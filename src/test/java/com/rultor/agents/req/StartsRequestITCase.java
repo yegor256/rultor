@@ -85,6 +85,72 @@ public final class StartsRequestITCase {
                 .add("arg").attr("name", "head_branch").set("master").up()
         );
         agent.execute(talk);
+        this.exec(talk);
+    }
+
+    /**
+     * StartsRequest can start a release request.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void startsReleaseRequest() throws Exception {
+        final File repo = this.repo();
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    "<p><release><script>echo HEY</script></release></p>"
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "a8b9c0")
+                .add("type").set("release").up()
+                .add("args")
+                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "tag").set("1.0-beta").up()
+        );
+        agent.execute(talk);
+        this.exec(talk);
+    }
+
+    /**
+     * StartsRequest can start a merge request.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void startsMergeRequest() throws Exception {
+        final File repo = this.repo();
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    "<p><merge><script>echo HEY</script></merge></p>"
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "a1b2c3")
+                .add("type").set("merge").up()
+                .add("args")
+                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "fork").set(repo.toString()).up()
+                .add("arg").attr("name", "fork_branch").set("frk").up()
+        );
+        agent.execute(talk);
+        this.exec(talk);
+    }
+
+    /**
+     * Execute script from daemon.
+     * @param talk Talk to use
+     * @throws IOException If fails
+     */
+    private void exec(final Talk talk) throws IOException {
         final String script = StringUtils.join(
             "set -x\n",
             "set -e\n",
@@ -117,7 +183,12 @@ public final class StartsRequestITCase {
                     "git init .;",
                     "echo 'hello, world!' > hello.txt;",
                     "git add .;",
-                    "git commit -am 'first file'"
+                    "git commit -am 'first file';",
+                    "git checkout -b frk;",
+                    "echo 'good bye!' > hello.txt;",
+                    "git commit -am 'modified file';",
+                    "git checkout master;",
+                    "git config receive.denyCurrentBranch ignore"
                 )
             ).directory(repo)
         ).stdout();
