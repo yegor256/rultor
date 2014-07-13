@@ -29,12 +29,9 @@
  */
 package com.rultor.agents.shells;
 
-import com.jcabi.aspects.Tv;
-import com.rultor.agents.Agents;
-import org.apache.commons.io.IOUtils;
-import org.hamcrest.Matchers;
-import org.junit.Assume;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Integration tests for ${@link SSH}.
@@ -47,17 +44,22 @@ import org.junit.Test;
 public final class SSHITCase {
 
     /**
+     * Temp directory.
+     * @checkstyle VisibilityModifierCheck (5 lines)
+     */
+    @Rule
+    public final transient TemporaryFolder temp = new TemporaryFolder();
+
+    /**
      * SSH can execute command on a real SSH server.
      * @throws Exception In case of error.
      */
     @Test
     public void executeCommandOnServer() throws Exception {
-        final String key = IOUtils.toString(
-            Agents.class.getResourceAsStream("rultor.key")
-        );
-        Assume.assumeThat(key.length(), Matchers.greaterThan(Tv.HUNDRED));
+        final Sshd sshd = new Sshd(this.temp.newFolder());
+        final int port = sshd.start();
         final Shell shell = new Shell.Safe(
-            new SSH("b1.rultor.com", 22, "rultor", key)
+            new SSH("localhost", port, sshd.login(), sshd.key())
         );
         new Shell.Empty(shell).exec("echo one");
     }

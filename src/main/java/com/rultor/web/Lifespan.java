@@ -96,20 +96,23 @@ public final class Lifespan implements ServletContextListener {
             throw new IllegalStateException(ex);
         }
         event.getServletContext().setAttribute(Talks.class.getName(), talks);
-        this.service.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                new Callable<Object>() {
-                    @Override
-                    public Object call() throws Exception {
-                        Lifespan.this.routine(talks);
-                        return null;
-                    }
-                },
-                true
-            ),
-            1L, 1L,
-            TimeUnit.MINUTES
-        );
+        // @checkstyle MultipleStringLiteralsCheck (1 line)
+        if (!Manifests.read("Rultor-DynamoKey").startsWith("AAAAA")) {
+            this.service.scheduleWithFixedDelay(
+                new VerboseRunnable(
+                    new Callable<Object>() {
+                        @Override
+                        public Object call() throws Exception {
+                            Lifespan.this.routine(talks);
+                            return null;
+                        }
+                    },
+                    true
+                ),
+                1L, 1L,
+                TimeUnit.MINUTES
+            );
+        }
     }
 
     @Override
