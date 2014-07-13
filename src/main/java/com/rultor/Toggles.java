@@ -30,6 +30,8 @@
 package com.rultor;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import java.io.File;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
@@ -49,9 +51,11 @@ import org.apache.commons.io.FileUtils;
 public final class Toggles {
 
     /**
-     * Read-only toggle.
+     * Directory to work in.
      */
-    private static final String READ_ONLY = "/tmp/rultor-read-only.txt";
+    private static final String DIR = String.format(
+        "/tmp/rultor-%s", Manifests.read("Rultor-Revision")
+    );
 
     /**
      * Set read only mode.
@@ -59,10 +63,15 @@ public final class Toggles {
      * @throws IOException If fails
      */
     public void readOnly(final boolean yes) throws IOException {
+        final File file = this.file();
         if (yes) {
-            FileUtils.touch(new File(Toggles.READ_ONLY));
+            FileUtils.touch(file);
         } else {
-            new File(Toggles.READ_ONLY).delete();
+            if (!file.delete()) {
+                throw new IllegalArgumentException(
+                    String.format("failed to delete %s", file)
+                );
+            }
         }
     }
 
@@ -71,7 +80,19 @@ public final class Toggles {
      * @return TRUE if read only
      */
     public boolean readOnly() {
-        return new File(Toggles.READ_ONLY).exists();
+        return this.file().exists();
+    }
+
+    /**
+     * Get file.
+     * @return File
+     */
+    private File file() {
+        final File file = new File(Toggles.DIR, "read-only");
+        if (file.getParentFile().mkdirs()) {
+            Logger.info(this, "directory created for %s", file);
+        }
+        return file;
     }
 
 }
