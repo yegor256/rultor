@@ -181,6 +181,8 @@ public final class StartsRequestITCase {
                 "-c",
                 StringUtils.join(
                     "git init .;",
+                    "git config user.email test@rultor.com;",
+                    "git config user.name test;",
                     "echo 'hello, world!' > hello.txt;",
                     "git add .;",
                     "git commit -am 'first file';",
