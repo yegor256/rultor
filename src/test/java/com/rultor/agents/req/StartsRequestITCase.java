@@ -180,6 +180,7 @@ public final class StartsRequestITCase {
                 "/bin/bash",
                 "-c",
                 StringUtils.join(
+                    "set -x; set -e; set -o pipefail;",
                     "git init .;",
                     "git config user.email test@rultor.com;",
                     "git config user.name test;",
