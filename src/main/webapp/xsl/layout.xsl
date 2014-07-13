@@ -38,7 +38,7 @@
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
-                <meta name="description" content="Coding Team Assistant"/>
+                <meta name="description" content="Coding team assistant that helps to automate merge, deploy and release operations, mostly for Github projects"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, revision control"/>
                 <meta name="author" content="rultor.com"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
