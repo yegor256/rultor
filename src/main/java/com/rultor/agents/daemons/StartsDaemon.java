@@ -112,8 +112,7 @@ public final class StartsDaemon extends AbstractAgent {
                         ),
                         "date --iso-8601=seconds --utc",
                         "uptime",
-                        daemon.xpath("script/text()").get(0),
-                        "echo 'RULTOR-SUCCESS'"
+                        daemon.xpath("script/text()").get(0)
                     ),
                     "\n"
                 ),

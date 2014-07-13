@@ -414,7 +414,7 @@
                         <executions>
                             <execution>
                                 <id>jekyll-build</id>
-                                <phase>post-site</phase>
+                                <phase>pre-site</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
