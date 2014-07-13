@@ -51,7 +51,10 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.4
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class StartsRequestITCase {
 
     /**
@@ -155,7 +158,7 @@ public final class StartsRequestITCase {
             "set -x\n",
             "set -e\n",
             "set -o pipefail\n",
-            "docker=echo\n",
+            "sudo=echo\n",
             String.format("cd %s\n", this.temp.newFolder()),
             talk.read().xpath("/talk/daemon/script/text()").get(0)
         );

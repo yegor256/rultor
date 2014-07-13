@@ -33,6 +33,6 @@ echo "${scripts[@]}" >> ${bin}
 chmod a+x ${bin}
 cd repo
 
-if [ -z "${docker}" ]; then
-  docker="sudo docker"
+if [ -z "${sudo}" ]; then
+  sudo="sudo"
 fi
