@@ -128,10 +128,7 @@ public final class StartsRequest extends AbstractAgent {
             "\n"
         );
         final String hash = req.xpath("@id").get(0);
-        Logger.info(
-            this, "request %s/%s started in %s",
-            type, hash, xml.xpath("/talk/@name").get(0)
-        );
+        Logger.info(this, "request %s/%s started", type, hash);
         return new Directives().xpath("/talk")
             .add("daemon")
             .attr("id", hash)
