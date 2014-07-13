@@ -31,6 +31,7 @@ package com.rultor.web;
 
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
+import com.rultor.agents.daemons.KillsDaemon;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -94,6 +95,24 @@ public final class TalkRs extends BaseRs {
             )
             .render()
             .build();
+    }
+
+    /**
+     * Kill currently running daemon.
+     * @return The JAX-RS response
+     * @throws IOException If fails
+     */
+    @GET
+    @Path("/kill")
+    public Response kill() throws IOException {
+        this.adminOnly();
+        final Talk talk = this.talks().get(this.number);
+        new KillsDaemon().process(talk.read());
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUri(),
+            String.format("talk #%d daemon requested to kill", talk.number()),
+            Level.INFO
+        );
     }
 
 }

@@ -74,7 +74,8 @@ public final class KillsDaemon extends AbstractAgent {
                 String.format("dir=%s", dir),
                 " && if [ ! -e ${dir}/pid ]; then exit 1; fi",
                 " && pid=$(cat ${dir}/pid)",
-                " && kill -9 $pid >/dev/null"
+                " && kill -9 $pid >/dev/null",
+                " && rm -f ${dir}/pid"
             )
         );
         Logger.info(this, "daemon killed because of delay in %s", dir);
