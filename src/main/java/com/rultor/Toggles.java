@@ -62,16 +62,15 @@ public final class Toggles {
         if (yes) {
             FileUtils.touch(new File(Toggles.READ_ONLY));
         } else {
-            FileUtils.deleteQuietly(new File(Toggles.READ_ONLY));
+            new File(Toggles.READ_ONLY).delete();
         }
     }
 
     /**
      * Is it read only mode now?
      * @return TRUE if read only
-     * @throws IOException If fails
      */
-    public boolean readOnly() throws IOException {
+    public boolean readOnly() {
         return new File(Toggles.READ_ONLY).exists();
     }
 

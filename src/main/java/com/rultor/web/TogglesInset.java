@@ -35,7 +35,6 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.auth.Identity;
 import com.rultor.Toggles;
-import java.io.IOException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -68,22 +67,18 @@ final class TogglesInset implements Inset {
         final Response.ResponseBuilder builder) {
         final Toggles toggles = new Toggles();
         final JaxbBundle bundle = new JaxbBundle("toggles");
-        try {
-            bundle.add("read-only", Boolean.toString(toggles.readOnly())).up();
-            if (!this.base.auth().identity().equals(Identity.ANONYMOUS)) {
-                bundle.link(
-                    new Link(
-                        "sw:read-only",
-                        this.base.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(TogglesRs.class)
-                            .path(TogglesRs.class, "readOnly")
-                            .build()
-                    )
-                );
-            }
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
+        bundle.add("read-only", Boolean.toString(toggles.readOnly())).up();
+        if (!this.base.auth().identity().equals(Identity.ANONYMOUS)) {
+            bundle.link(
+                new Link(
+                    "sw:read-only",
+                    this.base.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(TogglesRs.class)
+                        .path(TogglesRs.class, "readOnly")
+                        .build()
+                )
+            );
         }
         page.append(bundle);
     }
