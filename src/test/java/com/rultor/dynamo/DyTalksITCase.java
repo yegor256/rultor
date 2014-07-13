@@ -37,7 +37,7 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -71,7 +71,7 @@ public final class DyTalksITCase {
      */
     private Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
-        MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
+        Assume.assumeTrue(key.startsWith("AAAA"));
         return new Region.Prefixed(
             new ReRegion(
                 new Region.Simple(
