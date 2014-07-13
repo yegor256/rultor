@@ -126,8 +126,8 @@ public final class StartsDaemon extends AbstractAgent {
             StringUtils.join(
                 String.format("dir=%s", dir),
                 "; chmod a+x ${dir}/run.sh",
-                "&& echo 'run.sh failed to start' > ${dir}/stdout",
-                "&& ( nohup ${dir}/run.sh </dev/null >${dir}/stdout 2>&1; ",
+                " && echo 'run.sh failed to start' > ${dir}/stdout",
+                " && ( nohup ${dir}/run.sh </dev/null >${dir}/stdout 2>&1; ",
                 "echo $? >${dir}/status ) &"
             )
         );
