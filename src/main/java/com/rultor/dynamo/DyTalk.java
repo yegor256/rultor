@@ -29,8 +29,6 @@
  */
 package com.rultor.dynamo;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
@@ -111,10 +109,9 @@ public final class DyTalk implements Talk {
                 throw new IllegalArgumentException("XML is too big");
             }
             this.item.put(
-                DyTalks.ATTR_XML,
-                new AttributeValueUpdate().withValue(
-                    new AttributeValue().withS(body)
-                )
+                new AttributeUpdates()
+                    .with(DyTalks.ATTR_XML, body)
+                    .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
             );
         }
     }
@@ -122,10 +119,9 @@ public final class DyTalk implements Talk {
     @Override
     public void active(final boolean yes) throws IOException {
         this.item.put(
-            new AttributeUpdates().with(
-                DyTalks.ATTR_ACTIVE,
-                Boolean.toString(yes)
-            )
+            new AttributeUpdates()
+                .with(DyTalks.ATTR_ACTIVE, yes)
+                .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
         );
     }
 

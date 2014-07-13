@@ -98,6 +98,11 @@ public final class DyTalks implements Talks {
     public static final String ATTR_XML = "xml";
 
     /**
+     * When updated.
+     */
+    public static final String ATTR_UPDATED = "updated";
+
+    /**
      * Region we're in.
      */
     private final transient Region region;
@@ -181,6 +186,7 @@ public final class DyTalks implements Talks {
                 .with(DyTalks.HASH, name)
                 .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
                 .with(DyTalks.ATTR_NUMBER, number)
+                .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
                 .with(
                     DyTalks.ATTR_XML,
                     String.format("<talk name='%s' number='%d'/>", name, number)

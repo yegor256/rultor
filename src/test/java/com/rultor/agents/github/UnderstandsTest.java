@@ -89,7 +89,7 @@ public final class UnderstandsTest {
                 "/talk/wire[github-seen='2']",
                 "/talk/request[@id='2']",
                 "/talk/request[type='deploy' and args]",
-                "/talk/request/args/arg[@name='branch' and .='master']"
+                "/talk/request/args/arg[@name='head_branch' and .='master']"
             )
         );
     }
