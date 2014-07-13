@@ -74,7 +74,7 @@ public final class KillsDaemon extends AbstractAgent {
                 String.format("dir=%s", dir),
                 " && if [ ! -e ${dir}/pid ]; then exit 1; fi",
                 " && pid=$(cat ${dir}/pid)",
-                " && kill -9 $pid >/dev/null",
+                " && if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 $pid; fi",
                 " && rm -f ${dir}/pid"
             )
         );

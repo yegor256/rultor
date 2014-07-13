@@ -72,7 +72,7 @@ public final class EndsDaemon extends AbstractAgent {
                 String.format("dir=%s", dir),
                 " && if [ ! -e ${dir}/pid ]; then exit 1; fi",
                 " && pid=$(cat ${dir}/pid)",
-                " && ps -p $pid >/dev/null"
+                " && ps -p ${pid} >/dev/null"
             )
         );
         final Directives dirs = new Directives();
