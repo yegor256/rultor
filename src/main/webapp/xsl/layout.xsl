@@ -167,7 +167,7 @@
         </div>
     </xsl:template>
     <xsl:template match="identity">
-        <span>
+        <span title="Github account logged in: {urn}">
             <xsl:value-of select="name"/>
         </span>
         <span>
