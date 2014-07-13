@@ -68,10 +68,14 @@
         <xsl:variable name="label">
             <xsl:choose>
                 <xsl:when test="read-only='true'">
-                    <span style="color:red"><xsl:text>ro</xsl:text></span>
+                    <span style="color:red" title="read-only inactive mode">
+                        <xsl:text>ro</xsl:text>
+                    </span>
                 </xsl:when>
                 <xsl:otherwise>
-                    <span style="color:green"><xsl:text>rw</xsl:text></span>
+                    <span style="color:green" title="read-write, normal operations">
+                        <xsl:text>rw</xsl:text>
+                    </span>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -87,16 +91,16 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
-        <span>
+        <span title="currently deployed version is {name}">
             <xsl:value-of select="name"/>
         </span>
         <span>
             <a href="https://github.com/yegor256/rultor/commit/{revision}"
-                title="{revision}">
+                title="Github revision deployed is {revision}">
                 <xsl:value-of select="substring(revision,1,3)"/>
             </a>
         </span>
-        <span>
+        <span title="server time to build this page">
             <xsl:attribute name="style">
                 <xsl:text>color:</xsl:text>
                 <xsl:choose>
@@ -115,7 +119,7 @@
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
         </span>
-        <span>
+        <span title="server load average">
             <xsl:attribute name="style">
                 <xsl:text>color:</xsl:text>
                 <xsl:choose>
