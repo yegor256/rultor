@@ -39,7 +39,7 @@
     </xsl:template>
     <xsl:template match="page" mode="body">
         <div style="text-align: center;
-            width: 20em; height: 13em;
+            width: 20em; height: 20em;
             position: absolute;
             top: 0; bottom: 0; left: 0; right: 0;
             margin: auto;">
