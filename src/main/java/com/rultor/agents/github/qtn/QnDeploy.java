@@ -32,6 +32,8 @@ package com.rultor.agents.github.qtn;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
@@ -63,9 +65,11 @@ public final class QnDeploy implements Question {
                 home.toASCIIString()
             )
         );
+        final Issue issue = comment.issue();
+        final Repo repo = issue.repo();
         Logger.info(
-            this, "deploy request found in #%d",
-            comment.issue().number()
+            this, "deploy request found in %s/%d comment #%d",
+            repo.coordinates(), issue.number(), comment.issue().number()
         );
         return new Req.Simple(
             "deploy",
@@ -75,7 +79,7 @@ public final class QnDeploy implements Question {
                     "head",
                     String.format(
                         "git@github.com:%s.git",
-                        comment.issue().repo().coordinates()
+                        repo.coordinates()
                     )
                 )
                 .build()

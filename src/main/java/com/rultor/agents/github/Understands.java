@@ -101,7 +101,7 @@ public final class Understands extends AbstractAgent {
             }
             ++fresh;
             req = this.question.understand(
-                comment, new Home(xml, Integer.toString(next)).uri()
+                comment, new Home(xml, Integer.toString(comment.number())).uri()
             );
             if (req.equals(Req.LATER)) {
                 break;
