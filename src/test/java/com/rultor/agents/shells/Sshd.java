@@ -115,12 +115,10 @@ public final class Sshd {
             rsa.getAbsolutePath(),
             "-D",
             "-e",
-            "-o",
-            String.format("PidFile=%s", new File(this.dir, "pid")),
-            "-o",
-            "UsePAM=no",
-            "-o",
-            String.format("AuthorizedKeysFile=%s", keys)
+            "-o", String.format("PidFile=%s", new File(this.dir, "pid")),
+            "-o", "UsePAM=no",
+            "-o", String.format("AuthorizedKeysFile=%s", keys),
+            "-o", "StrictModes=no"
         ).start();
         new Thread(
             new Runnable() {
