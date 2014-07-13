@@ -95,7 +95,11 @@ public final class EndsDaemon extends AbstractAgent {
         final String dir) throws IOException {
         final int exit = Integer.parseInt(
             new Shell.Plain(new Shell.Safe(shell)).exec(
-                String.format("cat %s/status", dir)
+                StringUtils.join(
+                    String.format("dir=%s;", dir),
+                    "if [ ! -e ${dir}/status ]; then echo 255; exit 0; fi",
+                    " && cat ${dir}/status"
+                )
             ).trim()
         );
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
