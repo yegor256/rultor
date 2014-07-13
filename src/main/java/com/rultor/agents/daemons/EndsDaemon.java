@@ -93,8 +93,10 @@ public final class EndsDaemon extends AbstractAgent {
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
-        final int exit = new Shell.Empty(shell).exec(
-            String.format("grep RULTOR-SUCCESS %s/stdout", dir)
+        final int exit = Integer.parseInt(
+            new Shell.Plain(new Shell.Safe(shell)).exec(
+                String.format("echo %s/status", dir)
+            )
         );
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives().xpath("/talk/daemon")

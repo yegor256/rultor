@@ -31,6 +31,7 @@ package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,6 +39,7 @@ import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.input.NullInputStream;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Shell.
@@ -125,6 +127,40 @@ public interface Shell {
                 Logger.stream(Level.INFO, this),
                 Logger.stream(Level.WARNING, this)
             );
+        }
+    }
+
+    /**
+     * With output only.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "origin")
+    final class Plain {
+        /**
+         * Original.
+         */
+        private final transient Shell origin;
+        /**
+         * Ctor.
+         * @param shell Original shell
+         */
+        public Plain(final Shell shell) {
+            this.origin = shell;
+        }
+        /**
+         * Just exec.
+         * @param cmd Command
+         * @return Stdout
+         * @throws IOException If fails
+         */
+        public String exec(final String cmd) throws IOException {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            this.origin.exec(
+                cmd, new NullInputStream(0L),
+                baos, baos
+            );
+            return baos.toString(CharEncoding.UTF_8);
         }
     }
 
