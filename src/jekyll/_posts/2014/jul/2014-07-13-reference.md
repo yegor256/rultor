@@ -7,9 +7,12 @@ description:
   file in root directory of your Github repository
 ---
 
-Rultor is configures solely through YAML `.rultor.yml` file
-stored in the root directory of your Github repository. This page
-contains a complete reference of it (in alphabetic order).
+Rultor is configured solely through YAML `.rultor.yml` file
+stored in the root directory of your Github repository. You don't have
+any management panel. Everything you want to say to Rultor,
+you say in your `.rultor.yml` file.
+
+This page contains a complete reference of it (in alphabetic order).
 
 BTW, a real-life configuration you can see in [jcabi](https://github.com/jcabi/jcabi) project:
 [`rultor.yml`](https://github.com/jcabi/jcabi/blob/master/.rultor.yml).
@@ -20,10 +23,10 @@ Very often you want to add some secret files to the directory of
 your build, right before it starts. For example, a file with database
 credentials, that should be deployed to production. You don't want
 to keep this file in the main repository, since it contains sensitive
-information not desirable to be accessed by all programmers.
+information not intended to be accessable by all programmers.
 
-Put it into another private Github repository and inform Rultor that
-it has to fetch them from there:
+Put it into another *private* Github repository and inform Rultor that
+he has to fetch it from there:
 
 {% highlight yaml %}
 assets:
@@ -35,7 +38,7 @@ from `yegor256/secret-repo` and place it into `secret.xml` file
 right before starting a build.
 
 Keep in mind that every builds starts in `repo` directory, while
-assets are placed one folder up. This is how it will looks:
+assets are placed one folder up. This is how directory layout will looks:
 
 {% highlight text %}
 .
@@ -52,7 +55,7 @@ repo/
 {% endhighlight %}
 
 Don't forget to add [@rultor](https://github.com/rultor) to the
-list of collaborators in your private repository. Otherwise he won't
+list of collaborators in your private repository. Otherwise Rultor won't
 be able to fetch anything from it.
 
 ## Docker Image
