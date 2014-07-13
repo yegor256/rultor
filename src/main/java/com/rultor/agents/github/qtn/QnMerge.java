@@ -102,17 +102,17 @@ public final class QnMerge implements Question {
         return new Req.Simple(
             "merge",
             new ImmutableMap.Builder<String, String>()
-                .put("head_branch", head.getString("ref"))
-                .put("base_branch", base.getString("ref"))
+                .put("fork_branch", head.getString("ref"))
+                .put("head_branch", base.getString("ref"))
                 .put(
-                    "base",
+                    "head",
                     String.format(
                         "git@github.com:%s.git",
                         base.getJsonObject("repo").getString("full_name")
                     )
                 )
                 .put(
-                    "head",
+                    "fork",
                     String.format(
                         "git@github.com:%s.git",
                         head.getJsonObject("repo").getString("full_name")
