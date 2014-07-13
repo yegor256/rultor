@@ -55,7 +55,7 @@
                 </img>
             </p>
             <p>
-                <xsl:text>Rultor helps coding teams to automate</xsl:text>
+                <xsl:text>Rultor helps coding teams to automate </xsl:text>
                 <strong><xsl:text>merge</xsl:text></strong>
                 <xsl:text>, </xsl:text>
                 <strong><xsl:text>deploy</xsl:text></strong>
