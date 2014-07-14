@@ -136,13 +136,10 @@ public final class QnAskedBy implements Question {
     private Collection<String> commanders(final Repo repo) throws IOException {
         final Collection<String> logins = new LinkedList<String>();
         final XML xml = this.profile.read();
-        if (xml.nodes(this.xpath).isEmpty()) {
-            for (final User user : repo.collaborators().iterate()) {
-                logins.add(user.login());
-            }
-        } else {
-            logins.addAll(xml.xpath(this.xpath));
+        for (final User user : repo.collaborators().iterate()) {
+            logins.add(user.login());
         }
+        logins.addAll(xml.xpath(this.xpath));
         return logins;
     }
 
