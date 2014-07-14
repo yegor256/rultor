@@ -108,7 +108,7 @@ public final class QnAlone implements Question {
      */
     private Lock lock(final Repo repo) throws IOException {
         return this.locks.get(
-            String.format("rt-alone-%s", repo.coordinates()).replace(
+            String.format("rt-alone-%s", repo.coordinates()).replaceAll(
                 "[^a-zA-Z0-9\\-]", "-"
             )
         );
