@@ -69,6 +69,25 @@ docker:
   image: ubuntu:12.10
 {% endhighlight %}
 
+## Readers
+
+By default, anyone can see your build logs. This may not be desired
+for private projects. To grant access to your logs only for
+a selected list of users, use this construct:
+
+{% highlight yaml %}
+readers:
+  - urn:github:526301
+  - urn:github:8086956
+  - ...
+{% endhighlight %}
+
+Every user is specified as a URN, where his Github account number
+stays right after `urn:github:`. You can get your Github account number
+by logging into [www.rultor.com](http://www.rultor.com)
+and moving mouse over your name, at the
+top of the page.
+
 ## Merge, Deploy, Release
 
 Three commands `merge`, `deploy` and `release` are configured similarly in `.rultor.yml`. For example:

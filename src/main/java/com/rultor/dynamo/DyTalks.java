@@ -39,7 +39,6 @@ import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.ScanValve;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -191,24 +190,6 @@ public final class DyTalks implements Talks {
                     DyTalks.ATTR_XML,
                     String.format("<talk name='%s' number='%d'/>", name, number)
                 )
-        );
-    }
-
-    @Override
-    public Iterable<Talk> iterate() {
-        return Iterables.transform(
-            this.region.table(DyTalks.TBL)
-                .frame()
-                .through(
-                    new ScanValve()
-                        .withAttributeToGet(DyTalks.ATTR_NUMBER)
-                ),
-            new Function<Item, Talk>() {
-                @Override
-                public Talk apply(final Item input) {
-                    return new DyTalk(input);
-                }
-            }
         );
     }
 

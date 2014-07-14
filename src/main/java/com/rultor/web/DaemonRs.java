@@ -29,7 +29,11 @@
  */
 package com.rultor.web;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.jcabi.xml.XML;
 import com.rultor.agents.daemons.Tail;
+import com.rultor.profiles.Profiles;
 import java.io.IOException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -98,12 +102,46 @@ public final class DaemonRs extends BaseRs {
                 Level.WARNING
             );
         }
+        if (!this.granted()) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "according to .rultor.yml, you're not allowed to see this",
+                Level.WARNING
+            );
+        }
         return Response.ok().entity(
             new Tail(
                 this.talks().get(this.number).read(),
                 this.hash
             ).read()
         ).build();
+    }
+
+    /**
+     * Can I see this talk?
+     * @return TRUE if access granted
+     * @throws IOException If fails
+     */
+    private boolean granted() throws IOException {
+        final XML xml = new Profiles().fetch(
+            this.talks().get(this.number)
+        ).read();
+        final boolean granted;
+        if (xml.nodes("/p/readers").isEmpty()) {
+            granted = true;
+        } else {
+            final String self = this.auth().identity().urn().toString();
+            granted = Iterables.any(
+                xml.xpath("/p/readers/item/text()"),
+                new Predicate<String>() {
+                    @Override
+                    public boolean apply(final String input) {
+                        return input.trim().equals(self);
+                    }
+                }
+            );
+        }
+        return granted;
     }
 
 }

@@ -80,12 +80,6 @@ public interface Talks {
     void create(String name) throws IOException;
 
     /**
-     * Talks.
-     * @return Talks
-     */
-    Iterable<Talk> iterate();
-
-    /**
      * Get only active talks.
      * @return Talks
      */
