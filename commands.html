@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Here is a full list of Rultor commands" />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
+    <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
+    <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
+    <link rel="stylesheet" href="/css/layout.css?d82318b"/>
+    <link rel="canonical" href="//doc.rultor.com/commands.html" />
+    <title>Rultor Commands</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <a href="/">
+          <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
+        </a>
+      </header>
+      <section class="main">
+        <h1>Rultor Commands</h1>
+        <article><p>All commands you give to Rultor should start
+with <code>@rultor</code> and be followed by a text, which includes a mnemo of a command.
+For example, in order to check the status of Rultor in current
+conversation (ticket), you can post a comment:</p>
+
+<div class="highlight"><pre><code class="language-text" data-lang="text">@rultor what is the current status?</code></pre></div>
+
+<p>The mnemo of the command here is <code>status</code>. All the rest is ignored.
+You can achieve exactly the same by just posting:</p>
+
+<div class="highlight"><pre><code class="language-text" data-lang="text">@rultor status</code></pre></div>
+
+<p>Here is a full list of all commands, in alphabetic order.</p>
+
+<p>BTW, all commands are configured through
+<a href="/reference.html">.rultor.yml</a>.</p>
+
+<h2 id="deploy">Deploy</h2>
+
+<p>Deploying packaged product to production (or test) environment, in order
+to make it available for end-users (or testers).
+More details are <a href="/basics.html">here</a>.</p>
+
+<h2 id="hello">Hello</h2>
+
+<p>Sort of a &quot;ping&quot;. Post <code>@rultor hello</code> and expect an immediate answer
+from Rultor (well, within 60 seconds). If you don&#39;t get an answer, there
+is something wrong with Rultor. Feel free to post a bug to our
+<a href="https://github.com/yegor256/rultor/issues">issue tracker</a>.</p>
+
+<h2 id="merge">Merge</h2>
+
+<p>Merges pull request, checking its validity beforehand.
+More details are <a href="/basics.html">here</a>.</p>
+
+<h2 id="release">Release</h2>
+
+<p>Releases a stable version of the product to artifact repository,
+like Maven Central of RubyGems.
+More details are <a href="/basics.html">here</a>.</p>
+
+<h2 id="status">Status</h2>
+
+<p>Checks the status of currently running command in current conversation.
+When a command takes long this command may be convenient to use. Just
+post <code>@rultor status</code> and see what Rultor says.</p>
+
+<h2 id="version">Version</h2>
+
+<p>This command shows up current version of Rultor engine.</p>
+</article>
+      </section>
+      <footer class="footer">
+        <p>
+          &copy; <a href="http://www.rultor.com"><span itemprop="author">rultor.com</span></a>, 2013-2014
+          &nbsp;&nbsp;&nbsp;
+          <a href="/contents.html">contents</a>
+          &middot;
+          <a href="/reference.html">.rultor.yml</a>
+          &middot;
+          <a href="/terms.html">terms</a>
+          &middot;
+          <a href="/privacy.html">privacy</a>
+        </p>
+        <div class="badges">
+          <div>
+            <span>made by</span>
+            <br/>
+            <a href="http://www.teamed.io">
+              <img src="http://img.teamed.io/logo-light.svg" style="width:96px" alt="teamed.io logo"/>
+            </a>
+          </div>
+          <div>
+            <span>powered by</span>
+            <br/>
+            <a href="http://www.docker.io">
+              <img src="http://img.rultor.com/docker-logo.png" style="width:96px" alt="docker logo"/>
+            </a>
+          </div>
+          <div>
+            <span>operates at</span>
+            <br/>
+            <a href="http://www.github.com">
+              <img src="http://img.rultor.com/github-logo.png" style="width:96px" alt="github logo"/>
+            </a>
+          </div>
+          <div>
+            <span>hosted by</span>
+            <br/>
+            <a href="http://www.cloudbees.net">
+              <img src="http://img.rultor.com/cloudbees-logo.png" style="width:96px" alt="cloudbees logo"/>
+            </a>
+          </div>
+        </div>
+        <p>
+          <a href="https://github.com/yegor256/rultor/commit/d82318b">d82318b</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
