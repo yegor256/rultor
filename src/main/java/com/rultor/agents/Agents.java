@@ -133,7 +133,6 @@ public final class Agents {
      * @param profile Profile
      * @return List of them
      * @throws IOException If fails
-     * @checkstyle LineLength (100 lines)
      */
     public Collection<Agent> agents(final Talk talk, final Profile profile)
         throws IOException {
@@ -146,36 +145,49 @@ public final class Agents {
                         this.github.users().self().login(),
                         new QnParametrized(
                             new Question.FirstOf(
-                                Arrays.asList(
-                                    new QnAskedBy(
-                                        profile,
-                                        "/p/merge/commanders/item/text()",
-                                        new QnAlone(
-                                            talk,
-                                            this.sttc.locks(),
-                                            new QnIfContains("merge", new QnMerge())
+                                Arrays.<Question>asList(
+                                    new QnIfContains(
+                                        "merge",
+                                        new QnAskedBy(
+                                            profile,
+                                            "/p/merge/commanders/item/text()",
+                                            new QnAlone(
+                                                talk,
+                                                this.sttc.locks(),
+                                                new QnMerge()
+                                            )
                                         )
                                     ),
-                                    new QnAskedBy(
-                                        profile,
-                                        "/p/deploy/commanders/item/text()",
-                                        new QnAlone(
-                                            talk,
-                                            this.sttc.locks(),
-                                            new QnIfContains("deploy", new QnDeploy())
+                                    new QnIfContains(
+                                        "deploy",
+                                        new QnAskedBy(
+                                            profile,
+                                            "/p/deploy/commanders/item/text()",
+                                            new QnAlone(
+                                                talk,
+                                                this.sttc.locks(),
+                                                new QnDeploy()
+                                            )
                                         )
                                     ),
-                                    new QnAskedBy(
-                                        profile,
-                                        "/p/release/commanders/item/text()",
-                                        new QnAlone(
-                                            talk,
-                                            this.sttc.locks(),
-                                            new QnIfContains("release", new QnRelease())
+                                    new QnIfContains(
+                                        "release",
+                                        new QnAskedBy(
+                                            profile,
+                                            "/p/release/commanders/item/text()",
+                                            new QnAlone(
+                                                talk,
+                                                this.sttc.locks(),
+                                                new QnRelease()
+                                            )
                                         )
                                     ),
-                                    new QnIfContains("status", new QnStatus(talk)),
-                                    new QnIfContains("version", new QnVersion()),
+                                    new QnIfContains(
+                                        "status", new QnStatus(talk)
+                                    ),
+                                    new QnIfContains(
+                                        "version", new QnVersion()
+                                    ),
                                     new QnIfContains("hello", new QnHello())
                                 )
                             )
