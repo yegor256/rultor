@@ -148,7 +148,7 @@
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Talk talk : talks.active()) {
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>             ++total;
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>             <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Profile.html">Profile</a> profile = profiles.fetch(talk);
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Agent agent : agents.agents(profile)) {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Agent agent : agents.agents(talk, profile)) {
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>                 agent.execute(talk);
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>             }
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>         }
