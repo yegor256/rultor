@@ -91,17 +91,15 @@
     <xsl:template match="args[arg]">
         <xsl:text> * request has </xsl:text>
         <xsl:value-of select="count(arg)"/>
-        <xsl:text> parameter(s): </xsl:text>
+        <xsl:text> parameter(s):&#10;</xsl:text>
         <xsl:for-each select="arg">
-            <xsl:if test="position() &gt; 1">
-                <xsl:text>, </xsl:text>
-            </xsl:if>
+            <xsl:text>  * `</xsl:text>
             <xsl:value-of select="@name"/>
-            <xsl:text>=`</xsl:text>
-            <xsl:value-of select="@name"/>
+            <xsl:text>`: `</xsl:text>
+            <xsl:value-of select="."/>
             <xsl:text>`</xsl:text>
+            <xsl:text>&#10;</xsl:text>
         </xsl:for-each>
-        <xsl:text>`&#10;</xsl:text>
     </xsl:template>
     <xsl:template match="daemon[started and dir]">
         <xsl:text> * build started </xsl:text>
