@@ -32,10 +32,12 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
+import com.jcabi.xml.XSL;
+import com.jcabi.xml.XSLDocument;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
@@ -46,25 +48,38 @@ import lombok.ToString;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3.1
+ * @since 1.5
  */
 @Immutable
 @ToString
 @EqualsAndHashCode
-public final class QnVersion implements Question {
+public final class QnStatus implements Question {
+
+    /**
+     * XSL to generate report.
+     */
+    private static final XSL REPORT = XSLDocument.make(
+        QnStatus.class.getResourceAsStream("status.xsl")
+    );
+
+    /**
+     * Talk.
+     */
+    private final transient Talk talk;
+
+    /**
+     * Ctor.
+     * @param tlk Talk
+     */
+    public QnStatus(final Talk tlk) {
+        this.talk = tlk;
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "my current version is %s, Git revision is [`%s`](https://github.com/yegor256/rultor/commit/%1$s)",
-                Manifests.read("Rultor-Version"),
-                Manifests.read("Rultor-Revision")
-            )
-        );
-        Logger.info(this, "version request in #%d", comment.issue().number());
+        new Answer(comment).post(QnStatus.REPORT.applyTo(this.talk.read()));
+        Logger.info(this, "status request in #%d", comment.issue().number());
         return Req.EMPTY;
     }
 

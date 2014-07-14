@@ -53,6 +53,7 @@ import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
+import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
@@ -61,6 +62,7 @@ import com.rultor.agents.shells.RemovesShell;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
+import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -128,12 +130,13 @@ public final class Agents {
 
     /**
      * Create them for a talk.
+     * @param talk Talk itself
      * @param profile Profile
      * @return List of them
      * @throws IOException If fails
      * @checkstyle LineLength (100 lines)
      */
-    public Collection<Agent> agents(final Profile profile)
+    public Collection<Agent> agents(final Talk talk, final Profile profile)
         throws IOException {
         final Collection<Agent> agents = new LinkedList<Agent>();
         agents.addAll(
@@ -169,6 +172,7 @@ public final class Agents {
                                             new QnIfContains("release", new QnRelease())
                                         )
                                     ),
+                                    new QnIfContains("status", new QnStatus(talk)),
                                     new QnIfContains("version", new QnVersion()),
                                     new QnIfContains("hello", new QnHello())
                                 )

@@ -59,7 +59,7 @@ public final class QnRelease implements Question {
         final URI home) throws IOException {
         new Answer(comment).post(
             String.format(
-                "OK, I'll try now. The progress is [here](%s)",
+                "OK, I'll try now. You can check the progress [here](%s)",
                 home.toASCIIString()
             )
         );

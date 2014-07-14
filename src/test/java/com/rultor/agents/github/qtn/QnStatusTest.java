@@ -29,60 +29,69 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.log.Logger;
-import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.Question;
+import com.jcabi.github.mock.MkGithub;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Req;
-import java.io.IOException;
+import com.rultor.spi.Talk;
 import java.net.URI;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import javax.json.Json;
+import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Deploy request.
+ * Tests for ${@link QnStatus}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.5
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class QnDeploy implements Question {
+public final class QnStatusTest {
 
-    @Override
-    public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
-        new Answer(comment).post(
-            String.format(
-                "OK, I'll do it now. You can check the progress [here](%s)",
-                home.toASCIIString()
+    /**
+     * QnStatus can build a report.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void buildsReport() throws Exception {
+        final Repo repo = new MkGithub("jeff").repos().create(
+            Json.createObjectBuilder().add("name", "test").build()
+        );
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("status");
+        final Talk talk = new Talk.InFile(
+            new XMLDocument(
+                StringUtils.join(
+                    "<talk name='test' number='45'>",
+                    "<request id='454'><type>merge</type><args/></request>",
+                    "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
+                    "<script>test</script>",
+                    "<code>3</code><dir>/tmp/abc</dir>",
+                    "</daemon>",
+                    "</talk>"
+                )
             )
         );
-        final Issue issue = comment.issue();
-        final Repo repo = issue.repo();
-        Logger.info(
-            this, "deploy request found in %s/%d comment #%d",
-            repo.coordinates(), issue.number(), comment.issue().number()
+        MatcherAssert.assertThat(
+            new QnStatus(talk).understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            ),
+            Matchers.is(Req.EMPTY)
         );
-        return new Req.Simple(
-            "deploy",
-            new ImmutableMap.Builder<String, String>()
-                .put("head_branch", "master")
-                .put(
-                    "head",
-                    String.format(
-                        "git@github.com:%s.git",
-                        repo.coordinates()
-                    )
-                )
-                .build()
+        MatcherAssert.assertThat(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.allOf(
+                Matchers.containsString("request `454` is in processing"),
+                Matchers.containsString("request has no parameters"),
+                Matchers.containsString("build started"),
+                Matchers.containsString("build exit code is `3`")
+            )
         );
     }
 

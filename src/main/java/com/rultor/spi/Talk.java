@@ -117,6 +117,19 @@ public interface Talk {
         }
         /**
          * Ctor.
+         * @param xml XML to save
+         * @throws IOException If fails
+         */
+        public InFile(final XML xml) throws IOException {
+            this();
+            FileUtils.write(
+                new File(this.path),
+                new StrictXML(xml, Talk.SCHEMA).toString(),
+                CharEncoding.UTF_8
+            );
+        }
+        /**
+         * Ctor.
          * @param file The file
          */
         public InFile(final File file) {

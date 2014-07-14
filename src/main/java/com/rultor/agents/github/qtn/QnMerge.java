@@ -66,7 +66,7 @@ public final class QnMerge implements Question {
         if (issue.isPull() && issue.isOpen()) {
             new Answer(comment).post(
                 String.format(
-                    "OK, I'm on it. You can track me [here](%s)",
+                    "OK, I'm on it. You can check progress [here](%s)",
                     home.toASCIIString()
                 )
             );

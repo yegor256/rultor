@@ -140,7 +140,7 @@ public final class Lifespan implements ServletContextListener {
         for (final Talk talk : talks.active()) {
             ++total;
             final Profile profile = profiles.fetch(talk);
-            for (final Agent agent : agents.agents(profile)) {
+            for (final Agent agent : agents.agents(talk, profile)) {
                 agent.execute(talk);
             }
         }

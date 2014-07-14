@@ -55,7 +55,7 @@
                 </img>
             </p>
             <p>
-                <xsl:text>Rultor helps coding teams to automate </xsl:text>
+                <xsl:text>Rultor helps coding teams automate </xsl:text>
                 <strong><xsl:text>merge</xsl:text></strong>
                 <xsl:text>, </xsl:text>
                 <strong><xsl:text>deploy</xsl:text></strong>
@@ -64,10 +64,10 @@
                 <xsl:text> operations.</xsl:text>
                 <xsl:text> Say </xsl:text>
                 <code>@rultor hello</code>
-                <xsl:text> in a Github issue and we start from there.</xsl:text>
-                <xsl:text> Of course, here is </xsl:text>
+                <xsl:text> in a Github issue and start from there.</xsl:text>
+                <xsl:text> For full documentation, look </xsl:text>
                 <a href="http://doc.rultor.com">
-                    <xsl:text>full documentation</xsl:text>
+                    <xsl:text>here</xsl:text>
                 </a>
                 <xsl:text> :)</xsl:text>
             </p>
