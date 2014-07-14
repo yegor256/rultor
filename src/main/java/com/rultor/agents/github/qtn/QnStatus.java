@@ -52,7 +52,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "talk")
 public final class QnStatus implements Question {
 
     /**

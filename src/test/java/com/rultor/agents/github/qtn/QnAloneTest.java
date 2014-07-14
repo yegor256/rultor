@@ -27,64 +27,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
 import co.stateful.Locks;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import co.stateful.mock.MkSttc;
+import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.log.Logger;
-import com.jcabi.xml.XML;
-import com.rultor.agents.AbstractAgent;
-import com.rultor.agents.github.qtn.QnAlone;
-import java.io.IOException;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.xembly.Directive;
+import com.jcabi.github.mock.MkGithub;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Talk;
+import java.net.URI;
+import javax.json.Json;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
 import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
- * Unlocks repo.
+ * Tests for ${@link QnAlone}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.6.1
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(callSuper = false, of = { "github", "locks" })
-public final class UnlocksRepo extends AbstractAgent {
+public final class QnAloneTest {
 
     /**
-     * Github.
+     * QnAlone can create lock repo.
+     * @throws Exception In case of error.
      */
-    private final transient Github github;
-
-    /**
-     * Locks.
-     */
-    private final transient Locks locks;
-
-    /**
-     * Ctor.
-     * @param ghub Github client
-     * @param lcks Locks
-     */
-    public UnlocksRepo(final Github ghub, final Locks lcks) {
-        super(
-            "/talk/wire[github-repo and github-issue]",
-            "/talk[not(request) and not(daemon) and not(shell)]"
+    @Test
+    public void locksRepo() throws Exception {
+        final Repo repo = new MkGithub("jeff").repos().create(
+            Json.createObjectBuilder().add("name", "test").build()
         );
-        this.github = ghub;
-        this.locks = lcks;
-    }
-
-    @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
-        final Repo repo = new TalkIssues(this.github, xml).get().repo();
-        QnAlone.lock(this.locks, repo).unlock();
-        Logger.info(this, "repo %s unlocked", repo.coordinates());
-        return new Directives();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("deploy");
+        final Talk talk = new Talk.InFile();
+        final Locks locks = new MkSttc().locks();
+        MatcherAssert.assertThat(
+            new Xembler(
+                new Directives().add("request").append(
+                    new QnAlone(talk, locks, new QnDeploy()).understand(
+                        new Comment.Smart(issue.comments().get(1)), new URI("#")
+                    ).dirs()
+                )
+            ).xml(),
+            XhtmlMatchers.hasXPaths(
+                "/request[type='deploy']"
+            )
+        );
     }
 
 }

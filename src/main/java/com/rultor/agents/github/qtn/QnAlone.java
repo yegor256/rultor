@@ -37,6 +37,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
@@ -51,8 +52,13 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "locks", "origin" })
+@EqualsAndHashCode(of = { "talk", "locks", "origin" })
 public final class QnAlone implements Question {
+
+    /**
+     * Talk.
+     */
+    private final transient Talk talk;
 
     /**
      * Locks to use.
@@ -66,10 +72,12 @@ public final class QnAlone implements Question {
 
     /**
      * Ctor.
+     * @param tlk Talk
      * @param lcks Locks
      * @param qtn Original question
      */
-    public QnAlone(final Locks lcks, final Question qtn) {
+    public QnAlone(final Talk tlk, final Locks lcks, final Question qtn) {
+        this.talk = tlk;
         this.locks = lcks;
         this.origin = qtn;
     }
@@ -78,8 +86,12 @@ public final class QnAlone implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Repo repo = comment.issue().repo();
+        if (this.talk.read().nodes("/talk[request or daemon]").isEmpty()) {
+            this.lock(repo).unlock();
+            Logger.info(this, "repo %s unlocked", repo.coordinates());
+        }
         final Req req;
-        if (QnAlone.lock(this.locks, repo).lock()) {
+        if (this.lock(repo).lock()) {
             Logger.info(this, "repo %s locked", repo.coordinates());
             req = this.origin.understand(comment, home);
         } else {
@@ -90,14 +102,12 @@ public final class QnAlone implements Question {
 
     /**
      * Get lock by repo.
-     * @param lcks Locks
      * @param repo Github repo
      * @return Lock
      * @throws IOException If fails
      */
-    public static Lock lock(final Locks lcks, final Repo repo)
-        throws IOException {
-        return lcks.get(
+    private Lock lock(final Repo repo) throws IOException {
+        return this.locks.get(
             String.format("rt-alone-%s", repo.coordinates()).replace(
                 "[^a-zA-Z0-9\\-]", "-"
             )

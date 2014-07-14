@@ -43,7 +43,6 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Reports;
 import com.rultor.agents.github.StartsTalks;
 import com.rultor.agents.github.Understands;
-import com.rultor.agents.github.UnlocksRepo;
 import com.rultor.agents.github.qtn.QnAlone;
 import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnDeploy;
@@ -152,6 +151,7 @@ public final class Agents {
                                         profile,
                                         "/p/merge/commanders/item/text()",
                                         new QnAlone(
+                                            talk,
                                             this.sttc.locks(),
                                             new QnIfContains("merge", new QnMerge())
                                         )
@@ -160,6 +160,7 @@ public final class Agents {
                                         profile,
                                         "/p/deploy/commanders/item/text()",
                                         new QnAlone(
+                                            talk,
                                             this.sttc.locks(),
                                             new QnIfContains("deploy", new QnDeploy())
                                         )
@@ -168,6 +169,7 @@ public final class Agents {
                                         profile,
                                         "/p/release/commanders/item/text()",
                                         new QnAlone(
+                                            talk,
                                             this.sttc.locks(),
                                             new QnIfContains("release", new QnRelease())
                                         )
@@ -203,8 +205,7 @@ public final class Agents {
                             Manifests.read("Rultor-S3Secret")
                         )
                     ).bucket(Manifests.read("Rultor-S3Bucket"))
-                ),
-                new UnlocksRepo(this.github, this.sttc.locks())
+                )
             )
         );
         return agents;
