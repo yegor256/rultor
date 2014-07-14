@@ -38,8 +38,7 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <div style="text-align: center;
-            width: 25em; height: 20em;
+        <div class="wrapper" style="text-align: center; height: 20em;
             position: absolute;
             top: 0; bottom: 0; left: 0; right: 0;
             margin: auto;">
