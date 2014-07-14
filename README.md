@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/yegor256/rultor.svg?branch=master)](https://travis-ci.org/yegor256/rultor)
 
+Full documentation is at [doc.rultor.com](http://doc.rultor.com)
+
 ## How to contribute
 
 Fork repository, make changes, send us a pull request. We will review
