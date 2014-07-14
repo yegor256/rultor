@@ -103,17 +103,17 @@ a, a:visited {
     margin-top: 0;
     margin-bottom: 0;
   }
-  .badges {
-    margin-top: 0.8 * $em;
-    margin-bottom: 0.8 * $em;
-    div {
-      font-size: 0.8 * $em;
-      display: inline-block;
-      width: 7 * $em;
-      vertical-align: top;
-      img {
-        max-width: 100%;
-      }
+}
+.badges {
+  margin-top: 0.8 * $em;
+  margin-bottom: 0.8 * $em;
+  div {
+    font-size: 0.8 * $em;
+    display: inline-block;
+    width: 7 * $em;
+    vertical-align: top;
+    img {
+      max-width: 100%;
     }
   }
 }
