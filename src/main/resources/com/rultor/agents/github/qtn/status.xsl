@@ -41,7 +41,7 @@
                 <xsl:apply-templates select="request"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:text> * no requests registered&#10;</xsl:text>
+                <xsl:text> * no new requests registered&#10;</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
         <xsl:choose>
@@ -61,9 +61,15 @@
             <xsl:if test="position() &gt; 1">
                 <xsl:text>, </xsl:text>
             </xsl:if>
-            <a href="http://www.rultor.com/t/{/talk/@number}/{@id}">
-                <xsl:value-of select="@id"/>
-            </a>
+            <xsl:text>[</xsl:text>
+            <xsl:value-of select="/talk/@number"/>
+            <xsl:text>-</xsl:text>
+            <xsl:value-of select="@id"/>
+            <xsl:text>](http://www.rultor.com/t/</xsl:text>
+            <xsl:value-of select="/talk/@number"/>
+            <xsl:text>/</xsl:text>
+            <xsl:value-of select="@id"/>
+            <xsl:text>)</xsl:text>
         </xsl:for-each>
         <xsl:text>&#10;</xsl:text>
     </xsl:template>
