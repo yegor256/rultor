@@ -30,7 +30,6 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
@@ -40,6 +39,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -56,6 +56,12 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "github")
 public final class Reports extends AbstractAgent {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * Github.
@@ -83,24 +89,22 @@ public final class Reports extends AbstractAgent {
         );
         final String hash = req.xpath("@id").get(0);
         final URI home = new Home(xml, hash).uri();
-        final StringBuilder msg = new StringBuilder(Tv.HUNDRED);
+        final String pattern;
         if (success) {
-            msg.append("done!");
+            pattern = "Reports.success";
         } else {
-            msg.append("oops, I failed.");
+            pattern = "Reports.failure";
         }
-        msg.append(
-            Logger.format(
-                " FYI, full log is [here](%s) (took me %[ms]s)",
-                home.toASCIIString(),
-                Long.parseLong(req.xpath("msec/text()").get(0))
-            )
+        final String msg = Logger.format(
+            Reports.PHRASES.getString(pattern),
+            home.toASCIIString(),
+            Long.parseLong(req.xpath("msec/text()").get(0))
         );
         new Answer(
             new Comment.Smart(
                 issue.comments().get(Integer.parseInt(hash))
             )
-        ).post(msg.toString());
+        ).post(msg);
         return new Directives()
             .xpath("/talk/request[success]")
             .strict(1).remove();
