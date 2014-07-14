@@ -67,7 +67,7 @@
             <xsl:value-of select="@id"/>
             <xsl:text>](http://www.rultor.com/t/</xsl:text>
             <xsl:value-of select="/talk/@number"/>
-            <xsl:text>/</xsl:text>
+            <xsl:text>-</xsl:text>
             <xsl:value-of select="@id"/>
             <xsl:text>)</xsl:text>
         </xsl:for-each>
