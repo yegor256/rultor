@@ -38,6 +38,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -53,13 +54,18 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class QnVersion implements Question {
 
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
+
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
             String.format(
-                // @checkstyle LineLength (1 line)
-                "my current version is %s, Git revision is [`%s`](https://github.com/yegor256/rultor/commit/%1$s)",
+                QnVersion.PHRASES.getString("QnVersion.intro"),
                 Manifests.read("Rultor-Version"),
                 Manifests.read("Rultor-Revision")
             )

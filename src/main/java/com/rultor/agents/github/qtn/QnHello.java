@@ -37,9 +37,9 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Hello.
@@ -53,18 +53,17 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode
 public final class QnHello implements Question {
 
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
+
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
-            StringUtils.join(
-                "hi there! I understand a few simple commands:",
-                " \"merge\", \"deploy\", etc. ",
-                "[This page](http://doc.rultor.com/basics.html)",
-                " explains them briefly. Any questions or bug reports",
-                " are [welcome](https://github.com/yegor256/rultor/issues).",
-                " Have fun :)"
-            )
+            QnHello.PHRASES.getString("QnHello.intro")
         );
         Logger.info(this, "hello found in #%d", comment.issue().number());
         return Req.EMPTY;

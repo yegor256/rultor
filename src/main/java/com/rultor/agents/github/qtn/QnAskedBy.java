@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +60,12 @@ import org.apache.commons.lang3.StringUtils;
 @ToString
 @EqualsAndHashCode(of = { "profile", "xpath", "origin" })
 public final class QnAskedBy implements Question {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * Profile.
@@ -100,7 +107,7 @@ public final class QnAskedBy implements Question {
         } else {
             new Answer(comment).post(
                 String.format(
-                    "sorry, I accept such requests only from one of them: %s",
+                    QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
                     StringUtils.join(
                         Iterables.transform(
                             logins,

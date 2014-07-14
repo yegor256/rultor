@@ -29,63 +29,48 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
-import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.Question;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkGithub;
 import com.rultor.agents.github.Req;
-import java.io.IOException;
 import java.net.URI;
-import java.util.ResourceBundle;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import javax.json.Json;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Release request.
+ * Tests for ${@link QnHello}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3.6
+ * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class QnRelease implements Question {
+public final class QnHelloTest {
 
     /**
-     * Message bundle.
+     * QnHello can reply.
+     * @throws Exception In case of error.
      */
-    private static final ResourceBundle PHRASES =
-        ResourceBundle.getBundle("phrases");
-
-    @Override
-    public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
-        new Answer(comment).post(
-            String.format(
-                QnRelease.PHRASES.getString("QnRelease.start"),
-                home.toASCIIString()
-            )
+    @Test
+    public void repliesInGithub() throws Exception {
+        final Repo repo = new MkGithub("jeff").repos().create(
+            Json.createObjectBuilder().add("name", "test").build()
         );
-        Logger.info(
-            this, "release request found in #%d",
-            comment.issue().number()
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("hello");
+        MatcherAssert.assertThat(
+            new QnHello().understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            ),
+            Matchers.is(Req.EMPTY)
         );
-        return new Req.Simple(
-            "release",
-            new ImmutableMap.Builder<String, String>()
-                .put("head_branch", "master")
-                .put(
-                    "head",
-                    String.format(
-                        "git@github.com:%s.git",
-                        comment.issue().repo().coordinates()
-                    )
-                )
-                .build()
+        MatcherAssert.assertThat(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.containsString("Have fun :)")
         );
     }
 

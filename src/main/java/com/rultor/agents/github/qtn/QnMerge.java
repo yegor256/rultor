@@ -41,6 +41,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -58,6 +59,12 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class QnMerge implements Question {
 
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
+
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
@@ -66,7 +73,7 @@ public final class QnMerge implements Question {
         if (issue.isPull() && issue.isOpen()) {
             new Answer(comment).post(
                 String.format(
-                    "OK, I'm on it. You can check progress [here](%s)",
+                    QnMerge.PHRASES.getString("QnMerge.start"),
                     home.toASCIIString()
                 )
             );
@@ -78,12 +85,12 @@ public final class QnMerge implements Question {
             );
         } else if (issue.isOpen()) {
             new Answer(comment).post(
-                "it's not a pull request, I can't merge it"
+                QnMerge.PHRASES.getString("QnMerge.not-pull-request")
             );
             req = Req.EMPTY;
         } else {
             new Answer(comment).post(
-                "pull request is closed already, I can't merge it"
+                QnMerge.PHRASES.getString("QnMerge.already-closed")
             );
             req = Req.EMPTY;
         }

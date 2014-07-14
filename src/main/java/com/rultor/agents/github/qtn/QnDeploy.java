@@ -57,12 +57,18 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class QnDeploy implements Question {
 
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
+
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
             String.format(
-                ResourceBundle.getBundle("phrases").getString("deploy.start"),
+                QnDeploy.PHRASES.getString("QnDeploy.start"),
                 home.toASCIIString()
             )
         );
