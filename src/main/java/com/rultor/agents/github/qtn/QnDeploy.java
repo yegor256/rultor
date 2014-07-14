@@ -40,6 +40,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -61,7 +62,7 @@ public final class QnDeploy implements Question {
         final URI home) throws IOException {
         new Answer(comment).post(
             String.format(
-                "OK, I'll do it now. You can check the progress [here](%s)",
+                ResourceBundle.getBundle("phrases").getString("deploy.start"),
                 home.toASCIIString()
             )
         );
