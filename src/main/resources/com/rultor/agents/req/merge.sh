@@ -5,7 +5,7 @@ git remote update
 git merge "fork/${fork_branch}"
 
 cd ..
-${sudo} run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
+${sudo} docker run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
 cd repo
 
 ${sudo} git push origin "${head_branch}"

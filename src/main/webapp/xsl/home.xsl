@@ -39,7 +39,7 @@
     </xsl:template>
     <xsl:template match="page" mode="body">
         <div style="text-align: center;
-            width: 20em; height: 20em;
+            width: 25em; height: 20em;
             position: absolute;
             top: 0; bottom: 0; left: 0; right: 0;
             margin: auto;">
@@ -65,19 +65,42 @@
                 <xsl:text> Say </xsl:text>
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and we start from there.</xsl:text>
-                <xsl:text>Of course, here is </xsl:text>
+                <xsl:text> Of course, here is </xsl:text>
                 <a href="http://doc.rultor.com">
                     <xsl:text>full documentation</xsl:text>
                 </a>
                 <xsl:text> :)</xsl:text>
             </p>
-            <p style="margin-top:2em;color:#66595c;">
-                <xsl:text>made by</xsl:text>
-                <br/>
-                <a href="http://www.teamed.io">
-                    <img src="http://img.teamed.io/logo-light.svg" style="width:96px"/>
-                </a>
-            </p>
+            <div class="badges" style="margin-top:2em;">
+                <div>
+                    <span>made by</span>
+                    <br/>
+                    <a href="http://www.teamed.io">
+                        <img src="http://img.teamed.io/logo-light.svg" style="width:96px" alt="teamed.io logo"/>
+                    </a>
+                </div>
+                <div>
+                    <span>powered by</span>
+                    <br/>
+                    <a href="http://www.docker.io">
+                        <img src="http://img.rultor.com/docker-logo.png" style="width:96px" alt="docker logo"/>
+                    </a>
+                </div>
+                <div>
+                    <span>operates at</span>
+                    <br/>
+                    <a href="http://www.github.com">
+                        <img src="http://img.rultor.com/github-logo.png" style="width:96px" alt="github logo"/>
+                    </a>
+                </div>
+                <div>
+                    <span>hosted by</span>
+                    <br/>
+                    <a href="http://www.cloudbees.net">
+                        <img src="http://img.rultor.com/cloudbees-logo.png" style="width:96px" alt="cloudbees logo"/>
+                    </a>
+                </div>
+            </div>
         </div>
     </xsl:template>
 </xsl:stylesheet>
