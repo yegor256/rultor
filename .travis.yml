@@ -6,4 +6,5 @@ env:
 before_install:
   - unset GEM_PATH
 script: 
+  - sudo ln -s /usr/bin/md5sum /usr/bin/md5
   - mvn clean install -Pqulice --batch-mode --errors
