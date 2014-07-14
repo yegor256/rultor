@@ -5,6 +5,12 @@ if [ -z "${tag}" ]; then
   exit -1
 fi
 
+if [ $(git tag --list "${tag}") ]
+then
+   echo "Tag ${tag} already exists!"
+   exit -1
+fi
+
 git checkout -b __rultor-tmp
 
 cd ..
