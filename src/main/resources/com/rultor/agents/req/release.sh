@@ -9,8 +9,9 @@ git checkout -b __rultor-tmp
 
 cd ..
 ${sudo} docker run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
+${sudo} chown -R $(whoami) .
 cd repo
 
-${sudo} git commit --allow-empty -am "${tag}"
-${sudo} git tag "${tag}"
-${sudo} git push origin "${tag}"
+git commit --allow-empty -am "${tag}"
+git tag "${tag}"
+git push origin "${tag}"
