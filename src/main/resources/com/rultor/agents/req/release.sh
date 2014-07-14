@@ -18,6 +18,5 @@ ${sudo} docker run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${b
 ${sudo} chown -R $(whoami) .
 cd repo
 
-git commit --allow-empty -am "${tag}"
 git tag "${tag}"
 git push origin "${tag}"
