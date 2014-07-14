@@ -73,10 +73,7 @@ public final class Understands extends AbstractAgent {
      * @param qtn Question
      */
     public Understands(final Github ghub, final Question qtn) {
-        super(
-            "/talk/wire[github-repo and github-issue]",
-            "/talk[not(request)]"
-        );
+        super("/talk/wire[github-repo and github-issue]");
         this.github = ghub;
         this.question = qtn;
     }
