@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.req;
 
+import com.jcabi.immutable.Array;
 import com.jcabi.log.VerboseProcess;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.shells.SSH;
@@ -40,6 +41,7 @@ import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
@@ -76,7 +78,11 @@ public final class StartsRequestITCase {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    "<p><deploy><script>echo HEY</script></deploy></p>"
+                    StringUtils.join(
+                        "<p><deploy><script>echo HEY</script>",
+                        "<env><MAVEN_OPTS>-Xmx2g -Xms1g</MAVEN_OPTS></env>",
+                        "</deploy></p>"
+                    )
                 )
             )
         );
@@ -93,12 +99,18 @@ public final class StartsRequestITCase {
         MatcherAssert.assertThat(
             this.exec(talk),
             Matchers.allOf(
-                Matchers.containsString("image=yegor256/rultor\n"),
-                Matchers.containsString("Cloning into 'repo'...\n"),
-                Matchers.containsString("docker_when_possible run"),
-                Matchers.containsString("image=yegor256/rultor"),
-                Matchers.containsString("load average is "),
-                Matchers.containsString("low enough to run a new Docker")
+                new Array<Matcher<? super String>>()
+                    .with(Matchers.containsString("image=yegor256/rultor\n"))
+                    .with(Matchers.containsString("Cloning into 'repo'...\n"))
+                    .with(Matchers.containsString("docker_when_possible run"))
+                    .with(Matchers.containsString("image=yegor256/rultor"))
+                    .with(Matchers.containsString("load average is "))
+                    .with(Matchers.containsString("low enough to run a"))
+                    .with(
+                        Matchers.containsString(
+                            "SUDO-6: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
+                        )
+                    )
             )
         );
     }
@@ -171,7 +183,11 @@ public final class StartsRequestITCase {
             "set -x\n",
             "set -e\n",
             "set -o pipefail\n",
-            "sudo=echo\n",
+            "function sudo {\n",
+            "  for (( i=1; i<=$#; i++ )); do\n",
+            "    echo \"SUDO-$i: ${!i}\"\n",
+            "  done\n",
+            "}\n",
             String.format("cd %s\n", this.temp.newFolder()),
             talk.read().xpath("/talk/daemon/script/text()").get(0)
         );
