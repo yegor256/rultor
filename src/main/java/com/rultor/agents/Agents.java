@@ -29,6 +29,7 @@
  */
 package com.rultor.agents;
 
+import co.stateful.Locks;
 import co.stateful.Sttc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
@@ -48,6 +49,7 @@ import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnLastOf;
 import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReferredTo;
@@ -138,6 +140,7 @@ public final class Agents {
     public Collection<Agent> agents(final Talk talk, final Profile profile)
         throws IOException {
         final Collection<Agent> agents = new LinkedList<Agent>();
+        final Locks locks = this.sttc.locks();
         final Question list = new Question.FirstOf(
             Arrays.<Question>asList(
                 new QnIfContains(
@@ -145,7 +148,7 @@ public final class Agents {
                     new QnAskedBy(
                         profile,
                         "/p/merge/commanders/item/text()",
-                        new QnAlone(talk, this.sttc.locks(), new QnMerge())
+                        new QnAlone(talk, locks, new QnMerge())
                     )
                 ),
                 new QnIfContains(
@@ -153,7 +156,7 @@ public final class Agents {
                     new QnAskedBy(
                         profile,
                         "/p/deploy/commanders/item/text()",
-                        new QnAlone(talk, this.sttc.locks(), new QnDeploy())
+                        new QnAlone(talk, locks, new QnDeploy())
                     )
                 ),
                 new QnIfContains(
@@ -161,7 +164,7 @@ public final class Agents {
                     new QnAskedBy(
                         profile,
                         "/p/release/commanders/item/text()",
-                        new QnAlone(talk, this.sttc.locks(), new QnRelease())
+                        new QnAlone(talk, locks, new QnRelease())
                     )
                 ),
                 new QnIfContains("status", new QnStatus(talk)),
@@ -176,9 +179,14 @@ public final class Agents {
                     new QnSince(
                         // @checkstyle MagicNumber (1 line)
                         49092213,
-                        new QnReferredTo(
-                            this.github.users().self().login(),
-                            new QnParametrized(list)
+                        new QnLastOf(
+                            Arrays.asList(
+                                new QnReferredTo(
+                                    this.github.users().self().login(),
+                                    new QnParametrized(list)
+                                ),
+                                new QnAlone(talk, locks, Question.EMPTY)
+                            )
                         )
                     )
                 ),
