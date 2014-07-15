@@ -49,5 +49,5 @@ function docker_when_possible {
       break
     fi
   done
-  docker $@
+  ${sudo} docker $@
 }
