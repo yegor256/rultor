@@ -52,6 +52,7 @@ import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
+import com.rultor.agents.github.qtn.QnSince;
 import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.req.EndsRequest;
@@ -172,9 +173,13 @@ public final class Agents {
             Arrays.asList(
                 new Understands(
                     this.github,
-                    new QnReferredTo(
-                        this.github.users().self().login(),
-                        new QnParametrized(list)
+                    new QnSince(
+                        // @checkstyle MagicNumber (1 line)
+                        49092213,
+                        new QnReferredTo(
+                            this.github.users().self().login(),
+                            new QnParametrized(list)
+                        )
                     )
                 ),
                 new StartsRequest(profile),
