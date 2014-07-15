@@ -40,6 +40,8 @@ import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -88,7 +90,18 @@ public final class StartsRequestITCase {
                 .add("arg").attr("name", "head_branch").set("master").up()
         );
         agent.execute(talk);
-        this.exec(talk);
+        MatcherAssert.assertThat(
+            this.exec(talk),
+            Matchers.allOf(
+                Matchers.containsString("image=yegor256/rultor\n"),
+                Matchers.containsString("Cloning into 'repo'...\n"),
+                Matchers.containsString("Already on 'master'\n"),
+                Matchers.containsString("docker_when_possible run"),
+                Matchers.containsString("image=yegor256/rultor"),
+                Matchers.containsString("load average is "),
+                Matchers.containsString("low enough to run a new Docker")
+            )
+        );
     }
 
     /**
@@ -153,7 +166,7 @@ public final class StartsRequestITCase {
      * @param talk Talk to use
      * @throws IOException If fails
      */
-    private void exec(final Talk talk) throws IOException {
+    private String exec(final Talk talk) throws IOException {
         final String script = StringUtils.join(
             "set -x\n",
             "set -e\n",
@@ -164,7 +177,7 @@ public final class StartsRequestITCase {
         );
         final Sshd sshd = new Sshd(this.temp.newFolder());
         final int port = sshd.start();
-        new Shell.Empty(
+        return new Shell.Plain(
             new Shell.Safe(
                 new SSH("localhost", port, sshd.login(), sshd.key())
             )
