@@ -137,61 +137,44 @@ public final class Agents {
     public Collection<Agent> agents(final Talk talk, final Profile profile)
         throws IOException {
         final Collection<Agent> agents = new LinkedList<Agent>();
+        final Question list = new Question.FirstOf(
+            Arrays.<Question>asList(
+                new QnIfContains(
+                    "merge",
+                    new QnAskedBy(
+                        profile,
+                        "/p/merge/commanders/item/text()",
+                        new QnAlone(talk, this.sttc.locks(), new QnMerge())
+                    )
+                ),
+                new QnIfContains(
+                    "deploy",
+                    new QnAskedBy(
+                        profile,
+                        "/p/deploy/commanders/item/text()",
+                        new QnAlone(talk, this.sttc.locks(), new QnDeploy())
+                    )
+                ),
+                new QnIfContains(
+                    "release",
+                    new QnAskedBy(
+                        profile,
+                        "/p/release/commanders/item/text()",
+                        new QnAlone(talk, this.sttc.locks(), new QnRelease())
+                    )
+                ),
+                new QnIfContains("status", new QnStatus(talk)),
+                new QnIfContains("version", new QnVersion()),
+                new QnIfContains("hello", new QnHello())
+            )
+        );
         agents.addAll(
             Arrays.asList(
                 new Understands(
                     this.github,
                     new QnReferredTo(
                         this.github.users().self().login(),
-                        new QnParametrized(
-                            new Question.FirstOf(
-                                Arrays.<Question>asList(
-                                    new QnIfContains(
-                                        "merge",
-                                        new QnAskedBy(
-                                            profile,
-                                            "/p/merge/commanders/item/text()",
-                                            new QnAlone(
-                                                talk,
-                                                this.sttc.locks(),
-                                                new QnMerge()
-                                            )
-                                        )
-                                    ),
-                                    new QnIfContains(
-                                        "deploy",
-                                        new QnAskedBy(
-                                            profile,
-                                            "/p/deploy/commanders/item/text()",
-                                            new QnAlone(
-                                                talk,
-                                                this.sttc.locks(),
-                                                new QnDeploy()
-                                            )
-                                        )
-                                    ),
-                                    new QnIfContains(
-                                        "release",
-                                        new QnAskedBy(
-                                            profile,
-                                            "/p/release/commanders/item/text()",
-                                            new QnAlone(
-                                                talk,
-                                                this.sttc.locks(),
-                                                new QnRelease()
-                                            )
-                                        )
-                                    ),
-                                    new QnIfContains(
-                                        "status", new QnStatus(talk)
-                                    ),
-                                    new QnIfContains(
-                                        "version", new QnVersion()
-                                    ),
-                                    new QnIfContains("hello", new QnHello())
-                                )
-                            )
-                        )
+                        new QnParametrized(list)
                     )
                 ),
                 new StartsRequest(profile),
