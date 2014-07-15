@@ -82,7 +82,7 @@ public final class QnParametrized implements Question {
         throws IOException {
         final Map<String, String> map = QnParametrized.params(comment);
         Req req = this.origin.understand(comment, home);
-        if (!req.equals(Req.EMPTY)) {
+        if (!req.equals(Req.EMPTY) && !req.equals(Req.LATER)) {
             final Directives dirs = new Directives().append(req.dirs());
             req = new Req() {
                 @Override
