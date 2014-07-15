@@ -36,6 +36,7 @@ import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import java.io.IOException;
 import java.net.URI;
 import javax.json.Json;
 import org.hamcrest.MatcherAssert;
@@ -62,9 +63,7 @@ public final class QnParametrizedTest {
      */
     @Test
     public void fetchesParams() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = QnParametrizedTest.repo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, tag=`1.9` and server is `p5`");
         final Question origin = new Question() {
@@ -101,9 +100,7 @@ public final class QnParametrizedTest {
      */
     @Test
     public void ignoresEmptyParams() throws Exception {
-        final Repo repo = new MkGithub().repos().create(
-            Json.createObjectBuilder().add("name", "test2").build()
-        );
+        final Repo repo = QnParametrizedTest.repo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey");
         MatcherAssert.assertThat(
@@ -120,9 +117,7 @@ public final class QnParametrizedTest {
      */
     @Test
     public void ignoresEmptyReq() throws Exception {
-        final Repo repo = new MkGithub().repos().create(
-            Json.createObjectBuilder().add("name", "test3").build()
-        );
+        final Repo repo = QnParametrizedTest.repo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey you");
         MatcherAssert.assertThat(
@@ -139,9 +134,7 @@ public final class QnParametrizedTest {
      */
     @Test
     public void ignoresLaterReq() throws Exception {
-        final Repo repo = new MkGithub().repos().create(
-            Json.createObjectBuilder().add("name", "test3").build()
-        );
+        final Repo repo = QnParametrizedTest.repo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("");
         final Question question = new Question() {
@@ -155,6 +148,18 @@ public final class QnParametrizedTest {
                 new Comment.Smart(issue.comments().get(1)), new URI("#2")
             ),
             Matchers.is(Req.LATER)
+        );
+    }
+
+    /**
+     * Make a repo.
+     * @return Repo
+     * @throws IOException If fails
+     * @link https://github.com/jcabi/jcabi-github/issues/872
+     */
+    private static Repo repo() throws IOException {
+        return new MkGithub().repos().create(
+            Json.createObjectBuilder().add("name", "test").build()
         );
     }
 
