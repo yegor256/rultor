@@ -18,5 +18,5 @@ docker_when_possible run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /ma
 ${sudo} chown -R $(whoami) .
 cd repo
 
-git tag "${tag}"
+git tag "${tag}" -m "${tag}: tagged by rultor.com"
 git push origin "${tag}"
