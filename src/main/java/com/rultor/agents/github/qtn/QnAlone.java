@@ -35,6 +35,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Repo;
 import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Talk;
@@ -86,13 +87,15 @@ public final class QnAlone implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Repo repo = comment.issue().repo();
-        if (this.talk.read().nodes("/talk[request or daemon]").isEmpty()) {
-            this.lock(repo).unlock();
-            Logger.info(this, "repo %s unlocked", repo.coordinates());
+        final XML xml = this.talk.read();
+        final String name = xml.xpath("@name").get(0);
+        if (xml.nodes("/talk[request or daemon]").isEmpty()) {
+            this.lock(repo).unlock(name);
+            Logger.info(this, "%s unlocked by", repo.coordinates(), name);
         }
         final Req req;
-        if (this.lock(repo).lock()) {
-            Logger.info(this, "repo %s locked", repo.coordinates());
+        if (this.lock(repo).lock(name)) {
+            Logger.info(this, "%s locked for %s", repo.coordinates(), name);
             req = this.origin.understand(comment, home);
         } else {
             req = Req.LATER;
