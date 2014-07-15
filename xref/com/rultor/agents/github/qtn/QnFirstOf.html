@@ -78,7 +78,7 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          <a href="../../../../../com/rultor/agents/github/Req.html">Req</a> req = Req.EMPTY;
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Question qtn : <strong class="jxr_keyword">this</strong>.questions) {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>              req = qtn.understand(comment, home);
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>              <strong class="jxr_keyword">if</strong> (!req.equals(Req.EMPTY) || req.equals(Req.LATER)) {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>              <strong class="jxr_keyword">if</strong> (!req.equals(Req.EMPTY)) {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>                  <strong class="jxr_keyword">break</strong>;
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>              }
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>          }

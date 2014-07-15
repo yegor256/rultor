@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>          <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>          <strong class="jxr_keyword">final</strong> Map&lt;String, String&gt; map = QnParametrized.params(comment);
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>          <a href="../../../../../com/rultor/agents/github/Req.html">Req</a> req = <strong class="jxr_keyword">this</strong>.origin.understand(comment, home);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">if</strong> (!req.equals(Req.EMPTY)) {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">if</strong> (!req.equals(Req.EMPTY) &amp;&amp; !req.equals(Req.LATER)) {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>              <strong class="jxr_keyword">final</strong> Directives dirs = <strong class="jxr_keyword">new</strong> Directives().append(req.dirs());
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>              req = <strong class="jxr_keyword">new</strong> <a href="../../../../../com/rultor/agents/github/Req.html">Req</a>() {
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>                  @Override
