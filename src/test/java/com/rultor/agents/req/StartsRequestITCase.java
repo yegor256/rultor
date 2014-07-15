@@ -163,6 +163,7 @@ public final class StartsRequestITCase {
     /**
      * Execute script from daemon.
      * @param talk Talk to use
+     * @return Full stdout
      * @throws IOException If fails
      */
     private String exec(final Talk talk) throws IOException {
