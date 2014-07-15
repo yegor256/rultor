@@ -88,7 +88,7 @@ public final class QnAlone implements Question {
         final URI home) throws IOException {
         final Repo repo = comment.issue().repo();
         final XML xml = this.talk.read();
-        final String name = xml.xpath("@name").get(0);
+        final String name = xml.xpath("/talk/@name").get(0);
         if (xml.nodes("/talk[request or daemon]").isEmpty()) {
             this.lock(repo).unlock(name);
             Logger.info(this, "%s unlocked by %s", repo.coordinates(), name);
