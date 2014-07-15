@@ -3,6 +3,12 @@ assets:
   pubring.gpg: "yegor256/home#assets/pubring.gpg"
   secring.gpg: "yegor256/home#assets/secring.gpg"
 
+deploy:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script:
+    - "mvn clean deploy -Ppdd -Prultor --settings ../settings.xml"
+
 release:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
