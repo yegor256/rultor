@@ -45,6 +45,7 @@ function docker_when_possible {
       echo "I will try again in 15 seconds"
       sleep 15
     else
+      echo "load average is ${load}, low enough to run a new Docker container"
       break
     fi
   done

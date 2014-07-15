@@ -91,7 +91,7 @@ public final class QnAlone implements Question {
         final String name = xml.xpath("@name").get(0);
         if (xml.nodes("/talk[request or daemon]").isEmpty()) {
             this.lock(repo).unlock(name);
-            Logger.info(this, "%s unlocked by", repo.coordinates(), name);
+            Logger.info(this, "%s unlocked by %s", repo.coordinates(), name);
         }
         final Req req;
         if (this.lock(repo).lock(name)) {
