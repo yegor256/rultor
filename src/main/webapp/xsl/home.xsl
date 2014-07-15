@@ -64,11 +64,13 @@
                 <xsl:text> Say </xsl:text>
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
-                <xsl:text> For full documentation, look </xsl:text>
+            </p>
+            <p>
+                <xsl:text>For full documentation, look </xsl:text>
                 <a href="http://doc.rultor.com">
                     <xsl:text>here</xsl:text>
                 </a>
-                <xsl:text> :)</xsl:text>
+                <xsl:text>.</xsl:text>
             </p>
             <div class="badges" style="margin-top:2em;">
                 <div>
