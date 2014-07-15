@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github;
 
+import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
@@ -39,6 +40,7 @@ import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
+import java.net.URI;
 import java.util.Arrays;
 import javax.json.Json;
 import org.hamcrest.MatcherAssert;
@@ -91,6 +93,39 @@ public final class UnderstandsTest {
                 "/talk/request[type='deploy' and args]",
                 "/talk/request/args/arg[@name='head_branch' and .='master']"
             )
+        );
+    }
+
+    /**
+     * Understands can ignore LATER req.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void ignoresLaterReq() throws Exception {
+        final Repo repo = new MkGithub("jeff").repos().create(
+            Json.createObjectBuilder().add("name", "test2").build()
+        );
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("@jeff hey you");
+        final Agent agent = new Understands(
+            repo.github(),
+            new Question() {
+                @Override
+                public Req understand(final Comment.Smart cmt, final URI home) {
+                    return Req.LATER;
+                }
+            }
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk").add("wire")
+                .add("github-repo").set(repo.coordinates().toString()).up()
+                .add("github-issue").set(Integer.toString(issue.number())).up()
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPaths("/talk[not(request)]")
         );
     }
 

@@ -35,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Test SSHD daemon.
@@ -76,7 +77,8 @@ public final class Sshd {
      */
     public String key() throws IOException {
         return IOUtils.toString(
-            this.getClass().getResourceAsStream("id_rsa")
+            this.getClass().getResourceAsStream("id_rsa"),
+            CharEncoding.UTF_8
         );
     }
 
