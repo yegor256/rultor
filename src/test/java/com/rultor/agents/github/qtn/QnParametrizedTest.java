@@ -133,4 +133,29 @@ public final class QnParametrizedTest {
         );
     }
 
+    /**
+     * QnParametrized can ignore LATER request.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void ignoresLaterReq() throws Exception {
+        final Repo repo = new MkGithub().repos().create(
+            Json.createObjectBuilder().add("name", "test3").build()
+        );
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("");
+        final Question question = new Question() {
+            @Override
+            public Req understand(final Comment.Smart comment, final URI home) {
+                return Req.LATER;
+            }
+        };
+        MatcherAssert.assertThat(
+            new QnParametrized(question).understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#2")
+            ),
+            Matchers.is(Req.LATER)
+        );
+    }
+
 }

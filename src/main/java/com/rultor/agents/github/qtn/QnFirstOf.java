@@ -70,7 +70,7 @@ public final class QnFirstOf implements Question {
         Req req = Req.EMPTY;
         for (final Question qtn : this.questions) {
             req = qtn.understand(comment, home);
-            if (!req.equals(Req.EMPTY) || req.equals(Req.LATER)) {
+            if (!req.equals(Req.EMPTY)) {
                 break;
             }
         }
