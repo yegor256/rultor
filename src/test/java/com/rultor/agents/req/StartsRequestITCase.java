@@ -95,7 +95,6 @@ public final class StartsRequestITCase {
             Matchers.allOf(
                 Matchers.containsString("image=yegor256/rultor\n"),
                 Matchers.containsString("Cloning into 'repo'...\n"),
-                Matchers.containsString("Already on 'master'\n"),
                 Matchers.containsString("docker_when_possible run"),
                 Matchers.containsString("image=yegor256/rultor"),
                 Matchers.containsString("load average is "),
