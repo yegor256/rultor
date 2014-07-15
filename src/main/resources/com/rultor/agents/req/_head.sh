@@ -36,3 +36,17 @@ cd repo
 if [ -z "${sudo}" ]; then
   sudo="sudo"
 fi
+
+function docker_when_possible {
+  while true; do
+    load=$(uptime | awk '{print $12}' | cut -d "," -f 1)
+    if [ "${load}" -ge "8" ]; then
+      echo "load average is ${load}, too high to run a new Docker container"
+      echo "I will try again in 15 seconds"
+      sleep 15
+    else
+      break
+    fi
+  done
+  docker $@
+}
