@@ -114,6 +114,11 @@ public final class Understands extends AbstractAgent {
                 this, "nothing new in %s#%d, fresh/total: %d/%d",
                 issue.repo().coordinates(), issue.number(), fresh, total
             );
+        } else if (req.equals(Req.LATER)) {
+            Logger.info(
+                this, "temporary pause in %s#%d, before message #%d",
+                issue.repo().coordinates(), issue.number(), next
+            );
         } else {
             dirs.xpath("/talk").add("request")
                 .attr("id", Integer.toString(next))
