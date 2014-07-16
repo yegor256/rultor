@@ -39,9 +39,12 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
+import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -56,6 +59,12 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "github", "question" })
 public final class Understands extends AbstractAgent {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * Github.
@@ -80,7 +89,6 @@ public final class Understands extends AbstractAgent {
 
     // @checkstyle ExecutableStatementCountCheck (50 lines)
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(
@@ -97,9 +105,7 @@ public final class Understands extends AbstractAgent {
                 continue;
             }
             ++fresh;
-            req = this.question.understand(
-                comment, new Home(xml, Integer.toString(comment.number())).uri()
-            );
+            req = this.parse(comment, xml);
             if (req.equals(Req.LATER)) {
                 break;
             }
@@ -130,6 +136,32 @@ public final class Understands extends AbstractAgent {
                 .set(Integer.toString(next));
         }
         return dirs;
+    }
+
+    /**
+     * Understand.
+     * @param comment Comment
+     * @param xml XML
+     * @return Req
+     * @throws IOException If fails
+     */
+    private Req parse(final Comment.Smart comment, final XML xml)
+        throws IOException {
+        Req req;
+        try {
+            req = this.question.understand(
+                comment, new Home(xml, Integer.toString(comment.number())).uri()
+            );
+        } catch (final Profile.SyntaxException ex) {
+            new Answer(comment).post(
+                String.format(
+                    Understands.PHRASES.getString("Understands.broken-profile"),
+                    ExceptionUtils.getRootCauseMessage(ex)
+                )
+            );
+            req = Req.EMPTY;
+        }
+        return req;
     }
 
     /**
