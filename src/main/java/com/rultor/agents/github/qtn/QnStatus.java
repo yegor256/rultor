@@ -40,6 +40,7 @@ import com.rultor.agents.github.Req;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -54,6 +55,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "talk")
 public final class QnStatus implements Question {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * XSL to generate report.
@@ -78,7 +85,12 @@ public final class QnStatus implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(QnStatus.REPORT.applyTo(this.talk.read()));
+        new Answer(comment).post(
+            String.format(
+                QnStatus.PHRASES.getString("QnStatus.response"),
+                QnStatus.REPORT.applyTo(this.talk.read())
+            )
+        );
         Logger.info(this, "status request in #%d", comment.issue().number());
         return Req.EMPTY;
     }

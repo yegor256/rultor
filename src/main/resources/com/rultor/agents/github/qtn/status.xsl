@@ -34,7 +34,6 @@
     version="2.0" exclude-result-prefixes="xs r">
     <xsl:output method="text"/>
     <xsl:template match="/talk">
-        <xsl:text>this is what's going on here:&#10;&#10;</xsl:text>
         <xsl:apply-templates select="archive[log]"/>
         <xsl:choose>
             <xsl:when test="request">
