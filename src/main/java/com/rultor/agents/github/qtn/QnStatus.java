@@ -29,17 +29,25 @@
  */
 package com.rultor.agents.github.qtn;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
 import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.agents.shells.Shell;
+import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -85,10 +93,41 @@ public final class QnStatus implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
+        final XML xml = this.talk.read();
+        final Collection<String> lines = new LinkedList<String>();
+        if (!xml.nodes("/talk[shell/host and daemon/dir]").isEmpty()) {
+            final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
+            final Shell.Plain shell = new Shell.Plain(
+                new Shell.Safe(new TalkShells(xml).get())
+            );
+            lines.add(
+                String.format(
+                    " * Docker container ID: %s\n",
+                    shell.exec(String.format("cd \"%s\"; cat cid", dir))
+                )
+            );
+            lines.add(
+                String.format(
+                    " * working directory size: %s\n",
+                    shell.exec(String.format("du -hs \"%s\" | cut -f1", dir))
+                )
+            );
+            lines.add(
+                String.format(
+                    " * server load average: %s\n",
+                    shell.exec("uptime | awk '{print $12}' | cut -d ',' -f 1")
+                )
+            );
+        }
         new Answer(comment).post(
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
-                QnStatus.REPORT.applyTo(this.talk.read())
+                Joiner.on('\n').join(
+                    Iterables.concat(
+                        Collections.singleton(QnStatus.REPORT.applyTo(xml)),
+                        lines
+                    )
+                )
             )
         );
         Logger.info(this, "status request in #%d", comment.issue().number());
