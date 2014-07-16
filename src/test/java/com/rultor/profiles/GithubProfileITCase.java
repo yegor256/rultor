@@ -29,10 +29,12 @@
  */
 package com.rultor.profiles;
 
-import com.jcabi.github.Coordinates;
 import com.jcabi.github.RtGithub;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
+import com.rultor.spi.Talk;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
@@ -51,10 +53,18 @@ public final class GithubProfileITCase {
      */
     @Test
     public void fetchesYamlConfig() throws Exception {
-        final Profile profile = new GithubProfile(
-            new RtGithub().repos().get(
-                new Coordinates.Simple("yegor256/rultor")
+        final Talk talk = new Talk.InFile(
+            new XMLDocument(
+                StringUtils.join(
+                    "<talk name='x' number='1'><wire>",
+                    "<github-repo>yegor256/rultor</github-repo>",
+                    "<github-issue>1</github-issue>",
+                    "</wire></talk>"
+                )
             )
+        );
+        final Profile profile = new GithubProfile(
+            new RtGithub(), talk
         );
         MatcherAssert.assertThat(
             profile.read(),

@@ -48,7 +48,7 @@ import java.util.Map;
 public interface Profile {
 
     /**
-     * Get it in XML format.
+     * Get it in XML format (throws {@link Profile.SyntaxException}, if fails).
      * @return XML
      * @throws IOException If fails
      */
@@ -60,6 +60,23 @@ public interface Profile {
      * @throws IOException If fails
      */
     Map<String, InputStream> assets() throws IOException;
+
+    /**
+     * If can't read profile due to syntax error.
+     */
+    final class SyntaxException extends RuntimeException {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = -3860028281726793988L;
+        /**
+         * Ctor.
+         * @param cause Cause of it
+         */
+        public SyntaxException(final Exception cause) {
+            super(cause);
+        }
+    }
 
     /**
      * Defaults.

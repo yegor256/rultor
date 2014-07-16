@@ -32,6 +32,7 @@ package com.rultor.profiles;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.spi.Profile;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -41,6 +42,7 @@ import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 /**
  * YAML into XML.
@@ -75,7 +77,11 @@ final class YamlXML {
         final Yaml parser = new Yaml();
         final Directives dirs = new Directives().add("p");
         if (!this.yaml.isEmpty()) {
-            dirs.append(YamlXML.dirs(parser.load(this.yaml)));
+            try {
+                dirs.append(YamlXML.dirs(parser.load(this.yaml)));
+            } catch (final YAMLException ex) {
+                throw new Profile.SyntaxException(ex);
+            }
         }
         try {
             return new XMLDocument(new Xembler(dirs).xml());

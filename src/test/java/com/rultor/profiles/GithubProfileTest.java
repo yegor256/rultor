@@ -34,6 +34,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
+import java.io.IOException;
 import javax.json.Json;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -57,32 +58,14 @@ public final class GithubProfileTest {
      */
     @Test
     public void fetchesYamlConfig() throws Exception {
-        final Github github = new MkGithub("jeff");
-        github.repos()
-            .create(Json.createObjectBuilder().add("name", "test1").build())
-            .contents().create(
-                Json.createObjectBuilder()
-                    .add("path", "test.xml")
-                    .add("message", "just test msg")
-                    .add("content", Base64.encodeBase64String("hey".getBytes()))
-                    .build()
-            );
-        final Repo repo = github.repos().create(
-            Json.createObjectBuilder().add("name", "test2").build()
-        );
-        final String yaml = StringUtils.join(
-            "assets:\n",
-            "  test.xml: jeff/test1#test.xml\n",
-            "  beta: jeff/test1#test.xml\n",
-            "merge:\n",
-            "  script: hello!\n"
-        );
-        repo.contents().create(
-            Json.createObjectBuilder()
-                .add("path", ".rultor.yml")
-                .add("message", "just test")
-                .add("content", Base64.encodeBase64String(yaml.getBytes()))
-                .build()
+        final Repo repo = GithubProfileTest.repo(
+            StringUtils.join(
+                "assets:\n",
+                "  test.xml: jeff/test1#test.xml\n",
+                "  beta: jeff/test1#test.xml\n",
+                "merge:\n",
+                "  script: hello!\n"
+            )
         );
         final Profile profile = new GithubProfile(repo);
         MatcherAssert.assertThat(
@@ -99,5 +82,45 @@ public final class GithubProfileTest {
                 Matchers.notNullValue()
             )
         );
+    }
+
+    /**
+     * GithubProfile can throw when YAML is broken.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.SyntaxException.class)
+    public void throwsWhenYamlIsBroken() throws Exception {
+        new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n")).read();
+    }
+
+    /**
+     * Make a repo with YAML inside.
+     * @param yaml YAML config
+     * @return Repo
+     * @throws IOException If fails
+     */
+    private static Repo repo(final String yaml) throws IOException {
+        final Github github = new MkGithub("jeff");
+        github.repos()
+            .create(Json.createObjectBuilder().add("name", "test1").build())
+            .contents()
+            .create(
+                Json.createObjectBuilder()
+                    .add("path", "test.xml")
+                    .add("message", "just test msg")
+                    .add("content", Base64.encodeBase64String("hey".getBytes()))
+                    .build()
+            );
+        final Repo repo = github.repos().create(
+            Json.createObjectBuilder().add("name", "test2").build()
+        );
+        repo.contents().create(
+            Json.createObjectBuilder()
+                .add("path", ".rultor.yml")
+                .add("message", "just test")
+                .add("content", Base64.encodeBase64String(yaml.getBytes()))
+                .build()
+        );
+        return repo;
     }
 }

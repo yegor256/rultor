@@ -31,7 +31,6 @@ package com.rultor.profiles;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.http.wire.RetryWire;
@@ -61,13 +60,7 @@ public final class Profiles {
      * @throws IOException If fails
      */
     public Profile fetch(final Talk talk) throws IOException {
-        return new GithubProfile(
-            Profiles.github().repos().get(
-                new Coordinates.Simple(
-                    talk.read().xpath("/talk/wire/github-repo/text()").get(0)
-                )
-            )
-        );
+        return new GithubProfile(Profiles.github(), talk);
     }
 
     /**
