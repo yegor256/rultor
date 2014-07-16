@@ -29,47 +29,61 @@
  */
 package com.rultor.agents.github.qtn;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
-import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.log.Logger;
+import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.spi.Profile;
+import java.io.IOException;
 import java.net.URI;
-import javax.json.Json;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import java.util.ResourceBundle;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Tests for ${@link QnHello}.
+ * Show current config.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.6
+ * @since 1.8
  */
-public final class QnHelloTest {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "profile")
+public final class QnConfig implements Question {
 
     /**
-     * QnHello can reply.
-     * @throws Exception In case of error.
+     * Message bundle.
      */
-    @Test
-    public void repliesInGithub() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
+
+    /**
+     * Profile.
+     */
+    private final transient Profile profile;
+
+    /**
+     * Ctor.
+     * @param prof Profile
+     */
+    public QnConfig(final Profile prof) {
+        this.profile = prof;
+    }
+
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        new Answer(comment).post(
+            String.format(
+                QnConfig.PHRASES.getString("QnConfig.response"),
+                this.profile.read().toString()
+            )
         );
-        final Issue issue = repo.issues().create("", "");
-        issue.comments().post("hello");
-        MatcherAssert.assertThat(
-            new QnHello().understand(
-                new Comment.Smart(issue.comments().get(1)), new URI("#")
-            ),
-            Matchers.is(Req.EMPTY)
-        );
-        MatcherAssert.assertThat(
-            new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("Have fun :)")
-        );
+        Logger.info(this, "config request in #%d", comment.issue().number());
+        return Req.EMPTY;
     }
 
 }

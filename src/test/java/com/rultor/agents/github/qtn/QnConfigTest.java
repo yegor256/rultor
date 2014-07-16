@@ -33,7 +33,9 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Req;
+import com.rultor.spi.Profile;
 import java.net.URI;
 import javax.json.Json;
 import org.hamcrest.MatcherAssert;
@@ -41,16 +43,16 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Tests for ${@link QnHello}.
+ * Tests for ${@link QnConfig}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.6
+ * @since 1.8
  */
-public final class QnHelloTest {
+public final class QnConfigTest {
 
     /**
-     * QnHello can reply.
+     * QnConfig can reply.
      * @throws Exception In case of error.
      */
     @Test
@@ -60,15 +62,18 @@ public final class QnHelloTest {
         );
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument("<p>hey you</p>")
+        );
         MatcherAssert.assertThat(
-            new QnHello().understand(
+            new QnConfig(profile).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.EMPTY)
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("Have fun :)")
+            Matchers.containsString("<p>hey you</p>\n```")
         );
     }
 
