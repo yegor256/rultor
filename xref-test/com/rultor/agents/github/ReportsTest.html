@@ -72,23 +72,24 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">final</strong> Talk talk = <strong class="jxr_keyword">new</strong> Talk.InFile();
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          talk.modify(
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>              <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/talk"</span>).add(<span class="jxr_string">"wire"</span>)
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  .add(<span class="jxr_string">"github-repo"</span>).set(repo.coordinates().toString()).up()
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>                  .add(<span class="jxr_string">"github-issue"</span>).set(Integer.toString(issue.number())).up()
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>                  .up()
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>                  .add(<span class="jxr_string">"request"</span>).attr(<span class="jxr_string">"id"</span>, <span class="jxr_string">"1"</span>)
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>                  .add(<span class="jxr_string">"msec"</span>).set(<span class="jxr_string">"1234567"</span>).up()
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  .add(<span class="jxr_string">"success"</span>).set(<span class="jxr_string">"true"</span>).up()
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  .add(<span class="jxr_string">"type"</span>).set(<span class="jxr_string">"something"</span>).up()
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  .add(<span class="jxr_string">"args"</span>)
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          );
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>          agent.execute(talk);
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>              talk.read(),
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/talk[not(request)]"</span>)
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>          );
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  }
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  .add(<span class="jxr_string">"href"</span>).set(<span class="jxr_string">"http://test"</span>).up()
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>                  .add(<span class="jxr_string">"github-repo"</span>).set(repo.coordinates().toString()).up()
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>                  .add(<span class="jxr_string">"github-issue"</span>).set(Integer.toString(issue.number())).up()
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>                  .up()
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>                  .add(<span class="jxr_string">"request"</span>).attr(<span class="jxr_string">"id"</span>, <span class="jxr_string">"1"</span>)
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  .add(<span class="jxr_string">"msec"</span>).set(<span class="jxr_string">"1234567"</span>).up()
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  .add(<span class="jxr_string">"success"</span>).set(<span class="jxr_string">"true"</span>).up()
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  .add(<span class="jxr_string">"type"</span>).set(<span class="jxr_string">"something"</span>).up()
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>                  .add(<span class="jxr_string">"args"</span>)
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          );
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          agent.execute(talk);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>              talk.read(),
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/talk[not(request)]"</span>)
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>          );
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
