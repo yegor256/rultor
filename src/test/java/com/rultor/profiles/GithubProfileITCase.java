@@ -56,7 +56,7 @@ public final class GithubProfileITCase {
         final Talk talk = new Talk.InFile(
             new XMLDocument(
                 StringUtils.join(
-                    "<talk name='x' number='1'><wire>",
+                    "<talk name='x' number='1'><wire><href>#</href>",
                     "<github-repo>yegor256/rultor</github-repo>",
                     "<github-issue>1</github-issue>",
                     "</wire></talk>"

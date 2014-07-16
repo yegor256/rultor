@@ -64,6 +64,7 @@ public final class ReportsTest {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk").add("wire")
+                .add("href").set("http://test").up()
                 .add("github-repo").set(repo.coordinates().toString()).up()
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .up()

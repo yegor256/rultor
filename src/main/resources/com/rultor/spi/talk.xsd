@@ -96,6 +96,7 @@
     </xs:complexType>
     <xs:complexType name="wire">
         <xs:all>
+            <xs:element name="href" type="xs:anyURI"/>
             <xs:element name="github-repo" type="xs:string" minOccurs="0"/>
             <xs:element name="github-issue" type="xs:integer" minOccurs="0"/>
             <xs:element name="github-seen" type="xs:integer" minOccurs="0"/>
