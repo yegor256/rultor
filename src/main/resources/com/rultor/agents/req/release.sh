@@ -13,10 +13,7 @@ fi
 
 git checkout -b __rultor-tmp
 
-cd ..
-docker_when_possible run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
-${sudo} chown -R $(whoami) .
-cd repo
+docker_when_possible
 
 git tag "${tag}" -m "${tag}: tagged by rultor.com"
 git push origin "${tag}"

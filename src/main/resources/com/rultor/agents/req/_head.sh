@@ -1,7 +1,8 @@
 #!/bin/sh
 
-git clone "${head}" repo
-cd repo
+repo=repo
+git clone "${head}" "${repo}"
+cd "${repo}"
 git config user.email "me@rultor.com"
 git config user.name "rultor"
 git checkout "${head_branch}"
@@ -28,10 +29,10 @@ echo "#!/bin/bash" > ${bin}
 echo "set -x" >> ${bin}
 echo "set -e" >> ${bin}
 echo "set -o pipefail" >> ${bin}
-echo "cd repo" >> ${bin}
+echo "cd \"${repo}\"" >> ${bin}
 echo "${scripts[@]}" >> ${bin}
 chmod a+x ${bin}
-cd repo
+cd "${repo}"
 
 if [ -z "${sudo}" ]; then
   sudo="sudo"
@@ -49,5 +50,9 @@ function docker_when_possible {
       break
     fi
   done
-  ${sudo} docker "$@"
+  cd ..
+  ${sudo} docker run --rm -v $(pwd):/main "${vars[@]}" \
+    --memory=2g --cidfile=$(pwd)/cid -w=/main ${image} /main/${bin}
+  ${sudo} chown -R $(whoami) .
+  cd "${repo}"
 }
