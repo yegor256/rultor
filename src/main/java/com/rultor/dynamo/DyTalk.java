@@ -83,7 +83,9 @@ public final class DyTalk implements Talk {
 
     @Override
     public XML read() throws IOException {
-        return new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS());
+        return Talk.UPGRADE.transform(
+            new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS())
+        );
     }
 
     @Override

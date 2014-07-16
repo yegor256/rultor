@@ -35,6 +35,8 @@ import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.jcabi.xml.XSD;
 import com.jcabi.xml.XSDDocument;
+import com.jcabi.xml.XSL;
+import com.jcabi.xml.XSLDocument;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -57,7 +59,16 @@ public interface Talk {
     /**
      * Schema.
      */
-    XSD SCHEMA = XSDDocument.make(Talk.class.getResourceAsStream("talk.xsd"));
+    XSD SCHEMA = XSDDocument.make(
+        Talk.class.getResourceAsStream("talk.xsd")
+    );
+
+    /**
+     * Upgrade XSL.
+     */
+    XSL UPGRADE = XSLDocument.make(
+        Talk.class.getResourceAsStream("upgrade.xsl")
+    );
 
     /**
      * Its unique number.
@@ -145,9 +156,11 @@ public interface Talk {
         }
         @Override
         public XML read() throws IOException {
-            return new XMLDocument(
-                FileUtils.readFileToString(
-                    new File(this.path), CharEncoding.UTF_8
+            return Talk.UPGRADE.transform(
+                new XMLDocument(
+                    FileUtils.readFileToString(
+                        new File(this.path), CharEncoding.UTF_8
+                    )
                 )
             );
         }

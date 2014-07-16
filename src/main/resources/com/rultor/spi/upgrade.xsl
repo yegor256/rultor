@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -26,50 +27,34 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.profiles;
-
-import com.jcabi.github.RtGithub;
-import com.jcabi.matchers.XhtmlMatchers;
-import com.jcabi.xml.XMLDocument;
-import com.rultor.spi.Profile;
-import com.rultor.spi.Talk;
-import org.apache.commons.lang3.StringUtils;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-
-/**
- * Tests for ${@link GithubProfile}.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-public final class GithubProfileITCase {
-
-    /**
-     * GithubProfile can fetch a YAML config.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void fetchesYamlConfig() throws Exception {
-        final Talk talk = new Talk.InFile(
-            new XMLDocument(
-                StringUtils.join(
-                    "<talk name='x' number='1' later='false'>",
-                    "<wire><href>#</href>",
-                    "<github-repo>yegor256/rultor</github-repo>",
-                    "<github-issue>1</github-issue>",
-                    "</wire></talk>"
-                )
-            )
-        );
-        final Profile profile = new GithubProfile(
-            new RtGithub(), talk
-        );
-        MatcherAssert.assertThat(
-            profile.read(),
-            XhtmlMatchers.hasXPath("/p/merge/script")
-        );
-    }
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml"/>
+    <xsl:strip-space elements="*"/>
+    <xsl:template match="talk[not(@later)]">
+        <xsl:copy>
+            <xsl:attribute name="later">
+                <xsl:text>false</xsl:text>
+            </xsl:attribute>
+            <xsl:apply-templates select="node()|@*"/>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="wire[github-issue and github-repo and not(href)]">
+        <xsl:copy>
+            <xsl:apply-templates select="node()|@*"/>
+            <href>
+                <xsl:text>https://github.com/</xsl:text>
+                <xsl:value-of select="github-repo"/>
+                <xsl:text>/issues/</xsl:text>
+                <xsl:value-of select="github-issue"/>
+            </href>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="node()|@*">
+        <xsl:copy>
+            <xsl:apply-templates select="node()|@*"/>
+        </xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>

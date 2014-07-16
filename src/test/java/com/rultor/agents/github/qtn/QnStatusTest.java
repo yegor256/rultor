@@ -68,7 +68,7 @@ public final class QnStatusTest {
         final Talk talk = new Talk.InFile(
             new XMLDocument(
                 StringUtils.join(
-                    "<talk name='test' number='45'>",
+                    "<talk name='test' number='45' later='false'>",
                     "<request id='454'><type>merge</type><args/></request>",
                     "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
                     "<script>test</script>",
