@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -102,19 +103,20 @@ public final class QnStatus implements Question {
             );
             lines.add(
                 String.format(
-                    " * Docker container ID: %s\n",
+                    " * Docker container ID: `%s...`",
                     shell.exec(String.format("cd \"%s\"; cat cid", dir))
+                        .substring(0, Tv.TWENTY)
                 )
             );
             lines.add(
                 String.format(
-                    " * working directory size: %s\n",
+                    " * working directory size: %s",
                     shell.exec(String.format("du -hs \"%s\" | cut -f1", dir))
                 )
             );
             lines.add(
                 String.format(
-                    " * server load average: %s\n",
+                    " * server load average: %s",
                     shell.exec("uptime | awk '{print $12}' | cut -d ',' -f 1")
                 )
             );

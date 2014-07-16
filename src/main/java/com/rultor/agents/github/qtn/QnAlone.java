@@ -90,9 +90,12 @@ public final class QnAlone implements Question {
         final XML xml = this.talk.read();
         final String name = xml.xpath("/talk/@name").get(0);
         final Lock lock = this.lock(repo);
-        if (xml.nodes("/talk[request or daemon]").isEmpty()) {
-            lock.unlock(name);
-            Logger.info(this, "%s unlocked by %s", repo.coordinates(), name);
+        final boolean empty = xml.nodes("/talk[request or daemon]").isEmpty();
+        if (empty && lock.unlock(name)) {
+            Logger.info(
+                this, "%s unlocked by %s",
+                repo.coordinates(), name
+            );
         }
         final Req req;
         if (lock.lock(name)) {
@@ -101,12 +104,11 @@ public final class QnAlone implements Question {
         } else {
             req = Req.LATER;
         }
-        if (req.equals(Req.EMPTY)) {
+        if (empty && req.equals(Req.EMPTY) && lock.unlock(name)) {
             Logger.info(
-                this, "%s unlocked %s since REQ is empty",
+                this, "%s unlocked by %s since REQ is empty",
                 repo.coordinates(), name
             );
-            lock.unlock(name);
         }
         return req;
     }
