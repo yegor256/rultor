@@ -48,6 +48,7 @@ import com.rultor.agents.github.qtn.QnAlone;
 import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnHello;
+import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.agents.github.qtn.QnLastOf;
 import com.rultor.agents.github.qtn.QnMerge;
@@ -148,7 +149,9 @@ public final class Agents {
                     new QnAskedBy(
                         profile,
                         "/p/merge/commanders/item/text()",
-                        new QnAlone(talk, locks, new QnMerge())
+                        new QnIfCollaborator(
+                            new QnAlone(talk, locks, new QnMerge())
+                        )
                     )
                 ),
                 new QnIfContains(
@@ -156,7 +159,9 @@ public final class Agents {
                     new QnAskedBy(
                         profile,
                         "/p/deploy/commanders/item/text()",
-                        new QnAlone(talk, locks, new QnDeploy())
+                        new QnIfCollaborator(
+                            new QnAlone(talk, locks, new QnDeploy())
+                        )
                     )
                 ),
                 new QnIfContains(
@@ -164,7 +169,9 @@ public final class Agents {
                     new QnAskedBy(
                         profile,
                         "/p/release/commanders/item/text()",
-                        new QnAlone(talk, locks, new QnRelease())
+                        new QnIfCollaborator(
+                            new QnAlone(talk, locks, new QnRelease())
+                        )
                     )
                 ),
                 new QnIfContains("status", new QnStatus(talk)),
