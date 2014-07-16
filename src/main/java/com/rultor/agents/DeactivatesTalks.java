@@ -53,7 +53,8 @@ public final class DeactivatesTalks implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        final String xpath = "/talk[request or daemon or shell]";
+        final String xpath =
+            "/talk[@later='true' or request or daemon or shell]";
         for (final Talk talk : talks.active()) {
             final XML xml = talk.read();
             if (xml.nodes(xpath).isEmpty()) {

@@ -125,8 +125,12 @@ public final class Understands extends AbstractAgent {
                 this, "temporary pause in %s#%d, before message #%d",
                 issue.repo().coordinates(), issue.number(), next
             );
+            dirs.xpath("/talk[not(@later)]")
+                // @checkstyle MultipleStringLiteralsCheck (1 line)
+                .attr("later", Boolean.toString(true));
         } else {
-            dirs.xpath("/talk").add("request")
+            dirs.xpath("/talk").attr("later", Boolean.toString(false))
+                .add("request")
                 .attr("id", Integer.toString(next))
                 .append(req.dirs());
         }
