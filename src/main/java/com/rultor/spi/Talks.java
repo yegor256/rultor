@@ -29,8 +29,14 @@
  */
 package com.rultor.spi;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.io.Files;
 import com.jcabi.aspects.Immutable;
+import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Talks in a repo.
@@ -40,6 +46,7 @@ import java.io.IOException;
  * @since 1.0
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Talks {
 
     /**
@@ -85,4 +92,78 @@ public interface Talks {
      */
     Iterable<Talk> active();
 
+    /**
+     * In directory.
+     */
+    @Immutable
+    final class InDir implements Talks {
+        /**
+         * Dir.
+         */
+        private final transient String path;
+        /**
+         * Ctor.
+         */
+        public InDir() {
+            this.path = Files.createTempDir().getAbsolutePath();
+        }
+        @Override
+        public boolean exists(final long number) {
+            return this.get(number) != null;
+        }
+        @Override
+        public Talk get(final long number) {
+            return Iterables.find(
+                this.active(),
+                new Predicate<Talk>() {
+                    @Override
+                    public boolean apply(final Talk talk) {
+                        try {
+                            return talk.read().xpath("/talk/@number").get(0)
+                                .equals(Long.toString(number));
+                        } catch (final IOException ex) {
+                            throw new IllegalStateException(ex);
+                        }
+                    }
+                }
+            );
+        }
+        @Override
+        public boolean exists(final String name) {
+            return this.get(name) != null;
+        }
+        @Override
+        public Talk get(final String name) {
+            return Iterables.find(
+                this.active(),
+                new Predicate<Talk>() {
+                    @Override
+                    public boolean apply(final Talk talk) {
+                        try {
+                            return talk.read().xpath("/talk/@name").get(0)
+                                .equals(name);
+                        } catch (final IOException ex) {
+                            throw new IllegalStateException(ex);
+                        }
+                    }
+                }
+            );
+        }
+        @Override
+        public void create(final String name) throws IOException {
+            new Talk.InFile(new File(new File(this.path), name)).read();
+        }
+        @Override
+        public Iterable<Talk> active() {
+            return Iterables.transform(
+                FileUtils.listFiles(new File(this.path), new String[0], false),
+                new Function<File, Talk>() {
+                    @Override
+                    public Talk apply(final File file) {
+                        return new Talk.InFile(file);
+                    }
+                }
+            );
+        }
+    }
 }

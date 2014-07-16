@@ -135,6 +135,8 @@ public final class StartsTalks implements SuperAgent {
         talk.modify(
             new Directives().xpath("/talk[not(wire)]")
                 .add("wire")
+                .add("href").set(new Issue.Smart(issue).htmlUrl().toString())
+                .up()
                 .add("github-repo").set(coords).up()
                 .add("github-issue")
                 .set(Integer.toString(issue.number()))
