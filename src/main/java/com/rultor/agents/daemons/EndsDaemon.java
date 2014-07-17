@@ -103,9 +103,16 @@ public final class EndsDaemon extends AbstractAgent {
             ).trim()
         );
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
-        return new Directives().xpath("/talk/daemon")
+        return new Directives()
+            .xpath("/talk/daemon")
+            .strict(1)
             .add("ended")
-            .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+            .set(
+                DateFormatUtils.formatUTC(
+                    new Date(),
+                    DateFormatUtils.ISO_DATETIME_FORMAT.getPattern()
+                )
+            )
             .up()
             .add("code").set(Integer.toString(exit));
     }

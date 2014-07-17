@@ -82,11 +82,11 @@ public final class StartsTalks implements SuperAgent {
         final String since = DateFormatUtils.ISO_DATETIME_FORMAT.format(
             new Date()
         );
+        final Request req = this.github.entry()
+            .uri().path("/notifications").back();
         final Iterable<JsonObject> events = Iterables.filter(
             new RtPagination<JsonObject>(
-                this.github.entry()
-                    .uri().path("/notifications")
-                    .queryParam("participating", "true").back(),
+                req.uri().queryParam("participating", "true").back(),
                 RtPagination.COPYING
             ),
             new Predicate<JsonObject>() {
@@ -101,8 +101,7 @@ public final class StartsTalks implements SuperAgent {
             this.activate(talks, event);
             ++total;
         }
-        this.github.entry()
-            .uri().path("/notifications")
+        req.uri()
             .queryParam("last_read_at", since).back()
             .method(Request.PUT)
             .body().set("{}").back()
