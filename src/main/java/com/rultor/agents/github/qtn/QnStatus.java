@@ -139,7 +139,7 @@ public final class QnStatus implements Question {
             )
         );
         Logger.info(this, "status request in #%d", comment.issue().number());
-        return Req.EMPTY;
+        return Req.DONE;
     }
 
 }

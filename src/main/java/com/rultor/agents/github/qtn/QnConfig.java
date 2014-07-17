@@ -83,7 +83,7 @@ public final class QnConfig implements Question {
             )
         );
         Logger.info(this, "config request in #%d", comment.issue().number());
-        return Req.EMPTY;
+        return Req.DONE;
     }
 
 }

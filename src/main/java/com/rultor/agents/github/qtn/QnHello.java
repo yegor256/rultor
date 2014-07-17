@@ -66,7 +66,7 @@ public final class QnHello implements Question {
             QnHello.PHRASES.getString("QnHello.intro")
         );
         Logger.info(this, "hello found in #%d", comment.issue().number());
-        return Req.EMPTY;
+        return Req.DONE;
     }
 
 }

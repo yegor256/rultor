@@ -67,6 +67,16 @@ public interface Req {
     };
 
     /**
+     * Done, but nothing special.
+     */
+    Req DONE = new Req() {
+        @Override
+        public Iterable<Directive> dirs() {
+            return Collections.emptyList();
+        }
+    };
+
+    /**
      * Directives.
      * @return Dirs
      */
