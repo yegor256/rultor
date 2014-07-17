@@ -144,38 +144,41 @@ public final class Agents {
         final Collection<Agent> agents = new LinkedList<Agent>();
         final Locks locks = this.sttc.locks();
         final Question list = new Question.FirstOf(
-            Arrays.<Question>asList(
+            Arrays.asList(
                 new QnIfContains("config", new QnConfig(profile)),
                 new QnIfContains("status", new QnStatus(talk)),
                 new QnIfContains("version", new QnVersion()),
                 new QnIfContains("hello", new QnHello()),
-                new QnIfContains(
-                    "merge",
-                    new QnAskedBy(
-                        profile,
-                        "/p/merge/commanders/item/text()",
-                        new QnIfCollaborator(
-                            new QnAlone(talk, locks, new QnMerge())
-                        )
-                    )
-                ),
-                new QnIfContains(
-                    "deploy",
-                    new QnAskedBy(
-                        profile,
-                        "/p/deploy/commanders/item/text()",
-                        new QnIfCollaborator(
-                            new QnAlone(talk, locks, new QnDeploy())
-                        )
-                    )
-                ),
-                new QnIfContains(
-                    "release",
-                    new QnAskedBy(
-                        profile,
-                        "/p/release/commanders/item/text()",
-                        new QnIfCollaborator(
-                            new QnAlone(talk, locks, new QnRelease())
+                new QnIfCollaborator(
+                    new QnAlone(
+                        talk, locks,
+                        new Question.FirstOf(
+                            Arrays.<Question>asList(
+                                new QnIfContains(
+                                    "merge",
+                                    new QnAskedBy(
+                                        profile,
+                                        "/p/merge/commanders/item/text()",
+                                        new QnMerge()
+                                    )
+                                ),
+                                new QnIfContains(
+                                    "deploy",
+                                    new QnAskedBy(
+                                        profile,
+                                        "/p/deploy/commanders/item/text()",
+                                        new QnDeploy()
+                                    )
+                                ),
+                                new QnIfContains(
+                                    "release",
+                                    new QnAskedBy(
+                                        profile,
+                                        "/p/release/commanders/item/text()",
+                                        new QnRelease()
+                                    )
+                                )
+                            )
                         )
                     )
                 )
