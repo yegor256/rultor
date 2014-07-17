@@ -114,9 +114,8 @@ public final class Agents {
     /**
      * Create super agents, starters.
      * @return List of them
-     * @throws IOException If fails
      */
-    public Collection<SuperAgent> starters() throws IOException {
+    public Collection<SuperAgent> starters() {
         return Arrays.<SuperAgent>asList(
             new StartsTalks(this.github)
         );
