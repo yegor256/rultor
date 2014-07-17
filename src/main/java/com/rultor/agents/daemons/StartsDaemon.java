@@ -165,7 +165,7 @@ public final class StartsDaemon extends AbstractAgent {
                 Logger.stream(Level.INFO, true),
                 Logger.stream(Level.WARNING, true)
             );
-            Logger.info(this, "asset %s uploaded into %s", asset.getKey(), dir);
+            Logger.info(this, "\"%s\" uploaded into %s", asset.getKey(), dir);
         }
     }
 
