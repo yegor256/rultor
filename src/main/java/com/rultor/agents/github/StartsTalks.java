@@ -136,8 +136,9 @@ public final class StartsTalks implements SuperAgent {
         }
         final Talk talk = talks.get(name);
         talk.modify(
-            new Directives().xpath("/talk[not(wire)]")
-                .attr("later", Boolean.toString(true))
+            new Directives()
+                .xpath("/talk").attr("later", Boolean.toString(true))
+                .xpath("/talk[not(wire)]")
                 .add("wire").add("href")
                 .set(new Issue.Smart(issue).htmlUrl().toString())
                 .up()
