@@ -131,69 +131,74 @@
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>                 <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"nothing new in %s#%d, fresh/total: %d/%d"</span>,
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>                 issue.repo().coordinates(), issue.number(), fresh, total
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>             );
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (req.equals(Req.LATER)) {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (req.equals(Req.DONE)) {
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>             Logger.info(
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"temporary pause in %s#%d, at message #%d"</span>,
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>                 issue.repo().coordinates(), issue.number(), next
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"simple request in %s#%d"</span>,
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>                 issue.repo().coordinates(), issue.number()
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>             );
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>             dirs.xpath(<span class="jxr_string">"/talk[not(request)]"</span>).add(<span class="jxr_string">"request"</span>)
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>                 .attr(<span class="jxr_string">"id"</span>, Integer.toString(next))
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>                 .append(req.dirs());
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>         }
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>         <strong class="jxr_keyword">if</strong> (next &gt; seen) {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>             dirs.xpath(<span class="jxr_string">"/talk/wire"</span>)
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>                 .addIf(<span class="jxr_string">"github-seen"</span>)
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>                 .set(Integer.toString(next));
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (req.equals(Req.LATER)) {
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>             Logger.info(
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>                 <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"temporary pause in %s#%d, at message #%d"</span>,
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>                 issue.repo().coordinates(), issue.number(), next
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>             );
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>             dirs.xpath(<span class="jxr_string">"/talk[not(request)]"</span>).add(<span class="jxr_string">"request"</span>)
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>                 .attr(<span class="jxr_string">"id"</span>, Integer.toString(next))
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                 .append(req.dirs());
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>         }
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <strong class="jxr_keyword">return</strong> dirs.xpath(<span class="jxr_string">"/talk"</span>)
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>             .attr(<span class="jxr_string">"later"</span>, Boolean.toString(req.equals(Req.LATER)));
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>     }
-<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     * Understand.</em>
-<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     * @param comment Comment</em>
-<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">     * @param xml XML</em>
-<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">     * @return Req</em>
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../com/rultor/agents/github/Req.html">Req</a> parse(<strong class="jxr_keyword">final</strong> Comment.Smart comment, <strong class="jxr_keyword">final</strong> XML xml)
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>         <a href="../../../../com/rultor/agents/github/Req.html">Req</a> req;
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>             req = <strong class="jxr_keyword">this</strong>.question.understand(
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>                 comment, <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/daemons/Home.html">Home</a>(xml, Integer.toString(comment.number())).uri()
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>             );
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> Profile.SyntaxException ex) {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/github/Answer.html">Answer</a>(comment).post(
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>                 String.format(
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>                     Understands.PHRASES.getString(<span class="jxr_string">"Understands.broken-profile"</span>),
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>                     ExceptionUtils.getRootCauseMessage(ex)
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>                 )
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>             );
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>             req = Req.EMPTY;
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>         }
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>         <strong class="jxr_keyword">return</strong> req;
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>     }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     * Last seen message.</em>
-<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     * @param xml XML</em>
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">     * @return Number</em>
-<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> seen(<strong class="jxr_keyword">final</strong> XML xml) {
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> seen;
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>         <strong class="jxr_keyword">if</strong> (xml.nodes(<span class="jxr_string">"/talk/wire/github-seen"</span>).isEmpty()) {
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>             seen = 0;
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>             seen = Integer.parseInt(
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>                 xml.xpath(<span class="jxr_string">"/talk/wire/github-seen/text()"</span>).get(0)
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>             );
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>         }
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>         <strong class="jxr_keyword">return</strong> seen;
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
-<a class="jxr_linenumber" name="L187" href="#L187">187</a> 
-<a class="jxr_linenumber" name="L188" href="#L188">188</a> }
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <strong class="jxr_keyword">if</strong> (next &gt; seen) {
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>             dirs.xpath(<span class="jxr_string">"/talk/wire"</span>)
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                 .addIf(<span class="jxr_string">"github-seen"</span>)
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>                 .set(Integer.toString(next));
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         <strong class="jxr_keyword">return</strong> dirs.xpath(<span class="jxr_string">"/talk"</span>)
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>             .attr(<span class="jxr_string">"later"</span>, Boolean.toString(!req.equals(Req.EMPTY)));
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     }
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * Understand.</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     * @param comment Comment</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     * @param xml XML</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * @return Req</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../com/rultor/agents/github/Req.html">Req</a> parse(<strong class="jxr_keyword">final</strong> Comment.Smart comment, <strong class="jxr_keyword">final</strong> XML xml)
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>         <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <a href="../../../../com/rultor/agents/github/Req.html">Req</a> req;
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             req = <strong class="jxr_keyword">this</strong>.question.understand(
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>                 comment, <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/daemons/Home.html">Home</a>(xml, Integer.toString(comment.number())).uri()
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             );
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> Profile.SyntaxException ex) {
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/github/Answer.html">Answer</a>(comment).post(
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                 String.format(
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                     Understands.PHRASES.getString(<span class="jxr_string">"Understands.broken-profile"</span>),
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>                     ExceptionUtils.getRootCauseMessage(ex)
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>                 )
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>             );
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>             req = Req.EMPTY;
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         }
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         <strong class="jxr_keyword">return</strong> req;
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     }
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * Last seen message.</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * @param xml XML</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     * @return Number</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> seen(<strong class="jxr_keyword">final</strong> XML xml) {
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> seen;
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         <strong class="jxr_keyword">if</strong> (xml.nodes(<span class="jxr_string">"/talk/wire/github-seen"</span>).isEmpty()) {
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>             seen = 0;
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>             seen = Integer.parseInt(
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>                 xml.xpath(<span class="jxr_string">"/talk/wire/github-seen/text()"</span>).get(0)
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>             );
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         }
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>         <strong class="jxr_keyword">return</strong> seen;
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     }
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
