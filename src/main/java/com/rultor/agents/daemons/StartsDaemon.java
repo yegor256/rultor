@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
+import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
@@ -41,7 +42,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
@@ -50,7 +50,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -135,14 +134,7 @@ public final class StartsDaemon extends AbstractAgent {
         return new Directives()
             .xpath("/talk/daemon[not(started)]")
             .strict(1)
-            .add("started")
-            .set(
-                DateFormatUtils.formatUTC(
-                    new Date(),
-                    DateFormatUtils.ISO_DATETIME_FORMAT.getPattern()
-                )
-            )
-            .up()
+            .add("started").set(new Time().iso()).up()
             .add("dir").set(dir);
     }
 

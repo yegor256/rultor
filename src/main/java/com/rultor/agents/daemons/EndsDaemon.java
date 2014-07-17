@@ -32,15 +32,14 @@ package com.rultor.agents.daemons;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
+import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
-import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -106,14 +105,7 @@ public final class EndsDaemon extends AbstractAgent {
         return new Directives()
             .xpath("/talk/daemon")
             .strict(1)
-            .add("ended")
-            .set(
-                DateFormatUtils.formatUTC(
-                    new Date(),
-                    DateFormatUtils.ISO_DATETIME_FORMAT.getPattern()
-                )
-            )
-            .up()
+            .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit));
     }
 

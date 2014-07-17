@@ -104,7 +104,10 @@ public final class StartsDaemonITCase {
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
-            XhtmlMatchers.hasXPath("/talk/daemon[started and dir]")
+            XhtmlMatchers.hasXPaths(
+                "/talk/daemon[started and dir]",
+                "/talk/daemon[ends-with(started,'Z')]"
+            )
         );
         final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
