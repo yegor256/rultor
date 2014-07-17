@@ -138,7 +138,7 @@ public final class Understands extends AbstractAgent {
                 .addIf("github-seen")
                 .set(Integer.toString(next));
         }
-        return dirs.xpath("/talk[not(@later)]")
+        return dirs.xpath("/talk")
             .attr("later", Boolean.toString(req.equals(Req.LATER)));
     }
 
