@@ -77,7 +77,10 @@ public final class QnMerge implements Question {
                     home.toASCIIString()
                 )
             );
-            Logger.info(this, "merge request found in #%d", issue.number());
+            Logger.info(
+                this, "merge request found in %s#%d, comment #%d",
+                issue.repo().coordinates(), issue.number(), comment.number()
+            );
             req = QnMerge.pack(
                 new Pull.Smart(
                     issue.repo().pulls().get(issue.number())
