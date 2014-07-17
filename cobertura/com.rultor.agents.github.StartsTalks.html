@@ -269,40 +269,42 @@
 <tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">final</span> Talk talk = talks.get(name);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        talk.modify(</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;139</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            <span class="keyword">new</span> Directives().xpath(<span class="string">"/talk[not(wire)]"</span>)</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            <span class="keyword">new</span> Directives()</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;140</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                .attr(<span class="string">"later"</span>, Boolean.toString(<span class="keyword">true</span>))</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                .xpath(<span class="string">"/talk"</span>).attr(<span class="string">"later"</span>, Boolean.toString(<span class="keyword">true</span>))</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;141</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                .add(<span class="string">"wire"</span>).add(<span class="string">"href"</span>)</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                .xpath(<span class="string">"/talk[not(wire)]"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;142</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                .set(<span class="keyword">new</span> Issue.Smart(issue).htmlUrl().toString())</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                .add(<span class="string">"wire"</span>).add(<span class="string">"href"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;143</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                .up()</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                .set(<span class="keyword">new</span> Issue.Smart(issue).htmlUrl().toString())</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;144</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                .add(<span class="string">"github-repo"</span>).set(coords.toString())</pre></td></tr>
-<tr>  <td class="numLine">&nbsp;145</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                .up()</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;145</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                .add(<span class="string">"github-repo"</span>).set(coords.toString())</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;146</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                .add(<span class="string">"github-issue"</span>)</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                .up()</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;147</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                .set(Integer.toString(issue.number()))</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                .add(<span class="string">"github-issue"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;148</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                .set(Integer.toString(issue.number()))</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;149</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        );</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;149</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        talk.active(<span class="keyword">true</span>);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        Logger.info(</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;151</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>, <span class="string">"talk %s#%d activated as %s"</span>,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        talk.active(<span class="keyword">true</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;151</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        Logger.info(</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;152</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            coords, issue.number(), name</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>, <span class="string">"talk %s#%d activated as %s"</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;153</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;            coords, issue.number(), name</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;154</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        );</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;154</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    }</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;155</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;155</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    }</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;156</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;157</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 7/17/14 3:09 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 7/17/14 4:10 PM.</div>
 </body>
 </html>
