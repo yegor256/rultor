@@ -82,8 +82,9 @@ public final class QnReferredTo implements Question {
             Logger.info(
                 this,
                 // @checkstyle LineLength (1 line)
-                "comment #%d ignored, it is not addressed to me (doesn't start with \"%s\")",
-                comment.number(), prefix
+                "comment #%d ignored in %s#%d, it is not addressed to me (doesn't start with \"%s\")",
+                comment.number(), comment.issue().repo().coordinates(),
+                comment.issue().number(), prefix
             );
             req = Req.EMPTY;
         }
