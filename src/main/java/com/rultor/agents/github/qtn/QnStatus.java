@@ -111,13 +111,17 @@ public final class QnStatus implements Question {
             lines.add(
                 String.format(
                     " * working directory size: %s",
-                    shell.exec(String.format("du -hs \"%s\" | cut -f1", dir))
+                    shell.exec(
+                        String.format("du -hs \"%s\" | cut -f1", dir)
+                    ).trim()
                 )
             );
             lines.add(
                 String.format(
                     " * server load average: %s",
-                    shell.exec("uptime | awk '{print $12}' | cut -d ',' -f 1")
+                    shell.exec(
+                        "uptime | awk '{print $12}' | cut -d ',' -f 1"
+                    ).trim()
                 )
             );
         }
@@ -126,7 +130,9 @@ public final class QnStatus implements Question {
                 QnStatus.PHRASES.getString("QnStatus.response"),
                 Joiner.on('\n').join(
                     Iterables.concat(
-                        Collections.singleton(QnStatus.REPORT.applyTo(xml)),
+                        Collections.singleton(
+                            QnStatus.REPORT.applyTo(xml).trim()
+                        ),
                         lines
                     )
                 )
