@@ -109,7 +109,7 @@ public final class Lifespan implements ServletContextListener {
                     },
                     true
                 ),
-                1L, 2L,
+                1L, 1L,
                 TimeUnit.MINUTES
             );
         }

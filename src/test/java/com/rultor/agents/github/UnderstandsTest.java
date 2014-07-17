@@ -81,7 +81,7 @@ public final class UnderstandsTest {
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
-            new Directives().xpath("/talk").add("wire")
+            new Directives().xpath("/talk").attr("later", "true").add("wire")
                 .add("href").set("http://test2").up()
                 .add("github-repo").set(repo.coordinates().toString()).up()
                 .add("github-issue").set(Integer.toString(issue.number())).up()

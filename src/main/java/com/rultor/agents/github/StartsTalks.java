@@ -29,22 +29,27 @@
  */
 package com.rultor.agents.github;
 
-import co.stateful.Counter;
-import co.stateful.Counters;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Bulk;
-import com.jcabi.github.Comment;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
+import com.jcabi.github.RtPagination;
+import com.jcabi.http.Request;
+import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.Logger;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.Date;
+import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directives;
 
 /**
@@ -56,7 +61,7 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "github", "counters" })
+@EqualsAndHashCode(of = "github")
 public final class StartsTalks implements SuperAgent {
 
     /**
@@ -65,68 +70,67 @@ public final class StartsTalks implements SuperAgent {
     private final transient Github github;
 
     /**
-     * Github.
-     */
-    private final transient Counters counters;
-
-    /**
      * Ctor.
      * @param ghub Github client
-     * @param ctrs Counters
      */
-    public StartsTalks(final Github ghub, final Counters ctrs) {
+    public StartsTalks(final Github ghub) {
         this.github = ghub;
-        this.counters = ctrs;
     }
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        final Counter threshold = this.counters.get("rt-threshold");
-        final Iterable<Issue> issues = this.github.search().issues(
-            String.format(
-                "mentions:%s updated:>=%tF",
-                this.github.search().github().users().self().login(),
-                DateUtils.addDays(new Date(threshold.incrementAndGet(0L)), -1)
+        final String since = DateFormatUtils.ISO_DATETIME_FORMAT.format(
+            new Date()
+        );
+        final Iterable<JsonObject> events = Iterables.filter(
+            new RtPagination<JsonObject>(
+                this.github.entry()
+                    .uri().path("/notifications")
+                    .queryParam("participating", "true").back(),
+                RtPagination.COPYING
             ),
-            "updated",
-            "asc"
+            new Predicate<JsonObject>() {
+                @Override
+                public boolean apply(final JsonObject json) {
+                    return "mention".equals(json.getString("reason"));
+                }
+            }
         );
-        final Counter cnt = this.counters.get("rt-latest");
-        final int latest = (int) cnt.incrementAndGet(0L);
-        int max = latest;
         int total = 0;
-        int activated = 0;
-        for (final Issue issue : issues) {
+        for (final JsonObject event : events) {
+            this.activate(talks, event);
             ++total;
-            final int last = StartsTalks.last(issue);
-            if (last <= latest) {
-                continue;
-            }
-            this.activate(talks, issue);
-            ++activated;
-            if (last > max) {
-                max = last;
-            }
         }
-        if (max != latest) {
-            cnt.set((long) max);
-        }
-        threshold.set(System.currentTimeMillis());
-        Logger.info(
-            this, "%d issues checked, %d activated, max=%d",
-            total, activated, max
-        );
+        this.github.entry()
+            .uri().path("/notifications")
+            .queryParam("last_read_at", since).back()
+            .method(Request.PUT)
+            .body().set("{}").back()
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_RESET);
+        Logger.info(this, "%d notification(s) checked", total);
     }
 
     /**
      * Activate talk.
      * @param talks Talks
-     * @param issue Issue
+     * @param event Event
      * @throws IOException If fails
      */
-    private void activate(final Talks talks, final Issue issue)
+    private void activate(final Talks talks, final JsonObject event)
         throws IOException {
-        final String coords = issue.repo().coordinates().toString();
+        final Coordinates coords = new Coordinates.Simple(
+            event.getJsonObject("repository").getString("full_name")
+        );
+        final Issue issue = this.github.repos().get(coords).issues().get(
+            Integer.parseInt(
+                StringUtils.substringAfterLast(
+                    event.getJsonObject("subject").getString("url"),
+                    "/"
+                )
+            )
+        );
         final String name = String.format("%s#%d", coords, issue.number());
         if (!talks.exists(name)) {
             talks.create(name);
@@ -134,10 +138,12 @@ public final class StartsTalks implements SuperAgent {
         final Talk talk = talks.get(name);
         talk.modify(
             new Directives().xpath("/talk[not(wire)]")
-                .add("wire")
-                .add("href").set(new Issue.Smart(issue).htmlUrl().toString())
+                .attr("later", Boolean.toString(true))
+                .add("wire").add("href")
+                .set(new Issue.Smart(issue).htmlUrl().toString())
                 .up()
-                .add("github-repo").set(coords).up()
+                .add("github-repo").set(coords.toString())
+                .up()
                 .add("github-issue")
                 .set(Integer.toString(issue.number()))
         );
@@ -146,24 +152,6 @@ public final class StartsTalks implements SuperAgent {
             this, "talk %s#%d activated as %s",
             coords, issue.number(), name
         );
-    }
-
-    /**
-     * Latest message number in the issue.
-     * @param issue The issue
-     * @return Message number
-     */
-    private static int last(final Issue issue) {
-        int last = 0;
-        final Iterable<Comment> comments = new Bulk<Comment>(
-            issue.comments().iterate()
-        );
-        for (final Comment comment : comments) {
-            if (comment.number() > last) {
-                last = comment.number();
-            }
-        }
-        return last;
     }
 
 }

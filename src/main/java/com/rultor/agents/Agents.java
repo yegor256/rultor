@@ -118,7 +118,7 @@ public final class Agents {
      */
     public Collection<SuperAgent> starters() throws IOException {
         return Arrays.<SuperAgent>asList(
-            new StartsTalks(this.github, this.sttc.counters())
+            new StartsTalks(this.github)
         );
     }
 

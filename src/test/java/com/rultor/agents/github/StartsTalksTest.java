@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import co.stateful.mock.MkSttc;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
@@ -64,9 +63,7 @@ public final class StartsTalksTest {
         );
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, do it");
-        final SuperAgent agent = new StartsTalks(
-            github, new MkSttc().counters()
-        );
+        final SuperAgent agent = new StartsTalks(github);
         final Talks talks = new Talks.InDir();
         agent.execute(talks);
         MatcherAssert.assertThat(
