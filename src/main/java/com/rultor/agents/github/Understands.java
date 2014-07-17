@@ -125,7 +125,7 @@ public final class Understands extends AbstractAgent {
             );
         } else if (req.equals(Req.LATER)) {
             Logger.info(
-                this, "temporary pause in %s#%d, before message #%d",
+                this, "temporary pause in %s#%d, at message #%d",
                 issue.repo().coordinates(), issue.number(), next
             );
         } else {
