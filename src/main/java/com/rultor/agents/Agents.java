@@ -49,7 +49,6 @@ import com.rultor.agents.github.qtn.QnAlone;
 import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnConfig;
 import com.rultor.agents.github.qtn.QnDeploy;
-import com.rultor.agents.github.qtn.QnFirstOf;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
@@ -193,14 +192,9 @@ public final class Agents {
                     new QnSince(
                         // @checkstyle MagicNumber (1 line)
                         49092213,
-                        new QnFirstOf(
-                            Arrays.asList(
-                                new QnReferredTo(
-                                    this.github.users().self().login(),
-                                    new QnParametrized(list)
-                                ),
-                                new QnAlone(talk, locks, Question.EMPTY)
-                            )
+                        new QnReferredTo(
+                            this.github.users().self().login(),
+                            new QnParametrized(list)
                         )
                     )
                 ),
