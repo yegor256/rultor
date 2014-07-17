@@ -123,6 +123,11 @@ public final class Understands extends AbstractAgent {
                 this, "nothing new in %s#%d, fresh/total: %d/%d",
                 issue.repo().coordinates(), issue.number(), fresh, total
             );
+        } else if (req.equals(Req.DONE)) {
+            Logger.info(
+                this, "simple request in %s#%d",
+                issue.repo().coordinates(), issue.number()
+            );
         } else if (req.equals(Req.LATER)) {
             Logger.info(
                 this, "temporary pause in %s#%d, at message #%d",
@@ -139,7 +144,7 @@ public final class Understands extends AbstractAgent {
                 .set(Integer.toString(next));
         }
         return dirs.xpath("/talk")
-            .attr("later", Boolean.toString(req.equals(Req.LATER)));
+            .attr("later", Boolean.toString(!req.equals(Req.EMPTY)));
     }
 
     /**

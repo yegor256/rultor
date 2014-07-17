@@ -87,6 +87,7 @@ public final class UnderstandsTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
         );
         agent.execute(talk);
+        agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPaths(

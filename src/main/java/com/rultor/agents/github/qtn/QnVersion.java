@@ -71,7 +71,7 @@ public final class QnVersion implements Question {
             )
         );
         Logger.info(this, "version request in #%d", comment.issue().number());
-        return Req.EMPTY;
+        return Req.DONE;
     }
 
 }

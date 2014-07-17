@@ -82,7 +82,7 @@ public final class QnStatusTest {
             new QnStatus(talk).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
-            Matchers.is(Req.EMPTY)
+            Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
