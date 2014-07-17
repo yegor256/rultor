@@ -112,30 +112,33 @@
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>         agent.execute(talk);
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>             talk.read(),
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>             XhtmlMatchers.hasXPath(<span class="jxr_string">"/talk/daemon[started and dir]"</span>)
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>         );
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">final</strong> String dir = talk.read().xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0);
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <strong class="jxr_keyword">final</strong> ByteArrayOutputStream baos = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">new</strong> Shell.Safe(<strong class="jxr_keyword">new</strong> TalkShells(talk.read()).get()).exec(
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>             String.format(<span class="jxr_string">"cat %s/stdout"</span>, dir),
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>             <strong class="jxr_keyword">new</strong> NullInputStream(0L),
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             baos, baos
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>         );
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>             baos.toString(CharEncoding.UTF_8),
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>             Matchers.allOf(
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>                 Matchers.containsString(<span class="jxr_string">"+ set -o pipefail"</span>),
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>                 Matchers.containsString(<span class="jxr_string">"+ date --iso-8601=seconds --utc"</span>),
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>                 Matchers.containsString(<span class="jxr_string">"+ ls -al"</span>),
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>                 Matchers.containsString(<span class="jxr_string">"182f61268e6e6e6cd1a547be31fd8583"</span>)
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>             )
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         );
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>             <strong class="jxr_keyword">new</strong> File(dir, <span class="jxr_string">"status"</span>).exists(), Matchers.is(false)
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>             XhtmlMatchers.hasXPaths(
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>                 <span class="jxr_string">"/talk/daemon[started and dir]"</span>,
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>                 <span class="jxr_string">"/talk/daemon[ends-with(started,'Z')]"</span>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>             )
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         );
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">final</strong> String dir = talk.read().xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">final</strong> ByteArrayOutputStream baos = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">new</strong> Shell.Safe(<strong class="jxr_keyword">new</strong> TalkShells(talk.read()).get()).exec(
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>             String.format(<span class="jxr_string">"cat %s/stdout"</span>, dir),
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">new</strong> NullInputStream(0L),
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>             baos, baos
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         );
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             baos.toString(CharEncoding.UTF_8),
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>             Matchers.allOf(
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>                 Matchers.containsString(<span class="jxr_string">"+ set -o pipefail"</span>),
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                 Matchers.containsString(<span class="jxr_string">"+ date --iso-8601=seconds --utc"</span>),
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                 Matchers.containsString(<span class="jxr_string">"+ ls -al"</span>),
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                 Matchers.containsString(<span class="jxr_string">"182f61268e6e6e6cd1a547be31fd8583"</span>)
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>             )
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>         );
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     }
-<a class="jxr_linenumber" name="L129" href="#L129">129</a> 
-<a class="jxr_linenumber" name="L130" href="#L130">130</a> }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>             <strong class="jxr_keyword">new</strong> File(dir, <span class="jxr_string">"status"</span>).exists(), Matchers.is(false)
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         );
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
