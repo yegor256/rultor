@@ -52,7 +52,7 @@ function docker_when_possible {
   done
   cd ..
   ${sudo} docker run --rm -v $(pwd):/main "${vars[@]}" \
-    --memory=2g --cidfile=$(pwd)/cid -w=/main ${image} /main/${bin}
+    --memory=4g --cidfile=$(pwd)/cid -w=/main ${image} /main/${bin}
   ${sudo} chown -R $(whoami) .
   cd "${repo}"
 }
