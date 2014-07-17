@@ -90,8 +90,8 @@ public final class QnAlone implements Question {
         final RepoLock lock = new RepoLock(this.locks, repo);
         if (lock.lock(this.talk)) {
             Logger.info(
-                this, "%s locked by issue #%s",
-                repo.coordinates(), comment.issue().number()
+                this, "%s locked by issue #%s, comment #%d",
+                repo.coordinates(), comment.issue().number(), comment.number()
             );
             req = this.origin.understand(comment, home);
         } else {
