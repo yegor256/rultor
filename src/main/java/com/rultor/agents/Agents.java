@@ -44,6 +44,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Reports;
 import com.rultor.agents.github.StartsTalks;
 import com.rultor.agents.github.Understands;
+import com.rultor.agents.github.UnlocksRepo;
 import com.rultor.agents.github.qtn.QnAlone;
 import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnConfig;
@@ -124,9 +125,11 @@ public final class Agents {
     /**
      * Create super agents, closers.
      * @return List of them
+     * @throws IOException If fails
      */
-    public Collection<SuperAgent> closers() {
-        return Arrays.<SuperAgent>asList(
+    public Collection<SuperAgent> closers() throws IOException {
+        return Arrays.asList(
+            new UnlocksRepo(this.sttc.locks(), this.github),
             new DeactivatesTalks()
         );
     }
