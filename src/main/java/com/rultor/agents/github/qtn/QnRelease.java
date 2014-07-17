@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
@@ -70,9 +71,10 @@ public final class QnRelease implements Question {
                 home.toASCIIString()
             )
         );
+        final Issue issue = comment.issue();
         Logger.info(
-            this, "release request found in #%d",
-            comment.issue().number()
+            this, "release request found in %s#%d, comment #%d",
+            issue.repo().coordinates(), issue.number(), comment.number()
         );
         return new Req.Simple(
             "release",
