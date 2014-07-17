@@ -149,7 +149,6 @@ final class GithubProfile implements Profile {
      * @return Its content
      * @throws IOException If fails
      */
-    @Cacheable
     private String yml() throws IOException {
         final boolean exists = Iterables.any(
             this.repo.contents().iterate("", "master"),
