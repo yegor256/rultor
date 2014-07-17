@@ -133,7 +133,7 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>             );
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (req.equals(Req.LATER)) {
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>             Logger.info(
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"temporary pause in %s#%d, before message #%d"</span>,
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"temporary pause in %s#%d, at message #%d"</span>,
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>                 issue.repo().coordinates(), issue.number(), next
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>             );
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>         } <strong class="jxr_keyword">else</strong> {
@@ -146,7 +146,7 @@
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>                 .addIf(<span class="jxr_string">"github-seen"</span>)
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>                 .set(Integer.toString(next));
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>         }
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <strong class="jxr_keyword">return</strong> dirs.xpath(<span class="jxr_string">"/talk[not(@later)]"</span>)
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <strong class="jxr_keyword">return</strong> dirs.xpath(<span class="jxr_string">"/talk"</span>)
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>             .attr(<span class="jxr_string">"later"</span>, Boolean.toString(req.equals(Req.LATER)));
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>     }
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> 

@@ -89,9 +89,9 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>          } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>              Logger.info(
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>                  <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>                  <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>                  <span class="jxr_string">"comment #%d ignored, it is not addressed to me (doesn't start with \&quot;%s\&quot;)"</span>,
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>                  comment.number(), prefix
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                  <span class="jxr_string">"comment #%d in %s#%d is not for me (no \&quot;%s\&quot; prefix)"</span>,
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>                  comment.number(), comment.issue().repo().coordinates(),
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>                  comment.issue().number(), prefix
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>              );
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>              req = Req.EMPTY;
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>          }

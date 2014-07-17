@@ -122,121 +122,123 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * Create super agents, starters.</em>
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     * @return List of them</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">public</strong> Collection&lt;SuperAgent&gt; starters() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>         <strong class="jxr_keyword">return</strong> Arrays.&lt;SuperAgent&gt;asList(
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/StartsTalks.html">StartsTalks</a>(<strong class="jxr_keyword">this</strong>.github)
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>         );
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     }
-<a class="jxr_linenumber" name="L124" href="#L124">124</a> 
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     * Create super agents, closers.</em>
-<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * @return List of them</em>
-<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> Collection&lt;SuperAgent&gt; closers() {
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">return</strong> Arrays.&lt;SuperAgent&gt;asList(
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/DeactivatesTalks.html">DeactivatesTalks</a>()
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>         );
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>     }
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * Create them for a talk.</em>
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * @param talk Talk itself</em>
-<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * @param profile Profile</em>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     * @return List of them</em>
-<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">public</strong> Collection&lt;Agent&gt; agents(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> talk, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Profile.html">Profile</a> profile)
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Agent&gt; agents = <strong class="jxr_keyword">new</strong> LinkedList&lt;Agent&gt;();
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">final</strong> Locks locks = <strong class="jxr_keyword">this</strong>.sttc.locks();
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/agents/github/Question.html">Question</a> list = <strong class="jxr_keyword">new</strong> Question.FirstOf(
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>             Arrays.&lt;Question&gt;asList(
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"config"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnConfig.html">QnConfig</a>(profile)),
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"status"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnStatus.html">QnStatus</a>(talk)),
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"version"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnVersion.html">QnVersion</a>()),
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"hello"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnHello.html">QnHello</a>()),
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>                     <span class="jxr_string">"merge"</span>,
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAskedBy.html">QnAskedBy</a>(
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>                         profile,
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>                         <span class="jxr_string">"/p/merge/commanders/item/text()"</span>,
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfCollaborator.html">QnIfCollaborator</a>(
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>                             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAlone.html">QnAlone</a>(talk, locks, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnMerge.html">QnMerge</a>())
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>                         )
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>                     )
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>                 ),
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>                     <span class="jxr_string">"deploy"</span>,
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAskedBy.html">QnAskedBy</a>(
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>                         profile,
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>                         <span class="jxr_string">"/p/deploy/commanders/item/text()"</span>,
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfCollaborator.html">QnIfCollaborator</a>(
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>                             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAlone.html">QnAlone</a>(talk, locks, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnDeploy.html">QnDeploy</a>())
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>                         )
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>                     )
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>                 ),
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>                     <span class="jxr_string">"release"</span>,
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAskedBy.html">QnAskedBy</a>(
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>                         profile,
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>                         <span class="jxr_string">"/p/release/commanders/item/text()"</span>,
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfCollaborator.html">QnIfCollaborator</a>(
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>                             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAlone.html">QnAlone</a>(talk, locks, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnRelease.html">QnRelease</a>())
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>                         )
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>                     )
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>                 )
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>             )
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>         );
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>         agents.addAll(
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>             Arrays.asList(
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/Understands.html">Understands</a>(
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>                     <strong class="jxr_keyword">this</strong>.github,
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnSince.html">QnSince</a>(
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>                         <em class="jxr_comment">// @checkstyle MagicNumber (1 line)</em>
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>                         49092213,
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnFirstOf.html">QnFirstOf</a>(
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>                             Arrays.asList(
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>                                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnReferredTo.html">QnReferredTo</a>(
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>                                     <strong class="jxr_keyword">this</strong>.github.users().self().login(),
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>                                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnParametrized.html">QnParametrized</a>(list)
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>                                 ),
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>                                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAlone.html">QnAlone</a>(talk, locks, Question.EMPTY)
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>                             )
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>                         )
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>                     )
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>                 ),
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/req/StartsRequest.html">StartsRequest</a>(profile),
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/shells/RegistersShell.html">RegistersShell</a>(
-<a class="jxr_linenumber" name="L204" href="#L204">204</a>                     <em class="jxr_comment">// @checkstyle MagicNumber (1 line)</em>
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>                     <span class="jxr_string">"b1.rultor.com"</span>, 22,
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>                     <span class="jxr_string">"rultor"</span>,
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>                     IOUtils.toString(
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>                         <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"rultor.key"</span>),
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>                         CharEncoding.UTF_8
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>                     )
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>                 ),
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/StartsDaemon.html">StartsDaemon</a>(profile),
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/KillsDaemon.html">KillsDaemon</a>(),
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/EndsDaemon.html">EndsDaemon</a>(),
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/req/EndsRequest.html">EndsRequest</a>(),
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/Reports.html">Reports</a>(<strong class="jxr_keyword">this</strong>.github),
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/shells/RemovesShell.html">RemovesShell</a>(),
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/ArchivesDaemon.html">ArchivesDaemon</a>(
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>                     <strong class="jxr_keyword">new</strong> ReRegion(
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>                         <strong class="jxr_keyword">new</strong> Region.Simple(
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>                             Manifests.read(<span class="jxr_string">"Rultor-S3Key"</span>),
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>                             Manifests.read(<span class="jxr_string">"Rultor-S3Secret"</span>)
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>                         )
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>                     ).bucket(Manifests.read(<span class="jxr_string">"Rultor-S3Bucket"</span>))
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>                 )
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>             )
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>         );
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>         <strong class="jxr_keyword">return</strong> agents;
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>     }
-<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
-<a class="jxr_linenumber" name="L231" href="#L231">231</a> }
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <strong class="jxr_keyword">public</strong> Collection&lt;SuperAgent&gt; starters() {
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         <strong class="jxr_keyword">return</strong> Arrays.&lt;SuperAgent&gt;asList(
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/StartsTalks.html">StartsTalks</a>(<strong class="jxr_keyword">this</strong>.github)
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>         );
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     }
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     * Create super agents, closers.</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     * @return List of them</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">public</strong> Collection&lt;SuperAgent&gt; closers() {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <strong class="jxr_keyword">return</strong> Arrays.&lt;SuperAgent&gt;asList(
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/DeactivatesTalks.html">DeactivatesTalks</a>()
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         );
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     }
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * Create them for a talk.</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * @param talk Talk itself</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * @param profile Profile</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * @return List of them</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <strong class="jxr_keyword">public</strong> Collection&lt;Agent&gt; agents(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> talk, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Profile.html">Profile</a> profile)
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Agent&gt; agents = <strong class="jxr_keyword">new</strong> LinkedList&lt;Agent&gt;();
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">final</strong> Locks locks = <strong class="jxr_keyword">this</strong>.sttc.locks();
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/agents/github/Question.html">Question</a> list = <strong class="jxr_keyword">new</strong> Question.FirstOf(
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>             Arrays.asList(
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"config"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnConfig.html">QnConfig</a>(profile)),
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"status"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnStatus.html">QnStatus</a>(talk)),
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"version"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnVersion.html">QnVersion</a>()),
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(<span class="jxr_string">"hello"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnHello.html">QnHello</a>()),
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfCollaborator.html">QnIfCollaborator</a>(
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAlone.html">QnAlone</a>(
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>                         talk, locks,
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>                         <strong class="jxr_keyword">new</strong> Question.FirstOf(
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>                             Arrays.&lt;Question&gt;asList(
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>                                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>                                     <span class="jxr_string">"merge"</span>,
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>                                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAskedBy.html">QnAskedBy</a>(
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>                                         profile,
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>                                         <span class="jxr_string">"/p/merge/commanders/item/text()"</span>,
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>                                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnMerge.html">QnMerge</a>()
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>                                     )
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                                 ),
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>                                     <span class="jxr_string">"deploy"</span>,
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAskedBy.html">QnAskedBy</a>(
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                                         profile,
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>                                         <span class="jxr_string">"/p/deploy/commanders/item/text()"</span>,
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>                                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnDeploy.html">QnDeploy</a>()
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>                                     )
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>                                 ),
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>                                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnIfContains.html">QnIfContains</a>(
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>                                     <span class="jxr_string">"release"</span>,
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>                                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAskedBy.html">QnAskedBy</a>(
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>                                         profile,
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>                                         <span class="jxr_string">"/p/release/commanders/item/text()"</span>,
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>                                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnRelease.html">QnRelease</a>()
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>                                     )
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>                                 )
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>                             )
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>                         )
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>                     )
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>                 )
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>             )
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         );
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         agents.addAll(
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>             Arrays.asList(
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/Understands.html">Understands</a>(
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>                     <strong class="jxr_keyword">this</strong>.github,
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnSince.html">QnSince</a>(
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>                         <em class="jxr_comment">// @checkstyle MagicNumber (1 line)</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>                         49092213,
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnFirstOf.html">QnFirstOf</a>(
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>                             Arrays.asList(
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>                                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnReferredTo.html">QnReferredTo</a>(
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>                                     <strong class="jxr_keyword">this</strong>.github.users().self().login(),
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>                                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnParametrized.html">QnParametrized</a>(list)
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>                                 ),
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>                                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/qtn/QnAlone.html">QnAlone</a>(talk, locks, Question.EMPTY)
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>                             )
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>                         )
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>                     )
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>                 ),
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/req/StartsRequest.html">StartsRequest</a>(profile),
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/shells/RegistersShell.html">RegistersShell</a>(
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>                     <em class="jxr_comment">// @checkstyle MagicNumber (1 line)</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>                     <span class="jxr_string">"b1.rultor.com"</span>, 22,
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>                     <span class="jxr_string">"rultor"</span>,
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>                     IOUtils.toString(
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>                         <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"rultor.key"</span>),
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>                         CharEncoding.UTF_8
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>                     )
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>                 ),
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/StartsDaemon.html">StartsDaemon</a>(profile),
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/KillsDaemon.html">KillsDaemon</a>(),
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/EndsDaemon.html">EndsDaemon</a>(),
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/req/EndsRequest.html">EndsRequest</a>(),
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/github/Reports.html">Reports</a>(<strong class="jxr_keyword">this</strong>.github),
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/shells/RemovesShell.html">RemovesShell</a>(),
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/ArchivesDaemon.html">ArchivesDaemon</a>(
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>                     <strong class="jxr_keyword">new</strong> ReRegion(
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>                         <strong class="jxr_keyword">new</strong> Region.Simple(
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>                             Manifests.read(<span class="jxr_string">"Rultor-S3Key"</span>),
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>                             Manifests.read(<span class="jxr_string">"Rultor-S3Secret"</span>)
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>                         )
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>                     ).bucket(Manifests.read(<span class="jxr_string">"Rultor-S3Bucket"</span>))
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>                 )
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>             )
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         );
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>         <strong class="jxr_keyword">return</strong> agents;
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     }
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
