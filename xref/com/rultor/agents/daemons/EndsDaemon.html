@@ -111,14 +111,21 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>             ).trim()
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>         );
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>         Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"daemon finished at %s, exit: %d"</span>, dir, exit);
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/talk/daemon"</span>)
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>             .add(<span class="jxr_string">"ended"</span>)
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>             .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(<strong class="jxr_keyword">new</strong> Date()))
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>             .up()
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>             .add(<span class="jxr_string">"code"</span>).set(Integer.toString(exit));
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     }
-<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives()
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>             .xpath(<span class="jxr_string">"/talk/daemon"</span>)
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>             .strict(1)
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>             .add(<span class="jxr_string">"ended"</span>)
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>             .set(
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>                 DateFormatUtils.formatUTC(
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>                     <strong class="jxr_keyword">new</strong> Date(),
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>                     DateFormatUtils.ISO_DATETIME_FORMAT.getPattern()
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>                 )
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>             )
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>             .up()
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>             .add(<span class="jxr_string">"code"</span>).set(Integer.toString(exit));
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     }
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

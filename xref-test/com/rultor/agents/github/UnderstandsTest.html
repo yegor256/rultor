@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>          );
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>          <strong class="jxr_keyword">final</strong> Talk talk = <strong class="jxr_keyword">new</strong> Talk.InFile();
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>          talk.modify(
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>              <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/talk"</span>).add(<span class="jxr_string">"wire"</span>)
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>              <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/talk"</span>).attr(<span class="jxr_string">"later"</span>, <span class="jxr_string">"true"</span>).add(<span class="jxr_string">"wire"</span>)
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>                  .add(<span class="jxr_string">"href"</span>).set(<span class="jxr_string">"http://test2"</span>).up()
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>                  .add(<span class="jxr_string">"github-repo"</span>).set(repo.coordinates().toString()).up()
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>                  .add(<span class="jxr_string">"github-issue"</span>).set(Integer.toString(issue.number())).up()
