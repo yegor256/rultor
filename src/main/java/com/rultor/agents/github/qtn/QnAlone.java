@@ -29,14 +29,13 @@
  */
 package com.rultor.agents.github.qtn;
 
-import co.stateful.Lock;
 import co.stateful.Locks;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Repo;
 import com.jcabi.log.Logger;
-import com.jcabi.xml.XML;
 import com.rultor.agents.github.Question;
+import com.rultor.agents.github.RepoLock;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Talk;
 import java.io.IOException;
@@ -87,44 +86,18 @@ public final class QnAlone implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Repo repo = comment.issue().repo();
-        final XML xml = this.talk.read();
-        final String name = xml.xpath("/talk/@name").get(0);
-        final Lock lock = this.lock(repo);
-        final boolean empty = xml.nodes("/talk[request or daemon]").isEmpty();
-        if (empty && lock.unlock(name)) {
-            Logger.info(
-                this, "%s unlocked by %s",
-                repo.coordinates(), name
-            );
-        }
         final Req req;
-        if (lock.lock(name)) {
-            Logger.info(this, "%s locked for %s", repo.coordinates(), name);
+        final RepoLock lock = new RepoLock(this.locks, repo);
+        if (lock.lock(this.talk)) {
+            Logger.info(
+                this, "%s locked by issue #%s",
+                repo.coordinates(), comment.issue().number()
+            );
             req = this.origin.understand(comment, home);
         } else {
             req = Req.LATER;
         }
-        if (empty && req.equals(Req.EMPTY) && lock.unlock(name)) {
-            Logger.info(
-                this, "%s unlocked by %s since REQ is empty",
-                repo.coordinates(), name
-            );
-        }
         return req;
-    }
-
-    /**
-     * Get lock by repo.
-     * @param repo Github repo
-     * @return Lock
-     * @throws IOException If fails
-     */
-    private Lock lock(final Repo repo) throws IOException {
-        return this.locks.get(
-            String.format("rt-alone-%s", repo.coordinates()).replaceAll(
-                "[^a-zA-Z0-9\\-]", "-"
-            )
-        );
     }
 
 }

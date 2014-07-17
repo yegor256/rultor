@@ -27,9 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents;
+package com.rultor.agents.github;
 
+import co.stateful.Locks;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Github;
+import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.spi.SuperAgent;
@@ -41,32 +44,66 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Deactivates empty talks.
+ * Unlocks repo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.8.12
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
-public final class DeactivatesTalks implements SuperAgent {
+@EqualsAndHashCode(of = { "locks", "github" })
+public final class UnlocksRepo implements SuperAgent {
 
     /**
-     * Which talks should be deactivated.
+     * Which talks should be unlocked.
      */
     private static final String XPATH = StringUtils.join(
-        "/talk[@later='false' and not(request) and not(daemon)",
-        " and not(shell)]"
+        "/talk[@later='false' and not(request) and not(daemon) and not(shell)",
+        " and wire/github-repo and wire/github-issue]"
     );
+
+    /**
+     * Locks.
+     */
+    private final transient Locks locks;
+
+    /**
+     * Github.
+     */
+    private final transient Github github;
+
+    /**
+     * Ctor.
+     * @param lcks Locks
+     * @param ghub Github client
+     */
+    public UnlocksRepo(final Locks lcks, final Github ghub) {
+        this.locks = lcks;
+        this.github = ghub;
+    }
 
     @Override
     public void execute(final Talks talks) throws IOException {
         for (final Talk talk : talks.active()) {
-            final XML xml = talk.read();
-            if (!xml.nodes(DeactivatesTalks.XPATH).isEmpty()) {
-                talk.active(false);
-                Logger.info(this, "%s deactivated", talk.name());
+            this.unlock(talk);
+        }
+    }
+
+    /**
+     * Unlock.
+     * @param talk Talk
+     * @throws IOException If fails
+     */
+    private void unlock(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        if (!xml.nodes(UnlocksRepo.XPATH).isEmpty()) {
+            final Issue issue = new TalkIssues(this.github, talk.read()).get();
+            if (new RepoLock(this.locks, issue.repo()).unlock(talk)) {
+                Logger.info(
+                    this, "%s unlocked by %s",
+                    issue.repo().coordinates(), talk.name()
+                );
             }
         }
     }

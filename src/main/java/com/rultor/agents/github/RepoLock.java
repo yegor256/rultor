@@ -27,48 +27,89 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents;
+package com.rultor.agents.github;
 
+import co.stateful.Lock;
+import co.stateful.Locks;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
-import com.jcabi.xml.XML;
-import com.rultor.spi.SuperAgent;
+import com.jcabi.github.Repo;
 import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 
 /**
- * Deactivates empty talks.
+ * Repo lock.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.8.12
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
-public final class DeactivatesTalks implements SuperAgent {
+@EqualsAndHashCode(of = { "locks", "repo" })
+public final class RepoLock {
 
     /**
-     * Which talks should be deactivated.
+     * Locks.
      */
-    private static final String XPATH = StringUtils.join(
-        "/talk[@later='false' and not(request) and not(daemon)",
-        " and not(shell)]"
-    );
+    private final transient Locks locks;
 
-    @Override
-    public void execute(final Talks talks) throws IOException {
-        for (final Talk talk : talks.active()) {
-            final XML xml = talk.read();
-            if (!xml.nodes(DeactivatesTalks.XPATH).isEmpty()) {
-                talk.active(false);
-                Logger.info(this, "%s deactivated", talk.name());
-            }
-        }
+    /**
+     * Repo.
+     */
+    private final transient Repo repo;
+
+    /**
+     * Ctor.
+     * @param lcks Locks
+     * @param rpo Repo
+     */
+    public RepoLock(final Locks lcks, final Repo rpo) {
+        this.locks = lcks;
+        this.repo = rpo;
     }
 
+    /**
+     * Lock.
+     * @param talk Talk
+     * @return TRUE if locked
+     * @throws IOException If fails
+     */
+    public boolean lock(final Talk talk) throws IOException {
+        return this.lock().lock(RepoLock.label(talk));
+    }
+
+    /**
+     * Unlock.
+     * @param talk Talk
+     * @return TRUE if unlocked
+     * @throws IOException If fails
+     */
+    public boolean unlock(final Talk talk) throws IOException {
+        return this.lock().unlock(RepoLock.label(talk));
+    }
+
+    /**
+     * Get lock.
+     * @return Lock
+     * @throws IOException If fails
+     */
+    private Lock lock() throws IOException {
+        return this.locks.get(
+            String.format("rt-repo-%s", this.repo.coordinates()).replaceAll(
+                "[^a-zA-Z0-9\\-]", "-"
+            )
+        );
+    }
+
+    /**
+     * Get label.
+     * @param talk Talk
+     * @return Label
+     * @throws IOException If fails
+     */
+    private static String label(final Talk talk) throws IOException {
+        return talk.read().xpath("/talk/@name").get(0);
+    }
 }

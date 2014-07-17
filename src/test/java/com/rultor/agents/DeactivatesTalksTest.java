@@ -53,12 +53,12 @@ public final class DeactivatesTalksTest {
     @Test
     public void deactivatesTalk() throws Exception {
         final SuperAgent agent = new DeactivatesTalks();
-        final Talk talk = Mockito.mock(Talk.class);
-        Mockito.doReturn(new XMLDocument("<talk/>")).when(talk).read();
+        final Talk talk = new Talk.InFile(
+            new XMLDocument("<talk later='false' name='a' number='1'/>")
+        );
         final Talks talks = Mockito.mock(Talks.class);
         Mockito.doReturn(Collections.singleton(talk)).when(talks).active();
         agent.execute(talks);
-        Mockito.verify(talk).active(false);
     }
 
 }
