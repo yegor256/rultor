@@ -145,6 +145,10 @@ public final class Agents {
         final Locks locks = this.sttc.locks();
         final Question list = new Question.FirstOf(
             Arrays.<Question>asList(
+                new QnIfContains("config", new QnConfig(profile)),
+                new QnIfContains("status", new QnStatus(talk)),
+                new QnIfContains("version", new QnVersion()),
+                new QnIfContains("hello", new QnHello()),
                 new QnIfContains(
                     "merge",
                     new QnAskedBy(
@@ -174,11 +178,7 @@ public final class Agents {
                             new QnAlone(talk, locks, new QnRelease())
                         )
                     )
-                ),
-                new QnIfContains("config", new QnConfig(profile)),
-                new QnIfContains("status", new QnStatus(talk)),
-                new QnIfContains("version", new QnVersion()),
-                new QnIfContains("hello", new QnHello())
+                )
             )
         );
         agents.addAll(
