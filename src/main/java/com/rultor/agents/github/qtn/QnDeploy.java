@@ -75,7 +75,7 @@ public final class QnDeploy implements Question {
         final Issue issue = comment.issue();
         final Repo repo = issue.repo();
         Logger.info(
-            this, "deploy request found in %s/%d comment #%d",
+            this, "deploy request found in %s#%d comment #%d",
             repo.coordinates(), issue.number(), comment.number()
         );
         return new Req.Simple(
