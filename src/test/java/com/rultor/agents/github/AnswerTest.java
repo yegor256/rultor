@@ -64,6 +64,20 @@ public final class AnswerTest {
     }
 
     /**
+     * Answer can reject a message if it's a spam from us.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void preventsSpam() throws Exception {
+        final Issue issue = AnswerTest.issue();
+        issue.comments().post("hey, do it");
+        final Comment.Smart comment = new Comment.Smart(issue.comments().get(1));
+        new Answer(comment).post("first");
+        new Answer(comment).post("second");
+        new Answer(comment).post("this one should be rejected");
+    }
+
+    /**
      * Make an issue.
      * @return Issue
      * @throws IOException If fails
