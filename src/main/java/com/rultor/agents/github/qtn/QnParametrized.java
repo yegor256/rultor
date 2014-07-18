@@ -30,6 +30,7 @@
 package com.rultor.agents.github.qtn;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.rultor.agents.github.Question;
@@ -82,7 +83,7 @@ public final class QnParametrized implements Question {
         throws IOException {
         final Map<String, String> map = QnParametrized.params(comment);
         Req req = this.origin.understand(comment, home);
-        if (!req.equals(Req.EMPTY) && !req.equals(Req.LATER)) {
+        if (!Iterables.isEmpty(req.dirs())) {
             final Directives dirs = new Directives().append(req.dirs());
             req = new Req() {
                 @Override
