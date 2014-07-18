@@ -54,6 +54,11 @@ import lombok.ToString;
 public final class Answer {
 
     /**
+     * Maximum messages from me.
+     */
+    private static final int MAX = 5;
+
+    /**
      * Original comment.
      */
     private final transient Comment.Smart comment;
@@ -87,7 +92,7 @@ public final class Answer {
             }
             ++mine;
         }
-        if (mine <= 2) {
+        if (mine < Answer.MAX) {
             this.comment.issue().comments().post(
                 String.format(
                     "> %s\n\n@%s %s",

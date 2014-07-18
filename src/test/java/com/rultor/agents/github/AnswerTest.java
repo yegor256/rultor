@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
@@ -72,16 +73,19 @@ public final class AnswerTest {
     @Test
     public void preventsSpam() throws Exception {
         final Issue issue = AnswerTest.issue();
-        issue.comments().post("hello, how are you?");
+        MkGithub.class.cast(issue.repo().github()).relogin("walter")
+            .repos().get(new Coordinates.Simple("jeff/test"))
+            .issues().get(1).comments().post("hello, how are you?");
         final Comment.Smart comment = new Comment.Smart(
             issue.comments().get(1)
         );
-        new Answer(comment).post("first");
-        new Answer(comment).post("second");
-        new Answer(comment).post("this one should be ignored");
+        final Answer answer = new Answer(comment);
+        for (int idx = 0; idx < Tv.TEN; ++idx) {
+            answer.post("oops");
+        }
         MatcherAssert.assertThat(
             Iterables.size(issue.comments().iterate()),
-            Matchers.is(Tv.THREE)
+            Matchers.is(Tv.SIX)
         );
     }
 
