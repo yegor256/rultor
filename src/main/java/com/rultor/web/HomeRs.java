@@ -30,8 +30,10 @@
 package com.rultor.web;
 
 import com.rexsl.page.PageBuilder;
+import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -57,6 +59,20 @@ public final class HomeRs extends BaseRs {
             .init(this)
             .render()
             .build();
+    }
+
+    /**
+     * Old stands.
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/s/{name}")
+    public Response stand(@PathParam("name") final String name) {
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUri(),
+            String.format("stand %s is not available any more", name),
+            Level.WARNING
+        );
     }
 
 }
