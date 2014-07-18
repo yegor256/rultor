@@ -30,6 +30,7 @@
 package com.rultor.agents.github;
 
 import com.google.common.collect.Iterables;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
@@ -71,14 +72,16 @@ public final class AnswerTest {
     @Test
     public void preventsSpam() throws Exception {
         final Issue issue = AnswerTest.issue();
-        issue.comments().post("hey, do it");
-        final Comment.Smart comment = new Comment.Smart(issue.comments().get(1));
+        issue.comments().post("hello, how are you?");
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().get(1)
+        );
         new Answer(comment).post("first");
         new Answer(comment).post("second");
         new Answer(comment).post("this one should be ignored");
         MatcherAssert.assertThat(
             Iterables.size(issue.comments().iterate()),
-            Matchers.is(3)
+            Matchers.is(Tv.THREE)
         );
     }
 

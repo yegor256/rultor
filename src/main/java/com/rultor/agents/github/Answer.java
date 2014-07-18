@@ -29,10 +29,15 @@
  */
 package com.rultor.agents.github;
 
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -69,14 +74,34 @@ public final class Answer {
      */
     public void post(final String msg, final Object... args)
         throws IOException {
-        this.comment.issue().comments().post(
-            String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
-            )
+        final Issue issue = this.comment.issue();
+        final List<Comment.Smart> comments = Lists.newArrayList(
+            new Smarts<Comment.Smart>(issue.comments().iterate())
         );
+        Collections.reverse(comments);
+        final String self = issue.repo().github().users().self().login();
+        int mine = 0;
+        for (final Comment.Smart cmt : comments) {
+            if (!cmt.author().login().equals(self)) {
+                break;
+            }
+            ++mine;
+        }
+        if (mine <= 2) {
+            this.comment.issue().comments().post(
+                String.format(
+                    "> %s\n\n@%s %s",
+                    this.comment.body().replace("\n", " "),
+                    this.comment.author().login(),
+                    Logger.format(msg, args)
+                )
+            );
+        } else {
+            Logger.error(
+                this, "too many (%d) comments from %s already in %s#%d",
+                mine, self, issue.repo().coordinates(), issue.number()
+            );
+        }
     }
 
 }
