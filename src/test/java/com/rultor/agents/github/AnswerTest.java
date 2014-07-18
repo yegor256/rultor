@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
@@ -67,14 +68,18 @@ public final class AnswerTest {
      * Answer can reject a message if it's a spam from us.
      * @throws Exception In case of error.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void preventsSpam() throws Exception {
         final Issue issue = AnswerTest.issue();
         issue.comments().post("hey, do it");
         final Comment.Smart comment = new Comment.Smart(issue.comments().get(1));
         new Answer(comment).post("first");
         new Answer(comment).post("second");
-        new Answer(comment).post("this one should be rejected");
+        new Answer(comment).post("this one should be ignored");
+        MatcherAssert.assertThat(
+            Iterables.size(issue.comments().iterate()),
+            Matchers.is(3)
+        );
     }
 
     /**
