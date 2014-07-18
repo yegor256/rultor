@@ -39,17 +39,18 @@ import com.jcabi.github.RtPagination;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.Logger;
+import com.rultor.Time;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Date;
+import java.util.Collection;
+import java.util.LinkedList;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directives;
 
 /**
@@ -79,9 +80,7 @@ public final class StartsTalks implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        final String since = DateFormatUtils.ISO_DATETIME_FORMAT.format(
-            new Date()
-        );
+        final String since = new Time().iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();
         final Iterable<JsonObject> events = Iterables.filter(
@@ -96,10 +95,9 @@ public final class StartsTalks implements SuperAgent {
                 }
             }
         );
-        int total = 0;
+        final Collection<String> names = new LinkedList<String>();
         for (final JsonObject event : events) {
-            this.activate(talks, event);
-            ++total;
+            names.add(this.activate(talks, event));
         }
         req.uri()
             .queryParam("last_read_at", since).back()
@@ -108,16 +106,20 @@ public final class StartsTalks implements SuperAgent {
             .fetch()
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_RESET);
-        Logger.info(this, "%d notification(s) checked", total);
+        Logger.info(
+            this, "%d new notification(s): %[list]s",
+            names.size(), names
+        );
     }
 
     /**
      * Activate talk.
      * @param talks Talks
      * @param event Event
+     * @return Name of the talk activated
      * @throws IOException If fails
      */
-    private void activate(final Talks talks, final JsonObject event)
+    private String activate(final Talks talks, final JsonObject event)
         throws IOException {
         final Coordinates coords = new Coordinates.Simple(
             event.getJsonObject("repository").getString("full_name")
@@ -152,6 +154,7 @@ public final class StartsTalks implements SuperAgent {
             this, "talk %s#%d activated as %s",
             coords, issue.number(), name
         );
+        return talk.name();
     }
 
 }
