@@ -63,6 +63,7 @@ public final class HomeRs extends BaseRs {
 
     /**
      * Old stands.
+     * @param name Name
      * @return The JAX-RS response
      */
     @GET

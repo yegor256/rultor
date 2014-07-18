@@ -16,7 +16,7 @@ release:
     - "sudo bundle install"
     - "mvn versions:set \"-DnewVersion=${tag}\""
     - "git commit -am \"${tag}\""
-    - "mvn clean deploy -Prultor --settings ../settings.xml"
+    - "mvn clean deploy -Pqulice -Prultor --settings ../settings.xml"
     - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
 
 merge:
