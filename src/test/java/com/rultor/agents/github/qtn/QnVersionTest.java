@@ -70,7 +70,7 @@ public final class QnVersionTest {
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("my current version is")
+            Matchers.containsString("My current version is")
         );
     }
 
