@@ -71,19 +71,20 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">     * Old stands.</em>
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">     * @return The JAX-RS response</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      @GET
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      @Path(<span class="jxr_string">"/s/{name}"</span>)
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> Response stand(@PathParam(<span class="jxr_string">"name"</span>) <strong class="jxr_keyword">final</strong> String name) {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">this</strong>.flash().redirect(
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>              <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUri(),
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>              String.format(<span class="jxr_string">"stand %s is not available any more"</span>, name),
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>              Level.WARNING
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          );
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">     * @param name Name</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">     * @return The JAX-RS response</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      @GET
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      @Path(<span class="jxr_string">"/s/{name}"</span>)
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">public</strong> Response stand(@PathParam(<span class="jxr_string">"name"</span>) <strong class="jxr_keyword">final</strong> String name) {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">this</strong>.flash().redirect(
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>              <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUri(),
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>              String.format(<span class="jxr_string">"stand %s is not available any more"</span>, name),
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>              Level.WARNING
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          );
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
