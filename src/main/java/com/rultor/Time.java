@@ -61,6 +61,14 @@ public final class Time {
 
     /**
      * Ctor.
+     * @param date Date
+     */
+    public Time(final Date date) {
+        this(date.getTime());
+    }
+
+    /**
+     * Ctor.
      * @param msec Milliseconds
      */
     public Time(final long msec) {

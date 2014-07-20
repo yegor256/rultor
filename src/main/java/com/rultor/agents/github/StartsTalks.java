@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
@@ -46,11 +47,13 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.xembly.Directives;
 
 /**
@@ -80,7 +83,6 @@ public final class StartsTalks implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        final String since = new Time().iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();
         final Iterable<JsonObject> events = Iterables.filter(
@@ -99,6 +101,9 @@ public final class StartsTalks implements SuperAgent {
         for (final JsonObject event : events) {
             names.add(this.activate(talks, event));
         }
+        final String since = new Time(
+            DateUtils.addMinutes(new Date(), -Tv.FIVE)
+        ).iso();
         req.uri()
             .queryParam("last_read_at", since).back()
             .method(Request.PUT)
