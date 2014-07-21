@@ -73,7 +73,7 @@ public final class KillsDaemon extends AbstractAgent {
                 // @checkstyle LineLength (1 line)
                 "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
                 mins
-            )
+        )
         );
     }
 
