@@ -71,6 +71,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
@@ -209,7 +210,7 @@ public final class Agents {
                     )
                 ),
                 new StartsDaemon(profile),
-                new KillsDaemon(),
+                new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
                 new EndsDaemon(),
                 new EndsRequest(),
                 new Reports(this.github),

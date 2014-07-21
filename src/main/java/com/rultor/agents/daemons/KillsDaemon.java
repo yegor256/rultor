@@ -36,6 +36,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -58,10 +59,21 @@ public final class KillsDaemon extends AbstractAgent {
      * Ctor.
      */
     public KillsDaemon() {
+        this(TimeUnit.HOURS.toMinutes(1L));
+    }
+
+    /**
+     * Ctor.
+     * @param mins Maximum minutes per build
+     */
+    public KillsDaemon(final long mins) {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
-            // @checkstyle LineLength (1 line)
-            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > 30]"
+            String.format(
+                // @checkstyle LineLength (1 line)
+                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
+                mins
+            )
         );
     }
 
