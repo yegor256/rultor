@@ -55,6 +55,7 @@ import org.xembly.Xembler;
  * @since 1.0
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Talk {
 
     /**

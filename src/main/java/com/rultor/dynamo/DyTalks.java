@@ -76,12 +76,6 @@ public final class DyTalks implements Talks {
     public static final String IDX_NUMBERS = "numbers";
 
     /**
-     * Index name.
-     * @since 1.9
-     */
-    public static final String IDX_RECENT = "recent";
-
-    /**
      * Talk unique name.
      */
     public static final String HASH = "name";
@@ -228,7 +222,7 @@ public final class DyTalks implements Talks {
                 .frame()
                 .through(
                     new QueryValve()
-                        .withIndexName(DyTalks.IDX_RECENT)
+                        .withIndexName(DyTalks.IDX_ACTIVE)
                         .withScanIndexForward(false)
                         .withConsistentRead(false)
                         .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
