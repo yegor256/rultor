@@ -83,11 +83,16 @@ public final class StartsTalks implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
+        final String since = new Time(
+            DateUtils.addMinutes(new Date(), -Tv.FIVE)
+        ).iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();
         final Iterable<JsonObject> events = Iterables.filter(
             new RtPagination<JsonObject>(
-                req.uri().queryParam("participating", "true").back(),
+                req.uri().queryParam("participating", "true")
+                    .queryParam("since", since)
+                    .back(),
                 RtPagination.COPYING
             ),
             new Predicate<JsonObject>() {
@@ -101,9 +106,6 @@ public final class StartsTalks implements SuperAgent {
         for (final JsonObject event : events) {
             names.add(this.activate(talks, event));
         }
-        final String since = new Time(
-            DateUtils.addMinutes(new Date(), -Tv.FIVE)
-        ).iso();
         req.uri()
             .queryParam("last_read_at", since).back()
             .method(Request.PUT)
