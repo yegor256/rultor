@@ -39,6 +39,7 @@ import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.w3c.dom.Node;
@@ -79,6 +80,13 @@ public final class DyTalk implements Talk {
     @Override
     public String name() throws IOException {
         return this.item.get(DyTalks.HASH).getS();
+    }
+
+    @Override
+    public Date updated() throws IOException {
+        return new Date(
+            Long.parseLong(this.item.get(DyTalks.ATTR_UPDATED).getN())
+        );
     }
 
     @Override

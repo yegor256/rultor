@@ -29,12 +29,19 @@
  */
 package com.rultor.web;
 
+import com.google.common.collect.Iterables;
+import com.jcabi.aspects.Tv;
+import com.jcabi.xml.XML;
+import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Talk;
+import java.io.IOException;
 import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import org.ocpsoft.prettytime.PrettyTime;
 
 /**
  * Index resource, front page of the website.
@@ -57,6 +64,22 @@ public final class HomeRs extends BaseRs {
             .stylesheet("/xsl/home.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(
+                new JaxbBundle("recent").add(
+                    new JaxbBundle.Group<Talk>(
+                        Iterables.limit(this.talks().recent(), Tv.TEN)
+                    ) {
+                        @Override
+                        public JaxbBundle bundle(final Talk talk) {
+                            try {
+                                return HomeRs.bundle(talk);
+                            } catch (final IOException ex) {
+                                throw new IllegalStateException(ex);
+                            }
+                        }
+                    }
+                )
+            )
             .render()
             .build();
     }
@@ -74,6 +97,25 @@ public final class HomeRs extends BaseRs {
             String.format("stand %s is not available any more", name),
             Level.WARNING
         );
+    }
+
+    /**
+     * Turn talk into a JAXB bundle.
+     * @param talk Talk
+     * @return Bundle
+     * @throws IOException If fails
+     */
+    private static JaxbBundle bundle(final Talk talk) throws IOException {
+        JaxbBundle bundle = new JaxbBundle("talk", talk.name())
+            .attr("timeago", new PrettyTime().format(talk.updated()));
+        final XML xml = talk.read();
+        if (!xml.nodes("/talk/wire/href").isEmpty()) {
+            bundle = bundle.attr(
+                "href",
+                talk.read().xpath("/talk/wire/href/text()").get(0)
+            );
+        }
+        return bundle;
     }
 
 }

@@ -39,6 +39,7 @@ import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.w3c.dom.Node;
@@ -84,6 +85,13 @@ public interface Talk {
      * @throws IOException If fails
      */
     String name() throws IOException;
+
+    /**
+     * When was it updated.
+     * @return When
+     * @throws IOException If fails
+     */
+    Date updated() throws IOException;
 
     /**
      * Read its content.
@@ -153,6 +161,10 @@ public interface Talk {
         @Override
         public String name() {
             return "a1b2c3d4";
+        }
+        @Override
+        public Date updated() {
+            return new Date(new File(this.path).lastModified());
         }
         @Override
         public XML read() throws IOException {

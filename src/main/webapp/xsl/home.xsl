@@ -38,10 +38,7 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <div class="wrapper" style="text-align: center; height: 20em;
-            position: absolute;
-            top: 0; bottom: 0; left: 0; right: 0;
-            margin: auto;">
+        <div class="wrapper" style="text-align:center;">
             <p>
                 <img style="width:128px;height:128px;" alt="rultor logo">
                     <xsl:attribute name="src">
@@ -65,6 +62,9 @@
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
             </p>
+            <ul>
+                <xsl:apply-templates select="recent/talk"/>
+            </ul>
             <p>
                 <xsl:text>For full documentation, look </xsl:text>
                 <a href="http://doc.rultor.com">
@@ -103,5 +103,21 @@
                 </div>
             </div>
         </div>
+    </xsl:template>
+    <xsl:template match="recent/talk">
+        <li>
+            <xsl:choose>
+                <xsl:when test="@href">
+                    <a href="{@href}">
+                        <xsl:value-of select="."/>
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="."/>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@timeago"/>
+        </li>
     </xsl:template>
 </xsl:stylesheet>
