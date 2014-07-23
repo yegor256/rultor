@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<?xml-stylesheet type='text/xsl' href='/xsl/home.xsl'?>
 <!--
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
@@ -28,7 +29,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/front.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <version>
         <name>1.0-SNAPSHOT</name>
@@ -37,11 +37,16 @@
     </version>
     <links>
         <link href="/" rel="root" type="text/xml"/>
-        <link href="/xml/front.xml" rel="self" type="text/xml"/>
-        <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/index.xml" rel="auth-github" type="text/xml"/>
-        <link href="/xml/index.xml" rel="auth-google" type="text/xml"/>
-        <link href="/xml/index.xml" rel="auth-facebook" type="text/xml"/>
+        <link href="/xml/home.xml" rel="self" type="text/xml"/>
+        <link href="/xml/home.xml" rel="home" type="text/xml"/>
+        <link href="/xml/home.xml" rel="rexsl:github" type="text/xml"/>
     </links>
     <millis>16</millis>
+    <recent>
+        <talk href="/xml/home.xml" timeago="2 hours ago">yegor256/rultor#456</talk>
+        <talk href="/xml/home.xml" timeago="10 hours ago">yegor256/rultor#250</talk>
+        <talk href="/xml/home.xml" timeago="2 days ago">yegor256/rultor#56</talk>
+        <talk href="/xml/home.xml" timeago="5 days ago">yegor256/rultor#45</talk>
+        <talk href="/xml/home.xml" timeago="10 days ago">yegor256/rultor#4</talk>
+    </recent>
 </page>

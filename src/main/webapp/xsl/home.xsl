@@ -62,9 +62,14 @@
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
             </p>
-            <ul>
-                <xsl:apply-templates select="recent/talk"/>
-            </ul>
+            <xsl:if test="recent/talk">
+                <p>
+                    <xsl:text>See recent conversations in Github:</xsl:text>
+                </p>
+                <ul class="recent">
+                    <xsl:apply-templates select="recent/talk"/>
+                </ul>
+            </xsl:if>
             <p>
                 <xsl:text>For full documentation, look </xsl:text>
                 <a href="http://doc.rultor.com">
