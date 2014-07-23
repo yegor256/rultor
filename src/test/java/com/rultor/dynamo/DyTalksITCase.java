@@ -35,9 +35,10 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
-import org.junit.Assume;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -49,11 +50,11 @@ import org.junit.Test;
 public final class DyTalksITCase {
 
     /**
-     * DyRepos can add and remove repos.
+     * DyTalks can add a talk.
      * @throws Exception If some problem inside
      */
     @Test
-    public void andsAndRemovesRepos() throws Exception {
+    public void addsTalks() throws Exception {
         final Talks talks = new DyTalks(
             this.dynamo(), new MkSttc().counters().get("")
         );
@@ -66,12 +67,31 @@ public final class DyTalksITCase {
     }
 
     /**
+     * DyTalks can list recent talks.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void listsRecentTalks() throws Exception {
+        final Talks talks = new DyTalks(
+            this.dynamo(), new MkSttc().counters().get("")
+        );
+        final String name = "yegor256/rultor#529";
+        talks.create(name);
+        final Talk talk = talks.get(name);
+        talk.active(false);
+        MatcherAssert.assertThat(
+            talks.recent().iterator().next().name(),
+            Matchers.equalTo(name)
+        );
+    }
+
+    /**
      * DynamoDB region for tests.
      * @return Region
      */
     private Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
-        Assume.assumeTrue(key.startsWith("AAAA"));
+        MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(
             new ReRegion(
                 new Region.Simple(

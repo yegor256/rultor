@@ -11,6 +11,10 @@
         {
             "AttributeName": "number",
             "AttributeType": "N"
+        },
+        {
+            "AttributeName": "updated",
+            "AttributeType": "N"
         }
     ],
     "KeySchema": [
@@ -47,6 +51,26 @@
                 {
                     "AttributeName": "number",
                     "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "KEYS_ONLY"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": "1",
+                "WriteCapacityUnits": "1"
+            }
+        },
+        {
+            "IndexName": "recent",
+            "KeySchema": [
+                {
+                    "AttributeName": "active",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "updated",
+                    "KeyType": "RANGE"
                 }
             ],
             "Projection": {

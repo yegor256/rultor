@@ -76,6 +76,12 @@ public final class DyTalks implements Talks {
     public static final String IDX_NUMBERS = "numbers";
 
     /**
+     * Index name.
+     * @since 1.9
+     */
+    public static final String IDX_RECENT = "recent";
+
+    /**
      * Talk unique name.
      */
     public static final String HASH = "name";
@@ -206,6 +212,28 @@ public final class DyTalks implements Talks {
                         .withAttributesToGet(DyTalks.HASH, DyTalks.ATTR_NUMBER)
                 )
                 .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true)),
+            new Function<Item, Talk>() {
+                @Override
+                public Talk apply(final Item input) {
+                    return new DyTalk(input);
+                }
+            }
+        );
+    }
+
+    @Override
+    public Iterable<Talk> recent() {
+        return Iterables.transform(
+            this.region.table(DyTalks.TBL)
+                .frame()
+                .through(
+                    new QueryValve()
+                        .withIndexName(DyTalks.IDX_RECENT)
+                        .withScanIndexForward(false)
+                        .withConsistentRead(false)
+                        .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
+                )
+                .where(DyTalks.ATTR_ACTIVE, Boolean.toString(false)),
             new Function<Item, Talk>() {
                 @Override
                 public Talk apply(final Item input) {

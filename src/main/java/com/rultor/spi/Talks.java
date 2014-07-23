@@ -93,6 +93,12 @@ public interface Talks {
     Iterable<Talk> active();
 
     /**
+     * Get recent talks.
+     * @return Talks
+     */
+    Iterable<Talk> recent();
+
+    /**
      * In directory.
      */
     @Immutable
@@ -164,6 +170,10 @@ public interface Talks {
                     }
                 }
             );
+        }
+        @Override
+        public Iterable<Talk> recent() {
+            return this.active();
         }
     }
 }
