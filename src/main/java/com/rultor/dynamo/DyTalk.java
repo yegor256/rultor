@@ -37,6 +37,8 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSL;
+import com.jcabi.xml.XSLDocument;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Date;
@@ -58,6 +60,13 @@ import org.xembly.Xembler;
 @ToString
 @EqualsAndHashCode(of = "item")
 public final class DyTalk implements Talk {
+
+    /**
+     * Upgrade XSL.
+     */
+    private static final XSL CLEANUP = XSLDocument.make(
+        DyTalk.class.getResourceAsStream("cleanup.xsl")
+    );
 
     /**
      * Item.
@@ -112,8 +121,8 @@ public final class DyTalk implements Talk {
                     ex
                 );
             }
-            final String body = new StrictXML(
-                new XMLDocument(node), Talk.SCHEMA
+            final String body = DyTalk.CLEANUP.transform(
+                new StrictXML(new XMLDocument(node), Talk.SCHEMA)
             ).toString();
             if (body.length() > Tv.FIFTY * Tv.THOUSAND) {
                 throw new IllegalArgumentException("XML is too big");
