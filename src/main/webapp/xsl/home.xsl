@@ -121,8 +121,9 @@
                     <xsl:value-of select="."/>
                 </xsl:otherwise>
             </xsl:choose>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="@timeago"/>
+            <span class="ago">
+                <xsl:value-of select="@timeago"/>
+            </span>
         </li>
     </xsl:template>
 </xsl:stylesheet>

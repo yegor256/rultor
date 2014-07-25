@@ -29,7 +29,7 @@
  */
 
 .menu {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Courier New', 'Courier', monospace;
   font-size: 85%;
   padding: .3em;
   text-align: center;
@@ -44,4 +44,8 @@
 
 .recent {
   list-style: none;
+  .ago {
+    margin-left: .5em;
+    color: gray;
+  }
 }
