@@ -3,7 +3,8 @@ layout: default
 title: ".rultor.yml Reference"
 date: 2014-07-13
 description:
-Rultor is configured by the .rultor.yml, YAML configuration file in root directory of your Github repository
+  Rultor is configured by the .rultor.yml,
+  YAML configuration file in root directory of your Github repository
 ---
 
 Rultor is configured solely through the YAML `.rultor.yml` file stored in the
