@@ -128,22 +128,25 @@
         </li>
     </xsl:template>
     <xsl:template match="pulse">
-        <xsl:variable name="max" select="5"/>
+        <xsl:variable name="height" select="5"/>
+        <xsl:variable name="width" select="86400000"/>
         <div class="pulse">
             <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1"
                 width="100%" height="100%">
                 <xsl:attribute name="viewBox">
-                    <xsl:value-of select="-86400000"/>
+                    <xsl:value-of select="-$width"/>
                     <xsl:text> </xsl:text>
                     <xsl:value-of select="0"/>
                     <xsl:text> </xsl:text>
-                    <xsl:value-of select="86400000"/>
+                    <xsl:value-of select="$width"/>
                     <xsl:text> </xsl:text>
-                    <xsl:value-of select="$max"/>
+                    <xsl:value-of select="$height"/>
                 </xsl:attribute>
+                <line x1="0" y1="{$height}" x2="{$width}" y2="{$height}"
+                    stroke="gray" stroke-width="1px"/>
                 <xsl:for-each select="tick">
                     <rect width="{@msec}" height="{@total + 1}"
-                        x="{@start}" y="{$max - @total}" fill="green"/>
+                        x="{@start}" y="{$height - @total}" fill="green"/>
                 </xsl:for-each>
             </svg>
         </div>
