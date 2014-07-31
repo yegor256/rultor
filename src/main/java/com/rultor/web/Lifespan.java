@@ -95,7 +95,7 @@ public final class Lifespan implements ServletContextListener {
     private final transient Collection<Pulse.Tick> list =
         Collections.synchronizedCollection(
             EvictingQueue.<Pulse.Tick>create(
-                (int) TimeUnit.DAYS.toSeconds(1L)
+                (int) TimeUnit.HOURS.toMinutes(1L)
             )
         );
 

@@ -129,7 +129,7 @@
     </xsl:template>
     <xsl:template match="pulse">
         <xsl:variable name="height" select="5"/>
-        <xsl:variable name="width" select="86400000"/>
+        <xsl:variable name="width" select="3600000"/>
         <div class="pulse">
             <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1"
                 width="100%" height="100%">
@@ -143,10 +143,11 @@
                     <xsl:value-of select="$height"/>
                 </xsl:attribute>
                 <line x1="{-$width}" y1="{$height}" x2="0" y2="{$height}"
-                    stroke="gray" stroke-width="1px"/>
+                    stroke="lightgray" stroke-width="1px"
+                    vector-effect="non-scaling-stroke"/>
                 <xsl:for-each select="tick">
-                    <rect width="{@msec}" height="{@total + 1}"
-                        x="{@start}" y="{$height - @total}" fill="green"/>
+                    <rect width="{@msec}" height="{@total + 0.5}"
+                        x="{@start}" y="{$height - @total - 0.5}" fill="green"/>
                 </xsl:for-each>
             </svg>
         </div>

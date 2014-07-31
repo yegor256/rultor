@@ -50,9 +50,9 @@
         <talk href="/xml/home.xml" timeago="10 days ago">yegor256/rultor#4</talk>
     </recent>
     <pulse>
-        <tick start="-7899" msec="5600" total="2"/>
-        <tick start="-8890" msec="5600" total="0"/>
-        <tick start="-99900" msec="5600" total="0"/>
-        <tick start="-167700" msec="56" total="1"/>
+        <tick start="-60000" msec="5600" total="2"/>
+        <tick start="-120000" msec="15600" total="0"/>
+        <tick start="-180000" msec="7600" total="0"/>
+        <tick start="-240000" msec="2300" total="1"/>
     </pulse>
 </page>
