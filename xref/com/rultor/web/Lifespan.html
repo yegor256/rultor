@@ -103,7 +103,7 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> Collection&lt;Pulse.Tick&gt; list =
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>          Collections.synchronizedCollection(
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              EvictingQueue.&lt;Pulse.Tick&gt;create(
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>                  (<strong class="jxr_keyword">int</strong>) TimeUnit.DAYS.toSeconds(1L)
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>                  (<strong class="jxr_keyword">int</strong>) TimeUnit.HOURS.toMinutes(1L)
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>              )
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         );
 <a class="jxr_linenumber" name="L101" href="#L101">101</a> 
