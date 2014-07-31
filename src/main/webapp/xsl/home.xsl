@@ -133,11 +133,11 @@
             <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1"
                 width="100%" height="100%">
                 <xsl:attribute name="viewBox">
-                    <xsl:value-of select="-1440000"/>
+                    <xsl:value-of select="-86400000"/>
                     <xsl:text> </xsl:text>
                     <xsl:value-of select="0"/>
                     <xsl:text> </xsl:text>
-                    <xsl:value-of select="1440000"/>
+                    <xsl:value-of select="86400000"/>
                     <xsl:text> </xsl:text>
                     <xsl:value-of select="$max"/>
                 </xsl:attribute>
