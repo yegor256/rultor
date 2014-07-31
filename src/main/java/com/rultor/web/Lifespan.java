@@ -36,7 +36,6 @@ import co.stateful.retry.ReSttc;
 import com.google.common.collect.EvictingQueue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
@@ -95,7 +94,9 @@ public final class Lifespan implements ServletContextListener {
      */
     private final transient Collection<Pulse.Tick> list =
         Collections.synchronizedCollection(
-            EvictingQueue.<Pulse.Tick>create(Tv.THOUSAND)
+            EvictingQueue.<Pulse.Tick>create(
+                (int) TimeUnit.DAYS.toSeconds(1L)
+            )
         );
 
     @Override
