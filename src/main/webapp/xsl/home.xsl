@@ -151,5 +151,29 @@
                 </xsl:for-each>
             </svg>
         </div>
+        <p id="status">
+            <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
+            <xsl:text>status: </xsl:text>
+            <xsl:choose>
+                <xsl:when test="$age &gt; 600">
+                    <span style="color:red">
+                        <xsl:text>system outage :(</xsl:text>
+                    </span>
+                </xsl:when>
+                <xsl:when test="$age &gt; 240">
+                    <span style="color:orange">
+                        <xsl:text>temporary out of service</xsl:text>
+                    </span>
+                </xsl:when>
+                <xsl:otherwise>
+                    <span style="color:green">
+                        <xsl:text>all systems work fine</xsl:text>
+                    </span>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text> (</xsl:text>
+            <xsl:value-of select="format-number($age,'0')"/>
+            <xsl:text> sec)</xsl:text>
+        </p>
     </xsl:template>
 </xsl:stylesheet>
