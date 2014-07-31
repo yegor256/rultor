@@ -142,7 +142,7 @@
                     <xsl:value-of select="$max"/>
                 </xsl:attribute>
                 <xsl:for-each select="tick">
-                    <rect width="{@msec}" height="{@total}"
+                    <rect width="{@msec}" height="{@total + 1}"
                         x="{@start}" y="{$max - @total}" fill="green"/>
                 </xsl:for-each>
             </svg>
