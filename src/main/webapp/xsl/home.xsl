@@ -142,7 +142,7 @@
                     <xsl:text> </xsl:text>
                     <xsl:value-of select="$height"/>
                 </xsl:attribute>
-                <line x1="0" y1="{$height}" x2="{$width}" y2="{$height}"
+                <line x1="{-$width}" y1="{$height}" x2="0" y2="{$height}"
                     stroke="gray" stroke-width="1px"/>
                 <xsl:for-each select="tick">
                     <rect width="{@msec}" height="{@total + 1}"
