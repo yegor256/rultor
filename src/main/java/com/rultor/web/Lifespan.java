@@ -33,8 +33,10 @@ import co.stateful.RtSttc;
 import co.stateful.Sttc;
 import co.stateful.cached.CdSttc;
 import co.stateful.retry.ReSttc;
+import com.google.common.collect.EvictingQueue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
@@ -52,10 +54,13 @@ import com.rultor.dynamo.DyTalks;
 import com.rultor.profiles.Profiles;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -71,6 +76,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
 @ToString
 @EqualsAndHashCode
@@ -83,6 +89,14 @@ public final class Lifespan implements ServletContextListener {
      */
     private final transient ScheduledExecutorService service =
         Executors.newSingleThreadScheduledExecutor(new VerboseThreads());
+
+    /**
+     * Ticks.
+     */
+    private final transient Collection<Pulse.Tick> list =
+        Collections.synchronizedCollection(
+            EvictingQueue.<Pulse.Tick>create(Tv.THOUSAND)
+        );
 
     @Override
     public void contextInitialized(final ServletContextEvent event) {
@@ -100,11 +114,10 @@ public final class Lifespan implements ServletContextListener {
         if (!Manifests.read("Rultor-DynamoKey").startsWith("AAAAA")) {
             this.service.scheduleWithFixedDelay(
                 new VerboseRunnable(
-                    new Callable<Object>() {
+                    new Callable<Long>() {
                         @Override
-                        public Object call() throws Exception {
-                            Lifespan.this.routine(talks);
-                            return null;
+                        public Long call() throws Exception {
+                            return Lifespan.this.safe(talks);
                         }
                     },
                     true
@@ -113,6 +126,17 @@ public final class Lifespan implements ServletContextListener {
                 TimeUnit.MINUTES
             );
         }
+        event.getServletContext().setAttribute(
+            Pulse.class.getName(),
+            new Pulse() {
+                @Override
+                public Iterable<Pulse.Tick> ticks() {
+                    return Collections.unmodifiableCollection(
+                        Lifespan.this.list
+                    );
+                }
+            }
+        );
     }
 
     @Override
@@ -123,14 +147,29 @@ public final class Lifespan implements ServletContextListener {
     /**
      * Routine every-minute proc.
      * @param talks Talks
+     * @return Milliseconds spent
      * @throws IOException If fails
      */
-    private void routine(final Talks talks) throws IOException {
+    private long safe(final Talks talks) throws IOException {
+        final long start = System.currentTimeMillis();
+        int total = 0;
         if (new Toggles().readOnly()) {
             Logger.info(this, "read-only mode");
-            return;
+        } else {
+            total = this.routine(talks);
         }
-        final long start = System.currentTimeMillis();
+        final long msec = System.currentTimeMillis() - start;
+        this.list.add(new Pulse.Tick(start, msec, total));
+        return msec;
+    }
+
+    /**
+     * Routine every-minute proc.
+     * @param talks Talks
+     * @return Total talks processed
+     * @throws IOException If fails
+     */
+    private int routine(final Talks talks) throws IOException {
         final Agents agents = new Agents(this.github(), this.sttc());
         for (final SuperAgent agent : agents.starters()) {
             agent.execute(talks);
@@ -147,10 +186,7 @@ public final class Lifespan implements ServletContextListener {
         for (final SuperAgent agent : agents.closers()) {
             agent.execute(talks);
         }
-        Logger.info(
-            this, "%d active talk(s) processed in %[ms]s",
-            total, System.currentTimeMillis() - start
-        );
+        return total;
     }
 
     /**

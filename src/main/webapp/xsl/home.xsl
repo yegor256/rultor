@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
+    xmlns="http://www.w3.org/1999/xhtml" version="1.0">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
     <xsl:template match="page" mode="head">
@@ -62,6 +62,7 @@
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
             </p>
+            <xsl:apply-templates select="pulse"/>
             <xsl:if test="recent/talk">
                 <p>
                     <xsl:text>See recent conversations in Github:</xsl:text>
@@ -125,5 +126,26 @@
                 <xsl:value-of select="@timeago"/>
             </span>
         </li>
+    </xsl:template>
+    <xsl:template match="pulse">
+        <xsl:variable name="max" select="5"/>
+        <div class="pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1"
+                width="100%" height="100%">
+                <xsl:attribute name="viewBox">
+                    <xsl:value-of select="-1440000"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="0"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="1440000"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="$max"/>
+                </xsl:attribute>
+                <xsl:for-each select="tick">
+                    <rect width="{@msec}" height="{@total}"
+                        x="{@start}" y="{$max - @total}" fill="green"/>
+                </xsl:for-each>
+            </svg>
+        </div>
     </xsl:template>
 </xsl:stylesheet>

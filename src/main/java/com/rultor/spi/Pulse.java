@@ -1,6 +1,4 @@
-<?xml version="1.0"?>
-<?xml-stylesheet type='text/xsl' href='/xsl/home.xsl'?>
-<!--
+/**
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -28,31 +26,73 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="/" rel="root" type="text/xml"/>
-        <link href="/xml/home.xml" rel="self" type="text/xml"/>
-        <link href="/xml/home.xml" rel="home" type="text/xml"/>
-        <link href="/xml/home.xml" rel="rexsl:github" type="text/xml"/>
-    </links>
-    <millis>16</millis>
-    <recent>
-        <talk href="/xml/home.xml" timeago="2 hours ago">yegor256/rultor#456</talk>
-        <talk href="/xml/home.xml" timeago="10 hours ago">yegor256/rultor#250</talk>
-        <talk href="/xml/home.xml" timeago="2 days ago">yegor256/rultor#56</talk>
-        <talk href="/xml/home.xml" timeago="5 days ago">yegor256/rultor#45</talk>
-        <talk href="/xml/home.xml" timeago="10 days ago">yegor256/rultor#4</talk>
-    </recent>
-    <pulse>
-        <tick start="-7899" msec="5600" total="2"/>
-        <tick start="-8890" msec="5600" total="0"/>
-        <tick start="-99900" msec="5600" total="0"/>
-        <tick start="-167700" msec="56" total="1"/>
-    </pulse>
-</page>
+ */
+package com.rultor.spi;
+
+/**
+ * Pulse.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.20
+ */
+public interface Pulse {
+
+    /**
+     * Get ticks.
+     * @return Ticks
+     */
+    Iterable<Pulse.Tick> ticks();
+
+    /**
+     * Tick.
+     */
+    final class Tick {
+        /**
+         * When was it started.
+         */
+        private final transient long when;
+        /**
+         * Duration.
+         */
+        private final transient long msec;
+        /**
+         * Talks processed or -1.
+         */
+        private final transient int talks;
+        /**
+         * Ctor.
+         * @param date When
+         * @param duration Duration in msec
+         * @param total Total processed or negative if failed
+         */
+        public Tick(final long date, final long duration,
+            final int total) {
+            this.when = date;
+            this.msec = duration;
+            this.talks = total;
+        }
+        /**
+         * Time of start.
+         * @return Time of start
+         */
+        public long start() {
+            return this.when;
+        }
+        /**
+         * Duration in msec.
+         * @return Duration
+         */
+        public long duration() {
+            return this.msec;
+        }
+        /**
+         * Total processed or negative.
+         * @return Number of talks
+         */
+        public int total() {
+            return this.talks;
+        }
+    }
+
+}

@@ -30,12 +30,15 @@
 package com.rultor.web;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -80,6 +83,7 @@ public final class HomeRs extends BaseRs {
                     }
                 )
             )
+            .append(HomeRs.bundle(this.ticks()))
             .render()
             .build();
     }
@@ -116,6 +120,38 @@ public final class HomeRs extends BaseRs {
             );
         }
         return bundle;
+    }
+
+    /**
+     * Turn ticks into a JAXB bundle.
+     * @param ticks Ticks
+     * @return Bundle
+     */
+    private static JaxbBundle bundle(final Collection<Pulse.Tick> ticks) {
+        final long now = System.currentTimeMillis();
+        return new JaxbBundle("pulse").add(
+            new JaxbBundle.Group<Pulse.Tick>(ticks) {
+                @Override
+                public JaxbBundle bundle(final Pulse.Tick tick) {
+                    return new JaxbBundle("tick")
+                        .attr("total", Integer.toString(tick.total()))
+                        .attr("start", Long.toString(tick.start() - now))
+                        .attr("msec", Long.toString(tick.duration()));
+                }
+            }
+        );
+    }
+
+    /**
+     * Get all ticks.
+     * @return Ticks
+     */
+    private Collection<Pulse.Tick> ticks() {
+        return Lists.newArrayList(
+            Pulse.class.cast(
+                this.servletContext().getAttribute(Pulse.class.getName())
+            ).ticks()
+        );
     }
 
 }
