@@ -175,24 +175,25 @@
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>             dirs.add(<span class="jxr_string">"tick"</span>)
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>                 .attr(<span class="jxr_string">"total"</span>, Integer.toString(tick.total()))
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>                 .attr(<span class="jxr_string">"start"</span>, Long.toString(tick.start() - now))
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>                 .attr(<span class="jxr_string">"msec"</span>, Long.toString(tick.duration()));
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>         }
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> XMLDocument(<strong class="jxr_keyword">new</strong> Xembler(dirs).xml());
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>     }
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * Get all ticks.</em>
-<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * @return Ticks</em>
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Pulse.Tick&gt; ticks() {
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>         <strong class="jxr_keyword">return</strong> Lists.newArrayList(
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>             Pulse.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>                 <strong class="jxr_keyword">this</strong>.servletContext().getAttribute(Pulse.<strong class="jxr_keyword">class</strong>.getName())
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>             ).ticks()
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>         );
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>     }
-<a class="jxr_linenumber" name="L186" href="#L186">186</a> 
-<a class="jxr_linenumber" name="L187" href="#L187">187</a> }
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>                 .attr(<span class="jxr_string">"msec"</span>, Long.toString(tick.duration()))
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>                 .up();
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         }
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> XMLDocument(<strong class="jxr_keyword">new</strong> Xembler(dirs).xml());
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     }
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * Get all ticks.</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * @return Ticks</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Pulse.Tick&gt; ticks() {
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>         <strong class="jxr_keyword">return</strong> Lists.newArrayList(
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>             Pulse.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>                 <strong class="jxr_keyword">this</strong>.servletContext().getAttribute(Pulse.<strong class="jxr_keyword">class</strong>.getName())
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>             ).ticks()
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         );
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> 
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
