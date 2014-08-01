@@ -35,7 +35,6 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.agents.github.Req;
 import java.net.URI;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;

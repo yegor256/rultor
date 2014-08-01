@@ -37,7 +37,6 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
 import java.net.URI;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;

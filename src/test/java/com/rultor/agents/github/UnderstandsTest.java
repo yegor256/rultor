@@ -134,7 +134,7 @@ public final class UnderstandsTest {
         agent.execute(talk);
         MatcherAssert.assertThat(
             issue.comments().iterate(),
-            Matchers.<Comment>iterableWithSize(2)
+            Matchers.<Comment>iterableWithSize(1)
         );
     }
 

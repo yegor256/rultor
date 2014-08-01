@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Bulk;
 import com.jcabi.github.Comment;
@@ -41,7 +42,10 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.ResourceBundle;
+import javax.json.Json;
+import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -95,7 +99,10 @@ public final class Understands extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(
-            new Bulk<Comment>(issue.comments().iterate())
+            Iterables.concat(
+                Collections.singleton(Understands.asComment(issue)),
+                new Bulk<Comment>(issue.comments().iterate())
+            )
         );
         final int seen = Understands.seen(xml);
         int next = seen;
@@ -188,6 +195,49 @@ public final class Understands extends AbstractAgent {
             );
         }
         return seen;
+    }
+
+    /**
+     * Make a message from issue's body.
+     * @param issue The issue
+     * @return Comment
+     */
+    private static Comment asComment(final Issue.Smart issue) {
+        // @checkstyle AnonInnerLengthCheck (50 lines)
+        return new Comment() {
+            @Override
+            public Issue issue() {
+                return issue;
+            }
+            @Override
+            public int number() {
+                return 1;
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("#remove()");
+            }
+            @Override
+            public int compareTo(final Comment comment) {
+                return 1;
+            }
+            @Override
+            public void patch(final JsonObject json) {
+                throw new UnsupportedOperationException("#patch()");
+            }
+            @Override
+            public JsonObject json() throws IOException {
+                return Json.createObjectBuilder()
+                    .add("body", issue.body())
+                    .add(
+                        "user",
+                        Json.createObjectBuilder().add(
+                            "login", issue.author().login()
+                        )
+                    )
+                    .build();
+            }
+        };
     }
 
 }
