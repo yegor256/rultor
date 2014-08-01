@@ -57,9 +57,7 @@ public final class QnFirstOfTest {
      */
     @Test
     public void getsFirstReq() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Comment comment = issue.comments().post("deploy");
         MatcherAssert.assertThat(

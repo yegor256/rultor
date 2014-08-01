@@ -37,7 +37,6 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import java.io.IOException;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -95,9 +94,7 @@ public final class AnswerTest {
      * @throws IOException If fails
      */
     private static Issue issue() throws IOException {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         return repo.issues().create("", "");
     }
 

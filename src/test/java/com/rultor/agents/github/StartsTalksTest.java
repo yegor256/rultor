@@ -29,13 +29,11 @@
  */
 package com.rultor.agents.github;
 
-import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
@@ -57,13 +55,10 @@ public final class StartsTalksTest {
     @Test
     @Ignore
     public void startsTalks() throws Exception {
-        final Github github = new MkGithub("jeff");
-        final Repo repo = github.repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, do it");
-        final SuperAgent agent = new StartsTalks(github);
+        final SuperAgent agent = new StartsTalks(repo.github());
         final Talks talks = new Talks.InDir();
         agent.execute(talks);
         MatcherAssert.assertThat(

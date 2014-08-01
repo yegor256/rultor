@@ -37,7 +37,6 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.net.URI;
 import java.util.Arrays;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -57,9 +56,7 @@ public final class QnLastOfTest {
      */
     @Test
     public void getsLastReq() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Comment comment = issue.comments().post("deploy");
         MatcherAssert.assertThat(

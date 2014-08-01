@@ -35,7 +35,6 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import java.net.URI;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.xembly.Directives;
@@ -58,9 +57,7 @@ public final class QnMergeTest {
      */
     @Test
     public void buildsRequest() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().get(
             repo.pulls().create("", "head", "base").number()
         );

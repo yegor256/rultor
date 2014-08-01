@@ -55,9 +55,7 @@ public final class QnHelloTest {
      */
     @Test
     public void repliesInGithub() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");
         MatcherAssert.assertThat(

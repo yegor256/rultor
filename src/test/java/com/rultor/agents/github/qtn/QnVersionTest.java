@@ -35,7 +35,6 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.agents.github.Req;
 import java.net.URI;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -57,9 +56,7 @@ public final class QnVersionTest {
      */
     @Test
     public void repliesInGithub() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("version");
         MatcherAssert.assertThat(

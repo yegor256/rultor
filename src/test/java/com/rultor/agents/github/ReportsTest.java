@@ -35,7 +35,6 @@ import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.xembly.Directives;
@@ -55,9 +54,7 @@ public final class ReportsTest {
      */
     @Test
     public void reportsRequestResult() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, do it");
         final Agent agent = new Reports(repo.github());

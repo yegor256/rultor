@@ -37,7 +37,6 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Talk;
 import java.net.URI;
-import javax.json.Json;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -60,9 +59,7 @@ public final class QnStatusTest {
      */
     @Test
     public void buildsReport() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("status");
         final Talk talk = new Talk.InFile(

@@ -42,8 +42,8 @@ import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.net.URI;
 import java.util.Arrays;
-import javax.json.Json;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -64,9 +64,7 @@ public final class UnderstandsTest {
      */
     @Test
     public void understandsMessage() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hello");
         issue.comments().post("@jeff deploy");
@@ -105,9 +103,7 @@ public final class UnderstandsTest {
      */
     @Test
     public void ignoresLaterReq() throws Exception {
-        final Repo repo = new MkGithub("jeff").repos().create(
-            Json.createObjectBuilder().add("name", "test2").build()
-        );
+        final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hey you");
         final Agent agent = new Understands(
