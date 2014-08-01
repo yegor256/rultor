@@ -1,0 +1,11 @@
+com.rultor
+com.rultor.agents
+com.rultor.agents.daemons
+com.rultor.agents.github
+com.rultor.agents.github.qtn
+com.rultor.agents.req
+com.rultor.agents.shells
+com.rultor.dynamo
+com.rultor.profiles
+com.rultor.spi
+com.rultor.web
