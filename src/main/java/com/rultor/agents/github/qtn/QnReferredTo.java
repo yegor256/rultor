@@ -76,7 +76,7 @@ public final class QnReferredTo implements Question {
         final URI home) throws IOException {
         final String prefix = String.format("@%s ", this.login);
         final Req req;
-        if (comment.body().startsWith(prefix)) {
+        if (comment.body().trim().startsWith(prefix)) {
             req = this.origin.understand(comment, home);
         } else {
             Logger.info(
