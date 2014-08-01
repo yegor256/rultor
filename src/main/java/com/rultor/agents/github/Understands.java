@@ -211,8 +211,7 @@ public final class Understands extends AbstractAgent {
             }
             @Override
             public int number() {
-                // @checkstyle MagicNumber (1 line)
-                return 49092214;
+                return 1;
             }
             @Override
             public void remove() {
