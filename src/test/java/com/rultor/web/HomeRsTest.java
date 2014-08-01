@@ -32,7 +32,7 @@ package com.rultor.web;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rexsl.mock.MkServletContext;
 import com.rultor.spi.Pulse;
-import java.util.Collections;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
@@ -57,14 +57,20 @@ public final class HomeRsTest {
                 new Pulse() {
                     @Override
                     public Iterable<Pulse.Tick> ticks() {
-                        return Collections.emptyList();
+                        return Arrays.asList(
+                            new Pulse.Tick(1L, 1L, 1),
+                            new Pulse.Tick(2L, 1L, 1)
+                        );
                     }
                 }
             )
         );
         MatcherAssert.assertThat(
-            home.svg(),
-            XhtmlMatchers.hasXPath("/svg:svg")
+            XhtmlMatchers.xhtml(home.svg()),
+            XhtmlMatchers.hasXPaths(
+                "/svg:svg",
+                "//svg:svg[count(svg:rect) >= 2]"
+            )
         );
     }
 
