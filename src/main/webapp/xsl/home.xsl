@@ -149,31 +149,33 @@
                     <rect width="{@msec}" height="{@total + 0.5}"
                         x="{@start}" y="{$height - @total - 0.5}" fill="green"/>
                 </xsl:for-each>
+                <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
+                <text x="0" y="0" style="text-anchor:middle;font-size:1.5"
+                    transform="scale(46000,1) translate(-40,1.5)">
+                    <xsl:choose>
+                        <xsl:when test="$age &gt; 600">
+                            <tspan style="fill:red">
+                                <xsl:text>system outage :(</xsl:text>
+                            </tspan>
+                        </xsl:when>
+                        <xsl:when test="$age &gt; 240">
+                            <tspan style="fill:orange">
+                                <xsl:text>temporary out of service</xsl:text>
+                            </tspan>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <tspan style="fill:green">
+                                <xsl:text>all systems work fine</xsl:text>
+                            </tspan>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </text>
+                <text x="0" y="0" style="text-anchor:end;font-size:1.5"
+                    transform="scale(46000,1) translate(0,1.5)">
+                    <xsl:value-of select="format-number($age,'0')"/>
+                    <xsl:text> sec</xsl:text>
+                </text>
             </svg>
         </div>
-        <p id="status">
-            <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
-            <xsl:text>status: </xsl:text>
-            <xsl:choose>
-                <xsl:when test="$age &gt; 600">
-                    <span style="color:red">
-                        <xsl:text>system outage :(</xsl:text>
-                    </span>
-                </xsl:when>
-                <xsl:when test="$age &gt; 240">
-                    <span style="color:orange">
-                        <xsl:text>temporary out of service</xsl:text>
-                    </span>
-                </xsl:when>
-                <xsl:otherwise>
-                    <span style="color:green">
-                        <xsl:text>all systems work fine</xsl:text>
-                    </span>
-                </xsl:otherwise>
-            </xsl:choose>
-            <xsl:text> (</xsl:text>
-            <xsl:value-of select="format-number($age,'0')"/>
-            <xsl:text> sec)</xsl:text>
-        </p>
     </xsl:template>
 </xsl:stylesheet>
