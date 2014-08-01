@@ -365,6 +365,20 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>minify-js</id>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceIncludes>
+                                <include>*.js</include>
+                            </jsSourceIncludes>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <skipMerge>true</skipMerge>
+                            <skipMinify>false</skipMinify>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>minify-css</id>
                         <goals>
                             <goal>minify</goal>

@@ -4,6 +4,7 @@
   "/css/style.css",
   "/robots.txt",
   "/xsl/layout.xsl",
+  "/js/all.js",
   "/"
 ].forEach(
   function (page) {
