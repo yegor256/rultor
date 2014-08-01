@@ -28,30 +28,17 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.menu {
-  font-family: 'Courier New', 'Courier', monospace;
-  font-size: 85%;
-  padding: .3em;
-  text-align: center;
-  @media only screen and (max-width: 400px) {
-    width: 100%;
-  }
-  span {
-    margin-left: .3em;
-    margin-right: .3em;
-  }
-}
+/*globals $:false, document:false, window:false */
 
-#pulse {
-  border: 1px solid lightgray;
-  padding: 1em;
-  height: 64px;
-}
-
-.recent {
-  list-style: none;
-  .ago {
-    margin-left: .5em;
-    color: gray;
+$(document).ready(
+  function () {
+    "use strict";
+    var $div = $('#pulse');
+    window.setInterval(
+      function () {
+        $div.load($div.attr('data-href'));
+      },
+      3000
+    );
   }
-}
+);

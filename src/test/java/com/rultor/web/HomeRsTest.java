@@ -27,31 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
 
-.menu {
-  font-family: 'Courier New', 'Courier', monospace;
-  font-size: 85%;
-  padding: .3em;
-  text-align: center;
-  @media only screen and (max-width: 400px) {
-    width: 100%;
-  }
-  span {
-    margin-left: .3em;
-    margin-right: .3em;
-  }
-}
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rexsl.mock.MkServletContext;
+import com.rultor.spi.Pulse;
+import java.util.Collections;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
 
-#pulse {
-  border: 1px solid lightgray;
-  padding: 1em;
-  height: 64px;
-}
+/**
+ * Test case for {@link HomeRs}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.21
+ */
+public final class HomeRsTest {
 
-.recent {
-  list-style: none;
-  .ago {
-    margin-left: .5em;
-    color: gray;
-  }
+    /**
+     * HomeRs can render SVG.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersSvg() throws Exception {
+        final HomeRs home = new HomeRs();
+        home.setServletContext(
+            new MkServletContext().withAttr(
+                Pulse.class.getName(),
+                new Pulse() {
+                    @Override
+                    public Iterable<Pulse.Tick> ticks() {
+                        return Collections.emptyList();
+                    }
+                }
+            )
+        );
+        MatcherAssert.assertThat(
+            home.svg(),
+            XhtmlMatchers.hasXPath("/svg:svg")
+        );
+    }
+
 }

@@ -33,7 +33,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
+import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSL;
+import com.jcabi.xml.XSLDocument;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talk;
@@ -43,8 +47,12 @@ import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.xembly.Directives;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.Xembler;
 
 /**
  * Index resource, front page of the website.
@@ -52,9 +60,17 @@ import org.ocpsoft.prettytime.PrettyTime;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Path("/")
 public final class HomeRs extends BaseRs {
+
+    /**
+     * XSLT for pulse render.
+     */
+    private static final XSL PULSE = XSLDocument.make(
+        HomeRs.class.getResourceAsStream("pulse.xsl")
+    );
 
     /**
      * Get entrance page JAX-RS response.
@@ -83,7 +99,7 @@ public final class HomeRs extends BaseRs {
                     }
                 )
             )
-            .append(HomeRs.bundle(this.ticks()))
+            .link(new Link("svg", "./svg"))
             .render()
             .build();
     }
@@ -101,6 +117,21 @@ public final class HomeRs extends BaseRs {
             String.format("stand %s is not available any more", name),
             Level.WARNING
         );
+    }
+
+    /**
+     * Build SVG.
+     * @return The JAX-RS response
+     * @since 1.21
+     * @throws ImpossibleModificationException If fails
+     */
+    @GET
+    @Path("/svg")
+    @Produces("image/svg+xml")
+    public String svg() throws ImpossibleModificationException {
+        return HomeRs.PULSE.transform(
+            HomeRs.dirs(this.ticks())
+        ).nodes("/*").get(0).toString();
     }
 
     /**
@@ -123,23 +154,22 @@ public final class HomeRs extends BaseRs {
     }
 
     /**
-     * Turn ticks into a JAXB bundle.
+     * Turn ticks into XML.
      * @param ticks Ticks
-     * @return Bundle
+     * @return XML
+     * @throws ImpossibleModificationException If fails
      */
-    private static JaxbBundle bundle(final Collection<Pulse.Tick> ticks) {
+    private static XML dirs(final Collection<Pulse.Tick> ticks)
+        throws ImpossibleModificationException {
         final long now = System.currentTimeMillis();
-        return new JaxbBundle("pulse").add(
-            new JaxbBundle.Group<Pulse.Tick>(ticks) {
-                @Override
-                public JaxbBundle bundle(final Pulse.Tick tick) {
-                    return new JaxbBundle("tick")
-                        .attr("total", Integer.toString(tick.total()))
-                        .attr("start", Long.toString(tick.start() - now))
-                        .attr("msec", Long.toString(tick.duration()));
-                }
-            }
-        );
+        final Directives dirs = new Directives().add("pulse");
+        for (final Pulse.Tick tick : ticks) {
+            dirs.add("tick")
+                .attr("total", Integer.toString(tick.total()))
+                .attr("start", Long.toString(tick.start() - now))
+                .attr("msec", Long.toString(tick.duration()));
+        }
+        return new XMLDocument(new Xembler(dirs).xml());
     }
 
     /**

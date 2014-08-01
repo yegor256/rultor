@@ -62,7 +62,9 @@
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
             </p>
-            <xsl:apply-templates select="pulse"/>
+            <div id="pulse" data-href="{links/link[@rel='svg']/@href}">
+                <xsl:comment>SVG loads here</xsl:comment>
+            </div>
             <xsl:if test="recent/talk">
                 <p>
                     <xsl:text>See recent conversations in Github:</xsl:text>
@@ -126,56 +128,5 @@
                 <xsl:value-of select="@timeago"/>
             </span>
         </li>
-    </xsl:template>
-    <xsl:template match="pulse">
-        <xsl:variable name="height" select="5"/>
-        <xsl:variable name="width" select="3600000"/>
-        <div class="pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1"
-                width="100%" height="100%">
-                <xsl:attribute name="viewBox">
-                    <xsl:value-of select="-$width"/>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of select="0"/>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of select="$width"/>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of select="$height"/>
-                </xsl:attribute>
-                <line x1="{-$width}" y1="{$height}" x2="0" y2="{$height}"
-                    stroke="lightgray" stroke-width="1px"
-                    vector-effect="non-scaling-stroke"/>
-                <xsl:for-each select="tick">
-                    <rect width="{@msec}" height="{@total + 0.5}"
-                        x="{@start}" y="{$height - @total - 0.5}" fill="green"/>
-                </xsl:for-each>
-                <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
-                <text x="0" y="0" style="text-anchor:middle;font-size:1.5"
-                    transform="scale(46000,1) translate(-40,1.5)">
-                    <xsl:choose>
-                        <xsl:when test="$age &gt; 600">
-                            <tspan style="fill:red">
-                                <xsl:text>system outage :(</xsl:text>
-                            </tspan>
-                        </xsl:when>
-                        <xsl:when test="$age &gt; 240">
-                            <tspan style="fill:orange">
-                                <xsl:text>temporary out of service</xsl:text>
-                            </tspan>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <tspan style="fill:green">
-                                <xsl:text>all systems work fine</xsl:text>
-                            </tspan>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </text>
-                <text x="0" y="0" style="text-anchor:end;font-size:1.5"
-                    transform="scale(46000,1) translate(0,1.5)">
-                    <xsl:value-of select="format-number($age,'0')"/>
-                    <xsl:text> sec</xsl:text>
-                </text>
-            </svg>
-        </div>
     </xsl:template>
 </xsl:stylesheet>
