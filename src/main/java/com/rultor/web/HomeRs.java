@@ -167,7 +167,8 @@ public final class HomeRs extends BaseRs {
             dirs.add("tick")
                 .attr("total", Integer.toString(tick.total()))
                 .attr("start", Long.toString(tick.start() - now))
-                .attr("msec", Long.toString(tick.duration()));
+                .attr("msec", Long.toString(tick.duration()))
+                .up();
         }
         return new XMLDocument(new Xembler(dirs).xml());
     }
