@@ -160,7 +160,9 @@ public final class Lifespan implements ServletContextListener {
             total = this.routine(talks);
         }
         final long msec = System.currentTimeMillis() - start;
-        this.list.add(new Pulse.Tick(start, msec, total));
+        if (!this.list.add(new Pulse.Tick(start, msec, total))) {
+            throw new IllegalStateException("failed to add tick");
+        }
         return msec;
     }
 
