@@ -32,7 +32,6 @@ package com.rultor.agents.github;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
@@ -73,7 +72,7 @@ public final class AnswerTest {
     public void preventsSpam() throws Exception {
         final Issue issue = AnswerTest.issue();
         MkGithub.class.cast(issue.repo().github()).relogin("walter")
-            .repos().get(new Coordinates.Simple("jeff/test"))
+            .repos().get(issue.repo().coordinates())
             .issues().get(1).comments().post("hello, how are you?");
         final Comment.Smart comment = new Comment.Smart(
             issue.comments().get(1)

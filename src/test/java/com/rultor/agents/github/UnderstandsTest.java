@@ -40,6 +40,7 @@ import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
@@ -77,13 +78,7 @@ public final class UnderstandsTest {
                 )
             )
         );
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk").attr("later", "true").add("wire")
-                .add("href").set("http://test2").up()
-                .add("github-repo").set(repo.coordinates().toString()).up()
-                .add("github-issue").set(Integer.toString(issue.number())).up()
-        );
+        final Talk talk = UnderstandsTest.talk(issue);
         agent.execute(talk);
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -115,18 +110,52 @@ public final class UnderstandsTest {
                 }
             }
         );
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk").add("wire")
-                .add("href").set("http://test").up()
-                .add("github-repo").set(repo.coordinates().toString()).up()
-                .add("github-issue").set(Integer.toString(issue.number())).up()
-        );
+        final Talk talk = UnderstandsTest.talk(issue);
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPaths("/talk[not(request)]")
         );
+    }
+
+    /**
+     * Understands can understand a body of an issue.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void understandsIssueBody() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("test", "@test hello");
+        final Agent agent = new Understands(
+            repo.github(),
+            new QnIfContains("hello", new QnHello())
+        );
+        final Talk talk = UnderstandsTest.talk(issue);
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            issue.comments().iterate(),
+            Matchers.<Comment>iterableWithSize(2)
+        );
+    }
+
+    /**
+     * Make talk from issue.
+     * @param issue The issue
+     * @return Talk
+     * @throws IOException If fails
+     */
+    private static Talk talk(final Issue issue) throws IOException {
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .attr("later", "true")
+                .add("wire")
+                .add("href").set("http://test2").up()
+                .add("github-repo").set(issue.repo().coordinates().toString())
+                .up()
+                .add("github-issue").set(Integer.toString(issue.number())).up()
+        );
+        return talk;
     }
 
 }
