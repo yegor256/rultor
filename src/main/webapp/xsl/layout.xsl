@@ -61,20 +61,22 @@
                 //]]></script>
             </head>
             <body>
-                <div class="menu">
-                    <xsl:if test="not(identity)">
-                        <span>
-                            <a href="{links/link[@rel='rexsl:github']/@href}">
-                                <xsl:text>login</xsl:text>
-                            </a>
-                        </span>
-                    </xsl:if>
-                    <xsl:apply-templates select="identity"/>
-                    <xsl:apply-templates select="version"/>
-                    <xsl:apply-templates select="toggles"/>
-                    <xsl:apply-templates select="flash"/>
-                </div>
-                <xsl:apply-templates select="." mode="body"/>
+                <section itemscope itemtype="http://schema.org/WebApplication">
+                    <nav role="navigation" class="menu">
+                        <xsl:if test="not(identity)">
+                            <span>
+                                <a href="{links/link[@rel='rexsl:github']/@href}" title="login via Github">
+                                    <xsl:text>login</xsl:text>
+                                </a>
+                            </span>
+                        </xsl:if>
+                        <xsl:apply-templates select="identity"/>
+                        <xsl:apply-templates select="version"/>
+                        <xsl:apply-templates select="toggles"/>
+                        <xsl:apply-templates select="flash"/>
+                    </nav>
+                    <xsl:apply-templates select="." mode="body"/>
+                </section>
             </body>
         </html>
     </xsl:template>
@@ -105,7 +107,8 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
-        <span title="currently deployed version is {name}">
+        <span title="currently deployed version is {name}"
+            itemprop="softwareVersion">
             <xsl:value-of select="name"/>
         </span>
         <span>
