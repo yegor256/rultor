@@ -45,10 +45,10 @@
                 <link rel="stylesheet" type="text/css" media="all" href="//doc.rultor.com/css/layout.css?{version/revision}"/>
                 <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?{version/revision}"/>
                 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1-rc1.min.js">
-                    <xsl:comment>jquery</xsl:comment>
+                    <xsl:text> </xsl:text>
                 </script>
                 <script type="text/javascript" src="/js/all.js?{version/revision}">
-                    <xsl:comment>js</xsl:comment>
+                    <xsl:text> </xsl:text>
                 </script>
                 <xsl:apply-templates select="." mode="head"/>
                 <script>//<![CDATA[
