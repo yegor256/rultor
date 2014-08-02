@@ -61,7 +61,7 @@
                 //]]></script>
             </head>
             <body>
-                <section itemscope itemtype="http://schema.org/WebApplication">
+                <section itemscope="" itemtype="http://schema.org/WebApplication">
                     <nav role="navigation" class="menu">
                         <xsl:if test="not(identity)">
                             <span>
