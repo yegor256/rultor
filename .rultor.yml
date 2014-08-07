@@ -2,12 +2,15 @@ assets:
   settings.xml: "yegor256/home#assets/rultor/settings.xml"
   pubring.gpg: "yegor256/home#assets/pubring.gpg"
   secring.gpg: "yegor256/home#assets/secring.gpg"
+  s3cfg: "yegor256/home#assets/s3cfg"
 
 deploy:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
-    - "mvn clean deploy -Ppdd -Prultor --settings ../settings.xml"
+    - "mvn clean deploy -Prultor --settings ../settings.xml"
+    - "pdd --source=$(pwd) --verbose --file=rultor.xml"
+    - "s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml > /dev/null"
 
 release:
   env:
@@ -17,10 +20,11 @@ release:
     - "mvn versions:set \"-DnewVersion=${tag}\""
     - "git commit -am \"${tag}\""
     - "mvn clean deploy -Pqulice -Prultor --settings ../settings.xml"
-    - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
+    - "mvn clean site-deploy -Psite --settings ../settings.xml"
 
 merge:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "mvn help:system clean install -Pqulice --settings ../settings.xml"
+    - "mvn clean site -Psite --settings ../settings.xml"
