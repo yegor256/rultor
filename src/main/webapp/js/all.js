@@ -38,7 +38,7 @@ $(document).ready(
       function () {
         $div.load($div.attr('data-href'));
       },
-      3000
+      1000
     );
   }
 );
