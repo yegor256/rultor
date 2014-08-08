@@ -84,7 +84,7 @@ public final class StartsTalks implements SuperAgent {
     @Override
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
-            DateUtils.addMinutes(new Date(), -Tv.FIVE)
+            DateUtils.addMinutes(new Date(), -Tv.THREE)
         ).iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();
@@ -92,6 +92,7 @@ public final class StartsTalks implements SuperAgent {
             new RtPagination<JsonObject>(
                 req.uri().queryParam("participating", "true")
                     .queryParam("since", since)
+                    .queryParam("all", Boolean.toString(true))
                     .back(),
                 RtPagination.COPYING
             ),
