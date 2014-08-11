@@ -142,4 +142,25 @@ public final class DockerRunTest {
         );
     }
 
+    /**
+     * DockerRun can fetch environment vars.
+     * @throws Exception In case of error.
+     * @since 1.22
+     */
+    @Test
+    public void fetchesEnvVarsDefaults() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                StringUtils.join(
+                    "<p><o><env>A=123</env></o>",
+                    "<env>ALPHA='334 55'</env></p>"
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            new DockerRun(profile, "/p/o").envs(new ArrayMap<String, String>()),
+            Matchers.equalTo("( '--env=A=123' '--env=ALPHA=334 55' )")
+        );
+    }
+
 }
