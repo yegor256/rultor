@@ -189,17 +189,17 @@ final class DockerRun {
     /**
      * Get items from XML.
      * @param xml The XML
-     * @param xpath The XPath
+     * @param path The XPath
      * @return Items
      */
-    private Iterable<String> items(final XML xml, final String xpath) {
+    private Iterable<String> items(final XML xml, final String path) {
         final Collection<String> items = new LinkedList<String>();
-        if (!xml.nodes(xpath).isEmpty()) {
-            if (xml.nodes(String.format("%s/item", xpath)).isEmpty()) {
-                items.add(xml.xpath(String.format("%s/text()", xpath)).get(0));
+        if (!xml.nodes(path).isEmpty()) {
+            if (xml.nodes(String.format("%s/item", path)).isEmpty()) {
+                items.add(xml.xpath(String.format("%s/text()", path)).get(0));
             } else {
                 for (final String cmd
-                    : xml.xpath(String.format("%s/item/text()", xpath))) {
+                    : xml.xpath(String.format("%s/item/text()", path))) {
                     items.add(cmd);
                     items.add(";");
                 }
