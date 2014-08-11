@@ -70,6 +70,25 @@ docker:
   image: ubuntu:12.10
 {% endhighlight %}
 
+## Environment Variables
+
+You can specify environment variables common for all
+commands, for example:
+
+{% highlight yaml %}
+env:
+  MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+merge:
+  script:
+    - mvn clean install
+deploy:
+  script:
+    - mvn clean deploy
+{% endhighlight %}
+
+In this example, `MAVEN_OPTS` environment variable will be set
+for merging and deploying commands.
+
 ## Install Script
 
 You can specify script instructions common for all
@@ -88,6 +107,7 @@ deploy:
 
 In this example, `texlive` package will be installed before merge
 and before deploy commands execution.
+
 ## Readers
 
 By default, anyone can see your build logs. This may not be desired

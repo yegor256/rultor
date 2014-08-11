@@ -51,6 +51,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -106,7 +107,8 @@ final class DockerRun {
                     extra.entrySet(),
                     new Function<Map.Entry<String, String>, String>() {
                         @Override
-                        public String apply(final Map.Entry<String, String> ent) {
+                        public String apply(
+                            final Map.Entry<String, String> ent) {
                             return String.format(
                                 "--env=%s=%s", ent.getKey(), ent.getValue()
                             );
