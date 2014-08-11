@@ -138,7 +138,7 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/f").script(),
-            Matchers.equalTo("( 'one' 'two' 'hello' )")
+            Matchers.equalTo("( 'one' ';' 'two' ';' 'hello' )")
         );
     }
 

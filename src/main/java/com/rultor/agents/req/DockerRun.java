@@ -83,19 +83,12 @@ final class DockerRun {
      * @throws IOException If fails
      */
     public String script() throws IOException {
-        final XML xml = this.node();
-        final Collection<String> scripts = new LinkedList<String>();
-        if (!xml.nodes("script").isEmpty()) {
-            if (xml.nodes("script/item").isEmpty()) {
-                scripts.add(xml.xpath("script/text()").get(0));
-            } else {
-                for (final String cmd : xml.xpath("script/item/text()")) {
-                    scripts.add(cmd);
-                    scripts.add(";");
-                }
-            }
-        }
-        return this.enlist(scripts);
+        return this.enlist(
+            Iterables.concat(
+                this.items(this.profile.read(), "p/install"),
+                this.items(this.node(), "script")
+            )
+        );
     }
 
     /**
@@ -191,6 +184,28 @@ final class DockerRun {
                 )
             )
         );
+    }
+
+    /**
+     * Get items from XML.
+     * @param xml The XML
+     * @param xpath The XPath
+     * @return Items
+     */
+    private Iterable<String> items(final XML xml, final String xpath) {
+        final Collection<String> items = new LinkedList<String>();
+        if (!xml.nodes(xpath).isEmpty()) {
+            if (xml.nodes(String.format("%s/item", xpath)).isEmpty()) {
+                items.add(xml.xpath(String.format("%s/text()", xpath)).get(0));
+            } else {
+                for (final String cmd
+                    : xml.xpath(String.format("%s/item/text()", xpath))) {
+                    items.add(cmd);
+                    items.add(";");
+                }
+            }
+        }
+        return items;
     }
 
 }
