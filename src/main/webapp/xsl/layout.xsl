@@ -41,6 +41,7 @@
                 <meta name="description" content="Coding team assistant that helps to automate merge, deploy and release operations, mostly for Github projects"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, revision control"/>
                 <meta name="author" content="rultor.com"/>
+                <meta property="twitter:account_id" content="4503599630178231"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
                 <link rel="stylesheet" type="text/css" media="all" href="//doc.rultor.com/css/layout.css?{version/revision}"/>
                 <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?{version/revision}"/>
