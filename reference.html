@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?d5208d2"/>
+    <link rel="stylesheet" href="/css/layout.css?11a81a7"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
   </head>
@@ -78,6 +78,40 @@ able to fetch anything from it.</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ubuntu:12.10</span></code></pre></div>
+
+<h2 id="environment-variables">Environment Variables</h2>
+
+<p>You can specify environment variables common for all
+commands, for example:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">MAVEN_OPTS</span><span class="p-Indicator">:</span> <span class="s">&quot;-XX:MaxPermSize=256m</span><span class="nv"> </span><span class="s">-Xmx1g&quot;</span>
+<span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mvn clean install</span>
+<span class="l-Scalar-Plain">deploy</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mvn clean deploy</span></code></pre></div>
+
+<p>In this example, <code>MAVEN_OPTS</code> environment variable will be set
+for merging and deploying commands.</p>
+
+<h2 id="install-script">Install Script</h2>
+
+<p>You can specify script instructions common for all
+commands, for example:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sudo apt-get install texlive</span>
+<span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">latex ...</span>
+<span class="l-Scalar-Plain">deploy</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">latex ...</span></code></pre></div>
+
+<p>In this example, <code>texlive</code> package will be installed before merge
+and before deploy commands execution.</p>
 
 <h2 id="readers">Readers</h2>
 
@@ -165,7 +199,7 @@ Github collaborators <em>and</em> accounts mentioned here are allowed to give co
           </div>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/d5208d2">d5208d2</a>
+          <a href="https://github.com/yegor256/rultor/commit/11a81a7">11a81a7</a>
         </p>
       </footer>
     </div>
