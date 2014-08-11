@@ -153,13 +153,13 @@ public final class DockerRunTest {
             new XMLDocument(
                 StringUtils.join(
                     "<p><o><env>A=123</env></o>",
-                    "<env>ALPHA='334 55'</env></p>"
+                    "<env>ALPHA=909</env></p>"
                 )
             )
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/o").envs(new ArrayMap<String, String>()),
-            Matchers.equalTo("( '--env=A=123' '--env=ALPHA=334 55' )")
+            Matchers.equalTo("( '--env=ALPHA=909' '--env=A=123' )")
         );
     }
 

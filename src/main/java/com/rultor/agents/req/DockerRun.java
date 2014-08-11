@@ -83,10 +83,10 @@ final class DockerRun {
      * @throws IOException If fails
      */
     public String script() throws IOException {
-        return this.enlist(
+        return DockerRun.enlist(
             Iterables.concat(
-                this.items(this.profile.read(), "p/install"),
-                this.items(this.node(), "script")
+                DockerRun.scripts(this.profile.read(), "/p/install"),
+                DockerRun.scripts(this.node(), "script")
             )
         );
     }
@@ -98,51 +98,23 @@ final class DockerRun {
      * @throws IOException If fails
      */
     public String envs(final Map<String, String> extra) throws IOException {
-        final XML xml = this.node();
-        final Collection<String> envs = new LinkedList<String>();
-        if (!xml.nodes("env").isEmpty()) {
-            final Collection<String> parts;
-            if (xml.nodes("env/item").iterator().hasNext()) {
-                parts = xml.xpath("env/item/text()");
-            } else if (xml.nodes("env/*/text()").iterator().hasNext()) {
-                parts = new LinkedList<String>();
-                for (final XML env : xml.nodes("env/*")) {
-                    parts.add(
-                        String.format(
-                            "%s=%s", env.xpath("name()").get(0),
-                            env.xpath("text()").get(0)
-                        )
-                    );
-                }
-            } else {
-                parts = Collections.singleton(xml.xpath("env/text()").get(0));
-            }
-            envs.addAll(
+        return DockerRun.enlist(
+            Iterables.concat(
+                DockerRun.envs(this.profile.read(), "/p/env"),
+                DockerRun.envs(this.node(), "env"),
                 Collections2.transform(
-                    parts,
-                    new Function<String, String>() {
+                    extra.entrySet(),
+                    new Function<Map.Entry<String, String>, String>() {
                         @Override
-                        public String apply(final String input) {
-                            return String.format("--env=%s", input);
+                        public String apply(final Map.Entry<String, String> ent) {
+                            return String.format(
+                                "--env=%s=%s", ent.getKey(), ent.getValue()
+                            );
                         }
                     }
                 )
-            );
-        }
-        envs.addAll(
-            Collections2.transform(
-                extra.entrySet(),
-                new Function<Map.Entry<String, String>, String>() {
-                    @Override
-                    public String apply(final Map.Entry<String, String> ent) {
-                        return String.format(
-                            "--env=%s=%s", ent.getKey(), ent.getValue()
-                        );
-                    }
-                }
             )
         );
-        return this.enlist(envs);
     }
 
     /**
@@ -166,7 +138,7 @@ final class DockerRun {
      * @param items Items
      * @return Text for bash
      */
-    private String enlist(final Iterable<String> items) {
+    private static String enlist(final Iterable<String> items) {
         return String.format(
             "( %s )",
             Joiner.on(' ').join(
@@ -192,20 +164,61 @@ final class DockerRun {
      * @param path The XPath
      * @return Items
      */
-    private Iterable<String> items(final XML xml, final String path) {
+    private static Iterable<String> scripts(final XML xml, final String path) {
         final Collection<String> items = new LinkedList<String>();
         if (!xml.nodes(path).isEmpty()) {
-            if (xml.nodes(String.format("%s/item", path)).isEmpty()) {
-                items.add(xml.xpath(String.format("%s/text()", path)).get(0));
+            final XML node = xml.nodes(path).get(0);
+            if (node.nodes("item").isEmpty()) {
+                items.add(node.xpath("text()").get(0));
             } else {
-                for (final String cmd
-                    : xml.xpath(String.format("%s/item/text()", path))) {
+                for (final String cmd : node.xpath("item/text()")) {
                     items.add(cmd);
                     items.add(";");
                 }
             }
         }
         return items;
+    }
+
+    /**
+     * Environments from XML by XPath.
+     * @param xml The XML
+     * @param path The XPath
+     * @return Items
+     */
+    private static Iterable<String> envs(final XML xml, final String path) {
+        final Collection<String> envs = new LinkedList<String>();
+        if (!xml.nodes(path).isEmpty()) {
+            final XML node = xml.nodes(path).get(0);
+            final Collection<String> parts;
+            if (node.nodes("item").iterator().hasNext()) {
+                parts = node.xpath("item/text()");
+            } else if (node.nodes("*/text()").iterator().hasNext()) {
+                parts = new LinkedList<String>();
+                for (final XML env : node.nodes("*")) {
+                    parts.add(
+                        String.format(
+                            "%s=%s", env.xpath("name()").get(0),
+                            env.xpath("text()").get(0)
+                        )
+                    );
+                }
+            } else {
+                parts = Collections.singleton(node.xpath("text()").get(0));
+            }
+            envs.addAll(
+                Collections2.transform(
+                    parts,
+                    new Function<String, String>() {
+                        @Override
+                        public String apply(final String input) {
+                            return String.format("--env=%s", input);
+                        }
+                    }
+                )
+            );
+        }
+        return envs;
     }
 
 }
