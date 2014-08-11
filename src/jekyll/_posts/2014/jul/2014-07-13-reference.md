@@ -70,6 +70,24 @@ docker:
   image: ubuntu:12.10
 {% endhighlight %}
 
+## Install Script
+
+You can specify script instructions common for all
+commands, for example:
+
+{% highlight yaml %}
+install:
+  - sudo apt-get install texlive
+merge:
+  script:
+    - latex ...
+deploy:
+  script:
+    - latex ...
+{% endhighlight %}
+
+In this example, `texlive` package will be installed before merge
+and before deploy commands execution.
 ## Readers
 
 By default, anyone can see your build logs. This may not be desired
