@@ -121,4 +121,25 @@ public final class DockerRunTest {
         );
     }
 
+    /**
+     * DockerRun can fetch script.
+     * @throws Exception In case of error.
+     * @since 1.22
+     */
+    @Test
+    public void fetchesInstallScript() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                StringUtils.join(
+                    "<p><f><script>hello</script></f>",
+                    "<install><item>one</item><item>two</item></install></p>"
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            new DockerRun(profile, "/p/f").script(),
+            Matchers.equalTo("( 'one' 'two' 'hello' )")
+        );
+    }
+
 }
