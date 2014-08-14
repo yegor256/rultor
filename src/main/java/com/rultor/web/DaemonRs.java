@@ -36,8 +36,6 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -89,7 +87,6 @@ public final class DaemonRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Produces(MediaType.TEXT_PLAIN)
     public Response index() throws IOException {
         if (!this.talks().exists(this.number)) {
             throw this.flash().redirect(
@@ -110,7 +107,7 @@ public final class DaemonRs extends BaseRs {
                 this.talks().get(this.number).read(),
                 this.hash
             ).read()
-        ).build();
+        ).type("text/plain; charset=utf-8").build();
     }
 
 }
