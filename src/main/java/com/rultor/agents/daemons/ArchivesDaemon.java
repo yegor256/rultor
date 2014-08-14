@@ -93,7 +93,6 @@ public final class ArchivesDaemon extends AbstractAgent {
         new Shell.Safe(shell).exec(
             StringUtils.join(
                 String.format("dir=\"%s\";", dir),
-                "ls -al ${dir};",
                 "if [ -e \"${dir}/stdout\" ]; then ",
                 "cat \"${dir}/stdout\" | col -b 2>&1;",
                 "else echo 'stdout not found, some internal error'; fi"
