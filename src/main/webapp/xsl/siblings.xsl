@@ -55,7 +55,7 @@
         </div>
     </xsl:template>
     <xsl:template match="talk">
-        <div>
+        <div style="margin-bottom:2em;">
             <a href="{href}">
                 <xsl:value-of select="name"/>
             </a>
