@@ -8,6 +8,7 @@ env:
   MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
 
 install:
+  - "sudo apt-get install bsdmainutils"
   - "gem install pdd"
 
 deploy:
