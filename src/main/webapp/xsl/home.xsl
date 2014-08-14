@@ -52,13 +52,13 @@
                 </img>
             </p>
             <p itemprop="about">
-                <xsl:text>Rultor helps coding teams automate </xsl:text>
+                <xsl:text>Rultor helps DevOps teams automate </xsl:text>
                 <strong><xsl:text>merge</xsl:text></strong>
                 <xsl:text>, </xsl:text>
                 <strong><xsl:text>deploy</xsl:text></strong>
                 <xsl:text> and </xsl:text>
                 <strong><xsl:text>release</xsl:text></strong>
-                <xsl:text> operations.</xsl:text>
+                <xsl:text> routine operations.</xsl:text>
                 <xsl:text> Say </xsl:text>
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
