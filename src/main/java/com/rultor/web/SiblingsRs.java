@@ -44,6 +44,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.ocpsoft.prettytime.PrettyTime;
 
 /**
  * Siblings.
@@ -134,6 +135,7 @@ public final class SiblingsRs extends BaseRs {
             .add("name", talk.name()).up()
             .add("href", xml.xpath("/talk/wire/href/text()").get(0)).up()
             .add("updated", Long.toString(talk.updated().getTime())).up()
+            .add("timeago", new PrettyTime().format(talk.updated())).up()
             .add(archive);
     }
 

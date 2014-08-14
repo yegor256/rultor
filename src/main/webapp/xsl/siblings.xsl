@@ -59,6 +59,9 @@
             <a href="{href}">
                 <xsl:value-of select="name"/>
             </a>
+            <span class="color:gray;margin-left:1em;">
+                <xsl:value-of select="timeago"/>
+            </span>
             <xsl:if test="archive/log">
                 <ul>
                     <xsl:apply-templates select="archive/log"/>
