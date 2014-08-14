@@ -33,6 +33,7 @@ import co.stateful.Lock;
 import co.stateful.Locks;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Repo;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
@@ -40,6 +41,9 @@ import lombok.ToString;
 
 /**
  * Repo lock.
+ *
+ * <p>It is used by {@link com.rultor.agents.github.qtn.QnAlone}
+ * and {@link UnlocksRepo}.</p>
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -77,7 +81,10 @@ public final class RepoLock {
      * @throws IOException If fails
      */
     public boolean lock(final Talk talk) throws IOException {
-        return this.lock().lock(RepoLock.label(talk));
+        final String name = RepoLock.label(talk);
+        final boolean done = this.lock().lock(name);
+        Logger.info(this, "lock of %s: %B", name, done);
+        return done;
     }
 
     /**
@@ -87,7 +94,10 @@ public final class RepoLock {
      * @throws IOException If fails
      */
     public boolean unlock(final Talk talk) throws IOException {
-        return this.lock().unlock(RepoLock.label(talk));
+        final String name = RepoLock.label(talk);
+        final boolean done = this.lock().unlock(name);
+        Logger.info(this, "unlock of %s: %B", name, done);
+        return done;
     }
 
     /**
