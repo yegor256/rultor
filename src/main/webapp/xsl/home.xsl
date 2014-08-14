@@ -81,12 +81,18 @@
                 </a>
                 <xsl:text>.</xsl:text>
             </p>
+            <p itemprop="creator">
+                <a href="http://www.teamed.io">
+                    <img src="//img.teamed.io/btn.svg" style="width:200px;height:40px;"
+                        alt="teamed.io made-by badge"/>
+                </a>
+            </p>
             <div class="badges" style="margin-top:2em;">
                 <div>
-                    <span>made by</span>
+                    <span>provisioned by</span>
                     <br/>
-                    <a href="http://www.teamed.io" itemprop="creator" title="Teamed.io">
-                        <img src="http://img.teamed.io/logo-light.svg"
+                    <a href="http://aws.amazon.com/">
+                        <img src="//img.rultor.com/aws-logo.svg"
                             style="width:96px" alt="teamed.io logo"/>
                     </a>
                 </div>
@@ -94,7 +100,7 @@
                     <span>powered by</span>
                     <br/>
                     <a href="http://www.docker.io" title="Docker">
-                        <img src="http://img.rultor.com/docker-logo.png"
+                        <img src="//img.rultor.com/docker-logo.png"
                             style="width:96px" alt="docker logo"/>
                     </a>
                 </div>
@@ -102,7 +108,7 @@
                     <span>operates at</span>
                     <br/>
                     <a href="http://www.github.com" title="Github">
-                        <img src="http://img.rultor.com/github-logo.png"
+                        <img src="//img.rultor.com/github-logo.png"
                             style="width:96px" alt="github logo"/>
                     </a>
                 </div>
@@ -110,7 +116,7 @@
                     <span>hosted by</span>
                     <br/>
                     <a href="http://www.cloudbees.net" title="CloudBees">
-                        <img src="http://img.rultor.com/cloudbees-logo.png"
+                        <img src="//img.rultor.com/cloudbees-logo.png"
                             style="width:96px" alt="cloudbees logo"/>
                     </a>
                 </div>
