@@ -110,7 +110,7 @@
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>             Logger.stream(Level.WARNING, <strong class="jxr_keyword">this</strong>)
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>         );
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>         <strong class="jxr_keyword">new</strong> Shell.Empty(<strong class="jxr_keyword">new</strong> Shell.Safe(shell)).exec(
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>             String.format(<span class="jxr_string">"rm -rf %s || sudo -rf %1$s"</span>, dir)
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>             String.format(<span class="jxr_string">"sudo rm -rf %1$s || rm -rf %s"</span>, dir)
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>         );
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>         <strong class="jxr_keyword">final</strong> String hash = xml.xpath(<span class="jxr_string">"/talk/daemon/@id"</span>).get(0);
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>         <strong class="jxr_keyword">final</strong> URI uri = <strong class="jxr_keyword">this</strong>.upload(file, hash);
