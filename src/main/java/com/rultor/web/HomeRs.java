@@ -86,7 +86,7 @@ public final class HomeRs extends BaseRs {
             .append(
                 new JaxbBundle("recent").add(
                     new JaxbBundle.Group<Talk>(
-                        Iterables.limit(this.talks().recent(), Tv.TEN)
+                        Iterables.limit(this.talks().recent(), Tv.FIVE)
                     ) {
                         @Override
                         public JaxbBundle bundle(final Talk talk) {
