@@ -92,6 +92,7 @@ public final class ArchivesDaemon extends AbstractAgent {
         new Shell.Safe(shell).exec(
             StringUtils.join(
                 String.format("dir=\"%s\";", dir),
+                "ls -al ${dir};",
                 "if [ -e \"${dir}/stdout\" ]; then ",
                 "cat \"${dir}/stdout\" | col -b 2>&1;",
                 "else echo 'stdout not found, some internal error'; fi"
@@ -101,7 +102,7 @@ public final class ArchivesDaemon extends AbstractAgent {
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            String.format("sudo rm -rf %s", dir)
+            String.format("rm -rf %s || sudo -rf %1$s", dir)
         );
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final URI uri = this.upload(file, hash);

@@ -61,6 +61,14 @@ public final class Sshd {
     }
 
     /**
+     * Get home dir.
+     * @return Dir
+     */
+    public File home() {
+        return this.dir;
+    }
+
+    /**
      * Get user name to login.
      * @return User name
      */
