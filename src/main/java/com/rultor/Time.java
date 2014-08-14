@@ -30,6 +30,7 @@
 package com.rultor;
 
 import com.jcabi.aspects.Immutable;
+import java.text.ParseException;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -80,7 +81,7 @@ public final class Time {
      * @param date Date
      */
     public Time(final String date) {
-        this(0);
+        this(Time.parse(date));
     }
 
     /**
@@ -100,6 +101,19 @@ public final class Time {
      */
     public long msec() {
         return this.millis;
+    }
+
+    /**
+     * Parse text.
+     * @param date Date
+     * @return Date
+     */
+    private static Date parse(final String date) {
+        try {
+            return DateFormatUtils.ISO_DATETIME_FORMAT.parse(date);
+        } catch (final ParseException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

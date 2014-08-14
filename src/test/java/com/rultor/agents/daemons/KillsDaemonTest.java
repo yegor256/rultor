@@ -30,10 +30,9 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.Time;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
-import java.util.Date;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.xembly.Directives;
@@ -58,8 +57,9 @@ public final class KillsDaemonTest {
             new Directives().xpath("/talk").add("daemon")
                 .attr("id", "abcd")
                 .add("script").set("empty").up()
+                .add("title").set("something new").up()
                 .add("started")
-                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+                .set(new Time().iso())
         );
         final Agent agent = new KillsDaemon();
         agent.execute(talk);

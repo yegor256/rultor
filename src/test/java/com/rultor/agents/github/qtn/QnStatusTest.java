@@ -68,7 +68,7 @@ public final class QnStatusTest {
                     "<talk name='test' number='45' later='false'>",
                     "<request id='454'><type>merge</type><args/></request>",
                     "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
-                    "<script>test</script>",
+                    "<script>test</script><title>something</title>",
                     "<code>3</code><dir>/tmp/abc</dir>",
                     "</daemon>",
                     "</talk>"

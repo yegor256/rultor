@@ -87,6 +87,7 @@ public final class StartsDaemonITCase {
                 .add("login").set(sshd.login()).up()
                 .add("key").set(sshd.key()).up().up()
                 .add("daemon").attr("id", "fedcba")
+                .add("title").set("some operation").up()
                 .add("script").set("ls -al; md5 file.bin; sleep 50000")
         );
         final Profile profile = Mockito.mock(Profile.class);

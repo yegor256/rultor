@@ -57,6 +57,7 @@ public final class EndsRequestTest {
             new Directives().xpath("/talk")
                 // @checkstyle MultipleStringLiteralsCheck (1 line)
                 .add("daemon").attr("id", "abcd")
+                .add("title").set("some operation").up()
                 .add("script").set("test").up()
                 .add("code").set("13").up()
                 .add("started").set("2013-01-01T11:35:09Z").up()

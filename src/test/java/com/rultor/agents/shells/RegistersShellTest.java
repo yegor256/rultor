@@ -58,6 +58,7 @@ public final class RegistersShellTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon").attr("id", "abcd")
+                .add("title").set("something").up()
                 .add("script").set("test")
         );
         agent.execute(talk);
