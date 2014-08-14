@@ -5,8 +5,7 @@ if [ -z "${tag}" ]; then
   exit -1
 fi
 
-if [ $(git tag -l "${tag}") ]
-then
+if [ $(git tag -l "${tag}") ]; then
    echo "Tag ${tag} already exists!"
    exit -1
 fi
