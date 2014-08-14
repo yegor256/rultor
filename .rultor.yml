@@ -4,17 +4,20 @@ assets:
   secring.gpg: "yegor256/home#assets/secring.gpg"
   s3cfg: "yegor256/home#assets/s3cfg"
 
+env:
+  MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+
+install:
+  - "gem install pdd"
+
 deploy:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "mvn clean deploy -Prultor --settings ../settings.xml"
+    - "mvn clean"
     - "pdd --source=$(pwd) --verbose --file=rultor.xml"
-    - "s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml > /dev/null"
+    - "s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml"
 
 release:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "sudo bundle install"
     - "mvn versions:set \"-DnewVersion=${tag}\""
@@ -23,8 +26,8 @@ release:
     - "mvn clean site-deploy -Psite --settings ../settings.xml"
 
 merge:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "mvn help:system clean install -Pqulice --settings ../settings.xml"
     - "mvn clean site -Psite --settings ../settings.xml"
+    - "mvn clean"
+    - "pdd --source=$(pwd) --verbose --file=/dev/null"
