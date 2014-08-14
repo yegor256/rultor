@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
+import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Date;
@@ -125,7 +126,7 @@ public final class SiblingsRs extends BaseRs {
             new JaxbBundle.Group<XML>(xml.nodes("/talk/archive/log")) {
                 @Override
                 public JaxbBundle bundle(final XML log) {
-                    return SiblingsRs.log(log);
+                    return SiblingsRs.log(xml, log);
                 }
             }
         );
@@ -138,13 +139,15 @@ public final class SiblingsRs extends BaseRs {
 
     /**
      * Convert log to JAXB.
+     * @param talk Talk
      * @param log The log to convert
      * @return JAXB
      */
-    private static JaxbBundle log(final XML log) {
+    private static JaxbBundle log(final XML talk, final XML log) {
+        final String hash = log.xpath("@id").get(0);
         return new JaxbBundle("log")
-            .add("id", log.xpath("@id").get(0)).up()
-            .add("href", log.xpath("text()").get(0)).up()
+            .add("id", hash).up()
+            .add("href", new Home(talk, hash).uri().toString()).up()
             .add("title", log.xpath("@title").get(0)).up();
     }
 
