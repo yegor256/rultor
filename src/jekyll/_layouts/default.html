@@ -20,9 +20,9 @@
           <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
         </a>
       </header>
-      <section class="main">
-        <h1>{{ page.title }}</h1>
-        <article>{{ content }}</article>
+      <section class="main" itemscope itemtype="http://schema.org/Article">
+        <h1 itemprop="headline">{{ page.title }}</h1>
+        <article itemprop="articleBody">{{ content }}</article>
       </section>
       <footer class="footer">
         <p>
@@ -36,12 +36,18 @@
           &middot;
           <a href="/privacy.html">privacy</a>
         </p>
+        <p>
+          <a href="http://www.teamed.io">
+            <img src="//img.teamed.io/btn.svg" style="width:200px;height:40px;"
+              alt="teamed.io made-by badge"/>
+          </a>
+        </p>
         <div class="badges">
           <div>
-            <span>made by</span>
+            <span>provisioned by</span>
             <br/>
-            <a href="http://www.teamed.io">
-              <img src="http://img.teamed.io/logo-light.svg" style="width:96px" alt="teamed.io logo"/>
+            <a href="http://aws.amazon.com/">
+              <img src="//img.rultor.com/aws-logo.svg" style="width:96px" alt="aws logo"/>
             </a>
           </div>
           <div>

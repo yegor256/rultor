@@ -93,7 +93,7 @@
                     <br/>
                     <a href="http://aws.amazon.com/">
                         <img src="//img.rultor.com/aws-logo.svg"
-                            style="width:96px" alt="teamed.io logo"/>
+                            style="width:96px" alt="aws logo"/>
                     </a>
                 </div>
                 <div>
