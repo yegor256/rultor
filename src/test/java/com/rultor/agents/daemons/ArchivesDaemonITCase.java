@@ -91,7 +91,8 @@ public final class ArchivesDaemonITCase {
             talk.read(),
             XhtmlMatchers.hasXPaths(
                 "/talk[not(daemon)]",
-                "/talk/archive/log[@id='abcd' and starts-with(.,'s3://test/')]"
+                "/talk/archive/log[@id='abcd' and starts-with(.,'s3://test/')]",
+                "/talk/archive/log[@id='abcd' and @title]"
             )
         );
     }
