@@ -70,6 +70,7 @@ public final class ArchivesDaemonITCase {
         final Sshd sshd = new Sshd(this.temp.newFolder());
         final int port = sshd.start();
         final File home = new File(sshd.home(), "test");
+        FileUtils.forceMkdir(home);
         FileUtils.write(new File(home, "stdout"), "some output");
         final Talk talk = new Talk.InFile();
         talk.modify(
