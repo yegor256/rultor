@@ -95,7 +95,7 @@ public final class ArchivesDaemon extends AbstractAgent {
                 String.format("dir=\"%s\";", dir),
                 "if [ -e \"${dir}/stdout\" ]; then ",
                 "cat \"${dir}/stdout\" | col -b 2>&1;",
-                "else echo 'stdout not found, some internal error'; fi"
+                "else echo 'stdout not found, internal error!'; fi"
             ),
             new NullInputStream(0L),
             new FileOutputStream(file),
