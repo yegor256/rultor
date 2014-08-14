@@ -30,6 +30,9 @@
 package com.rultor.dynamo;
 
 import co.stateful.Counter;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -42,6 +45,7 @@ import com.jcabi.dynamo.Region;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -74,6 +78,12 @@ public final class DyTalks implements Talks {
      * @since 1.3
      */
     public static final String IDX_NUMBERS = "numbers";
+
+    /**
+     * Index name.
+     * @since 1.23
+     */
+    public static final String IDX_SIBLINGS = "siblings";
 
     /**
      * Talk unique name.
@@ -236,6 +246,38 @@ public final class DyTalks implements Talks {
                         .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                 )
                 .where(DyTalks.ATTR_ACTIVE, Boolean.toString(false)),
+            new Function<Item, Talk>() {
+                @Override
+                public Talk apply(final Item input) {
+                    return new DyTalk(input);
+                }
+            }
+        );
+    }
+
+    @Override
+    public Iterable<Talk> siblings(final String repo, final Date since) {
+        return Iterables.transform(
+            this.region.table(DyTalks.TBL)
+                .frame()
+                .through(
+                    new QueryValve()
+                        .withIndexName(DyTalks.IDX_SIBLINGS)
+                        .withScanIndexForward(false)
+                        .withConsistentRead(false)
+                        .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
+                )
+                .where(DyTalks.ATTR_REPO, repo)
+                .where(
+                    DyTalks.ATTR_UPDATED,
+                    new Condition()
+                        .withComparisonOperator(ComparisonOperator.LT)
+                        .withAttributeValueList(
+                            new AttributeValue().withN(
+                                Long.toString(since.getTime())
+                            )
+                        )
+                ),
             new Function<Item, Talk>() {
                 @Override
                 public Talk apply(final Item input) {

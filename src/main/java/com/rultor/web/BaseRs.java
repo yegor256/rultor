@@ -29,8 +29,11 @@
  */
 package com.rultor.web;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
+import com.jcabi.xml.XML;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
@@ -42,6 +45,7 @@ import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
+import com.rultor.profiles.Profiles;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.URI;
@@ -185,6 +189,34 @@ public class BaseRs extends BaseResource {
         return Talks.class.cast(
             this.servletContext().getAttribute(Talks.class.getName())
         );
+    }
+
+    /**
+     * Can I see this talk?
+     * @param number Talk number
+     * @return TRUE if access granted
+     * @throws IOException If fails
+     */
+    protected final boolean granted(final long number) throws IOException {
+        final XML xml = new Profiles().fetch(
+            this.talks().get(number)
+        ).read();
+        final boolean granted;
+        if (xml.nodes("/p/readers").isEmpty()) {
+            granted = true;
+        } else {
+            final String self = this.auth().identity().urn().toString();
+            granted = Iterables.any(
+                xml.xpath("/p/readers/item/text()"),
+                new Predicate<String>() {
+                    @Override
+                    public boolean apply(final String input) {
+                        return input.trim().equals(self);
+                    }
+                }
+            );
+        }
+        return granted;
     }
 
 }

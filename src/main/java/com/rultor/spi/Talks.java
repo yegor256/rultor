@@ -40,6 +40,7 @@ import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -103,6 +104,14 @@ public interface Talks {
      * @return Talks
      */
     Iterable<Talk> recent();
+
+    /**
+     * Get siblings, since this date (all talks will be older that this date).
+     * @param repo Repo name
+     * @param since Date
+     * @return Talks
+     */
+    Iterable<Talk> siblings(String repo, Date since);
 
     /**
      * In directory.
@@ -198,6 +207,10 @@ public interface Talks {
         }
         @Override
         public Iterable<Talk> recent() {
+            return this.active();
+        }
+        @Override
+        public Iterable<Talk> siblings(final String repo, final Date since) {
             return this.active();
         }
     }
