@@ -34,10 +34,12 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -160,8 +162,9 @@ public interface Talks {
         }
         @Override
         public void create(final String name) throws IOException {
+            final File file = new File(new File(this.path), name);
             FileUtils.write(
-                new File(new File(this.path), name),
+                file,
                 new StrictXML(
                     new XMLDocument(
                         String.format(
@@ -173,11 +176,16 @@ public interface Talks {
                 ).toString(),
                 CharEncoding.UTF_8
             );
+            Logger.info(this, "talk '%s' created in %s", name, file);
         }
         @Override
         public Iterable<Talk> active() {
+            final Collection<File> files = FileUtils.listFiles(
+                new File(this.path), null, false
+            );
+            Logger.info(this, "%d files in %s", files.size(), this.path);
             return Iterables.transform(
-                FileUtils.listFiles(new File(this.path), new String[0], false),
+                files,
                 new Function<File, Talk>() {
                     @Override
                     public Talk apply(final File file) {

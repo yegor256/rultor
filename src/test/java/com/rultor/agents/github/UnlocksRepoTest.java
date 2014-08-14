@@ -36,6 +36,7 @@ import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import org.junit.Test;
+import org.xembly.Directives;
 
 /**
  * Tests for ${@link UnlocksRepo}.
@@ -59,7 +60,15 @@ public final class UnlocksRepoTest {
             new MkSttc().locks(), repo.github()
         );
         final Talks talks = new Talks.InDir();
-        talks.create("test");
+        final String name = "test-talk";
+        talks.create(name);
+        talks.get(name).modify(
+            new Directives()
+                .xpath("/talk").add("wire")
+                .add("github-repo").set(repo.coordinates().toString()).up()
+                .add("github-issue").set(Integer.toString(issue.number())).up()
+                .add("href").set("#").up()
+        );
         agent.execute(talks);
     }
 

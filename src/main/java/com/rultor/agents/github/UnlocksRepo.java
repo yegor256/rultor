@@ -59,7 +59,7 @@ public final class UnlocksRepo implements SuperAgent {
      * Which talks should be unlocked.
      */
     private static final String XPATH = StringUtils.join(
-        "/talk[@later='false' and not(request) and not(daemon) and not(shell)",
+        "/talk[not(request) and not(daemon) and not(shell)",
         " and wire/github-repo and wire/github-issue]"
     );
 
