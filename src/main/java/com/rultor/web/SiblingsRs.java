@@ -144,9 +144,8 @@ public final class SiblingsRs extends BaseRs {
     private static JaxbBundle log(final XML log) {
         return new JaxbBundle("log")
             .add("id", log.xpath("@id").get(0)).up()
-            .add("href", log.xpath("text()").get(0))
-            .up()
-            .add("title", log.xpath("@title").get(0));
+            .add("href", log.xpath("text()").get(0)).up()
+            .add("title", log.xpath("@title").get(0)).up();
     }
 
 }
