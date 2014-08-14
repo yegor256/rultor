@@ -66,16 +66,17 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          talk.modify(
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>              <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/talk"</span>)
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>                  .add(<span class="jxr_string">"daemon"</span>).attr(<span class="jxr_string">"id"</span>, <span class="jxr_string">"abcd"</span>)
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>                  .add(<span class="jxr_string">"script"</span>).set(<span class="jxr_string">"test"</span>)
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>          );
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>          agent.execute(talk);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>              talk.read(),
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/talk/shell[@id='abcd']/port"</span>)
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          );
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      }
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  }
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>                  .add(<span class="jxr_string">"title"</span>).set(<span class="jxr_string">"something"</span>).up()
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>                  .add(<span class="jxr_string">"script"</span>).set(<span class="jxr_string">"test"</span>)
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          );
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          agent.execute(talk);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>              talk.read(),
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/talk/shell[@id='abcd']/port"</span>)
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          );
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      }
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
