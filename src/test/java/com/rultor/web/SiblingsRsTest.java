@@ -70,7 +70,7 @@ public final class SiblingsRsTest {
                 .add("github-repo").set("yegor256/rultor").up()
                 .add("github-issue").set("555").up().up()
                 .add("archive").add("log").attr("title", "hello, world")
-                .attr("id", "a1b2c3").set("s3://")
+                .attr("id", "a1b2c3").set("s3://test")
         );
         home.setServletContext(
             new MkServletContext().withAttr(Talks.class.getName(), talks)
