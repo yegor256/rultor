@@ -34,9 +34,12 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.xml.StrictXML;
+import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Talks in a repo.
@@ -157,7 +160,19 @@ public interface Talks {
         }
         @Override
         public void create(final String name) throws IOException {
-            new Talk.InFile(new File(new File(this.path), name)).read();
+            FileUtils.write(
+                new File(new File(this.path), name),
+                new StrictXML(
+                    new XMLDocument(
+                        String.format(
+                            "<talk name='%s' number='1' later='false'/>",
+                            name
+                        )
+                    ),
+                    Talk.SCHEMA
+                ).toString(),
+                CharEncoding.UTF_8
+            );
         }
         @Override
         public Iterable<Talk> active() {
