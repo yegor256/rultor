@@ -59,6 +59,11 @@ import org.xembly.Xembler;
 public interface Talk {
 
     /**
+     * Test name.
+     */
+    String TEST_NAME = "test";
+
+    /**
      * Schema.
      */
     XSD SCHEMA = XSDDocument.make(
@@ -132,7 +137,7 @@ public interface Talk {
             this(File.createTempFile("rultor", ".talk"));
             FileUtils.write(
                 new File(this.path),
-                String.format("<talk name='%s' number='1'/>", this.name())
+                String.format("<talk name='%s' number='1'/>", Talk.TEST_NAME)
             );
         }
         /**
@@ -156,12 +161,12 @@ public interface Talk {
             this.path = file.getAbsolutePath();
         }
         @Override
-        public Long number() {
-            return 1L;
+        public Long number() throws IOException {
+            return Long.parseLong(this.read().xpath("/talk/@number").get(0));
         }
         @Override
-        public String name() {
-            return "a1b2c3d4";
+        public String name() throws IOException {
+            return this.read().xpath("/talk/@name").get(0);
         }
         @Override
         public Date updated() {

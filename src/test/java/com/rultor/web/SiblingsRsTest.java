@@ -34,6 +34,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rexsl.mock.HttpHeadersMocker;
 import com.rexsl.mock.MkServletContext;
 import com.rexsl.mock.UriInfoMocker;
+import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
@@ -61,12 +62,13 @@ public final class SiblingsRsTest {
         home.setHttpHeaders(new HttpHeadersMocker().mock());
         home.setSecurityContext(Mockito.mock(SecurityContext.class));
         final Talks talks = new Talks.InDir();
-        final String name = "hello";
-        talks.create("repo1", name);
-        talks.get(name).modify(
+        talks.create("repo1", Talk.TEST_NAME);
+        talks.get(Talk.TEST_NAME).modify(
             new Directives()
                 .xpath("/talk")
-                .add("wire").add("href").set("http://example.com").up().up()
+                .add("wire").add("href").set("http://example.com").up()
+                .add("github-repo").set("yegor256/rultor").up()
+                .add("github-issue").set("555").up().up()
                 .add("archive").add("log").attr("title", "hello, world")
                 .attr("id", "a1b2c3").set("s3://")
         );

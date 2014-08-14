@@ -38,6 +38,7 @@ import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -103,7 +104,7 @@ public final class SiblingsRs extends BaseRs {
                         @Override
                         public JaxbBundle bundle(final Talk talk) {
                             try {
-                                return SiblingsRs.bundle(talk);
+                                return SiblingsRs.this.bundle(talk);
                             } catch (final IOException ex) {
                                 throw new IllegalStateException(ex);
                             }
@@ -121,7 +122,14 @@ public final class SiblingsRs extends BaseRs {
      * @return JAXB
      * @throws IOException If fails
      */
-    private static JaxbBundle bundle(final Talk talk) throws IOException {
+    private JaxbBundle bundle(final Talk talk) throws IOException {
+        if (!this.granted(talk.number())) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "according to .rultor.yml, you're not allowed to see this",
+                Level.WARNING
+            );
+        }
         final XML xml = talk.read();
         final JaxbBundle archive = new JaxbBundle("archive").add(
             new JaxbBundle.Group<XML>(xml.nodes("/talk/archive/log")) {

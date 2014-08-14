@@ -70,7 +70,7 @@ final class GithubProfile implements Profile {
     private static final String FILE = ".rultor.yml";
 
     /**
-     * Path patttern.
+     * Path pattern.
      */
     private static final Pattern PATH = Pattern.compile(
         "([a-zA-Z0-9\\.\\-]+/[a-zA-Z0-9\\.\\-]+)#(.+)"

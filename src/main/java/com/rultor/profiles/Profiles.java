@@ -60,7 +60,13 @@ public final class Profiles {
      * @throws IOException If fails
      */
     public Profile fetch(final Talk talk) throws IOException {
-        return new GithubProfile(Profiles.github(), talk);
+        final Profile profile;
+        if (Talk.TEST_NAME.equals(talk.name())) {
+            profile = new Profile.Fixed();
+        } else {
+            profile = new GithubProfile(Profiles.github(), talk);
+        }
+        return profile;
     }
 
     /**
