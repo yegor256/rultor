@@ -76,6 +76,14 @@ public final class Time {
     }
 
     /**
+     * Ctor.
+     * @param date Date
+     */
+    public Time(final String date) {
+        this(0);
+    }
+
+    /**
      * Make ISO string.
      * @return Text
      */
@@ -84,6 +92,14 @@ public final class Time {
             new Date(this.millis),
             "yyyy-MM-dd'T'HH:mm:ss'Z'"
         );
+    }
+
+    /**
+     * Make date.
+     * @return Date
+     */
+    public long msec() {
+        return this.millis;
     }
 
 }

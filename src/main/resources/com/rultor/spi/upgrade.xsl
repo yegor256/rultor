@@ -52,6 +52,20 @@
             </href>
         </xsl:copy>
     </xsl:template>
+    <xsl:template match="/talk/daemon[not(title)]">
+        <xsl:copy>
+            <xsl:apply-templates select="node()|@*"/>
+            <title>unknown</title>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="/talk/archive/log[not(@title)]">
+        <xsl:copy>
+            <xsl:attribute name="title">
+                <xsl:text>some command</xsl:text>
+            </xsl:attribute>
+            <xsl:apply-templates select="node()|@*"/>
+        </xsl:copy>
+    </xsl:template>
     <xsl:template match="node()|@*">
         <xsl:copy>
             <xsl:apply-templates select="node()|@*"/>

@@ -132,6 +132,7 @@ public final class StartsRequest extends AbstractAgent {
         return new Directives().xpath("/talk")
             .add("daemon")
             .attr("id", hash)
+            .add("title").set(type).up()
             .add("script").set(script);
     }
 

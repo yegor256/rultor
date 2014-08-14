@@ -34,6 +34,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.s3.Bucket;
 import com.jcabi.xml.XML;
+import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
@@ -78,7 +79,7 @@ public final class ArchivesDaemon extends AbstractAgent {
      */
     public ArchivesDaemon(final Bucket bkt) {
         super(
-            "/talk/daemon[code and ended]",
+            "/talk/daemon[started and code and ended]",
             "/talk/shell"
         );
         this.bucket = bkt;
@@ -106,10 +107,13 @@ public final class ArchivesDaemon extends AbstractAgent {
         );
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final URI uri = this.upload(file, hash);
-        Logger.info(this, "daemon archived into %s", uri);
+        final String title = this.title(xml, file);
+        Logger.info(this, "daemon archived into %s: %s", uri, title);
+        FileUtils.deleteQuietly(file);
         return new Directives().xpath("/talk/daemon").remove()
             .xpath("/talk").addIf("archive")
             .add("log").attr("id", hash)
+            .attr("title", title)
             .set(uri.toString());
     }
 
@@ -127,8 +131,35 @@ public final class ArchivesDaemon extends AbstractAgent {
         meta.setContentLength(file.length());
         final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);
         this.bucket.ocket(key).write(new FileInputStream(file), meta);
-        FileUtils.deleteQuietly(file);
         return URI.create(String.format("s3://%s/%s", this.bucket.name(), key));
+    }
+
+    /**
+     * Make a title.
+     * @param xml XML
+     * @param file File with stdout
+     * @return Title
+     * @throws IOException If fails
+     */
+    private String title(final XML xml, final File file) throws IOException {
+        final int code = Integer.parseInt(
+            xml.xpath("/talk/daemon/code/text()").get(0)
+        );
+        final String status;
+        if (code == 0) {
+            status = "SUCCESS";
+        } else {
+            status = "FAILURE";
+        }
+        return Logger.format(
+            "%s: %d (%s) in %[ms]s, %d lines",
+            xml.xpath("/talk/daemon/title/text()").get(0),
+            code,
+            status,
+            new Time(xml.xpath("/talk/daemon/ended/text()").get(0)).msec()
+            - new Time(xml.xpath("/talk/daemon/started/text()").get(0)).msec(),
+            FileUtils.readLines(file).size()
+        );
     }
 
 }

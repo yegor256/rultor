@@ -74,6 +74,7 @@ public final class ArchivesDaemonITCase {
             new Directives().xpath("/talk")
                 .add("daemon")
                 .attr("id", "abcd")
+                .add("title").set("merge").up()
                 .add("script").set("empty").up()
                 .add("dir").set(home.getAbsolutePath()).up()
                 .add("code").set("-7").up()
