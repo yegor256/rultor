@@ -79,6 +79,7 @@ public final class SiblingsRsTest {
                 "/page[repo='test']",
                 "/page[since='123']",
                 "/page/siblings[count(talk)=1]",
+                "/page/siblings/talk[timeago]",
                 "/page/siblings/talk/archive/log[id and href and title]",
                 "/page/siblings/talk/archive[count(log)=1]",
                 "//log[starts-with(href,'http://')]"
