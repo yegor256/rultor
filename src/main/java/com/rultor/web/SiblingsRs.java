@@ -50,6 +50,7 @@ import javax.ws.rs.core.Response;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.23
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Path("/p/{name : [/a-zA-Z0-9_\\-\\.]+}")
 public final class SiblingsRs extends BaseRs {
@@ -130,6 +131,7 @@ public final class SiblingsRs extends BaseRs {
         );
         return new JaxbBundle("talk")
             .add("name", talk.name()).up()
+            .add("href", xml.xpath("/talk/wire/href/text()").get(0)).up()
             .add("updated", Long.toString(talk.updated().getTime())).up()
             .add(archive);
     }

@@ -38,11 +38,27 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <xsl:apply-templates select="siblings/talk"/>
+        <div class="wrapper">
+            <header class="header">
+                <a href="{links/link[@rel='home']/@href}">
+                    <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
+                </a>
+            </header>
+            <div class="main">
+                <xsl:apply-templates select="siblings/talk"/>
+            </div>
+            <footer class="footer">
+                <p>
+                    <a href="/{links/link[@rel='home']/@href}">rultor.com</a>
+                </p>
+            </footer>
+        </div>
     </xsl:template>
     <xsl:template match="talk">
         <div>
-            <xsl:value-of select="name"/>
+            <a href="{href}">
+                <xsl:value-of select="name"/>
+            </a>
             <xsl:if test="archive/log">
                 <ul>
                     <xsl:apply-templates select="archive/log"/>

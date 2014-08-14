@@ -38,8 +38,8 @@
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
-                <meta name="description" content="Coding team assistant that helps to automate merge, deploy and release operations, mostly for Github projects"/>
-                <meta name="keywords" content="continuous integration, continuous delivery, revision control"/>
+                <meta name="description" content="DevOps team assistant that helps to automate merge, deploy and release operations, mostly for Github projects"/>
+                <meta name="keywords" content="continuous integration, continuous delivery, DevOps"/>
                 <meta name="author" content="rultor.com"/>
                 <meta property="twitter:account_id" content="4503599630178231"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
