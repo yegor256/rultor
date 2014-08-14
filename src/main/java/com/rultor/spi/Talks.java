@@ -86,10 +86,11 @@ public interface Talks {
 
     /**
      * Create a new one (runtime exception if it exists already).
+     * @param repo Name of the repository it is in
      * @param name The name
      * @throws IOException If fails
      */
-    void create(String name) throws IOException;
+    void create(String repo, String name) throws IOException;
 
     /**
      * Get only active talks.
@@ -161,7 +162,8 @@ public interface Talks {
             );
         }
         @Override
-        public void create(final String name) throws IOException {
+        public void create(final String repo, final String name)
+            throws IOException {
             final File file = new File(new File(this.path), name);
             FileUtils.write(
                 file,

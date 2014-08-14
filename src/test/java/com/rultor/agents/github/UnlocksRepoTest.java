@@ -61,7 +61,7 @@ public final class UnlocksRepoTest {
         );
         final Talks talks = new Talks.InDir();
         final String name = "test-talk";
-        talks.create(name);
+        talks.create("", name);
         talks.get(name).modify(
             new Directives()
                 .xpath("/talk").add("wire")

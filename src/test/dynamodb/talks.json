@@ -15,6 +15,10 @@
         {
             "AttributeName": "updated",
             "AttributeType": "N"
+        },
+        {
+            "AttributeName": "repo",
+            "AttributeType": "S"
         }
     ],
     "KeySchema": [
@@ -59,6 +63,26 @@
             ],
             "Projection": {
                 "ProjectionType": "KEYS_ONLY"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": "1",
+                "WriteCapacityUnits": "1"
+            }
+        },
+        {
+            "IndexName": "siblings",
+            "KeySchema": [
+                {
+                    "AttributeName": "repo",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "updated",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
             },
             "ProvisionedThroughput": {
                 "ReadCapacityUnits": "1",

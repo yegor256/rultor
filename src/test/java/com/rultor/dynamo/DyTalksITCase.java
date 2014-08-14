@@ -59,7 +59,7 @@ public final class DyTalksITCase {
             this.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "a5fe445";
-        talks.create(name);
+        talks.create("hey/you", name);
         MatcherAssert.assertThat(
             talks.get(name).read(),
             XhtmlMatchers.hasXPath("/talk")
@@ -76,7 +76,7 @@ public final class DyTalksITCase {
             this.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "yegor256/rultor#529";
-        talks.create(name);
+        talks.create("a/b", name);
         final Talk talk = talks.get(name);
         talk.active(false);
         MatcherAssert.assertThat(

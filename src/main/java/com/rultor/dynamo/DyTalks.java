@@ -87,6 +87,12 @@ public final class DyTalks implements Talks {
     public static final String ATTR_NUMBER = "number";
 
     /**
+     * Name of the repo it belongs to.
+     * @since 1.23
+     */
+    public static final String ATTR_REPO = "repo";
+
+    /**
      * Is it active (1) or archived (0).
      */
     public static final String ATTR_ACTIVE = "active";
@@ -178,12 +184,14 @@ public final class DyTalks implements Talks {
     }
 
     @Override
-    public void create(final String name) throws IOException {
+    public void create(final String repo, final String name)
+        throws IOException {
         final long number = this.counter.incrementAndGet(1L);
         this.region.table(DyTalks.TBL).put(
             new Attributes()
                 .with(DyTalks.HASH, name)
                 .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
+                .with(DyTalks.ATTR_REPO, repo)
                 .with(DyTalks.ATTR_NUMBER, number)
                 .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
                 .with(

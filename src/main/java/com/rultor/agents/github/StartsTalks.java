@@ -142,7 +142,7 @@ public final class StartsTalks implements SuperAgent {
         );
         final String name = String.format("%s#%d", coords, issue.number());
         if (!talks.exists(name)) {
-            talks.create(name);
+            talks.create(coords.toString(), name);
         }
         final Talk talk = talks.get(name);
         talk.modify(
