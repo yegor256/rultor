@@ -66,6 +66,7 @@ public final class StartsRequestTest {
             talk.read(),
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon[@id='abcd' and script]",
+                "/talk/daemon[@title]",
                 "//script[contains(.,'hey=hello!')]"
             )
         );

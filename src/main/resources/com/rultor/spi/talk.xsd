@@ -38,6 +38,7 @@
         <xs:all>
             <xs:element name="script" type="xs:string"/>
             <xs:element name="started" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="title" type="xs:string" minOccurs="0"/>
             <xs:element name="dir" minOccurs="0">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -109,6 +110,7 @@
                     <xs:simpleContent>
                         <xs:extension base="xs:anyURI">
                             <xs:attribute name="id" type="hash" use="required"/>
+                            <xs:attribute name="title" type="xs:string" use="optional"/>
                         </xs:extension>
                     </xs:simpleContent>
                 </xs:complexType>
