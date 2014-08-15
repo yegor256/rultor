@@ -59,6 +59,7 @@
                 <xsl:text> and </xsl:text>
                 <strong><xsl:text>release</xsl:text></strong>
                 <xsl:text> routine operations.</xsl:text>
+                <br/>
                 <xsl:text> Say </xsl:text>
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
