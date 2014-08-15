@@ -36,6 +36,8 @@ import com.rultor.agents.shells.Shell;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
 import org.xembly.Directives;
@@ -76,17 +78,18 @@ public final class StartsRequestITCase {
     @Test
     public void composesCorrectDeployRequest() throws Exception {
         Assume.assumeNotNull(StartsRequestITCase.HOST);
-        final Shell shell = new Shell.Safe(
+        final Shell shell = new Shell.Verbose(
             new SSH(
                 StartsRequestITCase.HOST, 22,
                 StartsRequestITCase.LOGIN, StartsRequestITCase.KEY
             )
         );
-        new Shell.Plain(shell).exec(
+        final String repo = String.format("/tmp/%d.git", System.nanoTime());
+        new Shell.Plain(new Shell.Safe(shell)).exec(
             Joiner.on(';').join(
                 "cd /tmp",
-                "git init repo.git",
-                "cd repo.git",
+                String.format("git init %s", repo),
+                String.format("cd %s", repo),
                 "git config user.email test@rultor.com",
                 "git config user.name test",
                 "echo 'hello, world!' > hello.txt",
@@ -104,7 +107,8 @@ public final class StartsRequestITCase {
                 new XMLDocument(
                     Joiner.on(' ').join(
                         "<p><deploy><script>",
-                        "id | grep rultor",
+                        "echo 'Hello, world!",
+                        "id",
                         "</script></deploy></p>"
                     )
                 )
@@ -116,12 +120,27 @@ public final class StartsRequestITCase {
                 .add("request").attr("id", "abcd")
                 .add("type").set("deploy").up()
                 .add("args")
-                .add("arg").attr("name", "head").set("/tmp/repo.git").up()
+                .add("arg").attr("name", "head").set(repo).up()
                 .add("arg").attr("name", "head_branch").set("master").up()
         );
         agent.execute(talk);
-        new Shell.Plain(shell).exec(
-            talk.read().xpath("//script/text()").get(0)
+        final String dir = String.format("/tmp/test-%d", System.nanoTime());
+        final String stdout = new Shell.Plain(shell).exec(
+            Joiner.on('\n').join(
+                String.format("mkdir %s", dir),
+                String.format("cd %s", dir),
+                talk.read().xpath("//script/text()").get(0)
+            )
+        );
+        new Shell.Plain(new Shell.Safe(shell)).exec(
+            Joiner.on('\n').join(
+                String.format("rm -rf %s", repo),
+                String.format("rm -rf %s", dir)
+            )
+        );
+        MatcherAssert.assertThat(
+            stdout,
+            Matchers.containsString("Hello, World!")
         );
     }
 

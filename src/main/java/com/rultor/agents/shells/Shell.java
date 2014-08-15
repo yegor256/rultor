@@ -39,6 +39,7 @@ import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.input.NullInputStream;
+import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
@@ -164,4 +165,34 @@ public interface Shell {
         }
     }
 
+    /**
+     * Verbose run.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "orgn")
+    final class Verbose implements Shell {
+        /**
+         * Original.
+         */
+        private final transient Shell orgn;
+        /**
+         * Ctor.
+         * @param shell Original shell
+         */
+        public Verbose(final Shell shell) {
+            this.orgn = shell;
+        }
+        // @checkstyle ParameterNumberCheck (5 line)
+        @Override
+        public int exec(final String command, final InputStream stdin,
+            final OutputStream stdout, final OutputStream stderr)
+            throws IOException {
+            return this.orgn.exec(
+                command, stdin,
+                new TeeOutputStream(stdout, Logger.stream(Level.INFO, this)),
+                new TeeOutputStream(stderr, Logger.stream(Level.WARNING, this))
+            );
+        }
+    }
 }
