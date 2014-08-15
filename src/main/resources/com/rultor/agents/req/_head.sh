@@ -32,14 +32,14 @@ cat <<EOT > entry.sh
 set -x
 set -e
 set -o pipefail
-adduser --disabled-password --gecos '' rultor
-adduser rultor sudo
-cp -R ./* /home/rultor
+adduser --disabled-password --gecos '' r
+adduser r sudo
+cp -R ./* /home/r
 rm -rf repo
-chown -R rultor /home/rultor
+chown -R r /home/r
 chmod a+x script.sh
-su rultor -c /home/rultor/script.sh
-mv /home/rultor/repo .
+su r -c /home/r/script.sh
+mv /home/r/repo .
 chown -R $(whoami) ./repo
 EOT
 chmod a+x entry.sh
