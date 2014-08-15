@@ -38,7 +38,7 @@ cp -R ./* /home/r
 rm -rf repo
 chown -R r /home/r
 chmod a+x /home/r/script.sh
-su r -c /home/r/script.sh
+su -m r -c /home/r/script.sh
 mv /home/r/repo .
 chown -R $(whoami) ./repo
 EOT
@@ -48,7 +48,7 @@ cat <<EOT > script.sh
 set -x
 set -e
 set -o pipefail
-cd ~/repo
+cd /home/r/repo
 EOT
 echo "${scripts[@]}" >> script.sh
 cd repo
