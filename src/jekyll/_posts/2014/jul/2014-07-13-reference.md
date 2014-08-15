@@ -37,13 +37,13 @@ This configuration tells Rultor that needs to fetch `assets/settings.xml` from
 `yegor256/secret-repo` and place it into the `secret.xml` file right before
 starting a build.
 
-Keep in mind that every builds starts in `/home/rultor/repo` directory,
+Keep in mind that every builds starts in `/home/r/repo` directory,
 while assets are placed one folder up in the directory tree,
-in `/home/rultor`. This is how the directory layout looks:
+in `/home/r`. This is how the directory layout looks:
 
 {% highlight text %}
 /home
-  /rultor
+  /r
     run.sh
     pid
     status
