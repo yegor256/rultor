@@ -92,7 +92,7 @@
                     <span>provisioned by</span>
                     <br/>
                     <a href="http://aws.amazon.com/">
-                        <img src="//img.rultor.com/aws-logo.svg"
+                        <img src="//img.rultor.com/aws-logo.png"
                             style="width:96px" alt="aws logo"/>
                     </a>
                 </div>
