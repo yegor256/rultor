@@ -43,8 +43,13 @@ mv /home/r/repo .
 chown -R $(whoami) ./repo
 EOT
 chmod a+x entry.sh
-echo "#!/bin/bash" > script.sh
-echo "cd ~/repo" >> script.sh
+cat <<EOT > script.sh
+#!/bin/bash
+set -x
+set -e
+set -o pipefail
+cd ~/repo
+EOT
 echo "${scripts[@]}" >> script.sh
 cd repo
 
