@@ -93,7 +93,7 @@
                     </span>
                 </xsl:when>
                 <xsl:otherwise>
-                    <span style="color:green" title="read-write, normal operations">
+                    <span style="color:#348C62" title="read-write, normal operations">
                         <xsl:text>rw</xsl:text>
                     </span>
                 </xsl:otherwise>
@@ -164,7 +164,7 @@
                 <xsl:text>color:</xsl:text>
                 <xsl:choose>
                     <xsl:when test="level = 'INFO'">
-                        <xsl:text>green</xsl:text>
+                        <xsl:text>#348C62</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'WARNING'">
                         <xsl:text>orange</xsl:text>

@@ -6,6 +6,7 @@
   "/xsl/layout.xsl",
   "/js/home.js",
   "/p/test/repo",
+  "/b/test/repo.1",
   "/"
 ].forEach(
   function (page) {
@@ -24,6 +25,25 @@
             test.done();
           }
         );
+      }
+    );
+  }
+);
+
+casper.test.begin(
+  "SVG is renderable",
+  function (test) {
+    "use strict";
+    casper.start(
+      casper.cli.get("home") + "/b/test/repo",
+      function () {
+        test.assertHttpStatus(200);
+        //test.assertTextExists('<svg');
+      }
+    );
+    casper.run(
+      function () {
+        test.done();
       }
     );
   }
