@@ -100,7 +100,7 @@ public final class StartsRequestITCase {
                 new Array<Matcher<? super String>>()
                     .with(Matchers.containsString("image=yegor256/rultor\n"))
                     .with(Matchers.containsString("Cloning into 'repo'...\n"))
-                    .with(Matchers.containsString("+ docker_when_possible\n"))
+                    .with(Matchers.containsString("docker_when_possible\n"))
                     .with(Matchers.containsString("image=yegor256/rultor"))
                     .with(Matchers.containsString("load average is "))
                     .with(Matchers.containsString("low enough to run a"))
