@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?ce3731c"/>
+    <link rel="stylesheet" href="/css/layout.css?bd1832a"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
   </head>
@@ -21,6 +21,9 @@
         </a>
       </header>
       <section class="main" itemscope itemtype="http://schema.org/Article">
+        <a href="https://github.com/yegor256/rultor">
+          <img src="//img.rultor.com/fork-me.svg" class="fork-me" alt="fork me in github"/>
+        </a>
         <h1 itemprop="headline">.rultor.yml Reference</h1>
         <article itemprop="articleBody"><p>Rultor is configured solely through the YAML <code>.rultor.yml</code> file stored in the
 root directory of your Github repository. There is no control or management
@@ -50,12 +53,12 @@ fetch it from there:</p>
 <code>yegor256/secret-repo</code> and place it into the <code>secret.xml</code> file right before
 starting a build.</p>
 
-<p>Keep in mind that every builds starts in <code>/home/rultor/repo</code> directory,
+<p>Keep in mind that every builds starts in <code>/home/r/repo</code> directory,
 while assets are placed one folder up in the directory tree,
-in <code>/home/rultor</code>. This is how the directory layout looks:</p>
+in <code>/home/r</code>. This is how the directory layout looks:</p>
 
 <div class="highlight"><pre><code class="language-text" data-lang="text">/home
-  /rultor
+  /r
     run.sh
     pid
     status
@@ -205,7 +208,7 @@ Github collaborators <em>and</em> accounts mentioned here are allowed to give co
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/ce3731c">ce3731c</a>
+          <a href="https://github.com/yegor256/rultor/commit/bd1832a">bd1832a</a>
         </p>
       </footer>
     </div>
