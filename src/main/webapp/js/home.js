@@ -36,7 +36,10 @@ $(document).ready(
     var $div = $('#pulse');
     window.setInterval(
       function () {
-        $div.load($div.attr('data-href'));
+        $div.find('img').attr(
+          'src',
+          $div.attr('data-href') + '?' + Date.now()
+        );
       },
       1000
     );

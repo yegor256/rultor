@@ -46,6 +46,10 @@
   border: 1px solid lightgray;
   padding: 1em;
   height: 64px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .recent {

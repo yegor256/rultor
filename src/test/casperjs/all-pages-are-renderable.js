@@ -4,7 +4,7 @@
   "/css/style.css",
   "/robots.txt",
   "/xsl/layout.xsl",
-  "/js/all.js",
+  "/js/home.js",
   "/p/test/repo",
   "/"
 ].forEach(
