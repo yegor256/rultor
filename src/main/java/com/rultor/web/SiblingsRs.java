@@ -120,7 +120,7 @@ public final class SiblingsRs extends BaseRs {
             .append(new JaxbBundle("repo", this.name))
             .append(new JaxbBundle("since", Long.toString(date.getTime())))
             .append(list);
-        if (!Iterables.isEmpty(siblings)) {
+        if (Iterables.size(siblings) == Tv.TWENTY) {
             final Talk last = Iterables.getLast(siblings);
             page = page.link(
                 new Link(
