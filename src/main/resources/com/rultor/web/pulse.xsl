@@ -53,7 +53,7 @@
                     x="{@start}" y="{$height - @total - 0.5}" fill="green"/>
             </xsl:for-each>
             <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
-            <text x="0" y="0" style="text-anchor:middle;font-size:1.5"
+            <text x="0" y="0" style="text-anchor:middle;font-size:1.5;font-family:monospace;"
                 transform="scale(46000,1) translate(-39,1.5)">
                 <xsl:choose>
                     <xsl:when test="$age &gt; 600">
