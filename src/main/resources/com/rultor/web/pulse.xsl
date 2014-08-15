@@ -73,7 +73,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </text>
-            <text x="0" y="0" style="text-anchor:end;font-size:1.5"
+            <text x="0" y="0" style="text-anchor:end;font-size:1.5;font-family:monospace;"
                 transform="scale(46000,1) translate(0,1.5)">
                 <xsl:value-of select="format-number($age,'0')"/>
                 <xsl:text> sec</xsl:text>
