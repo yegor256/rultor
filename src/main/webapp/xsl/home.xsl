@@ -83,7 +83,7 @@
             </p>
             <p itemprop="creator">
                 <a href="http://www.teamed.io">
-                    <img src="//img.teamed.io/btn.svg" style="width:200px;height:40px;"
+                    <img src="//img.teamed.io/btn.svg" style="width:150px;"
                         alt="teamed.io made-by badge"/>
                 </a>
             </p>
