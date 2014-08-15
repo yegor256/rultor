@@ -1,6 +1,7 @@
 <img src="http://img.rultor.com/logo.svg" width="64px" height="64px"/>
 
 [![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
+[![Made By Teamed.io](http://img.rultor.com/button.svg)](http://www.rultor.com)
 
 [![Build Status](https://travis-ci.org/yegor256/rultor.svg?branch=master)](https://travis-ci.org/yegor256/rultor)
 

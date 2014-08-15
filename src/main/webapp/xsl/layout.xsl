@@ -62,7 +62,9 @@
                 //]]></script>
             </head>
             <body>
-                <img src="//img.jcabi.com/fork-me.svg" class="fork-me" alt="fork me in github"/>
+                <a href="https://github.com/yegor256/rultor">
+                    <img src="//img.rultor.com/fork-me.svg" class="fork-me" alt="fork me in github"/>
+                </a>
                 <section itemscope="" itemtype="http://schema.org/WebApplication">
                     <nav role="navigation" class="menu">
                         <xsl:if test="not(identity)">
