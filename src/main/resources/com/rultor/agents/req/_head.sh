@@ -38,7 +38,7 @@ cp -R ./* /home/rultor
 rm -rf repo
 chown -R rultor /home/rultor
 chmod a+x script.sh
-su rultor -c ./script.sh
+su rultor -c /home/rultor/script.sh
 mv /home/rultor/repo .
 chown -R $(whoami) ./repo
 EOT
