@@ -82,12 +82,6 @@
                 </a>
                 <xsl:text>.</xsl:text>
             </p>
-            <p itemprop="creator">
-                <a href="http://www.teamed.io">
-                    <img src="//img.teamed.io/btn.svg" style="width:150px;"
-                        alt="teamed.io made-by badge"/>
-                </a>
-            </p>
             <div class="badges" style="margin-top:2em;">
                 <div>
                     <span>provisioned by</span>
@@ -122,6 +116,12 @@
                     </a>
                 </div>
             </div>
+            <p itemprop="creator">
+                <a href="http://www.teamed.io">
+                    <img src="//img.teamed.io/btn.svg" style="width:150px;"
+                        alt="teamed.io made-by badge"/>
+                </a>
+            </p>
         </div>
     </xsl:template>
     <xsl:template match="recent/talk">

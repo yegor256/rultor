@@ -29,12 +29,10 @@
  */
 package com.rultor.agents.req;
 
+import com.google.common.base.Joiner;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.VerboseProcess;
 import com.jcabi.xml.XMLDocument;
-import com.rultor.agents.shells.SSH;
-import com.rultor.agents.shells.Shell;
-import com.rultor.agents.shells.Sshd;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
@@ -108,7 +106,7 @@ public final class StartsRequestITCase {
                     .with(Matchers.containsString("low enough to run a"))
                     .with(
                         Matchers.containsString(
-                            "SUDO-6: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
+                            "DOCKER-5: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
                         )
                     )
             )
@@ -179,25 +177,22 @@ public final class StartsRequestITCase {
      * @throws IOException If fails
      */
     private String exec(final Talk talk) throws IOException {
-        final String script = StringUtils.join(
-            "set -x\n",
-            "set -e\n",
-            "set -o pipefail\n",
-            "function sudo {\n",
-            "  for (( i=1; i<=$#; i++ )); do\n",
-            "    echo \"SUDO-$i: ${!i}\"\n",
-            "  done\n",
-            "}\n",
-            String.format("cd %s\n", this.temp.newFolder()),
-            talk.read().xpath("/talk/daemon/script/text()").get(0)
+        final String script = Joiner.on('\n').join(
+            "set -x",
+            "set -e",
+            "set -o pipefail",
+            "function docker {",
+            "  for (( i=1; i<=$#; i++ )); do",
+            "    echo \"DOCKER-$i: ${!i}\"",
+            "  done",
+            "}",
+            talk.read().xpath("//script/text()").get(0)
         );
-        final Sshd sshd = new Sshd(this.temp.newFolder());
-        final int port = sshd.start();
-        return new Shell.Plain(
-            new Shell.Safe(
-                new SSH("localhost", port, sshd.login(), sshd.key())
-            )
-        ).exec(script);
+        return new VerboseProcess(
+            new ProcessBuilder().command(
+                "/bin/bash", "-c", script
+            ).directory(this.temp.newFolder()).redirectErrorStream(true)
+        ).stdout();
     }
 
     /**
@@ -211,18 +206,20 @@ public final class StartsRequestITCase {
             new ProcessBuilder().command(
                 "/bin/bash",
                 "-c",
-                StringUtils.join(
-                    "set -x; set -e; set -o pipefail;",
-                    "git init .;",
-                    "git config user.email test@rultor.com;",
-                    "git config user.name test;",
-                    "echo 'hello, world!' > hello.txt;",
-                    "git add .;",
-                    "git commit -am 'first file';",
-                    "git checkout -b frk;",
-                    "echo 'good bye!' > hello.txt;",
-                    "git commit -am 'modified file';",
-                    "git checkout master;",
+                Joiner.on(';').join(
+                    "set -x",
+                    "set -e",
+                    "set -o pipefail",
+                    "git init .",
+                    "git config user.email test@rultor.com",
+                    "git config user.name test",
+                    "echo 'hello, world!' > hello.txt",
+                    "git add .",
+                    "git commit -am 'first file'",
+                    "git checkout -b frk",
+                    "echo 'good bye!' > hello.txt",
+                    "git commit -am 'modified file'",
+                    "git checkout master",
                     "git config receive.denyCurrentBranch ignore"
                 )
             ).directory(repo)

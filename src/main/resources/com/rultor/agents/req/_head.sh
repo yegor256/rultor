@@ -1,8 +1,11 @@
 #!/bin/sh
 
-repo=repo
-git clone "${head}" "${repo}"
-cd "${repo}"
+if [ -z "${docker}" ]; then
+  docker="docker"
+fi
+
+git clone "${head}" repo
+cd repo
 git config user.email "me@rultor.com"
 git config user.name "rultor"
 git checkout "${head_branch}"
@@ -24,23 +27,29 @@ if [ -z "${scripts}" ]; then
 fi
 
 cd ..
-bin=script.sh
-echo "#!/bin/bash" > ${bin}
-echo "set -x" >> ${bin}
-echo "set -e" >> ${bin}
-echo "set -o pipefail" >> ${bin}
-echo "cd \"${repo}\"" >> ${bin}
-echo "${scripts[@]}" >> ${bin}
-chmod a+x ${bin}
-cd "${repo}"
-
-if [ -z "${sudo}" ]; then
-  sudo="sudo"
-fi
+cat <<EOT > entry.sh
+#!/bin/bash
+set -x
+set -e
+set -o pipefail
+adduser --disabled-password --gecos '' rultor
+adduser rultor sudo
+cp -R ./* /home/rultor
+rm -rf repo
+chown -R rultor /home/rultor
+su rultor -c ./script.sh
+mv /home/rultor/repo .
+EOT
+chmod a+x entry.sh
+echo "#!/bin/bash" > script.sh
+echo "cd ~/repo" >> script.sh
+echo "${scripts[@]}" >> script.sh
+chmod a+x script.sh
+cd repo
 
 function docker_when_possible {
   while true; do
-    load=$(uptime | awk '{print $12}' | cut -d "," -f 1)
+    load=$(uptime | awk '{print $12}' | cut -d ',' -f 1)
     if [ "${load}" \> 8 ]; then
       echo "load average is ${load}, too high to run a new Docker container"
       echo "I will try again in 15 seconds"
@@ -51,8 +60,7 @@ function docker_when_possible {
     fi
   done
   cd ..
-  ${sudo} docker run --rm -v $(pwd):/main "${vars[@]}" \
-    --memory=4g --cidfile=$(pwd)/cid -w=/main ${image} /main/${bin}
-  ${sudo} chown -R $(whoami) .
-  cd "${repo}"
+  ${docker} run --rm -v "$(pwd):/main" "${vars[@]}" \
+    --memory=4g "--cidfile=$(pwd)/cid" -w=/main "${image}" /main/entry.sh
+  cd repo
 }
