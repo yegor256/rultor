@@ -32,6 +32,7 @@ cat <<EOT > entry.sh
 set -x
 set -e
 set -o pipefail
+shopt -s dotglob
 adduser --disabled-password --gecos '' r
 adduser r sudo
 echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
