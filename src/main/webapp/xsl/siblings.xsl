@@ -47,16 +47,11 @@
                     <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
                 </a>
             </header>
-            <div class="main" id="talks">
-                <xsl:if test="siblings/talk">
-                    <xsl:attribute name="data-more">
-                        <xsl:value-of select="links/link[@rel='self']/@href"/>
-                        <xsl:text>?since=</xsl:text>
-                        <xsl:value-of select="siblings/talk[position()=last()]/updated"/>
-                    </xsl:attribute>
-                </xsl:if>
-                <xsl:apply-templates select="siblings/talk"/>
-                <div class="tail">
+            <div class="main">
+                <div id="talks" data-more="{links/link[@rel='more']/@href}">
+                    <xsl:apply-templates select="siblings/talk"/>
+                </div>
+                <div id="tail">
                     <xsl:text>loading...</xsl:text>
                 </div>
             </div>

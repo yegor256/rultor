@@ -37,6 +37,8 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -46,6 +48,7 @@ import org.junit.Test;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class DyTalksITCase {
 
@@ -82,6 +85,31 @@ public final class DyTalksITCase {
         MatcherAssert.assertThat(
             talks.recent().iterator().next().name(),
             Matchers.equalTo(name)
+        );
+    }
+
+    /**
+     * DyTalks can list siblings.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void listsSiblings() throws Exception {
+        final Talks talks = new DyTalks(
+            this.dynamo(), new MkSttc().counters().get("")
+        );
+        final String repo = "repo1";
+        talks.create(repo, "yegor256/rultor#9");
+        final Date date = new Date();
+        TimeUnit.SECONDS.sleep(2L);
+        talks.create(repo, "yegor256/rultor#10");
+        TimeUnit.SECONDS.sleep(2L);
+        MatcherAssert.assertThat(
+            talks.siblings(repo, new Date()),
+            Matchers.<Talk>iterableWithSize(2)
+        );
+        MatcherAssert.assertThat(
+            talks.siblings(repo, date),
+            Matchers.<Talk>iterableWithSize(1)
         );
     }
 

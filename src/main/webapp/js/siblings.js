@@ -35,19 +35,22 @@ $(document).ready(
     "use strict";
     $(window).scroll(
       function () {
-        var $box = $('#talks'), more = $box.attr('data-more'), $tail = $('.tail');
+        var $box = $('#talks'), more = $box.attr('data-more'), $tail = $('#tail');
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 600 && more) {
+          $box.removeAttr('data-more');
           $tail.show();
           $.ajax(
             {
               url: more,
               cache: false,
-              dataType: 'html',
+              dataType: 'xml',
+              headers: { 'Accept': 'text/html' },
               method: 'GET',
               success: function (data) {
                 var $div = $(data).find('#talks');
-                $box.html($div.html());
+                $box.html($box.html() + $div.html());
                 $box.attr('data-more', $div.attr('data-more'));
+                $tail.hide();
               },
               error: function () {
                 $tail.html('Oops, an error :( Please, try to reload the page');

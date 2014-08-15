@@ -33,6 +33,7 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
@@ -110,15 +111,27 @@ public final class SiblingsRs extends BaseRs {
                 }
             }
         );
-        return new PageBuilder()
+        EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/siblings.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("repo", this.name))
             .append(new JaxbBundle("since", Long.toString(date.getTime())))
-            .append(list)
-            .render()
-            .build();
+            .append(list);
+        if (!Iterables.isEmpty(siblings)) {
+            final Talk last = Iterables.getLast(siblings);
+            page = page.link(
+                new Link(
+                    "more",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(SiblingsRs.class)
+                        .queryParam("since", "{s}")
+                        .build(this.name, last.updated().getTime())
+                )
+            );
+        }
+        return page.render().build();
     }
 
     /**

@@ -28,10 +28,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#tail {
+  display: none;
+  text-align: center;
+  color: gray;
+}
+
 #talks {
-  .tail {
-    display: none;
-  }
   .talk {
     margin-bottom: 2em;
     .entry {
