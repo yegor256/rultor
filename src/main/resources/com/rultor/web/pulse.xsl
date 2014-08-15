@@ -50,7 +50,7 @@
                 vector-effect="non-scaling-stroke"/>
             <xsl:for-each select="tick">
                 <rect width="{max(@msec)}" height="{@total + 0.5}"
-                    x="{@start}" y="{$height - @total - 0.5}" fill="green"/>
+                    x="{@start}" y="{$height - @total - 0.5}" fill="#348C62"/>
             </xsl:for-each>
             <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
             <text x="0" y="0" style="text-anchor:middle;font-size:1.5;font-family:monospace;"
@@ -67,7 +67,7 @@
                         </tspan>
                     </xsl:when>
                     <xsl:otherwise>
-                        <tspan style="fill:green">
+                        <tspan style="fill:#348C62">
                             <xsl:text>all systems work fine</xsl:text>
                         </tspan>
                     </xsl:otherwise>
