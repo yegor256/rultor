@@ -37,6 +37,7 @@ adduser rultor sudo
 cp -R ./* /home/rultor
 rm -rf repo
 chown -R rultor /home/rultor
+chmod a+x script.sh
 su rultor -c ./script.sh
 mv /home/rultor/repo .
 chown -R $(whoami) ./repo
@@ -45,7 +46,6 @@ chmod a+x entry.sh
 echo "#!/bin/bash" > script.sh
 echo "cd ~/repo" >> script.sh
 echo "${scripts[@]}" >> script.sh
-chmod a+x script.sh
 cd repo
 
 function docker_when_possible {
