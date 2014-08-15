@@ -37,7 +37,7 @@ adduser r sudo
 cp -R ./* /home/r
 rm -rf repo
 chown -R r /home/r
-chmod a+x script.sh
+chmod a+x /home/r/script.sh
 su r -c /home/r/script.sh
 mv /home/r/repo .
 chown -R $(whoami) ./repo
