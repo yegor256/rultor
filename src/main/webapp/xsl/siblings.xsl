@@ -72,7 +72,9 @@
             </span>
             <xsl:if test="archive/log">
                 <ul>
-                    <xsl:apply-templates select="archive/log"/>
+                    <xsl:apply-templates select="archive/log">
+                        <xsl:sort select="id" order="descending" />
+                    </xsl:apply-templates>
                 </ul>
             </xsl:if>
         </div>
