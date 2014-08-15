@@ -46,7 +46,7 @@
                 <xsl:value-of select="$height"/>
             </xsl:attribute>
             <line x1="{-$width}" y1="{$height}" x2="0" y2="{$height}"
-                stroke="lightgray" stroke-width="1px"
+                stroke="lightgray" stroke-width="4px"
                 vector-effect="non-scaling-stroke"/>
             <xsl:for-each select="tick">
                 <rect width="{@msec}" height="{@total + 0.5}"
