@@ -39,6 +39,7 @@ rm -rf repo
 chown -R rultor /home/rultor
 su rultor -c ./script.sh
 mv /home/rultor/repo .
+chown -R $(whoami) ./repo
 EOT
 chmod a+x entry.sh
 echo "#!/bin/bash" > script.sh

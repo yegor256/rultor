@@ -105,10 +105,10 @@ public final class StartsRequestITCase {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    Joiner.on(' ').join(
+                    Joiner.on('\n').join(
                         "<p><deploy><script>",
-                        "echo 'Hello, world!",
-                        "id",
+                        "echo 'Hello, world!'",
+                        "echo 'I am' $(whoami)",
                         "</script></deploy></p>"
                     )
                 )
@@ -135,12 +135,15 @@ public final class StartsRequestITCase {
         new Shell.Plain(new Shell.Safe(shell)).exec(
             Joiner.on('\n').join(
                 String.format("rm -rf %s", repo),
-                String.format("rm -rf %s", dir)
+                String.format("sudo rm -rf %s", dir)
             )
         );
         MatcherAssert.assertThat(
             stdout,
-            Matchers.containsString("Hello, World!")
+            Matchers.allOf(
+                Matchers.containsString("Hello, world!"),
+                Matchers.containsString("I am rultor")
+            )
         );
     }
 
