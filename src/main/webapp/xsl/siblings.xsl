@@ -48,6 +48,11 @@
                 </a>
             </header>
             <div class="main">
+                <p>
+                    <xsl:text>Rultor.com manages basic DevOps operations (merge, release and deploy) for </xsl:text>
+                    <strong><xsl:value-of select="repo"/></strong>
+                    <xsl:text> project.</xsl:text>
+                </p>
                 <div id="talks" data-more="{links/link[@rel='more']/@href}">
                     <xsl:apply-templates select="siblings/talk"/>
                 </div>

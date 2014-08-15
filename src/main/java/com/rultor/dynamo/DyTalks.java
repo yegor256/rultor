@@ -244,6 +244,7 @@ public final class DyTalks implements Talks {
                         .withIndexName(DyTalks.IDX_ACTIVE)
                         .withScanIndexForward(false)
                         .withConsistentRead(false)
+                        .withLimit(Tv.TWENTY)
                         .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                 )
                 .where(DyTalks.ATTR_ACTIVE, Boolean.toString(false)),
