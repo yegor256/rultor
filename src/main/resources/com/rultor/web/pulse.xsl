@@ -49,7 +49,7 @@
                 stroke="lightgray" stroke-width="4px"
                 vector-effect="non-scaling-stroke"/>
             <xsl:for-each select="tick">
-                <rect width="{@msec}" height="{@total + 0.5}"
+                <rect width="{max(@msec,'5000')}" height="{@total + 0.5}"
                     x="{@start}" y="{$height - @total - 0.5}" fill="green"/>
             </xsl:for-each>
             <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
