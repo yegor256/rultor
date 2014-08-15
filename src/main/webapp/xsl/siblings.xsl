@@ -57,7 +57,7 @@
             </div>
             <footer class="footer">
                 <p>
-                    <a href="/{links/link[@rel='home']/@href}">rultor.com</a>
+                    <a href="{links/link[@rel='home']/@href}">rultor.com</a>
                 </p>
             </footer>
         </div>
