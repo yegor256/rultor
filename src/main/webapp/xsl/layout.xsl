@@ -62,6 +62,7 @@
                 //]]></script>
             </head>
             <body>
+                <img src="//img.jcabi.com/fork-me.svg" class="fork-me" alt="fork me in github"/>
                 <section itemscope="" itemtype="http://schema.org/WebApplication">
                     <nav role="navigation" class="menu">
                         <xsl:if test="not(identity)">
