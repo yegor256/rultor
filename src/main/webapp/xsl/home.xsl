@@ -40,16 +40,18 @@
     <xsl:template match="page" mode="body">
         <div class="wrapper" style="text-align:center;">
             <p>
-                <img style="width:128px;height:128px;" alt="rultor logo"
-                    itemprop="image">
-                    <xsl:attribute name="src">
-                        <xsl:text>//img.rultor.com/logo</xsl:text>
-                        <xsl:if test="toggles/read-only='true'">
-                            <xsl:text>-stripes</xsl:text>
-                        </xsl:if>
-                        <xsl:text>.svg</xsl:text>
-                    </xsl:attribute>
-                </img>
+                <a href="{links/link[@rel='home']/@href}">
+                    <img style="width:128px;height:128px;" alt="rultor logo"
+                        itemprop="image">
+                        <xsl:attribute name="src">
+                            <xsl:text>//img.rultor.com/logo</xsl:text>
+                            <xsl:if test="toggles/read-only='true'">
+                                <xsl:text>-stripes</xsl:text>
+                            </xsl:if>
+                            <xsl:text>.svg</xsl:text>
+                        </xsl:attribute>
+                    </img>
+                </a>
             </p>
             <p itemprop="about">
                 <xsl:text>Rultor helps DevOps teams automate </xsl:text>
