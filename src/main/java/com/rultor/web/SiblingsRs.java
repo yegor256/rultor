@@ -77,41 +77,46 @@ public final class SiblingsRs extends BaseRs {
      * Front page.
      * @param since Date
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @GET
     @Path("/")
-    public Response index(@QueryParam("since") final String since) {
+    public Response index(@QueryParam("since") final String since)
+        throws IOException {
         final Date date;
         if (since == null || !since.matches("[0-9]+")) {
             date = new Date(Long.MAX_VALUE);
         } else {
             date = new Date(Long.parseLong(since));
         }
+        final Iterable<Talk> siblings = this.talks().siblings(this.name, date);
+        if (!Iterables.isEmpty(siblings)
+            && !this.granted(siblings.iterator().next().number())) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "according to .rultor.yml, you're not allowed to see this",
+                Level.WARNING
+            );
+        }
+        final JaxbBundle list = new JaxbBundle("siblings").add(
+            new JaxbBundle.Group<Talk>(Iterables.limit(siblings, Tv.TWENTY)) {
+                @Override
+                public JaxbBundle bundle(final Talk talk) {
+                    try {
+                        return SiblingsRs.this.bundle(talk);
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                }
+            }
+        );
         return new PageBuilder()
             .stylesheet("/xsl/siblings.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("repo", this.name))
             .append(new JaxbBundle("since", Long.toString(date.getTime())))
-            .append(
-                new JaxbBundle("siblings").add(
-                    new JaxbBundle.Group<Talk>(
-                        Iterables.limit(
-                            this.talks().siblings(this.name, date),
-                            Tv.TWENTY
-                        )
-                    ) {
-                        @Override
-                        public JaxbBundle bundle(final Talk talk) {
-                            try {
-                                return SiblingsRs.this.bundle(talk);
-                            } catch (final IOException ex) {
-                                throw new IllegalStateException(ex);
-                            }
-                        }
-                    }
-                )
-            )
+            .append(list)
             .render()
             .build();
     }
@@ -123,13 +128,6 @@ public final class SiblingsRs extends BaseRs {
      * @throws IOException If fails
      */
     private JaxbBundle bundle(final Talk talk) throws IOException {
-        if (!this.granted(talk.number())) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                "according to .rultor.yml, you're not allowed to see this",
-                Level.WARNING
-            );
-        }
         final XML xml = talk.read();
         final JaxbBundle archive = new JaxbBundle("archive").add(
             new JaxbBundle.Group<XML>(xml.nodes("/talk/archive/log")) {
