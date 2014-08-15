@@ -90,7 +90,9 @@ public final class SiblingsRs extends BaseRs {
         } else {
             date = new Date(Long.parseLong(since));
         }
-        final Iterable<Talk> siblings = this.talks().siblings(this.name, date);
+        final Iterable<Talk> siblings = Iterables.limit(
+            this.talks().siblings(this.name, date), Tv.TWENTY
+        );
         if (!Iterables.isEmpty(siblings)
             && !this.granted(siblings.iterator().next().number())) {
             throw this.flash().redirect(
@@ -100,7 +102,7 @@ public final class SiblingsRs extends BaseRs {
             );
         }
         final JaxbBundle list = new JaxbBundle("siblings").add(
-            new JaxbBundle.Group<Talk>(Iterables.limit(siblings, Tv.TWENTY)) {
+            new JaxbBundle.Group<Talk>(siblings) {
                 @Override
                 public JaxbBundle bundle(final Talk talk) {
                     try {

@@ -37,6 +37,7 @@ import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
@@ -265,6 +266,7 @@ public final class DyTalks implements Talks {
                         .withIndexName(DyTalks.IDX_SIBLINGS)
                         .withScanIndexForward(false)
                         .withConsistentRead(false)
+                        .withLimit(Tv.TWENTY)
                         .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                 )
                 .where(DyTalks.ATTR_REPO, repo)
