@@ -5,6 +5,7 @@
   "/robots.txt",
   "/xsl/layout.xsl",
   "/js/all.js",
+  "/p/test/repo",
   "/"
 ].forEach(
   function (page) {

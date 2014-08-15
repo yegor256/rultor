@@ -36,6 +36,9 @@
         <title>
             <xsl:value-of select="repo"/>
         </title>
+        <script type="text/javascript" src="/js/siblings.js?{version/revision}">
+            <xsl:text> </xsl:text>
+        </script>
     </xsl:template>
     <xsl:template match="page" mode="body">
         <div class="wrapper">
@@ -44,8 +47,18 @@
                     <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
                 </a>
             </header>
-            <div class="main">
+            <div class="main" id="talks">
+                <xsl:if test="siblings/talk">
+                    <xsl:attribute name="data-more">
+                        <xsl:value-of select="links/link[@rel='self']/@href"/>
+                        <xsl:text>?since=</xsl:text>
+                        <xsl:value-of select="siblings/talk[position()=last()]/updated"/>
+                    </xsl:attribute>
+                </xsl:if>
                 <xsl:apply-templates select="siblings/talk"/>
+                <div class="tail">
+                    <xsl:text>loading...</xsl:text>
+                </div>
             </div>
             <footer class="footer">
                 <p>
@@ -55,11 +68,11 @@
         </div>
     </xsl:template>
     <xsl:template match="talk">
-        <div style="margin-bottom:2em;">
-            <a href="{href}">
+        <div class="talk">
+            <a class="entry" href="{href}">
                 <xsl:value-of select="name"/>
             </a>
-            <span style="color:gray;margin-left:1em;">
+            <span class="timeago">
                 <xsl:value-of select="timeago"/>
             </span>
             <xsl:if test="archive/log">
