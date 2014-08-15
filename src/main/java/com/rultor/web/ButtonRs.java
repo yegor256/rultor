@@ -34,7 +34,8 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -70,13 +71,18 @@ public final class ButtonRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Produces("image/svg+xml")
-    public String svg() throws IOException {
+    public Response svg() throws IOException {
         assert this.name != null;
-        return IOUtils.toString(
-            this.getClass().getResourceAsStream("button.svg"),
-            CharEncoding.UTF_8
-        );
+        return Response.ok()
+            .type("image/svg+xml")
+            .header(HttpHeaders.CACHE_CONTROL, "no-cache")
+            .entity(
+                IOUtils.toString(
+                    this.getClass().getResourceAsStream("button.svg"),
+                    CharEncoding.UTF_8
+                )
+            )
+            .build();
     }
 
 }

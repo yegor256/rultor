@@ -50,7 +50,7 @@ public final class ButtonRsTest {
         final ButtonRs home = new ButtonRs();
         home.setName("test/test");
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(home.svg()),
+            XhtmlMatchers.xhtml(home.svg().getEntity()),
             XhtmlMatchers.hasXPaths(
                 "/svg:svg",
                 "//svg:svg[count(svg:rect) >= 2]"
