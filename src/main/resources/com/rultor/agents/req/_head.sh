@@ -43,7 +43,7 @@ chown -R r /home/r
 chmod a+x /home/r/script.sh
 su -m r -c /home/r/script.sh
 mv /home/r/repo .
-chown -R $(whoami) ./repo
+chown -R \$(whoami) repo
 EOT
 chmod a+x entry.sh
 cat <<EOT > script.sh
@@ -71,5 +71,6 @@ function docker_when_possible {
   cd ..
   ${docker} run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main "${image}" /main/entry.sh
+  sudo chown -R $(whoami) repo
   cd repo
 }
