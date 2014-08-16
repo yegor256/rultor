@@ -36,7 +36,7 @@ shopt -s dotglob
 adduser --disabled-password --gecos '' r
 adduser r sudo
 echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-cp -R ~/* /home/r
+cp -R /root/* /home/r
 cp -R ./* /home/r
 rm -rf repo
 chown -R r /home/r
