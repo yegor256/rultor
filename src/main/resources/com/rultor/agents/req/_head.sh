@@ -51,6 +51,7 @@ cat <<EOT > script.sh
 set -x
 set -e
 set -o pipefail
+export HOME=/home/r
 cd /home/r/repo
 EOT
 echo "${scripts[@]}" >> script.sh
