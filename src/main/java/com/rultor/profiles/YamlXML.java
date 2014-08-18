@@ -80,7 +80,7 @@ final class YamlXML {
             try {
                 dirs.append(YamlXML.dirs(parser.load(this.yaml)));
             } catch (final YAMLException ex) {
-                throw new Profile.SyntaxException(ex);
+                throw new Profile.ConfigException(ex);
             }
         }
         try {

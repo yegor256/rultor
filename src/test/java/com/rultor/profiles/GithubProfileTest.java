@@ -88,7 +88,7 @@ public final class GithubProfileTest {
      * GithubProfile can throw when YAML is broken.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.SyntaxException.class)
+    @Test(expected = Profile.ConfigException.class)
     public void throwsWhenYamlIsBroken() throws Exception {
         new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n")).read();
     }

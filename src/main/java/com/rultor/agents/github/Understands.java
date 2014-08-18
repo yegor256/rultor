@@ -168,7 +168,7 @@ public final class Understands extends AbstractAgent {
             req = this.question.understand(
                 comment, new Home(xml, Integer.toString(comment.number())).uri()
             );
-        } catch (final Profile.SyntaxException ex) {
+        } catch (final Profile.ConfigException ex) {
             new Answer(comment).post(
                 String.format(
                     Understands.PHRASES.getString("Understands.broken-profile"),

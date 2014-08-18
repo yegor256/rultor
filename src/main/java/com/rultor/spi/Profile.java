@@ -48,7 +48,9 @@ import java.util.Map;
 public interface Profile {
 
     /**
-     * Get it in XML format (throws {@link Profile.SyntaxException}, if fails).
+     * Get it in XML format (throws
+     * {@link com.rultor.spi.Profile.ConfigException}, if fails).
+     *
      * @return XML
      * @throws IOException If fails
      */
@@ -64,7 +66,7 @@ public interface Profile {
     /**
      * If can't read profile due to syntax error.
      */
-    final class SyntaxException extends RuntimeException {
+    final class ConfigException extends RuntimeException {
         /**
          * Serialization marker.
          */
@@ -73,7 +75,7 @@ public interface Profile {
          * Ctor.
          * @param cause Cause of it
          */
-        public SyntaxException(final Exception cause) {
+        public ConfigException(final Exception cause) {
             super(cause);
         }
     }
