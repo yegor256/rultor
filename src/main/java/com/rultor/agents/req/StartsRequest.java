@@ -80,27 +80,36 @@ public final class StartsRequest extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("//request").get(0);
-        final ImmutableMap.Builder<String, String> vars =
-            new ImmutableMap.Builder<String, String>();
-        for (final XML arg : req.nodes("args/arg")) {
-            vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
-        }
         final String type = req.xpath("type/text()").get(0);
-        final DockerRun docker = new DockerRun(
-            this.profile, String.format("/p/%s", type)
-        );
-        vars.put("vars", docker.envs(vars.build()));
-        vars.put(
-            "image",
-            new Profile.Defaults(this.profile).text(
-                "/p/docker/image/text()", "yegor256/rultor"
-            )
-        );
-        vars.put("scripts", docker.script());
-        final String script = StringUtils.join(
+        final String hash = req.xpath("@id").get(0);
+        String script;
+        try {
+            script = this.script(req, type);
+            Logger.info(this, "request %s/%s started", type, hash);
+        } catch (final Profile.ConfigException ex) {
+            script = Logger.format(
+                "cat <<EOT\n%[exception]s\nEOT\nexit -1", ex
+            );
+        }
+        return new Directives().xpath("/talk")
+            .add("daemon")
+            .attr("id", hash)
+            .add("title").set(type).up()
+            .add("script").set(script);
+    }
+
+    /**
+     * Make a script.
+     * @param req Request
+     * @param type Its type
+     * @return Script
+     * @throws IOException If fails
+     */
+    private String script(final XML req, final String type) throws IOException {
+        return StringUtils.join(
             Iterables.concat(
                 Iterables.transform(
-                    vars.build().entrySet(),
+                    this.vars(req, type).entrySet(),
                     new Function<Map.Entry<String, String>, String>() {
                         @Override
                         public String apply(
@@ -127,13 +136,34 @@ public final class StartsRequest extends AbstractAgent {
             ),
             "\n"
         );
-        final String hash = req.xpath("@id").get(0);
-        Logger.info(this, "request %s/%s started", type, hash);
-        return new Directives().xpath("/talk")
-            .add("daemon")
-            .attr("id", hash)
-            .add("title").set(type).up()
-            .add("script").set(script);
+    }
+
+    /**
+     * Get variables from script.
+     * @param req Request
+     * @param type Its type
+     * @return Vars
+     * @throws IOException If fails
+     */
+    private Map<String, String> vars(final XML req, final String type)
+        throws IOException {
+        final ImmutableMap.Builder<String, String> vars =
+            new ImmutableMap.Builder<String, String>();
+        for (final XML arg : req.nodes("args/arg")) {
+            vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
+        }
+        final DockerRun docker = new DockerRun(
+            this.profile, String.format("/p/%s", type)
+        );
+        vars.put("vars", docker.envs(vars.build()));
+        vars.put(
+            "image",
+            new Profile.Defaults(this.profile).text(
+                "/p/docker/image/text()", "yegor256/rultor"
+            )
+        );
+        vars.put("scripts", docker.script());
+        return vars.build();
     }
 
 }
