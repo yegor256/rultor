@@ -216,7 +216,6 @@ public final class Agents {
                 new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
                 new EndsDaemon(),
                 new EndsRequest(),
-                new Reports(this.github),
                 new Tweets(
                     this.github,
                     new OAuthTwitter(
@@ -226,6 +225,7 @@ public final class Agents {
                         Manifests.read("Rultor-TwitterTokenSecret")
                     )
                 ),
+                new Reports(this.github),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
