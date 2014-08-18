@@ -105,6 +105,7 @@ public final class Reports extends AbstractAgent {
                 issue.comments().get(Integer.parseInt(hash))
             )
         ).post(msg);
+        Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")
             .strict(1).remove();

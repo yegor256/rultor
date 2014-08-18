@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.github.TalkIssues;
@@ -99,6 +100,10 @@ public final class Tweets extends AbstractAgent {
                     issue.repo().coordinates(),
                     req.xpath("args/arg[@name='tag']/text()").get(0)
                 )
+            );
+            Logger.info(
+                this, "tweet posted about %s release",
+                issue.repo().coordinates()
             );
         }
         return new Directives();
