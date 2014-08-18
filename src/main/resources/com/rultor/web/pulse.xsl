@@ -45,6 +45,14 @@
                 <xsl:text> </xsl:text>
                 <xsl:value-of select="$height"/>
             </xsl:attribute>
+            <defs>
+                <style type="text/css">
+                    text {
+                        font-size: 1.5;
+                        font-family: monospace;
+                    }
+                </style>
+            </defs>
             <line x1="{-$width}" y1="{$height}" x2="0" y2="{$height}"
                 stroke="lightgray" stroke-width="4px"
                 vector-effect="non-scaling-stroke"/>
@@ -53,7 +61,7 @@
                     x="{@start}" y="{$height - @total - 0.5}" fill="#348C62"/>
             </xsl:for-each>
             <xsl:variable name="age" select="-number(tick[last()]/@start) div 1000"/>
-            <text x="0" y="0" style="text-anchor:middle;font-size:1.5;font-family:monospace;"
+            <text x="0" y="0" style="text-anchor:middle;"
                 transform="scale(46000,1) translate(-39,1.5)">
                 <xsl:choose>
                     <xsl:when test="$age &gt; 600">
@@ -73,7 +81,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </text>
-            <text x="0" y="0" style="text-anchor:end;font-size:1.5;font-family:monospace;"
+            <text x="0" y="0" style="text-anchor:end;"
                 transform="scale(46000,1) translate(0,1.5)">
                 <xsl:value-of select="format-number($age,'0')"/>
                 <xsl:text> sec</xsl:text>
