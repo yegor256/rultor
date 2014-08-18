@@ -254,4 +254,32 @@ public final class StartsRequestTest {
         return repo;
     }
 
+    /**
+     * StartsRequest can take decryption instructions into account.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void decryptsAssets() throws Exception {
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    "<p><decrypt><a.txt>a.txt.asc</a.txt></decrypt></p>"
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "ff89")
+                .add("type").set("deploy").up().add("args")
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath(
+                "//script[contains(.,'gpg -d')]"
+            )
+        );
+    }
+
 }
