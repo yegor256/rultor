@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.daemons;
 
+import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -122,12 +123,12 @@ public final class StartsDaemon extends AbstractAgent {
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            StringUtils.join(
+            Joiner.on("&&").join(
                 String.format("dir=%s", dir),
-                "; chmod a+x ${dir}/run.sh",
-                " && echo 'run.sh failed to start' > ${dir}/stdout",
-                " && ( ( nohup ${dir}/run.sh </dev/null >${dir}/stdout 2>&1; ",
-                "echo $? >${dir}/status ) </dev/null >/dev/null & )"
+                "chmod a+x ${dir}/run.sh",
+                "echo 'run.sh failed to start' > ${dir}/stdout",
+                // @checkstyle LineLength (1 line)
+                "( ( nohup ${dir}/run.sh </dev/null >${dir}/stdout 2>&1; echo $? >${dir}/status ) </dev/null >/dev/null & )"
             )
         );
         Logger.info(this, "daemon started at %s", dir);
