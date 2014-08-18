@@ -75,7 +75,7 @@ public final class Tweets extends AbstractAgent {
     public Tweets(final Github ghub, final Twitter twt) {
         super(
             "/talk/wire[github-repo and github-issue]",
-            "/talk/request[@id and type and success]"
+            "/talk/request[@id and type='release' and success='true']"
         );
         this.github = ghub;
         this.twitter = twt;
@@ -84,17 +84,14 @@ public final class Tweets extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("/talk/request").get(0);
-        final boolean success = Boolean.parseBoolean(
-            req.xpath("success/text()").get(0)
-        );
-        final String type = req.xpath("type/text()").get(0);
-        if (success && "release".equals(type)) {
-            final Issue.Smart issue = new TalkIssues(this.github, xml).get();
+        final Issue.Smart issue = new TalkIssues(this.github, xml).get();
+        final Repo.Smart repo = new Repo.Smart(issue.repo());
+        if (!repo.isPrivate()) {
             this.twitter.post(
                 String.format(
                     "%s, ver %s released https://github.com/%s",
                     StringUtils.substring(
-                        new Repo.Smart(issue.repo()).description(),
+                        repo.description(),
                         0, Tv.HUNDRED
                     ),
                     req.xpath("args/arg[@name='tag']/text()").get(0),
