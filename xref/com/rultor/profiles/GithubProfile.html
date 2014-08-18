@@ -117,9 +117,9 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">final</strong> ImmutableMap.Builder&lt;String, InputStream&gt; assets =
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>             <strong class="jxr_keyword">new</strong> ImmutableMap.Builder&lt;String, InputStream&gt;();
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">final</strong> XML xml = <strong class="jxr_keyword">this</strong>.read();
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML asset : xml.nodes(<span class="jxr_string">"/p/assets/*"</span>)) {
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML asset : xml.nodes(<span class="jxr_string">"/p/entry[@key='assets']/entry"</span>)) {
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>             assets.put(
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>                 asset.xpath(<span class="jxr_string">"name()"</span>).get(0),
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>                 asset.xpath(<span class="jxr_string">"@key"</span>).get(0),
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>                 <strong class="jxr_keyword">this</strong>.asset(asset.xpath(<span class="jxr_string">"text()"</span>).get(0))
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>             );
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>         }

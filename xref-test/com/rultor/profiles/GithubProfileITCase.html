@@ -77,10 +77,12 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          );
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>              profile.read(),
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/p/merge/script"</span>)
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>          );
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  }
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>              XhtmlMatchers.hasXPaths(
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  <span class="jxr_string">"/p/entry[@key='merge']/entry[@key='script']"</span>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>              )
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          );
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

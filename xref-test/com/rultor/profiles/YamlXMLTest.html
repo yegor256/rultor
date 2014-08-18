@@ -59,10 +59,10 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>          MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>              <strong class="jxr_keyword">new</strong> YamlXML(<span class="jxr_string">"a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e"</span>).get(),
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>              XhtmlMatchers.hasXPaths(
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>                  <span class="jxr_string">"/p/a[.='test']"</span>,
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>                  <span class="jxr_string">"/p/b[.='hello']"</span>,
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>                  <span class="jxr_string">"/p/c/item[@idx=0 and .='one']"</span>,
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>                  <span class="jxr_string">"/p/d/f[.='e']"</span>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>                  <span class="jxr_string">"/p/entry[@key='a' and .='test']"</span>,
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>                  <span class="jxr_string">"/p/entry[@key='b' and .='hello']"</span>,
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>                  <span class="jxr_string">"/p/entry[@key='c']/item[.='one']"</span>,
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>                  <span class="jxr_string">"/p/entry[@key='d']/entry[@key='f' and .='e']"</span>
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>              )
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          );
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      }
