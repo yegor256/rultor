@@ -89,7 +89,7 @@ public final class Tweets extends AbstractAgent {
         if (!repo.isPrivate()) {
             this.twitter.post(
                 String.format(
-                    "%s, ver %s released https://github.com/%s",
+                    "%s, %s released https://github.com/%s",
                     StringUtils.substring(
                         repo.description(),
                         0, Tv.HUNDRED
