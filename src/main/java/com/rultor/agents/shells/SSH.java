@@ -195,6 +195,15 @@ public final class SSH implements Shell {
     }
 
     /**
+     * Escape SSH argument.
+     * @param arg Argument to escape
+     * @return Escaped
+     */
+    public static String escape(final String arg) {
+        return String.format("'%s'", arg.replace("'", "'\\''"));
+    }
+
+    /**
      * Exec this channel and return its exit code.
      * @param channel The channel to exec
      * @param session The session

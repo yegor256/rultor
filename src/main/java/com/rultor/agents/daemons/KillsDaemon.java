@@ -34,6 +34,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.SSH;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
@@ -83,7 +84,7 @@ public final class KillsDaemon extends AbstractAgent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Empty(new Shell.Safe(shell)).exec(
             Joiner.on(" && ").join(
-                String.format("dir=%s", dir),
+                String.format("dir=%s", SSH.escape(dir)),
                 "if [ ! -e \"${dir}/pid\" ]; then exit 0; fi",
                 "pid=$(cat \"${dir}/pid\")",
                 "if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 ${pid}; fi",

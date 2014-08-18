@@ -36,6 +36,7 @@ import com.jcabi.s3.Bucket;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.SSH;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import java.io.File;
@@ -92,7 +93,7 @@ public final class ArchivesDaemon extends AbstractAgent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
             StringUtils.join(
-                String.format("dir='%s';", dir),
+                String.format("dir=%s;", SSH.escape(dir)),
                 "if [ -e \"${dir}/stdout\" ]; then ",
                 "cat \"${dir}/stdout\" | col -b 2>&1;",
                 "else echo 'stdout not found, internal error!'; fi"
@@ -102,7 +103,7 @@ public final class ArchivesDaemon extends AbstractAgent {
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            String.format("sudo rm -rf '%1$s' || rm -rf '%s'", dir)
+            String.format("sudo rm -rf %1$s || rm -rf %s", SSH.escape(dir))
         );
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final URI uri = this.upload(file, hash);

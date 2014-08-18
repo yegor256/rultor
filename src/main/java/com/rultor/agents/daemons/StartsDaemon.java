@@ -36,6 +36,7 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.SSH;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Profile;
@@ -99,7 +100,7 @@ public final class StartsDaemon extends AbstractAgent {
         );
         final String dir = baos.toString(CharEncoding.UTF_8).trim();
         new Shell.Safe(shell).exec(
-            String.format("cat > '%s/run.sh'", dir),
+            String.format("dir=%s; cat > \"${dir}/run.sh\"", SSH.escape(dir)),
             IOUtils.toInputStream(
                 StringUtils.join(
                     Arrays.asList(
@@ -110,9 +111,14 @@ public final class StartsDaemon extends AbstractAgent {
                         "cd $(dirname $0)",
                         "echo $$ > ./pid",
                         String.format(
-                            "echo 'rultor.com %s/%s'",
-                            Manifests.read("Rultor-Version"),
-                            Manifests.read("Rultor-Revision")
+                            "echo %s",
+                            SSH.escape(
+                                String.format(
+                                    "%s %s",
+                                    Manifests.read("Rultor-Version"),
+                                    Manifests.read("Rultor-Revision")
+                                )
+                            )
                         ),
                         "date --iso-8601=seconds --utc",
                         "uptime",
@@ -128,7 +134,7 @@ public final class StartsDaemon extends AbstractAgent {
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
             Joiner.on("&&").join(
-                String.format("dir=%s", dir),
+                String.format("dir=%s", SSH.escape(dir)),
                 "chmod a+x \"${dir}/run.sh\"",
                 "echo 'run.sh failed to start' > \"${dir}/stdout\"",
                 // @checkstyle LineLength (1 line)
@@ -158,8 +164,8 @@ public final class StartsDaemon extends AbstractAgent {
                 : this.profile.assets().entrySet()) {
                 shell.exec(
                     String.format(
-                        "cat > '%s/%s'",
-                        dir, asset.getKey()
+                        "cat > %s",
+                        SSH.escape(String.format("%s/%s", dir, asset.getKey()))
                     ),
                     asset.getValue(),
                     Logger.stream(Level.INFO, true),
@@ -191,7 +197,12 @@ public final class StartsDaemon extends AbstractAgent {
             final String[] names = {"pubring.gpg", "secring.gpg"};
             for (final String name : names) {
                 shell.exec(
-                    String.format("cat > '%s/.gpg/%s'", dir, name),
+                    String.format(
+                        "cat >  %s",
+                        SSH.escape(
+                            String.format("%s/.gpg/%s", dir, name)
+                        )
+                    ),
                     this.ring(name),
                     Logger.stream(Level.INFO, true),
                     Logger.stream(Level.WARNING, true)

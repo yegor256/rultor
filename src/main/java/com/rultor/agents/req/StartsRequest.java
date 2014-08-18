@@ -37,6 +37,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.SSH;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collection;
@@ -187,9 +188,9 @@ public final class StartsRequest extends AbstractAgent {
                     "gpg \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
                     "\"--secret-keyring=$(pwd)/.gpg/secring.gpg\"",
                     String.format(
-                        "--decrypt '%s' > '%s'",
-                        node.xpath("./text()").get(0),
-                        node.xpath("@key").get(0)
+                        "--decrypt %s > %s",
+                        SSH.escape(node.xpath("./text()").get(0)),
+                        SSH.escape(node.xpath("@key").get(0))
                     )
                 )
             );

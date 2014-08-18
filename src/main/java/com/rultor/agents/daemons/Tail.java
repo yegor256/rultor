@@ -36,6 +36,7 @@ import com.jcabi.s3.Bucket;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.xml.XML;
+import com.rultor.agents.shells.SSH;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import java.io.ByteArrayInputStream;
@@ -228,8 +229,8 @@ public final class Tail {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(
                 String.format(
-                    "cat '%s/stdout' | col -b",
-                    this.xml.xpath("/talk/daemon/dir/text()").get(0)
+                    "dir=%s; cat \"${dir}/stdout\" | col -b",
+                    SSH.escape(this.xml.xpath("/talk/daemon/dir/text()").get(0))
                 ),
                 new NullInputStream(0L), baos,
                 Logger.stream(Level.SEVERE, true)
