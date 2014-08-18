@@ -14,7 +14,8 @@ file.
 
 This page contains a complete reference of commands in alphabetic order.
 
-BTW, you can see a real-life configuration in [jcabi](https://github.com/jcabi/jcabi) project:
+BTW, you can see a real-life configuration in
+[jcabi](https://github.com/jcabi/jcabi) project:
 [`rultor.yml`](https://github.com/jcabi/jcabi/blob/master/.rultor.yml).
 
 ## Assets
@@ -30,7 +31,7 @@ fetch it from there:
 
 {% highlight yaml %}
 assets:
-  secret.xml: yegor256/secret-repo#assets/settings.xml
+  secret.xml: "yegor256/secret-repo#assets/settings.xml"
 {% endhighlight %}
 
 This configuration tells Rultor that needs to fetch `assets/settings.xml` from
@@ -58,6 +59,33 @@ in `/home/r`. This is how the directory layout looks:
 Don't forget to add [@rultor](https://github.com/rultor) to the list of
 collaborators in your private repository. Otherwise Rultor won't be
 able to fetch anything from it.
+
+## Decrypt
+
+You may want to keep your secret assets right inside your main
+repository. In this case, in order to keep them secret, you should
+encrypt them using [GPG](https://www.gnupg.org/documentation/manpage.html):
+
+{% highlight text %}
+$ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 9AF0FA4C
+$ gpg --trust-model always -a -e -r 9AF0FA4C secret.txt
+{% endhighlight %}
+
+This example will fetch GPG key `9AF0FA4C` and use it to
+encrypt `secret.txt` file. You will get a new file `secret.txt.asc`.
+Commit this file to your repository &mdash; nobody will be able
+to read it, except Rultor server itself.
+
+Then, instruct Rultor to decrypt it before running your build:
+
+{% highlight yaml %}
+decrypt:
+  secret.txt: "scrt/secret.txt.asc"
+{% endhighlight %}
+
+This configuration tells Rultor to get `scrt/secret.txt.asc` from the
+root directory of your repository, decrypt it and save the result
+into `secret.txt`.
 
 ## Docker Image
 
