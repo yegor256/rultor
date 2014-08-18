@@ -111,6 +111,7 @@ public final class StartsDaemon extends AbstractAgent {
                         ),
                         "date --iso-8601=seconds --utc",
                         "uptime",
+                        this.upload(shell, dir),
                         daemon.xpath("script/text()").get(0)
                     ),
                     "\n"
@@ -120,7 +121,6 @@ public final class StartsDaemon extends AbstractAgent {
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
-        this.upload(shell, dir);
         new Shell.Empty(new Shell.Safe(shell)).exec(
             StringUtils.join(
                 String.format("dir=%s", dir),
@@ -142,12 +142,13 @@ public final class StartsDaemon extends AbstractAgent {
      * Upload assets.
      * @param shell Shell
      * @param dir Directory
+     * @return Script to use
      * @throws IOException If fails
      */
-    private void upload(final Shell shell, final String dir)
+    private String upload(final Shell shell, final String dir)
         throws IOException {
-        for (final Map.Entry<String, InputStream> asset
-            : this.profile.assets().entrySet()) {
+        final Map<String, InputStream> assets = this.profile.assets();
+        for (final Map.Entry<String, InputStream> asset : assets.entrySet()) {
             shell.exec(
                 String.format(
                     "cat > \"%s/%s\"",
@@ -159,6 +160,7 @@ public final class StartsDaemon extends AbstractAgent {
             );
             Logger.info(this, "\"%s\" uploaded into %s", asset.getKey(), dir);
         }
+        return "";
     }
 
 }
