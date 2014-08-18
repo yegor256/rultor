@@ -97,8 +97,8 @@ public final class Tweets extends AbstractAgent {
                         new Repo.Smart(issue.repo()).description(),
                         0, Tv.HUNDRED
                     ),
-                    issue.repo().coordinates(),
-                    req.xpath("args/arg[@name='tag']/text()").get(0)
+                    req.xpath("args/arg[@name='tag']/text()").get(0),
+                    issue.repo().coordinates()
                 )
             );
             Logger.info(
