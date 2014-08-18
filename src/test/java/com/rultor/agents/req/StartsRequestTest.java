@@ -198,6 +198,34 @@ public final class StartsRequestTest {
     }
 
     /**
+     * StartsRequest can take decryption instructions into account.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void decryptsAssets() throws Exception {
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    "<p><decrypt><a.txt>a.txt.asc</a.txt></decrypt></p>"
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "ff89")
+                .add("type").set("deploy").up().add("args")
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath(
+                "//script[contains(.,'gpg --decrypt')]"
+            )
+        );
+    }
+
+    /**
      * Execute script from daemon.
      * @param talk Talk to use
      * @return Full stdout
@@ -252,34 +280,6 @@ public final class StartsRequestTest {
             ).directory(repo)
         ).stdout();
         return repo;
-    }
-
-    /**
-     * StartsRequest can take decryption instructions into account.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void decryptsAssets() throws Exception {
-        final Agent agent = new StartsRequest(
-            new Profile.Fixed(
-                new XMLDocument(
-                    "<p><decrypt><a.txt>a.txt.asc</a.txt></decrypt></p>"
-                )
-            )
-        );
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk")
-                .add("request").attr("id", "ff89")
-                .add("type").set("deploy").up().add("args")
-        );
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPath(
-                "//script[contains(.,'gpg -d')]"
-            )
-        );
     }
 
 }

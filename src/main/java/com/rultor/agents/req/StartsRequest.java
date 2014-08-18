@@ -30,6 +30,7 @@
 package com.rultor.agents.req;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
@@ -38,7 +39,9 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -121,11 +124,14 @@ public final class StartsRequest extends AbstractAgent {
                         }
                     }
                 ),
-                Arrays.asList(
+                Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream("_head.sh"),
                         CharEncoding.UTF_8
-                    ),
+                    )
+                ),
+                this.decrypt(),
+                Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream(
                             String.format("%s.sh", type)
@@ -164,6 +170,30 @@ public final class StartsRequest extends AbstractAgent {
         );
         vars.put("scripts", docker.script());
         return vars.build();
+    }
+
+    /**
+     * Decrypt instructions.
+     * @return Instructions
+     * @throws IOException If fails
+     */
+    private Iterable<String> decrypt() throws IOException {
+        final Collection<String> commands = new LinkedList<String>();
+        for (final XML node : this.profile.read().nodes("/p/decrypt/*")) {
+            commands.add(
+                Joiner.on(' ').join(
+                    "gpg --keyring=$(pwd)/.gpg/pubring.gpg",
+                    "--secret-keyring=$(pwd)/.gpg/secring.gpg",
+                    String.format(
+                        "--decrypt %s > %s",
+                        node.xpath("./text()").get(0),
+                        node.xpath("./name()").get(0)
+                    )
+                )
+            );
+        }
+        commands.add("rm -rf .gpg");
+        return commands;
     }
 
 }

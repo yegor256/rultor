@@ -55,7 +55,6 @@ export HOME=/home/r
 cd /home/r/repo
 EOT
 echo "${scripts[@]}" >> script.sh
-cd repo
 
 function docker_when_possible {
   while true; do

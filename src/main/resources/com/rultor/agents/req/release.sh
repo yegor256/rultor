@@ -5,6 +5,7 @@ if [ -z "${tag}" ]; then
   exit -1
 fi
 
+cd repo
 if [ $(git tag -l "${tag}") ]; then
    echo "Tag ${tag} already exists!"
    exit -1

@@ -39,6 +39,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Profile;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +48,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
@@ -60,6 +62,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -163,6 +166,7 @@ public final class StartsDaemon extends AbstractAgent {
                 );
                 Logger.info(this, "\"%s\" uploaded as %s", asset.getKey(), dir);
             }
+            this.gpg(shell, dir);
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
                 "cat << EOT\n%[exception]s\nEOT\nexit -1",
@@ -170,6 +174,45 @@ public final class StartsDaemon extends AbstractAgent {
             );
         }
         return script;
+    }
+
+    /**
+     * Upload GPG keys.
+     * @param shell Shell
+     * @param dir Dir
+     * @throws IOException If fails
+     */
+    private void gpg(final Shell shell, final String dir) throws IOException {
+        if (!this.profile.read().nodes("/p/decrypt").isEmpty()) {
+            final String[] names = {"pubring.gpg", "secring.gpg"};
+            for (final String name : names) {
+                shell.exec(
+                    String.format("cat > \"%s/.gpg/%s\"", dir, name),
+                    this.ring(name),
+                    Logger.stream(Level.INFO, true),
+                    Logger.stream(Level.WARNING, true)
+                );
+            }
+            Logger.info(this, "GPG keys uploaded to %s", dir);
+        }
+    }
+
+    /**
+     * Get contents of ring.
+     * @param name Name
+     * @return Content
+     * @throws IOException If fails
+     */
+    private InputStream ring(final String name) throws IOException {
+        return new ByteArrayInputStream(
+            Base64.decodeBase64(
+                IOUtils.toByteArray(
+                    this.getClass().getResourceAsStream(
+                        String.format("%s.base64", name)
+                    )
+                )
+            )
+        );
     }
 
 }

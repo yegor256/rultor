@@ -61,13 +61,14 @@ able to fetch anything from it.
 
 ## Docker Image
 
-The default Docker image used for all commands is [`yegor256/rultor`](https://registry.hub.docker.com/u/yegor256/rultor/).
+The default Docker image used for all commands is
+[`yegor256/rultor`](https://registry.hub.docker.com/u/yegor256/rultor/).
 
 You can change it to, say, `ubuntu:12.10`:
 
 {% highlight yaml %}
 docker:
-  image: ubuntu:12.10
+  image: "ubuntu:12.10"
 {% endhighlight %}
 
 ## Environment Variables
@@ -80,10 +81,10 @@ env:
   MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
 merge:
   script:
-    - mvn clean install
+    - "mvn clean install"
 deploy:
   script:
-    - mvn clean deploy
+    - "mvn clean deploy"
 {% endhighlight %}
 
 In this example, `MAVEN_OPTS` environment variable will be set
@@ -96,13 +97,13 @@ commands, for example:
 
 {% highlight yaml %}
 install:
-  - sudo apt-get install texlive
+  - "sudo apt-get install texlive"
 merge:
   script:
-    - latex ...
+    - "latex ..."
 deploy:
   script:
-    - latex ...
+    - "latex ..."
 {% endhighlight %}
 
 In this example, `texlive` package will be installed before merge
@@ -116,8 +117,8 @@ a selected list of users, use this construct:
 
 {% highlight yaml %}
 readers:
-  - urn:github:526301
-  - urn:github:8086956
+  - "urn:github:526301"
+  - "urn:github:8086956"
   - ...
 {% endhighlight %}
 
@@ -129,7 +130,8 @@ top of the page.
 
 ## Merge, Deploy, Release
 
-Three commands `merge`, `deploy` and `release` are configured similarly in `.rultor.yml`. For example:
+Three commands `merge`, `deploy` and `release` are
+configured similarly in `.rultor.yml`. For example:
 
 {% highlight yaml %}
 merge: # or "deploy" or "release"

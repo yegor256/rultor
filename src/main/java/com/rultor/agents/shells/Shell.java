@@ -55,9 +55,9 @@ public interface Shell {
     /**
      * Execute and return exit code.
      * @param command Command
-     * @param stdin Stdin
-     * @param stdout Stdout
-     * @param stderr Stderr
+     * @param stdin Stdin (will be closed)
+     * @param stdout Stdout (will be closed)
+     * @param stderr Stderr (will be closed)
      * @return Exit code
      * @throws IOException If fails
      * @checkstyle ParameterNumberCheck (5 line)
