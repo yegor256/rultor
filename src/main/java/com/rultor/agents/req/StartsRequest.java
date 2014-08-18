@@ -159,13 +159,14 @@ public final class StartsRequest extends AbstractAgent {
             vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
         }
         final DockerRun docker = new DockerRun(
-            this.profile, String.format("/p/%s", type)
+            this.profile, String.format("/p/entry[@key='%s']", type)
         );
         vars.put("vars", docker.envs(vars.build()));
         vars.put(
             "image",
             new Profile.Defaults(this.profile).text(
-                "/p/docker/image/text()", "yegor256/rultor"
+                "/p/entry[@key='docker']/entry[@key='image']/text()",
+                "yegor256/rultor"
             )
         );
         vars.put("scripts", docker.script());
@@ -179,7 +180,8 @@ public final class StartsRequest extends AbstractAgent {
      */
     private Iterable<String> decrypt() throws IOException {
         final Collection<String> commands = new LinkedList<String>();
-        for (final XML node : this.profile.read().nodes("/p/decrypt/*")) {
+        for (final XML node
+            : this.profile.read().nodes("/p/entry[@key='decrypt']/entry")) {
             commands.add(
                 Joiner.on(' ').join(
                     "gpg \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
@@ -187,7 +189,7 @@ public final class StartsRequest extends AbstractAgent {
                     String.format(
                         "--decrypt '%s' > '%s'",
                         node.xpath("./text()").get(0),
-                        node.xpath("./name()").get(0)
+                        node.xpath("@key").get(0)
                     )
                 )
             );

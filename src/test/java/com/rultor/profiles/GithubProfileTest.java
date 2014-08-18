@@ -71,8 +71,9 @@ public final class GithubProfileTest {
         MatcherAssert.assertThat(
             profile.read(),
             XhtmlMatchers.hasXPaths(
-                "/p/merge/script",
-                "/p/assets[test.xml and beta]"
+                "/p/entry[@key='merge']/entry[@key='script']",
+                "/p/entry[@key='assets']/entry[@key='test.xml']",
+                "/p/entry[@key='assets']/entry[@key='beta']"
             )
         );
         MatcherAssert.assertThat(

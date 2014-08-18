@@ -27,35 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.profiles;
-
-import com.jcabi.matchers.XhtmlMatchers;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
 
 /**
- * Tests for ${@link YamlXML}.
+ * SPI, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.28
  */
-public final class YamlXMLTest {
-
-    /**
-     * YamlXML can parse.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void parsesYamlConfig() throws Exception {
-        MatcherAssert.assertThat(
-            new YamlXML("a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e").get(),
-            XhtmlMatchers.hasXPaths(
-                "/p/entry[@key='a' and .='test']",
-                "/p/entry[@key='b' and .='hello']",
-                "/p/entry[@key='c']/item[.='one']",
-                "/p/entry[@key='d']/entry[@key='f' and .='e']"
-            )
-        );
-    }
-}
+package com.rultor.spi;

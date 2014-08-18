@@ -101,18 +101,14 @@ final class YamlXML {
         if (obj instanceof Map) {
             for (final Map.Entry<String, Object> ent
                 : ((Map<String, Object>) obj).entrySet()) {
-                dirs.add(ent.getKey())
+                dirs.add("entry")
+                    .attr("key", ent.getKey())
                     .append(YamlXML.dirs(ent.getValue()))
                     .up();
             }
         } else if (obj instanceof List) {
-            int idx = 0;
             for (final Object item : (Iterable<Object>) obj) {
-                dirs.add("item")
-                    .attr("idx", Integer.toString(idx))
-                    .append(YamlXML.dirs(item))
-                    .up();
-                ++idx;
+                dirs.add("item").append(YamlXML.dirs(item)).up();
             }
         } else {
             dirs.set(obj.toString());

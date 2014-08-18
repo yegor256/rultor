@@ -36,6 +36,8 @@ import com.jcabi.http.response.XmlResponse;
 import java.net.HttpURLConnection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -50,6 +52,14 @@ public final class SiblingsRsITCase {
      * Home page of Tomcat.
      */
     private static final String HOME = System.getProperty("tomcat.home");
+
+    /**
+     * Before the entire test.
+     */
+    @BeforeClass
+    public static void before() {
+        Assume.assumeNotNull(SiblingsRsITCase.HOME);
+    }
 
     /**
      * SiblingsRs can render index page.

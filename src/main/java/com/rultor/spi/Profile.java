@@ -31,8 +31,11 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.ArrayMap;
+import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSD;
+import com.jcabi.xml.XSDDocument;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -46,6 +49,13 @@ import java.util.Map;
  */
 @Immutable
 public interface Profile {
+
+    /**
+     * Schema.
+     */
+    XSD SCHEMA = XSDDocument.make(
+        Talk.class.getResourceAsStream("profile.xsd")
+    );
 
     /**
      * Get it in XML format (throws
@@ -136,10 +146,10 @@ public interface Profile {
          * @param doc Document
          */
         public Fixed(final XML doc) {
-            this.xml = doc;
+            this.xml = new StrictXML(doc, Profile.SCHEMA);
         }
         @Override
-        public XML read() throws IOException {
+        public XML read() {
             return this.xml;
         }
         @Override

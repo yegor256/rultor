@@ -85,6 +85,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -160,7 +161,7 @@ public final class Agents {
                                     "merge",
                                     new QnAskedBy(
                                         profile,
-                                        "/p/merge/commanders/item/text()",
+                                        this.commanders("merge"),
                                         new QnMerge()
                                     )
                                 ),
@@ -168,7 +169,7 @@ public final class Agents {
                                     "deploy",
                                     new QnAskedBy(
                                         profile,
-                                        "/p/deploy/commanders/item/text()",
+                                        this.commanders("deploy"),
                                         new QnDeploy()
                                     )
                                 ),
@@ -176,7 +177,7 @@ public final class Agents {
                                     "release",
                                     new QnAskedBy(
                                         profile,
-                                        "/p/release/commanders/item/text()",
+                                        this.commanders("release"),
                                         new QnRelease()
                                     )
                                 )
@@ -226,6 +227,18 @@ public final class Agents {
             )
         );
         return agents;
+    }
+
+    /**
+     * XPath for commanders.
+     * @param entry Entry
+     * @return XPath
+     */
+    private String commanders(final String entry) {
+        return String.format(
+            "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
+            entry
+        );
     }
 
 }

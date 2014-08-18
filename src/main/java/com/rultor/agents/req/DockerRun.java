@@ -86,8 +86,10 @@ final class DockerRun {
     public String script() throws IOException {
         return DockerRun.enlist(
             Iterables.concat(
-                DockerRun.scripts(this.profile.read(), "/p/install"),
-                DockerRun.scripts(this.node(), "script")
+                DockerRun.scripts(
+                    this.profile.read(), "/p/entry[@key='install']"
+                ),
+                DockerRun.scripts(this.node(), "entry[@key='script']")
             )
         );
     }
@@ -101,8 +103,8 @@ final class DockerRun {
     public String envs(final Map<String, String> extra) throws IOException {
         return DockerRun.enlist(
             Iterables.concat(
-                DockerRun.envs(this.profile.read(), "/p/env"),
-                DockerRun.envs(this.node(), "env"),
+                DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
+                DockerRun.envs(this.node(), "entry[@key='env']"),
                 Collections2.transform(
                     extra.entrySet(),
                     new Function<Map.Entry<String, String>, String>() {
@@ -195,12 +197,12 @@ final class DockerRun {
             final Collection<String> parts;
             if (node.nodes("item").iterator().hasNext()) {
                 parts = node.xpath("item/text()");
-            } else if (node.nodes("*/text()").iterator().hasNext()) {
+            } else if (node.nodes("entry").iterator().hasNext()) {
                 parts = new LinkedList<String>();
-                for (final XML env : node.nodes("*")) {
+                for (final XML env : node.nodes("./entry")) {
                     parts.add(
                         String.format(
-                            "%s=%s", env.xpath("name()").get(0),
+                            "%s=%s", env.xpath("@key").get(0),
                             env.xpath("text()").get(0)
                         )
                     );

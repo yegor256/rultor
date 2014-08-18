@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -119,6 +120,9 @@ public final class DyTalksITCase {
      */
     private Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
+        Assume.assumeNotNull(key);
+        final String port = System.getProperty("dynamo.port");
+        Assume.assumeNotNull(port);
         MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(
             new ReRegion(
@@ -128,7 +132,7 @@ public final class DyTalksITCase {
                             key,
                             Manifests.read("Rultor-DynamoSecret")
                         ),
-                        Integer.parseInt(System.getProperty("dynamo.port"))
+                        Integer.parseInt(port)
                     )
                 )
             ),

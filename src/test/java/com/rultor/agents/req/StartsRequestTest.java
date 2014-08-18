@@ -39,6 +39,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -104,9 +105,10 @@ public final class StartsRequestTest {
             new Profile.Fixed(
                 new XMLDocument(
                     StringUtils.join(
-                        "<p><deploy><script>echo HEY</script>",
-                        "<env><MAVEN_OPTS>-Xmx2g -Xms1g</MAVEN_OPTS></env>",
-                        "</deploy></p>"
+                        "<p><entry key='deploy'>",
+                        "<entry key='script'>echo HEY</entry>",
+                        "<entry key='env'><entry key='MAVEN_OPTS'>",
+                        "-Xmx2g -Xms1g</entry></entry></entry></p>"
                     )
                 )
             )
@@ -150,7 +152,10 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    "<p><release><script>echo HEY</script></release></p>"
+                    StringUtils.join(
+                        "<p><entry key='release'><entry key='script'>",
+                        "echo HEY</entry></entry></p>"
+                    )
                 )
             )
         );
@@ -178,7 +183,10 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    "<p><merge><script>echo HEY</script></merge></p>"
+                    StringUtils.join(
+                        "<p><entry key='merge'><entry key='script'>",
+                        "echo HEY</entry></entry></p>"
+                    )
                 )
             )
         );
@@ -206,7 +214,10 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    "<p><decrypt><a.txt>a.txt.asc</a.txt></decrypt></p>"
+                    StringUtils.join(
+                        "<p><entry key='decrypt'><entry key='a.txt'>",
+                        "a.txt.asc</entry></entry></p>"
+                    )
                 )
             )
         );
@@ -246,7 +257,8 @@ public final class StartsRequestTest {
         return new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash", "-c", script
-            ).directory(this.temp.newFolder()).redirectErrorStream(true)
+            ).directory(this.temp.newFolder()).redirectErrorStream(true),
+            Level.WARNING, Level.WARNING
         ).stdout();
     }
 

@@ -36,6 +36,8 @@ import com.jcabi.http.response.XmlResponse;
 import java.net.HttpURLConnection;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -51,6 +53,14 @@ public final class HomeRsITCase {
      * Home page of Tomcat.
      */
     private static final String HOME = System.getProperty("tomcat.home");
+
+    /**
+     * Before the entire test.
+     */
+    @BeforeClass
+    public static void before() {
+        Assume.assumeNotNull(HomeRsITCase.HOME);
+    }
 
     /**
      * IndexRs can render exception trap page.

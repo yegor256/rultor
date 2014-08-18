@@ -50,6 +50,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -206,12 +207,15 @@ public class BaseRs extends BaseResource {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
         final boolean granted;
-        if (xml.nodes("/p/readers").isEmpty()) {
+        final Collection<String> readers = xml.xpath(
+            "/p/entry[@key='readers']/item/text()"
+        );
+        if (readers.isEmpty()) {
             granted = true;
         } else {
             final String self = this.auth().identity().urn().toString();
             granted = Iterables.any(
-                xml.xpath("/p/readers/item/text()"),
+                readers,
                 new Predicate<String>() {
                     @Override
                     public boolean apply(final String input) {

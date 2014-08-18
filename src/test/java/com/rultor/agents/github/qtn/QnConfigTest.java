@@ -33,7 +33,6 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
-import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
 import java.net.URI;
@@ -59,9 +58,7 @@ public final class QnConfigTest {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument("<p>hey you</p>")
-        );
+        final Profile profile = new Profile.Fixed();
         MatcherAssert.assertThat(
             new QnConfig(profile).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
@@ -70,7 +67,7 @@ public final class QnConfigTest {
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("<p>hey you</p>\n```")
+            Matchers.containsString("<p/>\n```")
         );
     }
 

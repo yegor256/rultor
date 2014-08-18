@@ -109,9 +109,9 @@ final class GithubProfile implements Profile {
         final ImmutableMap.Builder<String, InputStream> assets =
             new ImmutableMap.Builder<String, InputStream>();
         final XML xml = this.read();
-        for (final XML asset : xml.nodes("/p/assets/*")) {
+        for (final XML asset : xml.nodes("/p/entry[@key='assets']/entry")) {
             assets.put(
-                asset.xpath("name()").get(0),
+                asset.xpath("@key").get(0),
                 this.asset(asset.xpath("text()").get(0))
             );
         }

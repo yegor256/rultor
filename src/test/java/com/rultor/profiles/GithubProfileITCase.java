@@ -69,7 +69,9 @@ public final class GithubProfileITCase {
         );
         MatcherAssert.assertThat(
             profile.read(),
-            XhtmlMatchers.hasXPath("/p/merge/script")
+            XhtmlMatchers.hasXPaths(
+                "/p/entry[@key='merge']/entry[@key='script']"
+            )
         );
     }
 }

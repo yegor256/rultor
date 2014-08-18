@@ -44,6 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
@@ -183,7 +184,10 @@ public final class StartsDaemon extends AbstractAgent {
      * @throws IOException If fails
      */
     private void gpg(final Shell shell, final String dir) throws IOException {
-        if (!this.profile.read().nodes("/p/decrypt").isEmpty()) {
+        final Collection<XML> entries = this.profile.read().nodes(
+            "/p/entry[@key='decrypt']/entry"
+        );
+        if (!entries.isEmpty()) {
             final String[] names = {"pubring.gpg", "secring.gpg"};
             for (final String name : names) {
                 shell.exec(

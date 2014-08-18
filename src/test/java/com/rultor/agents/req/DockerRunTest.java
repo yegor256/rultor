@@ -55,22 +55,28 @@ public final class DockerRunTest {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 StringUtils.join(
-                    "<p><a><env><item>A=5</item><item>B=f e</item></env></a>",
-                    "<b><env>HELLO='1'</env></b>",
-                    "<c><env><MVN>works</MVN></env></c></p>"
+                    "<p><entry key='a'><entry key='env'>",
+                    "<item>A=5</item><item>B=f e</item></entry></entry>",
+                    "<entry key='b'><entry key='env'>HELLO='1'</entry></entry>",
+                    "<entry key='c'><entry key='env'><entry key='MVN'>",
+                    "works</entry></entry></entry></p>"
                 )
             )
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/a").envs(new ArrayMap<String, String>()),
+            new DockerRun(profile, "/p/entry[@key='a']").envs(
+                new ArrayMap<String, String>()
+            ),
             Matchers.equalTo("( '--env=A=5' '--env=B=f e' )")
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/b").envs(new ArrayMap<String, String>()),
+            new DockerRun(profile, "/p/entry[@key='b']").envs(
+                new ArrayMap<String, String>()
+            ),
             Matchers.equalTo("( '--env=HELLO='\\''1'\\''' )")
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/c").envs(
+            new DockerRun(profile, "/p/entry[@key='c']").envs(
                 new ArrayMap<String, String>().with("X", "a\"'b")
             ),
             Matchers.equalTo("( '--env=MVN=works' '--env=X=a\"'\\''b' )")
@@ -86,17 +92,19 @@ public final class DockerRunTest {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 StringUtils.join(
-                    "<p><x><script>mvn clean</script></x>",
-                    "<y><script><item>pw</item><item>ls</item></script></y></p>"
+                    "<p><entry key='x'><entry key='script'>",
+                    "mvn clean</entry></entry>",
+                    "<entry key='y'><entry key='script'>",
+                    "<item>pw</item><item>ls</item></entry></entry></p>"
                 )
             )
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/x").script(),
+            new DockerRun(profile, "/p/entry[@key='x']").script(),
             Matchers.equalTo("( 'mvn clean' )")
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/y").script(),
+            new DockerRun(profile, "/p/entry[@key='y']").script(),
             Matchers.equalTo("( 'pw' ';' 'ls' ';' )")
         );
     }
@@ -131,14 +139,15 @@ public final class DockerRunTest {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 StringUtils.join(
-                    "<p><f><script>hello</script></f>",
-                    "<install><item>one</item><item>two</item></install></p>"
+                    "<p><entry key='f'><entry key='script'>hi</entry></entry>",
+                    "<entry key='install'><item>one</item><item>two</item>",
+                    "</entry></p>"
                 )
             )
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/f").script(),
-            Matchers.equalTo("( 'one' ';' 'two' ';' 'hello' )")
+            new DockerRun(profile, "/p/entry[@key='f']").script(),
+            Matchers.equalTo("( 'one' ';' 'two' ';' 'hi' )")
         );
     }
 
@@ -152,13 +161,15 @@ public final class DockerRunTest {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 StringUtils.join(
-                    "<p><o><env>A=123</env></o>",
-                    "<env>ALPHA=909</env></p>"
+                    "<p><entry key='o'><entry key='env'>A=123</entry></entry>",
+                    "<entry key='env'>ALPHA=909</entry></p>"
                 )
             )
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/o").envs(new ArrayMap<String, String>()),
+            new DockerRun(profile, "/p/entry[@key='o']").envs(
+                new ArrayMap<String, String>()
+            ),
             Matchers.equalTo("( '--env=ALPHA=909' '--env=A=123' )")
         );
     }
