@@ -75,7 +75,7 @@ public final class CommentsTag extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
-        final String tag = req.xpath("args/arg[@name='tag]/text()").get(0);
+        final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Release.Smart release = new Release.Smart(
             issue.repo().releases().create(tag)
         );
