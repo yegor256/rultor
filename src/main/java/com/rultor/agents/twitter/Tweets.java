@@ -75,7 +75,7 @@ public final class Tweets extends AbstractAgent {
     public Tweets(final Github ghub, final Twitter twt) {
         super(
             "/talk/wire[github-repo and github-issue]",
-            "/talk/request[@id and success]"
+            "/talk/request[@id and type and success]"
         );
         this.github = ghub;
         this.twitter = twt;
