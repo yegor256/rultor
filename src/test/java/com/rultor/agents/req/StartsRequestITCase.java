@@ -142,7 +142,7 @@ public final class StartsRequestITCase {
             stdout,
             Matchers.allOf(
                 Matchers.containsString("Hello, world!"),
-                Matchers.containsString("I am rultor")
+                Matchers.containsString("I am r")
             )
         );
     }
