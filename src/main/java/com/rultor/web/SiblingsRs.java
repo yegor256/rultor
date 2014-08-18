@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rexsl.page.JaxbBundle;
@@ -39,6 +40,7 @@ import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -90,11 +92,12 @@ public final class SiblingsRs extends BaseRs {
         } else {
             date = new Date(Long.parseLong(since));
         }
-        final Iterable<Talk> siblings = Iterables.limit(
-            this.talks().siblings(this.name, date), Tv.TWENTY
+        final List<Talk> siblings = Lists.newArrayList(
+            Iterables.limit(
+                this.talks().siblings(this.name, date), Tv.TWENTY
+            )
         );
-        if (!Iterables.isEmpty(siblings)
-            && !this.granted(siblings.iterator().next().number())) {
+        if (!siblings.isEmpty() && !this.granted(siblings.get(0).number())) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 "according to .rultor.yml, you're not allowed to see this",
@@ -120,8 +123,8 @@ public final class SiblingsRs extends BaseRs {
             .append(new JaxbBundle("repo", this.name))
             .append(new JaxbBundle("since", Long.toString(date.getTime())))
             .append(list);
-        if (Iterables.size(siblings) == Tv.TWENTY) {
-            final Talk last = Iterables.getLast(siblings);
+        if (siblings.size() == Tv.TWENTY) {
+            final Talk last = siblings.get(siblings.size() - 1);
             page = page.link(
                 new Link(
                     "more",
