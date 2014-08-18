@@ -97,7 +97,7 @@ public final class SiblingsRs extends BaseRs {
                 this.talks().siblings(this.name, date), Tv.TWENTY
             )
         );
-        if (!siblings.isEmpty() && !this.granted(siblings.get(0).number())) {
+        if (!siblings.isEmpty() && !this.granted(siblings.get(0))) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 "according to .rultor.yml, you're not allowed to see this",

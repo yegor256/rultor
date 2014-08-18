@@ -95,7 +95,7 @@ public final class DaemonRs extends BaseRs {
                 Level.WARNING
             );
         }
-        if (!this.granted(this.number)) {
+        if (!this.granted(this.talks().get(this.number))) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 "according to .rultor.yml, you're not allowed to see this",
