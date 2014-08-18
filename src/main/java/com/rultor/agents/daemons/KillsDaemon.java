@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.daemons;
 
+import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -39,7 +40,6 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -82,12 +82,12 @@ public final class KillsDaemon extends AbstractAgent {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            StringUtils.join(
+            Joiner.on(" && ").join(
                 String.format("dir=%s", dir),
-                " && if [ ! -e ${dir}/pid ]; then exit 0; fi",
-                " && pid=$(cat ${dir}/pid)",
-                " && if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 $pid; fi",
-                " && rm -f ${dir}/pid"
+                "if [ ! -e \"${dir}/pid\" ]; then exit 0; fi",
+                "pid=$(cat \"${dir}/pid\")",
+                "if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 ${pid}; fi",
+                "rm -f \"${dir}/pid\""
             )
         );
         Logger.info(this, "daemon killed because of delay in %s", dir);

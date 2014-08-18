@@ -98,7 +98,7 @@ public final class StartsDaemon extends AbstractAgent {
         );
         final String dir = baos.toString(CharEncoding.UTF_8).trim();
         new Shell.Safe(shell).exec(
-            String.format("cat > %s/run.sh", dir),
+            String.format("cat > '%s/run.sh'", dir),
             IOUtils.toInputStream(
                 StringUtils.join(
                     Arrays.asList(
@@ -128,10 +128,10 @@ public final class StartsDaemon extends AbstractAgent {
         new Shell.Empty(new Shell.Safe(shell)).exec(
             Joiner.on("&&").join(
                 String.format("dir=%s", dir),
-                "chmod a+x ${dir}/run.sh",
-                "echo 'run.sh failed to start' > ${dir}/stdout",
+                "chmod a+x \"${dir}/run.sh\"",
+                "echo 'run.sh failed to start' > \"${dir}/stdout\"",
                 // @checkstyle LineLength (1 line)
-                "( ( nohup ${dir}/run.sh </dev/null >${dir}/stdout 2>&1; echo $? >${dir}/status ) </dev/null >/dev/null & )"
+                "( ( nohup \"${dir}/run.sh\" </dev/null >\"${dir}/stdout\" 2>&1; echo $? >\"${dir}/status\" ) </dev/null >/dev/null & )"
             )
         );
         Logger.info(this, "daemon started at %s", dir);
@@ -157,7 +157,7 @@ public final class StartsDaemon extends AbstractAgent {
                 : this.profile.assets().entrySet()) {
                 shell.exec(
                     String.format(
-                        "cat > \"%s/%s\"",
+                        "cat > '%s/%s'",
                         dir, asset.getKey()
                     ),
                     asset.getValue(),
@@ -187,7 +187,7 @@ public final class StartsDaemon extends AbstractAgent {
             final String[] names = {"pubring.gpg", "secring.gpg"};
             for (final String name : names) {
                 shell.exec(
-                    String.format("cat > \"%s/.gpg/%s\"", dir, name),
+                    String.format("cat > '%s/.gpg/%s'", dir, name),
                     this.ring(name),
                     Logger.stream(Level.INFO, true),
                     Logger.stream(Level.WARNING, true)

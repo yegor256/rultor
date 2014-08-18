@@ -182,10 +182,10 @@ public final class StartsRequest extends AbstractAgent {
         for (final XML node : this.profile.read().nodes("/p/decrypt/*")) {
             commands.add(
                 Joiner.on(' ').join(
-                    "gpg --keyring=$(pwd)/.gpg/pubring.gpg",
-                    "--secret-keyring=$(pwd)/.gpg/secring.gpg",
+                    "gpg '--keyring=$(pwd)/.gpg/pubring.gpg'",
+                    "'--secret-keyring=$(pwd)/.gpg/secring.gpg'",
                     String.format(
-                        "--decrypt %s > %s",
+                        "--decrypt '%s' > '%s'",
                         node.xpath("./text()").get(0),
                         node.xpath("./name()").get(0)
                     )

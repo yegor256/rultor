@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.daemons;
 
+import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -39,7 +40,6 @@ import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -67,11 +67,11 @@ public final class EndsDaemon extends AbstractAgent {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Shell.Empty(shell).exec(
-            StringUtils.join(
-                String.format("dir=%s", dir),
-                " && if [ ! -e ${dir}/pid ]; then exit 1; fi",
-                " && pid=$(cat ${dir}/pid)",
-                " && ps -p ${pid} >/dev/null"
+            Joiner.on(" && ").join(
+                String.format("dir='%s'", dir),
+                "if [ ! -e \"${dir}/pid\" ]; then exit 1; fi",
+                "pid=$(cat \"${dir}/pid\")",
+                "ps -p \"${pid}\" >/dev/null"
             )
         );
         final Directives dirs = new Directives();
@@ -94,10 +94,10 @@ public final class EndsDaemon extends AbstractAgent {
         final String dir) throws IOException {
         final int exit = Integer.parseInt(
             new Shell.Plain(new Shell.Safe(shell)).exec(
-                StringUtils.join(
+                Joiner.on(" &&  ").join(
                     String.format("dir=%s;", dir),
-                    "if [ ! -e ${dir}/status ]; then echo 255; exit 0; fi",
-                    " && cat ${dir}/status"
+                    "if [ ! -e \"${dir}/status\" ]; then echo 127; exit 0; fi",
+                    "cat \"${dir}/status\""
                 )
             ).trim()
         );

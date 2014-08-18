@@ -228,7 +228,7 @@ public final class Tail {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(
                 String.format(
-                    "cat %s/stdout | col -b",
+                    "cat '%s/stdout' | col -b",
                     this.xml.xpath("/talk/daemon/dir/text()").get(0)
                 ),
                 new NullInputStream(0L), baos,

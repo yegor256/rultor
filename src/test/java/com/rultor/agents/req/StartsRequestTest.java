@@ -220,7 +220,7 @@ public final class StartsRequestTest {
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPath(
-                "//script[contains(.,'gpg --decrypt')]"
+                "//script[contains(.,'--decrypt')]"
             )
         );
     }
