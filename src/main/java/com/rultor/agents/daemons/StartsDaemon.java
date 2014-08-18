@@ -147,20 +147,28 @@ public final class StartsDaemon extends AbstractAgent {
      */
     private String upload(final Shell shell, final String dir)
         throws IOException {
-        final Map<String, InputStream> assets = this.profile.assets();
-        for (final Map.Entry<String, InputStream> asset : assets.entrySet()) {
-            shell.exec(
-                String.format(
-                    "cat > \"%s/%s\"",
-                    dir, asset.getKey()
-                ),
-                asset.getValue(),
-                Logger.stream(Level.INFO, true),
-                Logger.stream(Level.WARNING, true)
+        String script = "";
+        try {
+            for (final Map.Entry<String, InputStream> asset
+                : this.profile.assets().entrySet()) {
+                shell.exec(
+                    String.format(
+                        "cat > \"%s/%s\"",
+                        dir, asset.getKey()
+                    ),
+                    asset.getValue(),
+                    Logger.stream(Level.INFO, true),
+                    Logger.stream(Level.WARNING, true)
+                );
+                Logger.info(this, "\"%s\" uploaded into %s", asset.getKey(), dir);
+            }
+        } catch (final Profile.ConfigException ex) {
+            script = Logger.format(
+                "cat << EOT\n%[exception]s\nEOT\nexit -1",
+                ex
             );
-            Logger.info(this, "\"%s\" uploaded into %s", asset.getKey(), dir);
         }
-        return "";
+        return script;
     }
 
 }
