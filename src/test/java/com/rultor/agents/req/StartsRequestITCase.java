@@ -106,10 +106,10 @@ public final class StartsRequestITCase {
             new Profile.Fixed(
                 new XMLDocument(
                     Joiner.on('\n').join(
-                        "<p><deploy><script>",
+                        "<p><entry key='deploy'><entry key='script'>",
                         "echo 'Hello, world!'",
                         "echo 'I am' $(whoami)",
-                        "</script></deploy></p>"
+                        "</entry></entry></p>"
                     )
                 )
             )
