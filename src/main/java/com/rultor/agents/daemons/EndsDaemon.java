@@ -96,7 +96,7 @@ public final class EndsDaemon extends AbstractAgent {
         final int exit = Integer.parseInt(
             new Shell.Plain(new Shell.Safe(shell)).exec(
                 Joiner.on(" &&  ").join(
-                    String.format("dir=%s;", SSH.escape(dir)),
+                    String.format("dir=%s", SSH.escape(dir)),
                     "if [ ! -e \"${dir}/status\" ]; then echo 127; exit 0; fi",
                     "cat \"${dir}/status\""
                 )
