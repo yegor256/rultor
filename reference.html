@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?528adef"/>
+    <link rel="stylesheet" href="/css/layout.css?05bbb5d"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
   </head>
@@ -32,7 +32,8 @@ file.</p>
 
 <p>This page contains a complete reference of commands in alphabetic order.</p>
 
-<p>BTW, you can see a real-life configuration in <a href="https://github.com/jcabi/jcabi">jcabi</a> project:
+<p>BTW, you can see a real-life configuration in
+<a href="https://github.com/jcabi/jcabi">jcabi</a> project:
 <a href="https://github.com/jcabi/jcabi/blob/master/.rultor.yml"><code>rultor.yml</code></a>.</p>
 
 <h2 id="assets">Assets</h2>
@@ -47,7 +48,7 @@ programmers.</p>
 fetch it from there:</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">assets</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">secret.xml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yegor256/secret-repo#assets/settings.xml</span></code></pre></div>
+  <span class="l-Scalar-Plain">secret.xml</span><span class="p-Indicator">:</span> <span class="s">&quot;yegor256/secret-repo#assets/settings.xml&quot;</span></code></pre></div>
 
 <p>This configuration tells Rultor that needs to fetch <code>assets/settings.xml</code> from
 <code>yegor256/secret-repo</code> and place it into the <code>secret.xml</code> file right before
@@ -73,14 +74,38 @@ in <code>/home/r</code>. This is how the directory layout looks:</p>
 collaborators in your private repository. Otherwise Rultor won&#39;t be
 able to fetch anything from it.</p>
 
+<h2 id="decrypt">Decrypt</h2>
+
+<p>You may want to keep your secret assets right inside your main
+repository. In this case, in order to keep them secret, you should
+encrypt them using <a href="https://www.gnupg.org/documentation/manpage.html">GPG</a>:</p>
+
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 9AF0FA4C
+$ gpg --trust-model always -a -e -r 9AF0FA4C secret.txt</code></pre></div>
+
+<p>This example will fetch GPG key <code>9AF0FA4C</code> and use it to
+encrypt <code>secret.txt</code> file. You will get a new file <code>secret.txt.asc</code>.
+Commit this file to your repository &mdash; nobody will be able
+to read it, except Rultor server itself.</p>
+
+<p>Then, instruct Rultor to decrypt it before running your build:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">decrypt</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">secret.txt</span><span class="p-Indicator">:</span> <span class="s">&quot;scrt/secret.txt.asc&quot;</span></code></pre></div>
+
+<p>This configuration tells Rultor to get <code>scrt/secret.txt.asc</code> from the
+root directory of your repository, decrypt it and save the result
+into <code>secret.txt</code>.</p>
+
 <h2 id="docker-image">Docker Image</h2>
 
-<p>The default Docker image used for all commands is <a href="https://registry.hub.docker.com/u/yegor256/rultor/"><code>yegor256/rultor</code></a>.</p>
+<p>The default Docker image used for all commands is
+<a href="https://registry.hub.docker.com/u/yegor256/rultor/"><code>yegor256/rultor</code></a>.</p>
 
 <p>You can change it to, say, <code>ubuntu:12.10</code>:</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ubuntu:12.10</span></code></pre></div>
+  <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="s">&quot;ubuntu:12.10&quot;</span></code></pre></div>
 
 <h2 id="environment-variables">Environment Variables</h2>
 
@@ -91,10 +116,10 @@ commands, for example:</p>
   <span class="l-Scalar-Plain">MAVEN_OPTS</span><span class="p-Indicator">:</span> <span class="s">&quot;-XX:MaxPermSize=256m</span><span class="nv"> </span><span class="s">-Xmx1g&quot;</span>
 <span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mvn clean install</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">install&quot;</span>
 <span class="l-Scalar-Plain">deploy</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mvn clean deploy</span></code></pre></div>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">deploy&quot;</span></code></pre></div>
 
 <p>In this example, <code>MAVEN_OPTS</code> environment variable will be set
 for merging and deploying commands.</p>
@@ -105,13 +130,13 @@ for merging and deploying commands.</p>
 commands, for example:</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sudo apt-get install texlive</span>
+  <span class="p-Indicator">-</span> <span class="s">&quot;sudo</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">texlive&quot;</span>
 <span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">latex ...</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;latex</span><span class="nv"> </span><span class="s">...&quot;</span>
 <span class="l-Scalar-Plain">deploy</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">latex ...</span></code></pre></div>
+    <span class="p-Indicator">-</span> <span class="s">&quot;latex</span><span class="nv"> </span><span class="s">...&quot;</span></code></pre></div>
 
 <p>In this example, <code>texlive</code> package will be installed before merge
 and before deploy commands execution.</p>
@@ -123,8 +148,8 @@ for private projects. To grant access to your logs only for
 a selected list of users, use this construct:</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">readers</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">urn:github:526301</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">urn:github:8086956</span>
+  <span class="p-Indicator">-</span> <span class="s">&quot;urn:github:526301&quot;</span>
+  <span class="p-Indicator">-</span> <span class="s">&quot;urn:github:8086956&quot;</span>
   <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">...</span></code></pre></div>
 
 <p>Every user is specified as a URN, where his Github account number
@@ -135,7 +160,8 @@ top of the page.</p>
 
 <h2 id="merge,-deploy,-release">Merge, Deploy, Release</h2>
 
-<p>Three commands <code>merge</code>, <code>deploy</code> and <code>release</code> are configured similarly in <code>.rultor.yml</code>. For example:</p>
+<p>Three commands <code>merge</code>, <code>deploy</code> and <code>release</code> are
+configured similarly in <code>.rultor.yml</code>. For example:</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span> <span class="c1"># or &quot;deploy&quot; or &quot;release&quot;</span>
   <span class="l-Scalar-Plain">commanders</span><span class="p-Indicator">:</span>
@@ -208,7 +234,7 @@ Github collaborators <em>and</em> accounts mentioned here are allowed to give co
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/528adef">528adef</a>
+          <a href="https://github.com/yegor256/rultor/commit/05bbb5d">05bbb5d</a>
         </p>
       </footer>
     </div>
