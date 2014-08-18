@@ -40,6 +40,7 @@ import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
+import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Reports;
 import com.rultor.agents.github.StartsTalks;
@@ -225,6 +226,7 @@ public final class Agents {
                         Manifests.read("Rultor-TwitterTokenSecret")
                     )
                 ),
+                new CommentsTag(this.github),
                 new Reports(this.github),
                 new RemovesShell(),
                 new ArchivesDaemon(

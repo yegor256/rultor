@@ -197,11 +197,10 @@ public final class StartsDaemon extends AbstractAgent {
             final String[] names = {"pubring.gpg", "secring.gpg"};
             for (final String name : names) {
                 shell.exec(
-                    String.format(
-                        "cat >  %s",
-                        SSH.escape(
-                            String.format("%s/.gpg/%s", dir, name)
-                        )
+                    Joiner.on(" && ").join(
+                        String.format("dir=%s  ", SSH.escape(dir)),
+                        "mkdir -p \"${dir}/.gpg\"",
+                        String.format("cat > \"${dir}/.gpg/%s\"", name)
                     ),
                     this.ring(name),
                     Logger.stream(Level.INFO, true),
