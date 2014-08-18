@@ -82,7 +82,7 @@
             <xsl:if test="archive/log">
                 <ul>
                     <xsl:apply-templates select="archive/log">
-                        <xsl:sort select="id" order="descending" />
+                        <xsl:sort select="id" order="ascending" />
                     </xsl:apply-templates>
                 </ul>
             </xsl:if>
