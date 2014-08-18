@@ -46,6 +46,7 @@ import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.profiles.Profiles;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.URI;
@@ -198,9 +199,12 @@ public class BaseRs extends BaseResource {
      * @throws IOException If fails
      */
     protected final boolean granted(final long number) throws IOException {
-        final XML xml = new Profiles().fetch(
-            this.talks().get(number)
-        ).read();
+        final XML xml;
+        try {
+            xml = new Profiles().fetch(this.talks().get(number)).read();
+        } catch (final Profile.ConfigException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
         final boolean granted;
         if (xml.nodes("/p/readers").isEmpty()) {
             granted = true;
