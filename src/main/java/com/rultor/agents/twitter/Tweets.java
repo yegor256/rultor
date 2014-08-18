@@ -27,87 +27,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
+package com.rultor.agents.twitter;
 
-import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
+import com.jcabi.aspects.Tv;
+import com.jcabi.github.Github;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
-import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
-import com.rultor.agents.shells.SSH;
-import com.rultor.agents.shells.Shell;
-import com.rultor.agents.shells.TalkShells;
+import com.rultor.agents.github.TalkIssues;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Marks the daemon as done.
+ * Tweets.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.30
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false)
-public final class EndsDaemon extends AbstractAgent {
+@EqualsAndHashCode(callSuper = false, of = { "github", "twitter" })
+public final class Tweets extends AbstractAgent {
+
+    /**
+     * Github.
+     */
+    private final transient Github github;
+
+    /**
+     * Twitter.
+     */
+    private final transient Twitter twitter;
 
     /**
      * Ctor.
+     * @param ghub Github client
+     * @param twt Twitter client
      */
-    public EndsDaemon() {
-        super("/talk/daemon[started and not(code) and not(ended)]");
+    public Tweets(final Github ghub, final Twitter twt) {
+        super(
+            "/talk/wire[github-repo and github-issue]",
+            "/talk/request[@id and success]"
+        );
+        this.github = ghub;
+        this.twitter = twt;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final Shell shell = new TalkShells(xml).get();
-        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final int exit = new Shell.Empty(shell).exec(
-            Joiner.on(" && ").join(
-                String.format("dir=%s ", SSH.escape(dir)),
-                "if [ ! -e \"${dir}/pid\" ]; then exit 1; fi",
-                "pid=$(cat \"${dir}/pid\")",
-                "ps -p \"${pid}\" >/dev/null"
-            )
+        final XML req = xml.nodes("/talk/request").get(0);
+        final boolean success = Boolean.parseBoolean(
+            req.xpath("success/text()").get(0)
         );
-        final Directives dirs = new Directives();
-        if (exit == 0) {
-            Logger.info(this, "the daemon is still running in %s", dir);
-        } else {
-            dirs.append(this.end(shell, dir));
-        }
-        return dirs;
-    }
-
-    /**
-     * End this daemon.
-     * @param shell Shell
-     * @param dir The dir
-     * @return Directives
-     * @throws IOException If fails
-     */
-    private Iterable<Directive> end(final Shell shell,
-        final String dir) throws IOException {
-        final int exit = Integer.parseInt(
-            new Shell.Plain(new Shell.Safe(shell)).exec(
-                Joiner.on(" &&  ").join(
-                    String.format("dir=%s", SSH.escape(dir)),
-                    "if [ ! -e \"${dir}/status\" ]; then echo 127; exit 0; fi",
-                    "cat \"${dir}/status\""
+        final String type = req.xpath("type/text()").get(0);
+        if (success && "release".equals(type)) {
+            final Issue.Smart issue = new TalkIssues(this.github, xml).get();
+            this.twitter.post(
+                String.format(
+                    "%s, ver %s released https://github.com/%s",
+                    StringUtils.substring(
+                        new Repo.Smart(issue.repo()).description(),
+                        0, Tv.HUNDRED
+                    ),
+                    issue.repo().coordinates(),
+                    req.xpath("args/arg[@name='tag']/text()").get(0)
                 )
-            ).trim()
-        );
-        Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
-        return new Directives()
-            .xpath("/talk/daemon")
-            .strict(1)
-            .add("ended").set(new Time().iso()).up()
-            .add("code").set(Integer.toString(exit));
+            );
+        }
+        return new Directives();
     }
 
 }

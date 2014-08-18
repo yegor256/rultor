@@ -63,6 +63,8 @@ import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.RegistersShell;
 import com.rultor.agents.shells.RemovesShell;
+import com.rultor.agents.twitter.OAuthTwitter;
+import com.rultor.agents.twitter.Tweets;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
@@ -215,6 +217,15 @@ public final class Agents {
                 new EndsDaemon(),
                 new EndsRequest(),
                 new Reports(this.github),
+                new Tweets(
+                    this.github,
+                    new OAuthTwitter(
+                        Manifests.read("Rultor-TwitterKey"),
+                        Manifests.read("Rultor-TwitterSecret"),
+                        Manifests.read("Rultor-TwitterToken"),
+                        Manifests.read("Rultor-TwitterTokenSecret")
+                    )
+                ),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
