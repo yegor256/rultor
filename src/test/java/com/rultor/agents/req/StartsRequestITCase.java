@@ -108,7 +108,7 @@ public final class StartsRequestITCase {
                     Joiner.on('\n').join(
                         "<p><entry key='deploy'><entry key='script'>",
                         "echo 'Hello, world!'",
-                        "echo 'I am' $(whoami)",
+                        "echo 'I am' $(id -u -n)",
                         "</entry></entry></p>"
                     )
                 )
