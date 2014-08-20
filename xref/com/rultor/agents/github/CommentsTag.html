@@ -83,7 +83,7 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">public</strong> Iterable&lt;Directive&gt; process(<strong class="jxr_keyword">final</strong> XML xml) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>          <strong class="jxr_keyword">final</strong> XML req = xml.nodes(<span class="jxr_string">"/talk/request"</span>).get(0);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>          <strong class="jxr_keyword">final</strong> Issue.Smart issue = <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/github/TalkIssues.html">TalkIssues</a>(<strong class="jxr_keyword">this</strong>.github, xml).get();
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>          <strong class="jxr_keyword">final</strong> String tag = req.xpath(<span class="jxr_string">"args/arg[@name='tag]/text()"</span>).get(0);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          <strong class="jxr_keyword">final</strong> String tag = req.xpath(<span class="jxr_string">"args/arg[@name='tag']/text()"</span>).get(0);
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>          <strong class="jxr_keyword">final</strong> Release.Smart release = <strong class="jxr_keyword">new</strong> Release.Smart(
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>              issue.repo().releases().create(tag)
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>          );
