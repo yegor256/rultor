@@ -31,6 +31,9 @@ package com.rultor.web;
 
 import com.rultor.agents.daemons.Tail;
 import java.io.IOException;
+import java.io.SequenceInputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -103,10 +106,18 @@ public final class DaemonRs extends BaseRs {
             );
         }
         return Response.ok().entity(
-            new Tail(
-                this.talks().get(this.number).read(),
-                this.hash
-            ).read()
+            new SequenceInputStream(
+                Collections.enumeration(
+                    Arrays.asList(
+                        this.getClass().getResourceAsStream("daemon/head.html"),
+                        new Tail(
+                            this.talks().get(this.number).read(),
+                            this.hash
+                        ).read(),
+                        this.getClass().getResourceAsStream("daemon/tail.html")
+                    )
+                )
+            )
         ).type("text/plain; charset=utf-8").build();
     }
 
