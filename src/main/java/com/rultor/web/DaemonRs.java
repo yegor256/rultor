@@ -118,7 +118,7 @@ public final class DaemonRs extends BaseRs {
                     )
                 )
             )
-        ).type("text/plain; charset=utf-8").build();
+        ).type("text/html; charset=utf-8").build();
     }
 
 }
