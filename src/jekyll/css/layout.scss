@@ -45,7 +45,7 @@ html {
   height: 100%;
 }
 body {
-  padding: 0;
+  padding: $em;
   margin: 0;
   height: 100%;
   font-family: $main-font;
@@ -68,7 +68,7 @@ a, a:visited {
   margin-right: auto;
   margin-left: auto;
   line-height: 1.4 * $em;
-  padding: 2 * $em;
+  padding: 1 * $em;
   @media all and (max-width: $width) {
     padding: $em;
     width: 100%;
