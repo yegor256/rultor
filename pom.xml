@@ -35,7 +35,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.26</version>
+        <version>0.28</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
@@ -80,7 +80,7 @@
         <url>https://github.com/yegor256/rultor</url>
     </scm>
     <ciManagement>
-        <system>travis-ci</system>
+        <system>travis</system>
         <url>https://travis-ci.org/yegor256/rultor</url>
     </ciManagement>
     <distributionManagement>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
             <artifactId>xembly</artifactId>
-            <version>0.17</version>
+            <version>0.18</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
@@ -255,7 +255,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
-            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
@@ -265,7 +264,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
-            <version>0.14</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -709,7 +707,7 @@
                     <plugin>
                         <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
-                        <version>0.7</version>
+                        <version>0.7.1</version>
                         <executions>
                             <execution>
                                 <id>dynamodb-integration-test</id>
