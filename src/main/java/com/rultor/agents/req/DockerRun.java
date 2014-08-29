@@ -58,6 +58,7 @@ import org.apache.commons.lang3.StringUtils;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "profile", "xpath" })
+@SuppressWarnings("PMD.TooManyMethods")
 final class DockerRun {
 
     /**
