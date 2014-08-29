@@ -229,7 +229,7 @@ final class DockerRun {
     }
 
     /**
-     * Get lines from a single XML node
+     * Get lines from a single XML node.
      * @param node Node to get text() from
      * @return Lines found
      */
