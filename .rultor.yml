@@ -12,23 +12,23 @@ install:
   - "sudo gem install pdd"
 
 deploy:
-  script:
-    - "mvn clean deploy -Prultor --settings ../settings.xml"
-    - "mvn clean"
-    - "pdd --source=$(pwd) --verbose --file=rultor.xml"
-    - "s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml"
+  script: |
+    mvn clean deploy -Prultor --errors --settings ../settings.xml
+    mvn clean
+    pdd --source=$(pwd) --verbose --file=rultor.xml
+    s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml
 
 release:
-  script:
-    - "sudo bundle install"
-    - "mvn versions:set \"-DnewVersion=${tag}\""
-    - "git commit -am \"${tag}\""
-    - "mvn clean deploy -Pqulice -Prultor --settings ../settings.xml"
-    - "mvn clean site-deploy -Psite --settings ../settings.xml"
+  script: |
+    sudo bundle install
+    mvn versions:set "-DnewVersion=${tag}"
+    git commit -am "${tag}"
+    mvn clean deploy -Pqulice -Prultor --errors --settings ../settings.xml
+    mvn clean site-deploy --errors -Psite --settings ../settings.xml
 
 merge:
-  script:
-    - "mvn help:system clean install -Pqulice --settings ../settings.xml"
-    - "mvn clean site -Psite --settings ../settings.xml"
-    - "mvn clean"
-    - "pdd --source=$(pwd) --verbose --file=/dev/null"
+  script: |
+    mvn help:system clean install -Pqulice --errors --settings ../settings.xml
+    mvn clean site -Psite --errors --settings ../settings.xml
+    mvn clean
+    pdd --source=$(pwd) --verbose --file=/dev/null
