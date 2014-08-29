@@ -174,4 +174,22 @@ public final class DockerRunTest {
         );
     }
 
+    /**
+     * DockerRun can fetch multi-line script.
+     * @throws Exception In case of error.
+     * @since 1.32.3
+     */
+    @Test
+    public void fetchesMultiLineScript() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                "<p><entry key='script'>How are you,\ndude</entry></p>"
+            )
+        );
+        MatcherAssert.assertThat(
+            new DockerRun(profile, "/p").script(),
+            Matchers.equalTo("( 'How are you,' ';' 'dude' )")
+        );
+    }
+
 }
