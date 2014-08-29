@@ -36,14 +36,16 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.agents.shells.SSH;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Docker run command.
@@ -151,10 +153,7 @@ final class DockerRun {
                     new Function<String, String>() {
                         @Override
                         public String apply(final String input) {
-                            return String.format(
-                                "'%s'",
-                                input.trim().replace("'", "'\\''")
-                            );
+                            return SSH.escape(input);
                         }
                     }
                 )
@@ -173,15 +172,19 @@ final class DockerRun {
         if (!xml.nodes(path).isEmpty()) {
             final XML node = xml.nodes(path).get(0);
             if (node.nodes("item").isEmpty()) {
-                items.add(node.xpath("text()").get(0));
+                items.addAll(DockerRun.lines(node));
             } else {
                 for (final String cmd : node.xpath("item/text()")) {
-                    items.add(cmd);
-                    items.add(";");
+                    items.add(cmd.trim());
                 }
             }
         }
-        return items;
+        final Collection<String> scripts = new LinkedList<String>();
+        for (final String item : items) {
+            scripts.add(item);
+            scripts.add(";");
+        }
+        return scripts;
     }
 
     /**
@@ -208,7 +211,7 @@ final class DockerRun {
                     );
                 }
             } else {
-                parts = Collections.singleton(node.xpath("text()").get(0));
+                parts = DockerRun.lines(node);
             }
             envs.addAll(
                 Collections2.transform(
@@ -223,6 +226,25 @@ final class DockerRun {
             );
         }
         return envs;
+    }
+
+    /**
+     * Get lines from a single XML node
+     * @param node Node to get text() from
+     * @return Lines found
+     */
+    private static Collection<String> lines(final XML node) {
+        return Collections2.transform(
+            Arrays.asList(
+                StringUtils.split(node.xpath("text()").get(0), '\n')
+            ),
+            new Function<String, String>() {
+                @Override
+                public String apply(final String line) {
+                    return line.trim();
+                }
+            }
+        );
     }
 
 }

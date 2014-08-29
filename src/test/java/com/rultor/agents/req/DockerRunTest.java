@@ -101,7 +101,7 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='x']").script(),
-            Matchers.equalTo("( 'mvn clean' )")
+            Matchers.equalTo("( 'mvn clean' ';' )")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='y']").script(),
@@ -147,7 +147,7 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='f']").script(),
-            Matchers.equalTo("( 'one' ';' 'two' ';' 'hi' )")
+            Matchers.equalTo("( 'one' ';' 'two' ';' 'hi' ';' )")
         );
     }
 
@@ -188,7 +188,7 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p").script(),
-            Matchers.equalTo("( 'How are you,' ';' 'dude' )")
+            Matchers.equalTo("( 'How are you,' ';' 'dude' ';' )")
         );
     }
 
