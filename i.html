@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="description" content="rultor.com build log"/>
+    <meta name="keywords" content="continuous integration, continuous delivery, DevOps"/>
+    <meta name="author" content="rultor.com"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="//doc.rultor.com/css/layout.css"/>
+    <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128-transparent.png"/>
+    <title>rultor.com</title>
+    <style>
+        .log {
+            overflow: auto;
+            white-space: pre-line;
+            font-size: 14px;
+            padding: 0;
+            border: none;
+        }
+    </style>
+</head>
+<body itemscope="" itemtype="http://schema.org/Code">
+    <div>
+        <a href="http://www.rultor.com">
+            <img src="http://img.rultor.com/logo.svg" style="vertical-align:middle;width:48px;height:48px;"
+                alt="rultor.com logo"/></a>
+        <span>
+            This build log was produced by
+            <a href="http://doc.rultor.com">rultor.com</a>
+        </span>
+    </div>
+    <xmp class="log" itemprop="text">
++ set -e
++ set -o pipefail
+++ dirname /tmp/rultor-hGIy/run.sh
++ cd /tmp/rultor-hGIy
++ echo 28190
++ echo '1.32.3 7a66751'
+1.32.3 7a66751
++ date --iso-8601=seconds --utc
+2014-08-29T19:39:59+0000
++ uptime
+ 21:39:59 up 142 days, 23:15,  0 users,  load average: 1.34, 9.80, 8.45
++ head=git@github.com:yegor256/thindeck.git
++ head_branch=master
++ tag=0.1.1
++ vars=('--env=MAVEN_OPTS=-XX:MaxPermSize=256m -Xmx1g' '--env=head=git@github.com:yegor256/thindeck.git' '--env=head_branch=master' '--env=tag=0.1.1')
++ image=yegor256/rultor
++ scripts=('sudo apt-get install -y openjdk-6-jre' ';' 'wget --retry-connrefused http://yar.fruct.org/attachments/download/362/plantuml_7707-1_all.deb' ';' 'sudo dpkg -i plantuml_7707-1_all.deb' ';' 'wget --retry-connrefused https://oss.sonatype.org/content/repositories/releases/net/sourceforge/plantuml/plantuml/8000/plantuml-8000.jar' ';' 'sudo mv plantuml-8000.jar /usr/share/plantuml/plantuml.jar' ';' 'sudo gem install pdd' ';' 'sudo bundle install' ';' 'mvn versions:set "-DnewVersion=${tag}"' ';' 'git commit -am "${tag}"' ';' 'mvn clean deploy -Pqulice -Pthindeck --errors --settings ../settings.xml' ';' 'mvn clean site-deploy -Psite --errors --settings ../settings.xml' ';')
++ '[' -z '' ']'
++ docker=docker
++ git clone git@github.com:yegor256/thindeck.git repo
+Initialized empty Git repository in /tmp/rultor-hGIy/repo/.git/
++ cd repo
++ git config user.email me@rultor.com
++ git config user.name rultor
++ git checkout master
+Already on 'master'
++ '[' -z 'sudo apt-get install -y openjdk-6-jre' ']'
++ cd ..
++ cat
++ chmod a+x entry.sh
++ cat
++ echo 'sudo apt-get install -y openjdk-6-jre' ';' 'wget --retry-connrefused http://yar.fruct.org/attachments/download/362/plantuml_7707-1_all.deb' ';' 'sudo dpkg -i plantuml_7707-1_all.deb' ';' 'wget --retry-connrefused https://oss.sonatype.org/content/repositories/releases/net/sourceforge/plantuml/plantuml/8000/plantuml-8000.jar' ';' 'sudo mv plantuml-8000.jar /usr/share/plantuml/plantuml.jar' ';' 'sudo gem install pdd' ';' 'sudo bundle install' ';' 'mvn versions:set "-DnewVersion=${tag}"' ';' 'git commit -am "${tag}"' ';' 'mvn clean deploy -Pqulice -Pthindeck --errors --settings ../settings.xml' ';' 'mvn clean site-deploy -Psite --errors --settings ../settings.xml' ';'
++ rm -rf .gpg
++ '[' -z 0.1.1 ']'
++ cd repo
+++ git tag -l 0.1.1
++ '[' ']'
++ git checkout -b __rultor-tmp
+Switched to a new branch '__rultor-tmp'
++ docker_when_possible
++ true
+++ awk '{print $12}'
+++ cut -d , -f 1
+++ uptime
++ load=8.41
++ '[' 8.41 -gt 8 ']'
+/tmp/rultor-hGIy/run.sh: line 78: [: 8.41: integer expression expected
++ echo 'load average is 8.41, low enough to run a new Docker container'
+load average is 8.41, low enough to run a new Docker container
++ break
++ cd ..
++ docker pull yegor256/rultor
+Pulling repository yegor256/rultor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+++ pwd
+++ pwd
++ docker run --rm -v /tmp/rultor-hGIy:/main '--env=MAVEN_OPTS=-XX:MaxPermSize=256m -Xmx1g' --env=head=git@github.com:yegor256/thindeck.git --env=head_branch=master --env=tag=0.1.1 --memory=4g --cidfile=/tmp/rultor-hGIy/cid -w=/main yegor256/rultor /main/entry.sh
++ set -e
++ set -o pipefail
++ shopt -s dotglob
++ adduser --disabled-password --gecos '' r
+Adding user `r' ...
+Adding new group `r' (1000) ...
+Adding new user `r' (1000) with group `r' ...
+Creating home directory `/home/r' ...
+Copying files from `/etc/skel' ...
++ adduser r sudo
+Adding user `r' to group `sudo' ...
+Adding user r to group sudo
+Done.
++ echo '%sudo ALL=(ALL) NOPASSWD:ALL'
++ cp -R /root/.bashrc /root/.java /root/.m2 /root/.profile /home/r
++ cp -R ./cid ./entry.sh ./pid ./pubring.gpg ./repo ./run.sh ./s3cfg ./script.sh ./secring.gpg ./settings.xml ./stdout /home/r
++ rm -rf repo
++ chown -R r /home/r
++ chmod a+x /home/r/script.sh
++ su -m r -c /home/r/script.sh
++ set -e
++ set -o pipefail
++ export HOME=/home/r
++ HOME=/home/r
++ cd /home/r/repo
++ sudo apt-get install -y openjdk-6-jre
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  icedtea-6-jre-cacao icedtea-6-jre-jamvm icedtea-netx icedtea-netx-common
+  openjdk-6-jre-headless openjdk-6-jre-lib ttf-dejavu-extra
+Suggested packages:
+  icedtea-plugin libnss-mdns sun-java6-fonts fonts-ipafont-gothic
+  fonts-ipafont-mincho ttf-wqy-microhei ttf-wqy-zenhei ttf-indic-fonts-core
+  ttf-telugu-fonts ttf-oriya-fonts ttf-kannada-fonts ttf-bengali-fonts
+The following NEW packages will be installed:
+  icedtea-6-jre-cacao icedtea-6-jre-jamvm icedtea-netx icedtea-netx-common
+  openjdk-6-jre openjdk-6-jre-headless openjdk-6-jre-lib ttf-dejavu-extra
+0 upgraded, 8 newly installed, 0 to remove and 0 not upgraded.
+Need to get 38.9 MB of archives.
+After this operation, 59.9 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu/ trusty-updates/universe openjdk-6-jre-lib all 6b32-1.13.4-4ubuntu0.14.04.1 [5954 kB]
+Get:2 http://archive.ubuntu.com/ubuntu/ trusty-updates/universe openjdk-6-jre-headless amd64 6b32-1.13.4-4ubuntu0.14.04.1 [30.8 MB]
+Get:3 http://archive.ubuntu.com/ubuntu/ trusty/main ttf-dejavu-extra all 2.34-1ubuntu1 [3104 B]
+Get:4 http://archive.ubuntu.com/ubuntu/ trusty-updates/universe icedtea-6-jre-cacao amd64 6b32-1.13.4-4ubuntu0.14.04.1 [333 kB]
+Get:5 http://archive.ubuntu.com/ubuntu/ trusty-updates/universe icedtea-6-jre-jamvm amd64 6b32-1.13.4-4ubuntu0.14.04.1 [397 kB]
+Get:6 http://archive.ubuntu.com/ubuntu/ trusty-updates/universe openjdk-6-jre amd64 6b32-1.13.4-4ubuntu0.14.04.1 [190 kB]
+Get:7 http://archive.ubuntu.com/ubuntu/ trusty/main icedtea-netx-common all 1.5-1ubuntu1 [1137 kB]
+Get:8 http://archive.ubuntu.com/ubuntu/ trusty/main icedtea-netx amd64 1.5-1ubuntu1 [19.6 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin:
+Fetched 38.9 MB in 3s (10.3 MB/s)
+Selecting previously unselected package openjdk-6-jre-lib.
+(Reading database ... 55304 files and directories currently installed.)
+Preparing to unpack .../openjdk-6-jre-lib_6b32-1.13.4-4ubuntu0.14.04.1_all.deb ...
+Unpacking openjdk-6-jre-lib (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Selecting previously unselected package openjdk-6-jre-headless:amd64.
+Preparing to unpack .../openjdk-6-jre-headless_6b32-1.13.4-4ubuntu0.14.04.1_amd64.deb ...
+Unpacking openjdk-6-jre-headless:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Selecting previously unselected package ttf-dejavu-extra.
+Preparing to unpack .../ttf-dejavu-extra_2.34-1ubuntu1_all.deb ...
+Unpacking ttf-dejavu-extra (2.34-1ubuntu1) ...
+Selecting previously unselected package icedtea-6-jre-cacao:amd64.
+Preparing to unpack .../icedtea-6-jre-cacao_6b32-1.13.4-4ubuntu0.14.04.1_amd64.deb ...
+Unpacking icedtea-6-jre-cacao:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Selecting previously unselected package icedtea-6-jre-jamvm:amd64.
+Preparing to unpack .../icedtea-6-jre-jamvm_6b32-1.13.4-4ubuntu0.14.04.1_amd64.deb ...
+Unpacking icedtea-6-jre-jamvm:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Selecting previously unselected package openjdk-6-jre:amd64.
+Preparing to unpack .../openjdk-6-jre_6b32-1.13.4-4ubuntu0.14.04.1_amd64.deb ...
+Unpacking openjdk-6-jre:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Selecting previously unselected package icedtea-netx-common.
+Preparing to unpack .../icedtea-netx-common_1.5-1ubuntu1_all.deb ...
+Unpacking icedtea-netx-common (1.5-1ubuntu1) ...
+Selecting previously unselected package icedtea-netx:amd64.
+Preparing to unpack .../icedtea-netx_1.5-1ubuntu1_amd64.deb ...
+Unpacking icedtea-netx:amd64 (1.5-1ubuntu1) ...
+Processing triggers for fontconfig (2.11.0-0ubuntu4.1) ...
+Processing triggers for hicolor-icon-theme (0.13-1) ...
+Processing triggers for desktop-file-utils (0.22-1ubuntu1) ...
+Processing triggers for mime-support (3.54ubuntu1) ...
+Setting up ttf-dejavu-extra (2.34-1ubuntu1) ...
+Setting up icedtea-netx-common (1.5-1ubuntu1) ...
+Setting up icedtea-netx:amd64 (1.5-1ubuntu1) ...
+update-alternatives: using /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/javaws to provide /usr/bin/javaws (javaws) in auto mode
+update-alternatives: using /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/itweb-settings to provide /usr/bin/itweb-settings (itweb-settings) in auto mode
+update-alternatives: warning: not replacing /usr/share/man/man1/itweb-settings.1.gz with a link
+update-alternatives: using /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/javaws to provide /usr/bin/javaws (javaws) in auto mode
+update-alternatives: using /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/itweb-settings to provide /usr/bin/itweb-settings (itweb-settings) in auto mode
+update-alternatives: warning: not replacing /usr/share/man/man1/itweb-settings.1.gz with a link
+Setting up openjdk-6-jre-headless:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Setting up icedtea-6-jre-cacao:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Setting up icedtea-6-jre-jamvm:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Setting up openjdk-6-jre:amd64 (6b32-1.13.4-4ubuntu0.14.04.1) ...
+Setting up openjdk-6-jre-lib (6b32-1.13.4-4ubuntu0.14.04.1) ...
++ wget --retry-connrefused http://yar.fruct.org/attachments/download/362/plantuml_7707-1_all.deb
+--2014-08-29 19:41:42--  http://yar.fruct.org/attachments/download/362/plantuml_7707-1_all.deb
+Resolving yar.fruct.org (yar.fruct.org)... 193.233.51.235
+Connecting to yar.fruct.org (yar.fruct.org)|193.233.51.235|:80... connected.
+HTTP request sent, awaiting response... 302 Moved Temporarily
+Location: https://yar.fruct.org/attachments/download/362/plantuml_7707-1_all.deb [following]
+--2014-08-29 19:41:42--  https://yar.fruct.org/attachments/download/362/plantuml_7707-1_all.deb
+Connecting to yar.fruct.org (yar.fruct.org)|193.233.51.235|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/x-debian-package]
+Saving to: 'plantuml_7707-1_all.deb'
+
+     0K .......... .......... .......... .......... ..........  336K
+    50K .......... .......... .......... .......... ..........  365K
+   100K .......... .......... .......... .......... ..........  715K
+   150K .......... .......... .......... .......... .......... 5.86M
+   200K .......... .......... .......... .......... ..........  782K
+   250K .......... .......... .......... .......... .......... 5.24M
+   300K .......... .......... .......... .......... ..........  882K
+   350K .......... .......... .......... .......... .......... 2.97M
+   400K .......... .......... .......... .......... .......... 4.70M
+   450K .......... .......... .......... .......... .......... 2.35M
+   500K .......... .......... .......... .......... .......... 1.70M
+   550K .......... .......... .......... .......... .......... 5.32M
+   600K .......... .......... .......... .......... .......... 5.14M
+   650K .......... .......... .......... .......... .......... 2.08M
+   700K .......... .......... .......... .......... .......... 5.83M
+   750K .......... .......... .......... .......... .......... 2.41M
+   800K .......... .......... .......... .......... .......... 5.99M
+   850K .......... .......... .......... .......... .......... 5.33M
+   900K .......... .......... .......... .......... .......... 5.87M
+   950K .......... .......... .......... .......... .......... 5.39M
+  1000K .......... .......... .......... .......... .......... 4.23M
+  1050K .......... .......... .......... .......... .......... 5.10M
+  1100K .......... .......... .......... .......... .......... 3.62M
+  1150K .......... .......... .......... .......... .......... 6.25M
+  1200K .......... .......... .......... .......... .......... 5.76M
+  1250K .......... .......... .......... .......... .......... 5.15M
+  1300K .......... .......... .......... .......... .......... 5.97M
+  1350K .......... .......... .......... .......... .......... 4.34M
+  1400K .......... .......... .......... .......... .......... 6.26M
+  1450K .......... .......... .......... .......... .......... 4.31M
+  1500K .......... .......... .......... .......... .......... 4.95M
+  1550K .......... .......... .......... .......... .......... 5.48M
+  1600K ....                   23.9M=0.8s
+
+2014-08-29 19:41:43 (1.97 MB/s) - 'plantuml_7707-1_all.deb' saved [1643096]
+
++ sudo dpkg -i plantuml_7707-1_all.deb
+Selecting previously unselected package plantuml.
+(Reading database ... 55659 files and directories currently installed.)
+Preparing to unpack plantuml_7707-1_all.deb ...
+Unpacking plantuml (7707-1) ...
+Setting up plantuml (7707-1) ...
++ wget --retry-connrefused https://oss.sonatype.org/content/repositories/releases/net/sourceforge/plantuml/plantuml/8000/plantuml-8000.jar
+--2014-08-29 19:41:44--  https://oss.sonatype.org/content/repositories/releases/net/sourceforge/plantuml/plantuml/8000/plantuml-8000.jar
+Resolving oss.sonatype.org (oss.sonatype.org)... 207.223.241.93
+Connecting to oss.sonatype.org (oss.sonatype.org)|207.223.241.93|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2689628 (2.6M) [application/java-archive]
+Saving to: 'plantuml-8000.jar'
+
+     0K .......... .......... .......... .......... ..........  1%  147K 18s
+    50K .......... .......... .......... .......... ..........  3%  438K 11s
+   100K .......... .......... .......... .......... ..........  5%  439K 9s
+   150K .......... .......... .......... .......... ..........  7%  445K 8s
+   200K .......... .......... .......... .......... ..........  9% 10.1M 7s
+   250K .......... .......... .......... .......... .......... 11%  444K 6s
+   300K .......... .......... .......... .......... .......... 13% 4.74M 5s
+   350K .......... .......... .......... .......... .......... 15%  482K 5s
+   400K .......... .......... .......... .......... .......... 17% 4.77M 4s
+   450K .......... .......... .......... .......... .......... 19%  497K 4s
+   500K .......... .......... .......... .......... .......... 20% 7.70M 4s
+   550K .......... .......... .......... .......... .......... 22% 2.88M 4s
+   600K .......... .......... .......... .......... .......... 24% 1.41M 3s
+   650K .......... .......... .......... .......... .......... 26%  794K 3s
+   700K .......... .......... .......... .......... .......... 28% 10.7M 3s
+   750K .......... .......... .......... .......... .......... 30% 3.86M 3s
+   800K .......... .......... .......... .......... .......... 32% 1.41M 2s
+   850K .......... .......... .......... .......... .......... 34%  820K 2s
+   900K .......... .......... .......... .......... .......... 36% 8.16M 2s
+   950K .......... .......... .......... .......... .......... 38% 12.5M 2s
+  1000K .......... .......... .......... .......... .......... 39% 4.59M 2s
+  1050K .......... .......... .......... .......... .......... 41% 1.50M 2s
+  1100K .......... .......... .......... .......... .......... 43%  907K 2s
+  1150K .......... .......... .......... .......... .......... 45% 4.13M 2s
+  1200K .......... .......... .......... .......... .......... 47% 16.9M 2s
+  1250K .......... .......... .......... .......... .......... 49% 12.1M 1s
+  1300K .......... .......... .......... .......... .......... 51% 7.04M 1s
+  1350K .......... .......... .......... .......... .......... 53% 1.65M 1s
+  1400K .......... .......... .......... .......... .......... 55%  878K 1s
+  1450K .......... .......... .......... .......... .......... 57% 12.6M 1s
+  1500K .......... .......... .......... .......... .......... 59% 7.93M 1s
+  1550K .......... .......... .......... .......... .......... 60% 11.3M 1s
+  1600K .......... .......... .......... .......... .......... 62% 6.75M 1s
+  1650K .......... .......... .......... .......... .......... 64% 6.86M 1s
+  1700K .......... .......... .......... .......... .......... 66%  592K 1s
+  1750K .......... .......... .......... .......... .......... 68% 6.92M 1s
+  1800K .......... .......... .......... .......... .......... 70% 7.97M 1s
+  1850K .......... .......... .......... .......... .......... 72% 12.1M 1s
+  1900K .......... .......... .......... .......... .......... 74% 12.3M 1s
+  1950K .......... .......... .......... .......... .......... 76% 12.4M 1s
+  2000K .......... .......... .......... .......... .......... 78% 11.7M 0s
+  2050K .......... .......... .......... .......... .......... 79% 11.8M 0s
+  2100K .......... .......... .......... .......... .......... 81% 1.82M 0s
+  2150K .......... .......... .......... .......... .......... 83% 13.1M 0s
+  2200K .......... .......... .......... .......... .......... 85%  881K 0s
+  2250K .......... .......... .......... .......... .......... 87% 7.93M 0s
+  2300K .......... .......... .......... .......... .......... 89% 12.1M 0s
+  2350K .......... .......... .......... .......... .......... 91% 12.9M 0s
+  2400K .......... .......... .......... .......... .......... 93% 10.3M 0s
+  2450K .......... .......... .......... .......... .......... 95% 14.0M 0s
+  2500K .......... .......... .......... .......... .......... 97% 12.7M 0s
+  2550K .......... .......... .......... .......... .......... 98% 12.7M 0s
+  2600K .......... .......... ......            100% 12.3M=1.7s
+
+2014-08-29 19:41:46 (1.47 MB/s) - 'plantuml-8000.jar' saved [2689628/2689628]
+
++ sudo mv plantuml-8000.jar /usr/share/plantuml/plantuml.jar
++ sudo gem install pdd
+Successfully installed pdd-0.5.2
+1 gem installed
+Installing ri documentation for pdd-0.5.2...
+Installing RDoc documentation for pdd-0.5.2...
++ sudo bundle install
+Don't run Bundler as root. Bundler can ask for sudo if it is needed, and
+installing your bundle as root will break this application for all non-root
+users on this machine.
+Fetching gem metadata from https://rubygems.org/........
+Resolving dependencies...
+Using blankslate 2.1.2.4
+Using timers 1.1.0
+Using celluloid 0.15.2
+Using fast-stemmer 1.0.2
+Using classifier-reborn 2.0.1
+Using coffee-script-source 1.8.0
+Using execjs 2.2.1
+Using coffee-script 2.3.0
+Using colorator 0.1
+Using csspool-st 3.1.2
+Using json 1.8.1
+Using css_press 0.3.2
+Using ffi 1.9.3
+Using htmlentities 4.3.2
+Using multi_css 0.1.0
+Using uglifier 2.5.3
+Using multi_js 0.1.0
+Using html_press 0.8.2
+Using jekyll-coffeescript 1.0.0
+Using jekyll-gist 1.1.0
+Using jekyll-paginate 1.0.0
+Using sass 3.4.2
+Using jekyll-sass-converter 1.2.0
+Using rb-fsevent 0.9.4
+Using rb-inotify 0.9.5
+Using listen 2.7.9
+Using jekyll-watch 1.1.0
+Using kramdown 1.4.1
+Using liquid 2.6.1
+Using mercenary 0.3.4
+Using posix-spawn 0.3.9
+Using yajl-ruby 1.1.0
+Using pygments.rb 0.6.0
+Using redcarpet 3.1.2
+Using safe_yaml 1.0.3
+Using parslet 1.5.0
+Using toml 0.1.1
+Using jekyll 2.3.0
+Using jekyll-plantuml 1.0.2
+Using jekyll-press 0.2.1
+Using jekyll-sass 1.2.2
+Using trollop 2.0
+Using jgd 1.5.2
+Using mime-types 2.3
+Using mail 2.6.1
+Using mini_portile 0.6.0
+Using nokogiri 1.6.3.1
+Using uuidtools 2.1.5
+Using bundler 1.6.3
+Your bundle is complete!
+Use `bundle show [gemname]` to see where a bundled gem is installed.
++ mvn versions:set -DnewVersion=0.1.1
+[INFO] Scanning for projects...
+Downloading: https://oss.sonatype.org/content/groups/public/com/github/github/site-maven-plugin/0.9/site-maven-plugin-0.9.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/com/github/github/site-maven-plugin/0.9/site-maven-plugin-0.9.jar (17 KB at 10.1 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-deploy-plugin/2.8.1/maven-deploy-plugin-2.8.1.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.8.1/maven-deploy-plugin-2.8.1.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.8.1/maven-deploy-plugin-2.8.1.pom (8 KB at 100.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-deploy-plugin/2.8.1/maven-deploy-plugin-2.8.1.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.8.1/maven-deploy-plugin-2.8.1.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.8.1/maven-deploy-plugin-2.8.1.jar (34 KB at 1002.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-mysql-maven-plugin/0.8.1/jcabi-mysql-maven-plugin-0.8.1.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-mysql-maven-plugin/0.8.1/jcabi-mysql-maven-plugin-0.8.1.pom (13 KB at 12.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-mysql-maven-plugin/0.8.1/jcabi-mysql-maven-plugin-0.8.1.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-mysql-maven-plugin/0.8.1/jcabi-mysql-maven-plugin-0.8.1.jar (32 KB at 79.1 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-ssl-maven-plugin/0.9/jcabi-ssl-maven-plugin-0.9.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-ssl-maven-plugin/0.9/jcabi-ssl-maven-plugin-0.9.pom (10 KB at 33.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-ssl-maven-plugin/0.9/jcabi-ssl-maven-plugin-0.9.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-ssl-maven-plugin/0.9/jcabi-ssl-maven-plugin-0.9.jar (28 KB at 71.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-heroku-maven-plugin/0.9/jcabi-heroku-maven-plugin-0.9.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-heroku-maven-plugin/0.9/jcabi-heroku-maven-plugin-0.9.pom (11 KB at 39.4 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-heroku-maven-plugin/0.9/jcabi-heroku-maven-plugin-0.9.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-heroku-maven-plugin/0.9/jcabi-heroku-maven-plugin-0.9.jar (28 KB at 70.1 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-beanstalk-maven-plugin/0.10/jcabi-beanstalk-maven-plugin-0.10.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-beanstalk-maven-plugin/0.10/jcabi-beanstalk-maven-plugin-0.10.pom (10 KB at 32.6 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-beanstalk-maven-plugin/0.10/jcabi-beanstalk-maven-plugin-0.10.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-beanstalk-maven-plugin/0.10/jcabi-beanstalk-maven-plugin-0.10.jar (67 KB at 150.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-antrun-plugin/1.7/maven-antrun-plugin-1.7.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-antrun-plugin/1.7/maven-antrun-plugin-1.7.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-antrun-plugin/1.7/maven-antrun-plugin-1.7.pom (5 KB at 175.1 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-antrun-plugin/1.7/maven-antrun-plugin-1.7.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-antrun-plugin/1.7/maven-antrun-plugin-1.7.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-antrun-plugin/1.7/maven-antrun-plugin-1.7.jar (31 KB at 1064.2 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-assembly-plugin/2.4.1/maven-assembly-plugin-2.4.1.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/2.4.1/maven-assembly-plugin-2.4.1.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/2.4.1/maven-assembly-plugin-2.4.1.pom (17 KB at 629.5 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-assembly-plugin/2.4.1/maven-assembly-plugin-2.4.1.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/2.4.1/maven-assembly-plugin-2.4.1.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/2.4.1/maven-assembly-plugin-2.4.1.jar (212 KB at 3409.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-changes-plugin/2.10/maven-changes-plugin-2.10.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-changes-plugin/2.10/maven-changes-plugin-2.10.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-changes-plugin/2.10/maven-changes-plugin-2.10.pom (20 KB at 771.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-changes-plugin/2.10/maven-changes-plugin-2.10.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-changes-plugin/2.10/maven-changes-plugin-2.10.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-changes-plugin/2.10/maven-changes-plugin-2.10.jar (209 KB at 4841.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-help-plugin/2.2/maven-help-plugin-2.2.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/2.2/maven-help-plugin-2.2.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/2.2/maven-help-plugin-2.2.pom (9 KB at 354.9 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-help-plugin/2.2/maven-help-plugin-2.2.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/2.2/maven-help-plugin-2.2.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/2.2/maven-help-plugin-2.2.jar (67 KB at 2283.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-invoker-plugin/1.9/maven-invoker-plugin-1.9.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-invoker-plugin/1.9/maven-invoker-plugin-1.9.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-invoker-plugin/1.9/maven-invoker-plugin-1.9.pom (11 KB at 409.3 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-invoker-plugin/1.9/maven-invoker-plugin-1.9.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-invoker-plugin/1.9/maven-invoker-plugin-1.9.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-invoker-plugin/1.9/maven-invoker-plugin-1.9.jar (100 KB at 3321.9 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-jar-plugin/2.5/maven-jar-plugin-2.5.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-jar-plugin/2.5/maven-jar-plugin-2.5.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-jar-plugin/2.5/maven-jar-plugin-2.5.pom (8 KB at 342.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-jar-plugin/2.5/maven-jar-plugin-2.5.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-jar-plugin/2.5/maven-jar-plugin-2.5.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-jar-plugin/2.5/maven-jar-plugin-2.5.jar (25 KB at 1012.2 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-release-plugin/2.5/maven-release-plugin-2.5.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-release-plugin/2.5/maven-release-plugin-2.5.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-release-plugin/2.5/maven-release-plugin-2.5.pom (11 KB at 447.0 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/release/maven-release/2.5/maven-release-2.5.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/release/maven-release/2.5/maven-release-2.5.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/release/maven-release/2.5/maven-release-2.5.pom (5 KB at 189.3 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-release-plugin/2.5/maven-release-plugin-2.5.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-release-plugin/2.5/maven-release-plugin-2.5.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-release-plugin/2.5/maven-release-plugin-2.5.jar (50 KB at 1894.2 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-source-plugin/2.3/maven-source-plugin-2.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin/2.3/maven-source-plugin-2.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin/2.3/maven-source-plugin-2.3.pom (7 KB at 240.3 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-source-plugin/2.3/maven-source-plugin-2.3.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin/2.3/maven-source-plugin-2.3.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin/2.3/maven-source-plugin-2.3.jar (31 KB at 1275.1 KB/sec)
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building thindeck 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- versions-maven-plugin:2.1:set (default-cli) @ thindeck ---
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/doxia/doxia-site-renderer/1.1/doxia-site-renderer-1.1.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-site-renderer/1.1/doxia-site-renderer-1.1.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-site-renderer/1.1/doxia-site-renderer-1.1.jar (47 KB at 1801.0 KB/sec)
+[INFO] Searching for local aggregator root...
+[INFO] Local aggregation root: /home/r/repo
+[INFO] Processing com.thindeck:thindeck
+[INFO]     Updating project com.thindeck:thindeck
+[INFO]         from version 1.0-SNAPSHOT to 0.1.1
+Props: {project.version=0.1.1, project.parent.version=0.28, project.parent.groupId=com.jcabi, project.artifactId=thindeck, project.groupId=com.thindeck, project.parent.artifactId=parent}
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 24.108 s
+[INFO] Finished at: 2014-08-29T19:42:43+00:00
+[INFO] Final Memory: 20M/239M
+[INFO] ------------------------------------------------------------------------
++ git commit -am 0.1.1
+[__rultor-tmp 61a8513] 0.1.1
+ 1 file changed, 1 insertion(+), 1 deletion(-)
++ mvn clean deploy -Pqulice -Pthindeck --errors --settings ../settings.xml
+[INFO] Error stacktraces are turned on.
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building thindeck 0.1.1
+[INFO] ------------------------------------------------------------------------
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/sun/tools/jxc/maven2/maven-jaxb-schemagen-plugin/maven-metadata.xml
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.pom (7 KB at 35.6 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/1.5/maven-gpg-plugin-1.5.jar (44 KB at 381.8 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/bees-maven-plugin/1.3.2/bees-maven-plugin-1.3.2.pom
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/bees-maven-plugin/1.3.2/bees-maven-plugin-1.3.2.pom (5 KB at 13.1 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/bees-maven-plugin/1.3.2/bees-maven-plugin-1.3.2.jar
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/bees-maven-plugin/1.3.2/bees-maven-plugin-1.3.2.jar (28 KB at 79.3 KB/sec)
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ thindeck ---
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create (jcabi-build-number) @ thindeck ---
+[INFO] ShortRevision tag detected. The value is '7'.
+[INFO] Executing: /bin/sh -c cd /home/r/repo && git rev-parse --verify --short=7 HEAD
+[INFO] Working directory: /home/r/repo
+[INFO] Storing buildNumber: 61a8513 at timestamp: 2014-08-29T19:42:55
+[INFO] Storing buildScmBranch: __rultor-tmp
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create-timestamp (jcabi-build-number) @ thindeck ---
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 4 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ thindeck ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 39 source files to /home/r/repo/target/classes
+[INFO]
+[INFO] --- requs-maven-plugin:1.14:compile (default) @ thindeck ---
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/requs/requs-core/1.14/requs-core-1.14.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/requs/requs-core/1.14/requs-core-1.14.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/org/requs/requs-core/1.14/requs-core-1.14.pom (10 KB at 10.6 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/requs/requs-core/1.14/requs-core-1.14.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/requs/requs-core/1.14/requs-core-1.14.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/org/requs/requs-core/1.14/requs-core-1.14.jar (201 KB at 209.2 KB/sec)
+log4j:WARN No appenders could be found for logger (org.jboss.logging).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+[ERROR] JSR-303 validator failed to initialize: Unable to instantiate Configuration. (see http://www.jcabi.com/jcabi-aspects/jsr-303.html)
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
+[INFO] output directory "/home/r/repo/target/requs" created
+[INFO] #load(): 61 attribs loaded from 86 URL(s) in 42ms: ["Ant-Version", "Archiver-Version", "Bnd-LastModified", "Build-Jdk", "Build-Timestamp", "Built-By", "Bundle-ActivationPolicy", "Bundle-Activator", "Bundle-Copyright", "Bundle-Description", "Bundle-DocURL", "Bundle-License", "Bundle-ManifestVersion", "Bundle-Name", "Bundle-RequiredExecutionEnvironment", "Bundle-SymbolicName", "Bundle-Vendor", "Bundle-Version", "Created-By", "DynamicImport-Package", "Eclipse-ExtensibleAPI", "Export-Package", "Extension-Name", "Fragment-Host", "Ignore-Package", "Implementation-Build", "Implementation-Title", "Implementation-URL", "Implementation-Vendor", "Implementation-Vendor-Id", "Implementation-Version", "Import-Package", "Include-Resource", "JCabi-Build", "JCabi-Date", "JCabi-Version", "Java-Vendor", "Java-Version", "Main-Class", "Manifest-Version", "Originally-Created-By", "Os-Arch", "Os-Name", "Os-Version", "Package", "Private-Package", "Project-Name", "Require-Bundle", "Requs-Date", "Requs-Revision", "Requs-Version", "Scm-Connection", "Scm-Revision", "Scm-Url", "Specification-Title", "Specification-Vendor", "Specification-Version", "Tool", "X-Compile-Source-JDK", "X-Compile-Target-JDK", "url"]
+[INFO] source file: /home/r/repo/src/main/requs/acronyms.req
+[INFO] source file: /home/r/repo/src/main/requs/anonymous.req
+[INFO] source file: /home/r/repo/src/main/requs/main.req
+[INFO] source file: /home/r/repo/src/main/requs/nfrs.req
+[INFO] source file: /home/r/repo/src/main/requs/vision.req
+[INFO] XeFacet.Wrap(origin=Aggregate()) done
+[INFO] XeFacet.Wrap(origin=AntlrFacet()) done
+[INFO] Transform(cleanup/duplicate-step-numbers.xsl) done
+[INFO] Transform(cleanup/duplicate-step-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-step-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-step-results.xsl) done
+[INFO] Transform(cleanup/lost-steps.xsl) done
+[INFO] Transform(cleanup/lost-methods.xsl) done
+[INFO] Transform(cleanup/duplicate-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-method-bindings.xsl) done
+[INFO] Transform(cleanup/incomplete-step-object.xsl) done
+[INFO] Transform(cleanup/incomplete-step-signature.xsl) done
+[INFO] Transform(cleanup/incomplete-step-result.xsl) done
+[INFO] Transform(cleanup/incomplete-binding.xsl) done
+[INFO] Transform(cleanup/bindings-in-exception.xsl) done
+[INFO] Transform(seal-methods.xsl) done
+[INFO] Transform(sanity/signatures-check.xsl) done
+[INFO] Transform(sanity/types-check.xsl) done
+[INFO] Transform(sanity/seals-check.xsl) done
+[INFO] Transform(sanity/exception-rethrow-check.xsl) done
+[INFO] Transform(sanity/misplaced-failure-check.xsl) done
+[INFO] Transform(sanity/broken-order-of-steps.xsl) done
+[INFO] Transform(sanity/missed-step-numbers.xsl) done
+[INFO] Transform(sanity/too-many-steps.xsl) done
+[INFO] Transform(sanity/empty-re-throws.xsl) done
+[INFO] Transform(sanity/orphan-types.xsl) done
+[INFO] Transform(sanity/undeclared-bindings.xsl) done
+[INFO] Transform(sanity/actor-is-singleton.xsl) done
+[INFO] Transform(step-refs.xsl) done
+[INFO] Transform(methods-in-markdown.xsl) done
+[INFO] Transform(pages-in-html.xsl) done
+[INFO] Transform(count-ambiguity.xsl) done
+[INFO] Transform(find-tbds.xsl) done
+[INFO] Transform(uml/sequence-diagrams.xsl) done
+[INFO] Transform(uml/use-case-diagrams.xsl) done
+[INFO] Transform(uml/class-diagrams.xsl) done
+[INFO] XeFacet.Wrap(origin=Rules()) done
+[INFO] XeFacet.Wrap(origin=XeFacet.Fixed()) done
+[INFO] Transform(renumber.xsl) done
+[INFO] XeFacet.Wrap(origin=org.requs.Compiler$1@5b7f242d) done
+[INFO] compiled and saved to /home/r/repo/target/requs
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-compile) @ thindeck ---
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
+[INFO] Created temp dir /home/r/repo/target/jcabi-ajc
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-cacheable for automated cleaning of expired @Cacheable values
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 48 file(s) processed, 35 pointcut(s) woven, 0 error(s), 10 warning(s)
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- build-helper-maven-plugin:1.8:reserve-network-port (tomcat-port) @ thindeck ---
+[INFO] Reserved port 44121 for tomcat.port
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ thindeck ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/r/repo/target/test-classes
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-test-compile) @ thindeck ---
+[INFO] Created temp dir /home/r/repo/target/jcabi-ajc-test
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodScheduler has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ImmutabilityChecker has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 2 file(s) processed, 0 pointcut(s) woven, 0 error(s), 12 warning(s)
+[INFO]
+[INFO] --- maven-surefire-plugin:2.17:test (default-test) @ thindeck ---
+[INFO] Surefire report directory: /home/r/repo/target/surefire-reports
+[INFO] parallel='all', perCoreThreadCount=true, threadCount=4, useUnlimitedThreads=false, threadCountSuites=0, threadCountClasses=0, threadCountMethods=0, parallelOptimized=true
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.thindeck.steps.SwapTest
+[0;37mINFOm] com.thindeck.api.mock.MkMemo: memo saved to /tmp/thindeck-1192481874093106669.xml (410 bytes)
+[0;37mINFOm] com.thindeck.api.mock.MkMemo: memo saved to /tmp/thindeck-1192481874093106669.xml (409 bytes)
+[0;37mINFOm] com.thindeck.api.mock.MkContext: swapped blue vs green containers
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.882 sec - in com.thindeck.steps.SwapTest
+Running com.thindeck.steps.FindTanksTest
+[0;37mINFOm] com.thindeck.api.mock.MkMemo: memo saved to /tmp/thindeck-1392797989584444081.xml (111 bytes)
+[0;37mINFOm] com.thindeck.api.mock.MkContext: one tank t1.thindeck.com found
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.802 sec - in com.thindeck.steps.FindTanksTest
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:versionalize (jcabi-versionalize-packages) @ thindeck ---
+[INFO] Versionalizing /home/r/repo/target/classes directory
+log4j:WARN No appenders could be found for logger (org.jboss.logging).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+[ERROR] JSR-303 validator failed to initialize: Unable to instantiate Configuration. (see http://www.jcabi.com/jcabi-aspects/jsr-303.html)
+[INFO] File /home/r/repo/target/classes/com/thindeck/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/scenarios/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/life/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/steps/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/cockpit/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/api/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/api/mock/com-thindeck-thindeck-war.txt added
+[INFO]
+[INFO] --- maven-war-plugin:2.4:war (default-war) @ thindeck ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [thindeck] in [/home/r/repo/target/thindeck-0.1.1]
+[INFO] Processing war project
+[INFO] Copying webapp resources [/home/r/repo/src/main/webapp]
+[INFO] Webapp assembled in [165 msecs]
+[INFO] Building war: /home/r/repo/target/thindeck-0.1.1.war
+[INFO]
+[INFO] --- phantomjs-maven-plugin:0.4:install (default) @ thindeck ---
+[INFO] Resolved artifact /home/r/.m2/repository/com/github/klieber/phantomjs/1.9.2/phantomjs-1.9.2-linux-x86_64.tar.bz2 from oss.sonatype.org (https://oss.sonatype.org/content/groups/public, releases+snapshots)
+[INFO] Extracting /home/r/.m2/repository/com/github/klieber/phantomjs/1.9.2/phantomjs-1.9.2-linux-x86_64.tar.bz2/phantomjs-1.9.2-linux-x86_64/bin/phantomjs to /home/r/repo/target/phantomjs-maven-plugin/phantomjs-1.9.2-linux-x86_64/bin/phantomjs
+[INFO]
+[INFO] --- exec-maven-plugin:1.3:exec (casperjs-install) @ thindeck ---
+Cloning into '/home/r/repo/target/casperjs'...
+[INFO]
+[INFO] --- tomcat7-maven-plugin:2.2:run-war-only (start-tomcat) @ thindeck ---
+[INFO] Running war on http://localhost:44121/
+[INFO] Creating Tomcat server configuration at /home/r/repo/target/tomcat
+[INFO] setting SystemProperties:
+[INFO]  log4j.configuration=file:/home/r/repo/src/test/resources/log4j.properties
+[INFO] create webapp with contextPath:
+Aug 29, 2014 7:43:34 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-44121"]
+Aug 29, 2014 7:43:35 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Tomcat
+Aug 29, 2014 7:43:35 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.47
+Aug 29, 2014 7:43:35 PM org.apache.catalina.loader.WebappClassLoader validateJarFile
+INFO: validateJarFile(/home/r/repo/target/thindeck-0.1.1/WEB-INF/lib/javax.el-api-3.0.1-b04.jar) - jar not loaded. See Servlet Spec 2.3, section 9.7.2. Offending class: javax/el/Expression.class
+[0;33mWARNm] com.jcabi.manifests.ServletMfs: MANIFEST.MF not found in WAR package
+[0;37mINFOm] com.thindeck.life.RoutineTxns: scheduled for execution with 1 MINUTES interval
+[0;37mINFOm] com.thindeck.life.Lifecycle: #contextInitialized(javax.servlet.ServletContextEvent[source=org.apach..0..alina.core.ApplicationContextFacade@6239c529]): in 72ms
+[0;31mERRORm] com.jcabi.aspects.aj.MethodValidator: JSR-303 validator failed to initialize: Unable to create a Configuration, because no Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath. (see http://aspects.jcabi.com/jsr-303.html)
+[0;33mWARNm] com.jcabi.manifests.ServletMfs: MANIFEST.MF not found in WAR package
+Aug 29, 2014 7:43:38 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-44121"]
+[INFO]
+[INFO] --- exec-maven-plugin:1.3:exec (casperjs-test) @ thindeck ---
+[0;33mWARNm] com.sun.jersey.spi.inject.Errors: The following warnings have been detected with resource and/or provider classes:
+  WARNING: A sub-resource method, public javax.ws.rs.core.Response com.thindeck.cockpit.IndexRs.front(), with URI template, "/", is treated as a resource method
+  WARNING: A sub-resource method, public javax.ws.rs.core.Response com.thindeck.cockpit.ReposRs.front(), with URI template, "/", is treated as a resource method
+  WARNING: A sub-resource method, public javax.ws.rs.core.Response com.thindeck.cockpit.RepoRs.front() throws java.io.IOException, with URI template, "/", is treated as a resource method
+Test file: /home/r/repo/src/test/casperjs/all-pages-are-renderable.js
+PASS / page can be rendered (NaN test)
+PASS /xsl/layout.xsl page can be rendered (NaN test)
+PASS /robots.txt page can be rendered (NaN test)
+PASS /repos page can be rendered (NaN test)
+PASS /r/fake-repo page can be rendered (NaN test)
+PASS /t/fake-repo/1/log page can be rendered (NaN test)
+PASS 6 tests executed in 3.136s, 6 passed, 0 failed, 0 dubious, 0 skipped.
+[INFO]
+[INFO] --- tomcat7-maven-plugin:2.2:shutdown (stop-tomcat) @ thindeck ---
+[0;37mINFOm] com.thindeck.life.RoutineTxns: execution stopped after 5s and 0 tick(s)
+[0;37mINFOm] com.thindeck.life.RoutineTxns: #close(): in 28?s
+[0;37mINFOm] com.thindeck.life.Lifecycle: #contextDestroyed(javax.servlet.ServletContextEvent[source=org.apach..0..alina.core.ApplicationContextFacade@6239c529]): in 2ms
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] appears to have started a thread named [jcabi-cacheable] but has failed to stop it. This is very likely to create a memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl@46f9bba8]) and a value of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl.Counter] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl$Counter@358f36ff]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl@46f9bba8]) and a value of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl.Counter] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl$Counter@381a367a]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [com.sun.xml.bind.v2.ClassFactory$1] (value [com.sun.xml.bind.v2.ClassFactory$1@66c4f82]) and a value of type [java.util.WeakHashMap] (value [{class javax.xml.bind.annotation.W3CDomHandler=java.lang.ref.WeakReference@19548cd0}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl@46f9bba8]) and a value of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl.Counter] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl$Counter@7de8b8ad]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [com.sun.xml.bind.v2.ClassFactory$1] (value [com.sun.xml.bind.v2.ClassFactory$1@66c4f82]) and a value of type [java.util.WeakHashMap] (value [{class javax.xml.bind.annotation.W3CDomHandler=java.lang.ref.WeakReference@39b4a66f}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl@46f9bba8]) and a value of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl.Counter] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl$Counter@31adf02]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [com.sun.xml.bind.v2.ClassFactory$1] (value [com.sun.xml.bind.v2.ClassFactory$1@66c4f82]) and a value of type [java.util.WeakHashMap] (value [{class javax.xml.bind.annotation.W3CDomHandler=java.lang.ref.WeakReference@5926fde5}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[0;31mERRORm] org.apache.catalina.loader.WebappClassLoader: The web application [] created a ThreadLocal with key of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl@46f9bba8]) and a value of type [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl.ThreadCounterImpl.Counter] (value [org.aspectj.runtime.internal.cflowstack.ThreadStackFactoryImpl$ThreadCounterImpl$Counter@ee6f31d]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+[INFO]
+[INFO] --- qulice-maven-plugin:0.10:check (jcabi-check) @ thindeck ---
+[INFO] LICENSE found: file:/home/r/repo/LICENSE.txt
+[INFO] No Checkstyle violations found in 72 files
+[INFO] No PMD violations found in 42 files
+[INFO] /src/site/site.xml: to be validated
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
+[ERROR] JSR-303 validator failed to initialize: Unable to create a Configuration, because no Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath. (see http://www.jcabi.com/jcabi-aspects/jsr-303.html)
+[INFO] /src/main/webapp/WEB-INF/web.xml: skipped
+[INFO] CodeNarc not required since no groovy files in /home/r/repo/src
+[INFO] Calling org.apache.maven.plugins:maven-enforcer-plugin:1.0-beta-1:enforce...
+[INFO] Calling org.codehaus.mojo:cobertura-maven-plugin:2.5.1:check...
+[INFO] Cannot perform check, instrumentation not performed - skipping.
+[INFO] This is not an SVN project
+[INFO] No dependency problems found
+[INFO] Calling org.codehaus.mojo:jslint-maven-plugin:1.0.1:jslint...
+[INFO] Qulice quality check completed in 14s
+[INFO]
+[INFO] --- maven-gpg-plugin:1.5:sign (jcabi-sign-artifacts) @ thindeck ---
+gpg: WARNING: unsafe permissions on homedir `/home/r'
+gpg: WARNING: unsafe permissions on homedir `/home/r'
+[INFO]
+[INFO] --- maven-install-plugin:2.5.1:install (default-install) @ thindeck ---
+[INFO] Installing /home/r/repo/target/thindeck-0.1.1.war to /home/r/.m2/repository/com/thindeck/thindeck/0.1.1/thindeck-0.1.1.war
+[INFO] Installing /home/r/repo/pom.xml to /home/r/.m2/repository/com/thindeck/thindeck/0.1.1/thindeck-0.1.1.pom
+[INFO] Installing /home/r/repo/target/thindeck-0.1.1.war.asc to /home/r/.m2/repository/com/thindeck/thindeck/0.1.1/thindeck-0.1.1.war.asc
+[INFO] Installing /home/r/repo/target/thindeck-0.1.1.pom.asc to /home/r/.m2/repository/com/thindeck/thindeck/0.1.1/thindeck-0.1.1.pom.asc
+[INFO]
+[INFO] --- maven-deploy-plugin:2.8.1:deploy (default-deploy) @ thindeck ---
+[INFO] Skipping artifact deployment
+[INFO]
+[INFO] >>> bees-maven-plugin:1.3.2:deploy (deploy-to-production) > package @ thindeck >>>
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create (jcabi-build-number) @ thindeck ---
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create-timestamp (jcabi-build-number) @ thindeck ---
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 4 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ thindeck ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 39 source files to /home/r/repo/target/classes
+[INFO]
+[INFO] --- requs-maven-plugin:1.14:compile (default) @ thindeck ---
+[INFO] source file: /home/r/repo/src/main/requs/acronyms.req
+[INFO] source file: /home/r/repo/src/main/requs/anonymous.req
+[INFO] source file: /home/r/repo/src/main/requs/main.req
+[INFO] source file: /home/r/repo/src/main/requs/nfrs.req
+[INFO] source file: /home/r/repo/src/main/requs/vision.req
+[INFO] XeFacet.Wrap(origin=Aggregate()) done
+[INFO] XeFacet.Wrap(origin=AntlrFacet()) done
+[INFO] Transform(cleanup/duplicate-step-numbers.xsl) done
+[INFO] Transform(cleanup/duplicate-step-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-step-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-step-results.xsl) done
+[INFO] Transform(cleanup/lost-steps.xsl) done
+[INFO] Transform(cleanup/lost-methods.xsl) done
+[INFO] Transform(cleanup/duplicate-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-method-bindings.xsl) done
+[INFO] Transform(cleanup/incomplete-step-object.xsl) done
+[INFO] Transform(cleanup/incomplete-step-signature.xsl) done
+[INFO] Transform(cleanup/incomplete-step-result.xsl) done
+[INFO] Transform(cleanup/incomplete-binding.xsl) done
+[INFO] Transform(cleanup/bindings-in-exception.xsl) done
+[INFO] Transform(seal-methods.xsl) done
+[INFO] Transform(sanity/signatures-check.xsl) done
+[INFO] Transform(sanity/types-check.xsl) done
+[INFO] Transform(sanity/seals-check.xsl) done
+[INFO] Transform(sanity/exception-rethrow-check.xsl) done
+[INFO] Transform(sanity/misplaced-failure-check.xsl) done
+[INFO] Transform(sanity/broken-order-of-steps.xsl) done
+[INFO] Transform(sanity/missed-step-numbers.xsl) done
+[INFO] Transform(sanity/too-many-steps.xsl) done
+[INFO] Transform(sanity/empty-re-throws.xsl) done
+[INFO] Transform(sanity/orphan-types.xsl) done
+[INFO] Transform(sanity/undeclared-bindings.xsl) done
+[INFO] Transform(sanity/actor-is-singleton.xsl) done
+[INFO] Transform(step-refs.xsl) done
+[INFO] Transform(methods-in-markdown.xsl) done
+[INFO] Transform(pages-in-html.xsl) done
+[INFO] Transform(count-ambiguity.xsl) done
+[INFO] Transform(find-tbds.xsl) done
+[INFO] Transform(uml/sequence-diagrams.xsl) done
+[INFO] Transform(uml/use-case-diagrams.xsl) done
+[INFO] Transform(uml/class-diagrams.xsl) done
+[INFO] XeFacet.Wrap(origin=Rules()) done
+[INFO] XeFacet.Wrap(origin=XeFacet.Fixed()) done
+[INFO] Transform(renumber.xsl) done
+[INFO] XeFacet.Wrap(origin=org.requs.Compiler$1@1886d547) done
+[INFO] compiled and saved to /home/r/repo/target/requs
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-compile) @ thindeck ---
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 48 file(s) processed, 35 pointcut(s) woven, 0 error(s), 10 warning(s)
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- build-helper-maven-plugin:1.8:reserve-network-port (tomcat-port) @ thindeck ---
+[INFO] Reserved port 56864 for tomcat.port
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ thindeck ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-test-compile) @ thindeck ---
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodScheduler has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ImmutabilityChecker has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 2 file(s) processed, 0 pointcut(s) woven, 0 error(s), 12 warning(s)
+[INFO]
+[INFO] --- maven-surefire-plugin:2.17:test (default-test) @ thindeck ---
+[INFO] Skipping execution of surefire because it has already been run for this configuration
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:versionalize (jcabi-versionalize-packages) @ thindeck ---
+[INFO] Versionalizing /home/r/repo/target/classes directory
+[INFO] File /home/r/repo/target/classes/com/thindeck/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/scenarios/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/life/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/steps/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/cockpit/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/api/com-thindeck-thindeck-war.txt added
+[INFO] File /home/r/repo/target/classes/com/thindeck/api/mock/com-thindeck-thindeck-war.txt added
+[INFO]
+[INFO] --- maven-war-plugin:2.4:war (default-war) @ thindeck ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [thindeck] in [/home/r/repo/target/thindeck-0.1.1]
+[INFO] Processing war project
+[INFO] Copying webapp resources [/home/r/repo/src/main/webapp]
+[INFO] Webapp assembled in [104 msecs]
+[INFO] Building war: /home/r/repo/target/thindeck-0.1.1.war
+[INFO]
+[INFO] <<< bees-maven-plugin:1.3.2:deploy (deploy-to-production) < package @ thindeck <<<
+[INFO]
+[INFO] --- bees-maven-plugin:1.3.2:deploy (deploy-to-production) @ thindeck ---
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/maven/maven-artifact-manager/2.0/maven-artifact-manager-2.0.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/maven-artifact-manager/2.0/maven-artifact-manager-2.0.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/maven-artifact-manager/2.0/maven-artifact-manager-2.0.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/maven-artifact-manager/2.0/maven-artifact-manager-2.0.pom (2 KB at 11.9 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/maven/maven-repository-metadata/2.0/maven-repository-metadata-2.0.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/maven-repository-metadata/2.0/maven-repository-metadata-2.0.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/maven-repository-metadata/2.0/maven-repository-metadata-2.0.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/maven-repository-metadata/2.0/maven-repository-metadata-2.0.pom (2 KB at 52.1 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver/1.3.1/stax-appserver-1.3.1.pom
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver/1.3.1/stax-appserver-1.3.1.pom (7 KB at 18.9 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/run-appserver/1.3.1/run-appserver-1.3.1.pom
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/run-appserver/1.3.1/run-appserver-1.3.1.pom (5 KB at 17.7 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.pom (2 KB at 78.7 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.pom (2 KB at 46.3 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/juli/6.0.35/juli-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/juli/6.0.35/juli-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/juli/6.0.35/juli-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/juli/6.0.35/juli-6.0.35.pom (2 KB at 44.2 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.pom (2 KB at 46.3 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.pom (3 KB at 97.4 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.pom (2 KB at 57.9 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.pom (2 KB at 42.4 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/eclipse/jdt/core/compiler/ecj/3.7/ecj-3.7.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/eclipse/jdt/core/compiler/ecj/3.7/ecj-3.7.pom
+Downloading: http://repo.maven.apache.org/maven2/org/eclipse/jdt/core/compiler/ecj/3.7/ecj-3.7.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/eclipse/jdt/core/compiler/ecj/3.7/ecj-3.7.pom (2 KB at 57.7 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.pom (2 KB at 58.7 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.pom (2 KB at 39.7 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.pom (2 KB at 42.8 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.pom
+Downloading: http://repo.maven.apache.org/maven2/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.pom (2 KB at 45.1 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.pom
+Downloading: https://oss.sonatype.org/content/groups/public/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.pom
+Downloading: http://repo.maven.apache.org/maven2/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.pom
+Downloaded: http://repo.maven.apache.org/maven2/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.pom (2 KB at 42.5 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-logagent/1.3.1/stax-logagent-1.3.1.pom
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-logagent/1.3.1/stax-logagent-1.3.1.pom (2 KB at 3.4 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver-core/1.3.1/stax-appserver-core-1.3.1.pom
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver-core/1.3.1/stax-appserver-core-1.3.1.pom (3 KB at 11.0 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.pom
+Downloading: https://oss.sonatype.org/content/groups/public/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.pom
+Downloading: http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.pom
+Downloaded: http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.pom (14 KB at 222.1 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/thoughtworks/xstream/xstream-parent/1.4.1/xstream-parent-1.4.1.pom
+Downloading: https://oss.sonatype.org/content/groups/public/com/thoughtworks/xstream/xstream-parent/1.4.1/xstream-parent-1.4.1.pom
+Downloading: http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream-parent/1.4.1/xstream-parent-1.4.1.pom
+Downloaded: http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream-parent/1.4.1/xstream-parent-1.4.1.pom (15 KB at 351.2 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.pom
+Downloading: https://oss.sonatype.org/content/groups/public/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.pom
+Downloading: http://repo.maven.apache.org/maven2/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.pom (5 KB at 176.4 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/javax/mail/mail/1.4.4/mail-1.4.4.pom
+Downloading: https://oss.sonatype.org/content/groups/public/javax/mail/mail/1.4.4/mail-1.4.4.pom
+Downloading: http://repo.maven.apache.org/maven2/javax/mail/mail/1.4.4/mail-1.4.4.pom
+Downloaded: http://repo.maven.apache.org/maven2/javax/mail/mail/1.4.4/mail-1.4.4.pom (5 KB at 170.4 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/sun/mail/all/1.4.4/all-1.4.4.pom
+Downloading: https://oss.sonatype.org/content/groups/public/com/sun/mail/all/1.4.4/all-1.4.4.pom
+Downloading: http://repo.maven.apache.org/maven2/com/sun/mail/all/1.4.4/all-1.4.4.pom
+Downloaded: http://repo.maven.apache.org/maven2/com/sun/mail/all/1.4.4/all-1.4.4.pom (16 KB at 642.1 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/cloudbees-api-client/1.1.3/cloudbees-api-client-1.1.3.pom
+Downloading: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-api-client/1.1.3/cloudbees-api-client-1.1.3.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-api-client/1.1.3/cloudbees-api-client-1.1.3.pom (4 KB at 3.4 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/cloudbees-api-client-parent/1.1.3/cloudbees-api-client-parent-1.1.3.pom
+Downloading: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-api-client-parent/1.1.3/cloudbees-api-client-parent-1.1.3.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-api-client-parent/1.1.3/cloudbees-api-client-parent-1.1.3.pom (5 KB at 14.5 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/cloudbees-oss-parent/1/cloudbees-oss-parent-1.pom
+Downloading: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-oss-parent/1/cloudbees-oss-parent-1.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-oss-parent/1/cloudbees-oss-parent-1.pom (6 KB at 21.8 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.pom
+Downloading: https://oss.sonatype.org/content/groups/public/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.pom
+Downloading: http://repo.maven.apache.org/maven2/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.pom (3 KB at 102.6 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver/1.3.1/stax-appserver-1.3.1.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/juli/6.0.35/juli-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-logagent/1.3.1/stax-logagent-1.3.1.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver-core/1.3.1/stax-appserver-core-1.3.1.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/javax/mail/mail/1.4.4/mail-1.4.4.jar
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/com/cloudbees/cloudbees-api-client/1.1.3/cloudbees-api-client-1.1.3.jar
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver/1.3.1/stax-appserver-1.3.1.jar (195 KB at 194.1 KB/sec)
+Downloading: http://repository-cloudbees.forge.cloudbees.com/public-release/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.jar
+Downloading:0http://repository-cloudbees.forge.cloudbees.com/public-release/org/codehaus/plexus/plexus-utils/1.0.4/plexus-utils-1.0.4.jar
+Downloaded:7http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-logagent/1.3.1/stax-logagent-1.3.1.jar (55 KB at 84.8 KB/sec)
+Downloaded: http://repository-cloudbees.forge.cloudbees.com/public-release/net/stax/stax-appserver-core/1.3.1/stax-appserver-core-1.3.1.jar (84 KB at 103.9 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/juli/6.0.35/juli-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.jar
+Downloading: https://oss.sonatype.org/content/groups/public/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.jar
+Downloading: https://oss.sonatype.org/content/groups/public/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.jar
+Downloading: https://oss.sonatype.org/content/groups/public/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.jar
+Downloading: https://oss.sonatype.org/content/groups/public/javax/mail/mail/1.4.4/mail-1.4.4.jar
+Downloading: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-api-client/1.1.3/cloudbees-api-client-1.1.3.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/codehaus/plexus/plexus-utils/1.0.4/plexus-utils-1.0.4.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/com/cloudbees/cloudbees-api-client/1.1.3/cloudbees-api-client-1.1.3.jar (61 KB at 53.1 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/juli/6.0.35/juli-6.0.35.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.jar
+Downloaded:1http://repo.maven.apache.org/maven2/org/apache/tomcat/annotations-api/6.0.35/annotations-api-6.0.35.jar (15 KB at 330.7 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/juli/6.0.35/juli-6.0.35.jar (32 KB at 594.7 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/servlet-api/6.0.35/servlet-api-6.0.35.jar (87 KB at 1164.1 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.jar
+Downloaded:2http://repo.maven.apache.org/maven2/org/apache/tomcat/el-api/6.0.35/el-api-6.0.35.jar (33 KB at 516.7 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.jar
+Downloaded:3http://repo.maven.apache.org/maven2/org/apache/tomcat/jsp-api/6.0.35/jsp-api-6.0.35.jar (75 KB at 1170.2 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper-el/6.0.35/jasper-el-6.0.35.jar (110 KB at 923.7 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/dbcp/6.0.35/dbcp-6.0.35.jar (248 KB at 2844.7 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/jasper/6.0.35/jasper-6.0.35.jar (516 KB at 2489.0 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.jar
+Downloaded:1http://repo.maven.apache.org/maven2/org/apache/tomcat/coyote/6.0.35/coyote-6.0.35.jar (751 KB at 3025.7 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/tomcat/catalina/6.0.35/catalina-6.0.35.jar (1202 KB at 2781.2 KB/sec)
+Downloaded: http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.1/xstream-1.4.1.jar (485 KB at 2200.4 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/javax/mail/mail/1.4.4/mail-1.4.4.jar
+Downloading: http://repo.maven.apache.org/maven2/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.jar
+Downloaded: http://repo.maven.apache.org/maven2/commons-daemon/commons-daemon/1.0.3/commons-daemon-1.0.3.jar (17 KB at 332.1 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/1.0.4/plexus-utils-1.0.4.jar
+Downloaded:7http://repo.maven.apache.org/maven2/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.jar (56 KB at 791.0 KB/sec)
+Downloaded: http://repo.maven.apache.org/maven2/mysql/mysql-connector-java/5.1.15/mysql-connector-java-5.1.15.jar (768 KB at 2264.2 KB/sec)
+Downloaded: http://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/1.0.4/plexus-utils-1.0.4.jar (160 KB at 1683.8 KB/sec)
+Downloaded:Bhttp://repo.maven.apache.org/maven2/javax/mail/mail/1.4.4/mail-1.4.4.jar (484 KB at 3661.5 KB/sec)
+Downloaded:Bhttp://repo.maven.apache.org/maven2/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.jar (1636 KB at 3922.0 KB/sec)
+Deploying application thindeck/cockpit (environment: )
+........................uploaded 25%
+........................uploaded 50%
+........................uploaded 75%
+........................upload completed
+deploying application to server(s)...
+Application thindeck/cockpit deployed: http://cockpit.thindeck.cloudbees.net
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 02:14 min
+[INFO] Finished at: 2014-08-29T19:45:01+00:00
+[INFO] Final Memory: 67M/474M
+[INFO] ------------------------------------------------------------------------
++ mvn clean site-deploy -Psite --errors --settings ../settings.xml
+[INFO] Error stacktraces are turned on.
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building thindeck 0.1.1
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ thindeck ---
+[INFO] Deleting /home/r/repo/target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:copy-resources (copy-jekyll-sources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 12 resources
+[INFO]
+[INFO] --- exec-maven-plugin:1.3:exec (jekyll-build) @ thindeck ---
+Configuration file: /home/r/repo/target/jekyll/_config.yml
+      Source: /home/r/repo/target/jekyll
+       Destination: /home/r/repo/target/site
+      Generating...
+        done.
+ Auto-regeneration: disabled. Use --watch to enable.
+[INFO]
+[INFO] --- maven-site-plugin:3.4:site (default-site) @ thindeck ---
+[INFO] configuring report plugin org.apache.maven.plugins:maven-project-info-reports-plugin:2.7
+[INFO] configuring report plugin org.apache.maven.plugins:maven-jxr-plugin:2.4
+[INFO] configuring report plugin org.apache.maven.plugins:maven-surefire-report-plugin:2.17
+[INFO] configuring report plugin org.codehaus.mojo:versions-maven-plugin:2.1
+[INFO] configuring report plugin org.apache.maven.plugins:maven-javadoc-plugin:2.9.1
+[INFO] preparing 'javadoc' report requires 'generate-sources' forked phase execution
+[INFO]
+[INFO] >>> maven-javadoc-plugin:2.9.1:javadoc > generate-sources @ thindeck >>>
+[INFO]
+[INFO] <<< maven-javadoc-plugin:2.9.1:javadoc < generate-sources @ thindeck <<<
+[INFO] preparing 'test-javadoc' report requires 'generate-test-sources' forked phase execution
+[INFO]
+[INFO] >>> maven-javadoc-plugin:2.9.1:test-javadoc > generate-test-sources @ thindeck >>>
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create (jcabi-build-number) @ thindeck ---
+[INFO] ShortRevision tag detected. The value is '7'.
+[INFO] Executing: /bin/sh -c cd /home/r/repo && git rev-parse --verify --short=7 HEAD
+[INFO] Working directory: /home/r/repo
+[INFO] Storing buildNumber: 61a8513 at timestamp: 2014-08-29T19:45:27
+[INFO] Storing buildScmBranch: __rultor-tmp
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create-timestamp (jcabi-build-number) @ thindeck ---
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 4 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ thindeck ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 39 source files to /home/r/repo/target/classes
+[INFO]
+[INFO] --- requs-maven-plugin:1.14:compile (default) @ thindeck ---
+log4j:WARN No appenders could be found for logger (org.jboss.logging).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+[ERROR] JSR-303 validator failed to initialize: Unable to instantiate Configuration. (see http://www.jcabi.com/jcabi-aspects/jsr-303.html)
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
+[INFO] output directory "/home/r/repo/target/requs" created
+[INFO] #load(): 61 attribs loaded from 86 URL(s) in 44ms: ["Ant-Version", "Archiver-Version", "Bnd-LastModified", "Build-Jdk", "Build-Timestamp", "Built-By", "Bundle-ActivationPolicy", "Bundle-Activator", "Bundle-Copyright", "Bundle-Description", "Bundle-DocURL", "Bundle-License", "Bundle-ManifestVersion", "Bundle-Name", "Bundle-RequiredExecutionEnvironment", "Bundle-SymbolicName", "Bundle-Vendor", "Bundle-Version", "Created-By", "DynamicImport-Package", "Eclipse-ExtensibleAPI", "Export-Package", "Extension-Name", "Fragment-Host", "Ignore-Package", "Implementation-Build", "Implementation-Title", "Implementation-URL", "Implementation-Vendor", "Implementation-Vendor-Id", "Implementation-Version", "Import-Package", "Include-Resource", "JCabi-Build", "JCabi-Date", "JCabi-Version", "Java-Vendor", "Java-Version", "Main-Class", "Manifest-Version", "Originally-Created-By", "Os-Arch", "Os-Name", "Os-Version", "Package", "Private-Package", "Project-Name", "Require-Bundle", "Requs-Date", "Requs-Revision", "Requs-Version", "Scm-Connection", "Scm-Revision", "Scm-Url", "Specification-Title", "Specification-Vendor", "Specification-Version", "Tool", "X-Compile-Source-JDK", "X-Compile-Target-JDK", "url"]
+[INFO] source file: /home/r/repo/src/main/requs/acronyms.req
+[INFO] source file: /home/r/repo/src/main/requs/anonymous.req
+[INFO] source file: /home/r/repo/src/main/requs/main.req
+[INFO] source file: /home/r/repo/src/main/requs/nfrs.req
+[INFO] source file: /home/r/repo/src/main/requs/vision.req
+[INFO] XeFacet.Wrap(origin=Aggregate()) done
+[INFO] XeFacet.Wrap(origin=AntlrFacet()) done
+[INFO] Transform(cleanup/duplicate-step-numbers.xsl) done
+[INFO] Transform(cleanup/duplicate-step-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-step-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-step-results.xsl) done
+[INFO] Transform(cleanup/lost-steps.xsl) done
+[INFO] Transform(cleanup/lost-methods.xsl) done
+[INFO] Transform(cleanup/duplicate-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-method-bindings.xsl) done
+[INFO] Transform(cleanup/incomplete-step-object.xsl) done
+[INFO] Transform(cleanup/incomplete-step-signature.xsl) done
+[INFO] Transform(cleanup/incomplete-step-result.xsl) done
+[INFO] Transform(cleanup/incomplete-binding.xsl) done
+[INFO] Transform(cleanup/bindings-in-exception.xsl) done
+[INFO] Transform(seal-methods.xsl) done
+[INFO] Transform(sanity/signatures-check.xsl) done
+[INFO] Transform(sanity/types-check.xsl) done
+[INFO] Transform(sanity/seals-check.xsl) done
+[INFO] Transform(sanity/exception-rethrow-check.xsl) done
+[INFO] Transform(sanity/misplaced-failure-check.xsl) done
+[INFO] Transform(sanity/broken-order-of-steps.xsl) done
+[INFO] Transform(sanity/missed-step-numbers.xsl) done
+[INFO] Transform(sanity/too-many-steps.xsl) done
+[INFO] Transform(sanity/empty-re-throws.xsl) done
+[INFO] Transform(sanity/orphan-types.xsl) done
+[INFO] Transform(sanity/undeclared-bindings.xsl) done
+[INFO] Transform(sanity/actor-is-singleton.xsl) done
+[INFO] Transform(step-refs.xsl) done
+[INFO] Transform(methods-in-markdown.xsl) done
+[INFO] Transform(pages-in-html.xsl) done
+[INFO] Transform(count-ambiguity.xsl) done
+[INFO] Transform(find-tbds.xsl) done
+[INFO] Transform(uml/sequence-diagrams.xsl) done
+[INFO] Transform(uml/use-case-diagrams.xsl) done
+[INFO] Transform(uml/class-diagrams.xsl) done
+[INFO] XeFacet.Wrap(origin=Rules()) done
+[INFO] XeFacet.Wrap(origin=XeFacet.Fixed()) done
+[INFO] Transform(renumber.xsl) done
+[INFO] XeFacet.Wrap(origin=org.requs.Compiler$1@6b97cd2c) done
+[INFO] compiled and saved to /home/r/repo/target/requs
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-compile) @ thindeck ---
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
+[INFO] Created temp dir /home/r/repo/target/jcabi-ajc
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-cacheable for automated cleaning of expired @Cacheable values
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 48 file(s) processed, 35 pointcut(s) woven, 0 error(s), 10 warning(s)
+[INFO]
+[INFO] <<< maven-javadoc-plugin:2.9.1:test-javadoc < generate-test-sources @ thindeck <<<
+[INFO] configuring report plugin org.codehaus.mojo:cobertura-maven-plugin:2.5.2
+[INFO] preparing 'cobertura' report requires '[cobertura]test' forked phase execution
+[INFO]
+[INFO] >>> cobertura-maven-plugin:2.5.2:cobertura > [cobertura]test @ thindeck >>>
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create (jcabi-build-number) @ thindeck ---
+[INFO] ShortRevision tag detected. The value is '7'.
+[INFO] Executing: /bin/sh -c cd /home/r/repo && git rev-parse --verify --short=7 HEAD
+[INFO] Working directory: /home/r/repo
+[INFO] Storing buildNumber: 61a8513 at timestamp: 2014-08-29T19:45:49
+[INFO] Storing buildScmBranch: __rultor-tmp
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create-timestamp (jcabi-build-number) @ thindeck ---
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 4 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ thindeck ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 39 source files to /home/r/repo/target/classes
+[INFO]
+[INFO] --- requs-maven-plugin:1.14:compile (default) @ thindeck ---
+[INFO] source file: /home/r/repo/src/main/requs/acronyms.req
+[INFO] source file: /home/r/repo/src/main/requs/anonymous.req
+[INFO] source file: /home/r/repo/src/main/requs/main.req
+[INFO] source file: /home/r/repo/src/main/requs/nfrs.req
+[INFO] source file: /home/r/repo/src/main/requs/vision.req
+[INFO] XeFacet.Wrap(origin=Aggregate()) done
+[INFO] XeFacet.Wrap(origin=AntlrFacet()) done
+[INFO] Transform(cleanup/duplicate-step-numbers.xsl) done
+[INFO] Transform(cleanup/duplicate-step-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-step-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-step-results.xsl) done
+[INFO] Transform(cleanup/lost-steps.xsl) done
+[INFO] Transform(cleanup/lost-methods.xsl) done
+[INFO] Transform(cleanup/duplicate-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-method-bindings.xsl) done
+[INFO] Transform(cleanup/incomplete-step-object.xsl) done
+[INFO] Transform(cleanup/incomplete-step-signature.xsl) done
+[INFO] Transform(cleanup/incomplete-step-result.xsl) done
+[INFO] Transform(cleanup/incomplete-binding.xsl) done
+[INFO] Transform(cleanup/bindings-in-exception.xsl) done
+[INFO] Transform(seal-methods.xsl) done
+[INFO] Transform(sanity/signatures-check.xsl) done
+[INFO] Transform(sanity/types-check.xsl) done
+[INFO] Transform(sanity/seals-check.xsl) done
+[INFO] Transform(sanity/exception-rethrow-check.xsl) done
+[INFO] Transform(sanity/misplaced-failure-check.xsl) done
+[INFO] Transform(sanity/broken-order-of-steps.xsl) done
+[INFO] Transform(sanity/missed-step-numbers.xsl) done
+[INFO] Transform(sanity/too-many-steps.xsl) done
+[INFO] Transform(sanity/empty-re-throws.xsl) done
+[INFO] Transform(sanity/orphan-types.xsl) done
+[INFO] Transform(sanity/undeclared-bindings.xsl) done
+[INFO] Transform(sanity/actor-is-singleton.xsl) done
+[INFO] Transform(step-refs.xsl) done
+[INFO] Transform(methods-in-markdown.xsl) done
+[INFO] Transform(pages-in-html.xsl) done
+[INFO] Transform(count-ambiguity.xsl) done
+[INFO] Transform(find-tbds.xsl) done
+[INFO] Transform(uml/sequence-diagrams.xsl) done
+[INFO] Transform(uml/use-case-diagrams.xsl) done
+[INFO] Transform(uml/class-diagrams.xsl) done
+[INFO] XeFacet.Wrap(origin=Rules()) done
+[INFO] XeFacet.Wrap(origin=XeFacet.Fixed()) done
+[INFO] Transform(renumber.xsl) done
+[INFO] XeFacet.Wrap(origin=org.requs.Compiler$1@548c245f) done
+[INFO] compiled and saved to /home/r/repo/target/requs
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-compile) @ thindeck ---
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 48 file(s) processed, 35 pointcut(s) woven, 0 error(s), 10 warning(s)
+[INFO]
+[INFO] --- cobertura-maven-plugin:2.5.2:instrument @ thindeck ---
+[INFO] Cobertura 1.9.4.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+Instrumenting 48 files to /home/r/repo/target/generated-classes/cobertura
+Cobertura: Saved information on 48 classes.
+Instrument time: 472ms
+
+[INFO] Instrumentation was successful.
+[INFO] NOT adding cobertura ser file to attached artifacts list.
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- build-helper-maven-plugin:1.8:reserve-network-port (tomcat-port) @ thindeck ---
+[INFO] Reserved port 44408 for tomcat.port
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ thindeck ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/r/repo/target/test-classes
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-test-compile) @ thindeck ---
+[INFO] Created temp dir /home/r/repo/target/jcabi-ajc-test
+[WARNING] build config error: skipping missing, empty or corrupt aspectpath entry: /home/r/.m2/repository/net/sourceforge/cobertura/cobertura-runtime/1.9.4.1/cobertura-runtime-1.9.4.1.pom
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodScheduler has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ImmutabilityChecker has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 2 file(s) processed, 0 pointcut(s) woven, 0 error(s), 13 warning(s)
+[INFO]
+[INFO] --- maven-surefire-plugin:2.17:test (default-test) @ thindeck ---
+[INFO] Surefire report directory: /home/r/repo/target/surefire-reports
+[INFO] parallel='all', perCoreThreadCount=true, threadCount=4, useUnlimitedThreads=false, threadCountSuites=0, threadCountClasses=0, threadCountMethods=0, parallelOptimized=true
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.thindeck.steps.SwapTest
+[0;37mINFOm] com.thindeck.api.mock.MkMemo: memo saved to /tmp/thindeck-257715936612077571.xml (410 bytes)
+[0;37mINFOm] com.thindeck.api.mock.MkMemo: memo saved to /tmp/thindeck-257715936612077571.xml (409 bytes)
+[0;37mINFOm] com.thindeck.api.mock.MkContext: swapped blue vs green containers
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.944 sec - in com.thindeck.steps.SwapTest
+Running com.thindeck.steps.FindTanksTest
+[0;37mINFOm] com.thindeck.api.mock.MkMemo: memo saved to /tmp/thindeck-3651607249807459446.xml (111 bytes)
+[0;37mINFOm] com.thindeck.api.mock.MkContext: one tank t1.thindeck.com found
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.812 sec - in com.thindeck.steps.FindTanksTest
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO]
+[INFO] <<< cobertura-maven-plugin:2.5.2:cobertura < [cobertura]test @ thindeck <<<
+[INFO] configuring report plugin org.apache.maven.plugins:maven-plugin-plugin:3.3
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-plugin-plugin/3.3/maven-plugin-plugin-3.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin/3.3/maven-plugin-plugin-3.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin/3.3/maven-plugin-plugin-3.3.pom (12 KB at 80.0 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugins/maven-plugin-plugin/3.3/maven-plugin-plugin-3.3.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin/3.3/maven-plugin-plugin-3.3.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin/3.3/maven-plugin-plugin-3.3.jar (49 KB at 624.6 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.3/maven-plugin-tools-annotations-3.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.3/maven-plugin-tools-annotations-3.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.3/maven-plugin-tools-annotations-3.3.pom (5 KB at 97.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.3/maven-plugin-tools-api-3.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.3/maven-plugin-tools-api-3.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.3/maven-plugin-tools-api-3.3.pom (3 KB at 114.0 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/ow2/asm/asm/5.0.2/asm-5.0.2.pom
+Downloading: http://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2.pom (2 KB at 72.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/ow2/asm/asm-parent/5.0.2/asm-parent-5.0.2.pom
+Downloading: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-parent/5.0.2/asm-parent-5.0.2.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-parent/5.0.2/asm-parent-5.0.2.pom (6 KB at 137.6 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.3/maven-plugin-tools-generators-3.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.3/maven-plugin-tools-generators-3.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.3/maven-plugin-tools-generators-3.3.pom (5 KB at 175.9 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/ow2/asm/asm-commons/5.0.2/asm-commons-5.0.2.pom
+Downloading: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/5.0.2/asm-commons-5.0.2.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/5.0.2/asm-commons-5.0.2.pom (3 KB at 56.8 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/ow2/asm/asm-tree/5.0.2/asm-tree-5.0.2.pom
+Downloading: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/5.0.2/asm-tree-5.0.2.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/5.0.2/asm-tree-5.0.2.pom (3 KB at 63.6 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-java/3.3/maven-plugin-tools-java-3.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-java/3.3/maven-plugin-tools-java-3.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-java/3.3/maven-plugin-tools-java-3.3.pom (4 KB at 82.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-beanshell/3.3/maven-plugin-tools-beanshell-3.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-beanshell/3.3/maven-plugin-tools-beanshell-3.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-beanshell/3.3/maven-plugin-tools-beanshell-3.3.pom (3 KB at 88.2 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/beanshell/bsh/1.3.0/bsh-1.3.0.pom
+Downloading: http://repo.maven.apache.org/maven2/org/beanshell/bsh/1.3.0/bsh-1.3.0.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/beanshell/bsh/1.3.0/bsh-1.3.0.pom (2 KB at 34.0 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-model/3.3/maven-plugin-tools-model-3.3.pom
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-model/3.3/maven-plugin-tools-model-3.3.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-model/3.3/maven-plugin-tools-model-3.3.pom (4 KB at 85.0 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/ow2/asm/asm/5.0.2/asm-5.0.2.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.3/maven-plugin-tools-api-3.3.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.3/maven-plugin-tools-annotations-3.3.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.3/maven-plugin-tools-generators-3.3.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/ow2/asm/asm-commons/5.0.2/asm-commons-5.0.2.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/ow2/asm/asm-tree/5.0.2/asm-tree-5.0.2.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-java/3.3/maven-plugin-tools-java-3.3.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-beanshell/3.3/maven-plugin-tools-beanshell-3.3.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/beanshell/bsh/1.3.0/bsh-1.3.0.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/apache/maven/plugin-tools/maven-plugin-tools-model/3.3/maven-plugin-tools-model-3.3.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.3/maven-plugin-tools-annotations-3.3.jar
+Downloading: http://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.3/maven-plugin-tools-generators-3.3.jar
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.3/maven-plugin-tools-api-3.3.jar
+Downloading: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/5.0.2/asm-commons-5.0.2.jar
+Downloaded:1http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.3/maven-plugin-tools-annotations-3.3.jar (39 KB at 388.1 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/5.0.2/asm-tree-5.0.2.jar
+Downloaded:2http://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2.jar (52 KB at 495.1 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-java/3.3/maven-plugin-tools-java-3.3.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/5.0.2/asm-commons-5.0.2.jar (41 KB at 485.0 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-beanshell/3.3/maven-plugin-tools-beanshell-3.3.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.3/maven-plugin-tools-api-3.3.jar (23 KB at 238.0 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/beanshell/bsh/1.3.0/bsh-1.3.0.jar
+Downloaded:4http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-java/3.3/maven-plugin-tools-java-3.3.jar (18 KB at 544.6 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-model/3.3/maven-plugin-tools-model-3.3.jar
+Downloaded:1http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.3/maven-plugin-tools-generators-3.3.jar (46 KB at 243.2 KB/sec)
+Downloaded:8http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-beanshell/3.3/maven-plugin-tools-beanshell-3.3.jar (14 KB at 123.2 KB/sec)
+Downloaded:1http://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-model/3.3/maven-plugin-tools-model-3.3.jar (27 KB at 265.0 KB/sec)
+Downloaded: http://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/5.0.2/asm-tree-5.0.2.jar (29 KB at 196.9 KB/sec)
+Downloaded: http://repo.maven.apache.org/maven2/org/beanshell/bsh/1.3.0/bsh-1.3.0.jar (237 KB at 1535.6 KB/sec)
+[INFO] preparing 'report' report requires 'process-classes' forked phase execution
+[INFO]
+[INFO] >>> maven-plugin-plugin:3.3:report > process-classes @ thindeck >>>
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create (jcabi-build-number) @ thindeck ---
+[INFO] ShortRevision tag detected. The value is '7'.
+[INFO] Executing: /bin/sh -c cd /home/r/repo && git rev-parse --verify --short=7 HEAD
+[INFO] Working directory: /home/r/repo
+[INFO] Storing buildNumber: 61a8513 at timestamp: 2014-08-29T19:46:22
+[INFO] Storing buildScmBranch: __rultor-tmp
+[INFO]
+[INFO] --- buildnumber-maven-plugin:1.3:create-timestamp (jcabi-build-number) @ thindeck ---
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ thindeck ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 4 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ thindeck ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 39 source files to /home/r/repo/target/classes
+[INFO]
+[INFO] --- requs-maven-plugin:1.14:compile (default) @ thindeck ---
+[INFO] source file: /home/r/repo/src/main/requs/acronyms.req
+[INFO] source file: /home/r/repo/src/main/requs/anonymous.req
+[INFO] source file: /home/r/repo/src/main/requs/main.req
+[INFO] source file: /home/r/repo/src/main/requs/nfrs.req
+[INFO] source file: /home/r/repo/src/main/requs/vision.req
+[INFO] XeFacet.Wrap(origin=Aggregate()) done
+[INFO] XeFacet.Wrap(origin=AntlrFacet()) done
+[INFO] Transform(cleanup/duplicate-step-numbers.xsl) done
+[INFO] Transform(cleanup/duplicate-step-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-step-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-step-results.xsl) done
+[INFO] Transform(cleanup/lost-steps.xsl) done
+[INFO] Transform(cleanup/lost-methods.xsl) done
+[INFO] Transform(cleanup/duplicate-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-method-bindings.xsl) done
+[INFO] Transform(cleanup/incomplete-step-object.xsl) done
+[INFO] Transform(cleanup/incomplete-step-signature.xsl) done
+[INFO] Transform(cleanup/incomplete-step-result.xsl) done
+[INFO] Transform(cleanup/incomplete-binding.xsl) done
+[INFO] Transform(cleanup/bindings-in-exception.xsl) done
+[INFO] Transform(seal-methods.xsl) done
+[INFO] Transform(sanity/signatures-check.xsl) done
+[INFO] Transform(sanity/types-check.xsl) done
+[INFO] Transform(sanity/seals-check.xsl) done
+[INFO] Transform(sanity/exception-rethrow-check.xsl) done
+[INFO] Transform(sanity/misplaced-failure-check.xsl) done
+[INFO] Transform(sanity/broken-order-of-steps.xsl) done
+[INFO] Transform(sanity/missed-step-numbers.xsl) done
+[INFO] Transform(sanity/too-many-steps.xsl) done
+[INFO] Transform(sanity/empty-re-throws.xsl) done
+[INFO] Transform(sanity/orphan-types.xsl) done
+[INFO] Transform(sanity/undeclared-bindings.xsl) done
+[INFO] Transform(sanity/actor-is-singleton.xsl) done
+[INFO] Transform(step-refs.xsl) done
+[INFO] Transform(methods-in-markdown.xsl) done
+[INFO] Transform(pages-in-html.xsl) done
+[INFO] Transform(count-ambiguity.xsl) done
+[INFO] Transform(find-tbds.xsl) done
+[INFO] Transform(uml/sequence-diagrams.xsl) done
+[INFO] Transform(uml/use-case-diagrams.xsl) done
+[INFO] Transform(uml/class-diagrams.xsl) done
+[INFO] XeFacet.Wrap(origin=Rules()) done
+[INFO] XeFacet.Wrap(origin=XeFacet.Fixed()) done
+[INFO] Transform(renumber.xsl) done
+[INFO] XeFacet.Wrap(origin=org.requs.Compiler$1@75c0727b) done
+[INFO] compiled and saved to /home/r/repo/target/requs
+[INFO]
+[INFO] --- jcabi-maven-plugin:0.9.3:ajc (jcabi-ajc-compile) @ thindeck ---
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodValidator has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.SingleException has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.ExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodAsyncRunner has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodCacher has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Parallelizer has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.QuietExceptionsLogger has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.MethodInterrupter has not been applied [Xlint:adviceDidNotMatch]
+[WARNING] advice defined in com.jcabi.aspects.aj.Repeater has not been applied [Xlint:adviceDidNotMatch]
+[INFO] ajc result: 48 file(s) processed, 35 pointcut(s) woven, 0 error(s), 10 warning(s)
+[INFO]
+[INFO] <<< maven-plugin-plugin:3.3:report < process-classes @ thindeck <<<
+[INFO] configuring report plugin org.requs:requs-maven-plugin:1.14
+[INFO] Parent project loaded from repository: com.jcabi:parent:pom:0.28
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/parent/0.28/parent-0.28-site_en.xml
+Downloading: http://repo.maven.apache.org/maven2/com/jcabi/parent/0.28/parent-0.28-site_en.xml
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/parent/0.28/parent-0.28-site.xml
+Downloading: http://repo.maven.apache.org/maven2/com/jcabi/parent/0.28/parent-0.28-site.xml
+[INFO] Relativizing decoration links with respect to project URL: http://www.thindeck.com
+Downloading: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-maven-skin/1.3.1/jcabi-maven-skin-1.3.1.jar
+Downloaded: https://oss.sonatype.org/content/groups/public/com/jcabi/jcabi-maven-skin/1.3.1/jcabi-maven-skin-1.3.1.jar (9 KB at 9.3 KB/sec)
+[INFO] Rendering site with com.jcabi:jcabi-maven-skin:jar:1.3.1 skin.
+[INFO] Generating "Continuous Integration" report --- maven-project-info-reports-plugin:2.7:cim
+[INFO] Generating "Dependencies" report   --- maven-project-info-reports-plugin:2.7:dependencies
+[INFO] Generating "Issue Tracking" report --- maven-project-info-reports-plugin:2.7:issue-tracking
+[INFO] Generating "Project License" report  --- maven-project-info-reports-plugin:2.7:license
+[INFO] Generating "Mailing Lists" report  --- maven-project-info-reports-plugin:2.7:mailing-list
+[INFO] Generating "Project Plugins" report  --- maven-project-info-reports-plugin:2.7:plugins
+[INFO] Generating "Project Team" report   --- maven-project-info-reports-plugin:2.7:project-team
+[INFO] Generating "Source Repository" report  --- maven-project-info-reports-plugin:2.7:scm
+[INFO] Generating "Project Summary" report  --- maven-project-info-reports-plugin:2.7:summary
+[INFO] Generating "Test Source Xref" report --- maven-jxr-plugin:2.4:test-jxr
+[INFO] Generating "Source Xref" report    --- maven-jxr-plugin:2.4:jxr
+[INFO] Generating "Surefire Report" report  --- maven-surefire-report-plugin:2.17:report-only
+[INFO] Generating "Dependency Updates Report" report --- versions-maven-plugin:2.1:dependency-updates-report
+[INFO] artifact com.jcabi:jcabi-ssh: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-ssh: checking for updates from central
+[INFO] artifact com.jcabi.incubator:xembly: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi.incubator:xembly: checking for updates from central
+[INFO] artifact com.rexsl:rexsl: checking for updates from oss.sonatype.org
+[INFO] artifact com.rexsl:rexsl: checking for updates from central
+[INFO] artifact com.sun.jersey:jersey-core: checking for updates from oss.sonatype.org
+[INFO] artifact com.sun.jersey:jersey-core: checking for updates from central
+[INFO] artifact com.google.guava:guava: checking for updates from oss.sonatype.org
+[INFO] artifact com.google.guava:guava: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-aether: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-aether: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-aspects: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-aspects: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-dynamo: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-dynamo: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-github: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-github: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-http: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-http: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-immutable: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-immutable: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-jdbc: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-jdbc: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-log: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-log: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-manifests: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-manifests: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-matchers: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-matchers: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-maven-slf4j: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-maven-slf4j: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-odesk: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-odesk: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-s3: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-s3: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-simpledb: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-simpledb: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-urn: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-urn: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-velocity: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-velocity: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-w3c: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-w3c: checking for updates from central
+[INFO] artifact com.jcabi:jcabi-xml: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-xml: checking for updates from central
+[INFO] artifact commons-codec:commons-codec: checking for updates from oss.sonatype.org
+[INFO] artifact commons-codec:commons-codec: checking for updates from central
+[INFO] artifact commons-collections:commons-collections: checking for updates from oss.sonatype.org
+[INFO] artifact commons-collections:commons-collections: checking for updates from central
+[INFO] artifact commons-io:commons-io: checking for updates from oss.sonatype.org
+[INFO] artifact commons-io:commons-io: checking for updates from central
+[INFO] artifact commons-net:commons-net: checking for updates from oss.sonatype.org
+[INFO] artifact commons-net:commons-net: checking for updates from central
+[INFO] artifact javax.el:javax.el-api: checking for updates from oss.sonatype.org
+[INFO] artifact javax.el:javax.el-api: checking for updates from central
+[INFO] artifact javax.json:javax.json-api: checking for updates from oss.sonatype.org
+[INFO] artifact javax.json:javax.json-api: checking for updates from central
+[INFO] artifact javax.servlet:servlet-api: checking for updates from oss.sonatype.org
+[INFO] artifact javax.servlet:servlet-api: checking for updates from central
+[INFO] artifact javax.validation:validation-api: checking for updates from oss.sonatype.org
+[INFO] artifact javax.validation:validation-api: checking for updates from central
+[INFO] artifact javax.ws.rs:jsr311-api: checking for updates from oss.sonatype.org
+[INFO] artifact javax.ws.rs:jsr311-api: checking for updates from central
+[INFO] artifact javax.xml.bind:jaxb-api: checking for updates from oss.sonatype.org
+[INFO] artifact javax.xml.bind:jaxb-api: checking for updates from central
+[INFO] artifact junit:junit: checking for updates from oss.sonatype.org
+[INFO] artifact junit:junit: checking for updates from central
+[INFO] artifact log4j:log4j: checking for updates from oss.sonatype.org
+[INFO] artifact log4j:log4j: checking for updates from central
+[INFO] artifact org.antlr:antlr-runtime: checking for updates from oss.sonatype.org
+[INFO] artifact org.antlr:antlr-runtime: checking for updates from central
+[INFO] artifact org.antlr:antlr4-annotations: checking for updates from oss.sonatype.org
+[INFO] artifact org.antlr:antlr4-annotations: checking for updates from central
+[INFO] artifact org.antlr:antlr4-runtime: checking for updates from oss.sonatype.org
+[INFO] artifact org.antlr:antlr4-runtime: checking for updates from central
+[INFO] artifact org.apache.commons:commons-lang3: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.commons:commons-lang3: checking for updates from central
+[INFO] artifact org.apache.commons:commons-math3: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.commons:commons-math3: checking for updates from central
+[INFO] artifact org.aspectj:aspectjrt: checking for updates from oss.sonatype.org
+[INFO] artifact org.aspectj:aspectjrt: checking for updates from central
+[INFO] artifact org.clojure:clojure: checking for updates from oss.sonatype.org
+[INFO] artifact org.clojure:clojure: checking for updates from central
+[INFO] artifact org.clojure:clojure-contrib: checking for updates from oss.sonatype.org
+[INFO] artifact org.clojure:clojure-contrib: checking for updates from central
+[INFO] artifact org.clojure:tools.logging: checking for updates from oss.sonatype.org
+[INFO] artifact org.clojure:tools.logging: checking for updates from central
+[INFO] artifact org.codehaus.groovy:groovy-all: checking for updates from oss.sonatype.org
+[INFO] artifact org.codehaus.groovy:groovy-all: checking for updates from central
+[INFO] artifact org.glassfish:javax.json: checking for updates from oss.sonatype.org
+[INFO] artifact org.glassfish:javax.json: checking for updates from central
+[INFO] artifact org.hamcrest:hamcrest-core: checking for updates from oss.sonatype.org
+[INFO] artifact org.hamcrest:hamcrest-core: checking for updates from central
+[INFO] artifact org.hamcrest:hamcrest-library: checking for updates from oss.sonatype.org
+[INFO] artifact org.hamcrest:hamcrest-library: checking for updates from central
+[INFO] artifact org.hibernate:hibernate-validator: checking for updates from oss.sonatype.org
+[INFO] artifact org.hibernate:hibernate-validator: checking for updates from central
+[INFO] artifact org.mockito:mockito-core: checking for updates from oss.sonatype.org
+[INFO] artifact org.mockito:mockito-core: checking for updates from central
+[INFO] artifact org.projectlombok:lombok: checking for updates from oss.sonatype.org
+[INFO] artifact org.projectlombok:lombok: checking for updates from central
+[INFO] artifact org.slf4j:slf4j-log4j12: checking for updates from oss.sonatype.org
+[INFO] artifact org.slf4j:slf4j-log4j12: checking for updates from central
+[INFO] artifact xml-apis:xml-apis: checking for updates from oss.sonatype.org
+[INFO] artifact xml-apis:xml-apis: checking for updates from central
+[INFO] Generating "Plugin Updates Report" report --- versions-maven-plugin:2.1:plugin-updates-report
+[INFO] artifact com.github.klieber:phantomjs-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-docck-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.codehaus.mojo:buildnumber-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.requs:requs-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.requs:requs-maven-plugin: checking for updates from central
+[INFO] artifact com.github.github:site-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-beanstalk-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-dynamodb-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-heroku-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-mysql-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.jcabi:jcabi-ssl-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.sun.tools.jxc.maven2:maven-jaxb-schemagen-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact com.sun:tools: checking for updates from oss.sonatype.org
+[INFO] artifact com.sun:tools: checking for updates from central
+[INFO] artifact org.apache.maven.plugins:maven-antrun-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact ant-contrib:ant-contrib: checking for updates from oss.sonatype.org
+[INFO] artifact ant-contrib:ant-contrib: checking for updates from central
+[INFO] artifact org.apache.maven.plugins:maven-assembly-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-changes-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-clean-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-compiler-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-dependency-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-deploy-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-failsafe-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-help-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-install-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-invoker-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-jar-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-javadoc-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-plugin-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-release-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-resources-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-site-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.doxia:doxia-module-markdown: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.doxia:doxia-module-markdown: checking for updates from central
+[INFO] artifact org.apache.maven.plugins:maven-source-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-surefire-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.maven.plugins:maven-war-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.apache.tomcat.maven:tomcat7-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.codehaus.mojo:build-helper-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.codehaus.mojo:cobertura-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.codehaus.mojo:exec-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] artifact org.codehaus.mojo:versions-maven-plugin: checking for updates from oss.sonatype.org
+[INFO] Generating "JavaDocs" report   --- maven-javadoc-plugin:2.9.1:javadoc
+[ERROR] Error fetching link: http://projectlombok.org/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.rexsl.com/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: https://github.com/yegor256/xembly/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: https://jersey.java.net/jersey-core/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://jaxb.java.net/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://code.google.com/p/guava-libraries/guava/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.jcabi.com/jcabi-ssh/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.jcabi.com/jcabi-matchers/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.jcabi.com/jcabi-manifests/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.jcabi.com/jcabi-xml/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.jcabi.com/jcabi-immutable/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.jcabi.com/jcabi-urn/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://uel.java.net/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.aspectj.org/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://beanvalidation.org/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: https://github.com/hamcrest/JavaHamcrest/hamcrest-core/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: https://github.com/hamcrest/JavaHamcrest/hamcrest-library/apidocs/package-list. Ignored it.
+[ERROR] Error fetching link: http://www.mockito.org/apidocs/package-list. Ignored it.
+[INFO]
+1 warning
+[WARNING] Javadoc Warnings
+[WARNING] javadoc: warning - Error fetching URL: http://www.h2database.com/javadoc/package-list
+[WARNING] com.sun.tools.javac.code.Symbol$CompletionFailure: class file for org.aspectj.runtime.internal.AroundClosure not found
+[INFO] Generating "Cobertura Test Coverage" report --- cobertura-maven-plugin:2.5.2:cobertura
+[INFO] Cobertura 1.9.4.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+Cobertura: Loaded information on 48 classes.
+Report time: 1554ms
+
+[INFO] Cobertura Report generation was successful.
+[INFO] Generating "Requs" report    --- requs-maven-plugin:1.14:default
+[INFO] site directory /home/r/repo/target/site/requs created
+log4j:WARN No appenders could be found for logger (org.jboss.logging).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+[ERROR] JSR-303 validator failed to initialize: Unable to instantiate Configuration. (see http://www.jcabi.com/jcabi-aspects/jsr-303.html)
+[INFO] jcabi-aspects 0.17.1/8b0e260 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
+[INFO] #load(): 66 attribs loaded from 132 URL(s) in 68ms: ["Ant-Version", "Archiver-Version", "Bnd-LastModified", "Build-By", "Build-Jdk", "Build-Timestamp", "Built-By", "Bundle-ActivationPolicy", "Bundle-Activator", "Bundle-Copyright", "Bundle-Description", "Bundle-DocURL", "Bundle-License", "Bundle-ManifestVersion", "Bundle-Name", "Bundle-RequiredExecutionEnvironment", "Bundle-SymbolicName", "Bundle-Vendor", "Bundle-Version", "Created-By", "DynamicImport-Package", "Eclipse-ExtensibleAPI", "Export-Package", "Extension-Name", "Fragment-Host", "Ignore-Package", "Implementation-Build", "Implementation-Title", "Implementation-URL", "Implementation-Vendor", "Implementation-Vendor-Id", "Implementation-Version", "Import-Package", "Include-Resource", "JCabi-Build", "JCabi-Date", "JCabi-Version", "Java-Vendor", "Java-Version", "Main-Class", "Manifest-Version", "Originally-Created-By", "Os-Arch", "Os-Name", "Os-Version", "Package", "Private-Package", "Project-Name", "Require-Bundle", "Requs-Date", "Requs-Revision", "Requs-Version", "Scm-Connection", "Scm-Revision", "Scm-Url", "Sealed", "Specification-Title", "Specification-Vendor", "Specification-Version", "Tool", "X-Compile-Source-JDK", "X-Compile-Target-JDK", "implementation-version", "mode", "package", "url"]
+[INFO] source file: /home/r/repo/src/main/requs/acronyms.req
+[INFO] source file: /home/r/repo/src/main/requs/anonymous.req
+[INFO] source file: /home/r/repo/src/main/requs/main.req
+[INFO] source file: /home/r/repo/src/main/requs/nfrs.req
+[INFO] source file: /home/r/repo/src/main/requs/vision.req
+[INFO] XeFacet.Wrap(origin=Aggregate()) done
+[INFO] XeFacet.Wrap(origin=AntlrFacet()) done
+[INFO] Transform(cleanup/duplicate-step-numbers.xsl) done
+[INFO] Transform(cleanup/duplicate-step-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-step-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-step-results.xsl) done
+[INFO] Transform(cleanup/lost-steps.xsl) done
+[INFO] Transform(cleanup/lost-methods.xsl) done
+[INFO] Transform(cleanup/duplicate-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-signatures.xsl) done
+[INFO] Transform(cleanup/duplicate-method-objects.xsl) done
+[INFO] Transform(cleanup/duplicate-method-bindings.xsl) done
+[INFO] Transform(cleanup/incomplete-step-object.xsl) done
+[INFO] Transform(cleanup/incomplete-step-signature.xsl) done
+[INFO] Transform(cleanup/incomplete-step-result.xsl) done
+[INFO] Transform(cleanup/incomplete-binding.xsl) done
+[INFO] Transform(cleanup/bindings-in-exception.xsl) done
+[INFO] Transform(seal-methods.xsl) done
+[INFO] Transform(sanity/signatures-check.xsl) done
+[INFO] Transform(sanity/types-check.xsl) done
+[INFO] Transform(sanity/seals-check.xsl) done
+[INFO] Transform(sanity/exception-rethrow-check.xsl) done
+[INFO] Transform(sanity/misplaced-failure-check.xsl) done
+[INFO] Transform(sanity/broken-order-of-steps.xsl) done
+[INFO] Transform(sanity/missed-step-numbers.xsl) done
+[INFO] Transform(sanity/too-many-steps.xsl) done
+[INFO] Transform(sanity/empty-re-throws.xsl) done
+[INFO] Transform(sanity/orphan-types.xsl) done
+[INFO] Transform(sanity/undeclared-bindings.xsl) done
+[INFO] Transform(sanity/actor-is-singleton.xsl) done
+[INFO] Transform(step-refs.xsl) done
+[INFO] Transform(methods-in-markdown.xsl) done
+[INFO] Transform(pages-in-html.xsl) done
+[INFO] Transform(count-ambiguity.xsl) done
+[INFO] Transform(find-tbds.xsl) done
+[INFO] Transform(uml/sequence-diagrams.xsl) done
+[INFO] Transform(uml/use-case-diagrams.xsl) done
+[INFO] Transform(uml/class-diagrams.xsl) done
+[INFO] XeFacet.Wrap(origin=Rules()) done
+[INFO] XeFacet.Wrap(origin=XeFacet.Fixed()) done
+[INFO] Transform(renumber.xsl) done
+[INFO] XeFacet.Wrap(origin=org.requs.Compiler$1@1a7a3795) done
+[INFO] compiled and saved to /home/r/repo/target/site/requs
+[INFO] Generating Sitemap.
+[INFO] Rendering 1 generated Doxia document: 1 xdoc
+[INFO]
+[INFO] --- maven-site-plugin:3.4:deploy (default-deploy) @ thindeck ---
+[INFO] maven.site.deploy.skip = true: Skipping site deployment
+[INFO]
+[INFO] --- site-maven-plugin:0.9:site (default) @ thindeck ---
+Downloading: https://oss.sonatype.org/content/groups/public/com/github/github/github-maven-core/0.9/github-maven-core-0.9.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/github/github/github-maven-core/0.9/github-maven-core-0.9.pom (581 B at 0.6 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/eclipse/mylyn/github/org.eclipse.egit.github.core/2.1.5/org.eclipse.egit.github.core-2.1.5.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/org/eclipse/mylyn/github/org.eclipse.egit.github.core/2.1.5/org.eclipse.egit.github.core-2.1.5.pom (5 KB at 16.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/google/code/gson/gson/2.2.2/gson-2.2.2.pom
+Downloaded: https://oss.sonatype.org/content/groups/public/com/google/code/gson/gson/2.2.2/gson-2.2.2.pom (8 KB at 27.3 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/org/codehaus/plexus/plexus-utils/3.0.1/plexus-utils-3.0.1.pom
+Downloading: http://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.0.1/plexus-utils-3.0.1.pom
+Downloaded: http://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.0.1/plexus-utils-3.0.1.pom (3 KB at 21.7 KB/sec)
+Downloading: https://oss.sonatype.org/content/groups/public/com/github/github/github-maven-core/0.9/github-maven-core-0.9.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/codehaus/plexus/plexus-utils/3.0.1/plexus-utils-3.0.1.jar
+Downloading: https://oss.sonatype.org/content/groups/public/org/eclipse/mylyn/github/org.eclipse.egit.github.core/2.1.5/org.eclipse.egit.github.core-2.1.5.jar
+Downloading: https://oss.sonatype.org/content/groups/public/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar
+Downloaded:1https://oss.sonatype.org/content/groups/public/com/github/github/github-maven-core/0.9/github-maven-core-0.9.jar (8 KB at 8.5 KB/sec)
+Downloaded: https://oss.sonatype.org/content/groups/public/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar (185 KB at 123.5 KB/sec)
+Downloaded: https://oss.sonatype.org/content/groups/public/org/eclipse/mylyn/github/org.eclipse.egit.github.core/2.1.5/org.eclipse.egit.github.core-2.1.5.jar (200 KB at 123.0 KB/sec)
+Downloading: http://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.0.1/plexus-utils-3.0.1.jar
+Downloaded: http://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.0.1/plexus-utils-3.0.1.jar (222 KB at 3404.3 KB/sec)
+[INFO] Creating 266 blobs
+[INFO] Creating tree with 266 blob entries
+[INFO] Merging with tree 38ea39dde5d53409ee335d390037329d0bf09a58
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 04:01 min
+[INFO] Finished at: 2014-08-29T19:49:08+00:00
+[INFO] Final Memory: 59M/489M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal com.github.github:site-maven-plugin:0.9:site (default) on project thindeck: Error creating commit: Invalid request.
+[ERROR]
+[ERROR] Expected data to be of type "object"; value was: nil.
+[ERROR] Expected data to be of type "object"; value was: nil. (422)
+[ERROR] -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal com.github.github:site-maven-plugin:0.9:site (default) on project thindeck: Error creating commit: Invalid request.
+
+Expected data to be of type "object"; value was: nil.
+Expected data to be of type "object"; value was: nil. (422)
+  at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:216)
+  at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:153)
+  at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:145)
+  at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:116)
+  at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:80)
+  at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build(SingleThreadedBuilder.java:51)
+  at org.apache.maven.lifecycle.internal.LifecycleStarter.execute(LifecycleStarter.java:120)
+  at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:347)
+  at org.apache.maven.DefaultMaven.execute(DefaultMaven.java:154)
+  at org.apache.maven.cli.MavenCli.execute(MavenCli.java:584)
+  at org.apache.maven.cli.MavenCli.doMain(MavenCli.java:213)
+  at org.apache.maven.cli.MavenCli.main(MavenCli.java:157)
+  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+  at java.lang.reflect.Method.invoke(Method.java:606)
+  at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced(Launcher.java:289)
+  at org.codehaus.plexus.classworlds.launcher.Launcher.launch(Launcher.java:229)
+  at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(Launcher.java:415)
+  at org.codehaus.plexus.classworlds.launcher.Launcher.main(Launcher.java:356)
+Caused by: org.apache.maven.plugin.MojoExecutionException: Error creating commit: Invalid request.
+
+Expected data to be of type "object"; value was: nil.
+Expected data to be of type "object"; value was: nil. (422)
+  at com.github.maven.plugins.site.SiteMojo.execute(SiteMojo.java:440)
+  at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:132)
+  at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:208)
+  ... 19 more
+Caused by: org.eclipse.egit.github.core.client.RequestException: Invalid request.
+
+Expected data to be of type "object"; value was: nil.
+Expected data to be of type "object"; value was: nil. (422)
+  at org.eclipse.egit.github.core.client.GitHubClient.createException(GitHubClient.java:552)
+  at org.eclipse.egit.github.core.client.GitHubClient.sendJson(GitHubClient.java:643)
+  at org.eclipse.egit.github.core.client.GitHubClient.post(GitHubClient.java:757)
+  at org.eclipse.egit.github.core.service.DataService.createCommit(DataService.java:397)
+  at com.github.maven.plugins.site.SiteMojo.execute(SiteMojo.java:434)
+  ... 21 more
+[ERROR]
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+</xmp>
+</body>
+</html>
