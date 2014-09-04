@@ -39,7 +39,7 @@ echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 cp -R /root/* /home/r
 cp -R ./* /home/r
 rm -rf repo
-chown -R r /home/r
+chown -R r:r /home/r
 chmod a+x /home/r/script.sh
 su -m r -c /home/r/script.sh
 mv /home/r/repo .
