@@ -11,7 +11,13 @@ if [ $(git tag -l "${tag}") ]; then
    exit -1
 fi
 
-git checkout -b __rultor-tmp
+export BRANCH_NAME=
+
+while [ `git branch --list $BRANCH_NAME | wc -l` -gt 0 ]; do
+    export BRANCH_NAME="__rultor-tmp-`cat /dev/urandom | tr -cd 'a-z0-9' | head -c 16`"
+done
+git checkout -b $BRANCH_NAME
+
 
 docker_when_possible
 
