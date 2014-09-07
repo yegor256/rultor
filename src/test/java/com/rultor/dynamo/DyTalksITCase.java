@@ -43,6 +43,7 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
+import org.xembly.Directives;
 
 /**
  * Integration case for {@link DyTalks}.
@@ -83,6 +84,7 @@ public final class DyTalksITCase {
         talks.create("a/b", name);
         final Talk talk = talks.get(name);
         talk.active(false);
+        talk.modify(new Directives().xpath("/talk").attr("public", "true"));
         MatcherAssert.assertThat(
             talks.recent().iterator().next().name(),
             Matchers.equalTo(name)
@@ -137,6 +139,25 @@ public final class DyTalksITCase {
                 )
             ),
             "rt-"
+        );
+    }
+
+    /**
+     * DyTalks can list recent talks, ignoring private ones.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void listsRecentTalksExceptPrivates() throws Exception {
+        final Talks talks = new DyTalks(
+            this.dynamo(), new MkSttc().counters().get("")
+        );
+        final String name = "yegor256/rultor#531";
+        talks.create("a/ff", name);
+        final Talk talk = talks.get(name);
+        talk.active(false);
+        MatcherAssert.assertThat(
+            talks.recent(),
+            Matchers.emptyIterable()
         );
     }
 

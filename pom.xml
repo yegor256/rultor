@@ -218,6 +218,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-xml</artifactId>
+            <version>0.12</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>

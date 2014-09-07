@@ -129,6 +129,7 @@
             <xs:attribute name="name" use="required" type="xs:string"/>
             <xs:attribute name="number" use="required" type="xs:integer"/>
             <xs:attribute name="later" use="required" type="xs:boolean"/>
+            <xs:attribute name="public" use="optional" type="xs:boolean"/>
         </xs:complexType>
         <xs:unique name="daemonID">
             <xs:selector xpath="daemon|archive/log" />

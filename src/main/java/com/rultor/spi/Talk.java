@@ -36,9 +36,11 @@ import com.jcabi.xml.XMLDocument;
 import com.jcabi.xml.XSD;
 import com.jcabi.xml.XSDDocument;
 import com.jcabi.xml.XSL;
+import com.jcabi.xml.XSLChain;
 import com.jcabi.xml.XSLDocument;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -73,8 +75,19 @@ public interface Talk {
     /**
      * Upgrade XSL.
      */
-    XSL UPGRADE = XSLDocument.make(
-        Talk.class.getResourceAsStream("upgrade.xsl")
+    XSL UPGRADE = new XSLChain(
+        Arrays.asList(
+            XSLDocument.make(
+                Talk.class.getResourceAsStream(
+                    "upgrade/001-talks.xsl"
+                )
+            ),
+            XSLDocument.make(
+                Talk.class.getResourceAsStream(
+                    "upgrade/002-public-attribute.xsl"
+                )
+            )
+        )
     );
 
     /**

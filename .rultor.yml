@@ -24,7 +24,7 @@ release:
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn clean deploy -Pqulice -Prultor --errors --settings ../settings.xml
-    mvn clean site-deploy --errors -Psite --settings ../settings.xml | echo 'site-deploy failed'
+    mvn clean site-deploy --errors -Psite --settings ../settings.xml || echo 'site-deploy failed'
 
 merge:
   script: |

@@ -236,7 +236,8 @@ public final class Agents {
                             Manifests.read("Rultor-S3Secret")
                         )
                     ).bucket(Manifests.read("Rultor-S3Bucket"))
-                )
+                ),
+                new Publishes(profile)
             )
         );
         return agents;

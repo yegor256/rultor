@@ -41,7 +41,7 @@ import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
- * Tests for ${@link Tweets}.
+ * Tests for {@link Tweets}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

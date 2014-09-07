@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -26,41 +27,21 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.agents;
-
-import com.jcabi.xml.XMLDocument;
-import com.rultor.spi.SuperAgent;
-import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
-import java.util.Collections;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-/**
- * Tests for ${@link DeactivatesTalks}.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.3
- */
-public final class DeactivatesTalksTest {
-
-    /**
-     * DeactivatesTalks can deactivate a talk.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void deactivatesTalk() throws Exception {
-        final SuperAgent agent = new DeactivatesTalks();
-        final Talk talk = new Talk.InFile(
-            new XMLDocument(
-                "<talk later='false' name='a' number='1'/>"
-            )
-        );
-        final Talks talks = Mockito.mock(Talks.class);
-        Mockito.doReturn(Collections.singleton(talk)).when(talks).active();
-        agent.execute(talks);
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+    <xsl:output method="xml"/>
+    <xsl:strip-space elements="*"/>
+    <xsl:template match="talk[not(@public)]">
+        <xsl:copy>
+            <xsl:attribute name="public">
+                <xsl:text>true</xsl:text>
+            </xsl:attribute>
+            <xsl:apply-templates select="node()|@*"/>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="node()|@*">
+        <xsl:copy>
+            <xsl:apply-templates select="node()|@*"/>
+        </xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>

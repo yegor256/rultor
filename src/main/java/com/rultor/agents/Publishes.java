@@ -29,38 +29,50 @@
  */
 package com.rultor.agents;
 
-import com.jcabi.xml.XMLDocument;
-import com.rultor.spi.SuperAgent;
-import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
-import java.util.Collections;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.xml.XML;
+import com.rultor.spi.Profile;
+import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.xembly.Directive;
+import org.xembly.Directives;
 
 /**
- * Tests for ${@link DeactivatesTalks}.
+ * Publishes if it's public.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.32.7
  */
-public final class DeactivatesTalksTest {
+@Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = "profile")
+public final class Publishes extends AbstractAgent {
 
     /**
-     * DeactivatesTalks can deactivate a talk.
-     * @throws Exception In case of error.
+     * Profile.
      */
-    @Test
-    public void deactivatesTalk() throws Exception {
-        final SuperAgent agent = new DeactivatesTalks();
-        final Talk talk = new Talk.InFile(
-            new XMLDocument(
-                "<talk later='false' name='a' number='1'/>"
-            )
-        );
-        final Talks talks = Mockito.mock(Talks.class);
-        Mockito.doReturn(Collections.singleton(talk)).when(talks).active();
-        agent.execute(talks);
+    private final transient Profile profile;
+
+    /**
+     * Ctor.
+     * @param prf Profile
+     */
+    public Publishes(final Profile prf) {
+        super("/talk/archive/log");
+        this.profile = prf;
+    }
+
+    @Override
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final boolean pub = this.profile
+            .read()
+            .nodes("/p/entry[@key='readers']/item")
+            .isEmpty();
+        return new Directives()
+            .xpath("/talk")
+            .attr("public", Boolean.toString(pub));
     }
 
 }

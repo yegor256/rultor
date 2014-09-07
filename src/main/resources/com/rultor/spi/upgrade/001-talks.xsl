@@ -41,7 +41,7 @@
             <xsl:apply-templates select="node()|@*"/>
         </xsl:copy>
     </xsl:template>
-    <xsl:template match="wire[github-issue and github-repo and not(href)]">
+    <xsl:template match="talk/wire[github-issue and github-repo and not(href)]">
         <xsl:copy>
             <xsl:apply-templates select="node()|@*"/>
             <href>
@@ -52,13 +52,13 @@
             </href>
         </xsl:copy>
     </xsl:template>
-    <xsl:template match="/talk/daemon[not(title)]">
+    <xsl:template match="talk/daemon[not(title)]">
         <xsl:copy>
             <xsl:apply-templates select="node()|@*"/>
             <title>unknown</title>
         </xsl:copy>
     </xsl:template>
-    <xsl:template match="/talk/archive/log[not(@title)]">
+    <xsl:template match="talk/archive/log[not(@title)]">
         <xsl:copy>
             <xsl:attribute name="title">
                 <xsl:text>some command</xsl:text>

@@ -29,38 +29,40 @@
  */
 package com.rultor.agents;
 
-import com.jcabi.xml.XMLDocument;
-import com.rultor.spi.SuperAgent;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Agent;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
-import java.util.Collections;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.xembly.Directives;
 
 /**
- * Tests for ${@link DeactivatesTalks}.
+ * Tests for {@link Publishes}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.32.7
  */
-public final class DeactivatesTalksTest {
+public final class PublishesTest {
 
     /**
-     * DeactivatesTalks can deactivate a talk.
+     * Publishes can add a public attribute.
      * @throws Exception In case of error.
      */
     @Test
-    public void deactivatesTalk() throws Exception {
-        final SuperAgent agent = new DeactivatesTalks();
-        final Talk talk = new Talk.InFile(
-            new XMLDocument(
-                "<talk later='false' name='a' number='1'/>"
-            )
+    public void addsPublicAttribute() throws Exception {
+        final Agent agent = new Publishes(new Profile.Fixed());
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk").add("archive")
+                .add("log").attr("id", "abc").attr("title", "hey").up()
         );
-        final Talks talks = Mockito.mock(Talks.class);
-        Mockito.doReturn(Collections.singleton(talk)).when(talks).active();
-        agent.execute(talks);
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath("/talk[@public='true']")
+        );
     }
 
 }
