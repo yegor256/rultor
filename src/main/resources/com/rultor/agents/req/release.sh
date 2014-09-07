@@ -7,17 +7,15 @@ fi
 
 cd repo
 if [ $(git tag -l "${tag}") ]; then
-   echo "Tag ${tag} already exists!"
-   exit -1
+  echo "Tag ${tag} already exists!"
+  exit -1
 fi
 
 export BRANCH_NAME=
-
-while [ `git branch --list $BRANCH_NAME | wc -l` -gt 0 ]; do
-    export BRANCH_NAME="__rultor-tmp-`cat /dev/urandom | tr -cd 'a-z0-9' | head -c 16`"
+while [ $(git branch --list "${BRANCH_NAME}" | wc -l) -gt 0 ]; do
+  export BRANCH_NAME="__rultor-tmp-`cat /dev/urandom | tr -cd 'a-z0-9' | head -c 16`"
 done
-git checkout -b $BRANCH_NAME
-
+git checkout -b "${BRANCH_NAME}"
 
 docker_when_possible
 
