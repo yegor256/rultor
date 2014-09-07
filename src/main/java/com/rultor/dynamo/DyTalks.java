@@ -35,6 +35,7 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
@@ -236,22 +237,36 @@ public final class DyTalks implements Talks {
 
     @Override
     public Iterable<Talk> recent() {
-        return Iterables.transform(
-            this.region.table(DyTalks.TBL)
-                .frame()
-                .through(
-                    new QueryValve()
-                        .withIndexName(DyTalks.IDX_ACTIVE)
-                        .withScanIndexForward(false)
-                        .withConsistentRead(false)
-                        .withLimit(Tv.TWENTY)
-                        .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
-                )
-                .where(DyTalks.ATTR_ACTIVE, Boolean.toString(false)),
-            new Function<Item, Talk>() {
+        return Iterables.filter(
+            Iterables.transform(
+                this.region.table(DyTalks.TBL)
+                    .frame()
+                    .through(
+                        new QueryValve()
+                            .withIndexName(DyTalks.IDX_ACTIVE)
+                            .withScanIndexForward(false)
+                            .withConsistentRead(false)
+                            .withLimit(Tv.TWENTY)
+                            .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
+                    )
+                    .where(DyTalks.ATTR_ACTIVE, Boolean.toString(false)),
+                new Function<Item, Talk>() {
+                    @Override
+                    public Talk apply(final Item input) {
+                        return new DyTalk(input);
+                    }
+                }
+            ),
+            new Predicate<Talk>() {
                 @Override
-                public Talk apply(final Item input) {
-                    return new DyTalk(input);
+                public boolean apply(final Talk talk) {
+                    try {
+                        return !talk.read().nodes(
+                            "/talk[@public='true']"
+                        ).isEmpty();
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
                 }
             }
         );

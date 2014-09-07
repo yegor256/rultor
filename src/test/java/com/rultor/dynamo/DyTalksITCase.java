@@ -37,8 +37,10 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -67,7 +69,7 @@ public final class DyTalksITCase {
         talks.create("hey/you", name);
         MatcherAssert.assertThat(
             talks.get(name).read(),
-            XhtmlMatchers.hasXPath("/talk")
+            XhtmlMatchers.hasXPath("/talk[@later]")
         );
     }
 
@@ -84,7 +86,6 @@ public final class DyTalksITCase {
         talks.create("a/b", name);
         final Talk talk = talks.get(name);
         talk.active(false);
-        talk.modify(new Directives().xpath("/talk").attr("public", "true"));
         MatcherAssert.assertThat(
             talks.recent().iterator().next().name(),
             Matchers.equalTo(name)
@@ -117,6 +118,40 @@ public final class DyTalksITCase {
     }
 
     /**
+     * DyTalks can list recent talks, ignoring private ones.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void listsRecentTalksExceptPrivates() throws Exception {
+        final Talks talks = new DyTalks(
+            this.dynamo(), new MkSttc().counters().get("")
+        );
+        final String name = "yegor256/rultor#990";
+        talks.create("a/ff", name);
+        final Talk talk = talks.get(name);
+        talk.active(false);
+        talk.modify(new Directives().xpath("/talk").attr("public", "false"));
+        MatcherAssert.assertThat(
+            talks.recent(),
+            Matchers.not(
+                Matchers.hasItem(
+                    new CustomMatcher<Talk>("private talk") {
+                        @Override
+                        public boolean matches(final Object item) {
+                            final Talk tlk = Talk.class.cast(item);
+                            try {
+                                return name.equals(tlk.name());
+                            } catch (final IOException ex) {
+                                throw new IllegalStateException(ex);
+                            }
+                        }
+                    }
+                )
+            )
+        );
+    }
+
+    /**
      * DynamoDB region for tests.
      * @return Region
      */
@@ -139,25 +174,6 @@ public final class DyTalksITCase {
                 )
             ),
             "rt-"
-        );
-    }
-
-    /**
-     * DyTalks can list recent talks, ignoring private ones.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void listsRecentTalksExceptPrivates() throws Exception {
-        final Talks talks = new DyTalks(
-            this.dynamo(), new MkSttc().counters().get("")
-        );
-        final String name = "yegor256/rultor#531";
-        talks.create("a/ff", name);
-        final Talk talk = talks.get(name);
-        talk.active(false);
-        MatcherAssert.assertThat(
-            talks.recent(),
-            Matchers.emptyIterable()
         );
     }
 
