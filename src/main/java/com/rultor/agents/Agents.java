@@ -60,6 +60,7 @@ import com.rultor.agents.github.qtn.QnRelease;
 import com.rultor.agents.github.qtn.QnSince;
 import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnVersion;
+import com.rultor.agents.github.qtn.QnGithubIssue;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.RegistersShell;
@@ -199,7 +200,7 @@ public final class Agents {
                         49092213,
                         new QnReferredTo(
                             this.github.users().self().login(),
-                            new QnParametrized(list)
+                            new QnParametrized(new QnGithubIssue(list))
                         )
                     )
                 ),
