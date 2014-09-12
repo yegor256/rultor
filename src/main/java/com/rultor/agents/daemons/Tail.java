@@ -229,7 +229,8 @@ public final class Tail {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(
                 String.format(
-                    "dir=%s; cat \"${dir}/stdout\" | col -b",
+                    "file=%s/stdout; %s | col -b",
+                    "cat \"${file}\" 2>/dev/null || echo \"the file is gone\"",
                     SSH.escape(this.xml.xpath("/talk/daemon/dir/text()").get(0))
                 ),
                 new NullInputStream(0L), baos,
