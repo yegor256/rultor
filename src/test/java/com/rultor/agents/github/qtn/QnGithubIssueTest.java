@@ -34,8 +34,11 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.xml.StrictXML;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.spi.Talk;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -74,18 +77,33 @@ public final class QnGithubIssueTest {
             }
         };
         MatcherAssert.assertThat(
-            new Xembler(
-                new Directives().add("request").append(
-                    new QnGithubIssue(origin).understand(
-                        new Comment.Smart(issue.comments().get(1)), new URI("#")
-                    ).dirs()
-                )
-            ).xml(),
+            new StrictXML(
+                new XMLDocument(
+                    new Xembler(
+                        new Directives().add("talk")
+                            .attr("name", "abc")
+                            .attr("later", "false")
+                            .attr("number", "123")
+                            .add("request")
+                            .attr("id", "a1b2c3")
+                            .append(
+                                new QnGithubIssue(origin).understand(
+                                    new Comment.Smart(
+                                        issue.comments().get(1)
+                                    ),
+                                    new URI("#")
+                                ).dirs()
+                            )
+                            .addIf("args")
+                    ).xml()
+                ),
+                Talk.SCHEMA
+            ),
             XhtmlMatchers.hasXPaths(
-                "/request[type='xxx']",
-                "/request/args[count(arg) = 1]",
+                "/talk/request[type='xxx']",
+                "/talk/request/args[count(arg) = 1]",
                 String.format(
-                    "/request/args/arg[@name='github_issue' and .='%d']",
+                    "/talk/request/args/arg[@name='github_issue' and .='%d']",
                     issue.number()
                 )
             )

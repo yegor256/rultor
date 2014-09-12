@@ -70,10 +70,10 @@ public final class QnGithubIssue implements Question {
             req = new Req() {
                 @Override
                 public Iterable<Directive> dirs() {
-                    dirs.addIf("args");
-                    dirs.add("arg").attr("name", "github_issue")
-                        .set(String.valueOf(comment.issue().number())).up();
-                    return dirs;
+                    return dirs.addIf("args")
+                        .add("arg").attr("name", "github_issue")
+                        .set(String.valueOf(comment.issue().number()))
+                        .up().up();
                 }
             };
         }
