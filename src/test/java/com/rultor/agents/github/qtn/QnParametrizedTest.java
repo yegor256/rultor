@@ -70,7 +70,9 @@ public final class QnParametrizedTest {
                 return new Req() {
                     @Override
                     public Iterable<Directive> dirs() {
-                        return new Directives().add("type").set("xxx").up();
+                        return new Directives()
+                            .add("args").add("arg").set("hello, all").up().up()
+                            .add("type").set("xxx").up();
                     }
                 };
             }
@@ -85,7 +87,7 @@ public final class QnParametrizedTest {
             ).xml(),
             XhtmlMatchers.hasXPaths(
                 "/request[type='xxx']",
-                "/request/args[count(arg) = 2]",
+                "/request/args[count(arg) = 3]",
                 "/request/args/arg[@name='tag' and .='1.9']",
                 "/request/args/arg[@name='server' and .='p5']"
             )

@@ -61,9 +61,8 @@ public final class QnGithubIssue implements Question {
     }
 
     @Override
-    public Req understand(
-        final Comment.Smart comment, final URI home
-    ) throws IOException {
+    public Req understand(final Comment.Smart comment, final URI home)
+        throws IOException {
         Req req = this.origin.understand(comment, home);
         if (!Iterables.isEmpty(req.dirs())) {
             final Directives dirs = new Directives().append(req.dirs());
