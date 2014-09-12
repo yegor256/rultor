@@ -44,7 +44,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
@@ -54,7 +53,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -102,30 +100,27 @@ public final class StartsDaemon extends AbstractAgent {
         new Shell.Safe(shell).exec(
             String.format("dir=%s; cat > \"${dir}/run.sh\"", SSH.escape(dir)),
             IOUtils.toInputStream(
-                StringUtils.join(
-                    Arrays.asList(
-                        "#!/bin/bash",
-                        "set -x",
-                        "set -e",
-                        "set -o pipefail",
-                        "cd $(dirname $0)",
-                        "echo $$ > ./pid",
-                        String.format(
-                            "echo %s",
-                            SSH.escape(
-                                String.format(
-                                    "%s %s",
-                                    Manifests.read("Rultor-Version"),
-                                    Manifests.read("Rultor-Revision")
-                                )
+                Joiner.on('\n').join(
+                    "#!/bin/bash",
+                    "set -x",
+                    "set -e",
+                    "set -o pipefail",
+                    "cd $(dirname $0)",
+                    "echo $$ > ./pid",
+                    String.format(
+                        "echo %s",
+                        SSH.escape(
+                            String.format(
+                                "%s %s",
+                                Manifests.read("Rultor-Version"),
+                                Manifests.read("Rultor-Revision")
                             )
-                        ),
-                        "date --iso-8601=seconds --utc",
-                        "uptime",
-                        this.upload(shell, dir),
-                        daemon.xpath("script/text()").get(0)
+                        )
                     ),
-                    "\n"
+                    "date --iso-8601=seconds --utc",
+                    "uptime",
+                    this.upload(shell, dir),
+                    daemon.xpath("script/text()").get(0)
                 ),
                 CharEncoding.UTF_8
             ),
@@ -133,7 +128,7 @@ public final class StartsDaemon extends AbstractAgent {
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            Joiner.on("&&").join(
+            Joiner.on(" && ").join(
                 String.format("dir=%s", SSH.escape(dir)),
                 "chmod a+x \"${dir}/run.sh\"",
                 "echo 'run.sh failed to start' > \"${dir}/stdout\"",
@@ -171,7 +166,10 @@ public final class StartsDaemon extends AbstractAgent {
                     Logger.stream(Level.INFO, true),
                     Logger.stream(Level.WARNING, true)
                 );
-                Logger.info(this, "\"%s\" uploaded as %s", asset.getKey(), dir);
+                Logger.info(
+                    this, "\"%s\" uploaded into %s",
+                    asset.getKey(), dir
+                );
             }
             this.gpg(shell, dir);
         } catch (final Profile.ConfigException ex) {
@@ -197,7 +195,7 @@ public final class StartsDaemon extends AbstractAgent {
             final String[] names = {"pubring.gpg", "secring.gpg"};
             for (final String name : names) {
                 shell.exec(
-                    Joiner.on(" && ").join(
+                    Joiner.on(" &&  ").join(
                         String.format("dir=%s  ", SSH.escape(dir)),
                         "mkdir -p \"${dir}/.gpg\"",
                         String.format("cat > \"${dir}/.gpg/%s\"", name)

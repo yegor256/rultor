@@ -30,6 +30,7 @@
 package com.rultor.agents.daemons;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.s3.Bucket;
@@ -52,7 +53,6 @@ import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -92,11 +92,13 @@ public final class ArchivesDaemon extends AbstractAgent {
         final File file = File.createTempFile("rultor", ".log");
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
-            StringUtils.join(
-                String.format("dir=%s;", SSH.escape(dir)),
-                "if [ -e \"${dir}/stdout\" ]; then ",
-                "cat \"${dir}/stdout\" | col -b 2>&1;",
-                "else echo 'stdout not found, internal error!'; fi"
+            Joiner.on(';').join(
+                String.format("dir=%s", SSH.escape(dir)),
+                "if [ -e \"${dir}/stdout\" ]",
+                "then",
+                "cat \"${dir}/stdout\" | col -b 2>&1",
+                "else echo 'stdout not found, internal error!'",
+                "fi"
             ),
             new NullInputStream(0L),
             new FileOutputStream(file),
