@@ -36,6 +36,8 @@ import co.stateful.retry.ReSttc;
 import com.google.common.collect.EvictingQueue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Timeable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
@@ -151,6 +153,7 @@ public final class Lifespan implements ServletContextListener {
      * @return Milliseconds spent
      * @throws IOException If fails
      */
+    @Timeable(limit = Tv.FIVE, unit = TimeUnit.MINUTES)
     private long safe(final Talks talks) throws IOException {
         final long start = System.currentTimeMillis();
         int total = 0;
