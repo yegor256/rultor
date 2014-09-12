@@ -200,7 +200,7 @@ public final class Agents {
                         49092213,
                         new QnReferredTo(
                             this.github.users().self().login(),
-                            new QnParametrized(new QnGithubIssue(list))
+                            new QnParametrized(list)
                         )
                     )
                 ),
