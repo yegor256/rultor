@@ -92,11 +92,10 @@ public final class ArchivesDaemon extends AbstractAgent {
         final File file = File.createTempFile("rultor", ".log");
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
-            Joiner.on(';').join(
+            Joiner.on("; ").join(
                 String.format("dir=%s", SSH.escape(dir)),
                 "if [ -e \"${dir}/stdout\" ]",
-                "then",
-                "cat \"${dir}/stdout\" | col -b 2>&1",
+                "then cat \"${dir}/stdout\" | col -b 2>&1",
                 "else echo 'stdout not found, internal error!'",
                 "fi"
             ),

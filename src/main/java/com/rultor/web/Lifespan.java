@@ -66,6 +66,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.EqualsAndHashCode;
@@ -84,6 +85,11 @@ import lombok.ToString;
 @Loggable(Loggable.INFO)
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Lifespan implements ServletContextListener {
+
+    /**
+     * Shutting down?
+     */
+    private final transient AtomicBoolean down = new AtomicBoolean();
 
     /**
      * Routine worker.
@@ -120,7 +126,7 @@ public final class Lifespan implements ServletContextListener {
                     new Callable<Long>() {
                         @Override
                         public Long call() throws Exception {
-                            return Lifespan.this.safe(talks);
+                            return Lifespan.this.uninterrupted(talks);
                         }
                     },
                     true
@@ -144,7 +150,31 @@ public final class Lifespan implements ServletContextListener {
 
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
+        this.down.set(true);
         this.service.shutdown();
+    }
+
+    /**
+     * Uninterrupted call.
+     * @param talks Talks
+     * @return Milliseconds spent
+     * @throws IOException If fails
+     */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    private long uninterrupted(final Talks talks) throws IOException {
+        try {
+            return this.safe(talks);
+        // @checkstyle IllegalCatchCheck (1 line)
+        } catch (final RuntimeException ex) {
+            if (!this.down.get()) {
+                try {
+                    TimeUnit.MICROSECONDS.sleep(1L);
+                } catch (final InterruptedException iex) {
+                    Logger.info(this, "%[exception]s", iex);
+                }
+            }
+            throw ex;
+        }
     }
 
     /**
