@@ -91,6 +91,10 @@
                         </xs:element>
                     </xs:sequence>
                 </xs:complexType>
+                <xs:unique name="argName">
+                    <xs:selector xpath="arg" />
+                    <xs:field xpath="@name" />
+                </xs:unique>
             </xs:element>
         </xs:all>
         <xs:attribute name="id" type="hash" use="required"/>
