@@ -42,6 +42,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
@@ -112,6 +113,7 @@ public final class StartsDaemonITCase {
         );
         final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        TimeUnit.SECONDS.sleep(2L);
         new Shell.Safe(new TalkShells(talk.read()).get()).exec(
             String.format("cat %s/stdout", dir),
             new NullInputStream(0L),
