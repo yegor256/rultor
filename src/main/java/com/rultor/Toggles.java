@@ -64,13 +64,15 @@ public final class Toggles {
      */
     public void readOnly(final boolean yes) throws IOException {
         final File file = this.file();
-        if (yes) {
-            FileUtils.touch(file);
-        } else {
-            if (!file.delete()) {
-                throw new IllegalArgumentException(
-                    String.format("failed to delete %s", file)
-                );
+        synchronized (Toggles.class) {
+            if (yes) {
+                FileUtils.touch(file);
+            } else {
+                if (!file.delete()) {
+                    throw new IllegalArgumentException(
+                        String.format("failed to delete %s", file)
+                    );
+                }
             }
         }
     }
@@ -80,7 +82,9 @@ public final class Toggles {
      * @return TRUE if read only
      */
     public boolean readOnly() {
-        return this.file().exists();
+        synchronized (Toggles.class) {
+            return this.file().exists();
+        }
     }
 
     /**
