@@ -55,6 +55,10 @@ import org.apache.commons.lang3.CharEncoding;
 /**
  * Github Profile.
  *
+ * <p>An instance of this class is created by {@link Profiles}, when
+ * it is obvious that the configuration of the repository is stored
+ * in Github.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
