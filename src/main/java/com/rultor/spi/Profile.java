@@ -85,6 +85,13 @@ public interface Profile {
          * Ctor.
          * @param cause Cause of it
          */
+        public ConfigException(final String cause) {
+            super(cause);
+        }
+        /**
+         * Ctor.
+         * @param cause Cause of it
+         */
         public ConfigException(final Exception cause) {
             super(cause);
         }

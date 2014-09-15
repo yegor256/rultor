@@ -73,7 +73,7 @@ final class GithubProfile implements Profile {
      * Path pattern.
      */
     private static final Pattern PATH = Pattern.compile(
-        "([a-zA-Z0-9\\.\\-]+/[a-zA-Z0-9\\.\\-]+)#(.+)"
+        "(\\w[\\w\\-]+/[\\w\\.\\-]+)#(.+)"
     );
 
     /**
@@ -127,7 +127,7 @@ final class GithubProfile implements Profile {
     private InputStream asset(final String path) throws IOException {
         final Matcher matcher = GithubProfile.PATH.matcher(path);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException(
+            throw new Profile.ConfigException(
                 String.format("invalid path of asset: %s", path)
             );
         }
