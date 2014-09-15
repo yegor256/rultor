@@ -97,6 +97,7 @@ public final class GithubProfileTest {
     /**
      * GithubProfile can throw if asset is misconfigured.
      * @throws Exception In case of error.
+     * @since 1.33
      */
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenAssetIsMisconfigured() throws Exception {
