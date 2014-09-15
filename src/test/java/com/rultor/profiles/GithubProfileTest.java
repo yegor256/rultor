@@ -29,6 +29,7 @@
  */
 package com.rultor.profiles;
 
+import com.google.common.base.Joiner;
 import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
@@ -37,7 +38,6 @@ import com.rultor.spi.Profile;
 import java.io.IOException;
 import javax.json.Json;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -59,12 +59,12 @@ public final class GithubProfileTest {
     @Test
     public void fetchesYamlConfig() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            StringUtils.join(
-                "assets:\n",
-                "  test.xml: jeff/test1#test.xml\n",
-                "  beta: jeff/test1#test.xml\n",
-                "merge:\n",
-                "  script: hello!\n"
+            Joiner.on('\n').join(
+                "assets:",
+                "  test.xml: jeff/test1#test.xml",
+                "  beta: jeff/test1#test.xml",
+                "merge:",
+                "  script: hello!"
             )
         );
         final Profile profile = new GithubProfile(repo);
@@ -92,6 +92,21 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenYamlIsBroken() throws Exception {
         new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n")).read();
+    }
+
+    /**
+     * GithubProfile can throw if asset is misconfigured.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void throwsWhenAssetIsMisconfigured() throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            Joiner.on('\n').join(
+                "assets: ",
+                "  something.xml: -invalid.user.name/test1#test.xml"
+            )
+        );
+        new GithubProfile(repo).assets();
     }
 
     /**
