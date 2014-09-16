@@ -70,6 +70,7 @@ function docker_when_possible {
   done
   cd ..
   ${docker} pull "${image}"
+  ${docker} -v
   ${docker} run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main "${image}" /main/entry.sh
   sudo chown -R $(whoami) repo
