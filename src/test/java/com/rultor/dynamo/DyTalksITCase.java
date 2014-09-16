@@ -44,6 +44,7 @@ import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -89,6 +90,37 @@ public final class DyTalksITCase {
         MatcherAssert.assertThat(
             talks.recent().iterator().next().name(),
             Matchers.equalTo(name)
+        );
+    }
+
+    /**
+     * DyTalks caches talks.
+     * @throws Exception If some problem inside
+     * @todo #536 For some strange reason Cacheable is not being applied to
+     *  DyTalks, when it starts working enable this test.
+     */
+    @Test
+    @Ignore
+    public void cachesRecentTalks() throws Exception {
+        final Talks talks = new DyTalks(
+            this.dynamo(), new MkSttc().counters().get("")
+        );
+        final String first = "krzyk/rultor#562";
+        final String repo = "some/other";
+        talks.create(repo, first);
+        final Talk talk = talks.get(first);
+        talk.active(false);
+        MatcherAssert.assertThat(
+            talks.recent(),
+            Matchers.<Talk>iterableWithSize(1)
+        );
+        final String second = "krzyk/rultor#562#2";
+        talks.create(repo, second);
+        final Talk talking = talks.get(second);
+        talking.active(false);
+        MatcherAssert.assertThat(
+            talks.recent(),
+            Matchers.<Talk>iterableWithSize(1)
         );
     }
 

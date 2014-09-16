@@ -37,6 +37,7 @@ import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
@@ -235,6 +236,7 @@ public final class DyTalks implements Talks {
         );
     }
 
+    @Cacheable
     @Override
     public Iterable<Talk> recent() {
         return Iterables.filter(
