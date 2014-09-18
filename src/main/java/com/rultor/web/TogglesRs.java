@@ -54,7 +54,7 @@ public final class TogglesRs extends BaseRs {
     public void readOnly() throws IOException {
         this.adminOnly();
         final Toggles toggles = new Toggles();
-        toggles.readOnly(!toggles.readOnly());
+        toggles.toggle();
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format("read-only mode set to %B", toggles.readOnly()),

@@ -58,21 +58,20 @@ public final class Toggles {
     );
 
     /**
-     * Set read only mode.
-     * @param yes TRUE if read only
+     * Toggle read only mode.
      * @throws IOException If fails
      */
-    public void readOnly(final boolean yes) throws IOException {
+    public void toggle() throws IOException {
         final File file = this.file();
         synchronized (Toggles.class) {
-            if (yes) {
-                FileUtils.touch(file);
-            } else {
+            if (this.readOnly()) {
                 if (!file.delete()) {
-                    throw new IllegalArgumentException(
+                    throw new IllegalStateException(
                         String.format("failed to delete %s", file)
                     );
                 }
+            } else {
+                FileUtils.touch(file);
             }
         }
     }
