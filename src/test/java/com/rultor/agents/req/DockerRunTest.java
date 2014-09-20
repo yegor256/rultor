@@ -146,8 +146,35 @@ public final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            // @checkstyle MultipleStringLiterals (1 line)
             new DockerRun(profile, "/p/entry[@key='f']").script(),
             Matchers.equalTo("( 'one' ';' 'two' ';' 'hi' ';' )")
+        );
+    }
+
+    /**
+     * DockerRun can fetch uninstall script.
+     * @throws Exception In case of error.
+     * @since 1.22
+     */
+    @Test
+    public void fetchesUninstallScript() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                StringUtils.join(
+                    "<p>",
+                    "<entry key='uninstall'>" ,
+                    "<item>one</item><item>two</item>",
+                    "</entry>",
+                    "<entry key='f'><entry key='script'>hi</entry></entry>",
+                    "</p>"
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            // @checkstyle MultipleStringLiterals (1 line)
+            new DockerRun(profile, "/p/entry[@key='f']").script(),
+            Matchers.equalTo("( 'hi' ';' 'one' ';' 'two' ';' )")
         );
     }
 

@@ -92,7 +92,10 @@ final class DockerRun {
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='install']"
                 ),
-                DockerRun.scripts(this.node(), "entry[@key='script']")
+                DockerRun.scripts(this.node(), "entry[@key='script']"),
+                DockerRun.scripts(
+                    this.profile.read(), "/p/entry[@key='uninstall']"
+                )
             )
         );
     }
