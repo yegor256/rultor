@@ -166,7 +166,7 @@ public final class StartsRequest extends AbstractAgent {
         vars.put(
             "image",
             new Profile.Defaults(this.profile).text(
-                "/p/entry[@key='docker']/entry[@key='image']/text()",
+                "/p/entry[@key='docker']/entry[@key='image']",
                 "yegor256/rultor"
             )
         );
