@@ -154,7 +154,9 @@ public final class StartsRequestTest {
                 new XMLDocument(
                     StringUtils.join(
                         "<p><entry key='release'><entry key='script'>",
-                        "echo HEY</entry></entry></p>"
+                        "echo HEY</entry></entry>",
+                        "<entry key='docker'><entry key='image'>a/b</entry>",
+                        "</entry></p>"
                     )
                 )
             )
