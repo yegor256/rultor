@@ -33,6 +33,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
@@ -41,6 +42,7 @@ import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -87,8 +89,22 @@ final class DockerRun {
      * @throws IOException If fails
      */
     public String script() throws IOException {
+        final Iterable<String> uninstall;
+        if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
+            uninstall = Collections.emptyList();
+        } else {
+            uninstall = Iterables.concat(
+                Lists.newArrayList("function", "clean_up()", "{"),
+                DockerRun.scripts(
+                    this.profile.read(), "/p/entry[@key='uninstall']"
+                ),
+                Lists.newArrayList("}", ";"),
+                Lists.newArrayList("trap", "clean_up", "EXIT", ";")
+            );
+        }
         return DockerRun.enlist(
             Iterables.concat(
+                uninstall,
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='install']"
                 ),
