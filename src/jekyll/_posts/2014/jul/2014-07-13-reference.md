@@ -183,3 +183,22 @@ The list of Github accounts able to give commands to Rultor is specified in
 `commanders`. By default, only Github repository collaborators can give
 commands. Configured commanders don't replace collaborators. In other words,
 Github collaborators *and* accounts mentioned here are allowed to give commands.
+
+## Uninstall Script
+
+When you need some script to be executed at the end of
+every command (no matter what the result of that command is),
+you can configure it via `unistall`:
+
+{% highlight yaml %}
+install: |
+  # create a new EC2 instance
+merge:
+  script: |
+    # use EC2 instance for testing
+uninstall: |
+  # destroy EC2 instance
+{% endhighlight %}
+
+This mechanism can be useful when you want to free certain
+resources, created during installation.
