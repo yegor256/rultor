@@ -33,6 +33,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
@@ -89,13 +90,18 @@ final class DockerRun {
     public String script() throws IOException {
         return DockerRun.enlist(
             Iterables.concat(
+                Iterables.concat(
+                    Lists.newArrayList("function", "clean_up()", "{"),
+                    DockerRun.scripts(
+                        this.profile.read(), "/p/entry[@key='uninstall']"
+                    ),
+                    Lists.newArrayList("}", ";"),
+                    Lists.newArrayList("trap", "clean_up", "EXIT", ";")
+                ),
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='install']"
                 ),
-                DockerRun.scripts(this.node(), "entry[@key='script']"),
-                DockerRun.scripts(
-                    this.profile.read(), "/p/entry[@key='uninstall']"
-                )
+                DockerRun.scripts(this.node(), "entry[@key='script']")
             )
         );
     }
