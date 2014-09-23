@@ -174,7 +174,7 @@ public final class DockerRunTest {
         MatcherAssert.assertThat(
             // @checkstyle MultipleStringLiterals (1 line)
             new DockerRun(profile, "/p/entry[@key='f']").script(),
-            // @checksttle LineLength (1 line)
+            // @checkstyle LineLength (1 line)
             Matchers.equalTo("( 'function' 'clean_up()' '{' 'one' ';' 'two' ';' '}' ';' 'trap' 'clean_up' 'EXIT' ';' 'hi' ';' )")
         );
     }
