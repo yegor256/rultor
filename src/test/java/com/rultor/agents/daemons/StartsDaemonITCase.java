@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
@@ -80,6 +81,12 @@ public final class StartsDaemonITCase {
         final Sshd sshd = new Sshd(this.temp.newFolder());
         final int port = sshd.start();
         final Talk talk = new Talk.InFile();
+        final String executor;
+        if (SystemUtils.IS_OS_LINUX) {
+            executor = "md5sum";
+        } else {
+            executor = "md5";
+        }
         talk.modify(
             new Directives().xpath("/talk")
                 .add("shell").attr("id", "abcdef")
@@ -89,7 +96,9 @@ public final class StartsDaemonITCase {
                 .add("key").set(sshd.key()).up().up()
                 .add("daemon").attr("id", "fedcba")
                 .add("title").set("some operation").up()
-                .add("script").set("ls -al; md5 file.bin; sleep 50000")
+                .add("script").set(
+                    String.format("ls -al; %s file.bin; sleep 50000", executor)
+                )
         );
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doReturn(new XMLDocument("<p/>")).when(profile).read();
