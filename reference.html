@@ -9,9 +9,17 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?3769fef"/>
+    <link rel="stylesheet" href="/css/layout.css?60715f4"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
+    <script>//<![CDATA[
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-1963507-28', 'auto');
+      ga('send', 'pageview');
+    //]]></script>
   </head>
   <body>
     <div class="wrapper">
@@ -183,6 +191,23 @@ one. If any of them fails, execution stops.</p>
 <code>commanders</code>. By default, only Github repository collaborators can give
 commands. Configured commanders don&#39;t replace collaborators. In other words,
 Github collaborators <em>and</em> accounts mentioned here are allowed to give commands.</p>
+
+<h2 id="uninstall-script">Uninstall Script</h2>
+
+<p>When you need some script to be executed at the end of
+every command (no matter what the result of that command is),
+you can configure it via <code>unistall</code>:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+  <span class="no"># create a new EC2 instance</span>
+<span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+    <span class="no"># use EC2 instance for testing</span>
+<span class="l-Scalar-Plain">uninstall</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+  <span class="no"># destroy EC2 instance</span></code></pre></div>
+
+<p>This mechanism can be useful when you want to free certain
+resources, created during installation.</p>
 </article>
       </section>
       <footer class="footer">
@@ -234,9 +259,31 @@ Github collaborators <em>and</em> accounts mentioned here are allowed to give co
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/3769fef">3769fef</a>
+          <a href="https://github.com/yegor256/rultor/commit/60715f4">60715f4</a>
         </p>
       </footer>
     </div>
+    <script type="text/javascript">//<![CDATA[
+      (function (d, w, c) {
+      (w[c] = w[c] || []).push(function() {
+      try {
+      w.yaCounter25979713 = new Ya.Metrika({id:25979713,
+      webvisor:true,
+      clickmap:true,
+      trackLinks:true,
+      accurateTrackBounce:true});
+      } catch(e) { }
+      });
+      var n = d.getElementsByTagName("script")[0],
+      s = d.createElement("script"),
+      f = function () { n.parentNode.insertBefore(s, n); };
+      s.type = "text/javascript";
+      s.async = true;
+      s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+      if (w.opera == "[object Opera]") {
+      d.addEventListener("DOMContentLoaded", f, false);
+      } else { f(); }
+      })(document, window, "yandex_metrika_callbacks");
+    //]]></script>
   </body>
 </html>

@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>rultor - Project Dependencies</title>
-        <link media="all" rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+        <title>rultor &#x2013; Project Dependencies</title>
         <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
+        <link media="all" rel="stylesheet" type="text/css" href="./ico/ico.css"/>
                             <script>
                 var _gaq = _gaq || [];
                 _gaq.push(['_setAccount', 'UA-1963507-28']);
@@ -20,31 +20,15 @@
 <link rel="shortcut icon" href="http://img.rultor.com/favicon.gif"/>
                                                                                                                 
 <link rel="author" href="https://plus.google.com/u/0/114792568016408327418?rel=author"/>
-                                            <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
-        <script>
-            $(document).ready(
-                function() {
-                    $(".menu-button").click(
-                        function() {
-                            if ($("#here-goes-menu").attr("class") == "menu-off") {
-                                $("#menu").clone().attr("class", "mobile-menu").appendTo("#here-goes-menu");
-                                $("#here-goes-menu").attr("class", "menu-on");
-                            } else {
-                                $(".mobile-menu").hide();
-                                $("#here-goes-menu").attr("class", "menu-off");
-                            }
-                        }
-                    );
-                }
-            );
-        </script>
+                                            <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="./js/jcabi.js"></script>
     </head>
     <body>
                 <section class="page" itemscope="" itemtype="http://schema.org/BlogPosting">
             <nav class="menu-section" role="navigation">
                 <ul class="menu" id="menu">
                                                                                     <li>
-                            Overview
+                            <span>Overview</span>
                                                             <ul>
                                                                                                     <li >
                             <span>                        <a href="index.html" title="Introduction">Introduction</a>
@@ -53,7 +37,7 @@
                                                                     </ul>
                                                     </li>
                                                                                                                         <li >
-                            <span>                        <a href="apidocs-1.32.2/index.html" title="JavaDoc 1.32.2">JavaDoc 1.32.2</a>
+                            <span>                        <a href="apidocs-1.33/index.html" title="JavaDoc 1.33">JavaDoc 1.33</a>
         </span>
                                                                                                                                                                 <ul>
                                                                     </ul>
@@ -73,7 +57,7 @@
                                                                                         </ul>
                                                     </li>
                                             <li>
-                            Project Documentation
+                            <span>Project Documentation</span>
                                                             <ul>
                                                                                                     <li >
                             <span>                        <a href="project-info.html" title="Project Information">Project Information</a>
@@ -147,7 +131,6 @@
                 <main role="main">
                     <div class="content">
                         <header>
-                            <i class="menu-button fa fa-align-justify"></i>
                             <div class="logo">
                                 <a href="http://doc.rultor.com/"
                                     title=" rultor.com ">
@@ -159,29 +142,69 @@
                                     />
                                 </a>
                             </div>
-                            <div class="date">
-                                <div class="date-numbers">
-                                    <strong itemprop="version">1.32.2</strong>
+                            <div class="teamed">
+                                <a href="http://www.teamed.io">
+                                    <img src="http://img.teamed.io/btn.svg" alt="teamed.io logo"/>
+                                </a>
+                            </div>
+                            <ul class="badges">
+                                <li>
+                                    <strong itemprop="version">1.33</strong>
+                                </li>
+                                <li>
                                     
-                                    <time itemprop="datePublished" datetime="2014-08-25T09:58:48Z">
+                                    <time itemprop="datePublished" datetime="2014-09-26T09:13:01Z">
                                         
-                                        25-Aug-2014
+                                        26-Sep-2014
                                     </time>
-                                </div>
-                                                                                                    <div>
-                                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=rultor&amp;type=watch&amp;count=true&amp;size=large"
-                                            style="border-width:0px;overflow:hidden;width:170px;height:30px;">
-                                        </iframe>
-                                    </div>
-                                                            </div>
-                            <div id="here-goes-menu" class="menu-off"></div>
+                                </li>
+                                <li class="menu-button">menu</li>
+                            </ul>
+                            <div class="social">
+                                <a href="http://www.facebook.com/sharer/sharer.php?u=URL"
+                                    title="Share on Facebook" class="ico">
+                                    <i class="icon-facebook"></i>
+                                </a>
+                                <a href="https://twitter.com/share?url=URL&amp;text=TITLE"
+                                    title="Share on Twitter" class="ico">
+                                    <i class="icon-twitter"></i>
+                                </a>
+                                <a href="https://plus.google.com/share?url=URL"
+                                    title="Share on Google+" class="ico">
+                                    <i class="icon-googleplus"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/cws/share?url=URL"
+                                    title="Share on LinkedIn" class="ico">
+                                    <i class="icon-linkedin"></i>
+                                </a>
+                                <a href="http://www.stumbleupon.com/submit?url=URL&amp;title=TITLE"
+                                    title="Share on StumbleUpon" class="ico">
+                                    <i class="icon-stumbleupon"></i>
+                                </a>
+                                <a href="http://digg.com/submit?phase=2&amp;url=URL&amp;title=TITLE"
+                                    title="Share on Digg" class="ico">
+                                    <i class="icon-digg"></i>
+                                </a>
+                                <a href="http://reddit.com/submit?url=URL&amp;title=TITLE"
+                                    title="Share on Reddit" class="ico">
+                                    <i class="icon-reddit"></i>
+                                </a>
+                                <a href="http://news.ycombinator.com/submitlink?u=URL&amp;t=TITLE"
+                                    title="Share on Hacker News" class="ico">
+                                    <i class="icon-hackernews"></i>
+                                </a>
+                            </div>
                         </header>
-                        <article role="article" itemprop="articleBody">
+                        <div id="here-goes-menu" class="menu-off"></div>
+                                                                            <a href="https://github.com/yegor256/rultor">
+                                <img src="http://img.jcabi.com/fork-me.svg" class="fork-me"/>
+                            </a>
+                                                <article role="article" itemprop="articleBody">
                             <a name="Project_Dependencies"></a>
 <div class="section">
-<h2>Project Dependencies<a name="Project_Dependencies"></a></h2><a name="Project_Dependencies_compile"></a>
+<h2><a name="Project_Dependencies"></a>Project Dependencies</h2><a name="Project_Dependencies_compile"></a>
 <div class="section">
-<h3>compile<a name="compile"></a></h3>
+<h3><a name="compile"></a>compile</h3>
 <p>The following is a list of compile dependencies for this project. These dependencies are required to compile and run the application:</p>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -205,79 +228,79 @@
 <tr class="b">
 <td>com.google.guava</td>
 <td><a class="externalLink" href="http://code.google.com/p/guava-libraries/guava">guava</a></td>
-<td>17.0</td>
+<td>18.0</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="a">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-aspects">jcabi-aspects</a></td>
-<td>0.17.1</td>
+<td>0.18</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="b">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-dynamo">jcabi-dynamo</a></td>
-<td>0.16</td>
+<td>0.16.2</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="a">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-github">jcabi-github</a></td>
-<td>0.14</td>
+<td>0.15</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="b">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-http">jcabi-http</a></td>
-<td>1.8</td>
+<td>1.8.3</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="a">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-immutable">jcabi-immutable</a></td>
-<td>1.2</td>
+<td>1.3</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="b">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-log">jcabi-log</a></td>
-<td>0.14</td>
+<td>0.14.3</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="a">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-manifests">jcabi-manifests</a></td>
-<td>1.0.3</td>
+<td>1.0.4</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="b">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-matchers">jcabi-matchers</a></td>
-<td>1.1</td>
+<td>1.2</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="a">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-s3">jcabi-s3</a></td>
-<td>0.6</td>
+<td>0.6.1</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="b">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-urn">jcabi-urn</a></td>
-<td>0.8</td>
+<td>0.9</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="a">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-xml">jcabi-xml</a></td>
-<td>0.11</td>
+<td>0.12</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></td></tr>
 <tr class="b">
 <td>com.jcabi.incubator</td>
 <td><a class="externalLink" href="https://github.com/yegor256/xembly">xembly</a></td>
-<td>0.17</td>
+<td>0.18</td>
 <td>jar</td>
 <td><a class="externalLink" href="https://www.xembly.org/LICENSE.txt">BSD</a></td></tr>
 <tr class="a">
@@ -359,7 +382,7 @@
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a>-<a class="externalLink" href="http://www.saxproject.org/copying.html">The SAX License</a>-<a class="externalLink" href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/java-binding.zip">The W3C License</a></td></tr></table></div><a name="Project_Dependencies_runtime"></a>
 <div class="section">
-<h3>runtime<a name="runtime"></a></h3>
+<h3><a name="runtime"></a>runtime</h3>
 <p>The following is a list of runtime dependencies for this project. These dependencies are required to run the application:</p>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -407,7 +430,7 @@
 <tr class="a">
 <td>org.aspectj</td>
 <td><a class="externalLink" href="http://www.aspectj.org">aspectjrt</a></td>
-<td>1.8.1</td>
+<td>1.8.2</td>
 <td>-</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License - v 1.0</a></td></tr>
@@ -421,7 +444,7 @@
 <tr class="a">
 <td>org.hibernate</td>
 <td><a class="externalLink" href="http://validator.hibernate.org/hibernate-validator">hibernate-validator</a></td>
-<td>5.1.1.Final</td>
+<td>5.1.2.Final</td>
 <td>-</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></td></tr>
@@ -433,7 +456,7 @@
 <td>jar</td>
 <td><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></td></tr></table></div><a name="Project_Dependencies_test"></a>
 <div class="section">
-<h3>test<a name="test"></a></h3>
+<h3><a name="test"></a>test</h3>
 <p>The following is a list of test dependencies for this project. These dependencies are only required to compile and run unit tests for the application:</p>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -461,7 +484,7 @@
 <td>jar</td>
 <td><a class="externalLink" href="http://code.google.com/p/mockito/wiki/License">The MIT License</a></td></tr></table></div><a name="Project_Dependencies_provided"></a>
 <div class="section">
-<h3>provided<a name="provided"></a></h3>
+<h3><a name="provided"></a>provided</h3>
 <p>The following is a list of provided dependencies for this project. These dependencies are required to compile the application, but should be provided by default when using the library:</p>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -491,14 +514,14 @@
 <tr class="a">
 <td>org.projectlombok</td>
 <td><a class="externalLink" href="http://projectlombok.org">lombok</a></td>
-<td>1.14.4</td>
+<td>1.14.8</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://projectlombok.org/LICENSE">The MIT License</a></td></tr></table></div></div><a name="Project_Transitive_Dependencies"></a>
 <div class="section">
-<h2>Project Transitive Dependencies<a name="Project_Transitive_Dependencies"></a></h2>
+<h2><a name="Project_Transitive_Dependencies"></a>Project Transitive Dependencies</h2>
 <p>The following is a list of transitive dependencies for this project. Transitive dependencies are the dependencies of the project dependencies.</p><a name="Project_Transitive_Dependencies_compile"></a>
 <div class="section">
-<h3>compile<a name="compile"></a></h3>
+<h3><a name="compile"></a>compile</h3>
 <p>The following is a list of compile dependencies for this project. These dependencies are required to compile and run the application:</p>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -586,7 +609,7 @@
 <td>jar</td>
 <td><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></td></tr></table></div><a name="Project_Transitive_Dependencies_runtime"></a>
 <div class="section">
-<h3>runtime<a name="runtime"></a></h3>
+<h3><a name="runtime"></a>runtime</h3>
 <p>The following is a list of runtime dependencies for this project. These dependencies are required to run the application:</p>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -667,7 +690,7 @@
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, version 2.0</a></td></tr></table></div><a name="Project_Transitive_Dependencies_test"></a>
 <div class="section">
-<h3>test<a name="test"></a></h3>
+<h3><a name="test"></a>test</h3>
 <p>The following is a list of test dependencies for this project. These dependencies are only required to compile and run unit tests for the application:</p>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -689,7 +712,7 @@
 <td>jar</td>
 <td><a class="externalLink" href="http://objenesis.googlecode.com/svn/docs/license.html">MIT License</a></td></tr></table></div></div><a name="Project_Dependency_Graph"></a>
 <div class="section">
-<h2>Project Dependency Graph<a name="Project_Dependency_Graph"></a></h2><script language="javascript" type="text/javascript">
+<h2><a name="Project_Dependency_Graph"></a>Project Dependency Graph</h2><script language="javascript" type="text/javascript">
       function toggleDependencyDetail( divId, imgId )
       {
         var div = document.getElementById( divId );
@@ -708,9 +731,9 @@
 </script>
 <a name="Dependency_Tree"></a>
 <div class="section">
-<h3>Dependency Tree<a name="Dependency_Tree"></a></h3>
+<h3><a name="Dependency_Tree"></a>Dependency Tree</h3>
 <ul>
-<li>com.rultor:rultor:war:1.32.2 <img id="_img1" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep0', '_img1' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep0" style="display:none">
+<li>com.rultor:rultor:war:1.33 <img id="_img1" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep0', '_img1' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep0" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>rultor</th></tr>
@@ -776,7 +799,7 @@
 <p><b>Description: </b>Date and time library to replace JDK date handling</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.joda.org/joda-time/">http://www.joda.org/joda-time/</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2</a></p></td></tr></table></div></li></ul></li>
-<li>com.jcabi.incubator:xembly:jar:0.17 (compile) <img id="_img15" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep14', '_img15' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep14" style="display:none">
+<li>com.jcabi.incubator:xembly:jar:0.18 (compile) <img id="_img15" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep14', '_img15' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep14" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>xembly</th></tr>
@@ -813,7 +836,7 @@
 <p><b>Description: </b>Hamcrest library of matcher implementations.</p>
 <p><b>URL: </b><a class="externalLink" href="https://github.com/hamcrest/JavaHamcrest/hamcrest-library">https://github.com/hamcrest/JavaHamcrest/hamcrest-library</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.opensource.org/licenses/bsd-license.php">New BSD License</a></p></td></tr></table></div></li>
-<li>com.google.guava:guava:jar:17.0 (compile) <img id="_img23" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep22', '_img23' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep22" style="display:none">
+<li>com.google.guava:guava:jar:18.0 (compile) <img id="_img23" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep22', '_img23' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep22" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Guava: Google Core Libraries for Java</th></tr>
@@ -909,7 +932,7 @@
 <p><b>Description: </b>Default provider for JSR 353:Java API for Processing JSON</p>
 <p><b>URL: </b><a class="externalLink" href="http://jsonp.java.net">http://jsonp.java.net</a></p>
 <p><b>Project License: </b><a class="externalLink" href="https://glassfish.java.net/public/CDDL+GPL_1_1.html">Dual license consisting of the CDDL v1.1 and GPL v2</a></p></td></tr></table></div></li>
-<li>org.projectlombok:lombok:jar:1.14.4 (provided) <img id="_img41" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep40', '_img41' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep40" style="display:none">
+<li>org.projectlombok:lombok:jar:1.14.8 (provided) <img id="_img41" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep40', '_img41' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep40" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Project Lombok</th></tr>
@@ -938,7 +961,7 @@
 <p><b>Description: </b>YAML 1.1 parser and emitter for Java</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.snakeyaml.org">http://www.snakeyaml.org</a></p>
 <p><b>Project License: </b><a href="LICENSE.txt">Apache License Version 2.0</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-aspects:jar:0.17.1 (compile) <img id="_img47" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep46', '_img47' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep46" style="display:none">
+<li>com.jcabi:jcabi-aspects:jar:0.18 (compile) <img id="_img47" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep46', '_img47' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep46" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-aspects</th></tr>
@@ -947,7 +970,7 @@
 <p><b>Description: </b>Collection of convenient and useful Java annotations</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.jcabi.com/jcabi-aspects">http://www.jcabi.com/jcabi-aspects</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-s3:jar:0.6 (compile) <img id="_img49" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep48', '_img49' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep48" style="display:none">
+<li>com.jcabi:jcabi-s3:jar:0.6.1 (compile) <img id="_img49" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep48', '_img49' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep48" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-s3</th></tr>
@@ -956,7 +979,7 @@
 <p><b>Description: </b>Object Layer on top of AWS S3 SDK</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.jcabi.com/jcabi-s3">http://www.jcabi.com/jcabi-s3</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-log:jar:0.14 (compile) <img id="_img51" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep50', '_img51' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep50" style="display:none">
+<li>com.jcabi:jcabi-log:jar:0.14.3 (compile) <img id="_img51" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep50', '_img51' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep50" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-log</th></tr>
@@ -975,7 +998,7 @@
 <p><b>Description: </b>The slf4j API</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.slf4j.org">http://www.slf4j.org</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p></td></tr></table></div></li></ul></li>
-<li>com.jcabi:jcabi-dynamo:jar:0.16 (compile) <img id="_img55" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep54', '_img55' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep54" style="display:none">
+<li>com.jcabi:jcabi-dynamo:jar:0.16.2 (compile) <img id="_img55" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep54', '_img55' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep54" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-dynamo</th></tr>
@@ -984,7 +1007,7 @@
 <p><b>Description: </b>Object Oriented Wrapper of Amazon DynamoDB SDK</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.jcabi.com/jcabi-dynamo">http://www.jcabi.com/jcabi-dynamo</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></p></td></tr></table></div></li>
-<li>org.aspectj:aspectjrt:jar:1.8.1 (runtime) <img id="_img57" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep56', '_img57' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep56" style="display:none">
+<li>org.aspectj:aspectjrt:jar:1.8.2 (runtime) <img id="_img57" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep56', '_img57' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep56" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>AspectJ runtime</th></tr>
@@ -1002,7 +1025,7 @@
 <p><b>Description: </b>Bean Validation API</p>
 <p><b>URL: </b><a class="externalLink" href="http://beanvalidation.org">http://beanvalidation.org</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.hibernate:hibernate-validator:jar:5.1.1.Final (runtime) <img id="_img61" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep60', '_img61' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep60" style="display:none">
+<li>org.hibernate:hibernate-validator:jar:5.1.2.Final (runtime) <img id="_img61" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep60', '_img61' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep60" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Hibernate Validator Engine</th></tr>
@@ -1148,7 +1171,7 @@
 <p><b>Description: </b>Java implementation of the SemVer Specification</p>
 <p><b>URL: </b><a class="externalLink" href="https://github.com/zafarkhaja/java-semver">https://github.com/zafarkhaja/java-semver</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">The MIT License</a></p></td></tr></table></div></li></ul></li>
-<li>com.jcabi:jcabi-matchers:jar:1.1 (compile) <img id="_img91" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep90', '_img91' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep90" style="display:none">
+<li>com.jcabi:jcabi-matchers:jar:1.2 (compile) <img id="_img91" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep90', '_img91' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep90" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-matchers</th></tr>
@@ -1157,7 +1180,7 @@
 <p><b>Description: </b>Hamcrest Matchers</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.jcabi.com/jcabi-matchers">http://www.jcabi.com/jcabi-matchers</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-xml:jar:0.11 (compile) <img id="_img93" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep92', '_img93' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep92" style="display:none">
+<li>com.jcabi:jcabi-xml:jar:0.12 (compile) <img id="_img93" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep92', '_img93' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep92" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-xml</th></tr>
@@ -1217,17 +1240,16 @@ file comparators, endian transformation classes, and much more.</p>
      collection of phonetic encoding utilities.</p>
 <p><b>URL: </b><a class="externalLink" href="http://commons.apache.org/proper/commons-codec/">http://commons.apache.org/proper/commons-codec/</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-urn:jar:0.8 (compile) <img id="_img105" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep104', '_img105' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep104" style="display:none">
+<li>com.jcabi:jcabi-urn:jar:0.9 (compile) <img id="_img105" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep104', '_img105' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep104" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-urn</th></tr>
 <tr class="b">
 <td>
-<p><b>Description: </b>JCabi is a set of useful open source Java components.
-        More details you can find at www.jcabi.com.</p>
+<p><b>Description: </b>URN</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.jcabi.com/jcabi-urn">http://www.jcabi.com/jcabi-urn</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-http:jar:1.8 (compile) <img id="_img107" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep106', '_img107' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep106" style="display:none">
+<li>com.jcabi:jcabi-http:jar:1.8.3 (compile) <img id="_img107" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep106', '_img107' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep106" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-http</th></tr>
@@ -1236,7 +1258,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>Fluent HTTP Client</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.jcabi.com/jcabi-http">http://www.jcabi.com/jcabi-http</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-immutable:jar:1.2 (compile) <img id="_img109" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep108', '_img109' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep108" style="display:none">
+<li>com.jcabi:jcabi-immutable:jar:1.3 (compile) <img id="_img109" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep108', '_img109' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep108" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-immutable</th></tr>
@@ -1245,7 +1267,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>Immutable Collections</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.jcabi.com/jcabi-immutable">http://www.jcabi.com/jcabi-immutable</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.jcabi.com/LICENSE.txt">BSD</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-manifests:jar:1.0.3 (compile) <img id="_img111" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep110', '_img111' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep110" style="display:none">
+<li>com.jcabi:jcabi-manifests:jar:1.0.4 (compile) <img id="_img111" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep110', '_img111' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep110" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-manifests</th></tr>
@@ -1263,7 +1285,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>Social style time-formatting utilities and web-framework integrations.</p>
 <p><b>URL: </b><a class="externalLink" href="http://ocpsoft.org/prettytime/prettytime/">http://ocpsoft.org/prettytime/prettytime/</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/">Apache License</a></p></td></tr></table></div></li>
-<li>com.jcabi:jcabi-github:jar:0.14 (compile) <img id="_img115" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep114', '_img115' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep114" style="display:none">
+<li>com.jcabi:jcabi-github:jar:0.15 (compile) <img id="_img115" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep114', '_img115' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep114" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>jcabi-github</th></tr>
@@ -1389,7 +1411,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>URL: </b><a class="externalLink" href="http://objenesis.googlecode.com/svn/docs/index.html">http://objenesis.googlecode.com/svn/docs/index.html</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://objenesis.googlecode.com/svn/docs/license.html">MIT License</a></p></td></tr></table></div></li></ul></li></ul></li></ul></div></div><a name="Licenses"></a>
 <div class="section">
-<h2>Licenses<a name="Licenses"></a></h2>
+<h2><a name="Licenses"></a>Licenses</h2>
 <p><b>Apache License, version 2.0: </b>JBoss Logging 3</p>
 <p><b>CDDL + GPLv2 with classpath exception: </b>Expression Language 3.0 API, JavaServlet(TM) Specification</p>
 <p><b>Apache 2: </b>Joda-Time</p>
@@ -1417,7 +1439,6 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>The MIT License: </b>Java SemVer, Mockito, Project Lombok</p>
 <p><b>Apache 2.0 License: </b>Apache MINA Core, Apache Mina SSHD :: Core</p>
 <p><b>Apache License Version 2.0: </b>SnakeYAML</p></div>
-                            <img class="maven-logo" src="//img.jcabi.com/built-by-maven.png" alt="built by maven"/>
                         </article>
                     </div>
                 </main>

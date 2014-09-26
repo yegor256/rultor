@@ -9,9 +9,17 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?3769fef"/>
+    <link rel="stylesheet" href="/css/layout.css?60715f4"/>
     <link rel="canonical" href="//doc.rultor.com/index.html" />
     <title>DevOps Team Assistant</title>
+    <script>//<![CDATA[
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-1963507-28', 'auto');
+      ga('send', 'pageview');
+    //]]></script>
   </head>
   <body>
     <div class="wrapper">
@@ -50,15 +58,17 @@ to your existing continuous integration solution, like
 <p>Rultor is absolutely free, both for open source and commercial projects.
 It is sponsored by <a href="http://www.teamed.io">teamed.io</a>.</p>
 
-<p>These blog posts may be helpful:</p>
+<p>These blog posts may be helpful:
+<a href="http://www.yegor256.com/2014/07/29/docker-in-rultor.html">Every Build in Its Own Docker Container</a>,
+<a href="http://www.yegor256.com/2014/07/21/read-only-master-branch.html">Master Branch Must Be Read-Only</a>,
+<a href="http://www.yegor256.com/2014/07/31/travis-and-rultor.html">Rultor + Travis</a>, and
+<a href="http://www.yegor256.com/2014/07/24/rultor-automated-merging.html">Rultor, a Merging Bot</a>.</p>
 
-<ul>
-<li><p><a href="http://www.yegor256.com/2014/07/31/travis-and-rultor.html">Rultor + Travis</a></p></li>
-<li><p><a href="http://www.yegor256.com/2014/07/24/rultor-automated-merging.html">Rultor, a Merging Bot</a></p></li>
-<li><p><a href="http://www.yegor256.com/2014/07/21/read-only-master-branch.html">Master Branch Must Be Read-Only</a></p></li>
-<li><p><a href="http://www.yegor256.com/2014/07/29/docker-in-rultor.html">Every Build in Its Own Docker Container</a></p></li>
-<li><p><a href="http://www.yegor256.com/2014/08/19/how-to-release-to-maven-central.html">How to Release to Maven Central, in One Click</a></p></li>
-</ul>
+<p>Here is how Rultor helps us to deploy/release automatically
+to <a href="http://www.yegor256.com/2014/08/19/how-to-release-to-maven-central.html">Maven Central</a>,
+<a href="http://www.yegor256.com/2014/08/26/publish-to-rubygems.html">Rubygems</a>,
+<a href="http://www.yegor256.com/2014/09/13/deploying-to-heroku.html">Heroku</a>, and
+<a href="http://www.yegor256.com/2014/08/25/deploy-to-cloudbees.html">CloudBees</a>.</p>
 
 <p>Yeah, BTW, every build runs in its own
 <a href="/docker.html">Docker</a>
@@ -114,9 +124,31 @@ container! :)</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/3769fef">3769fef</a>
+          <a href="https://github.com/yegor256/rultor/commit/60715f4">60715f4</a>
         </p>
       </footer>
     </div>
+    <script type="text/javascript">//<![CDATA[
+      (function (d, w, c) {
+      (w[c] = w[c] || []).push(function() {
+      try {
+      w.yaCounter25979713 = new Ya.Metrika({id:25979713,
+      webvisor:true,
+      clickmap:true,
+      trackLinks:true,
+      accurateTrackBounce:true});
+      } catch(e) { }
+      });
+      var n = d.getElementsByTagName("script")[0],
+      s = d.createElement("script"),
+      f = function () { n.parentNode.insertBefore(s, n); };
+      s.type = "text/javascript";
+      s.async = true;
+      s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+      if (w.opera == "[object Opera]") {
+      d.addEventListener("DOMContentLoaded", f, false);
+      } else { f(); }
+      })(document, window, "yandex_metrika_callbacks");
+    //]]></script>
   </body>
 </html>

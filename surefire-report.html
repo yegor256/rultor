@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>rultor - Surefire Report</title>
-        <link media="all" rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+        <title>rultor &#x2013; Surefire Report</title>
         <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
+        <link media="all" rel="stylesheet" type="text/css" href="./ico/ico.css"/>
                             <script>
                 var _gaq = _gaq || [];
                 _gaq.push(['_setAccount', 'UA-1963507-28']);
@@ -20,31 +20,15 @@
 <link rel="shortcut icon" href="http://img.rultor.com/favicon.gif"/>
                                                                                                                 
 <link rel="author" href="https://plus.google.com/u/0/114792568016408327418?rel=author"/>
-                                            <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
-        <script>
-            $(document).ready(
-                function() {
-                    $(".menu-button").click(
-                        function() {
-                            if ($("#here-goes-menu").attr("class") == "menu-off") {
-                                $("#menu").clone().attr("class", "mobile-menu").appendTo("#here-goes-menu");
-                                $("#here-goes-menu").attr("class", "menu-on");
-                            } else {
-                                $(".mobile-menu").hide();
-                                $("#here-goes-menu").attr("class", "menu-off");
-                            }
-                        }
-                    );
-                }
-            );
-        </script>
+                                            <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="./js/jcabi.js"></script>
     </head>
     <body>
                 <section class="page" itemscope="" itemtype="http://schema.org/BlogPosting">
             <nav class="menu-section" role="navigation">
                 <ul class="menu" id="menu">
                                                                                     <li>
-                            Overview
+                            <span>Overview</span>
                                                             <ul>
                                                                                                     <li >
                             <span>                        <a href="index.html" title="Introduction">Introduction</a>
@@ -53,7 +37,7 @@
                                                                     </ul>
                                                     </li>
                                                                                                                         <li >
-                            <span>                        <a href="apidocs-1.32.2/index.html" title="JavaDoc 1.32.2">JavaDoc 1.32.2</a>
+                            <span>                        <a href="apidocs-1.33/index.html" title="JavaDoc 1.33">JavaDoc 1.33</a>
         </span>
                                                                                                                                                                 <ul>
                                                                     </ul>
@@ -73,7 +57,7 @@
                                                                                         </ul>
                                                     </li>
                                             <li>
-                            Project Documentation
+                            <span>Project Documentation</span>
                                                             <ul>
                                                                                                     <li >
                             <span>                        <a href="project-info.html" title="Project Information">Project Information</a>
@@ -114,7 +98,7 @@
                                                                     </ul>
                                                     </li>
                                                                                                                         <li >
-                            <span>                        <a href="apidocs-1.32.2/index.html" title="JavaDocs">JavaDocs</a>
+                            <span>                        <a href="apidocs-1.33/index.html" title="JavaDocs">JavaDocs</a>
         </span>
                                                                                                                                                                 <ul>
                                                                     </ul>
@@ -135,7 +119,6 @@
                 <main role="main">
                     <div class="content">
                         <header>
-                            <i class="menu-button fa fa-align-justify"></i>
                             <div class="logo">
                                 <a href="http://doc.rultor.com/"
                                     title=" rultor.com ">
@@ -147,24 +130,64 @@
                                     />
                                 </a>
                             </div>
-                            <div class="date">
-                                <div class="date-numbers">
-                                    <strong itemprop="version">1.32.2</strong>
+                            <div class="teamed">
+                                <a href="http://www.teamed.io">
+                                    <img src="http://img.teamed.io/btn.svg" alt="teamed.io logo"/>
+                                </a>
+                            </div>
+                            <ul class="badges">
+                                <li>
+                                    <strong itemprop="version">1.33</strong>
+                                </li>
+                                <li>
                                     
-                                    <time itemprop="datePublished" datetime="2014-08-25T09:58:52Z">
+                                    <time itemprop="datePublished" datetime="2014-09-26T09:13:04Z">
                                         
-                                        25-Aug-2014
+                                        26-Sep-2014
                                     </time>
-                                </div>
-                                                                                                    <div>
-                                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=rultor&amp;type=watch&amp;count=true&amp;size=large"
-                                            style="border-width:0px;overflow:hidden;width:170px;height:30px;">
-                                        </iframe>
-                                    </div>
-                                                            </div>
-                            <div id="here-goes-menu" class="menu-off"></div>
+                                </li>
+                                <li class="menu-button">menu</li>
+                            </ul>
+                            <div class="social">
+                                <a href="http://www.facebook.com/sharer/sharer.php?u=URL"
+                                    title="Share on Facebook" class="ico">
+                                    <i class="icon-facebook"></i>
+                                </a>
+                                <a href="https://twitter.com/share?url=URL&amp;text=TITLE"
+                                    title="Share on Twitter" class="ico">
+                                    <i class="icon-twitter"></i>
+                                </a>
+                                <a href="https://plus.google.com/share?url=URL"
+                                    title="Share on Google+" class="ico">
+                                    <i class="icon-googleplus"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/cws/share?url=URL"
+                                    title="Share on LinkedIn" class="ico">
+                                    <i class="icon-linkedin"></i>
+                                </a>
+                                <a href="http://www.stumbleupon.com/submit?url=URL&amp;title=TITLE"
+                                    title="Share on StumbleUpon" class="ico">
+                                    <i class="icon-stumbleupon"></i>
+                                </a>
+                                <a href="http://digg.com/submit?phase=2&amp;url=URL&amp;title=TITLE"
+                                    title="Share on Digg" class="ico">
+                                    <i class="icon-digg"></i>
+                                </a>
+                                <a href="http://reddit.com/submit?url=URL&amp;title=TITLE"
+                                    title="Share on Reddit" class="ico">
+                                    <i class="icon-reddit"></i>
+                                </a>
+                                <a href="http://news.ycombinator.com/submitlink?u=URL&amp;t=TITLE"
+                                    title="Share on Hacker News" class="ico">
+                                    <i class="icon-hackernews"></i>
+                                </a>
+                            </div>
                         </header>
-                        <article role="article" itemprop="articleBody">
+                        <div id="here-goes-menu" class="menu-off"></div>
+                                                                            <a href="https://github.com/yegor256/rultor">
+                                <img src="http://img.jcabi.com/fork-me.svg" class="fork-me"/>
+                            </a>
+                                                <article role="article" itemprop="articleBody">
                             <script type="text/javascript">
 //<![CDATA[
 function toggleDisplay(elementId) {
@@ -183,9 +206,9 @@ function toggleDisplay(elementId) {
 //]]>
 </script>
 <div class="section">
-<h2>Surefire Report<a name="Surefire_Report"></a></h2></div>
+<h2><a name="Surefire_Report"></a>Surefire Report</h2></div>
 <div class="section">
-<h2>Summary<a name="Summary"></a></h2><a name="Summary"></a>
+<h2><a name="Summary"></a>Summary</h2><a name="Summary"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
 <table border="1" class="bodyTable">
 <tr class="a">
@@ -196,15 +219,15 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td>52</td>
+<td>57</td>
 <td>0</td>
 <td>0</td>
 <td>2</td>
-<td>96.154%</td>
-<td>147.934</td></tr></table><br />
+<td>96.491%</td>
+<td>69.426</td></tr></table><br />
 <p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div>
 <div class="section">
-<h2>Package List<a name="Package_List"></a></h2><a name="Package_List"></a>
+<h2><a name="Package_List"></a>Package List</h2><a name="Package_List"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
 <table border="1" class="bodyTable">
 <tr class="a">
@@ -222,7 +245,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>1</td>
 <td>87.5%</td>
-<td>30.923</td></tr>
+<td>18.203</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.agents.daemons">com.rultor.agents.daemons</a></td>
 <td>1</td>
@@ -230,39 +253,39 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>4.63</td></tr>
+<td>1.193</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.agents">com.rultor.agents</a></td>
-<td>2</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.762</td></tr>
-<tr class="a">
-<td><a href="#com.rultor.profiles">com.rultor.profiles</a></td>
 <td>3</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>12.571</td></tr>
-<tr class="b">
-<td><a href="#com.rultor.agents.github.qtn">com.rultor.agents.github.qtn</a></td>
-<td>15</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>39.858</td></tr>
+<td>2.638</td></tr>
 <tr class="a">
-<td><a href="#com.rultor.agents.req">com.rultor.agents.req</a></td>
-<td>11</td>
+<td><a href="#com.rultor.profiles">com.rultor.profiles</a></td>
+<td>4</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>29.234</td></tr>
+<td>9.646</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.req">com.rultor.agents.req</a></td>
+<td>13</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>5.845</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtn">com.rultor.agents.github.qtn</a></td>
+<td>16</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>23.651</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.agents.twitter">com.rultor.agents.twitter</a></td>
 <td>1</td>
@@ -278,7 +301,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>8.42</td></tr>
+<td>2.922</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.spi">com.rultor.spi</a></td>
 <td>4</td>
@@ -286,7 +309,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.312</td></tr>
+<td>0.186</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.web">com.rultor.web</a></td>
 <td>5</td>
@@ -294,10 +317,10 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>20.224</td></tr></table><br />
+<td>5.142</td></tr></table><br />
 <p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
 <div class="section">
-<h3>com.rultor.agents.github<a name="com.rultor.agents.github"></a></h3><a name="com.rultor.agents.github"></a>
+<h3><a name="com.rultor.agents.github"></a>com.rultor.agents.github</h3><a name="com.rultor.agents.github"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -316,7 +339,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.499</td></tr>
+<td>2.487</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.agents.githubAnswerTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.githubAnswerTest">AnswerTest</a></td>
@@ -325,7 +348,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>11.512</td></tr>
+<td>7.182</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.agents.githubReportsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.githubReportsTest">ReportsTest</a></td>
@@ -334,7 +357,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>3.225</td></tr>
+<td>1.848</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.agents.githubUnderstandsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.githubUnderstandsTest">UnderstandsTest</a></td>
@@ -343,7 +366,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>14.687</td></tr>
+<td>6.686</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.agents.githubStartsTalksTest"><img src="images/icon_warning_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.githubStartsTalksTest">StartsTalksTest</a></td>
@@ -354,7 +377,7 @@ function toggleDisplay(elementId) {
 <td>0%</td>
 <td>0</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.agents.daemons<a name="com.rultor.agents.daemons"></a></h3><a name="com.rultor.agents.daemons"></a>
+<h3><a name="com.rultor.agents.daemons"></a>com.rultor.agents.daemons</h3><a name="com.rultor.agents.daemons"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -373,9 +396,9 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>4.63</td></tr></table></div>
+<td>1.193</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.agents<a name="com.rultor.agents"></a></h3><a name="com.rultor.agents"></a>
+<h3><a name="com.rultor.agents"></a>com.rultor.agents</h3><a name="com.rultor.agents"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -394,8 +417,17 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.457</td></tr>
+<td>2.112</td></tr>
 <tr class="a">
+<td><a href="#com.rultor.agentsPublishesTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agentsPublishesTest">PublishesTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.358</td></tr>
+<tr class="b">
 <td><a href="#com.rultor.agentsDeactivatesTalksTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agentsDeactivatesTalksTest">DeactivatesTalksTest</a></td>
 <td>1</td>
@@ -403,9 +435,9 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.305</td></tr></table></div>
+<td>0.168</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.profiles<a name="com.rultor.profiles"></a></h3><a name="com.rultor.profiles"></a>
+<h3><a name="com.rultor.profiles"></a>com.rultor.profiles</h3><a name="com.rultor.profiles"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -424,138 +456,18 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>2.342</td></tr>
+<td>0.877</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.profilesGithubProfileTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.profilesGithubProfileTest">GithubProfileTest</a></td>
-<td>2</td>
+<td>3</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>10.229</td></tr></table></div>
+<td>8.769</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.agents.github.qtn<a name="com.rultor.agents.github.qtn"></a></h3><a name="com.rultor.agents.github.qtn"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors </th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#com.rultor.agents.github.qtnQnStatusTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnStatusTest">QnStatusTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.322</td></tr>
-<tr class="a">
-<td><a href="#com.rultor.agents.github.qtnQnReferredToTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnReferredToTest">QnReferredToTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>2.014</td></tr>
-<tr class="b">
-<td><a href="#com.rultor.agents.github.qtnQnHelloTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnHelloTest">QnHelloTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.397</td></tr>
-<tr class="a">
-<td><a href="#com.rultor.agents.github.qtnQnParametrizedTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnParametrizedTest">QnParametrizedTest</a></td>
-<td>4</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>16.297</td></tr>
-<tr class="b">
-<td><a href="#com.rultor.agents.github.qtnQnAloneTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnAloneTest">QnAloneTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>2.337</td></tr>
-<tr class="a">
-<td><a href="#com.rultor.agents.github.qtnQnReleaseTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnReleaseTest">QnReleaseTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>2.919</td></tr>
-<tr class="b">
-<td><a href="#com.rultor.agents.github.qtnQnVersionTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnVersionTest">QnVersionTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>2.599</td></tr>
-<tr class="a">
-<td><a href="#com.rultor.agents.github.qtnQnFirstOfTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnFirstOfTest">QnFirstOfTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.141</td></tr>
-<tr class="b">
-<td><a href="#com.rultor.agents.github.qtnQnDeployTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnDeployTest">QnDeployTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>2.469</td></tr>
-<tr class="a">
-<td><a href="#com.rultor.agents.github.qtnQnMergeTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnMergeTest">QnMergeTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>3.156</td></tr>
-<tr class="b">
-<td><a href="#com.rultor.agents.github.qtnQnConfigTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnConfigTest">QnConfigTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.957</td></tr>
-<tr class="a">
-<td><a href="#com.rultor.agents.github.qtnQnLastOfTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#com.rultor.agents.github.qtnQnLastOfTest">QnLastOfTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>2.25</td></tr></table></div>
-<div class="section">
-<h3>com.rultor.agents.req<a name="com.rultor.agents.req"></a></h3><a name="com.rultor.agents.req"></a>
+<h3><a name="com.rultor.agents.req"></a>com.rultor.agents.req</h3><a name="com.rultor.agents.req"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -569,12 +481,12 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><a href="#com.rultor.agents.reqDockerRunTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.reqDockerRunTest">DockerRunTest</a></td>
-<td>5</td>
+<td>7</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.838</td></tr>
+<td>0.942</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.agents.reqStartsRequestTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.reqStartsRequestTest">StartsRequestTest</a></td>
@@ -583,7 +495,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>27.799</td></tr>
+<td>4.334</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.agents.reqEndsRequestTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.reqEndsRequestTest">EndsRequestTest</a></td>
@@ -592,9 +504,138 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.597</td></tr></table></div>
+<td>0.569</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.agents.twitter<a name="com.rultor.agents.twitter"></a></h3><a name="com.rultor.agents.twitter"></a>
+<h3><a name="com.rultor.agents.github.qtn"></a>com.rultor.agents.github.qtn</h3><a name="com.rultor.agents.github.qtn"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnGithubIssueTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnGithubIssueTest">QnGithubIssueTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.408</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtnQnStatusTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnStatusTest">QnStatusTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.928</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnReferredToTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnReferredToTest">QnReferredToTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.863</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtnQnHelloTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnHelloTest">QnHelloTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.174</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnParametrizedTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnParametrizedTest">QnParametrizedTest</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>3.791</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtnQnAloneTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnAloneTest">QnAloneTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.479</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnReleaseTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnReleaseTest">QnReleaseTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.636</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtnQnVersionTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnVersionTest">QnVersionTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.882</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnFirstOfTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnFirstOfTest">QnFirstOfTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.979</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtnQnDeployTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnDeployTest">QnDeployTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.213</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnMergeTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnMergeTest">QnMergeTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.358</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtnQnConfigTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnConfigTest">QnConfigTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.961</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnLastOfTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnLastOfTest">QnLastOfTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.979</td></tr></table></div>
+<div class="section">
+<h3><a name="com.rultor.agents.twitter"></a>com.rultor.agents.twitter</h3><a name="com.rultor.agents.twitter"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -615,7 +656,7 @@ function toggleDisplay(elementId) {
 <td>0%</td>
 <td>0</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.agents.shells<a name="com.rultor.agents.shells"></a></h3><a name="com.rultor.agents.shells"></a>
+<h3><a name="com.rultor.agents.shells"></a>com.rultor.agents.shells</h3><a name="com.rultor.agents.shells"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -634,7 +675,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>7.706</td></tr>
+<td>2.242</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.agents.shellsRegistersShellTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.agents.shellsRegistersShellTest">RegistersShellTest</a></td>
@@ -643,9 +684,9 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.714</td></tr></table></div>
+<td>0.68</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.spi<a name="com.rultor.spi"></a></h3><a name="com.rultor.spi"></a>
+<h3><a name="com.rultor.spi"></a>com.rultor.spi</h3><a name="com.rultor.spi"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -664,9 +705,9 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.312</td></tr></table></div>
+<td>0.186</td></tr></table></div>
 <div class="section">
-<h3>com.rultor.web<a name="com.rultor.web"></a></h3><a name="com.rultor.web"></a>
+<h3><a name="com.rultor.web"></a>com.rultor.web</h3><a name="com.rultor.web"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -685,7 +726,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>9.367</td></tr>
+<td>2.493</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.webButtonRsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.webButtonRsTest">ButtonRsTest</a></td>
@@ -694,7 +735,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.226</td></tr>
+<td>0.769</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.webDaemonRsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.webDaemonRsTest">DaemonRsTest</a></td>
@@ -703,7 +744,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>6.005</td></tr>
+<td>0.891</td></tr>
 <tr class="a">
 <td><a href="#com.rultor.webHomeRsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.webHomeRsTest">HomeRsTest</a></td>
@@ -712,7 +753,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>2.687</td></tr>
+<td>0.233</td></tr>
 <tr class="b">
 <td><a href="#com.rultor.webSitemapRsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#com.rultor.webSitemapRsTest">SitemapRsTest</a></td>
@@ -721,204 +762,226 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.939</td></tr></table></div><br /></div>
+<td>0.756</td></tr></table></div><br /></div>
 <div class="section">
-<h2>Test Cases<a name="Test_Cases"></a></h2><a name="Test_Cases"></a>
+<h2><a name="Test_Cases"></a>Test Cases</h2><a name="Test_Cases"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p>
 <div class="section">
-<h3>DockerRunTest<a name="DockerRunTest"></a></h3><a name="com.rultor.agents.reqDockerRunTest"></a>
+<h3><a name="QnGithubIssueTest"></a>QnGithubIssueTest</h3><a name="com.rultor.agents.github.qtnQnGithubIssueTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>fetchesScript</td>
-<td>0.122</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>fetchesEnvVars</td>
-<td>0.285</td></tr>
+<td>canAddGithubIssueVariable</td>
+<td>1.408</td></tr></table></div>
+<div class="section">
+<h3><a name="DockerRunTest"></a>DockerRunTest</h3><a name="com.rultor.agents.reqDockerRunTest"></a>
+<table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>fetchesEnvVarsDefaults</td>
+<td>fetchesUninstallScript</td>
 <td>0.136</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>fetchesFromEmptyProfile</td>
-<td>0.146</td></tr>
+<td>fetchesMultiLineScript</td>
+<td>0.112</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>fetchesInstallScript</td>
-<td>0.149</td></tr></table></div>
+<td>0.132</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesScript</td>
+<td>0.136</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesEnvVarsDefaults</td>
+<td>0.115</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesEnvVars</td>
+<td>0.195</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesFromEmptyProfile</td>
+<td>0.116</td></tr></table></div>
 <div class="section">
-<h3>QnStatusTest<a name="QnStatusTest"></a></h3><a name="com.rultor.agents.github.qtnQnStatusTest"></a>
+<h3><a name="QnStatusTest"></a>QnStatusTest</h3><a name="com.rultor.agents.github.qtnQnStatusTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>buildsReport</td>
-<td>1.322</td></tr></table></div>
+<td>2.928</td></tr></table></div>
 <div class="section">
-<h3>KillsDaemonTest<a name="KillsDaemonTest"></a></h3><a name="com.rultor.agents.daemonsKillsDaemonTest"></a>
+<h3><a name="KillsDaemonTest"></a>KillsDaemonTest</h3><a name="com.rultor.agents.daemonsKillsDaemonTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>ignoresFreshDaemon</td>
-<td>4.63</td></tr></table></div>
+<td>1.193</td></tr></table></div>
 <div class="section">
-<h3>UnlocksRepoTest<a name="UnlocksRepoTest"></a></h3><a name="com.rultor.agents.githubUnlocksRepoTest"></a>
+<h3><a name="UnlocksRepoTest"></a>UnlocksRepoTest</h3><a name="com.rultor.agents.githubUnlocksRepoTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>unlocksRepo</td>
-<td>1.499</td></tr></table></div>
+<td>2.487</td></tr></table></div>
 <div class="section">
-<h3>ProfileTest<a name="ProfileTest"></a></h3><a name="com.rultor.spiProfileTest"></a>
+<h3><a name="ProfileTest"></a>ProfileTest</h3><a name="com.rultor.spiProfileTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>acceptsValidXML</td>
-<td>0.075</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>rejectsUnknownAttributes</td>
-<td>0.066</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>rejectsEntryWithoutKey</td>
-<td>0.093</td></tr>
+<td>0.08</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>rejectsMixedEntriesAndItems</td>
-<td>0.078</td></tr></table></div>
+<td>0.043</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>rejectsUnknownAttributes</td>
+<td>0.031</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>rejectsEntryWithoutKey</td>
+<td>0.032</td></tr></table></div>
 <div class="section">
-<h3>QnReferredToTest<a name="QnReferredToTest"></a></h3><a name="com.rultor.agents.github.qtnQnReferredToTest"></a>
+<h3><a name="QnReferredToTest"></a>QnReferredToTest</h3><a name="com.rultor.agents.github.qtnQnReferredToTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>buildsRequest</td>
-<td>2.014</td></tr></table></div>
+<td>1.863</td></tr></table></div>
 <div class="section">
-<h3>QnHelloTest<a name="QnHelloTest"></a></h3><a name="com.rultor.agents.github.qtnQnHelloTest"></a>
+<h3><a name="QnHelloTest"></a>QnHelloTest</h3><a name="com.rultor.agents.github.qtnQnHelloTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>repliesInGithub</td>
-<td>1.397</td></tr></table></div>
+<td>1.174</td></tr></table></div>
 <div class="section">
-<h3>YamlXMLTest<a name="YamlXMLTest"></a></h3><a name="com.rultor.profilesYamlXMLTest"></a>
+<h3><a name="YamlXMLTest"></a>YamlXMLTest</h3><a name="com.rultor.profilesYamlXMLTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>parsesYamlConfig</td>
-<td>2.342</td></tr></table></div>
+<td>0.877</td></tr></table></div>
 <div class="section">
-<h3>AnswerTest<a name="AnswerTest"></a></h3><a name="com.rultor.agents.githubAnswerTest"></a>
+<h3><a name="AnswerTest"></a>AnswerTest</h3><a name="com.rultor.agents.githubAnswerTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>postsGithubComment</td>
-<td>1.68</td></tr>
+<td>preventsSpam</td>
+<td>5.207</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>preventsSpam</td>
-<td>9.832</td></tr></table></div>
+<td>postsGithubComment</td>
+<td>1.975</td></tr></table></div>
 <div class="section">
-<h3>QnParametrizedTest<a name="QnParametrizedTest"></a></h3><a name="com.rultor.agents.github.qtnQnParametrizedTest"></a>
+<h3><a name="QnParametrizedTest"></a>QnParametrizedTest</h3><a name="com.rultor.agents.github.qtnQnParametrizedTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>ignoresLaterReq</td>
-<td>3.962</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>fetchesParams</td>
-<td>4.439</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>ignoresEmptyParams</td>
-<td>3.942</td></tr>
+<td>0.642</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>ignoresEmptyReq</td>
-<td>3.954</td></tr></table></div>
+<td>0.789</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>ignoresEmptyParams</td>
+<td>0.84</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesParams</td>
+<td>1.52</td></tr></table></div>
 <div class="section">
-<h3>ReportsTest<a name="ReportsTest"></a></h3><a name="com.rultor.agents.githubReportsTest"></a>
+<h3><a name="ReportsTest"></a>ReportsTest</h3><a name="com.rultor.agents.githubReportsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>reportsRequestResult</td>
-<td>3.225</td></tr></table></div>
+<td>1.848</td></tr></table></div>
 <div class="section">
-<h3>QnAloneTest<a name="QnAloneTest"></a></h3><a name="com.rultor.agents.github.qtnQnAloneTest"></a>
+<h3><a name="QnAloneTest"></a>QnAloneTest</h3><a name="com.rultor.agents.github.qtnQnAloneTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>locksRepo</td>
-<td>2.337</td></tr></table></div>
+<td>1.479</td></tr></table></div>
 <div class="section">
-<h3>QnReleaseTest<a name="QnReleaseTest"></a></h3><a name="com.rultor.agents.github.qtnQnReleaseTest"></a>
+<h3><a name="QnReleaseTest"></a>QnReleaseTest</h3><a name="com.rultor.agents.github.qtnQnReleaseTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>buildsRequest</td>
-<td>2.919</td></tr></table></div>
+<td>2.636</td></tr></table></div>
 <div class="section">
-<h3>SiblingsRsTest<a name="SiblingsRsTest"></a></h3><a name="com.rultor.webSiblingsRsTest"></a>
+<h3><a name="SiblingsRsTest"></a>SiblingsRsTest</h3><a name="com.rultor.webSiblingsRsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>rendersListOfTalks</td>
-<td>9.367</td></tr></table></div>
+<td>2.493</td></tr></table></div>
 <div class="section">
-<h3>UnderstandsTest<a name="UnderstandsTest"></a></h3><a name="com.rultor.agents.githubUnderstandsTest"></a>
+<h3><a name="UnderstandsTest"></a>UnderstandsTest</h3><a name="com.rultor.agents.githubUnderstandsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>ignoresLaterReq</td>
-<td>2.194</td></tr>
+<td>1.162</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>understandsMessage</td>
-<td>7.45</td></tr>
+<td>3.165</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>understandsIssueBody</td>
-<td>5.043</td></tr></table></div>
+<td>2.359</td></tr></table></div>
 <div class="section">
-<h3>QnVersionTest<a name="QnVersionTest"></a></h3><a name="com.rultor.agents.github.qtnQnVersionTest"></a>
+<h3><a name="QnVersionTest"></a>QnVersionTest</h3><a name="com.rultor.agents.github.qtnQnVersionTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>repliesInGithub</td>
-<td>2.599</td></tr></table></div>
+<td>0.882</td></tr></table></div>
 <div class="section">
-<h3>ButtonRsTest<a name="ButtonRsTest"></a></h3><a name="com.rultor.webButtonRsTest"></a>
+<h3><a name="ButtonRsTest"></a>ButtonRsTest</h3><a name="com.rultor.webButtonRsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>rendersSvg</td>
-<td>0.226</td></tr></table></div>
+<td>0.769</td></tr></table></div>
 <div class="section">
-<h3>QnFirstOfTest<a name="QnFirstOfTest"></a></h3><a name="com.rultor.agents.github.qtnQnFirstOfTest"></a>
+<h3><a name="QnFirstOfTest"></a>QnFirstOfTest</h3><a name="com.rultor.agents.github.qtnQnFirstOfTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>getsFirstReq</td>
-<td>1.141</td></tr></table></div>
+<td>0.979</td></tr></table></div>
 <div class="section">
-<h3>AgentsTest<a name="AgentsTest"></a></h3><a name="com.rultor.agentsAgentsTest"></a>
+<h3><a name="AgentsTest"></a>AgentsTest</h3><a name="com.rultor.agentsAgentsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>processesTalk</td>
-<td>1.457</td></tr></table></div>
+<td>2.112</td></tr></table></div>
 <div class="section">
-<h3>QnDeployTest<a name="QnDeployTest"></a></h3><a name="com.rultor.agents.github.qtnQnDeployTest"></a>
+<h3><a name="QnDeployTest"></a>QnDeployTest</h3><a name="com.rultor.agents.github.qtnQnDeployTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>buildsRequest</td>
-<td>2.469</td></tr></table></div>
+<td>1.213</td></tr></table></div>
 <div class="section">
-<h3>StartsTalksTest<a name="StartsTalksTest"></a></h3><a name="com.rultor.agents.githubStartsTalksTest"></a>
+<h3><a name="PublishesTest"></a>PublishesTest</h3><a name="com.rultor.agentsPublishesTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>addsPublicAttribute</td>
+<td>0.358</td></tr></table></div>
+<div class="section">
+<h3><a name="StartsTalksTest"></a>StartsTalksTest</h3><a name="com.rultor.agents.githubStartsTalksTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><a href="#com.rultor.agents.github.StartsTalksTest.startsTalks"><img src="images/icon_warning_sml.gif" alt="" /></a></td>
@@ -930,14 +993,14 @@ function toggleDisplay(elementId) {
 <td>skipped</td>
 <td></td></tr></table></div>
 <div class="section">
-<h3>DaemonRsTest<a name="DaemonRsTest"></a></h3><a name="com.rultor.webDaemonRsTest"></a>
+<h3><a name="DaemonRsTest"></a>DaemonRsTest</h3><a name="com.rultor.webDaemonRsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>showsLogInHtml</td>
-<td>6.005</td></tr></table></div>
+<td>0.891</td></tr></table></div>
 <div class="section">
-<h3>TweetsTest<a name="TweetsTest"></a></h3><a name="com.rultor.agents.twitterTweetsTest"></a>
+<h3><a name="TweetsTest"></a>TweetsTest</h3><a name="com.rultor.agents.twitterTweetsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><a href="#com.rultor.agents.twitter.TweetsTest.postsTweet"><img src="images/icon_warning_sml.gif" alt="" /></a></td>
@@ -949,104 +1012,108 @@ function toggleDisplay(elementId) {
 <td>skipped</td>
 <td></td></tr></table></div>
 <div class="section">
-<h3>GithubProfileTest<a name="GithubProfileTest"></a></h3><a name="com.rultor.profilesGithubProfileTest"></a>
+<h3><a name="GithubProfileTest"></a>GithubProfileTest</h3><a name="com.rultor.profilesGithubProfileTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>throwsWhenYamlIsBroken</td>
-<td>4.585</td></tr>
+<td>fetchesYamlConfig</td>
+<td>3.712</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>fetchesYamlConfig</td>
-<td>5.644</td></tr></table></div>
+<td>throwsWhenAssetIsMisconfigured</td>
+<td>2.553</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>throwsWhenYamlIsBroken</td>
+<td>2.504</td></tr></table></div>
 <div class="section">
-<h3>SSHTest<a name="SSHTest"></a></h3><a name="com.rultor.agents.shellsSSHTest"></a>
+<h3><a name="SSHTest"></a>SSHTest</h3><a name="com.rultor.agents.shellsSSHTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>executeCommandOnServer</td>
-<td>7.706</td></tr></table></div>
+<td>2.242</td></tr></table></div>
 <div class="section">
-<h3>QnMergeTest<a name="QnMergeTest"></a></h3><a name="com.rultor.agents.github.qtnQnMergeTest"></a>
+<h3><a name="QnMergeTest"></a>QnMergeTest</h3><a name="com.rultor.agents.github.qtnQnMergeTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>buildsRequest</td>
-<td>3.156</td></tr></table></div>
+<td>1.358</td></tr></table></div>
 <div class="section">
-<h3>QnConfigTest<a name="QnConfigTest"></a></h3><a name="com.rultor.agents.github.qtnQnConfigTest"></a>
+<h3><a name="QnConfigTest"></a>QnConfigTest</h3><a name="com.rultor.agents.github.qtnQnConfigTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>repliesInGithub</td>
-<td>1.957</td></tr></table></div>
+<td>2.961</td></tr></table></div>
 <div class="section">
-<h3>HomeRsTest<a name="HomeRsTest"></a></h3><a name="com.rultor.webHomeRsTest"></a>
+<h3><a name="HomeRsTest"></a>HomeRsTest</h3><a name="com.rultor.webHomeRsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>rendersSvg</td>
-<td>2.687</td></tr></table></div>
+<td>0.233</td></tr></table></div>
 <div class="section">
-<h3>QnLastOfTest<a name="QnLastOfTest"></a></h3><a name="com.rultor.agents.github.qtnQnLastOfTest"></a>
+<h3><a name="QnLastOfTest"></a>QnLastOfTest</h3><a name="com.rultor.agents.github.qtnQnLastOfTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>getsLastReq</td>
-<td>2.25</td></tr></table></div>
+<td>0.979</td></tr></table></div>
 <div class="section">
-<h3>StartsRequestTest<a name="StartsRequestTest"></a></h3><a name="com.rultor.agents.reqStartsRequestTest"></a>
+<h3><a name="StartsRequestTest"></a>StartsRequestTest</h3><a name="com.rultor.agents.reqStartsRequestTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>startsMergeRequest</td>
-<td>5.6</td></tr>
+<td>1.16</td></tr>
 <tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>decryptsAssets</td>
-<td>5.197</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>startsDeployRequest</td>
-<td>5.649</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>startsReleaseRequest</td>
-<td>5.56</td></tr>
-<tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>startsRequest</td>
-<td>5.793</td></tr></table></div>
+<td>0.698</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>decryptsAssets</td>
+<td>0.654</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>startsDeployRequest</td>
+<td>0.836</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>startsReleaseRequest</td>
+<td>0.986</td></tr></table></div>
 <div class="section">
-<h3>SitemapRsTest<a name="SitemapRsTest"></a></h3><a name="com.rultor.webSitemapRsTest"></a>
+<h3><a name="SitemapRsTest"></a>SitemapRsTest</h3><a name="com.rultor.webSitemapRsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>rendersListOfTalks</td>
-<td>1.939</td></tr></table></div>
+<td>0.756</td></tr></table></div>
 <div class="section">
-<h3>RegistersShellTest<a name="RegistersShellTest"></a></h3><a name="com.rultor.agents.shellsRegistersShellTest"></a>
+<h3><a name="RegistersShellTest"></a>RegistersShellTest</h3><a name="com.rultor.agents.shellsRegistersShellTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>registersShell</td>
-<td>0.714</td></tr></table></div>
+<td>0.68</td></tr></table></div>
 <div class="section">
-<h3>DeactivatesTalksTest<a name="DeactivatesTalksTest"></a></h3><a name="com.rultor.agentsDeactivatesTalksTest"></a>
+<h3><a name="DeactivatesTalksTest"></a>DeactivatesTalksTest</h3><a name="com.rultor.agentsDeactivatesTalksTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>deactivatesTalk</td>
-<td>0.305</td></tr></table></div>
+<td>0.168</td></tr></table></div>
 <div class="section">
-<h3>EndsRequestTest<a name="EndsRequestTest"></a></h3><a name="com.rultor.agents.reqEndsRequestTest"></a>
+<h3><a name="EndsRequestTest"></a>EndsRequestTest</h3><a name="com.rultor.agents.reqEndsRequestTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>endsRequest</td>
-<td>0.597</td></tr></table></div><br /></div>
+<td>0.569</td></tr></table></div><br /></div>
 <div class="section">
-<h2>Failure Details<a name="Failure_Details"></a></h2><a name="Failure_Details"></a>
+<h2><a name="Failure_Details"></a>Failure Details</h2><a name="Failure_Details"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
 <table border="1" class="bodyTable">
 <tr class="a">
@@ -1061,7 +1128,6 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td></td>
 <td>skipped: skipped</td></tr></table><br /></div>
-                            <img class="maven-logo" src="//img.jcabi.com/built-by-maven.png" alt="built by maven"/>
                         </article>
                     </div>
                 </main>

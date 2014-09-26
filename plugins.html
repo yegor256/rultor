@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>rultor - Project Build Plugins</title>
-        <link media="all" rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+        <title>rultor &#x2013; Project Build Plugins</title>
         <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
+        <link media="all" rel="stylesheet" type="text/css" href="./ico/ico.css"/>
                             <script>
                 var _gaq = _gaq || [];
                 _gaq.push(['_setAccount', 'UA-1963507-28']);
@@ -20,31 +20,15 @@
 <link rel="shortcut icon" href="http://img.rultor.com/favicon.gif"/>
                                                                                                                 
 <link rel="author" href="https://plus.google.com/u/0/114792568016408327418?rel=author"/>
-                                            <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
-        <script>
-            $(document).ready(
-                function() {
-                    $(".menu-button").click(
-                        function() {
-                            if ($("#here-goes-menu").attr("class") == "menu-off") {
-                                $("#menu").clone().attr("class", "mobile-menu").appendTo("#here-goes-menu");
-                                $("#here-goes-menu").attr("class", "menu-on");
-                            } else {
-                                $(".mobile-menu").hide();
-                                $("#here-goes-menu").attr("class", "menu-off");
-                            }
-                        }
-                    );
-                }
-            );
-        </script>
+                                            <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="./js/jcabi.js"></script>
     </head>
     <body>
                 <section class="page" itemscope="" itemtype="http://schema.org/BlogPosting">
             <nav class="menu-section" role="navigation">
                 <ul class="menu" id="menu">
                                                                                     <li>
-                            Overview
+                            <span>Overview</span>
                                                             <ul>
                                                                                                     <li >
                             <span>                        <a href="index.html" title="Introduction">Introduction</a>
@@ -53,7 +37,7 @@
                                                                     </ul>
                                                     </li>
                                                                                                                         <li >
-                            <span>                        <a href="apidocs-1.32.2/index.html" title="JavaDoc 1.32.2">JavaDoc 1.32.2</a>
+                            <span>                        <a href="apidocs-1.33/index.html" title="JavaDoc 1.33">JavaDoc 1.33</a>
         </span>
                                                                                                                                                                 <ul>
                                                                     </ul>
@@ -73,7 +57,7 @@
                                                                                         </ul>
                                                     </li>
                                             <li>
-                            Project Documentation
+                            <span>Project Documentation</span>
                                                             <ul>
                                                                                                     <li >
                             <span>                        <a href="project-info.html" title="Project Information">Project Information</a>
@@ -147,7 +131,6 @@
                 <main role="main">
                     <div class="content">
                         <header>
-                            <i class="menu-button fa fa-align-justify"></i>
                             <div class="logo">
                                 <a href="http://doc.rultor.com/"
                                     title=" rultor.com ">
@@ -159,26 +142,66 @@
                                     />
                                 </a>
                             </div>
-                            <div class="date">
-                                <div class="date-numbers">
-                                    <strong itemprop="version">1.32.2</strong>
+                            <div class="teamed">
+                                <a href="http://www.teamed.io">
+                                    <img src="http://img.teamed.io/btn.svg" alt="teamed.io logo"/>
+                                </a>
+                            </div>
+                            <ul class="badges">
+                                <li>
+                                    <strong itemprop="version">1.33</strong>
+                                </li>
+                                <li>
                                     
-                                    <time itemprop="datePublished" datetime="2014-08-25T09:58:49Z">
+                                    <time itemprop="datePublished" datetime="2014-09-26T09:13:02Z">
                                         
-                                        25-Aug-2014
+                                        26-Sep-2014
                                     </time>
-                                </div>
-                                                                                                    <div>
-                                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=rultor&amp;type=watch&amp;count=true&amp;size=large"
-                                            style="border-width:0px;overflow:hidden;width:170px;height:30px;">
-                                        </iframe>
-                                    </div>
-                                                            </div>
-                            <div id="here-goes-menu" class="menu-off"></div>
+                                </li>
+                                <li class="menu-button">menu</li>
+                            </ul>
+                            <div class="social">
+                                <a href="http://www.facebook.com/sharer/sharer.php?u=URL"
+                                    title="Share on Facebook" class="ico">
+                                    <i class="icon-facebook"></i>
+                                </a>
+                                <a href="https://twitter.com/share?url=URL&amp;text=TITLE"
+                                    title="Share on Twitter" class="ico">
+                                    <i class="icon-twitter"></i>
+                                </a>
+                                <a href="https://plus.google.com/share?url=URL"
+                                    title="Share on Google+" class="ico">
+                                    <i class="icon-googleplus"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/cws/share?url=URL"
+                                    title="Share on LinkedIn" class="ico">
+                                    <i class="icon-linkedin"></i>
+                                </a>
+                                <a href="http://www.stumbleupon.com/submit?url=URL&amp;title=TITLE"
+                                    title="Share on StumbleUpon" class="ico">
+                                    <i class="icon-stumbleupon"></i>
+                                </a>
+                                <a href="http://digg.com/submit?phase=2&amp;url=URL&amp;title=TITLE"
+                                    title="Share on Digg" class="ico">
+                                    <i class="icon-digg"></i>
+                                </a>
+                                <a href="http://reddit.com/submit?url=URL&amp;title=TITLE"
+                                    title="Share on Reddit" class="ico">
+                                    <i class="icon-reddit"></i>
+                                </a>
+                                <a href="http://news.ycombinator.com/submitlink?u=URL&amp;t=TITLE"
+                                    title="Share on Hacker News" class="ico">
+                                    <i class="icon-hackernews"></i>
+                                </a>
+                            </div>
                         </header>
-                        <article role="article" itemprop="articleBody">
+                        <div id="here-goes-menu" class="menu-off"></div>
+                                                                            <a href="https://github.com/yegor256/rultor">
+                                <img src="http://img.jcabi.com/fork-me.svg" class="fork-me"/>
+                            </a>
+                                                <article role="article" itemprop="articleBody">
                             <div class="section">
-<h2>Project Build Plugins<a name="Project_Build_Plugins"></a></h2><a name="Project_Build_Plugins"></a>
+<h2><a name="Project_Build_Plugins"></a>Project Build Plugins</h2><a name="Project_Build_Plugins"></a>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>GroupId</th>
@@ -187,7 +210,7 @@
 <tr class="b">
 <td>com.github.github</td>
 <td><a class="externalLink" href="https://github.com/github/maven-plugins">site-maven-plugin</a></td>
-<td>0.9</td></tr>
+<td>0.10</td></tr>
 <tr class="a">
 <td>com.github.klieber</td>
 <td><a class="externalLink" href="https://github.com/klieber/phantomjs-maven-plugin">phantomjs-maven-plugin</a></td>
@@ -195,11 +218,11 @@
 <tr class="b">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-dynamodb-maven-plugin">jcabi-dynamodb-maven-plugin</a></td>
-<td>0.7</td></tr>
+<td>0.7.1</td></tr>
 <tr class="a">
 <td>com.jcabi</td>
 <td><a class="externalLink" href="http://www.jcabi.com/jcabi-maven-plugin">jcabi-maven-plugin</a></td>
-<td>0.9.2</td></tr>
+<td>0.9.3</td></tr>
 <tr class="b">
 <td>com.samaxes.maven</td>
 <td><a class="externalLink" href="https://github.com/samaxes/minify-maven-plugin">minify-maven-plugin</a></td>
@@ -223,7 +246,7 @@
 <tr class="a">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/plugins/maven-deploy-plugin/">maven-deploy-plugin</a></td>
-<td>2.7</td></tr>
+<td>2.8.1</td></tr>
 <tr class="b">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/plugins/maven-docck-plugin/">maven-docck-plugin</a></td>
@@ -231,11 +254,11 @@
 <tr class="a">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/surefire/maven-failsafe-plugin">maven-failsafe-plugin</a></td>
-<td>2.16</td></tr>
+<td>2.17</td></tr>
 <tr class="b">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/plugins/maven-install-plugin/">maven-install-plugin</a></td>
-<td>2.5</td></tr>
+<td>2.5.1</td></tr>
 <tr class="a">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/plugins/maven-resources-plugin/">maven-resources-plugin</a></td>
@@ -243,11 +266,11 @@
 <tr class="b">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/plugins/maven-site-plugin/">maven-site-plugin</a></td>
-<td>3.3</td></tr>
+<td>3.4</td></tr>
 <tr class="a">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/surefire/maven-surefire-plugin">maven-surefire-plugin</a></td>
-<td>2.16</td></tr>
+<td>2.17</td></tr>
 <tr class="b">
 <td>org.apache.maven.plugins</td>
 <td><a class="externalLink" href="http://maven.apache.org/plugins/maven-war-plugin/">maven-war-plugin</a></td>
@@ -263,7 +286,7 @@
 <tr class="a">
 <td>org.codehaus.mojo</td>
 <td><a class="externalLink" href="http://mojo.codehaus.org/buildnumber-maven-plugin">buildnumber-maven-plugin</a></td>
-<td>1.2</td></tr>
+<td>1.3</td></tr>
 <tr class="b">
 <td>org.codehaus.mojo</td>
 <td><a class="externalLink" href="http://mojo.codehaus.org/exec-maven-plugin">exec-maven-plugin</a></td>
@@ -273,9 +296,8 @@
 <td><a class="externalLink" href="http://developer.jasig.org/projects/sass-maven-plugin/1.1.1/sass-maven-plugin">sass-maven-plugin</a></td>
 <td>1.1.1</td></tr></table></div>
 <div class="section">
-<h2>Project Report Plugins<a name="Project_Report_Plugins"></a></h2><a name="Project_Report_Plugins"></a>
+<h2><a name="Project_Report_Plugins"></a>Project Report Plugins</h2><a name="Project_Report_Plugins"></a>
 <p>There are no plugins reports defined in the Reporting part of this project.</p></div>
-                            <img class="maven-logo" src="//img.jcabi.com/built-by-maven.png" alt="built by maven"/>
                         </article>
                     </div>
                 </main>

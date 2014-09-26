@@ -109,7 +109,7 @@
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         );
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p/entry[@key='x']"</span>).script(),
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>             Matchers.equalTo(<span class="jxr_string">"( 'mvn clean' )"</span>)
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>             Matchers.equalTo(<span class="jxr_string">"( 'mvn clean' ';' )"</span>)
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>         );
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p/entry[@key='y']"</span>).script(),
@@ -154,35 +154,81 @@
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>             )
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         );
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p/entry[@key='f']"</span>).script(),
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>             Matchers.equalTo(<span class="jxr_string">"( 'one' ';' 'two' ';' 'hi' )"</span>)
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>         );
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>     }
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * DockerRun can fetch environment vars.</em>
-<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * @throws Exception In case of error.</em>
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * @since 1.22</em>
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>     @Test
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesEnvVarsDefaults() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">final</strong> Profile profile = <strong class="jxr_keyword">new</strong> Profile.Fixed(
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <strong class="jxr_keyword">new</strong> XMLDocument(
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>                 StringUtils.join(
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>                     <span class="jxr_string">"&lt;p&gt;&lt;entry key='o'&gt;&lt;entry key='env'&gt;A=123&lt;/entry&gt;&lt;/entry&gt;"</span>,
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>                     <span class="jxr_string">"&lt;entry key='env'&gt;ALPHA=909&lt;/entry&gt;&lt;/p&gt;"</span>
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>                 )
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>             )
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>         );
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p/entry[@key='o']"</span>).envs(
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>                 <strong class="jxr_keyword">new</strong> ArrayMap&lt;String, String&gt;()
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>             ),
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>             Matchers.equalTo(<span class="jxr_string">"( '--env=ALPHA=909' '--env=A=123' )"</span>)
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>         );
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>     }
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> 
-<a class="jxr_linenumber" name="L177" href="#L177">177</a> }
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>             <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p/entry[@key='f']"</span>).script(),
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>             Matchers.equalTo(<span class="jxr_string">"( 'one' ';' 'two' ';' 'hi' ';' )"</span>)
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         );
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     }
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * DockerRun can fetch uninstall script.</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * @throws Exception In case of error.</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * @since 1.22</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     @Test
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesUninstallScript() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>         <strong class="jxr_keyword">final</strong> Profile profile = <strong class="jxr_keyword">new</strong> Profile.Fixed(
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             <strong class="jxr_keyword">new</strong> XMLDocument(
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                 StringUtils.join(
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>                     <span class="jxr_string">"&lt;p&gt;"</span>,
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                     <span class="jxr_string">"&lt;entry key='uninstall'&gt;"</span> ,
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                     <span class="jxr_string">"&lt;item&gt;one&lt;/item&gt;&lt;item&gt;two&lt;/item&gt;"</span>,
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>                     <span class="jxr_string">"&lt;/entry&gt;"</span>,
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>                     <span class="jxr_string">"&lt;entry key='f'&gt;&lt;entry key='script'&gt;hi&lt;/entry&gt;&lt;/entry&gt;"</span>,
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>                     <span class="jxr_string">"&lt;/p&gt;"</span>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>                 )
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>             )
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         );
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>         MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>             <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p/entry[@key='f']"</span>).script(),
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>             <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>             Matchers.equalTo(<span class="jxr_string">"( 'function' 'clean_up()' '{' 'one' ';' 'two' ';' '}' ';' 'trap' 'clean_up' 'EXIT' ';' 'hi' ';' )"</span>)
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         );
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     }
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">     * DockerRun can fetch environment vars.</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">     * @throws Exception In case of error.</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">     * @since 1.22</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     @Test
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesEnvVarsDefaults() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         <strong class="jxr_keyword">final</strong> Profile profile = <strong class="jxr_keyword">new</strong> Profile.Fixed(
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>             <strong class="jxr_keyword">new</strong> XMLDocument(
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>                 StringUtils.join(
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>                     <span class="jxr_string">"&lt;p&gt;&lt;entry key='o'&gt;&lt;entry key='env'&gt;A=123&lt;/entry&gt;&lt;/entry&gt;"</span>,
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>                     <span class="jxr_string">"&lt;entry key='env'&gt;ALPHA=909&lt;/entry&gt;&lt;/p&gt;"</span>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>                 )
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>             )
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>         );
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>         MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p/entry[@key='o']"</span>).envs(
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>                 <strong class="jxr_keyword">new</strong> ArrayMap&lt;String, String&gt;()
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>             ),
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>             Matchers.equalTo(<span class="jxr_string">"( '--env=ALPHA=909' '--env=A=123' )"</span>)
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>         );
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>     }
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> 
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * DockerRun can fetch multi-line script.</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * @throws Exception In case of error.</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     * @since 1.32.3</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>     @Test
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesMultiLineScript() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         <strong class="jxr_keyword">final</strong> Profile profile = <strong class="jxr_keyword">new</strong> Profile.Fixed(
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>             <strong class="jxr_keyword">new</strong> XMLDocument(
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>                 <span class="jxr_string">"&lt;p&gt;&lt;entry key='script'&gt;How are you,\ndude&lt;/entry&gt;&lt;/p&gt;"</span>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>             )
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         );
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>             <strong class="jxr_keyword">new</strong> DockerRun(profile, <span class="jxr_string">"/p"</span>).script(),
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>             Matchers.equalTo(<span class="jxr_string">"( 'How are you,' ';' 'dude' ';' )"</span>)
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         );
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>     }
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> 
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
