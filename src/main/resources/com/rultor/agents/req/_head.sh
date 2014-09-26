@@ -4,11 +4,10 @@ if [ -z "${docker}" ]; then
   docker="docker"
 fi
 
-git clone "${head}" repo
+git clone --branch="${head_branch}" --depth=10 "${head}" repo
 cd repo
 git config user.email "me@rultor.com"
 git config user.name "rultor"
-git checkout "${head_branch}"
 
 if [ -z "${scripts}" ]; then
   if [ -e "pom.xml" ]; then
