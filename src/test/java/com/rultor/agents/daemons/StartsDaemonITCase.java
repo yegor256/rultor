@@ -48,6 +48,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -75,9 +76,11 @@ public final class StartsDaemonITCase {
     /**
      * StartsDaemon can start a daemon.
      * @throws Exception In case of error.
+     * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
     public void startsDaemon() throws Exception {
+        Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
         final Sshd sshd = new Sshd(this.temp.newFolder());
         final int port = sshd.start();
         final Talk talk = new Talk.InFile();
