@@ -12,7 +12,7 @@ env:
 install: |
   sudo apt-get install bsdmainutils
   sudo gem install pdd
-  sudo bundle install
+  cd src/bundle && sudo bundle install && cd ../..
 
 deploy:
   script: |
@@ -23,7 +23,6 @@ deploy:
 
 release:
   script: |
-    sudo bundle install
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mv ../settings.xml settings.xml
