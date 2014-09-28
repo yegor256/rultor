@@ -262,49 +262,54 @@
 <a class="jxr_linenumber" name="L254" href="#L254">254</a>             <span class="jxr_string">"    echo \&quot;DOCKER-$i: ${!i}\&quot;"</span>,
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>             <span class="jxr_string">"  done"</span>,
 <a class="jxr_linenumber" name="L256" href="#L256">256</a>             <span class="jxr_string">"}"</span>,
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>             talk.read().xpath(<span class="jxr_string">"//script/text()"</span>).get(0)
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>         );
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> VerboseProcess(
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>             <strong class="jxr_keyword">new</strong> ProcessBuilder().command(
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>                 <span class="jxr_string">"/bin/bash"</span>, <span class="jxr_string">"-c"</span>, script
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>             ).directory(<strong class="jxr_keyword">this</strong>.temp.newFolder()).redirectErrorStream(<strong class="jxr_keyword">true</strong>),
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>             Level.WARNING, Level.WARNING
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>         ).stdout();
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>     }
-<a class="jxr_linenumber" name="L266" href="#L266">266</a> 
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">     * Create empty Git repo.</em>
-<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">     * @return Its location</em>
-<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <strong class="jxr_keyword">private</strong> File repo() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>         <strong class="jxr_keyword">final</strong> File repo = <strong class="jxr_keyword">this</strong>.temp.newFolder();
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <strong class="jxr_keyword">new</strong> VerboseProcess(
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>             <strong class="jxr_keyword">new</strong> ProcessBuilder().command(
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>                 <span class="jxr_string">"/bin/bash"</span>,
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>                 <span class="jxr_string">"-c"</span>,
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>                 Joiner.on(';').join(
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>                     <span class="jxr_string">"set -x"</span>,
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>                     <span class="jxr_string">"set -e"</span>,
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>                     <span class="jxr_string">"set -o pipefail"</span>,
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>                     <span class="jxr_string">"git init ."</span>,
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>                     <span class="jxr_string">"git config user.email test@rultor.com"</span>,
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>                     <span class="jxr_string">"git config user.name test"</span>,
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>                     <span class="jxr_string">"echo 'hello, world!' &gt; hello.txt"</span>,
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>                     <span class="jxr_string">"git add ."</span>,
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>                     <span class="jxr_string">"git commit -am 'first file'"</span>,
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>                     <span class="jxr_string">"git checkout -b frk"</span>,
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>                     <span class="jxr_string">"echo 'good bye!' &gt; hello.txt"</span>,
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>                     <span class="jxr_string">"git commit -am 'modified file'"</span>,
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>                     <span class="jxr_string">"git checkout master"</span>,
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>                     <span class="jxr_string">"git config receive.denyCurrentBranch ignore"</span>
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>                 )
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>             ).directory(repo)
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>         ).stdout();
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>         <strong class="jxr_keyword">return</strong> repo;
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>     }
-<a class="jxr_linenumber" name="L298" href="#L298">298</a> 
-<a class="jxr_linenumber" name="L299" href="#L299">299</a> }
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>             <span class="jxr_string">"function sudo {"</span>,
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>             <span class="jxr_string">"  for (( i=1; i&lt;=$#; i++ )); do "</span>,
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>             <span class="jxr_string">"    echo \&quot;SUDO-$i: ${!i}\&quot;"</span>,
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>             <span class="jxr_string">"  done"</span>,
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>             <span class="jxr_string">"} "</span>,
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>             talk.read().xpath(<span class="jxr_string">"//script/text()"</span>).get(0)
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         );
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> VerboseProcess(
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>             <strong class="jxr_keyword">new</strong> ProcessBuilder().command(
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>                 <span class="jxr_string">"/bin/bash"</span>, <span class="jxr_string">"-c"</span>, script
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>             ).directory(<strong class="jxr_keyword">this</strong>.temp.newFolder()).redirectErrorStream(<strong class="jxr_keyword">true</strong>),
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>             Level.WARNING, Level.WARNING
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         ).stdout();
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>     }
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> 
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * Create empty Git repo.</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     * @return Its location</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     <strong class="jxr_keyword">private</strong> File repo() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         <strong class="jxr_keyword">final</strong> File repo = <strong class="jxr_keyword">this</strong>.temp.newFolder();
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         <strong class="jxr_keyword">new</strong> VerboseProcess(
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>             <strong class="jxr_keyword">new</strong> ProcessBuilder().command(
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>                 <span class="jxr_string">"/bin/bash"</span>,
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>                 <span class="jxr_string">"-c"</span>,
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>                 Joiner.on(';').join(
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>                     <span class="jxr_string">"set -x"</span>,
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>                     <span class="jxr_string">"set -e"</span>,
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>                     <span class="jxr_string">"set -o pipefail"</span>,
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>                     <span class="jxr_string">"git init ."</span>,
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>                     <span class="jxr_string">"git config user.email test@rultor.com"</span>,
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>                     <span class="jxr_string">"git config user.name test"</span>,
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>                     <span class="jxr_string">"echo 'hello, world!' &gt; hello.txt"</span>,
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>                     <span class="jxr_string">"git add ."</span>,
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>                     <span class="jxr_string">"git commit -am 'first file'"</span>,
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>                     <span class="jxr_string">"git checkout -b frk"</span>,
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>                     <span class="jxr_string">"echo 'good bye!' &gt; hello.txt"</span>,
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>                     <span class="jxr_string">"git commit -am 'modified file'"</span>,
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                     <span class="jxr_string">"git checkout master"</span>,
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>                     <span class="jxr_string">"git config receive.denyCurrentBranch ignore"</span>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>                 )
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>             ).directory(repo)
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>         ).stdout();
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         <strong class="jxr_keyword">return</strong> repo;
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     }
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
