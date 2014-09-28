@@ -27,7 +27,7 @@ release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mv ../settings.xml settings.xml
+    cp ../settings.xml settings.xml
     mvn clean install -Pqulice --errors
     git remote add heroku git@heroku.com:rultor.git
     mkdir ~/.ssh
