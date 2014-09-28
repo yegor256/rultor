@@ -754,11 +754,13 @@
                     <groupId>org.apache.tomcat.embed</groupId>
                     <artifactId>tomcat-embed-logging-juli</artifactId>
                     <version>${tomcat.version}</version>
+                    <scope>runtime</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.tomcat.embed</groupId>
                     <artifactId>tomcat-embed-jasper</artifactId>
                     <version>${tomcat.version}</version>
+                    <scope>runtime</scope>
                 </dependency>
             </dependencies>
             <build>
