@@ -2,14 +2,17 @@ assets:
   settings.xml: "yegor256/home#assets/rultor/settings.xml"
   pubring.gpg: "yegor256/home#assets/pubring.gpg"
   secring.gpg: "yegor256/home#assets/secring.gpg"
+  id_rsa: "yegor256/home#assets/rultor/id_rsa"
+  id_rsa.pub: "yegor256/home#assets/rultor/id_rsa.pub"
   s3cfg: "yegor256/home#assets/s3cfg"
 
 env:
   MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
 
-install:
-  - "sudo apt-get install bsdmainutils"
-  - "sudo gem install pdd"
+install: |
+  sudo apt-get install bsdmainutils
+  sudo gem install pdd
+  sudo bundle install
 
 deploy:
   script: |
@@ -23,8 +26,17 @@ release:
     sudo bundle install
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean deploy -Pqulice -Prultor --errors --settings ../settings.xml
-    mvn clean site-deploy --errors -Psite --settings ../settings.xml
+    mv ../settings.xml settings.xml
+    mvn clean install -Pqulice --errors
+    git remote add heroku git@heroku.com:rultor.git
+    mkdir ~/.ssh
+    mv ../id_rsa ../id_rsa.pub ~/.ssh
+    chmod -R 600 ~/.ssh/*
+    echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
+    git add settings.xml
+    git commit -m 'settings.xml'
+    git push -f heroku $(git symbolic-ref --short HEAD):master
+    curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.rultor.com
 
 merge:
   script: |
