@@ -1,3 +1,8 @@
 # @todo https://github.com/teamed/requs/issues/65 Until requs bug is fixed, we enforce LF line endings
 # on all (e.g. Windows) machines to make requs build possible
 * text eol=lf
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary
+
