@@ -1,9 +1,5 @@
 #!/bin/sh
 
-if [ -z "${docker}" ]; then
-  docker="docker"
-fi
-
 git clone --branch="${head_branch}" --depth=10 "${head}" repo
 cd repo
 git config user.email "me@rultor.com"
@@ -68,8 +64,8 @@ function docker_when_possible {
     fi
   done
   cd ..
-  ${docker} pull "${image}"
-  ${docker} run --rm -v "$(pwd):/main" "${vars[@]}" \
+  docker pull "${image}"
+  docker run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main "${image}" /main/entry.sh
   sudo chown -R $(whoami) repo
   cd repo

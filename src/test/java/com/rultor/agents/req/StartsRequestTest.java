@@ -254,6 +254,11 @@ public final class StartsRequestTest {
             "    echo \"DOCKER-$i: ${!i}\"",
             "  done",
             "}",
+            "function sudo {",
+            "  for (( i=1; i<=$#; i++ )); do ",
+            "    echo \"SUDO-$i: ${!i}\"",
+            "  done",
+            "} ",
             talk.read().xpath("//script/text()").get(0)
         );
         return new VerboseProcess(
