@@ -35,6 +35,7 @@ release:
     echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
     git add settings.xml
     git commit -m 'settings.xml'
+    git fetch --unshallow
     git push -f heroku $(git symbolic-ref --short HEAD):master
     curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.rultor.com
 
