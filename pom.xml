@@ -748,6 +748,8 @@
                                 <exclude>checkstyle:/src/main/webapp/.*</exclude>
                                 <exclude>checkstyle:/src/main/scss/.*</exclude>
                                 <exclude>checkstyle:/src/test/casperjs/.*</exclude>
+                                <exclude>checkstyle:/src/jekyll/guard-article.pdf</exclude>
+                                <exclude>checkstyle:/src/jekyll/images/.*</exclude>
                                 <exclude>findbugs:.*</exclude>
                                 <exclude>xml:/src/main/webapp/WEB-INF/web.xml</exclude>
                                 <exclude>xml:/src/test/webapp/xml/.*</exclude>
