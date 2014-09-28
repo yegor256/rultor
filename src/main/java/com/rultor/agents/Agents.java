@@ -33,6 +33,7 @@ import co.stateful.Locks;
 import co.stateful.Sttc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
+import com.jcabi.immutable.Array;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
@@ -148,7 +149,7 @@ public final class Agents {
     public Collection<Agent> agents(final Talk talk, final Profile profile)
         throws IOException {
         final Locks locks = this.sttc.locks();
-        return Arrays.<Agent>asList(
+        return new Array<Agent>(
             new Understands(
                 this.github,
                 new QnSince(
@@ -158,7 +159,7 @@ public final class Agents {
                         this.github.users().self().login(),
                         new QnParametrized(
                             new Question.FirstOf(
-                                Arrays.asList(
+                                new Array<Question>(
                                     new QnIfContains("config", new QnConfig(profile)),
                                     new QnIfContains("status", new QnStatus(talk)),
                                     new QnIfContains("version", new QnVersion()),
@@ -167,12 +168,12 @@ public final class Agents {
                                         new QnAlone(
                                             talk, locks,
                                             new Question.FirstOf(
-                                                Arrays.<Question>asList(
+                                                new Array<Question>(
                                                     new QnIfContains(
                                                         "merge",
                                                         new QnAskedBy(
                                                             profile,
-                                                            this.commanders("merge"),
+                                                            Agents.commanders("merge"),
                                                             new QnMerge()
                                                         )
                                                     ),
@@ -180,7 +181,7 @@ public final class Agents {
                                                         "deploy",
                                                         new QnAskedBy(
                                                             profile,
-                                                            this.commanders("deploy"),
+                                                            Agents.commanders("deploy"),
                                                             new QnDeploy()
                                                         )
                                                     ),
@@ -188,7 +189,7 @@ public final class Agents {
                                                         "release",
                                                         new QnAskedBy(
                                                             profile,
-                                                            this.commanders("release"),
+                                                            Agents.commanders("release"),
                                                             new QnRelease()
                                                         )
                                                     )
@@ -245,7 +246,7 @@ public final class Agents {
      * @param entry Entry
      * @return XPath
      */
-    private String commanders(final String entry) {
+    private static String commanders(final String entry) {
         return String.format(
             "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
             entry
