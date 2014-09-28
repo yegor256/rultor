@@ -553,6 +553,7 @@
                             <systemPropertyVariables combine.children="append">
                                 <tomcat.home>http://localhost:${tomcat.port}</tomcat.home>
                             </systemPropertyVariables>
+                            <reuseForks>false</reuseForks>
                         </configuration>
                         <executions>
                             <execution>
