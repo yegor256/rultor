@@ -41,8 +41,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.CustomMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -83,21 +85,20 @@ public final class DyTalksITCase {
         final Talks talks = new DyTalks(
             this.dynamo(), new MkSttc().counters().get("")
         );
+        ((DyTalks) talks).flush();
         final String name = "yegor256/rultor#529";
         talks.create("a/b", name);
         final Talk talk = talks.get(name);
         talk.active(false);
         MatcherAssert.assertThat(
-            talks.recent().iterator().next().name(),
-            Matchers.equalTo(name)
+            talks.recent(),
+            Matchers.hasItem(new DyTalksITCase.TalkMatcher(name))
         );
     }
 
     /**
      * DyTalks caches talks.
      * @throws Exception If some problem inside
-     * @todo #536 For some strange reason Cacheable is not being applied to
-     *  DyTalks, when it starts working enable this test.
      */
     @Test
     @Ignore
@@ -105,22 +106,25 @@ public final class DyTalksITCase {
         final Talks talks = new DyTalks(
             this.dynamo(), new MkSttc().counters().get("")
         );
-        final String first = "krzyk/rultor#562";
+        ((DyTalks) talks).flush();
+        final String first = "krzyk1/rultor#562";
         final String repo = "some/other";
         talks.create(repo, first);
         final Talk talk = talks.get(first);
         talk.active(false);
         MatcherAssert.assertThat(
             talks.recent(),
-            Matchers.<Talk>iterableWithSize(1)
+            Matchers.hasItem(new DyTalksITCase.TalkMatcher(first))
         );
-        final String second = "krzyk/rultor#562#2";
+        final String second = "krzyk2/rultor#562#2";
         talks.create(repo, second);
         final Talk talking = talks.get(second);
         talking.active(false);
         MatcherAssert.assertThat(
             talks.recent(),
-            Matchers.<Talk>iterableWithSize(1)
+            Matchers.not(
+                Matchers.hasItem(new DyTalksITCase.TalkMatcher(second))
+            )
         );
     }
 
@@ -209,4 +213,38 @@ public final class DyTalksITCase {
         );
     }
 
+    /**
+     * Matcher for Talks.
+     */
+    @SuppressWarnings("PMD.CallSuperInConstructor")
+    private static final class TalkMatcher extends TypeSafeMatcher<Talk> {
+        /**
+         * Name of the talk.
+         */
+        private final transient String name;
+
+        /**
+         * Constructor.
+         * @param nam Name of the talk.
+         */
+        public TalkMatcher(final String nam) {
+            this.name = nam;
+        }
+
+        @Override
+        public boolean matchesSafely(final Talk talk) {
+            try {
+                return talk.name().equals(this.name);
+            } catch (final IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+
+        @Override
+        public void describeTo(final Description description) {
+            description.appendText(
+                String.format("Talk '%s' not found", this.name)
+            );
+        }
+    }
 }

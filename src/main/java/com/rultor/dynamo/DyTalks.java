@@ -37,6 +37,7 @@ import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
@@ -63,6 +64,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "region")
+@SuppressWarnings("PMD.TooManyMethods")
 public final class DyTalks implements Talks {
 
     /**
@@ -239,39 +241,53 @@ public final class DyTalks implements Talks {
     @Cacheable
     @Override
     public Iterable<Talk> recent() {
-        return Iterables.filter(
-            Iterables.transform(
-                this.region.table(DyTalks.TBL)
-                    .frame()
-                    .through(
-                        new QueryValve()
-                            .withIndexName(DyTalks.IDX_ACTIVE)
-                            .withScanIndexForward(false)
-                            .withConsistentRead(false)
-                            .withLimit(Tv.TWENTY)
-                            .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
-                    )
-                    .where(DyTalks.ATTR_ACTIVE, Boolean.toString(false)),
-                new Function<Item, Talk>() {
+        return Lists.newArrayList(
+            Iterables.filter(
+                Iterables.transform(
+                    this.region.table(DyTalks.TBL)
+                        .frame()
+                        .through(
+                            new QueryValve()
+                                .withIndexName(DyTalks.IDX_ACTIVE)
+                                .withScanIndexForward(false)
+                                .withConsistentRead(false)
+                                .withLimit(Tv.TWENTY)
+                                .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
+                        )
+                        .where(
+                            DyTalks.ATTR_ACTIVE, Boolean.toString(false)
+                        ),
+                    new Function<Item, Talk>() {
+                        @Override
+                        public Talk apply(final Item input) {
+                            return new DyTalk(input);
+                        }
+                    }
+                ),
+                new Predicate<Talk>() {
                     @Override
-                    public Talk apply(final Item input) {
-                        return new DyTalk(input);
+                    public boolean apply(final Talk talk) {
+                        try {
+                            return !talk.read().nodes(
+                                "/talk[@public='true']"
+                            ).isEmpty();
+                        } catch (final IOException ex) {
+                            throw new IllegalStateException(ex);
+                        }
                     }
                 }
-            ),
-            new Predicate<Talk>() {
-                @Override
-                public boolean apply(final Talk talk) {
-                    try {
-                        return !talk.read().nodes(
-                            "/talk[@public='true']"
-                        ).isEmpty();
-                    } catch (final IOException ex) {
-                        throw new IllegalStateException(ex);
-                    }
-                }
-            }
+            )
         );
+    }
+
+    /**
+     * Method for unit test to clean recent() cache.
+     * @todo #536 Remove this method and PMD.TooManyMethods when
+     *  jcabi-aspects#91 is resolved.
+     */
+    @Cacheable.FlushBefore
+    public void flush() {
+        // intentionally left empty
     }
 
     @Override
