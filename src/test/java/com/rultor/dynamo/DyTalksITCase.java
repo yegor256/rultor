@@ -216,7 +216,6 @@ public final class DyTalksITCase {
     /**
      * Matcher for Talks.
      */
-    @SuppressWarnings("PMD.CallSuperInConstructor")
     private static final class TalkMatcher extends TypeSafeMatcher<Talk> {
         /**
          * Name of the talk.
@@ -228,6 +227,7 @@ public final class DyTalksITCase {
          * @param nam Name of the talk.
          */
         public TalkMatcher(final String nam) {
+            super();
             this.name = nam;
         }
 
