@@ -12,7 +12,9 @@ env:
 install: |
   sudo apt-get install bsdmainutils
   sudo gem install pdd
-  cd src/bundle && sudo bundle install && cd ../..
+  cd src/bundle
+  sudo bundle install
+  cd ../..
 
 deploy:
   script: |
