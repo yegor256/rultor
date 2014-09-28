@@ -44,7 +44,7 @@
                     <img style="width:128px;height:128px;" alt="rultor logo"
                         itemprop="image">
                         <xsl:attribute name="src">
-                            <xsl:text>//img.rultor.com/logo</xsl:text>
+                            <xsl:text>//doc.rultor.com/images/logo</xsl:text>
                             <xsl:if test="toggles/read-only='true'">
                                 <xsl:text>-stripes</xsl:text>
                             </xsl:if>
@@ -89,7 +89,7 @@
                     <span>provisioned by</span>
                     <br/>
                     <a href="http://aws.amazon.com/">
-                        <img src="//img.rultor.com/aws-logo.png"
+                        <img src="//doc.rultor.com/images/aws-logo.png"
                             style="width:96px" alt="aws logo"/>
                     </a>
                 </div>
@@ -97,7 +97,7 @@
                     <span>powered by</span>
                     <br/>
                     <a href="http://www.docker.io" title="Docker">
-                        <img src="//img.rultor.com/docker-logo.png"
+                        <img src="//doc.rultor.com/images/docker-logo.png"
                             style="width:96px" alt="docker logo"/>
                     </a>
                 </div>
@@ -105,16 +105,16 @@
                     <span>operates at</span>
                     <br/>
                     <a href="http://www.github.com" title="Github">
-                        <img src="//img.rultor.com/github-logo.png"
+                        <img src="//doc.rultor.com/images/github-logo.png"
                             style="width:96px" alt="github logo"/>
                     </a>
                 </div>
                 <div>
                     <span>hosted by</span>
                     <br/>
-                    <a href="http://www.cloudbees.net" title="CloudBees">
-                        <img src="//img.rultor.com/cloudbees-logo.png"
-                            style="width:96px" alt="cloudbees logo"/>
+                    <a href="http://www.heroku.com" title="Heroku">
+                        <img src="//doc.rultor.com/images/heroku-logo.png"
+                            style="width:96px" alt="heroku logo"/>
                     </a>
                 </div>
             </div>

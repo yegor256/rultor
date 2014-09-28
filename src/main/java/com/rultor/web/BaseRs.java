@@ -89,7 +89,7 @@ public class BaseRs extends BaseResource {
                 identity = new Identity.Simple(
                     BaseRs.TEST_URN,
                     "localhost",
-                    URI.create("http://img.rultor.com/none.png")
+                    URI.create("http://doc.rultor.com/images/none.png")
                 );
             } else {
                 identity = Identity.ANONYMOUS;

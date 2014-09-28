@@ -44,7 +44,7 @@
         <div class="wrapper">
             <header class="header">
                 <a href="{links/link[@rel='home']/@href}">
-                    <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
+                    <img src="//doc.rultor.com/images/logo.svg" class="logo" alt="logo"/>
                 </a>
             </header>
             <div class="main">

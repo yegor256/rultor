@@ -41,7 +41,7 @@
                 <meta property="twitter:account_id" content="4503599630178231"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
                 <link rel="stylesheet" type="text/css" media="all" href="//doc.rultor.com/css/layout.css?{version/revision}"/>
-                <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128-transparent.png?{version/revision}"/>
+                <link rel="icon" type="image/gif" href="//doc.rultor.com/favicon.ico?{version/revision}"/>
                 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1-rc1.min.js">
                     <xsl:text> </xsl:text>
                 </script>
@@ -60,7 +60,7 @@
             </head>
             <body>
                 <a href="https://github.com/yegor256/rultor">
-                    <img src="//img.rultor.com/fork-me.svg" class="fork-me" alt="fork me in github"/>
+                    <img src="//doc.rultor.com/images/fork-me.svg" class="fork-me" alt="fork me in github"/>
                 </a>
                 <section itemscope="" itemtype="http://schema.org/WebApplication">
                     <nav role="navigation" class="menu">
