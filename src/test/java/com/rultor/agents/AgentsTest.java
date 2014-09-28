@@ -33,10 +33,8 @@ import co.stateful.Sttc;
 import co.stateful.mock.MkSttc;
 import com.jcabi.github.Github;
 import com.jcabi.github.mock.MkGithub;
-import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import java.util.Collection;
 import org.junit.Test;
 
 /**
@@ -58,11 +56,7 @@ public final class AgentsTest {
         final Github github = new MkGithub();
         final Sttc sttc = new MkSttc();
         final Profile profile = new Profile.Fixed();
-        final Collection<Agent> agents =
-            new Agents(github, sttc).agents(talk, profile);
-        for (final Agent agent : agents) {
-            agent.execute(talk);
-        }
+        new Agents(github, sttc).agent(talk, profile).execute(talk);
     }
 
 }

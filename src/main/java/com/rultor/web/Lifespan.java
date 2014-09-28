@@ -53,10 +53,8 @@ import com.rultor.Toggles;
 import com.rultor.agents.Agents;
 import com.rultor.dynamo.DyTalks;
 import com.rultor.profiles.Profiles;
-import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -207,21 +205,15 @@ public final class Lifespan implements ServletContextListener {
      */
     private int routine(final Talks talks) throws IOException {
         final Agents agents = new Agents(this.github(), this.sttc());
-        for (final SuperAgent agent : agents.starters()) {
-            agent.execute(talks);
-        }
+        agents.starter().execute(talks);
         final Profiles profiles = new Profiles();
         int total = 0;
         for (final Talk talk : talks.active()) {
             ++total;
             final Profile profile = profiles.fetch(talk);
-            for (final Agent agent : agents.agents(talk, profile)) {
-                agent.execute(talk);
-            }
+            agents.agent(talk, profile).execute(talk);
         }
-        for (final SuperAgent agent : agents.closers()) {
-            agent.execute(talks);
-        }
+        agents.closer().execute(talks);
         return total;
     }
 

@@ -72,8 +72,6 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -117,80 +115,86 @@ public final class Agents {
     }
 
     /**
-     * Create super agents, starters.
-     * @return List of them
+     * Create super agent, starter.
+     * @return The starter
      */
-    public Collection<SuperAgent> starters() {
-        return Arrays.<SuperAgent>asList(
-            new StartsTalks(this.github)
+    public SuperAgent starter() {
+        return new SuperAgent.Iterative(
+            new Array<SuperAgent>(
+                new StartsTalks(this.github)
+            )
         );
     }
 
     /**
-     * Create super agents, closers.
-     * @return List of them
+     * Create super agent, closer.
+     * @return The closer
      * @throws IOException If fails
      */
-    public Collection<SuperAgent> closers() throws IOException {
-        return Arrays.asList(
-            new UnlocksRepo(this.sttc.locks(), this.github),
-            new DeactivatesTalks()
+    public SuperAgent closer() throws IOException {
+        return new SuperAgent.Iterative(
+            new Array<SuperAgent>(
+                new UnlocksRepo(this.sttc.locks(), this.github),
+                new DeactivatesTalks()
+            )
         );
     }
 
     /**
-     * Create them for a talk.
+     * Create it for a talk.
      * @param talk Talk itself
      * @param profile Profile
-     * @return List of them
+     * @return The agent
      * @throws IOException If fails
      * @checkstyle LineLength (150 lines)
      */
-    public Collection<Agent> agents(final Talk talk, final Profile profile)
+    public Agent agent(final Talk talk, final Profile profile)
         throws IOException {
         final Locks locks = this.sttc.locks();
-        return new Array<Agent>(
-            new Understands(
-                this.github,
-                new QnSince(
-                    // @checkstyle MagicNumber (1 line)
-                    49092213,
-                    new QnReferredTo(
-                        this.github.users().self().login(),
-                        new QnParametrized(
-                            new Question.FirstOf(
-                                new Array<Question>(
-                                    new QnIfContains("config", new QnConfig(profile)),
-                                    new QnIfContains("status", new QnStatus(talk)),
-                                    new QnIfContains("version", new QnVersion()),
-                                    new QnIfContains("hello", new QnHello()),
-                                    new QnIfCollaborator(
-                                        new QnAlone(
-                                            talk, locks,
-                                            new Question.FirstOf(
-                                                new Array<Question>(
-                                                    new QnIfContains(
-                                                        "merge",
-                                                        new QnAskedBy(
-                                                            profile,
-                                                            Agents.commanders("merge"),
-                                                            new QnMerge()
-                                                        )
-                                                    ),
-                                                    new QnIfContains(
-                                                        "deploy",
-                                                        new QnAskedBy(
-                                                            profile,
-                                                            Agents.commanders("deploy"),
-                                                            new QnDeploy()
-                                                        )
-                                                    ),
-                                                    new QnIfContains(
-                                                        "release",
-                                                        new QnAskedBy(
-                                                            profile,
-                                                            Agents.commanders("release"),
-                                                            new QnRelease()
+        return new Agent.Iterative(
+            new Array<Agent>(
+                new Understands(
+                    this.github,
+                    new QnSince(
+                        // @checkstyle MagicNumber (1 line)
+                        49092213,
+                        new QnReferredTo(
+                            this.github.users().self().login(),
+                            new QnParametrized(
+                                new Question.FirstOf(
+                                    new Array<Question>(
+                                        new QnIfContains("config", new QnConfig(profile)),
+                                        new QnIfContains("status", new QnStatus(talk)),
+                                        new QnIfContains("version", new QnVersion()),
+                                        new QnIfContains("hello", new QnHello()),
+                                        new QnIfCollaborator(
+                                            new QnAlone(
+                                                talk, locks,
+                                                new Question.FirstOf(
+                                                    new Array<Question>(
+                                                        new QnIfContains(
+                                                            "merge",
+                                                            new QnAskedBy(
+                                                                profile,
+                                                                Agents.commanders("merge"),
+                                                                new QnMerge()
+                                                            )
+                                                        ),
+                                                        new QnIfContains(
+                                                            "deploy",
+                                                            new QnAskedBy(
+                                                                profile,
+                                                                Agents.commanders("deploy"),
+                                                                new QnDeploy()
+                                                            )
+                                                        ),
+                                                        new QnIfContains(
+                                                            "release",
+                                                            new QnAskedBy(
+                                                                profile,
+                                                                Agents.commanders("release"),
+                                                                new QnRelease()
+                                                            )
                                                         )
                                                     )
                                                 )
@@ -201,43 +205,43 @@ public final class Agents {
                             )
                         )
                     )
-                )
-            ),
-            new StartsRequest(profile),
-            new RegistersShell(
-                // @checkstyle MagicNumber (1 line)
-                "b1.rultor.com", 22,
-                "rultor",
-                IOUtils.toString(
-                    this.getClass().getResourceAsStream("rultor.key"),
-                    CharEncoding.UTF_8
-                )
-            ),
-            new StartsDaemon(profile),
-            new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
-            new EndsDaemon(),
-            new EndsRequest(),
-            new Tweets(
-                this.github,
-                new OAuthTwitter(
-                    Manifests.read("Rultor-TwitterKey"),
-                    Manifests.read("Rultor-TwitterSecret"),
-                    Manifests.read("Rultor-TwitterToken"),
-                    Manifests.read("Rultor-TwitterTokenSecret")
-                )
-            ),
-            new CommentsTag(this.github),
-            new Reports(this.github),
-            new RemovesShell(),
-            new ArchivesDaemon(
-                new ReRegion(
-                    new Region.Simple(
-                        Manifests.read("Rultor-S3Key"),
-                        Manifests.read("Rultor-S3Secret")
+                ),
+                new StartsRequest(profile),
+                new RegistersShell(
+                    // @checkstyle MagicNumber (1 line)
+                    "b1.rultor.com", 22,
+                    "rultor",
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream("rultor.key"),
+                        CharEncoding.UTF_8
                     )
-                ).bucket(Manifests.read("Rultor-S3Bucket"))
-            ),
-            new Publishes(profile)
+                ),
+                new StartsDaemon(profile),
+                new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
+                new EndsDaemon(),
+                new EndsRequest(),
+                new Tweets(
+                    this.github,
+                    new OAuthTwitter(
+                        Manifests.read("Rultor-TwitterKey"),
+                        Manifests.read("Rultor-TwitterSecret"),
+                        Manifests.read("Rultor-TwitterToken"),
+                        Manifests.read("Rultor-TwitterTokenSecret")
+                    )
+                ),
+                new CommentsTag(this.github),
+                new Reports(this.github),
+                new RemovesShell(),
+                new ArchivesDaemon(
+                    new ReRegion(
+                        new Region.Simple(
+                            Manifests.read("Rultor-S3Key"),
+                            Manifests.read("Rultor-S3Secret")
+                        )
+                    ).bucket(Manifests.read("Rultor-S3Bucket"))
+                ),
+                new Publishes(profile)
+            )
         );
     }
 

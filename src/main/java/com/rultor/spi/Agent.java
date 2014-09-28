@@ -30,7 +30,10 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.immutable.Array;
 import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Agent.
@@ -48,5 +51,31 @@ public interface Agent {
      * @throws IOException If fails
      */
     void execute(Talk talk) throws IOException;
+
+    /**
+     * Iterative.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "children")
+    final class Iterative implements Agent {
+        /**
+         * Agents to run.
+         */
+        private final transient Array<Agent> children;
+        /**
+         * Ctor.
+         * @param list List of them
+         */
+        public Iterative(final Iterable<Agent> list) {
+            this.children = new Array<Agent>(list);
+        }
+        @Override
+        public void execute(final Talk talk) throws IOException {
+            for (final Agent agent : this.children) {
+                agent.execute(talk);
+            }
+        }
+    }
 
 }

@@ -30,7 +30,10 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.immutable.Array;
 import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Super Agent.
@@ -48,5 +51,31 @@ public interface SuperAgent {
      * @throws IOException If fails
      */
     void execute(Talks talks) throws IOException;
+
+    /**
+     * Iterative.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "children")
+    final class Iterative implements SuperAgent {
+        /**
+         * Agents to run.
+         */
+        private final transient Array<SuperAgent> children;
+        /**
+         * Ctor.
+         * @param list List of them
+         */
+        public Iterative(final Iterable<SuperAgent> list) {
+            this.children = new Array<SuperAgent>(list);
+        }
+        @Override
+        public void execute(final Talks talks) throws IOException {
+            for (final SuperAgent agent : this.children) {
+                agent.execute(talks);
+            }
+        }
+    }
 
 }
