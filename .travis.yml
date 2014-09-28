@@ -8,6 +8,5 @@ env:
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
 before_install:
   - unset GEM_PATH
-script: 
-  - sudo ln -s /usr/bin/md5sum /usr/bin/md5
+script:
   - mvn clean install -Pqulice --batch-mode --errors
