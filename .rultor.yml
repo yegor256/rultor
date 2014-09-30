@@ -38,7 +38,9 @@ release:
     git commit -m 'settings.xml'
     build=$(git rev-parse --short HEAD)
     sed -i "s/BUILD/${build}/g" src/main/resources/META-INF/MANIFEST.MF
+    sed -i "s/BUILD/${build}/g" src/main/resources/log4j.properties
     git add src/main/resources/META-INF/MANIFEST.MF
+    git add src/main/resources/log4j.properties
     git commit -m 'build number set'
     git fetch --unshallow
     git push -f heroku $(git symbolic-ref --short HEAD):master
