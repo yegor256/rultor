@@ -58,6 +58,13 @@ public interface Profile {
     );
 
     /**
+     * Name of the repo.
+     * @return Name
+     * @since 1.36
+     */
+    String name();
+
+    /**
      * Get it in XML format (throws
      * {@link com.rultor.spi.Profile.ConfigException}, if fails).
      *
@@ -154,6 +161,10 @@ public interface Profile {
          */
         public Fixed(final XML doc) {
             this.xml = new StrictXML(doc, Profile.SCHEMA);
+        }
+        @Override
+        public String name() {
+            return "test";
         }
         @Override
         public XML read() {

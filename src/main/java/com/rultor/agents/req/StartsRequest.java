@@ -199,21 +199,15 @@ public final class StartsRequest extends AbstractAgent {
             commands.add(
                 String.format(
                     "echo %s | bcrypt %s",
-                    SSH.escape(String.format("rultor-key:%s", this.key())),
+                    SSH.escape(
+                        String.format("rultor-key:%s", this.profile.name())
+                    ),
                     bfe
                 )
             );
         }
         commands.add("rm -rf .gpg");
         return commands;
-    }
-
-    /**
-     * Get secret key for this profile.
-     * @return Key
-     */
-    private String key() {
-        return "";
     }
 
 }
