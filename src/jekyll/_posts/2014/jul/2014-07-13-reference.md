@@ -34,7 +34,7 @@ assets:
   secret.xml: "yegor256/secret-repo#assets/settings.xml"
 {% endhighlight %}
 
-This configuration tells Rultor that needs to fetch `assets/settings.xml` from
+This configuration tells Rultor that it needs to fetch `assets/settings.xml` from
 `yegor256/secret-repo` and place it into the `secret.xml` file right before
 starting a build.
 
