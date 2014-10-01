@@ -184,7 +184,7 @@ public final class StartsRequest extends AbstractAgent {
         for (final XML node
             : this.profile.read().nodes("/p/entry[@key='decrypt']/entry")) {
             final String key = node.xpath("@key").get(0);
-            final String bfe = String.format("%s.bfe", key);
+            final String enc = String.format("%s.enc", key);
             commands.add(
                 Joiner.on(' ').join(
                     "gpg \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
@@ -192,19 +192,21 @@ public final class StartsRequest extends AbstractAgent {
                     String.format(
                         "--decrypt %s > %s",
                         SSH.escape(node.xpath("./text()").get(0)),
-                        SSH.escape(bfe)
+                        SSH.escape(enc)
                     )
                 )
             );
             commands.add(
                 String.format(
-                    "echo %s | bcrypt %s",
+                    "gpg --decrypt --passphrase %s %s > %s",
                     SSH.escape(
                         String.format("rultor-key:%s", this.profile.name())
                     ),
-                    bfe
+                    SSH.escape(enc),
+                    SSH.escape(key)
                 )
             );
+            commands.add(String.format("rm -rf %s", SSH.escape(enc)));
         }
         commands.add("rm -rf .gpg");
         return commands;
