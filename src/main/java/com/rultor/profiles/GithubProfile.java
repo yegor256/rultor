@@ -29,9 +29,7 @@
  */
 package com.rultor.profiles;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
@@ -154,17 +152,8 @@ final class GithubProfile implements Profile {
      * @throws IOException If fails
      */
     private String yml() throws IOException {
-        final boolean exists = Iterables.any(
-            this.repo.contents().iterate("", "master"),
-            new Predicate<Content>() {
-                @Override
-                public boolean apply(final Content input) {
-                    return input.path().equals(GithubProfile.FILE);
-                }
-            }
-        );
         final String yml;
-        if (exists) {
+        if (this.repo.contents().exists(GithubProfile.FILE, "master")) {
             yml = new String(
                 Base64.decodeBase64(
                     new Content.Smart(
