@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?ae988c9"/>
+    <link rel="stylesheet" href="/css/layout.css?ce26314"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
     <script>//<![CDATA[
@@ -86,13 +86,14 @@ able to fetch anything from it.</p>
 
 <p>You may want to keep your secret assets right inside your main
 repository. In this case, in order to keep them secret, you should
-encrypt them using <a href="https://www.gnupg.org/documentation/manpage.html">GPG</a>:</p>
+encrypt them using <a href="https://github.com/yegor256/rultor-remote">rultor remote</a>:</p>
 
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 9AF0FA4C
-$ gpg --trust-model always -a -e -r 9AF0FA4C secret.txt</code></pre></div>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ gem install rultor
+$ rultor encrypt -p me/test secret.txt</code></pre></div>
 
-<p>This example will fetch GPG key <code>9AF0FA4C</code> and use it to
-encrypt <code>secret.txt</code> file. You will get a new file <code>secret.txt.asc</code>.
+<p>Here <code>me/test</code> is the name of your Github project.</p>
+
+<p>This code encrypt <code>secret.txt</code> file. You will get a new file <code>secret.txt.asc</code>.
 Commit this file to your repository &mdash; nobody will be able
 to read it, except Rultor server itself.</p>
 
@@ -259,7 +260,7 @@ resources, created during installation.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/ae988c9">ae988c9</a>
+          <a href="https://github.com/yegor256/rultor/commit/ce26314">ce26314</a>
         </p>
       </footer>
     </div>
