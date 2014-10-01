@@ -81,7 +81,7 @@ Then, instruct Rultor to decrypt it before running your build:
 
 {% highlight yaml %}
 decrypt:
-  secret.txt: "scrt/secret.txt.asc"
+  secret.txt: "repo/scrt/secret.txt.asc"
 {% endhighlight %}
 
 This configuration tells Rultor to get `scrt/secret.txt.asc` from the
