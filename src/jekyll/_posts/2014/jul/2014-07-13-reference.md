@@ -64,15 +64,16 @@ able to fetch anything from it.
 
 You may want to keep your secret assets right inside your main
 repository. In this case, in order to keep them secret, you should
-encrypt them using [GPG](https://www.gnupg.org/documentation/manpage.html):
+encrypt them using [rultor remote](https://github.com/yegor256/rultor-remote):
 
 {% highlight text %}
-$ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 9AF0FA4C
-$ gpg --trust-model always -a -e -r 9AF0FA4C secret.txt
+$ gem install rultor
+$ rultor encrypt -p me/test secret.txt
 {% endhighlight %}
 
-This example will fetch GPG key `9AF0FA4C` and use it to
-encrypt `secret.txt` file. You will get a new file `secret.txt.asc`.
+Here `me/test` is the name of your Github project.
+
+This code encrypt `secret.txt` file. You will get a new file `secret.txt.asc`.
 Commit this file to your repository &mdash; nobody will be able
 to read it, except Rultor server itself.
 
