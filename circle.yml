@@ -1,0 +1,11 @@
+machine:
+  java:
+    version: openjdk7
+general:
+  branches:
+    ignore:
+      - gh-pages
+test:
+  override:
+    - mvn clean install -Pqulice
+
