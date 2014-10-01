@@ -229,6 +229,7 @@ public final class Tail {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(
                 String.format(
+                    // @checkstyle LineLength (1 line)
                     "dir=%s; (cat \"${dir}/stdout\" 2>/dev/null || echo \"file $file is gone\") | col -b",
                     SSH.escape(this.xml.xpath("/talk/daemon/dir/text()").get(0))
                 ),
