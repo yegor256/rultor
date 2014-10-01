@@ -110,6 +110,45 @@ public final class DockerRunTest {
     }
 
     /**
+     * DockerRun can create script with comment inside.
+     * @throws Exception In case of error.
+     * @todo #593 Add handling of hash inside single and double quotes - it
+     *  should not be treated as a comment there.
+     */
+    @Test
+    public void executesWithComment() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                StringUtils.join(
+                    "<p><entry key='z'><entry key='script'>",
+                    "<item>echo \"first\"</item>",
+                    "<item># some comment</item>",
+                    "<item>echo \"second\" # some comment</item>",
+                    "<item>echo \"third\" \\# some comment</item>",
+                    "<item>echo \"last\"</item>",
+                    "</entry></entry>",
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    "</p>"
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            new DockerRun(profile, "/p/entry[@key='z']").script(),
+            Matchers.equalTo(
+                StringUtils.join(
+                    "( ",
+                    "'echo \"first\"' ';' ",
+                    "'`# some comment`' ';' " ,
+                    "'echo \"second\" `# some comment`' ';' " ,
+                    "'echo \"third\" \\# some comment' ';' " ,
+                    "'echo \"last\"' ';' ",
+                    ")"
+                )
+            )
+        );
+    }
+
+    /**
      * DockerRun can fetch from an empty doc.
      * @throws Exception In case of error.
      */
