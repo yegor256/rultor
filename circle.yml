@@ -7,5 +7,6 @@ general:
       - gh-pages
 test:
   override:
+    - unset GEM_PATH
     - mvn clean install -Pqulice
 
