@@ -54,7 +54,7 @@ echo "${scripts[@]}" >> script.sh
 function docker_when_possible {
   while true; do
     load=$(uptime | awk '{print $12}' | cut -d ',' -f 1)
-    if [ "${load}" -gt 8 ]; then
+    if [ `echo $load \> 8 | bc` -eq 1 ]; then
       echo "load average is ${load}, too high to run a new Docker container"
       echo "I will try again in 15 seconds"
       sleep 15
