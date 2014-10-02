@@ -60,7 +60,10 @@ public final class Publishes extends AbstractAgent {
      * @param prf Profile
      */
     public Publishes(final Profile prf) {
-        super("/talk/archive/log");
+        super(
+            "/talk[@public!='false']",
+            "/talk/archive/log"
+        );
         this.profile = prf;
     }
 
