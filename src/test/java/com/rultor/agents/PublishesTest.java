@@ -65,4 +65,25 @@ public final class PublishesTest {
         );
     }
 
+    /**
+     * Publishes can ignore if PUBLIC attribute is already set.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void ignoresIfPublicAttributeSet() throws Exception {
+        final Agent agent = new Publishes(new Profile.Fixed());
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .attr("public", "false")
+                .add("archive")
+                .add("log").attr("id", "abc").attr("title", "hey").up()
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath("/talk[@public='false']")
+        );
+    }
+
 }
