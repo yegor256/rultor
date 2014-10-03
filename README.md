@@ -52,3 +52,5 @@ for fun :)
 [circleci.io](http://www.circleci.io) (I can't configure JRuby there)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
 
+[wercker.com](http://www.wercker.com)<br/>
+[![wercker status](https://app.wercker.com/status/0e6506c69e078b7692e50b240c034524/s "wercker status")](https://app.wercker.com/project/bykey/0e6506c69e078b7692e50b240c034524)
