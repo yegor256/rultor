@@ -32,6 +32,7 @@ if [ "${as_root}" = "true" ]; then
   cat <<EOT >> entry.sh
   mkdir /home/r
   cp -R ./* /home/r
+  rm -rf repo
   chmod a+x /home/r/script.sh
   /home/r/script.sh
   mv /home/r/repo .
