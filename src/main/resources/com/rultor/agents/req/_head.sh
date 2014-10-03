@@ -27,19 +27,29 @@ cat <<EOT > entry.sh
 set -x
 set -e
 set -o pipefail
-shopt -s dotglob
-adduser --disabled-password --gecos '' r
-adduser r sudo
-echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-cp -R /root/* /home/r
-cp -R ./* /home/r
-rm -rf repo
-chown -R r:r /home/r
-chmod a+x /home/r/script.sh
-su -m r -c /home/r/script.sh
-mv /home/r/repo .
-chown -R \$(whoami) repo
 EOT
+if [ "${as_root}" = "true" ]; then
+  cat <<EOT >> entry.sh
+  mkdir /home/r
+  cp -R /root/* /home/r
+  cp -R ./* /home/r
+EOT
+else
+  cat <<EOT >> entry.sh
+  shopt -s dotglob
+  adduser --disabled-password --gecos '' r
+  adduser r sudo
+  echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+  cp -R /root/* /home/r
+  cp -R ./* /home/r
+  rm -rf repo
+  chown -R r:r /home/r
+  chmod a+x /home/r/script.sh
+  su -m r -c /home/r/script.sh
+  mv /home/r/repo .
+  chown -R \$(whoami) repo
+EOT
+fi
 chmod a+x entry.sh
 cat <<EOT > script.sh
 #!/bin/bash

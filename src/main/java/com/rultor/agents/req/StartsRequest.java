@@ -48,7 +48,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -109,8 +108,9 @@ public final class StartsRequest extends AbstractAgent {
      * @return Script
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     private String script(final XML req, final String type) throws IOException {
-        return StringUtils.join(
+        return Joiner.on('\n').join(
             Iterables.concat(
                 Iterables.transform(
                     this.vars(req, type).entrySet(),
@@ -125,6 +125,7 @@ public final class StartsRequest extends AbstractAgent {
                         }
                     }
                 ),
+                Collections.singleton(this.asRoot()),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream("_head.sh"),
@@ -140,8 +141,22 @@ public final class StartsRequest extends AbstractAgent {
                         CharEncoding.UTF_8
                     )
                 )
-            ),
-            "\n"
+            )
+        );
+    }
+
+    /**
+     * Get start script for as_root config.
+     * @return Script
+     * @throws IOException If fails
+     * @since 1.37
+     */
+    private String asRoot() throws IOException {
+        return String.format(
+            "as_root=%b",
+            !this.profile.read().nodes(
+                "/p/entry[@key='docker']/entry[@key='as_root' and .='true']"
+            ).isEmpty()
         );
     }
 
