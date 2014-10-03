@@ -46,3 +46,5 @@ for fun :)
 [shippable.com](http://www.shippable.com) (their Maven version is too old)<br/>
 [![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
 
+[semaphoreapp.com](http://www.semaphoreapp.com)<br/>
+[![Build Status](https://semaphoreapp.com/api/v1/projects/115d317a-9f15-4c71-9301-5dae64f0a76d/260906/badge.png)](https://semaphoreapp.com/yegor256/rultor)
