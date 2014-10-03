@@ -46,7 +46,7 @@ for fun :)
 [magnum-ci.com](http://www.magnum-ci.com)<br/>
 [![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
 
-[shippable.com](http://www.shippable.com) (their Maven version is too old)<br/>
+[shippable.com](http://www.shippable.com)<br/>
 [![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
 
 [circleci.io](http://www.circleci.io) (I can't configure JRuby there)<br/>
