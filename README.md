@@ -37,7 +37,7 @@ for fun :)
 [drone.io](http://www.drone.io) (their Maven version is too old)<br/>
 [![Build Status](https://drone.io/github.com/yegor256/rultor/status.png)](https://drone.io/github.com/yegor256/rultor/latest)
 
-[circleci.io](http://www.circleci.io)<br/>
+[circleci.io](http://www.circleci.io) (I can't configure JRuby there)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
 
 [snap-ci.com](http://www.snap-ci.com)<br/>
