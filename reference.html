@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?c6208b4"/>
+    <link rel="stylesheet" href="/css/layout.css?9a4ec38"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
     <script>//<![CDATA[
@@ -167,6 +167,20 @@ by logging into <a href="http://www.rultor.com">www.rultor.com</a>
 and moving mouse over your name, at the
 top of the page.</p>
 
+<h2 id="run-as-root">Run As Root</h2>
+
+<p>By default, we create a new user <code>r</code> in Docker container and
+run your scripts from it. You can instruct Rultor to run
+everything as root:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">as_root</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span></code></pre></div>
+
+<p>This may be a useful option when you are using a custom Docker
+container with something different from Ubuntu inside. Switching
+to a user <code>r</code> may not work smoothly under CentOS, for example. In
+this case, just use root.</p>
+
 <h2 id="merge,-deploy,-release">Merge, Deploy, Release</h2>
 
 <p>Three commands <code>merge</code>, <code>deploy</code> and <code>release</code> are
@@ -260,7 +274,7 @@ resources, created during installation.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/c6208b4">c6208b4</a>
+          <a href="https://github.com/yegor256/rultor/commit/9a4ec38">9a4ec38</a>
         </p>
       </footer>
     </div>
