@@ -31,6 +31,10 @@ EOT
 if [ "${as_root}" = "true" ]; then
   cat <<EOT >> entry.sh
   mkdir /home/r
+  cp -R ./* /home/r
+  chmod a+x /home/r/script.sh
+  /home/r/script.sh
+  mv /home/r/repo .
 EOT
 else
   cat <<EOT >> entry.sh
