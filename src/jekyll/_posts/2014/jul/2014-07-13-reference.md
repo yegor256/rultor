@@ -157,6 +157,22 @@ by logging into [www.rultor.com](http://www.rultor.com)
 and moving mouse over your name, at the
 top of the page.
 
+## Run As Root
+
+By default, we create a new user `r` in Docker container and
+run your scripts from it. You can instruct Rultor to run
+everything as root:
+
+{% highlight yaml %}
+docker:
+  as_root: true
+{% endhighlight %}
+
+This may be a useful option when you are using a custom Docker
+container with something different from Ubuntu inside. Switching
+to a user `r` may not work smoothly under CentOS, for example. In
+this case, just use root.
+
 ## Merge, Deploy, Release
 
 Three commands `merge`, `deploy` and `release` are
