@@ -28,21 +28,21 @@ a new [Github issue](https://github.com/yegor256/rultor/issues/new).
 We're using all possible continuous integration systems, mostly
 for fun :)
 
-[travis](http://www.travis-ci.org)
+[travis](http://www.travis-ci.org)<br/>
 [![Build Status](https://travis-ci.org/yegor256/rultor.svg?branch=master)](https://travis-ci.org/yegor256/rultor)
 
-[codeship.io](http://www.codeship.io)
+[codeship.io](http://www.codeship.io)<br/>
 [![Codeship Status for yegor256/rultor](https://codeship.io/projects/d00b5ff0-2641-0132-d783-12f2cec1461b/status?branch=master)](https://codeship.io/projects/37414)
 
-[drone.io](http://www.drone.io) (their Maven version is too old)
+[drone.io](http://www.drone.io) (their Maven version is too old)<br/>
 [![Build Status](https://drone.io/github.com/yegor256/rultor/status.png)](https://drone.io/github.com/yegor256/rultor/latest)
 
-[circleci.io](http://www.circleci.io)
+[circleci.io](http://www.circleci.io)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
 
-[snap-ci.com](http://www.snap-ci.com)
+[snap-ci.com](http://www.snap-ci.com)<br/>
 [![Build Status](https://snap-ci.com/yegor256/rultor/branch/master/build_image)](https://snap-ci.com/yegor256/rultor/branch/master)
 
-[shippable.com](http://www.shippable.com) (their Maven version is too old)
+[shippable.com](http://www.shippable.com) (their Maven version is too old)<br/>
 [![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
 
