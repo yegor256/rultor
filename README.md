@@ -34,20 +34,20 @@ for fun :)
 [codeship.io](http://www.codeship.io)<br/>
 [![Codeship Status for yegor256/rultor](https://codeship.io/projects/d00b5ff0-2641-0132-d783-12f2cec1461b/status?branch=master)](https://codeship.io/projects/37414)
 
+[snap-ci.com](http://www.snap-ci.com)<br/>
+[![Build Status](https://snap-ci.com/yegor256/rultor/branch/master/build_image)](https://snap-ci.com/yegor256/rultor/branch/master)
+
+[semaphoreapp.com](http://www.semaphoreapp.com)<br/>
+[![Build Status](https://semaphoreapp.com/api/v1/projects/115d317a-9f15-4c71-9301-5dae64f0a76d/260906/badge.png)](https://semaphoreapp.com/yegor256/rultor)
+
+[shippable.com](http://www.shippable.com) (their Maven version is too old)<br/>
+[![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
+
 [drone.io](http://www.drone.io) (their Maven version is too old)<br/>
 [![Build Status](https://drone.io/github.com/yegor256/rultor/status.png)](https://drone.io/github.com/yegor256/rultor/latest)
 
 [circleci.io](http://www.circleci.io) (I can't configure JRuby there)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
-
-[snap-ci.com](http://www.snap-ci.com)<br/>
-[![Build Status](https://snap-ci.com/yegor256/rultor/branch/master/build_image)](https://snap-ci.com/yegor256/rultor/branch/master)
-
-[shippable.com](http://www.shippable.com) (their Maven version is too old)<br/>
-[![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
-
-[semaphoreapp.com](http://www.semaphoreapp.com)<br/>
-[![Build Status](https://semaphoreapp.com/api/v1/projects/115d317a-9f15-4c71-9301-5dae64f0a76d/260906/badge.png)](https://semaphoreapp.com/yegor256/rultor)
 
 [magnum-ci.com](http://www.magnum-ci.com)<br/>
 [![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
