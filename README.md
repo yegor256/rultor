@@ -28,7 +28,7 @@ a new [Github issue](https://github.com/yegor256/rultor/issues/new).
 We're using all possible continuous integration systems, mostly
 for fun :)
 
-[travis](http://www.travis-ci.org)<br/>
+[travis-ci.org](http://www.travis-ci.org)<br/>
 [![Build Status](https://travis-ci.org/yegor256/rultor.svg?branch=master)](https://travis-ci.org/yegor256/rultor)
 
 [codeship.io](http://www.codeship.io)<br/>
@@ -48,3 +48,6 @@ for fun :)
 
 [semaphoreapp.com](http://www.semaphoreapp.com)<br/>
 [![Build Status](https://semaphoreapp.com/api/v1/projects/115d317a-9f15-4c71-9301-5dae64f0a76d/260906/badge.png)](https://semaphoreapp.com/yegor256/rultor)
+
+[magnum-ci.com](http://www.magnum-ci.com)<br/>
+[![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
