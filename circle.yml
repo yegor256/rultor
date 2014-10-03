@@ -1,6 +1,8 @@
 machine:
   java:
     version: openjdk7
+  ruby:
+    version: 1.9.3-p0-falcon
 dependencies:
   cache_directories:
     - ~/.m2
