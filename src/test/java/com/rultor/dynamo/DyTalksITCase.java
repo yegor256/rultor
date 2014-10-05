@@ -85,7 +85,6 @@ public final class DyTalksITCase {
         final Talks talks = new DyTalks(
             this.dynamo(), new MkSttc().counters().get("")
         );
-        ((DyTalks) talks).flush();
         final String name = "yegor256/rultor#529";
         talks.create("a/b", name);
         final Talk talk = talks.get(name);
@@ -106,7 +105,6 @@ public final class DyTalksITCase {
         final Talks talks = new DyTalks(
             this.dynamo(), new MkSttc().counters().get("")
         );
-        ((DyTalks) talks).flush();
         final String first = "krzyk1/rultor#562";
         final String repo = "some/other";
         talks.create(repo, first);
