@@ -32,7 +32,6 @@ package com.rultor.agents.daemons;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import java.net.URI;
-import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -68,16 +67,15 @@ public final class Home {
         this.hash = hsh;
     }
 
-    public Object buildIt() {
-        return new Foo(
-            Math.max(10, 40),
+    /**
+     * Get its URI.
+     * @return URI
+     */
+    public URI uri() {
+        return URI.create(
             String.format(
-                "hello, %s (%s)",
-                new Name(
-                    Arrays.asList(
-                        "Jeff", "Lebowski"
-                    )
-                ),
+                "http://www.rultor.com/t/%d-%s",
+                Long.parseLong(this.xml.xpath("/talk/@number").get(0)),
                 this.hash
             )
         );
