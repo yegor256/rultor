@@ -55,5 +55,5 @@ for fun :)
 [wercker.com](http://www.wercker.com)<br/>
 [![wercker status](https://app.wercker.com/status/0e6506c69e078b7692e50b240c034524/s "wercker status")](https://app.wercker.com/project/bykey/0e6506c69e078b7692e50b240c034524)
 
-[sonolabs.com](http://ci.sonolabs.com)<br/>
+[solanolabs.com](http://ci.solanolabs.com)<br/>
 [![sonolabs status](https://ci.solanolabs.com:443/yegor256/rultor/badges/120059.png?badge_token=6c00577e47c05198703fe752d6d26cd4e4a4d011)](https://ci.solanolabs.com:443/yegor256/rultor/suites/120059)
