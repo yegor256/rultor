@@ -35,10 +35,13 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import java.io.File;
 import java.util.logging.Level;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -84,6 +87,7 @@ public final class DecryptTest {
      * @throws Exception In case of error.
      */
     @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void decryptsAssets() throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
@@ -92,7 +96,8 @@ public final class DecryptTest {
                         "<p><entry key='decrypt'><entry key='a.txt'>",
                         "a.txt.asc</entry></entry></p>"
                     )
-                )
+                ),
+                "test/test"
             )
         ).commands();
         final String script = Joiner.on('\n').join(
@@ -103,6 +108,19 @@ public final class DecryptTest {
         );
         final File dir = this.temp.newFolder();
         FileUtils.write(new File(dir, "a.txt.asc"), DecryptTest.ASC);
+        final String[] keys = {"pubring", "secring"};
+        for (final String key : keys) {
+            final String gpg = IOUtils.toString(
+                this.getClass().getResourceAsStream(
+                    String.format("%s.gpg.base64", key)
+                )
+            );
+            Assume.assumeThat(gpg, Matchers.not(Matchers.startsWith("${")));
+            FileUtils.writeByteArrayToFile(
+                new File(dir, String.format(".gpg/%s.gpg", key)),
+                Base64.decodeBase64(gpg)
+            );
+        }
         new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash", "-c", script
@@ -111,7 +129,7 @@ public final class DecryptTest {
         ).stdout();
         MatcherAssert.assertThat(
             FileUtils.readFileToString(new File(dir, "a.txt")),
-            Matchers.equalTo("hello, world!")
+            Matchers.startsWith("hello, world!")
         );
     }
 
