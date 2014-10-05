@@ -72,13 +72,19 @@ final class Decrypt {
      */
     public Iterable<String> commands() throws IOException {
         final Collection<String> commands = new LinkedList<String>();
+        commands.add(
+            Joiner.on(' ').join(
+                "gpg --keyserver hkp://pool.sks-keyservers.net",
+                "--verbose --recv-keys 9AF0FA4C"
+            )
+        );
         for (final XML node
             : this.profile.read().nodes("/p/entry[@key='decrypt']/entry")) {
             final String key = node.xpath("@key").get(0);
             final String enc = String.format("%s.enc", key);
             commands.add(
                 Joiner.on(' ').join(
-                    "gpg \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
+                    "gpg --verbose \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
                     "\"--secret-keyring=$(pwd)/.gpg/secring.gpg\"",
                     String.format(
                         "--decrypt %s > %s",
@@ -89,7 +95,7 @@ final class Decrypt {
             );
             commands.add(
                 String.format(
-                    "gpg --decrypt --passphrase %s %s > %s",
+                    "gpg --verbose --decrypt --passphrase %s %s > %s",
                     SSH.escape(
                         String.format("rultor-key:%s", this.profile.name())
                     ),

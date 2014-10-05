@@ -50,7 +50,7 @@ import org.junit.rules.TemporaryFolder;
 import org.xembly.Directives;
 
 /**
- * Tests for ${@link StartsRequest}.
+ * Tests for {@link StartsRequest}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
