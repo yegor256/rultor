@@ -95,7 +95,10 @@ final class Decrypt {
             );
             commands.add(
                 String.format(
-                    "gpg --verbose --decrypt --passphrase %s %s > %s",
+                    Joiner.on(' ').join(
+                        "gpg --no-tty --batch --verbose --decrypt",
+                        "--passphrase %s %s > %s"
+                    ),
                     SSH.escape(
                         String.format("rultor-key:%s", this.profile.name())
                     ),
