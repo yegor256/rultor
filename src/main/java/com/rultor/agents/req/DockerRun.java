@@ -198,10 +198,30 @@ final class DockerRun {
         }
         final Collection<String> scripts = new LinkedList<String>();
         for (final String item : items) {
-            scripts.add(item);
+            scripts.add(neutralize(item));
             scripts.add(";");
         }
         return scripts;
+    }
+
+    /**
+     * Neutralize comment contained in the script line.
+     * @param item Script element.
+     * @return Script element with invisible comment
+     */
+    private static String neutralize(final String item) {
+        final int start = item.indexOf('#');
+        final String result;
+        if ((start == 0) || ((start > 0) && (item.charAt(start - 1) != '\\'))) {
+            result = new StringBuilder(item.substring(0, start))
+                .append('`')
+                .append(item.substring(start))
+                .append('`')
+                .toString();
+        } else {
+            result = item;
+        }
+        return result;
     }
 
     /**
