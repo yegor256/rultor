@@ -37,18 +37,14 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
-import com.rultor.agents.shells.SSH;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -109,8 +105,9 @@ public final class StartsRequest extends AbstractAgent {
      * @return Script
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     private String script(final XML req, final String type) throws IOException {
-        return StringUtils.join(
+        return Joiner.on('\n').join(
             Iterables.concat(
                 Iterables.transform(
                     this.vars(req, type).entrySet(),
@@ -125,13 +122,14 @@ public final class StartsRequest extends AbstractAgent {
                         }
                     }
                 ),
+                Collections.singleton(this.asRoot()),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream("_head.sh"),
                         CharEncoding.UTF_8
                     )
                 ),
-                this.decrypt(),
+                new Decrypt(this.profile).commands(),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream(
@@ -140,8 +138,22 @@ public final class StartsRequest extends AbstractAgent {
                         CharEncoding.UTF_8
                     )
                 )
-            ),
-            "\n"
+            )
+        );
+    }
+
+    /**
+     * Get start script for as_root config.
+     * @return Script
+     * @throws IOException If fails
+     * @since 1.37
+     */
+    private String asRoot() throws IOException {
+        return String.format(
+            "as_root=%b",
+            !this.profile.read().nodes(
+                "/p/entry[@key='docker']/entry[@key='as_root' and .='true']"
+            ).isEmpty()
         );
     }
 
@@ -172,44 +184,6 @@ public final class StartsRequest extends AbstractAgent {
         );
         vars.put("scripts", docker.script());
         return vars.build();
-    }
-
-    /**
-     * Decrypt instructions.
-     * @return Instructions
-     * @throws IOException If fails
-     */
-    private Iterable<String> decrypt() throws IOException {
-        final Collection<String> commands = new LinkedList<String>();
-        for (final XML node
-            : this.profile.read().nodes("/p/entry[@key='decrypt']/entry")) {
-            final String key = node.xpath("@key").get(0);
-            final String enc = String.format("%s.enc", key);
-            commands.add(
-                Joiner.on(' ').join(
-                    "gpg \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
-                    "\"--secret-keyring=$(pwd)/.gpg/secring.gpg\"",
-                    String.format(
-                        "--decrypt %s > %s",
-                        SSH.escape(node.xpath("./text()").get(0)),
-                        SSH.escape(enc)
-                    )
-                )
-            );
-            commands.add(
-                String.format(
-                    "gpg --decrypt --passphrase %s %s > %s",
-                    SSH.escape(
-                        String.format("rultor-key:%s", this.profile.name())
-                    ),
-                    SSH.escape(enc),
-                    SSH.escape(key)
-                )
-            );
-            commands.add(String.format("rm -rf %s", SSH.escape(enc)));
-        }
-        commands.add("rm -rf .gpg");
-        return commands;
     }
 
 }

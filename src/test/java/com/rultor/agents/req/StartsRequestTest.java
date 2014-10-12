@@ -50,7 +50,7 @@ import org.junit.rules.TemporaryFolder;
 import org.xembly.Directives;
 
 /**
- * Tests for ${@link StartsRequest}.
+ * Tests for {@link StartsRequest}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -123,6 +123,14 @@ public final class StartsRequestTest {
                 .add("arg").attr("name", "head_branch").set("master").up()
         );
         agent.execute(talk);
+        talk.modify(
+            new Directives().xpath("/talk/daemon/script").set(
+                Joiner.on('\n').join(
+                    talk.read().xpath("/talk/daemon/script/text()").get(0),
+                    "cd ..; cat entry.sh; cat script.sh"
+                )
+            )
+        );
         MatcherAssert.assertThat(
             this.exec(talk),
             Matchers.allOf(
@@ -138,6 +146,7 @@ public final class StartsRequestTest {
                             "DOCKER-5: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
                         )
                     )
+                    .with(Matchers.containsString("adduser"))
             )
         );
     }
@@ -235,6 +244,50 @@ public final class StartsRequestTest {
             XhtmlMatchers.hasXPath(
                 "//script[contains(.,'--decrypt')]"
             )
+        );
+    }
+
+    /**
+     * StartsRequest can start a request.
+     * @throws Exception In case of error.
+     * @since 1.37
+     */
+    @Test
+    public void runsAsRootIfRequested() throws Exception {
+        final File repo = this.repo();
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    StringUtils.join(
+                        "<p><entry key='docker'>",
+                        "<entry key='as_root'>true</entry></entry>",
+                        "<entry key='deploy'>",
+                        "<entry key='script'>echo BOOM</entry></entry></p>"
+                    )
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "abcd")
+                .add("type").set("deploy").up()
+                .add("args")
+                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head_branch").set("master").up()
+        );
+        agent.execute(talk);
+        talk.modify(
+            new Directives().xpath("/talk/daemon/script").set(
+                Joiner.on('\n').join(
+                    talk.read().xpath("/talk/daemon/script/text()").get(0),
+                    "cd ..; cat entry.sh"
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            this.exec(talk),
+            Matchers.not(Matchers.containsString("adduser"))
         );
     }
 
