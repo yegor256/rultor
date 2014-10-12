@@ -43,6 +43,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.32.7
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class PublishesTest {
 
@@ -62,6 +63,27 @@ public final class PublishesTest {
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPath("/talk[@public='true']")
+        );
+    }
+
+    /**
+     * Publishes can ignore if PUBLIC attribute is already set.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void ignoresIfPublicAttributeSet() throws Exception {
+        final Agent agent = new Publishes(new Profile.Fixed());
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .attr("public", "false")
+                .add("archive")
+                .add("log").attr("id", "abc").attr("title", "hey").up()
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath("/talk[@public='false']")
         );
     }
 

@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -117,12 +118,13 @@ public final class Sshd {
                 rsa.getAbsolutePath()
             )
         ).stdout();
+        final File config = new File(this.dir, "sshd_config");
+        FileUtils.write(config, "");
         final Process proc = new ProcessBuilder().command(
             "/usr/sbin/sshd",
-            "-p",
-            Integer.toString(port),
-            "-h",
-            rsa.getAbsolutePath(),
+            "-p", Integer.toString(port),
+            "-h", rsa.getAbsolutePath(),
+            "-f", config.getAbsolutePath(),
             "-D",
             "-e",
             "-o", String.format("PidFile=%s", new File(this.dir, "pid")),

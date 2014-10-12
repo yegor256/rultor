@@ -150,6 +150,10 @@ public interface Profile {
          */
         private final transient XML xml;
         /**
+         * Name of it.
+         */
+        private final transient String label;
+        /**
          * Ctor.
          */
         public Fixed() {
@@ -160,11 +164,20 @@ public interface Profile {
          * @param doc Document
          */
         public Fixed(final XML doc) {
+            this(new StrictXML(doc, Profile.SCHEMA), "test/test");
+        }
+        /**
+         * Ctor.
+         * @param doc Document
+         * @param name Name
+         */
+        public Fixed(final XML doc, final String name) {
             this.xml = new StrictXML(doc, Profile.SCHEMA);
+            this.label = name;
         }
         @Override
         public String name() {
-            return "test";
+            return this.label;
         }
         @Override
         public XML read() {

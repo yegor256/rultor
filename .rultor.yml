@@ -18,7 +18,7 @@ install: |
 
 deploy:
   script: |
-    mvn clean install -Prultor --errors --settings ../settings.xml --batch-mode
+    mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode
     mvn clean
     pdd --source=$(pwd) --verbose --file=rultor.xml
     s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml
@@ -28,7 +28,7 @@ release:
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
-    mvn clean install -Pqulice --errors --batch-mode
+    mvn clean package -Pqulice -Prultor --errors --batch-mode
     git remote add heroku git@heroku.com:rultor.git
     mkdir ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
@@ -49,7 +49,7 @@ release:
 
 merge:
   script: |
-    mvn help:system clean install -Pqulice --errors --settings ../settings.xml --batch-mode
+    mvn help:system clean package -Pqulice -Prultor --errors --settings ../settings.xml --batch-mode
     mvn clean site -Psite --errors --settings ../settings.xml --batch-mode
     mvn clean
     pdd --source=$(pwd) --verbose --file=/dev/null
