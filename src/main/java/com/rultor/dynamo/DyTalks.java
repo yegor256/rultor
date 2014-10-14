@@ -64,7 +64,6 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "region")
-@SuppressWarnings("PMD.TooManyMethods")
 public final class DyTalks implements Talks {
 
     /**
@@ -278,16 +277,6 @@ public final class DyTalks implements Talks {
                 }
             )
         );
-    }
-
-    /**
-     * Method for unit test to clean recent() cache.
-     * @todo #536 Remove this method and PMD.TooManyMethods when
-     *  jcabi-aspects#91 is resolved.
-     */
-    @Cacheable.FlushBefore
-    public void flush() {
-        // intentionally left empty
     }
 
     @Override
