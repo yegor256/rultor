@@ -135,7 +135,7 @@ public final class StartsDaemonITCase {
             baos.toString(CharEncoding.UTF_8),
             Matchers.allOf(
                 Matchers.containsString("+ set -o pipefail"),
-                Matchers.containsString("+ date --iso-8601=seconds --utc"),
+                Matchers.containsString("+ date"),
                 Matchers.containsString("+ ls -al"),
                 Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
             )
