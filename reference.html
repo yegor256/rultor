@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?2856d51"/>
+    <link rel="stylesheet" href="/css/layout.css?f2f3643"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
     <script>//<![CDATA[
@@ -81,6 +81,14 @@ in <code>/home/r</code>. This is how the directory layout looks:</p>
 <p>Don&#39;t forget to add <a href="https://github.com/rultor">@rultor</a> to the list of
 collaborators in your private repository. Otherwise Rultor won&#39;t be
 able to fetch anything from it.</p>
+
+<p>The repository you&#39;re fetching assets from must contain <code>.rultor.yml</code>
+where <code>friends</code> section should include the name of repository where
+these assets are used, for example:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">friends</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">yegor256/rultor</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">jcabi/*</span></code></pre></div>
 
 <h2 id="decrypt">Decrypt</h2>
 
@@ -274,7 +282,7 @@ resources, created during installation.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/2856d51">2856d51</a>
+          <a href="https://github.com/yegor256/rultor/commit/f2f3643">f2f3643</a>
         </p>
       </footer>
     </div>
