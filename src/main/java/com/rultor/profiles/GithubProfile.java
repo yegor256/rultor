@@ -42,6 +42,7 @@ import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -142,6 +143,29 @@ final class GithubProfile implements Profile {
         final Repo rpo = this.repo.github().repos().get(
             new Coordinates.Simple(matcher.group(1))
         );
+        if (!rpo.contents().exists(".rultor.yml", "master")) {
+            throw new Profile.ConfigException(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "`.rultor.yml` file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets",
+                    rpo.coordinates()
+                )
+            );
+        }
+        final Collection<String> friends = new YamlXML(
+            new Content.Smart(
+                rpo.contents().get(".rultor.yml")
+            ).content()
+        ).get().xpath("/p/entry[@key='friends']/entry/text()");
+        if (!friends.contains(this.repo.coordinates().toString())) {
+            throw new Profile.ConfigException(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "`.rultor.yml` in %s doesn't allow %s to use its assets, see http://doc.rultor.com/reference.html#assets",
+                    rpo.coordinates(), this.repo.coordinates()
+                )
+            );
+        }
         return new ByteArrayInputStream(
             Base64.decodeBase64(
                 new Content.Smart(
