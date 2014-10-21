@@ -117,7 +117,7 @@ public final class StartsDaemon extends AbstractAgent {
                             )
                         )
                     ),
-                    "date --iso-8601=seconds --utc",
+                    "date",
                     "uptime",
                     this.upload(shell, dir),
                     daemon.xpath("script/text()").get(0)
