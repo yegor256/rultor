@@ -74,6 +74,11 @@ final class GithubProfile implements Profile {
     private static final String FILE = ".rultor.yml";
 
     /**
+     * Branch name.
+     */
+    private static final String BRANCH = "master";
+
+    /**
      * Path pattern.
      */
     private static final Pattern PATH = Pattern.compile(
@@ -143,19 +148,19 @@ final class GithubProfile implements Profile {
         final Repo rpo = this.repo.github().repos().get(
             new Coordinates.Simple(matcher.group(1))
         );
-        if (!rpo.contents().exists(".rultor.yml", "master")) {
+        if (!rpo.contents().exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "`.rultor.yml` file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets",
-                    rpo.coordinates()
+                    "`%s` file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets",
+                    GithubProfile.FILE, rpo.coordinates()
                 )
             );
         }
         final Collection<String> friends = new YamlXML(
             new String(
                 new Content.Smart(
-                    rpo.contents().get(".rultor.yml")
+                    rpo.contents().get(GithubProfile.FILE)
                 ).decoded(),
                 CharEncoding.UTF_8
             )
@@ -164,8 +169,9 @@ final class GithubProfile implements Profile {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "`.rultor.yml` in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets",
-                    rpo.coordinates(), this.repo.coordinates(), friends.size()
+                    "`%s` in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets",
+                    GithubProfile.FILE, rpo.coordinates(),
+                    this.repo.coordinates(), friends.size()
                 )
             );
         }
@@ -185,7 +191,8 @@ final class GithubProfile implements Profile {
      */
     private String yml() throws IOException {
         final String yml;
-        if (this.repo.contents().exists(GithubProfile.FILE, "master")) {
+        if (this.repo.contents()
+            .exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
             yml = new String(
                 new Content.Smart(
                     this.repo.contents().get(GithubProfile.FILE)
