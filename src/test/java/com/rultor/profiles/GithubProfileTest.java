@@ -30,6 +30,7 @@
 package com.rultor.profiles;
 
 import com.google.common.base.Joiner;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
@@ -67,6 +68,19 @@ public final class GithubProfileTest {
                 "  script: hello!"
             )
         );
+        repo.github().repos().get(new Coordinates.Simple("jeff/test1"))
+            .contents().create(
+                Json.createObjectBuilder()
+                    .add("path", ".rultor.yml")
+                    .add("message", "rultor config")
+                    .add(
+                        "content",
+                        Base64.encodeBase64String(
+                            "friends:\n  - jeff/test2".getBytes()
+                        )
+                    )
+                    .build()
+            );
         final Profile profile = new GithubProfile(repo);
         MatcherAssert.assertThat(
             profile.read(),

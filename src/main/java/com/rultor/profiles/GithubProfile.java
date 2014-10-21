@@ -153,16 +153,19 @@ final class GithubProfile implements Profile {
             );
         }
         final Collection<String> friends = new YamlXML(
-            new Content.Smart(
-                rpo.contents().get(".rultor.yml")
-            ).content()
-        ).get().xpath("/p/entry[@key='friends']/entry/text()");
+            new String(
+                new Content.Smart(
+                    rpo.contents().get(".rultor.yml")
+                ).decoded(),
+                CharEncoding.UTF_8
+            )
+        ).get().xpath("/p/entry[@key='friends']/item/text()");
         if (!friends.contains(this.repo.coordinates().toString())) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "`.rultor.yml` in %s doesn't allow %s to use its assets, see http://doc.rultor.com/reference.html#assets",
-                    rpo.coordinates(), this.repo.coordinates()
+                    "`.rultor.yml` in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets",
+                    rpo.coordinates(), this.repo.coordinates(), friends.size()
                 )
             );
         }
@@ -184,11 +187,9 @@ final class GithubProfile implements Profile {
         final String yml;
         if (this.repo.contents().exists(GithubProfile.FILE, "master")) {
             yml = new String(
-                Base64.decodeBase64(
-                    new Content.Smart(
-                        this.repo.contents().get(GithubProfile.FILE)
-                    ).content()
-                ),
+                new Content.Smart(
+                    this.repo.contents().get(GithubProfile.FILE)
+                ).decoded(),
                 CharEncoding.UTF_8
             );
         } else {
