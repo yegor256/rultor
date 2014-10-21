@@ -111,6 +111,36 @@ public final class GithubProfileTest {
     }
 
     /**
+     * GithubProfile can throw when rultor.yml is absent.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void throwsWhenRultorConfigIsAbsent() throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            Joiner.on('\n').join(
+                "assets:   ",
+                "  something.xml: jeff/test2#.rultor.yml"
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
+     * GithubProfile can throw when friend is not defined.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void throwsWhenFriendNotDefined() throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            Joiner.on('\n').join(
+                "assets:    ",
+                "  a.xml: jeff/test1#test.xml"
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
      * Make a repo with YAML inside.
      * @param yaml YAML config
      * @return Repo
