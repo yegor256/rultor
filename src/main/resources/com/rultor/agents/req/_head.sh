@@ -80,7 +80,7 @@ function docker_when_possible {
   docker pull "${image}"
   docker run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main \
-    --name="talk" "${image}" /main/entry.sh
+    --name="${talk}" "${image}" /main/entry.sh
   sudo chown -R $(whoami) repo
   cd repo
 }
