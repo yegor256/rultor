@@ -112,8 +112,6 @@ public final class DockerRunTest {
     /**
      * DockerRun can create script with comment inside.
      * @throws Exception In case of error.
-     * @todo #593 Add handling of hash inside single and double quotes - it
-     *  should not be treated as a comment there.
      */
     @Test
     public void executesWithComment() throws Exception {
@@ -123,6 +121,8 @@ public final class DockerRunTest {
                     "<p><entry key='z'><entry key='script'>",
                     "<item>echo \"first\"</item>",
                     "<item># some comment</item>",
+                    "<item>echo \"# some comment\" more</item>",
+                    "<item>echo '# some comment' more</item>",
                     "<item>echo \"second\" # some comment</item>",
                     "<item>echo \"third\" \\# some comment</item>",
                     "<item>echo \"last\"</item>",
@@ -139,6 +139,8 @@ public final class DockerRunTest {
                     "( ",
                     "'echo \"first\"' ';' ",
                     "'`# some comment`' ';' " ,
+                    "'echo \"# some comment\" more' ';' " ,
+                    "'echo '\\''# some comment'\\'' more' ';' " ,
                     "'echo \"second\" `# some comment`' ';' " ,
                     "'echo \"third\" \\# some comment' ';' " ,
                     "'echo \"last\"' ';' ",
