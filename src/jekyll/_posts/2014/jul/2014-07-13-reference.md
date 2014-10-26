@@ -60,6 +60,16 @@ Don't forget to add [@rultor](https://github.com/rultor) to the list of
 collaborators in your private repository. Otherwise Rultor won't be
 able to fetch anything from it.
 
+The repository you're fetching assets from must contain `.rultor.yml`
+where `friends` section should include the name of repository where
+these assets are used, for example:
+
+{% highlight yaml %}
+friends:
+  - yegor256/rultor
+  - jcabi/*
+{% endhighlight %}
+
 ## Decrypt
 
 You may want to keep your secret assets right inside your main

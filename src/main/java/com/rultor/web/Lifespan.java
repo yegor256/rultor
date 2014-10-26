@@ -163,7 +163,7 @@ public final class Lifespan implements ServletContextListener {
         try {
             return this.safe(talks);
         // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final RuntimeException ex) {
+        } catch (final Exception ex) {
             if (!this.down.get()) {
                 try {
                     TimeUnit.MICROSECONDS.sleep(1L);
@@ -171,7 +171,7 @@ public final class Lifespan implements ServletContextListener {
                     Logger.info(this, "%[exception]s", iex);
                 }
             }
-            throw ex;
+            throw new IllegalStateException(ex);
         }
     }
 

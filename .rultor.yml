@@ -2,8 +2,8 @@ assets:
   settings.xml: "yegor256/home#assets/rultor/settings.xml"
   pubring.gpg: "yegor256/home#assets/pubring.gpg"
   secring.gpg: "yegor256/home#assets/secring.gpg"
-  id_rsa: "yegor256/home#assets/rultor/id_rsa"
-  id_rsa.pub: "yegor256/home#assets/rultor/id_rsa.pub"
+  id_rsa: "yegor256/home#assets/heroku-key"
+  id_rsa.pub: "yegor256/home#assets/heroku-key.pub"
   s3cfg: "yegor256/home#assets/s3cfg"
 
 env:

@@ -42,6 +42,7 @@ import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,6 +72,11 @@ final class GithubProfile implements Profile {
      * File name.
      */
     private static final String FILE = ".rultor.yml";
+
+    /**
+     * Branch name.
+     */
+    private static final String BRANCH = "master";
 
     /**
      * Path pattern.
@@ -142,6 +148,33 @@ final class GithubProfile implements Profile {
         final Repo rpo = this.repo.github().repos().get(
             new Coordinates.Simple(matcher.group(1))
         );
+        if (!rpo.contents().exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
+            throw new Profile.ConfigException(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "`%s` file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets",
+                    GithubProfile.FILE, rpo.coordinates()
+                )
+            );
+        }
+        final Collection<String> friends = new YamlXML(
+            new String(
+                new Content.Smart(
+                    rpo.contents().get(GithubProfile.FILE)
+                ).decoded(),
+                CharEncoding.UTF_8
+            )
+        ).get().xpath("/p/entry[@key='friends']/item/text()");
+        if (!friends.contains(this.repo.coordinates().toString())) {
+            throw new Profile.ConfigException(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "`%s` in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets",
+                    GithubProfile.FILE, rpo.coordinates(),
+                    this.repo.coordinates(), friends.size()
+                )
+            );
+        }
         return new ByteArrayInputStream(
             Base64.decodeBase64(
                 new Content.Smart(
@@ -158,13 +191,12 @@ final class GithubProfile implements Profile {
      */
     private String yml() throws IOException {
         final String yml;
-        if (this.repo.contents().exists(GithubProfile.FILE, "master")) {
+        if (this.repo.contents()
+            .exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
             yml = new String(
-                Base64.decodeBase64(
-                    new Content.Smart(
-                        this.repo.contents().get(GithubProfile.FILE)
-                    ).content()
-                ),
+                new Content.Smart(
+                    this.repo.contents().get(GithubProfile.FILE)
+                ).decoded(),
                 CharEncoding.UTF_8
             );
         } else {
