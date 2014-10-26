@@ -182,6 +182,13 @@ public final class StartsRequest extends AbstractAgent {
                 "yegor256/rultor"
             )
         );
+        vars.put(
+            "directory",
+            new Profile.Defaults(this.profile).text(
+                "/p/entry[@key='docker']/entry[@key='directory']",
+                ""
+            )
+        );
         vars.put("scripts", docker.script());
         return vars.build();
     }
