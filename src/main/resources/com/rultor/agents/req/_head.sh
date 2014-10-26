@@ -85,7 +85,8 @@ function docker_when_possible {
     docker pull "${use_image}"
   fi
   docker run --rm -v "$(pwd):/main" "${vars[@]}" \
-    --memory=4g "--cidfile=$(pwd)/cid" -w=/main "${use_image}" /main/entry.sh
+    --memory=4g "--cidfile=$(pwd)/cid" -w=/main \
+    --name="${talk}" "${image}" /main/entry.sh
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
   fi

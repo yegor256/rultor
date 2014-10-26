@@ -205,6 +205,17 @@ final class DockerRun {
     }
 
     /**
+     * Is hash character inside double or single quotes.
+     * @param item String to check.
+     * @param pos Position of the hash.
+     * @return If hash is in quotes.
+     */
+    private static boolean inquotes(final String item, final int pos) {
+        return (StringUtils.countMatches(item.substring(0, pos), "\"") % 2 == 1)
+            || (StringUtils.countMatches(item.substring(0, pos), "'") % 2 == 1);
+    }
+
+    /**
      * Neutralize comment contained in the script line.
      * @param item Script element.
      * @return Script element with invisible comment
@@ -212,7 +223,8 @@ final class DockerRun {
     private static String neutralize(final String item) {
         final int start = item.indexOf('#');
         final String result;
-        if ((start == 0) || ((start > 0) && (item.charAt(start - 1) != '\\'))) {
+        if ((start == 0) || ((start > 0) && (item.charAt(start - 1) != '\\')
+            && (!DockerRun.inquotes(item, start)))) {
             result = new StringBuilder(item.substring(0, start))
                 .append('`')
                 .append(item.substring(start))

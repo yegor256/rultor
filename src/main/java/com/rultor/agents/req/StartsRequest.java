@@ -33,6 +33,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -84,7 +86,11 @@ public final class StartsRequest extends AbstractAgent {
         final String hash = req.xpath("@id").get(0);
         String script;
         try {
-            script = this.script(req, type);
+            script = this.script(
+                req,
+                type,
+                xml.xpath("/talk/@name").get(0)
+            );
             Logger.info(this, "request %s/%s started", type, hash);
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
@@ -102,15 +108,20 @@ public final class StartsRequest extends AbstractAgent {
      * Make a script.
      * @param req Request
      * @param type Its type
+     * @param name Name of talk
      * @return Script
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    private String script(final XML req, final String type) throws IOException {
+    private String script(final XML req, final String type, final String name)
+        throws IOException {
         return Joiner.on('\n').join(
             Iterables.concat(
                 Iterables.transform(
-                    this.vars(req, type).entrySet(),
+                    Sets.union(
+                        this.vars(req, type).entrySet(),
+                        Sets.newHashSet(Maps.immutableEntry("talk", name))
+                    ),
                     new Function<Map.Entry<String, String>, String>() {
                         @Override
                         public String apply(
