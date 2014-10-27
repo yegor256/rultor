@@ -237,17 +237,18 @@
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>             <strong class="jxr_keyword">final</strong> ByteArrayOutputStream baos = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>             shell.exec(
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>                 String.format(
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>                     <span class="jxr_string">"dir=%s; cat \&quot;${dir}/stdout\&quot; | col -b"</span>,
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>                     SSH.escape(<strong class="jxr_keyword">this</strong>.xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0))
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>                 ),
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>                 <strong class="jxr_keyword">new</strong> NullInputStream(0L), baos,
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>                 Logger.stream(Level.SEVERE, <strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>             );
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ByteArrayInputStream(baos.toByteArray());
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>         }
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>     }
-<a class="jxr_linenumber" name="L241" href="#L241">241</a> 
-<a class="jxr_linenumber" name="L242" href="#L242">242</a> }
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>                     <span class="jxr_string">"dir=%s; (cat \&quot;${dir}/stdout\&quot; 2&gt;/dev/null || echo \&quot;file $file is gone\&quot;) | col -b"</span>,
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>                     SSH.escape(<strong class="jxr_keyword">this</strong>.xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0))
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>                 ),
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>                 <strong class="jxr_keyword">new</strong> NullInputStream(0L), baos,
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>                 Logger.stream(Level.SEVERE, <strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>             );
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ByteArrayInputStream(baos.toByteArray());
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         }
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     }
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
