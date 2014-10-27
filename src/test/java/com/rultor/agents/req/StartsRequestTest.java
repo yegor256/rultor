@@ -140,7 +140,10 @@ public final class StartsRequestTest {
                     .with(Matchers.containsString("image=yegor256/rultor\n"))
                     .with(
                         Matchers.containsString(
-                            String.format("talk=%s\n", Talk.InFile.TEST_NAME)
+                            String.format(
+                                "container=%s\n",
+                                Talk.TEST_NAME
+                            )
                         )
                     )
                     .with(Matchers.containsString("Cloning into 'repo'...\n"))

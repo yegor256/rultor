@@ -120,7 +120,12 @@ public final class StartsRequest extends AbstractAgent {
                 Iterables.transform(
                     Sets.union(
                         this.vars(req, type).entrySet(),
-                        Sets.newHashSet(Maps.immutableEntry("talk", name))
+                        Sets.newHashSet(
+                            Maps.immutableEntry(
+                                "container",
+                                name.replaceAll("[^a-zA-Z0-9_.-]", "_")
+                            )
+                        )
                     ),
                     new Function<Map.Entry<String, String>, String>() {
                         @Override

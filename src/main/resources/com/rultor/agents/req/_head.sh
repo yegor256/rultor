@@ -84,13 +84,11 @@ function docker_when_possible {
     use_image="${image}"
     docker pull "${use_image}"
   fi
-  if docker run --rm -v "$(pwd):/main" "${vars[@]}" \
+  docker run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main \
-    --name="${talk}" "${image}" /main/entry.sh \
-    || true; then
-    if [ -n "${directory}" ]; then
-      docker rmi "${use_image}"
-    fi
+    --name="${container}" "${image}" /main/entry.sh
+  if [ -n "${directory}" ]; then
+    docker rmi "${use_image}"
   fi
   sudo chown -R $(whoami) repo
   cd repo
