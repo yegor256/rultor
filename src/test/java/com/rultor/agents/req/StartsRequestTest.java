@@ -57,6 +57,7 @@ import org.xembly.Directives;
  * @since 1.3
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @todo #565 Add a test for stop command.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class StartsRequestTest {
