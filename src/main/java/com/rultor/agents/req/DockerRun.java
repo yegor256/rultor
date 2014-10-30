@@ -211,8 +211,8 @@ final class DockerRun {
      * @return If hash is in quotes.
      */
     private static boolean inquotes(final String item, final int pos) {
-        return (StringUtils.countMatches(item.substring(0, pos), "\"") % 2 == 1)
-            || (StringUtils.countMatches(item.substring(0, pos), "'") % 2 == 1);
+        return StringUtils.countMatches(item.substring(0, pos), "\"") % 2 == 1
+            || StringUtils.countMatches(item.substring(0, pos), "'") % 2 == 1;
     }
 
     /**
@@ -223,8 +223,8 @@ final class DockerRun {
     private static String neutralize(final String item) {
         final int start = item.indexOf('#');
         final String result;
-        if ((start == 0) || ((start > 0) && (item.charAt(start - 1) != '\\')
-            && (!DockerRun.inquotes(item, start)))) {
+        if (start == 0 || start > 0 && item.charAt(start - 1) != '\\'
+            && !DockerRun.inquotes(item, start)) {
             result = new StringBuilder(item.substring(0, start))
                 .append('`')
                 .append(item.substring(start))

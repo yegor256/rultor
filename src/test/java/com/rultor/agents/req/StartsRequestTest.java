@@ -58,6 +58,8 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @todo #565 Add a test for stop command.
+ * @todo #594 Add a test for case where dockerfile is specified instead of
+ *  image in configuration (docker: directory some/directory).
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class StartsRequestTest {
@@ -139,7 +141,10 @@ public final class StartsRequestTest {
                     .with(Matchers.containsString("image=yegor256/rultor\n"))
                     .with(
                         Matchers.containsString(
-                            String.format("talk=%s\n", Talk.InFile.TEST_NAME)
+                            String.format(
+                                "container=%s\n",
+                                Talk.TEST_NAME
+                            )
                         )
                     )
                     .with(Matchers.containsString("Cloning into 'repo'...\n"))

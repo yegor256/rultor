@@ -77,10 +77,19 @@ function docker_when_possible {
     fi
   done
   cd ..
-  docker pull "${image}"
+  if [ -n "${directory}" ]; then
+    use_image="yegor256/rultor-$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 8)"
+    docker build "${directory}" -t ${use_image}
+  else
+    use_image="${image}"
+    docker pull "${use_image}"
+  fi
   docker run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main \
-    --name="${talk}" "${image}" /main/entry.sh
+    --name="${container}" "${image}" /main/entry.sh
+  if [ -n "${directory}" ]; then
+    docker rmi "${use_image}"
+  fi
   sudo chown -R $(whoami) repo
   cd repo
 }
