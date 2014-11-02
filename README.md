@@ -5,6 +5,12 @@
 
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
 
+These blog posts may be helpful:
+[Every Build in Its Own Docker Container](http://www.yegor256.com/2014/07/29/docker-in-rultor.html),
+[Master Branch Must Be Read-Only](http://www.yegor256.com/2014/07/21/read-only-master-branch.html),
+[Rultor + Travis](http://www.yegor256.com/2014/07/31/travis-and-rultor.html), and
+[Rultor, a Merging Bot](http://www.yegor256.com/2014/07/24/rultor-automated-merging.html).
+
 ## How to contribute
 
 Fork repository, make changes, send us a pull request. We will review
