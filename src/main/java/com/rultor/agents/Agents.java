@@ -60,6 +60,7 @@ import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
 import com.rultor.agents.github.qtn.QnSince;
 import com.rultor.agents.github.qtn.QnStatus;
+import com.rultor.agents.github.qtn.QnStop;
 import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
@@ -171,32 +172,7 @@ public final class Agents {
                                             new QnAlone(
                                                 talk, locks,
                                                 new Question.FirstOf(
-                                                    new Array<Question>(
-                                                        new QnIfContains(
-                                                            "merge",
-                                                            new QnAskedBy(
-                                                                profile,
-                                                                Agents.commanders("merge"),
-                                                                new QnMerge()
-                                                            )
-                                                        ),
-                                                        new QnIfContains(
-                                                            "deploy",
-                                                            new QnAskedBy(
-                                                                profile,
-                                                                Agents.commanders("deploy"),
-                                                                new QnDeploy()
-                                                            )
-                                                        ),
-                                                        new QnIfContains(
-                                                            "release",
-                                                            new QnAskedBy(
-                                                                profile,
-                                                                Agents.commanders("release"),
-                                                                new QnRelease()
-                                                            )
-                                                        )
-                                                    )
+                                                    this.commands(profile)
                                                 )
                                             )
                                         )
@@ -241,6 +217,48 @@ public final class Agents {
                     ).bucket(Manifests.read("Rultor-S3Bucket"))
                 ),
                 new Publishes(profile)
+            )
+        );
+    }
+
+    /**
+     * Handle main commands.
+     * @param profile Profile to uuse
+     * @return Array of questions.
+     */
+    private Array<Question> commands(final Profile profile) {
+        return new Array<Question>(
+            new QnIfContains(
+                "merge",
+                new QnAskedBy(
+                    profile,
+                    Agents.commanders("merge"),
+                    new QnMerge()
+                )
+            ),
+            new QnIfContains(
+                "deploy",
+                new QnAskedBy(
+                    profile,
+                    Agents.commanders("deploy"),
+                    new QnDeploy()
+                )
+            ),
+            new QnIfContains(
+                "release",
+                new QnAskedBy(
+                    profile,
+                    Agents.commanders("release"),
+                    new QnRelease()
+                )
+            ),
+            new QnIfContains(
+                "stop",
+                new QnAskedBy(
+                    profile,
+                    Agents.commanders("stop"),
+                    new QnStop()
+                )
             )
         );
     }

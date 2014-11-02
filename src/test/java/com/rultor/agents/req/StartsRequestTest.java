@@ -57,6 +57,7 @@ import org.xembly.Directives;
  * @since 1.3
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @todo #565 Add a test for stop command.
  * @todo #594 Add a test for case where dockerfile is specified instead of
  *  image in configuration (docker: directory some/directory).
  */
