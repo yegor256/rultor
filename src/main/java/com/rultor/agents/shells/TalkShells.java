@@ -30,6 +30,8 @@
 package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import java.net.UnknownHostException;
 import lombok.EqualsAndHashCode;

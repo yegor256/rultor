@@ -31,8 +31,8 @@ package com.rultor.agents.req;
 
 import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.ssh.SSH;
 import com.jcabi.xml.XML;
-import com.rultor.agents.shells.SSH;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collection;
