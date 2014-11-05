@@ -283,17 +283,23 @@ final class DockerRun {
      * @return Lines found
      */
     private static Collection<String> lines(final XML node) {
-        return Collections2.transform(
-            Arrays.asList(
-                StringUtils.split(node.xpath("text()").get(0), '\n')
-            ),
-            new Function<String, String>() {
-                @Override
-                public String apply(final String line) {
-                    return line.trim();
-                }
-            }
-        );
+        final Collection<String> lines = new LinkedList<String>();
+        if (node.node().hasChildNodes()) {
+            lines.addAll(
+                Collections2.transform(
+                    Arrays.asList(
+                        StringUtils.split(node.xpath("text()").get(0), '\n')
+                    ),
+                    new Function<String, String>() {
+                        @Override
+                        public String apply(final String line) {
+                            return line.trim();
+                        }
+                    }
+                )
+            );
+        }
+        return lines;
     }
 
 }
