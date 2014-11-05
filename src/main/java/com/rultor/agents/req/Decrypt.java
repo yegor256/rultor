@@ -71,16 +71,19 @@ final class Decrypt {
      * @throws IOException If fails
      */
     public Iterable<String> commands() throws IOException {
+        final Collection<XML> assets =
+            this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
-        commands.add(
-            Joiner.on(' ').join(
-                "gpg --keyserver hkp://pool.sks-keyservers.net",
-                "--verbose --recv-keys 9AF0FA4C"
-            )
-        );
-        for (final XML node
-            : this.profile.read().nodes("/p/entry[@key='decrypt']/entry")) {
-            final String key = node.xpath("@key").get(0);
+        if (!assets.isEmpty()) {
+            commands.add(
+                Joiner.on(' ').join(
+                    "gpg --keyserver hkp://pool.sks-keyservers.net",
+                    "--verbose --recv-keys 9AF0FA4C"
+                )
+            );
+        }
+        for (final XML asset : assets) {
+            final String key = asset.xpath("@key").get(0);
             final String enc = String.format("%s.enc", key);
             commands.add(
                 Joiner.on(' ').join(
@@ -88,7 +91,7 @@ final class Decrypt {
                     "\"--secret-keyring=$(pwd)/.gpg/secring.gpg\"",
                     String.format(
                         "--decrypt %s > %s",
-                        SSH.escape(node.xpath("./text()").get(0)),
+                        SSH.escape(asset.xpath("./text()").get(0)),
                         SSH.escape(enc)
                     )
                 )
