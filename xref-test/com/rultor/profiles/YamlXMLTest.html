@@ -66,7 +66,24 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>              )
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          );
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      }
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  }
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">     * YamlXML can parse a broken text.</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">     * @throws Exception In case of error.</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      @Test
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> parsesYamlConfigWhenBroken() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>              <strong class="jxr_keyword">new</strong> YamlXML(<span class="jxr_string">"a: alpha\nb:\nc:\n  - beta"</span>).get(),
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>              XhtmlMatchers.hasXPaths(
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>                  <span class="jxr_string">"/p/entry[@key='a' and .='alpha']"</span>,
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  <span class="jxr_string">"/p/entry[@key='b' and .='']"</span>,
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  <span class="jxr_string">"/p/entry[@key='c']/item[.='beta']"</span>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>              )
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          );
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

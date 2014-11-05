@@ -39,9 +39,9 @@
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.immutable.ArrayMap;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.matchers.XhtmlMatchers;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XMLDocument;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.shells.Shell;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.shells.Sshd;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.SSHD;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.Shell;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XMLDocument;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.shells.TalkShells;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Agent;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Profile;
@@ -89,8 +89,8 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      @Test
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> startsDaemon() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>          Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/agents/shells/Sshd.html">Sshd</a> sshd = <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/shells/Sshd.html">Sshd</a>(<strong class="jxr_keyword">this</strong>.temp.newFolder());
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port = sshd.start();
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">final</strong> SSHD sshd = <strong class="jxr_keyword">new</strong> SSHD(<strong class="jxr_keyword">this</strong>.temp.newFolder());
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port = sshd.port();
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          <strong class="jxr_keyword">final</strong> Talk talk = <strong class="jxr_keyword">new</strong> Talk.InFile();
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>          <strong class="jxr_keyword">final</strong> String executor;
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          <strong class="jxr_keyword">if</strong> (SystemUtils.IS_OS_LINUX) {

@@ -40,10 +40,10 @@
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.base.Joiner;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Immutable;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.Logger;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XML;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.AbstractAgent;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.shells.SSH;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.shells.Shell;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.SSH;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.Shell;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XML;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.AbstractAgent;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.shells.TalkShells;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      @Override
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> Iterable&lt;Directive&gt; process(<strong class="jxr_keyword">final</strong> XML xml) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/agents/shells/Shell.html">Shell</a> shell = <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/shells/TalkShells.html">TalkShells</a>(xml).get();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          <strong class="jxr_keyword">final</strong> Shell shell = <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/shells/TalkShells.html">TalkShells</a>(xml).get();
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">final</strong> String dir = xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">new</strong> Shell.Empty(<strong class="jxr_keyword">new</strong> Shell.Safe(shell)).exec(
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>              Joiner.on(<span class="jxr_string">" &amp;&amp; "</span>).join(
