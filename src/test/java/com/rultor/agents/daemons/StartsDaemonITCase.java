@@ -31,9 +31,9 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.ssh.SSHD;
+import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XMLDocument;
-import com.rultor.agents.shells.Shell;
-import com.rultor.agents.shells.Sshd;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
@@ -81,8 +81,8 @@ public final class StartsDaemonITCase {
     @Test
     public void startsDaemon() throws Exception {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
-        final Sshd sshd = new Sshd(this.temp.newFolder());
-        final int port = sshd.start();
+        final SSHD sshd = new SSHD(this.temp.newFolder());
+        final int port = sshd.port();
         final Talk talk = new Talk.InFile();
         final String executor;
         if (SystemUtils.IS_OS_LINUX) {

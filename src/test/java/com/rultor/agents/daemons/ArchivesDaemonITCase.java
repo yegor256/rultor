@@ -31,8 +31,8 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.s3.mock.MkBucket;
+import com.jcabi.ssh.SSHD;
 import com.rultor.Time;
-import com.rultor.agents.shells.Sshd;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.File;
@@ -67,8 +67,8 @@ public final class ArchivesDaemonITCase {
      */
     @Test
     public void archivesDaemon() throws Exception {
-        final Sshd sshd = new Sshd(this.temp.newFolder());
-        final int port = sshd.start();
+        final SSHD sshd = new SSHD(this.temp.newFolder());
+        final int port = sshd.port();
         final File home = new File(sshd.home(), "test");
         FileUtils.forceMkdir(home);
         FileUtils.write(new File(home, "stdout"), "some output");

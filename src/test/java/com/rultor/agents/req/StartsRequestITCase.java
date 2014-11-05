@@ -30,9 +30,9 @@
 package com.rultor.agents.req;
 
 import com.google.common.base.Joiner;
+import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XMLDocument;
-import com.rultor.agents.shells.SSH;
-import com.rultor.agents.shells.Shell;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
