@@ -261,4 +261,23 @@ public final class DockerRunTest {
         );
     }
 
+    /**
+     * DockerRun can fetch environment vars from empty list.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void fetchesEnvVarsFromEmptyList() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                "<p><entry key='ooo'><entry key='env'/></entry></p>"
+            )
+        );
+        MatcherAssert.assertThat(
+            new DockerRun(profile, "/p/entry[@key='ooo']").envs(
+                new ArrayMap<String, String>()
+            ),
+            Matchers.equalTo("( )")
+        );
+    }
+
 }
