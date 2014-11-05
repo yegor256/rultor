@@ -291,20 +291,26 @@
 <a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">     * @return Lines found</em>
 <a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Collection&lt;String&gt; lines(<strong class="jxr_keyword">final</strong> XML node) {
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>         <strong class="jxr_keyword">return</strong> Collections2.transform(
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>             Arrays.asList(
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>                 StringUtils.split(node.xpath(<span class="jxr_string">"text()"</span>).get(0), '\n')
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>             ),
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>             <strong class="jxr_keyword">new</strong> Function&lt;String, String&gt;() {
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>                 @Override
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>                 <strong class="jxr_keyword">public</strong> String apply(<strong class="jxr_keyword">final</strong> String line) {
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>                     <strong class="jxr_keyword">return</strong> line.trim();
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>                 }
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>             }
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>         );
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>     }
-<a class="jxr_linenumber" name="L298" href="#L298">298</a> 
-<a class="jxr_linenumber" name="L299" href="#L299">299</a> }
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; lines = <strong class="jxr_keyword">new</strong> LinkedList&lt;String&gt;();
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>         <strong class="jxr_keyword">if</strong> (node.node().hasChildNodes()) {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>             lines.addAll(
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>                 Collections2.transform(
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>                     Arrays.asList(
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>                         StringUtils.split(node.xpath(<span class="jxr_string">"text()"</span>).get(0), '\n')
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>                     ),
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>                     <strong class="jxr_keyword">new</strong> Function&lt;String, String&gt;() {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>                         @Override
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>                         <strong class="jxr_keyword">public</strong> String apply(<strong class="jxr_keyword">final</strong> String line) {
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                             <strong class="jxr_keyword">return</strong> line.trim();
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>                         }
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>                     }
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>                 )
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>             );
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         }
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         <strong class="jxr_keyword">return</strong> lines;
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     }
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
