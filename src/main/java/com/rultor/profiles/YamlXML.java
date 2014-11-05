@@ -110,6 +110,8 @@ final class YamlXML {
             for (final Object item : (Iterable<Object>) obj) {
                 dirs.add("item").append(YamlXML.dirs(item)).up();
             }
+        } else if (obj == null) {
+            dirs.set("");
         } else {
             dirs.set(obj.toString());
         }
