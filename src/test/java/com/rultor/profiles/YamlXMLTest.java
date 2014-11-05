@@ -58,4 +58,21 @@ public final class YamlXMLTest {
             )
         );
     }
+
+    /**
+     * YamlXML can parse a broken text.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void parsesYamlConfigWhenBroken() throws Exception {
+        MatcherAssert.assertThat(
+            new YamlXML("a: alpha\nb:\nc:\n  - beta").get(),
+            XhtmlMatchers.hasXPaths(
+                "/p/entry[@key='a' and .='alpha']",
+                "/p/entry[@key='b' and .='']",
+                "/p/entry[@key='c']/item[.='beta']"
+            )
+        );
+    }
+
 }
