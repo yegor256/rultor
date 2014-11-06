@@ -276,7 +276,7 @@ public final class DockerRunTest {
             new DockerRun(profile, "/p/entry[@key='ooo']").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.startsWith("( ")
+            Matchers.startsWith("(  ")
         );
     }
 
