@@ -88,14 +88,8 @@ public final class Tweets extends AbstractAgent {
         final Repo.Smart repo = new Repo.Smart(issue.repo());
         if (!repo.isPrivate()) {
             this.twitter.post(
-                String.format(
-                    "%s, %s released https://github.com/%s",
-                    StringUtils.substring(
-                        repo.description(),
-                        0, Tv.HUNDRED
-                    ),
-                    req.xpath("args/arg[@name='tag']/text()").get(0),
-                    issue.repo().coordinates()
+                Tweets.tweet(
+                    repo, req.xpath("args/arg[@name='tag']/text()").get(0)
                 )
             );
             Logger.info(
@@ -104,6 +98,32 @@ public final class Tweets extends AbstractAgent {
             );
         }
         return new Directives();
+    }
+
+    /**
+     * Create a tweet to post.
+     * @param repo The repo
+     * @param tag The tag
+     * @return Tweet text
+     * @throws IOException If fails
+     */
+    private static String tweet(final Repo.Smart repo, final String tag)
+        throws IOException {
+        final StringBuilder text = new StringBuilder(2 * Tv.HUNDRED);
+        if (repo.description().isEmpty()) {
+            text.append(repo.coordinates().repo());
+        } else {
+            text.append(
+                StringUtils.substring(
+                    repo.description(),
+                    0, Tv.HUNDRED
+                )
+            );
+        }
+        return text.append(", ").append(tag)
+            .append(" released https://github.com/")
+            .append(repo.coordinates())
+            .toString();
     }
 
 }
