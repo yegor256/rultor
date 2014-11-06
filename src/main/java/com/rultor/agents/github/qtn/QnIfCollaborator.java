@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Repo;
+import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -75,10 +76,8 @@ public final class QnIfCollaborator implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        final Repo repo = comment.issue().repo();
-        final String self = repo.github().users().self().login();
         final Req req;
-        if (repo.collaborators().isCollaborator(self)) {
+        if (this.ami(comment.issue().repo())) {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
@@ -87,6 +86,27 @@ public final class QnIfCollaborator implements Question {
             req = Req.EMPTY;
         }
         return req;
+    }
+
+    /**
+     * Am I a collaborator?
+     * @param repo The repo
+     * @return TRUE if I am
+     */
+    private boolean ami(final Repo repo) {
+        boolean collaborator;
+        try {
+            collaborator = repo.collaborators().isCollaborator(
+                repo.github().users().self().login()
+            );
+        } catch (final IOException ex) {
+            Logger.warn(
+                this, "failed to check collaborator: %s",
+                ex.getLocalizedMessage()
+            );
+            collaborator = true;
+        }
+        return collaborator;
     }
 
 }
