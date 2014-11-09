@@ -65,6 +65,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "region")
+@SuppressWarnings("PMD.TooManyMethods")
 public final class DyTalks implements Talks {
 
     /**

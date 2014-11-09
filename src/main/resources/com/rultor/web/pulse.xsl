@@ -71,7 +71,7 @@
             <text x="0" y="0" style="text-anchor:middle;"
                 transform="scale(46000,1) translate(-39,1.5)">
                 <xsl:choose>
-                    <xsl:when test="$age &gt; 600">
+                    <xsl:when test="not($age) or $age &gt; 600">
                         <tspan style="fill:red">
                             <xsl:text>system outage :(</xsl:text>
                         </tspan>
