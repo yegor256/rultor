@@ -36,6 +36,7 @@ import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Cacheable;
@@ -194,6 +195,17 @@ public final class DyTalks implements Talks {
                 )
                 .where(DyTalks.HASH, name)
                 .iterator().next()
+        );
+    }
+
+    @Override
+    public void delete(final String name) {
+        Iterables.removeIf(
+            this.region.table(DyTalks.TBL)
+                .frame()
+                .through(new QueryValve().withLimit(1))
+                .where(DyTalks.HASH, name),
+            Predicates.alwaysTrue()
         );
     }
 

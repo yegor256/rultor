@@ -115,4 +115,22 @@ public final class TalkRs extends BaseRs {
         );
     }
 
+    /**
+     * Delete the entire talk.
+     * @return The JAX-RS response
+     * @throws IOException If fails
+     */
+    @GET
+    @Path("/delete")
+    public Response delete() throws IOException {
+        this.adminOnly();
+        final Talk talk = this.talks().get(this.number);
+        this.talks().delete(talk.name());
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUri(),
+            String.format("talk #%d deleted", this.number),
+            Level.INFO
+        );
+    }
+
 }

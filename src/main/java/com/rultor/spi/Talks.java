@@ -86,6 +86,12 @@ public interface Talks {
     Talk get(String name);
 
     /**
+     * Delete an existing talk (runtime exception if it's absent).
+     * @param name The name
+     */
+    void delete(String name);
+
+    /**
      * Create a new one (runtime exception if it exists already).
      * @param repo Name of the repository it is in
      * @param name The name
@@ -169,6 +175,10 @@ public interface Talks {
                     }
                 }
             );
+        }
+        @Override
+        public void delete(final String name) {
+            FileUtils.deleteQuietly(new File(new File(this.path), name));
         }
         @Override
         public void create(final String repo, final String name)
