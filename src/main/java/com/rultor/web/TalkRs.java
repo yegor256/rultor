@@ -63,6 +63,7 @@ public final class TalkRs extends BaseRs {
     @PathParam("number")
     public void setName(@NotNull(message = "talk number is mandatory")
         final Long talk) {
+        this.adminOnly();
         this.number = talk;
     }
 
@@ -74,7 +75,6 @@ public final class TalkRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws IOException {
-        this.adminOnly();
         if (!this.talks().exists(this.number)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
@@ -105,7 +105,6 @@ public final class TalkRs extends BaseRs {
     @GET
     @Path("/kill")
     public Response kill() throws IOException {
-        this.adminOnly();
         final Talk talk = this.talks().get(this.number);
         new KillsDaemon().process(talk.read());
         throw this.flash().redirect(
@@ -123,7 +122,6 @@ public final class TalkRs extends BaseRs {
     @GET
     @Path("/delete")
     public Response delete() throws IOException {
-        this.adminOnly();
         final Talk talk = this.talks().get(this.number);
         this.talks().delete(talk.name());
         throw this.flash().redirect(

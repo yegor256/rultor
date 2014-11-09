@@ -33,6 +33,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rexsl.mock.MkServletContext;
 import com.rultor.spi.Pulse;
 import java.util.Arrays;
+import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
@@ -71,6 +72,30 @@ public final class HomeRsTest {
                 "/svg:svg",
                 "//svg:svg[count(svg:rect) >= 2]"
             )
+        );
+    }
+
+    /**
+     * HomeRs can render SVG without ticks.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersSvgWithouTicks() throws Exception {
+        final HomeRs home = new HomeRs();
+        home.setServletContext(
+            new MkServletContext().withAttr(
+                Pulse.class.getName(),
+                new Pulse() {
+                    @Override
+                    public Iterable<Pulse.Tick> ticks() {
+                        return Collections.emptyList();
+                    }
+                }
+            )
+        );
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(home.svg()),
+            XhtmlMatchers.hasXPath("//svg:tspan[contains(.,'outage')]")
         );
     }
 
