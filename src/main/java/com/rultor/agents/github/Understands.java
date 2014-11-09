@@ -62,6 +62,7 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "github", "question" })
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public final class Understands extends AbstractAgent {
 
     /**
@@ -124,6 +125,14 @@ public final class Understands extends AbstractAgent {
                 break;
             }
         }
+        if (next < seen) {
+            throw new IllegalStateException(
+                String.format(
+                    "comment #%d is younger than #%d, something is wrong",
+                    next, seen
+                )
+            );
+        }
         final Directives dirs = new Directives();
         if (req.equals(Req.EMPTY)) {
             Logger.info(
@@ -141,7 +150,7 @@ public final class Understands extends AbstractAgent {
                 issue.repo().coordinates(), issue.number(), next
             );
         } else {
-            dirs.xpath("/talk[not(request)]").add("request")
+            dirs.xpath("/talk[not(request)]").strict(1).add("request")
                 .attr("id", Integer.toString(next))
                 .append(req.dirs());
         }
