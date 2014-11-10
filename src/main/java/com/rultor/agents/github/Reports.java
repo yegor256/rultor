@@ -100,15 +100,28 @@ public final class Reports extends AbstractAgent {
             home.toASCIIString(),
             Long.parseLong(req.xpath("msec/text()").get(0))
         );
-        new Answer(
-            new Comment.Smart(
-                issue.comments().get(Integer.parseInt(hash))
-            )
-        ).post(msg);
+        final int number = Integer.parseInt(hash);
+        new Answer(this.origin(issue, number)).post(msg);
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")
             .strict(1).remove();
+    }
+
+    /**
+     * Get a comment we're answering to.
+     * @param issue The issue
+     * @param number Its number
+     * @return Comment
+     */
+    private Comment.Smart origin(final Issue.Smart issue, final int number) {
+        final Comment comment;
+        if (number == 1) {
+            comment = new FirstComment(issue);
+        } else {
+            comment = issue.comments().get(number);
+        }
+        return new Comment.Smart(comment);
     }
 
 }
