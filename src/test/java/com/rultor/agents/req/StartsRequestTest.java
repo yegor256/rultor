@@ -40,6 +40,7 @@ import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -58,8 +59,6 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @todo #565 Add a test for stop command.
- * @todo #594 Add a test for case where dockerfile is specified instead of
- *  image in configuration (docker: directory some/directory).
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class StartsRequestTest {
@@ -224,6 +223,60 @@ public final class StartsRequestTest {
         );
         agent.execute(talk);
         this.exec(talk);
+    }
+
+    /**
+     * StartsRequest can run release with dockerfile.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void runsReleaseWithDockerfile() throws Exception {
+        final File repo = this.repo();
+        final File dir = this.temp.newFolder();
+        FileUtils.write(new File(dir, "Dockerfile"), "FROM yegor256/rultor");
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    StringUtils.join(
+                        "<p><entry key='release'><entry key='script'>",
+                        "echo HEY</entry></entry><entry key='docker'>",
+                        String.format("<entry key='directory'>%s</entry>", dir),
+                        "</entry></p>"
+                    )
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "a8b9c0")
+                .add("type").set("release").up()
+                .add("args")
+                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "tag").set("1.0-beta").up()
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            this.exec(talk),
+            Matchers.allOf(
+                new Array<Matcher<? super String>>()
+                    .with(
+                        Matchers.containsString(
+                            String.format(
+                                "docker build %s -t yegor256/rultor-", dir
+                        )
+                    )
+                )
+                    .with(Matchers.containsString("docker run"))
+                    .with(
+                        Matchers.containsString(
+                                "docker rmi yegor256/rultor-"
+                        )
+                    )
+                    .with(Matchers.containsString("low enough to run a"))
+            )
+        );
     }
 
     /**
