@@ -93,13 +93,15 @@ public final class QnIfCollaborator implements Question {
      * @param repo The repo
      * @return TRUE if I am
      */
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private boolean ami(final Repo repo) {
         boolean collaborator;
         try {
             collaborator = repo.collaborators().isCollaborator(
                 repo.github().users().self().login()
             );
-        } catch (final IOException ex) {
+        // @checkstyle IllegalCatchCheck (1 line)
+        } catch (final Throwable ex) {
             Logger.warn(
                 this, "failed to check collaborator: %s",
                 ex.getLocalizedMessage()
