@@ -34,7 +34,6 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Repo;
-import com.jcabi.github.User;
 import com.jcabi.xml.XML;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
@@ -136,9 +135,7 @@ public final class QnAskedBy implements Question {
     private Collection<String> commanders(final Repo repo) throws IOException {
         final Collection<String> logins = new LinkedList<String>();
         final XML xml = this.profile.read();
-        for (final User user : repo.collaborators().iterate()) {
-            logins.add(user.login());
-        }
+        logins.addAll(new Crew(repo).names());
         logins.addAll(xml.xpath(this.xpath));
         return logins;
     }

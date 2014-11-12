@@ -32,12 +32,12 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Repo;
-import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -77,7 +77,10 @@ public final class QnIfCollaborator implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        if (this.ami(comment.issue().repo())) {
+        final Repo repo = comment.issue().repo();
+        final String self = repo.github().users().self().login();
+        final Collection<String> crew = new Crew(repo).names();
+        if (crew.isEmpty() || crew.contains(self)) {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
@@ -86,29 +89,6 @@ public final class QnIfCollaborator implements Question {
             req = Req.EMPTY;
         }
         return req;
-    }
-
-    /**
-     * Am I a collaborator?
-     * @param repo The repo
-     * @return TRUE if I am
-     */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    private boolean ami(final Repo repo) {
-        boolean collaborator;
-        try {
-            collaborator = repo.collaborators().isCollaborator(
-                repo.github().users().self().login()
-            );
-        // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Throwable ex) {
-            Logger.warn(
-                this, "failed to check collaborator: %s",
-                ex.getLocalizedMessage()
-            );
-            collaborator = true;
-        }
-        return collaborator;
     }
 
 }

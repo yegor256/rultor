@@ -29,46 +29,59 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
-import com.jcabi.matchers.XhtmlMatchers;
-import java.net.URI;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.xembly.Directives;
-import org.xembly.Xembler;
+import com.jcabi.github.User;
+import com.jcabi.log.Logger;
+import java.util.Collection;
+import java.util.LinkedList;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Tests for ${@link QnIfCollaborator}.
+ * Github crew.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.40.4
+ * @since 1.40.7
  */
-public final class QnIfCollaboratorTest {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "repo")
+final class Crew {
 
     /**
-     * QnCollaborators can block a request.
-     * @throws Exception In case of error.
+     * Github.
      */
-    @Test
-    public void blocksRequest() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
-        repo.collaborators().add("friend");
-        final Issue issue = repo.issues().create("", "");
-        issue.comments().post("deploy");
-        MatcherAssert.assertThat(
-            new Xembler(
-                new Directives().add("request").append(
-                    new QnIfCollaborator(new QnDeploy()).understand(
-                        new Comment.Smart(issue.comments().get(1)), new URI("#")
-                    ).dirs()
-                )
-            ).xml(),
-            XhtmlMatchers.hasXPaths("/request[not(type)]")
-        );
+    private final transient Repo repo;
+
+    /**
+     * Ctor.
+     * @param rpo Github repo
+     */
+    Crew(final Repo rpo) {
+        this.repo = rpo;
+    }
+
+    /**
+     * Get all collaborators.
+     * @return List of their login names
+     */
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    public Collection<String> names() {
+        final Collection<String> names = new LinkedList<String>();
+        try {
+            for (final User user : this.repo.collaborators().iterate()) {
+                names.add(user.login());
+            }
+            // @checkstyle IllegalCatchCheck (1 line)
+        } catch (final Throwable ex) {
+            Logger.warn(
+                this, "failed to fetch collaborator: %s",
+                ex.getLocalizedMessage()
+            );
+        }
+        return names;
     }
 
 }
