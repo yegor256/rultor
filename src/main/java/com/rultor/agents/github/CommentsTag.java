@@ -29,14 +29,25 @@
  */
 package com.rultor.agents.github;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
+import com.jcabi.github.Repo;
+import com.jcabi.github.RepoCommit;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -76,13 +87,59 @@ public final class CommentsTag extends AbstractAgent {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
+        final Repo repo = issue.repo();
+        final Date prev = this.previous(repo);
         final Release.Smart release = new Release.Smart(
-            issue.repo().releases().create(tag)
+            repo.releases().create(tag)
         );
         release.name(issue.title());
-        release.body(String.format("See #%d", issue.number()));
+        release.body(this.body(repo, prev, release.publishedAt()));
         Logger.info(this, "tag %s commented", tag);
         return new Directives();
     }
 
+    /**
+     * Release body text.
+     * @param repo Repo with releases.
+     * @param prev Previous release date.
+     * @param current Current release date.
+     * @return Release body text.
+     * @throws IOException In case of problem communicating with git.
+     */
+    private String body(final Repo repo, final Date prev, final Date current)
+        throws IOException {
+        final DateFormat format = new SimpleDateFormat(
+            "yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH
+        );
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        final Collection<String> lines = new LinkedList<String>();
+        lines.add("Following commits included in this release:");
+        final ImmutableMap<String, String> params =
+            new ImmutableMap.Builder<String, String>()
+                .put("since", format.format(prev))
+                .put("until", format.format(current))
+                .build();
+        for (final RepoCommit commit : repo.commits().iterate(params)) {
+            lines.add(commit.sha());
+        }
+        return Joiner.on("\n").join(lines);
+    }
+
+    /**
+     * Get previous release time.
+     * @param repo Repo in which to find the releases.
+     * @return Previous release time or start of epoch.
+     * @throws IOException In case of problem communicating with repo.
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    private Date previous(final Repo repo) throws IOException {
+        Date prev = new Date(0);
+        for (final Release release : repo.releases().iterate()) {
+            final Release.Smart rel = new Release.Smart(release);
+            if (prev.before(rel.publishedAt())) {
+                prev = rel.publishedAt();
+            }
+        }
+        return prev;
+    }
 }
