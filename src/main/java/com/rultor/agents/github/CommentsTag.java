@@ -32,7 +32,6 @@ package com.rultor.agents.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
-import com.jcabi.github.Release;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
@@ -76,11 +75,11 @@ public final class CommentsTag extends AbstractAgent {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
-        final Release.Smart release = new Release.Smart(
-            issue.repo().releases().create(tag)
-        );
-        release.name(issue.title());
-        release.body(String.format("See #%d", issue.number()));
+//        final Release.Smart release = new Release.Smart(
+//            issue.repo().releases().create(tag)
+//        );
+//        release.name(issue.title());
+//        release.body(String.format("See #%d", issue.number()));
         Logger.info(this, "tag %s commented", tag);
         return new Directives();
     }
