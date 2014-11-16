@@ -32,10 +32,13 @@ package com.rultor.agents.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
+import com.jcabi.github.Release;
+import com.jcabi.github.Releases;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import java.io.IOException;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -52,6 +55,12 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "github")
 public final class CommentsTag extends AbstractAgent {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * Github.
@@ -75,12 +84,28 @@ public final class CommentsTag extends AbstractAgent {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
-//        final Release.Smart release = new Release.Smart(
-//            issue.repo().releases().create(tag)
-//        );
-//        release.name(issue.title());
-//        release.body(String.format("See #%d", issue.number()));
-        Logger.info(this, "tag %s commented", tag);
+        final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
+        if (rels.exists(tag)) {
+            final Release.Smart rel = new Release.Smart(rels.find(tag));
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
+                    tag
+                )
+            );
+            rel.body(
+                String.format(
+                    "%s\n\nSee also #%d",
+                    rel.body(), issue.number()
+                )
+            );
+            Logger.info(this, "duplicate tag %s commented", tag);
+        } else {
+            final Release.Smart rel = new Release.Smart(rels.create(tag));
+            rel.name(issue.title());
+            rel.body(String.format("See #%d", issue.number()));
+            Logger.info(this, "tag %s created and commented", tag);
+        }
         return new Directives();
     }
 
