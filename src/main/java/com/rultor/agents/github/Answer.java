@@ -93,20 +93,35 @@ public final class Answer {
             ++mine;
         }
         if (mine < Answer.MAX) {
-            this.comment.issue().comments().post(
-                String.format(
-                    "> %s\n\n@%s %s",
-                    this.comment.body().replace("\n", " "),
-                    this.comment.author().login(),
-                    Logger.format(msg, args)
-                )
-            );
+            issue.comments().post(this.msg(Logger.format(msg, args)));
         } else {
             Logger.error(
                 this, "too many (%d) comments from %s already in %s#%d",
                 mine, self, issue.repo().coordinates(), issue.number()
             );
         }
+    }
+
+    /**
+     * Make a message to post.
+     * @param text The text
+     * @return Text to post
+     */
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    private String msg(final String text) {
+        String msg;
+        try {
+            msg = String.format(
+                "> %s\n\n@%s %s",
+                this.comment.body().replace("\n", " "),
+                this.comment.author().login(),
+                text
+            );
+            // @checkstyle IllegalCatchCheck (1 line)
+        } catch (final Throwable ex) {
+            msg = text;
+        }
+        return msg;
     }
 
 }
