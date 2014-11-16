@@ -15,6 +15,9 @@ if [ -z "${scripts}" ]; then
   elif [ -e "build.xml" ]; then
     scripts=( 'ant' )
     echo "build.xml is here, I guess it is Apache Ant"
+  elif [[ -e "build.sbt" || -e "project/Build.scala" ]]; then
+    scripts=( 'sbt' )
+    echo "build.sbt or project/Build.scala is here, I guess it is Scala SBT"
   else
     echo "I can't guess your build automation tool, see http://doc.rultor.com/basics.html"
     exit -1
