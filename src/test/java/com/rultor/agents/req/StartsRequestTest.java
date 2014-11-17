@@ -155,7 +155,7 @@ public final class StartsRequestTest {
                             "DOCKER-5: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
                         )
                     )
-                    .with(Matchers.containsString("adduser"))
+                    .with(Matchers.containsString("useradd"))
             )
         );
     }
@@ -350,7 +350,7 @@ public final class StartsRequestTest {
         );
         MatcherAssert.assertThat(
             this.exec(talk),
-            Matchers.not(Matchers.containsString("adduser"))
+            Matchers.not(Matchers.containsString("useradd"))
         );
     }
 
