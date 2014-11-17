@@ -163,7 +163,7 @@
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>                             <span class="jxr_string">"DOCKER-5: --env=MAVEN_OPTS=-Xmx2g -Xms1g"</span>
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>                         )
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>                     )
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>                     .with(Matchers.containsString(<span class="jxr_string">"adduser"</span>))
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>                     .with(Matchers.containsString(<span class="jxr_string">"useradd"</span>))
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>             )
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>         );
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>     }
@@ -358,7 +358,7 @@
 <a class="jxr_linenumber" name="L350" href="#L350">350</a>         );
 <a class="jxr_linenumber" name="L351" href="#L351">351</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="L352" href="#L352">352</a>             <strong class="jxr_keyword">this</strong>.exec(talk),
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>             Matchers.not(Matchers.containsString(<span class="jxr_string">"adduser"</span>))
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>             Matchers.not(Matchers.containsString(<span class="jxr_string">"useradd"</span>))
 <a class="jxr_linenumber" name="L354" href="#L354">354</a>         );
 <a class="jxr_linenumber" name="L355" href="#L355">355</a>     }
 <a class="jxr_linenumber" name="L356" href="#L356">356</a> 
