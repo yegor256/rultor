@@ -78,7 +78,7 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../com/rultor/agents/github/Req.html">Req</a> understand(<strong class="jxr_keyword">final</strong> Comment.Smart comment,
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">final</strong> URI home) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>          comment.issue().repo().github().entry().uri()
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>              .path(<span class="jxr_string">"/users/following"</span>)
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>              .path(<span class="jxr_string">"/user/following"</span>)
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>              .path(comment.author().login())
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>              .back()
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>              .method(Request.PUT)
