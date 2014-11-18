@@ -158,10 +158,6 @@ public final class StartsTalks implements SuperAgent {
                 .set(Integer.toString(issue.number()))
         );
         talk.active(true);
-        this.github.entry().uri()
-            .path("/users/follow").queryParam("target", talk.name())
-            .back().method(Request.POST)
-            .fetch();
         Logger.info(
             this, "talk %s#%d activated as %s",
             coords, issue.number(), name
