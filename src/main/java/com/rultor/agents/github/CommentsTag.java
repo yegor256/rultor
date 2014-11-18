@@ -100,16 +100,16 @@ public final class CommentsTag extends AbstractAgent {
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
-            issue.comments().post(
-                String.format(
-                    CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
-                    tag
-                )
-            );
             rel.body(
                 String.format(
                     "%s\n\nSee also #%d",
                     rel.body(), issue.number()
+                )
+            );
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
+                    tag
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
