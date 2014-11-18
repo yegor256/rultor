@@ -30,6 +30,7 @@
 package com.rultor.agents.twitter;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Quietly;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -86,6 +87,7 @@ public final class OAuthTwitter implements Twitter {
     }
 
     @Override
+    @Quietly
     public void post(final String msg) throws IOException {
         final TwitterFactory factory = new TwitterFactory();
         final twitter4j.Twitter twitter = factory.getInstance();
