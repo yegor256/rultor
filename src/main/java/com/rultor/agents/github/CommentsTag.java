@@ -38,6 +38,7 @@ import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
+import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
@@ -61,6 +62,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.31
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -116,7 +118,12 @@ public final class CommentsTag extends AbstractAgent {
             final Date prev = this.previous(repo);
             final Release.Smart rel = new Release.Smart(rels.create(tag));
             rel.name(issue.title());
-            rel.body(this.body(repo, prev, rel.publishedAt()));
+            rel.body(
+                String.format(
+                    "See #%d, release log:\n\n%s",
+                    issue.number(), this.log(repo, prev, rel.publishedAt())
+                )
+            );
             Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
@@ -130,23 +137,32 @@ public final class CommentsTag extends AbstractAgent {
      * @return Release body text.
      * @throws IOException In case of problem communicating with git.
      */
-    private String body(final Repo repo, final Date prev, final Date current)
+    private String log(final Repo repo, final Date prev, final Date current)
         throws IOException {
         final DateFormat format = new SimpleDateFormat(
             "yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         final Collection<String> lines = new LinkedList<String>();
-        lines.add("Following commits included in this release:");
         final ImmutableMap<String, String> params =
             new ImmutableMap.Builder<String, String>()
                 .put("since", format.format(prev))
                 .put("until", format.format(current))
                 .build();
-        for (final RepoCommit commit : repo.commits().iterate(params)) {
-            lines.add(commit.sha());
+        final Iterable<RepoCommit.Smart> commits = new Smarts<RepoCommit.Smart>(
+            repo.commits().iterate(params)
+        );
+        for (final RepoCommit.Smart commit : commits) {
+            lines.add(
+                String.format(
+                    " * %s by @%s: %s",
+                    commit.sha(),
+                    commit.json().getJsonObject("author").getString("login"),
+                    commit.message()
+                )
+            );
         }
-        return Joiner.on("\n").join(lines);
+        return Joiner.on('\n').join(lines);
     }
 
     /**
