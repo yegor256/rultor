@@ -43,8 +43,7 @@ EOT
 else
   cat <<EOT >> entry.sh
   shopt -s dotglob
-  adduser --disabled-password --gecos '' r
-  adduser r sudo
+  useradd -m -G sudo r
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
   cp -R /root/* /home/r
   cp -R ./* /home/r

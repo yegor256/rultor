@@ -35,6 +35,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
+import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.log.Logger;
@@ -47,6 +48,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -64,6 +66,12 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "github")
 public final class CommentsTag extends AbstractAgent {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * Github.
@@ -87,14 +95,30 @@ public final class CommentsTag extends AbstractAgent {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
-        final Repo repo = issue.repo();
-        final Date prev = this.previous(repo);
-        final Release.Smart release = new Release.Smart(
-            repo.releases().create(tag)
-        );
-        release.name(issue.title());
-        release.body(this.body(repo, prev, release.publishedAt()));
-        Logger.info(this, "tag %s commented", tag);
+        final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
+        if (rels.exists(tag)) {
+            final Release.Smart rel = new Release.Smart(rels.find(tag));
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
+                    tag
+                )
+            );
+            rel.body(
+                String.format(
+                    "%s\n\nSee also #%d",
+                    rel.body(), issue.number()
+                )
+            );
+            Logger.info(this, "duplicate tag %s commented", tag);
+        } else {
+            final Repo repo = issue.repo();
+            final Date prev = this.previous(repo);
+            final Release.Smart rel = new Release.Smart(rels.create(tag));
+            rel.name(issue.title());
+            rel.body(this.body(repo, prev, rel.publishedAt()));
+            Logger.info(this, "tag %s created and commented", tag);
+        }
         return new Directives();
     }
 

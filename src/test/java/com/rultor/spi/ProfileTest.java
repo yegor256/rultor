@@ -36,7 +36,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 /**
- * Tests for ${@link Profile}.
+ * Tests for {@link Profile}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
