@@ -70,7 +70,7 @@ public final class QnFollow implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         comment.issue().repo().github().entry().uri()
-            .path("/users/following")
+            .path("/user/following")
             .path(comment.author().login())
             .back()
             .method(Request.PUT)
