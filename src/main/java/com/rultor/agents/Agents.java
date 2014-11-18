@@ -51,6 +51,7 @@ import com.rultor.agents.github.qtn.QnAlone;
 import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnConfig;
 import com.rultor.agents.github.qtn.QnDeploy;
+import com.rultor.agents.github.qtn.QnFollow;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
@@ -168,11 +169,13 @@ public final class Agents {
                                         new QnIfContains("status", new QnStatus(talk)),
                                         new QnIfContains("version", new QnVersion()),
                                         new QnIfContains("hello", new QnHello()),
-                                        new QnIfCollaborator(
-                                            new QnAlone(
-                                                talk, locks,
-                                                new Question.FirstOf(
-                                                    this.commands(profile)
+                                        new QnFollow(
+                                            new QnIfCollaborator(
+                                                new QnAlone(
+                                                    talk, locks,
+                                                    new Question.FirstOf(
+                                                        this.commands(profile)
+                                                    )
                                                 )
                                             )
                                         )
