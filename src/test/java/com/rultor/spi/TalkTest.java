@@ -56,10 +56,10 @@ public final class TalkTest {
                 .add("github-repo").set("test/test").up()
                 .add("github-issue").set("123").up()
                 .add("href").set("#").up().up()
-                .add("daemon").add("script").set("hello!").up()
+                .add("daemon").attr("id", "abc")
+                .add("script").set("hello!").up()
                 .add("title").set("some title here \u20ac").up()
                 .add("dir").set("C:\\Windows32\\Temp_One").up()
-
         );
         MatcherAssert.assertThat(
             talk.read(),

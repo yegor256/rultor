@@ -42,7 +42,7 @@
             <xs:element name="dir" minOccurs="0">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
-                        <xs:pattern value="/[0-9a-zA-Z/+\.-]+"/>
+                        <xs:pattern value="[0-9a-zA-Z_\\:/+\.-]+"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
