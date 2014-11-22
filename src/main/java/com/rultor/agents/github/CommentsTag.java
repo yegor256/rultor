@@ -157,7 +157,7 @@ public final class CommentsTag extends AbstractAgent {
                 String.format(
                     " * %s by @%s: %s",
                     commit.sha(),
-                    commit.json().getJsonObject("author").get("login"),
+                    commit.json().getJsonObject("author").get("email"),
                     commit.message()
                 )
             );
