@@ -174,8 +174,8 @@ public final class StartsDaemon extends AbstractAgent {
             this.gpg(shell, dir);
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
-                "cat << EOT\n%[exception]s\nEOT\nexit -1",
-                ex
+                "cat << EOT\n%s\nEOT\nexit -1",
+                ex.getLocalizedMessage()
             );
         }
         return script;
