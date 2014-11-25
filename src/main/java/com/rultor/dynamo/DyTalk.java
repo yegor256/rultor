@@ -126,7 +126,7 @@ public final class DyTalk implements Talk {
             }
             final String body = DyTalk.CLEANUP.transform(
                 new StrictXML(new XMLDocument(node), Talk.SCHEMA)
-            ).toString();
+            ).toString().replaceAll("\\/s+", "");
             if (body.length() > Tv.FIFTY * Tv.THOUSAND) {
                 throw new IllegalArgumentException("XML is too big");
             }
