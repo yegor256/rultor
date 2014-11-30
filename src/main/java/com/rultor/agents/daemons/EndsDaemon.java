@@ -30,6 +30,9 @@
 package com.rultor.agents.daemons;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
@@ -50,11 +53,22 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @todo #567 Add a test for log highlights.
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public final class EndsDaemon extends AbstractAgent {
+
+    /**
+     * Prefix for log highlights.
+     */
+    private static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
+
+    /**
+     * Join shell commands with this string.
+     */
+    private static final String SHELL_JOINER = " && ";
 
     /**
      * Ctor.
@@ -68,7 +82,7 @@ public final class EndsDaemon extends AbstractAgent {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Shell.Empty(shell).exec(
-            Joiner.on(" && ").join(
+            Joiner.on(EndsDaemon.SHELL_JOINER).join(
                 String.format("dir=%s ", SSH.escape(dir)),
                 "if [ ! -e \"${dir}/pid\" ]; then exit 1; fi",
                 "pid=$(cat \"${dir}/pid\")",
@@ -93,21 +107,41 @@ public final class EndsDaemon extends AbstractAgent {
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
+        final String dirasgn = String.format("dir=%s", SSH.escape(dir));
         final int exit = Integer.parseInt(
             new Shell.Plain(new Shell.Safe(shell)).exec(
-                Joiner.on(" &&  ").join(
-                    String.format("dir=%s", SSH.escape(dir)),
+                Joiner.on(EndsDaemon.SHELL_JOINER).join(
+                    dirasgn,
                     "if [ ! -e \"${dir}/status\" ]; then echo 127; exit 0; fi",
                     "cat \"${dir}/status\""
                 )
             ).trim()
+        );
+        final String stdout = Joiner.on("\n").join(
+            Iterables.filter(
+                Splitter.on(System.lineSeparator()).split(
+                    new Shell.Plain(new Shell.Safe(shell)).exec(
+                        Joiner.on(EndsDaemon.SHELL_JOINER).join(
+                            dirasgn,
+                            "cat \"${dir}/stdout\""
+                        )
+                    )
+                ),
+                new Predicate<String>() {
+                    @Override
+                    public boolean apply(final String input) {
+                        return input.startsWith(EndsDaemon.HIGHLIGHTS_PREFIX);
+                    }
+                }
+            )
         );
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives()
             .xpath("/talk/daemon")
             .strict(1)
             .add("ended").set(new Time().iso()).up()
-            .add("code").set(Integer.toString(exit));
+            .add("code").set(Integer.toString(exit)).up()
+            .add("highlights").set(stdout);
     }
 
 }
