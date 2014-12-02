@@ -175,10 +175,32 @@ final class GithubProfile implements Profile {
                 )
             );
         }
+        return buildAssetStream(rpo, matcher.group(2));
+    }
+
+    /**
+     * Build the InputStream for the given filename in the given Repository,
+     * dealing with errors.
+     * @param rpo Repository where the file is.
+     * @param filename Name of the file.
+     * @return An InputStream with the Base64 contents of the file.
+     * @throws IOException If something goes wrong.
+     */
+    private InputStream buildAssetStream(final Repo rpo, final String filename)
+        throws IOException {
+        if (!rpo.contents().exists(filename, GithubProfile.BRANCH)) {
+            throw new Profile.ConfigException(
+                String.format(
+                    "`%s` on `%s` does not exist.",
+                    filename,
+                    GithubProfile.BRANCH
+                )
+            );
+        }
         return new ByteArrayInputStream(
             Base64.decodeBase64(
                 new Content.Smart(
-                    rpo.contents().get(matcher.group(2))
+                    rpo.contents().get(filename)
                 ).content()
             )
         );
