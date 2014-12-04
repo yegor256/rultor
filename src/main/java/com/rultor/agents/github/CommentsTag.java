@@ -129,7 +129,7 @@ public final class CommentsTag extends AbstractAgent {
                     // @checkstyle LineLength (1 line)
                     "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
                     issue.number(), this.log(repo, prev, rel.publishedAt()),
-                    Manifests.read("Rultor-Revision"), home
+                    Manifests.read("Rultor-Version"), home
                 )
             );
             Logger.info(this, "tag %s created and commented", tag);
