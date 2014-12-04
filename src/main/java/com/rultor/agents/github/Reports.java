@@ -64,6 +64,11 @@ public final class Reports extends AbstractAgent {
         ResourceBundle.getBundle("phrases");
 
     /**
+     * Log highligts text node.
+     */
+    private static final String HIGHLIGHTS_TEXT = "highlights/text()";
+
+    /**
      * Github.
      */
     private final transient Github github;
@@ -95,10 +100,20 @@ public final class Reports extends AbstractAgent {
         } else {
             pattern = "Reports.failure";
         }
+        final String highlights;
+        if (req.xpath(Reports.HIGHLIGHTS_TEXT).isEmpty()) {
+            highlights = "";
+        } else {
+            highlights = String.format(
+                Reports.PHRASES.getString("Reports.highlights"),
+                req.xpath(Reports.HIGHLIGHTS_TEXT).get(0)
+            );
+        }
         final String msg = Logger.format(
             Reports.PHRASES.getString(pattern),
             home.toASCIIString(),
-            Long.parseLong(req.xpath("msec/text()").get(0))
+            Long.parseLong(req.xpath("msec/text()").get(0)),
+            highlights
         );
         final int number = Integer.parseInt(hash);
         new Answer(this.origin(issue, number)).post(msg);
