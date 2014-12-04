@@ -50,6 +50,10 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public final class EndsRequest extends AbstractAgent {
+    /**
+     * Log highligts text node.
+     */
+    private static final String HIGHLIGHTS_TEXT = "highlights/text()";
 
     /**
      * Ctor.
@@ -69,9 +73,14 @@ public final class EndsRequest extends AbstractAgent {
             - new Time(daemon.xpath("started/text()").get(0)).msec();
         final boolean success = code == 0;
         Logger.info(this, "request finished: %b", success);
-        return new Directives().xpath("/talk/request")
+        final Directives dirs = new Directives().xpath("/talk/request")
             .add("msec").set(Long.toString(msec)).up()
             .add("success").set(Boolean.toString(success));
+        if (!daemon.xpath(EndsRequest.HIGHLIGHTS_TEXT).isEmpty()) {
+            dirs.up().add("highlights")
+                .set(daemon.xpath(EndsRequest.HIGHLIGHTS_TEXT).get(0));
+        }
+        return dirs;
     }
 
 }
