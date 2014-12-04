@@ -51,6 +51,7 @@ import org.junit.Test;
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class GithubProfileTest {
 
     /**
@@ -151,13 +152,13 @@ public final class GithubProfileTest {
         );
         new GithubProfile(repo).assets();
     }
-    
+
     /**
      * GithubProfile should throw a ConfigException if some asset file doesn't
      * exist.
      * @throws Exception In case of error.
      */
-    @Test(expected=Profile.ConfigException.class)
+    @Test(expected = Profile.ConfigException.class)
     public void testAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             Joiner.on('\n').join(

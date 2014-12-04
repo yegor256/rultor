@@ -41,6 +41,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import java.io.IOException;
@@ -121,8 +122,9 @@ public final class CommentsTag extends AbstractAgent {
             rel.name(issue.title());
             rel.body(
                 String.format(
-                    "See #%d, release log:\n\n%s",
-                    issue.number(), this.log(repo, prev, rel.publishedAt())
+                    "See #%d, release log:\n\n%s\n\nreleased by rultor.com %s",
+                    issue.number(), this.log(repo, prev, rel.publishedAt()),
+                    Manifests.read("Rultor-Revision")
                 )
             );
             Logger.info(this, "tag %s created and commented", tag);

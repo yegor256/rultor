@@ -48,6 +48,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.manifests.ServletMfs;
 import com.jcabi.urn.URN;
 import com.rultor.Toggles;
 import com.rultor.agents.Agents;
@@ -109,7 +110,7 @@ public final class Lifespan implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
         final Talks talks;
         try {
-            Manifests.append(event.getServletContext());
+            Manifests.DEFAULT.append(new ServletMfs(event.getServletContext()));
             talks = new DyTalks(
                 this.dynamo(), this.sttc().counters().get("rt-talk")
             );

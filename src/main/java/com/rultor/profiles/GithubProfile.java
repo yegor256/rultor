@@ -175,7 +175,7 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        return buildAssetStream(rpo, matcher.group(2));
+        return this.buildAssetStream(rpo, matcher.group(2));
     }
 
     /**
