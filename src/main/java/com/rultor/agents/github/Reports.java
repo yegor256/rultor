@@ -92,8 +92,7 @@ public final class Reports extends AbstractAgent {
         final boolean success = Boolean.parseBoolean(
             req.xpath("success/text()").get(0)
         );
-        final String hash = req.xpath("@id").get(0);
-        final URI home = new Home(xml, hash).uri();
+        final URI home = new Home(xml).uri();
         final String pattern;
         if (success) {
             pattern = "Reports.success";
@@ -115,7 +114,7 @@ public final class Reports extends AbstractAgent {
             Long.parseLong(req.xpath("msec/text()").get(0)),
             highlights
         );
-        final int number = Integer.parseInt(hash);
+        final int number = Integer.parseInt(req.xpath("@id").get(0));
         new Answer(this.origin(issue, number)).post(msg);
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
