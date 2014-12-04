@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.daemons;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
@@ -44,6 +45,7 @@ import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -53,7 +55,9 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @todo #567 Add a test for log highlights.
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @todo @567 Refactor this class to use less objects and remove checkstyle
+ *  exception above.
  */
 @Immutable
 @ToString
@@ -63,7 +67,7 @@ public final class EndsDaemon extends AbstractAgent {
     /**
      * Prefix for log highlights.
      */
-    private static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
+    public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
 
     /**
      * Join shell commands with this string.
@@ -118,19 +122,30 @@ public final class EndsDaemon extends AbstractAgent {
             ).trim()
         );
         final String stdout = Joiner.on("\n").join(
-            Iterables.filter(
-                Splitter.on(System.lineSeparator()).split(
-                    new Shell.Plain(new Shell.Safe(shell)).exec(
-                        Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                            dirasgn,
-                            "cat \"${dir}/stdout\""
+            Iterables.transform(
+                Iterables.filter(
+                    Splitter.on(System.lineSeparator()).split(
+                        new Shell.Plain(new Shell.Safe(shell)).exec(
+                            Joiner.on(EndsDaemon.SHELL_JOINER).join(
+                                dirasgn,
+                                "cat \"${dir}/stdout\""
+                            )
                         )
-                    )
-                ),
-                new Predicate<String>() {
+                    ),
+                    new Predicate<String>() {
+                        @Override
+                        public boolean apply(final String input) {
+                            return input.startsWith(
+                                EndsDaemon.HIGHLIGHTS_PREFIX
+                            );
+                        }
+                    }
+                ), new Function<String, String>() {
                     @Override
-                    public boolean apply(final String input) {
-                        return input.startsWith(EndsDaemon.HIGHLIGHTS_PREFIX);
+                    public String apply(final String str) {
+                        return StringUtils.removeStart(
+                            str, EndsDaemon.HIGHLIGHTS_PREFIX
+                        );
                     }
                 }
             )
