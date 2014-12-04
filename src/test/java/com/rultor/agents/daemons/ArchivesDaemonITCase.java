@@ -89,7 +89,9 @@ public final class ArchivesDaemonITCase {
                 .add("login").set(sshd.login()).up()
                 .add("key").set(sshd.key()).up().up()
         );
-        final Agent agent = new ArchivesDaemon(new MkBucket("test"));
+        final Agent agent = new ArchivesDaemon(
+            new MkBucket(this.temp.newFolder(), "test")
+        );
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
