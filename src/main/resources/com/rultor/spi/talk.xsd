@@ -48,6 +48,7 @@
             </xs:element>
             <xs:element name="ended" type="xs:dateTime" minOccurs="0"/>
             <xs:element name="code" type="xs:integer" minOccurs="0"/>
+            <xs:element name="highlights" type="xs:string" minOccurs="0"/>
         </xs:all>
         <xs:attribute name="id" type="hash" use="required"/>
     </xs:complexType>
@@ -64,6 +65,7 @@
         <xs:all>
             <xs:element name="success" type="xs:boolean" minOccurs="0"/>
             <xs:element name="msec" type="xs:integer" minOccurs="0"/>
+            <xs:element name="highlights" type="xs:string" minOccurs="0"/>
             <xs:element name="type">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">

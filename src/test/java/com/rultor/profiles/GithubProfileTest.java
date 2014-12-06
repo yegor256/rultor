@@ -51,6 +51,7 @@ import org.junit.Test;
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class GithubProfileTest {
 
     /**
@@ -150,6 +151,36 @@ public final class GithubProfileTest {
             )
         );
         new GithubProfile(repo).assets();
+    }
+
+    /**
+     * GithubProfile should throw a ConfigException if some asset file doesn't
+     * exist.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void testAssetNotFound() throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            Joiner.on('\n').join(
+                "assets:",
+                "  test.xml: jeff/test1#test.xmls",
+                "merge:",
+                "  script: hello!"
+            )
+        );
+        final String yaml = "friends:\n  - jeff/test2";
+        repo.github()
+            .repos()
+            .get(new Coordinates.Simple("jeff/test1"))
+            .contents().create(
+                Json.createObjectBuilder()
+                    .add("path", ".rultor.yml")
+                    .add("message", "rultor config")
+                    .add("content", Base64.encodeBase64String(yaml.getBytes()))
+                    .build()
+            );
+        final Profile profile = new GithubProfile(repo);
+        profile.assets();
     }
 
     /**

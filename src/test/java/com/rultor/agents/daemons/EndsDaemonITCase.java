@@ -30,30 +30,28 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
-import com.jcabi.s3.mock.MkBucket;
 import com.jcabi.ssh.SSHD;
 import com.rultor.Time;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.File;
+import java.io.IOException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.xembly.Directives;
 
 /**
- * Tests for ${@link ArchivesDaemon}.
+ * Tests for {@link EndsDaemon}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
- * @since 1.23
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class ArchivesDaemonITCase {
-
+public final class EndsDaemonITCase {
     /**
      * Temp directory.
      * @checkstyle VisibilityModifierCheck (5 lines)
@@ -62,45 +60,46 @@ public final class ArchivesDaemonITCase {
     public final transient TemporaryFolder temp = new TemporaryFolder();
 
     /**
-     * ArchivesDaemon can archive a daemon.
-     * @throws Exception In case of error.
+     * EndsDaemon should store highlighted stdout entry.
+     * @throws IOException In case of error.
      */
     @Test
-    public void archivesDaemon() throws Exception {
+    public void parsesHighlightedStdout() throws IOException {
+        Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
         final SSHD sshd = new SSHD(this.temp.newFolder());
         final int port = sshd.port();
         final File home = new File(sshd.home(), "test");
         FileUtils.forceMkdir(home);
-        FileUtils.write(new File(home, "stdout"), "some output");
+        final String hlight = "text output";
+        final String output = String.format(
+            "some random\n%s%s\nother", EndsDaemon.HIGHLIGHTS_PREFIX, hlight
+        );
+        FileUtils.write(new File(home.getAbsolutePath(), "stdout"), output);
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon")
+                // @checkstyle MultipleStringLiterals (1 line)
                 .attr("id", "abcd")
                 .add("title").set("merge").up()
-                .add("script").set("empty").up()
-                .add("dir").set(home.getAbsolutePath()).up()
-                .add("code").set("-7").up()
+                .add("script").set("ls").up()
                 .add("started").set(new Time().iso()).up()
-                .add("ended").set(new Time().iso()).up().up()
+                .add("dir").set(home.getAbsolutePath()).up()
+                .up()
                 .add("shell").attr("id", "a1b2c3e3")
                 .add("host").set("localhost").up()
                 .add("port").set(Integer.toString(port)).up()
                 .add("login").set(sshd.login()).up()
                 .add("key").set(sshd.key()).up().up()
         );
-        final Agent agent = new ArchivesDaemon(
-            new MkBucket(this.temp.newFolder(), "test")
-        );
+        final Agent agent = new EndsDaemon();
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPaths(
-                "/talk[not(daemon)]",
-                "/talk/archive/log[@id='abcd' and starts-with(.,'s3://test/')]",
-                "/talk/archive/log[@id='abcd' and @title]"
+                "/talk/daemon/highlights",
+                "/talk/daemon/highlights[.='text output']"
             )
         );
     }
-
 }

@@ -9,4 +9,4 @@ env:
 before_install:
   - unset GEM_PATH
 script:
-  - mvn clean install -Pqulice --batch-mode --errors
+  - mvn clean install -Pqulice --errors

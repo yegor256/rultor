@@ -60,6 +60,14 @@ public final class Home {
     /**
      * Ctor.
      * @param talk Talk
+     */
+    public Home(final XML talk) {
+        this(talk, talk.xpath("/talk/request/@id").get(0));
+    }
+
+    /**
+     * Ctor.
+     * @param talk Talk
      * @param hsh Hash
      */
     public Home(final XML talk, final String hsh) {

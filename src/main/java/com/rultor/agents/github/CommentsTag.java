@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Commit;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
@@ -40,9 +41,12 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.daemons.Home;
 import java.io.IOException;
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -67,6 +71,7 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "github")
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class CommentsTag extends AbstractAgent {
 
     /**
@@ -98,12 +103,13 @@ public final class CommentsTag extends AbstractAgent {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
+        final URI home = new Home(xml).uri();
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
                 String.format(
-                    "%s\n\nSee also #%d",
-                    rel.body(), issue.number()
+                    "%s\n\nSee also #%d and [build log](%s)",
+                    rel.body(), issue.number(), home
                 )
             );
             issue.comments().post(
@@ -120,8 +126,10 @@ public final class CommentsTag extends AbstractAgent {
             rel.name(issue.title());
             rel.body(
                 String.format(
-                    "See #%d, release log:\n\n%s",
-                    issue.number(), this.log(repo, prev, rel.publishedAt())
+                    // @checkstyle LineLength (1 line)
+                    "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
+                    issue.number(), this.log(repo, prev, rel.publishedAt()),
+                    Manifests.read("Rultor-Version"), home
                 )
             );
             Logger.info(this, "tag %s created and commented", tag);
@@ -153,11 +161,12 @@ public final class CommentsTag extends AbstractAgent {
             repo.commits().iterate(params)
         );
         for (final RepoCommit.Smart commit : commits) {
+            final Commit cmt = repo.git().commits().get(commit.sha());
             lines.add(
                 String.format(
                     " * %s by @%s: %s",
                     commit.sha(),
-                    commit.json().getJsonObject("author").get("login"),
+                    cmt.json().getJsonObject("author").get("login"),
                     commit.message()
                 )
             );
