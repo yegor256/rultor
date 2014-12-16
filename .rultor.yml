@@ -9,6 +9,9 @@ assets:
 env:
   MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
 
+architect:
+  - yegor256
+
 install: |
   sudo apt-get install bsdmainutils
   sudo gem install pdd
