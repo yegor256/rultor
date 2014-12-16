@@ -12,11 +12,24 @@ root directory of your Github repository. There is no control or management
 panel. Everything you want to say to Rultor is placed into your `.rultor.yml`
 file.
 
-This page contains a complete reference of commands in alphabetic order.
+This page contains a complete reference of YAML instructions in alphabetic order.
 
 BTW, you can see a real-life configuration in
 [jcabi](https://github.com/jcabi/jcabi) project:
 [`rultor.yml`](https://github.com/jcabi/jcabi/blob/master/.rultor.yml).
+
+## Architect
+
+You may wish to define a role of an architect in your project,
+who will supervise all merge/release/deploy commands. No command
+of that kind will be executed without his confirmation:
+
+{% highlight yaml %}
+architect:
+  - yegor256
+{% endhighlight %}
+
+This is enough to tell Rultor to ask for confirmation before running a build.
 
 ## Assets
 

@@ -49,6 +49,7 @@ import com.rultor.agents.github.Understands;
 import com.rultor.agents.github.UnlocksRepo;
 import com.rultor.agents.github.qtn.QnAlone;
 import com.rultor.agents.github.qtn.QnAskedBy;
+import com.rultor.agents.github.qtn.QnByArchitect;
 import com.rultor.agents.github.qtn.QnConfig;
 import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnFollow;
@@ -173,9 +174,7 @@ public final class Agents {
                                             new QnIfCollaborator(
                                                 new QnAlone(
                                                     talk, locks,
-                                                    new Question.FirstOf(
-                                                        this.commands(profile)
-                                                    )
+                                                    this.commands(profile)
                                                 )
                                             )
                                         )
@@ -229,38 +228,44 @@ public final class Agents {
      * @param profile Profile to uuse
      * @return Array of questions.
      */
-    private Array<Question> commands(final Profile profile) {
-        return new Array<Question>(
-            new QnIfContains(
-                "merge",
-                new QnAskedBy(
-                    profile,
-                    Agents.commanders("merge"),
-                    new QnMerge()
-                )
-            ),
-            new QnIfContains(
-                "deploy",
-                new QnAskedBy(
-                    profile,
-                    Agents.commanders("deploy"),
-                    new QnDeploy()
-                )
-            ),
-            new QnIfContains(
-                "release",
-                new QnAskedBy(
-                    profile,
-                    Agents.commanders("release"),
-                    new QnRelease()
-                )
-            ),
-            new QnIfContains(
-                "stop",
-                new QnAskedBy(
-                    profile,
-                    Agents.commanders("stop"),
-                    new QnStop()
+    private Question commands(final Profile profile) {
+        return new QnByArchitect(
+            profile,
+            "/p/entry[@key='architect']/item/text()",
+            new Question.FirstOf(
+                new Array<Question>(
+                    new QnIfContains(
+                        "merge",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("merge"),
+                            new QnMerge()
+                        )
+                    ),
+                    new QnIfContains(
+                        "deploy",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("deploy"),
+                            new QnDeploy()
+                        )
+                    ),
+                    new QnIfContains(
+                        "release",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("release"),
+                            new QnRelease()
+                        )
+                    ),
+                    new QnIfContains(
+                        "stop",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("stop"),
+                            new QnStop()
+                        )
+                    )
                 )
             )
         );
