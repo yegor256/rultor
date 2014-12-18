@@ -30,6 +30,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.agents.IndexesRequests;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
 import org.junit.Ignore;
@@ -37,7 +38,7 @@ import org.junit.Test;
 import org.xembly.Directives;
 
 /**
- * Tests for {@link IndexesRequests}.
+ * Tests for {@link com.rultor.agents.IndexesRequests}.
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
