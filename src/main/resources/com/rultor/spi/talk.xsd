@@ -100,6 +100,7 @@
             </xs:element>
         </xs:all>
         <xs:attribute name="id" type="hash" use="required"/>
+        <xs:attribute name="index" type="xs:integer" use="optional"/>
     </xs:complexType>
     <xs:complexType name="wire">
         <xs:all>
@@ -117,6 +118,7 @@
                         <xs:extension base="xs:anyURI">
                             <xs:attribute name="id" type="hash" use="required"/>
                             <xs:attribute name="title" type="xs:string" use="required"/>
+                            <xs:attribute name="index" type="xs:integer" use="optional"/>
                         </xs:extension>
                     </xs:simpleContent>
                 </xs:complexType>
