@@ -11,6 +11,7 @@ env:
 
 architect:
   - yegor256
+  - alex-palevsky
 
 install: |
   sudo apt-get install bsdmainutils
