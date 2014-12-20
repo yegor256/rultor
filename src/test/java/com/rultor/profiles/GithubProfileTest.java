@@ -51,6 +51,7 @@ import org.junit.Test;
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class GithubProfileTest {
 
     /**
@@ -120,6 +121,55 @@ public final class GithubProfileTest {
             )
         );
         new GithubProfile(repo).assets();
+    }
+
+    /**
+     * GithubProfile can throw if asset contains username with underscore.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            Joiner.on('\n').join(
+                "assets: ",
+                "  something.xml: invalid_username/test1#test.xml"
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
+     * GithubProfile can accept asset from repo name that contains a dot.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsAssetsFromDotRepo() throws Exception {
+        final Github github = new MkGithub("jeff");
+        final String name = "te.st";
+        final Repo repo = github.repos().create(
+            Json.createObjectBuilder().add("name", name).build()
+        );
+        repo.contents().create(
+            Json.createObjectBuilder()
+                .add("path", ".rultor.yml")
+                .add("message", "just test")
+                .add(
+                    "content",
+                    Base64.encodeBase64String(
+                        Joiner.on('\n').join(
+                            "assets: ",
+                            String.format(
+                                "  something.xml: jeff/%s#.rultor.yml", name
+                            ),
+                            "friends:", String.format("  - jeff/%s", name)
+                        ).getBytes()
+                    )
+                ).build()
+        );
+        MatcherAssert.assertThat(
+            new GithubProfile(repo).assets().entrySet(),
+            Matchers.not(Matchers.emptyIterable())
+        );
     }
 
     /**

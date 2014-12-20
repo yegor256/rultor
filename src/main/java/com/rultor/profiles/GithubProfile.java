@@ -82,7 +82,7 @@ final class GithubProfile implements Profile {
      * Path pattern.
      */
     private static final Pattern PATH = Pattern.compile(
-        "(\\w[\\w\\-]+/[\\w\\.\\-]+)#(.+)"
+        "([a-zA-Z_0-9][a-zA-Z0-9-]*/[a-zA-Z_0-9.-]+)#(.+)"
     );
 
     /**
