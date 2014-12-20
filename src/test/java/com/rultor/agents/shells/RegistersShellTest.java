@@ -30,8 +30,13 @@
 package com.rultor.agents.shells;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.xembly.Directives;
@@ -51,8 +56,24 @@ public final class RegistersShellTest {
      */
     @Test
     public void registersShell() throws Exception {
+        final String host = "local";
+        final int port = 221;
+        final String key = "/com/rultor/agents/rultor.key";
+        final String login = "john";
         final Agent agent = new RegistersShell(
-            "localhost", 1, "user", "key"
+            new Profile.Fixed(
+                new XMLDocument(
+                    StringUtils.join(
+                        "<p><entry key='ssh'>",
+                        String.format("<entry key='host'>%s</entry>", host),
+                        String.format("<entry key='port'>%d</entry>", port),
+                        String.format("<entry key='key'>%s</entry>", key),
+                        String.format("<entry key='login'>%s</entry>", login),
+                        "</entry></p>"
+                    )
+                )
+            ),
+            "localhost", 22, "rultor", ""
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -64,7 +85,18 @@ public final class RegistersShellTest {
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
-            XhtmlMatchers.hasXPath("/talk/shell[@id='abcd']/port")
+            XhtmlMatchers.hasXPaths(
+                String.format("/talk/shell[@id='abcd']/host[.='%s']", host),
+                String.format("/talk/shell[@id='abcd']/port[.='%d']", port),
+                String.format("/talk/shell[@id='abcd']/login[.='%s']", login),
+                String.format(
+                    "/talk/shell[@id='abcd']/key[.='%s']",
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream(key),
+                        CharEncoding.UTF_8
+                    )
+                )
+            )
         );
     }
 

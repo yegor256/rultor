@@ -187,6 +187,7 @@ public final class Agents {
                 ),
                 new StartsRequest(profile),
                 new RegistersShell(
+                    profile,
                     // @checkstyle MagicNumber (1 line)
                     "b1.rultor.com", 22,
                     "rultor",
