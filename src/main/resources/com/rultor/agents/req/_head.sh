@@ -80,12 +80,7 @@ function docker_when_possible {
   done
   cd ..
   if [ -n "${directory}" ]; then
-    # @todo #633 For some reason the pipes inside use_image are giving non-zero
-    #  exit code although the result filename is correct. Find out why it is
-    #  happening and remove unsetting of pipefail below
-    set +o pipefail
-    use_image="yegor256/rultor-$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 8)"
-    set -o pipefail
+    use_image="yegor256/rultor-$(dd if=/dev/urandom bs=10k count=1 2>/dev/null | tr -cd 'a-z0-9' | head -c 8)"
     docker build "${directory}" -t "${use_image}"
   else
     use_image="${image}"
