@@ -31,6 +31,7 @@ package com.rultor.agents.req;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
@@ -41,6 +42,7 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -61,6 +63,11 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "profile")
 public final class StartsRequest extends AbstractAgent {
+    /**
+     * Command types not requiring _head.sh.
+     */
+    private static final Collection<String> HEADLESS =
+        Collections.singleton("stop");
 
     /**
      * Profile.
@@ -139,11 +146,18 @@ public final class StartsRequest extends AbstractAgent {
                     }
                 ),
                 Collections.singleton(this.asRoot()),
-                Collections.singleton(
-                    IOUtils.toString(
-                        this.getClass().getResourceAsStream("_head.sh"),
-                        CharEncoding.UTF_8
-                    )
+                Iterables.filter(
+                    Collections.singleton(
+                        IOUtils.toString(
+                            this.getClass().getResourceAsStream("_head.sh"),
+                            CharEncoding.UTF_8
+                        )
+                    ), new Predicate<String>() {
+                        @Override
+                        public boolean apply(final String input) {
+                            return !StartsRequest.HEADLESS.contains(type);
+                        }
+                    }
                 ),
                 new Decrypt(this.profile).commands(),
                 Collections.singleton(
