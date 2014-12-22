@@ -33,8 +33,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.spi.Profile;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -72,19 +76,44 @@ public final class RegistersShell extends AbstractAgent {
 
     /**
      * Constructor.
-     * @param adr IP address
-     * @param prt Port of server
-     * @param user Login
-     * @param priv Private SSH key
+     * @param profile Profile
+     * @param adr Default IP address
+     * @param prt Default Port of server
+     * @param user Defaul Login
+     * @param priv Default Private SSH key
      * @checkstyle ParameterNumberCheck (6 lines)
      */
-    public RegistersShell(final String adr, final int prt,
-        final String user, final String priv) {
+    public RegistersShell(final Profile profile, final String adr,
+        final int prt, final String user, final String priv) {
         super("/talk[daemon and not(shell)]");
-        this.addr = adr;
-        this.login = user;
-        this.key = priv;
-        this.port = prt;
+        try {
+            final Profile.Defaults prof = new Profile.Defaults(profile);
+            this.addr = prof.text(
+                "/p/entry[@key='ssh']/entry[@key='host']", adr
+            );
+            this.port = Integer.parseInt(
+                prof.text(
+                    "/p/entry[@key='ssh']/entry[@key='port']",
+                    Integer.toString(prt)
+                )
+            );
+            this.login = prof.text(
+                "/p/entry[@key='ssh']/entry[@key='login']", user
+            );
+            final String keypath = prof.text(
+                "/p/entry[@key='ssh']/entry[@key='key']", ""
+            );
+            if (keypath.isEmpty()) {
+                this.key = priv;
+            } else {
+                this.key = IOUtils.toString(
+                    this.getClass().getResourceAsStream(keypath),
+                    CharEncoding.UTF_8
+                );
+            }
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
