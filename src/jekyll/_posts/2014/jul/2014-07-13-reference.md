@@ -196,6 +196,21 @@ container with something different from Ubuntu inside. Switching
 to a user `r` may not work smoothly under CentOS, for example. In
 this case, just use root.
 
+## SSH
+
+By default, Rultor uses its own servers to run your builds. You can
+change that by providing your own SSH coordinates:
+
+{% highlight yaml %}
+ssh:
+  host: test.example.com
+  port: 22
+  key: ./keys/id_rsa
+  login: test
+{% endhighlight %}
+
+Your servers must have `docker` installed. This is the only requirement.
+
 ## Merge, Deploy, Release
 
 Three commands `merge`, `deploy` and `release` are
