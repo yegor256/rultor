@@ -139,6 +139,23 @@ public final class GithubProfileTest {
     }
 
     /**
+     * GithubProfile can throw if asset contains username starting with an
+     * underscore.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void throwsWhenAssetsUsernameStartsWithUnderscore()
+        throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            Joiner.on('\n').join(
+                "assets: ",
+                "  something.xml: _invalidusername/test1#test.xml"
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
      * GithubProfile can accept asset from repo name that contains a dot.
      * @throws Exception In case of error.
      */
