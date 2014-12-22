@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?31bbec8"/>
+    <link rel="stylesheet" href="/css/layout.css?fd8420b"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
     <script>//<![CDATA[
@@ -200,6 +200,19 @@ container with something different from Ubuntu inside. Switching
 to a user <code>r</code> may not work smoothly under CentOS, for example. In
 this case, just use root.</p>
 
+<h2 id="ssh">SSH</h2>
+
+<p>By default, Rultor uses its own servers to run your builds. You can
+change that by providing your own SSH coordinates:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">ssh</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">test.example.com</span>
+  <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">22</span>
+  <span class="l-Scalar-Plain">key</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">./keys/id_rsa</span>
+  <span class="l-Scalar-Plain">login</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">test</span></code></pre></div>
+
+<p>Your servers must have <code>docker</code> installed. This is the only requirement.</p>
+
 <h2 id="merge,-deploy,-release">Merge, Deploy, Release</h2>
 
 <p>Three commands <code>merge</code>, <code>deploy</code> and <code>release</code> are
@@ -293,7 +306,7 @@ resources, created during installation.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/31bbec8">31bbec8</a>
+          <a href="https://github.com/yegor256/rultor/commit/fd8420b">fd8420b</a>
         </p>
       </footer>
     </div>
