@@ -58,7 +58,6 @@ import org.xembly.Directives;
  * @since 1.3
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @todo #565 Add a test for stop command.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class StartsRequestTest {
@@ -223,6 +222,31 @@ public final class StartsRequestTest {
         );
         agent.execute(talk);
         this.exec(talk);
+    }
+
+    /**
+     * StartsRequest can perform stop request.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void performsStopRequest() throws Exception {
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(new XMLDocument("<p></p>"))
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "a8b9c2")
+                .add("type").set("stop").up()
+                .add("args")
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            this.exec(talk),
+            Matchers.containsString(
+                "docker stop"
+            )
+        );
     }
 
     /**
