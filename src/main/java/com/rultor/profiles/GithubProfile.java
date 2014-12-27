@@ -29,6 +29,7 @@
  */
 package com.rultor.profiles;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
@@ -43,6 +44,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -224,7 +227,29 @@ final class GithubProfile implements Profile {
         } else {
             yml = "";
         }
+        final List<String> msg = this.validate(yml);
+        if (!msg.isEmpty()) {
+            throw new Profile.ConfigException(
+                String.format(
+                    "`%s` is not valid according to schema:\n``%s``",
+                    GithubProfile.FILE,
+                    Joiner.on('\n').join(msg)
+                )
+            );
+        }
         return yml;
     }
 
+    /**
+     * Validate rultor config YAML according to schema.
+     * @param yml Rultor YAML config
+     * @return Validation result message, empty list means validation succeeded.
+     * @todo #561:30min Implement validation using Kwalify library enable
+     *  rejectsEmptyYaml and rejectsYamlWithout(Release/Deploy/Merge) tests and
+     *  remove UnusedFormalParameter suppress below.
+     */
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private List<String> validate(final String yml) {
+        return Collections.emptyList();
+    }
 }
