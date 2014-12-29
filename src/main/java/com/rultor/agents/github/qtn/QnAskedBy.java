@@ -30,6 +30,7 @@
 package com.rultor.agents.github.qtn;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
@@ -107,23 +108,35 @@ public final class QnAskedBy implements Question {
             new Answer(comment).post(
                 String.format(
                     QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
-                    StringUtils.join(
-                        Iterables.transform(
-                            logins,
-                            new Function<String, Object>() {
-                                @Override
-                                public Object apply(final String input) {
-                                    return String.format("@%s", input);
-                                }
-                            }
-                        ),
-                        ", "
-                    )
+                    commandersAsDelimitedList(logins)
                 )
             );
             req = Req.EMPTY;
         }
         return req;
+    }
+
+    String commandersAsDelimitedList(final Collection<String> logins) {
+        return StringUtils.join(
+            Iterables.transform(
+                Iterables.filter(
+                    logins,
+                    new Predicate<Object>() {
+                        @Override
+                        public boolean apply(final Object input) {
+                            return !"rultor".equals(input);
+                        }
+                    }
+                ),
+                new Function<String, Object>() {
+                    @Override
+                    public Object apply(final String input) {
+                        return String.format("@%s", input);
+                    }
+                }
+            ),
+            ", "
+        );
     }
 
     /**
