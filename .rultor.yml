@@ -16,7 +16,6 @@ architect:
 install: |
   sudo apt-get install bsdmainutils
   sudo gem install pdd
-  sudo gem install kwalify
   cd src/bundle
   sudo bundle install
   cd ../..
