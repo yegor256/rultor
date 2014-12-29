@@ -301,6 +301,11 @@
             <classifier>xpath</classifier>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>3.6.0.201411121045-m1</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
