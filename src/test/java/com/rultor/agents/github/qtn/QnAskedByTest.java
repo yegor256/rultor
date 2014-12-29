@@ -29,8 +29,12 @@
  */
 package com.rultor.agents.github.qtn;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkGithub;
+import com.rultor.spi.Profile;
+import java.net.URI;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -40,21 +44,31 @@ import org.junit.Test;
  * @author Nathan Green (ngreen@inco5.com)
  * @version $Id$
  */
-public class QnAskedByTest extends TestCase {
+public final class QnAskedByTest extends TestCase {
 
     /**
      * In error message, exclude {@code @rultor} from list of commanders (#690).
      * @throws Exception In case of error.
      */
     @Test
-    public void testCommandersAsDelimitedListExcludesRultor() throws Exception {
-        final QnAskedBy qab = new QnAskedBy(null, "", null);
-        final List<String> commanders = new ArrayList<String>() {{
-            add("testuser1");
-            add("rultor");
-            add("testuser2");
-        }};
-        final String formatted = qab.commandersAsDelimitedList(commanders);
-        assertEquals("@testuser1, @testuser2", formatted);
+    public void testAuthorizedCommandersExcludesRultor() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        repo.collaborators().add("testuser1");
+        repo.collaborators().add("rultor");
+        repo.collaborators().add("testuser2");
+        final Issue issue = repo.issues().create("title", "body");
+        issue.comments().post("comment");
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().get(1)
+        );
+        final QnAskedBy qab = new QnAskedBy(new Profile.Fixed(), "//tst", null);
+        qab.understand(comment, new URI("http:/localhost"));
+        final Comment.Smart reply = new Comment.Smart(issue.comments().get(2));
+        assertTrue(
+            "rultor excluded",
+            reply.body().contains(
+                "authorized commanders: @testuser1, @testuser2 Your Github "
+            )
+        );
     }
 }

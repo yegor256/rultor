@@ -108,7 +108,7 @@ public final class QnAskedBy implements Question {
             new Answer(comment).post(
                 String.format(
                     QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
-                    commandersAsDelimitedList(logins)
+                    this.commandersAsDelimitedList(logins)
                 )
             );
             req = Req.EMPTY;
@@ -116,7 +116,12 @@ public final class QnAskedBy implements Question {
         return req;
     }
 
-    String commandersAsDelimitedList(final Collection<String> logins) {
+    /**
+     * Format list of commanders with {@code @} prefix, comma-delimited.
+     * @param logins Commanders
+     * @return Comma-delimited names
+     */
+    private String commandersAsDelimitedList(final Collection<String> logins) {
         return StringUtils.join(
             Iterables.transform(
                 Iterables.filter(
