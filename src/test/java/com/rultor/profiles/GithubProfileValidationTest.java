@@ -45,69 +45,64 @@ import org.junit.Test;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @todo #561:30min Implement validation tests based on 2014-07-13-basics.md
+ *  file.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class GithubProfileValidationTest {
     /**
-     * GithubProfile can reject empty YAML.
+     * GithubProfile will accept empty rultor configuration.
      * @throws Exception In case of error.
      */
-    @Ignore
-    @Test(expected = Profile.ConfigException.class)
-    public void rejectsEmptyYaml() throws Exception {
+    @Test
+    public void acceptsEmptyYaml() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo("");
         new GithubProfile(repo).read();
     }
 
     /**
-     * GithubProfile can reject YAML without release phase.
+     * GithubProfile can reject YAML with missing script in merge command.
      * @throws Exception In case of error.
      */
     @Ignore
     @Test(expected = Profile.ConfigException.class)
-    public void rejectsYamlWithoutRelease() throws Exception {
+    public void rejectsYamlWithoutMergeScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             Joiner.on('\n').join(
-                "deploy:",
-                "  script: whoami",
                 "merge:",
-                "  script: pwd"
+                "  - pwd"
             )
         );
         new GithubProfile(repo).read();
     }
 
     /**
-     * GithubProfile can reject YAML without merge phase.
+     * GithubProfile can reject YAML with missing script in deploy command.
      * @throws Exception In case of error.
      */
     @Ignore
     @Test(expected = Profile.ConfigException.class)
-    public void rejectsYamlWithoutMerge() throws Exception {
+    public void rejectsYamlWithoutDeployScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             Joiner.on('\n').join(
                 "deploy:",
-                "  script: whoami",
-                "release:",
-                "  script: pwd"
+                "  - pwd"
             )
         );
         new GithubProfile(repo).read();
     }
 
     /**
-     * GithubProfile can reject YAML without deploy phase.
+     * GithubProfile can reject YAML with missing script in release command.
      * @throws Exception In case of error.
      */
     @Ignore
     @Test(expected = Profile.ConfigException.class)
-    public void rejectsYamlWithoutDeploy() throws Exception {
+    public void rejectsYamlWithoutReleaseScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             Joiner.on('\n').join(
-                "merge:",
-                "  script: whoami",
                 "release:",
-                "  script: pwd"
+                "  - pwd"
             )
         );
         new GithubProfile(repo).read();

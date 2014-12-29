@@ -244,9 +244,9 @@ final class GithubProfile implements Profile {
      * Validate rultor config YAML according to schema.
      * @param yml Rultor YAML config
      * @return Validation result message, empty list means validation succeeded.
-     * @todo #561:30min Implement validation using Kwalify library enable
-     *  rejectsEmptyYaml and rejectsYamlWithout(Release/Deploy/Merge) tests and
-     *  remove UnusedFormalParameter suppress below.
+     * @todo #570:30min Implement validation using Kwalify library enable
+     *  tests in GitHubProfileValidationTest and remove UnusedFormalParameter
+     *  suppress below.
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private List<String> validate(final String yml) {
