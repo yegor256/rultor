@@ -188,4 +188,7 @@ public interface Profile {
             return new ArrayMap<String, InputStream>();
         }
     }
+
+    String HTTP_PROXY_HOST = "http.proxyHost";
+    String HTTP_PROXY_PORT = "http.proxyPort";
 }

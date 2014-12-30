@@ -31,6 +31,7 @@ package com.rultor.agents.req;
 
 import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
@@ -39,6 +40,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Decrypt.
@@ -75,15 +77,24 @@ final class Decrypt {
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
         if (!assets.isEmpty()) {
+            final String proxyClause = composeProxyClause();
             commands.add(
                 Joiner.on(' ').join(
-                    "gpg --keyserver hkp://pool.sks-keyservers.net:80",
+                    "gpg --keyserver hkp://pool.sks-keyservers.net",
+                    proxyClause,
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
         }
         for (final XML asset : assets) {
             final String key = asset.xpath("@key").get(0);
+
+            if (Profile.HTTP_PROXY_HOST.equals(key) ||
+                Profile.HTTP_PROXY_PORT.equals(key))
+            {
+                continue;
+            }
+
             final String enc = String.format("%s.enc", key);
             commands.add(
                 Joiner.on(' ').join(
@@ -115,4 +126,49 @@ final class Decrypt {
         return commands;
     }
 
+    protected String composeProxyClause() throws IOException {
+        String proxyClause = "proxy";
+        final String proxyHost = readProfileSetting(
+            Profile.HTTP_PROXY_HOST
+        );
+        final String proxyPortTxt = readProfileSetting(
+            Profile.HTTP_PROXY_PORT
+        );
+
+        if (StringUtils.isNotBlank(proxyHost) &&
+            StringUtils.isNotBlank(proxyPortTxt)) {
+            int proxyPort = 0;
+
+            try
+            {
+                proxyPort = Integer.parseInt(proxyPortTxt);
+            }
+            catch (final NumberFormatException exception)
+            {
+                Logger.error(this, Joiner.on(" ").join(
+                    "Can't parse proxy port", proxyPortTxt));
+            }
+
+            if (proxyPort > 0)
+            {
+                proxyClause = Joiner.on("").join("http-proxy=", proxyHost, ":", proxyPort);
+            }
+        }
+        return proxyClause;
+    }
+
+    protected String readProfileSetting(final String key) throws IOException {
+        final Collection<XML> proxyHostXmls =
+            this.profile.read().nodes(Joiner.on("").join(
+                "/p/entry[@key='decrypt']/entry[@key='",
+                key,
+                "']"
+            ));
+        String value = null;
+        if (proxyHostXmls.size() > 0)
+        {
+            value = proxyHostXmls.iterator().next().xpath("text()").get(0);
+        }
+        return value;
+    }
 }
