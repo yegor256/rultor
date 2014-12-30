@@ -60,10 +60,10 @@ public final class IndexesRequests implements SuperAgent {
         if (talks == null) {
             return;
         }
-        int maxIndexOfAllTalks = this.getMaxIndexOfAllTalks(talks);
+        int maxIndexOfAllTalks = this.getMaxTalkIndex(talks);
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
-            if (requests.size() == 0) {
+            if (requests.isEmpty()) {
                 int indexValue = 0;
                 final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
                 if (logs.isEmpty()) {
@@ -119,7 +119,7 @@ public final class IndexesRequests implements SuperAgent {
      *  list
      * @throws IOException Thrown, when problems with reading XML occur.
      */
-    private int getMaxIndexOfAllTalks(final Talks talks) throws IOException {
+    private int getMaxTalkIndex(final Talks talks) throws IOException {
         int maxIndex = 0;
         for (final Talk talk : talks.active()) {
             final int talkIndex = this.getMaxLogIndex(talk.read()
