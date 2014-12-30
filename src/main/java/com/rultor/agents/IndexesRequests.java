@@ -50,48 +50,67 @@ public final class IndexesRequests implements SuperAgent {
         if (talks == null) {
             return;
         }
+        int maxIndexOfAllTalks = getMaxIndexOfAllTalks(talks);
+
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
 
             if (requests.size() == 0)
             {
-                boolean hasLogs = false;
                 int indexValue = 0;
 
                 final List<XML> logs = talk.read().nodes("//archive/log");
-                System.out.println("logs: " + logs.size());
 
                 if (logs.isEmpty()) {
-                    indexValue = 1;
+                    indexValue = maxIndexOfAllTalks + 1;
                 } else {
-                    // extract index from logs
-                    int maxIndex = 0;
-                    for (XML curLog : logs) {
-                        int curIndex = 0;
-                        final List<String> indexTexts = curLog.xpath("@index");
-                        if (indexTexts.size() == 1) {
-                            final String indexText = indexTexts.get(0);
-                            try {
-                                maxIndex = Integer.parseInt(indexText);
-                            } catch (final NumberFormatException exception) {
-                                Logger.error(this,
-                                    String.format(
-                                        "Invalid index number '%s'",
-                                        indexText
-                                    )
-                                );
-                            }
-                            if (curIndex > maxIndex) {
-                                maxIndex = curIndex;
-                            }
-                        }
-
-                        indexValue = maxIndex + 1;
-                    }
+                    final int maxLogIndex = getMaxLogIndex(logs);
+                    indexValue = Math.max(maxLogIndex, maxIndexOfAllTalks)  + 1;
                 }
+                maxIndexOfAllTalks++;
+
                 addIndex(talk, indexValue);
             }
         }
+    }
+
+    protected int getMaxLogIndex(final List<XML> logs) {
+        int maxLogIndex = 0;
+        for (XML curLog : logs) {
+            int curIndex = 0;
+            final List<String> indexTexts = curLog.xpath("@index");
+            if (indexTexts.size() == 1) {
+                final String indexText = indexTexts.get(0);
+                try {
+                    maxLogIndex = Integer.parseInt(indexText);
+                } catch (final NumberFormatException exception) {
+                    Logger.error(this,
+                        String.format(
+                            "Invalid index number '%s'",
+                            indexText
+                        )
+                    );
+                }
+                if (curIndex > maxLogIndex) {
+                    maxLogIndex = curIndex;
+                }
+            }
+        }
+        return maxLogIndex;
+    }
+
+    private int getMaxIndexOfAllTalks(final Talks talks) throws IOException {
+        int maxIndex = 0;
+
+        for (final Talk talk : talks.active()) {
+            int talkIndex = getMaxLogIndex(talk.read().nodes("//archive/log"));
+
+            if (talkIndex > maxIndex) {
+                maxIndex = talkIndex;
+            }
+        }
+
+        return maxIndex;
     }
 
     private void addIndex(final Talk talk, final int index) throws IOException {
