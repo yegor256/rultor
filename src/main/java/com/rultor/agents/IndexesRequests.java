@@ -51,30 +51,25 @@ public final class IndexesRequests implements SuperAgent {
             return;
         }
         int maxIndexOfAllTalks = getMaxIndexOfAllTalks(talks);
-
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
 
-            if (requests.size() == 0)
-            {
+            if (requests.size() == 0) {
                 int indexValue = 0;
-
                 final List<XML> logs = talk.read().nodes("//archive/log");
-
                 if (logs.isEmpty()) {
                     indexValue = maxIndexOfAllTalks + 1;
                 } else {
                     final int maxLogIndex = getMaxLogIndex(logs);
                     indexValue = Math.max(maxLogIndex, maxIndexOfAllTalks)  + 1;
                 }
-                maxIndexOfAllTalks++;
-
                 addIndex(talk, indexValue);
+                maxIndexOfAllTalks++;
             }
         }
     }
 
-    protected int getMaxLogIndex(final List<XML> logs) {
+    private int getMaxLogIndex(final List<XML> logs) {
         int maxLogIndex = 0;
         for (XML curLog : logs) {
             int curIndex = 0;
@@ -101,7 +96,6 @@ public final class IndexesRequests implements SuperAgent {
 
     private int getMaxIndexOfAllTalks(final Talks talks) throws IOException {
         int maxIndex = 0;
-
         for (final Talk talk : talks.active()) {
             int talkIndex = getMaxLogIndex(talk.read().nodes("//archive/log"));
 
@@ -109,7 +103,6 @@ public final class IndexesRequests implements SuperAgent {
                 maxIndex = talkIndex;
             }
         }
-
         return maxIndex;
     }
 
