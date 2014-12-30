@@ -54,6 +54,7 @@ public final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
+    @Ignore
     public void storesIndexIfNone() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();
@@ -62,8 +63,6 @@ public final class IndexesRequestsTest {
             new Directives()
                 .xpath("/talk").add("wire").add("href").set("#1").up()
         );
-
-        System.out.println("talks: " + talks.get(name).read());
 
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
@@ -77,7 +76,6 @@ public final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void retrievesIndexFromLog() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();

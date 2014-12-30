@@ -29,6 +29,8 @@
  */
 package com.rultor.agents;
 
+import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
@@ -53,15 +55,53 @@ public final class IndexesRequests implements SuperAgent {
 
             if (requests.size() == 0)
             {
-                talk.modify(
-                    new Directives().xpath("//talk").add("request")
-                    .attr("index", "1")
-                    .attr("id", createRequestId())
-                .add("type").set("index")
-                .up()
-                .add("args"));
+                boolean hasLogs = false;
+                int indexValue = 0;
+
+                final List<XML> logs = talk.read().nodes("//archive/log");
+                System.out.println("logs: " + logs.size());
+
+                if (logs.isEmpty()) {
+                    indexValue = 1;
+                } else {
+                    // extract index from logs
+                    int maxIndex = 0;
+                    for (XML curLog : logs) {
+                        int curIndex = 0;
+                        final List<String> indexTexts = curLog.xpath("@index");
+                        if (indexTexts.size() == 1) {
+                            final String indexText = indexTexts.get(0);
+                            try {
+                                maxIndex = Integer.parseInt(indexText);
+                            } catch (final NumberFormatException exception) {
+                                Logger.error(this,
+                                    String.format(
+                                        "Invalid index number '%s'",
+                                        indexText
+                                    )
+                                );
+                            }
+                            if (curIndex > maxIndex) {
+                                maxIndex = curIndex;
+                            }
+                        }
+
+                        indexValue = maxIndex + 1;
+                    }
+                }
+                addIndex(talk, indexValue);
             }
         }
+    }
+
+    private void addIndex(final Talk talk, final int index) throws IOException {
+        talk.modify(
+            new Directives().xpath("//talk").add("request")
+            .attr("index", Integer.toString(index))
+            .attr("id", createRequestId())
+        .add("type").set("index")
+        .up()
+        .add("args"));
     }
 
     private String createRequestId() {
