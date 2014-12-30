@@ -49,6 +49,15 @@ import java.util.Map;
  */
 @Immutable
 public interface Profile {
+    /**
+     * Name of the profile parameter, which specifies HTTP proxy host.
+     */
+    String HTTP_PROXY_HOST = "http.proxyHost";
+
+    /**
+     * Name of the profile parameter, which specifies HTTP proxy port.
+     */
+    String HTTP_PROXY_PORT = "http.proxyPort";
 
     /**
      * Schema.
@@ -188,7 +197,4 @@ public interface Profile {
             return new ArrayMap<String, InputStream>();
         }
     }
-
-    String HTTP_PROXY_HOST = "http.proxyHost";
-    String HTTP_PROXY_PORT = "http.proxyPort";
 }

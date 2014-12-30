@@ -92,7 +92,6 @@ final class Decrypt {
                 || Profile.HTTP_PROXY_PORT.equals(key)) {
                 continue;
             }
-
             final String enc = String.format("%s.enc", key);
             commands.add(
                 Joiner.on(' ').join(
@@ -132,21 +131,25 @@ final class Decrypt {
      */
     private String composeProxyClause() throws IOException {
         String proxyClause = "proxy";
-        final String proxyHost = readProfileSetting(
+        final String proxyHost = this.readProfileSetting(
             Profile.HTTP_PROXY_HOST
         );
-        final String proxyPortTxt = readProfileSetting(
+        final String proxyporttxt = this.readProfileSetting(
             Profile.HTTP_PROXY_PORT
         );
-        if (StringUtils.isNotBlank(proxyHost) &&
-            StringUtils.isNotBlank(proxyPortTxt)) {
+        if (StringUtils.isNotBlank(proxyHost)
+            && StringUtils.isNotBlank(proxyporttxt)) {
             int proxyPort = 0;
-            try
-            {
-                proxyPort = Integer.parseInt(proxyPortTxt);
+            try {
+                proxyPort = Integer.parseInt(proxyporttxt);
             } catch (final NumberFormatException exception) {
-                Logger.error(this, Joiner.on(" ").join(
-                    "Can't parse proxy port", proxyPortTxt));
+                Logger.error(
+                    this,
+                    Joiner.on(" ").join(
+                        "Can't parse proxy port",
+                        proxyporttxt
+                    )
+                );
             }
             if (proxyPort > 0) {
                 proxyClause = Joiner.on("").join(
@@ -168,13 +171,15 @@ final class Decrypt {
      */
     private String readProfileSetting(final String key) throws IOException {
         final Collection<XML> proxyHostXmls =
-            this.profile.read().nodes(Joiner.on("").join(
-                "/p/entry[@key='decrypt']/entry[@key='",
-                key,
-                "']"
-            ));
+            this.profile.read().nodes(
+                Joiner.on("").join(
+                    "/p/entry[@key='decrypt']/entry[@key='",
+                    key,
+                    "']"
+                )
+            );
         String value = null;
-        if (proxyHostXmls.size() > 0) {
+        if (!proxyHostXmls.isEmpty()) {
             value = proxyHostXmls.iterator().next().xpath("text()").get(0);
         }
         return value;

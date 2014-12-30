@@ -94,24 +94,6 @@ public final class StartsRequestTest {
             )
         );
     }
-
-    @Test
-    public void test() throws IOException {
-        final Agent agent = new StartsRequest(new Profile.Fixed());
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk")
-                .add("request").attr("id", "abcd")
-                .add("type").set("merge").up()
-                .add("args")
-                .add("arg").attr("name", "hey").set("hello!")
-        );
-
-        // System.out.println("command: " + (talk.read().xpath("//script/text()").get(0)));
-        System.out.println("command: " + talk.read());
-
-    }
-
     /**
      * StartsRequest can start a request.
      * @throws Exception In case of error.

@@ -46,7 +46,6 @@ import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.Mockito;
 
 /**
  * Tests for {@link Decrypt}.
@@ -56,6 +55,20 @@ import org.mockito.Mockito;
  * @since 1.37.4
  */
 public final class DecryptTest {
+    /**
+     * Test profile name.
+     */
+    public static final String TEST_PROFILE_NAME = "test/test";
+
+    /**
+     * Profile key specification text.
+     */
+    public static final String ENTRY_KEY = "<entry key='";
+
+    /**
+     * Greter than sign.
+     */
+    public static final String GREATER_THAN = "'>";
 
     /**
      * Encoded test file.
@@ -99,7 +112,7 @@ public final class DecryptTest {
                         "a.txt.asc</entry></entry></p>"
                     )
                 ),
-                "test/test"
+                TEST_PROFILE_NAME
             )
         ).commands();
         final String script = Joiner.on('\n').join(
@@ -138,30 +151,37 @@ public final class DecryptTest {
     /**
      * This test reproduces issue #635 and validates that Decrypt uses HTTP
      *  proxy server settings when running gpg, if they are provided.
+     * @throws java.io.IOException Thrown in case of XML parsing error
      */
     @Test
     public void testHttpProxyHandling() throws IOException {
-        final Profile profile = Mockito.mock(Profile.class);
-        final Decrypt decrypt = new Decrypt(new Profile.Fixed(
-            new XMLDocument(
-                StringUtils.join(
-                    "<p><entry key='decrypt'>",
-                    "<entry key='" + Profile.HTTP_PROXY_HOST + "'>",
-                    "http://someserver.com</entry>",
-                    "<entry key='" + Profile.HTTP_PROXY_PORT + "'>",
-                    "8080</entry>",
-                    "</entry></p>"
-                )
-            ),
-            "test/test"
-        ));
+        final Decrypt decrypt = new Decrypt(
+            new Profile.Fixed(
+                new XMLDocument(
+                    StringUtils.join(
+                        "<p><entry key='decrypt'>",
+                        ENTRY_KEY,
+                        Profile.HTTP_PROXY_HOST, GREATER_THAN,
+                        "http://someserver.com</entry>",
+                        ENTRY_KEY,
+                        Profile.HTTP_PROXY_PORT, GREATER_THAN,
+                        "8080</entry>",
+                        "</entry></p>"
+                    )
+                ),
+                TEST_PROFILE_NAME
+            )
+        );
         final Iterable<String> commands = decrypt.commands();
         MatcherAssert.assertThat(
             commands.iterator().next(),
-            Matchers.equalTo(Joiner.on(' ').join(
-                "gpg --keyserver hkp://pool.sks-keyservers.net",
-                "http-proxy=http://someserver.com:8080",
-                "--verbose --recv-keys 9AF0FA4C"))
+            Matchers.equalTo(
+                Joiner.on(' ').join(
+                    "gpg --keyserver hkp://pool.sks-keyservers.net",
+                    "http-proxy=http://someserver.com:8080",
+                    "--verbose --recv-keys 9AF0FA4C"
+                )
+            )
         );
     }
 }
