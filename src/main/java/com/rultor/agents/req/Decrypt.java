@@ -77,7 +77,7 @@ final class Decrypt {
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
         if (!assets.isEmpty()) {
-            final String proxyClause = composeProxyClause();
+            final String proxyClause = this.composeProxyClause();
             commands.add(
                 Joiner.on(' ').join(
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
@@ -88,10 +88,8 @@ final class Decrypt {
         }
         for (final XML asset : assets) {
             final String key = asset.xpath("@key").get(0);
-
-            if (Profile.HTTP_PROXY_HOST.equals(key) ||
-                Profile.HTTP_PROXY_PORT.equals(key))
-            {
+            if (Profile.HTTP_PROXY_HOST.equals(key)
+                || Profile.HTTP_PROXY_PORT.equals(key)) {
                 continue;
             }
 
@@ -126,7 +124,13 @@ final class Decrypt {
         return commands;
     }
 
-    protected String composeProxyClause() throws IOException {
+    /**
+     * Creates the part of the gpg command, which specifies the proxy settings.
+     * @return String with proxy settings, e. g.
+     *  "http-proxy=http://someserver.com:8080"
+     * @throws IOException Thrown in case of XML parse error.
+     */
+    private String composeProxyClause() throws IOException {
         String proxyClause = "proxy";
         final String proxyHost = readProfileSetting(
             Profile.HTTP_PROXY_HOST
@@ -134,30 +138,35 @@ final class Decrypt {
         final String proxyPortTxt = readProfileSetting(
             Profile.HTTP_PROXY_PORT
         );
-
         if (StringUtils.isNotBlank(proxyHost) &&
             StringUtils.isNotBlank(proxyPortTxt)) {
             int proxyPort = 0;
-
             try
             {
                 proxyPort = Integer.parseInt(proxyPortTxt);
-            }
-            catch (final NumberFormatException exception)
-            {
+            } catch (final NumberFormatException exception) {
                 Logger.error(this, Joiner.on(" ").join(
                     "Can't parse proxy port", proxyPortTxt));
             }
-
-            if (proxyPort > 0)
-            {
-                proxyClause = Joiner.on("").join("http-proxy=", proxyHost, ":", proxyPort);
+            if (proxyPort > 0) {
+                proxyClause = Joiner.on("").join(
+                    "http-proxy=",
+                    proxyHost,
+                    ":",
+                    proxyPort
+                );
             }
         }
         return proxyClause;
     }
 
-    protected String readProfileSetting(final String key) throws IOException {
+    /**
+     * Reads the value of the specified profile setting and returns it.
+     * @param key Key of the setting to be read.
+     * @return Value of the setting, if it is present, null otherwise.
+     * @throws IOException Thrown in case of XML parsing error.
+     */
+    private String readProfileSetting(final String key) throws IOException {
         final Collection<XML> proxyHostXmls =
             this.profile.read().nodes(Joiner.on("").join(
                 "/p/entry[@key='decrypt']/entry[@key='",
@@ -165,8 +174,7 @@ final class Decrypt {
                 "']"
             ));
         String value = null;
-        if (proxyHostXmls.size() > 0)
-        {
+        if (proxyHostXmls.size() > 0) {
             value = proxyHostXmls.iterator().next().xpath("text()").get(0);
         }
         return value;
