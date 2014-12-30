@@ -123,7 +123,8 @@ public final class IndexesRequests implements SuperAgent {
         int maxIndex = 0;
         for (final Talk talk : talks.active()) {
             final int talkIndex = this.getMaxLogIndex(talk.read()
-                .nodes(ARCHIVE_LOG));
+                .nodes(ARCHIVE_LOG)
+            );
             if (talkIndex > maxIndex) {
                 maxIndex = talkIndex;
             }
@@ -142,10 +143,10 @@ public final class IndexesRequests implements SuperAgent {
         talk.modify(
             new Directives().xpath("//talk").add("request")
             .attr(INDEX, Integer.toString(index))
-            .attr("id", createRequestId())
-        .add("type").set(INDEX)
-        .up()
-        .add("args"));
+            .attr("id", this.createRequestId())
+            .add("type").set(INDEX)
+            .up()
+            .add("args"));
     }
 
     /**
