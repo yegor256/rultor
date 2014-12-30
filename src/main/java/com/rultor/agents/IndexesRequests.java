@@ -60,20 +60,20 @@ public final class IndexesRequests implements SuperAgent {
         if (talks == null) {
             return;
         }
-        int maxIndexOfAllTalks = this.getMaxTalkIndex(talks);
+        int maxTalkIndex = this.getMaxTalkIndex(talks);
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
             if (requests.isEmpty()) {
                 int indexValue = 0;
                 final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
                 if (logs.isEmpty()) {
-                    indexValue = maxIndexOfAllTalks + 1;
+                    indexValue = maxTalkIndex + 1;
                 } else {
                     final int maxLogIndex = this.getMaxLogIndex(logs);
-                    indexValue = Math.max(maxLogIndex, maxIndexOfAllTalks) + 1;
+                    indexValue = Math.max(maxLogIndex, maxTalkIndex) + 1;
                 }
                 this.addIndex(talk, indexValue);
-                maxIndexOfAllTalks += 1;
+                maxTalkIndex += 1;
             }
         }
     }
