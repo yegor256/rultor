@@ -45,33 +45,34 @@ import org.xembly.Directives;
  * @version $Id$
  */
 public final class IndexesRequests implements SuperAgent {
+    public static final String ARCHIVE_LOG = "//archive/log";
+
     @Override
     public void execute(final Talks talks) throws IOException {
         if (talks == null) {
             return;
         }
-        int maxIndexOfAllTalks = getMaxIndexOfAllTalks(talks);
+        int maxIndexOfAllTalks = this.getMaxIndexOfAllTalks(talks);
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
-
             if (requests.size() == 0) {
                 int indexValue = 0;
-                final List<XML> logs = talk.read().nodes("//archive/log");
+                final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
                 if (logs.isEmpty()) {
                     indexValue = maxIndexOfAllTalks + 1;
                 } else {
-                    final int maxLogIndex = getMaxLogIndex(logs);
+                    final int maxLogIndex = this.getMaxLogIndex(logs);
                     indexValue = Math.max(maxLogIndex, maxIndexOfAllTalks)  + 1;
                 }
-                addIndex(talk, indexValue);
-                maxIndexOfAllTalks++;
+                this.addIndex(talk, indexValue);
+                maxIndexOfAllTalks+=1;
             }
         }
     }
 
     private int getMaxLogIndex(final List<XML> logs) {
         int maxLogIndex = 0;
-        for (XML curLog : logs) {
+        for (final XML curLog : logs) {
             int curIndex = 0;
             final List<String> indexTexts = curLog.xpath("@index");
             if (indexTexts.size() == 1) {
