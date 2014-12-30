@@ -45,6 +45,9 @@ import org.xembly.Directives;
  * @version $Id$
  */
 public final class IndexesRequests implements SuperAgent {
+    /**
+     * Xpath expression for retrieving log entries from a talk's XML.
+     */
     public static final String ARCHIVE_LOG = "//archive/log";
 
     @Override
@@ -62,23 +65,30 @@ public final class IndexesRequests implements SuperAgent {
                     indexValue = maxIndexOfAllTalks + 1;
                 } else {
                     final int maxLogIndex = this.getMaxLogIndex(logs);
-                    indexValue = Math.max(maxLogIndex, maxIndexOfAllTalks)  + 1;
+                    indexValue = Math.max(maxLogIndex, maxIndexOfAllTalks) + 1;
                 }
                 this.addIndex(talk, indexValue);
-                maxIndexOfAllTalks+=1;
+                maxIndexOfAllTalks += 1;
             }
         }
     }
 
+    /**
+     * Returns the greatest index of all log children of an archive node.
+     * @param logs A list of XML objects for individual log nodes (e. g.
+     * <log id="3" index="1" title="title3"/>
+     * @return Highest value of the index attribute of all log nodes contained
+     * in the logs list.
+     */
     private int getMaxLogIndex(final List<XML> logs) {
         int maxLogIndex = 0;
-        for (final XML curLog : logs) {
+        for (final XML log : logs) {
             int curIndex = 0;
-            final List<String> indexTexts = curLog.xpath("@index");
+            final List<String> indexTexts = log.xpath("@index");
             if (indexTexts.size() == 1) {
                 final String indexText = indexTexts.get(0);
                 try {
-                    maxLogIndex = Integer.parseInt(indexText);
+                    curIndex = Integer.parseInt(indexText);
                 } catch (final NumberFormatException exception) {
                     Logger.error(this,
                         String.format(
@@ -95,11 +105,19 @@ public final class IndexesRequests implements SuperAgent {
         return maxLogIndex;
     }
 
+    /**
+     * Returns the highest index of all log nodes in all talks contained in
+     * the talks list.
+     * @param talks The list of talks to traverse.
+     * @return Highest value of the index attribute of all talks in the talks
+     * list
+     * @throws IOException Thrown, when problems with reading XML occur.
+     */
     private int getMaxIndexOfAllTalks(final Talks talks) throws IOException {
         int maxIndex = 0;
         for (final Talk talk : talks.active()) {
-            int talkIndex = getMaxLogIndex(talk.read().nodes("//archive/log"));
-
+            final int talkIndex = this.getMaxLogIndex(talk.read()
+                .nodes(ARCHIVE_LOG));
             if (talkIndex > maxIndex) {
                 maxIndex = talkIndex;
             }
@@ -107,6 +125,13 @@ public final class IndexesRequests implements SuperAgent {
         return maxIndex;
     }
 
+    /**
+     * Adds a request tag to a talk node.
+     * @param talk Talk, to which the request node should be added.
+     * @param index Value of the index attribute of the newly created request
+     * node.
+     * @throws IOException Thrown, when problems with reading XML occur.
+     */
     private void addIndex(final Talk talk, final int index) throws IOException {
         talk.modify(
             new Directives().xpath("//talk").add("request")
@@ -117,6 +142,11 @@ public final class IndexesRequests implements SuperAgent {
         .add("args"));
     }
 
+    /**
+     * Creates a unique alphanumeric identifier.
+     * @return Random unique identifier without dashes (only numbers and
+     * letters).
+     */
     private String createRequestId() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
