@@ -62,7 +62,6 @@ public final class IndexesRequestsTest {
             new Directives()
                 .xpath("/talk").add("wire").add("href").set("#1").up()
         );
-
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
             talks.get(name).read(),

@@ -146,7 +146,8 @@ public final class IndexesRequests implements SuperAgent {
             .attr("id", this.createRequestId())
             .add("type").set(INDEX)
             .up()
-            .add("args"));
+            .add("args")
+        );
     }
 
     /**
