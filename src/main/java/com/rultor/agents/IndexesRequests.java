@@ -30,8 +30,12 @@
 package com.rultor.agents;
 
 import com.rultor.spi.SuperAgent;
+import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import org.xembly.Directives;
 
 /**
  * Adds index to all the requests received.
@@ -41,9 +45,26 @@ import java.io.IOException;
 public final class IndexesRequests implements SuperAgent {
     @Override
     public void execute(final Talks talks) throws IOException {
+        if (talks == null) {
+            return;
+        }
+        for (final Talk talk : talks.active()) {
+            final List<String> requests = talk.read().xpath("//request");
 
+            if (requests.size() == 0)
+            {
+                talk.modify(
+                    new Directives().xpath("//talk").add("request")
+                    .attr("index", "1")
+                    .attr("id", createRequestId())
+                .add("type").set("index")
+                .up()
+                .add("args"));
+            }
+        }
+    }
 
-
-        throw new UnsupportedOperationException();
+    private String createRequestId() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 }

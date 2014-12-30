@@ -62,6 +62,9 @@ public final class IndexesRequestsTest {
             new Directives()
                 .xpath("/talk").add("wire").add("href").set("#1").up()
         );
+
+        System.out.println("talks: " + talks.get(name).read());
+
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
             talks.get(name).read(),
@@ -88,6 +91,9 @@ public final class IndexesRequestsTest {
                 .add("log").attr("id", "2").attr("title", "title2")
                 .attr("index", "2").up()
         );
+
+        System.out.println("talks: " + talks.get(name).read());
+
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
             talks.get(name).read(),
