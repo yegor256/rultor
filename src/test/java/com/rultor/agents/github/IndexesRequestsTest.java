@@ -54,7 +54,6 @@ public final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void storesIndexIfNone() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();
