@@ -50,6 +50,11 @@ public final class IndexesRequests implements SuperAgent {
      */
     public static final String ARCHIVE_LOG = "//archive/log";
 
+    /**
+     * Name of the log index attribute.
+     */
+    public static final String INDEX = "index";
+
     @Override
     public void execute(final Talks talks) throws IOException {
         if (talks == null) {
@@ -76,9 +81,9 @@ public final class IndexesRequests implements SuperAgent {
     /**
      * Returns the greatest index of all log children of an archive node.
      * @param logs A list of XML objects for individual log nodes (e. g.
-     * <log id="3" index="1" title="title3"/>
+     *  <log id="3" index="1" title="title3"/>
      * @return Highest value of the index attribute of all log nodes contained
-     * in the logs list.
+     *  in the logs list.
      */
     private int getMaxLogIndex(final List<XML> logs) {
         int maxLogIndex = 0;
@@ -90,7 +95,8 @@ public final class IndexesRequests implements SuperAgent {
                 try {
                     curIndex = Integer.parseInt(indexText);
                 } catch (final NumberFormatException exception) {
-                    Logger.error(this,
+                    Logger.error(
+                        this,
                         String.format(
                             "Invalid index number '%s'",
                             indexText
@@ -107,10 +113,10 @@ public final class IndexesRequests implements SuperAgent {
 
     /**
      * Returns the highest index of all log nodes in all talks contained in
-     * the talks list.
+     *  the talks list.
      * @param talks The list of talks to traverse.
      * @return Highest value of the index attribute of all talks in the talks
-     * list
+     *  list
      * @throws IOException Thrown, when problems with reading XML occur.
      */
     private int getMaxIndexOfAllTalks(final Talks talks) throws IOException {
@@ -129,15 +135,15 @@ public final class IndexesRequests implements SuperAgent {
      * Adds a request tag to a talk node.
      * @param talk Talk, to which the request node should be added.
      * @param index Value of the index attribute of the newly created request
-     * node.
+     *  node.
      * @throws IOException Thrown, when problems with reading XML occur.
      */
     private void addIndex(final Talk talk, final int index) throws IOException {
         talk.modify(
             new Directives().xpath("//talk").add("request")
-            .attr("index", Integer.toString(index))
+            .attr(INDEX, Integer.toString(index))
             .attr("id", createRequestId())
-        .add("type").set("index")
+        .add("type").set(INDEX)
         .up()
         .add("args"));
     }
@@ -145,7 +151,7 @@ public final class IndexesRequests implements SuperAgent {
     /**
      * Creates a unique alphanumeric identifier.
      * @return Random unique identifier without dashes (only numbers and
-     * letters).
+     *  letters).
      */
     private String createRequestId() {
         return UUID.randomUUID().toString().replaceAll("-", "");
