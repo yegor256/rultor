@@ -77,7 +77,7 @@ final class Decrypt {
         if (!assets.isEmpty()) {
             commands.add(
                 Joiner.on(' ').join(
-                    "gpg --keyserver hkp://pool.sks-keyservers.net",
+                    "gpg --keyserver hkp://pool.sks-keyservers.net:80",
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
