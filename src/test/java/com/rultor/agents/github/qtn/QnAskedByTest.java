@@ -50,11 +50,11 @@ import org.mockito.Mockito;
 public final class QnAskedByTest {
 
     /**
-     * In error message, exclude {@code @rultor} from list of commanders (#690).
+     * QnAskedBy can exclude {@code @rultor} from list of commanders (#690).
      * @throws Exception In case of error.
      */
     @Test
-    public void rultorUserNotInCommanderList() throws Exception {
+    public void excludesRultorFromListOfCommanders() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         repo.collaborators().add("testuser1");
         repo.collaborators().add("rultor");
