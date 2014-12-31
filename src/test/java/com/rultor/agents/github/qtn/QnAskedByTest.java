@@ -33,10 +33,13 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
+import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
-import junit.framework.TestCase;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Tests for {@link QnAskedBy}.
@@ -44,14 +47,14 @@ import org.junit.Test;
  * @author Nathan Green (ngreen@inco5.com)
  * @version $Id$
  */
-public final class QnAskedByTest extends TestCase {
+public final class QnAskedByTest {
 
     /**
      * In error message, exclude {@code @rultor} from list of commanders (#690).
      * @throws Exception In case of error.
      */
     @Test
-    public void testAuthorizedCommandersExcludesRultor() throws Exception {
+    public void rultorUserNotInCommanderList() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         repo.collaborators().add("testuser1");
         repo.collaborators().add("rultor");
@@ -61,13 +64,23 @@ public final class QnAskedByTest extends TestCase {
         final Comment.Smart comment = new Comment.Smart(
             issue.comments().get(1)
         );
-        final QnAskedBy qab = new QnAskedBy(new Profile.Fixed(), "//tst", null);
+        final QnAskedBy qab = new QnAskedBy(
+            new Profile.Fixed(),
+            "//test",
+            Mockito.mock(Question.class)
+        );
         qab.understand(comment, new URI("http:/localhost"));
         final Comment.Smart reply = new Comment.Smart(issue.comments().get(2));
-        assertTrue(
-            "rultor excluded",
-            reply.body().contains(
-                "authorized commanders: @testuser1, @testuser2 Your Github "
+        MatcherAssert.assertThat(
+            reply.body(),
+            Matchers.not(
+                Matchers.containsString("@rultor")
+            )
+        );
+        MatcherAssert.assertThat(
+            reply.body(),
+            Matchers.containsString(
+                " authorized commanders: @testuser1, @testuser2 Your Github "
             )
         );
     }
