@@ -69,18 +69,12 @@ public final class QnAskedByTest {
             "//test",
             Mockito.mock(Question.class)
         );
-        qab.understand(comment, new URI("http:/localhost"));
+        qab.understand(comment, new URI("http://localhost"));
         final Comment.Smart reply = new Comment.Smart(issue.comments().get(2));
         MatcherAssert.assertThat(
             reply.body(),
             Matchers.not(
                 Matchers.containsString("@rultor")
-            )
-        );
-        MatcherAssert.assertThat(
-            reply.body(),
-            Matchers.containsString(
-                " authorized commanders: @testuser1, @testuser2 Your Github "
             )
         );
     }
