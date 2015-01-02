@@ -33,7 +33,6 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.IndexesRequests;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -99,7 +98,6 @@ public final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void retrievesIndexFromSibling() throws Exception {
         final String first = "first";
         final Talks talks = new Talks.InDir();
@@ -129,7 +127,7 @@ public final class IndexesRequestsTest {
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
             talks.get(third).read(),
-            XhtmlMatchers.hasXPaths("/talk/request[@index='3']")
+            XhtmlMatchers.hasXPaths("/talk/request[@index='5']")
         );
     }
 }

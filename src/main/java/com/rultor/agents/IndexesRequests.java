@@ -67,7 +67,7 @@ public final class IndexesRequests implements SuperAgent {
                     indexValue = maxTalkIndex + 1;
                 } else {
                     final int maxLogIndex = this.getMaxLogIndex(logs);
-                    indexValue = Math.max(maxLogIndex, maxTalkIndex) + 1;
+                    indexValue = maxLogIndex + 1;
                 }
                 talk.modify(
                     new Directives().xpath("//talk").add("request")
