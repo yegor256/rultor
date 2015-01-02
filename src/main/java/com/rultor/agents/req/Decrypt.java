@@ -136,8 +136,8 @@ final class Decrypt {
      */
     private String composeProxyClause() throws IOException {
         String proxyClause = "proxy";
-        final String proxyHost = this.getProperty(HTTP_PROXY_HOST);
-        final String proxyporttxt = this.getProperty(HTTP_PROXY_PORT);
+        final String proxyHost = System.getProperty(HTTP_PROXY_HOST);
+        final String proxyporttxt = System.getProperty(HTTP_PROXY_PORT);
         if (StringUtils.isNotBlank(proxyHost)
             && StringUtils.isNotBlank(proxyporttxt)) {
             int proxyPort = 0;
@@ -162,16 +162,5 @@ final class Decrypt {
             }
         }
         return proxyClause;
-    }
-
-    /**
-     * Returns the system property with the specified name. This method wraps
-     *  a call to System.getProperty(...) in order to be able to mock it in
-     *  unit tests.
-     * @param name Name of the property.
-     * @return Value of the property, if it exists, null otherwise.
-     */
-    protected String getProperty(final String name) {
-        return System.getProperty(name);
     }
 }
