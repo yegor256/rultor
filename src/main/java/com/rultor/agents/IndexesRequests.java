@@ -77,22 +77,22 @@ public final class IndexesRequests implements SuperAgent {
      */
     private int update(final Talk talk, final int max) throws IOException {
         final List<String> requests = talk.read().xpath("//request");
+        final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
         int newmax = max;
-        if (requests.isEmpty()) {
-            final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
-            if (!logs.isEmpty()) {
-                final int talkmax = this.max(talk);
-                final int index = talkmax > 1 ? talkmax : max;
-                talk.modify(
-                    new Directives().xpath("//talk").add("request")
-                        .attr(INDEX, Integer.toString(index + 1))
-                        .attr("id", this.createRequestId())
-                        .add("type").set(INDEX)
-                        .up()
-                        .add("args")
-                );
-                newmax += 1;
-            }
+        int index = this.max(talk);
+        if (index < 1) {
+            index = max;
+        }
+        if (requests.isEmpty() && !logs.isEmpty()) {
+            talk.modify(
+                new Directives().xpath("//talk").add("request")
+                    .attr(INDEX, Integer.toString(index + 1))
+                    .attr("id", this.createRequestId())
+                    .add("type").set(INDEX)
+                    .up()
+                    .add("args")
+            );
+            newmax += 1;
         }
         return newmax;
     }
