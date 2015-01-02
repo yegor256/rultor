@@ -42,9 +42,6 @@ import org.xembly.Directives;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @todo #674 Implement behavior tested in storeIndexIfNone,
- *  retrievesIndexFromLog, retrievesIndexFromSibling and remove Ignore
- *  annotation. Add this SuperAgent to com.rultor.agents.Agents.starter method.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class IndexesRequestsTest {
