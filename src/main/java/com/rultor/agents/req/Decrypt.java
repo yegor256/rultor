@@ -53,6 +53,15 @@ import org.apache.commons.lang3.StringUtils;
 @ToString
 @EqualsAndHashCode(of = "profile")
 final class Decrypt {
+    /**
+     * Name of the system property, which specifies HTTP proxy host.
+     */
+    protected static final String HTTP_PROXY_HOST = "http.proxyHost";
+
+    /**
+     * Name of the system property, which specifies HTTP proxy port.
+     */
+    protected static final String HTTP_PROXY_PORT = "http.proxyPort";
 
     /**
      * Profile.
@@ -88,10 +97,6 @@ final class Decrypt {
         }
         for (final XML asset : assets) {
             final String key = asset.xpath("@key").get(0);
-            if (Profile.HTTP_PROXY_HOST.equals(key)
-                || Profile.HTTP_PROXY_PORT.equals(key)) {
-                continue;
-            }
             final String enc = String.format("%s.enc", key);
             commands.add(
                 Joiner.on(' ').join(
@@ -131,12 +136,8 @@ final class Decrypt {
      */
     private String composeProxyClause() throws IOException {
         String proxyClause = "proxy";
-        final String proxyHost = this.readProfileSetting(
-            Profile.HTTP_PROXY_HOST
-        );
-        final String proxyporttxt = this.readProfileSetting(
-            Profile.HTTP_PROXY_PORT
-        );
+        final String proxyHost = this.getProperty(HTTP_PROXY_HOST);
+        final String proxyporttxt = this.getProperty(HTTP_PROXY_PORT);
         if (StringUtils.isNotBlank(proxyHost)
             && StringUtils.isNotBlank(proxyporttxt)) {
             int proxyPort = 0;
@@ -164,24 +165,13 @@ final class Decrypt {
     }
 
     /**
-     * Reads the value of the specified profile setting and returns it.
-     * @param key Key of the setting to be read.
-     * @return Value of the setting, if it is present, null otherwise.
-     * @throws IOException Thrown in case of XML parsing error.
+     * Returns the system property with the specified name. This method wraps
+     *  a call to System.getProperty(...) in order to be able to mock it in
+     *  unit tests.
+     * @param name Name of the property.
+     * @return Value of the property, if it exists, null otherwise.
      */
-    private String readProfileSetting(final String key) throws IOException {
-        final Collection<XML> proxyHostXmls =
-            this.profile.read().nodes(
-                Joiner.on("").join(
-                    "/p/entry[@key='decrypt']/entry[@key='",
-                    key,
-                    "']"
-                )
-            );
-        String value = null;
-        if (!proxyHostXmls.isEmpty()) {
-            value = proxyHostXmls.iterator().next().xpath("text()").get(0);
-        }
-        return value;
+    protected String getProperty(final String name) {
+        return System.getProperty(name);
     }
 }

@@ -106,12 +106,7 @@ public final class DecryptTest {
     public void decryptsAssets() throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
-                new XMLDocument(
-                    StringUtils.join(
-                        "<p><entry key='decrypt'><entry key='a.txt'>",
-                        "a.txt.asc</entry></entry></p>"
-                    )
-                ),
+                createProfileXml(),
                 TEST_PROFILE_NAME
             )
         ).commands();
@@ -148,6 +143,15 @@ public final class DecryptTest {
         );
     }
 
+    private XMLDocument createProfileXml() {
+        return new XMLDocument(
+            StringUtils.join(
+                "<p><entry key='decrypt'><entry key='a.txt'>",
+                "a.txt.asc</entry></entry></p>"
+            )
+        );
+    }
+
     /**
      * This test reproduces issue #635 and validates that Decrypt uses HTTP
      *  proxy server settings when running gpg, if they are provided.
@@ -157,21 +161,14 @@ public final class DecryptTest {
     public void testHttpProxyHandling() throws IOException {
         final Decrypt decrypt = new Decrypt(
             new Profile.Fixed(
-                new XMLDocument(
-                    StringUtils.join(
-                        "<p><entry key='decrypt'>",
-                        ENTRY_KEY,
-                        Profile.HTTP_PROXY_HOST, GREATER_THAN,
-                        "http://someserver.com</entry>",
-                        ENTRY_KEY,
-                        Profile.HTTP_PROXY_PORT, GREATER_THAN,
-                        "8080</entry>",
-                        "</entry></p>"
-                    )
-                ),
+                createProfileXml(),
                 TEST_PROFILE_NAME
             )
         );
+        System.getProperties().setProperty(Decrypt.HTTP_PROXY_HOST,
+            "http://someserver.com");
+        System.getProperties().setProperty(Decrypt.HTTP_PROXY_PORT,
+            "8080");
         final Iterable<String> commands = decrypt.commands();
         MatcherAssert.assertThat(
             commands.iterator().next(),
