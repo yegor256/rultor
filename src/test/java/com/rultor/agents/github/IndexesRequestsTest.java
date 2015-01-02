@@ -122,9 +122,14 @@ public final class IndexesRequestsTest {
                 .xpath("/talk").add("wire").add("href").set("#5").up()
         );
         new IndexesRequests().execute(talks);
+
+        System.out.println("first: " + first);
+        System.out.println("second: " + second);
+        System.out.println("third: " + third);
+
         MatcherAssert.assertThat(
             talks.get(third).read(),
-            XhtmlMatchers.hasXPaths("/talk/request[@index='5']")
+            XhtmlMatchers.hasXPaths("/talk/request[@index='3']")
         );
     }
 }
