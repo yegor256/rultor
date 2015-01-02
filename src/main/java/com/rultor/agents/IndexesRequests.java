@@ -56,6 +56,7 @@ public final class IndexesRequests implements SuperAgent {
     public static final String INDEX = "index";
 
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
         int maxTalkIndex = this.getMaxTalkIndex(talks);
         for (final Talk talk : talks.active()) {
@@ -69,28 +70,17 @@ public final class IndexesRequests implements SuperAgent {
                     final int maxLogIndex = this.getMaxLogIndex(logs);
                     indexValue = maxLogIndex + 1;
                 }
-                this.addIndex(talk, indexValue);
+                talk.modify(
+                    new Directives().xpath("//talk").add("request")
+                        .attr(INDEX, Integer.toString(indexValue))
+                        .attr("id", this.createRequestId())
+                        .add("type").set(INDEX)
+                        .up()
+                        .add("args")
+                );
                 maxTalkIndex += 1;
             }
         }
-    }
-
-    /**
-     * Adds a request tag to a talk node.
-     * @param talk Talk, to which the request node should be added.
-     * @param index Value of the index attribute of the newly created request
-     *  node.
-     * @throws IOException Thrown, when problems with reading XML occur.
-     */
-    private void addIndex(final Talk talk, final int index) throws IOException {
-        talk.modify(
-            new Directives().xpath("//talk").add("request")
-                .attr(INDEX, Integer.toString(index))
-                .attr("id", this.createRequestId())
-                .add("type").set(INDEX)
-                .up()
-                .add("args")
-        );
     }
 
     /**
