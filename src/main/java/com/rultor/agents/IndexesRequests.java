@@ -29,7 +29,9 @@
  */
 package com.rultor.agents;
 
-import com.jcabi.log.Logger;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 import com.jcabi.xml.XML;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
@@ -58,7 +60,12 @@ public final class IndexesRequests implements SuperAgent {
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
-        int maxTalk = this.getMaxTalkIndex(talks);
+        int max = this.max(talks);
+        for (Talk talk : talks.active()) {
+            max = this.update(talk, max);
+        }
+/*
+        int maxTalk = this.max(talks);
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
             if (requests.isEmpty()) {
@@ -80,39 +87,53 @@ public final class IndexesRequests implements SuperAgent {
                 maxTalk += 1;
             }
         }
+        */
     }
 
-    /**
-     * Returns the greatest index of all log children of an archive node.
-     * @param logs A list of XML objects for individual log nodes (e. g.
-     *  <log id="3" index="1" title="title3"/>
-     * @return Highest value of the index attribute of all log nodes contained
-     *  in the logs list.
-     */
-    private int getMaxLogIndex(final List<XML> logs) {
-        int max = 0;
-        for (final XML log : logs) {
+    private int update(final Talk talk, final int max) throws IOException {
+        final List<String> requests = talk.read().xpath("//request");
+        int newMax = max;
+        if (requests.isEmpty()) {
             int index = 0;
-            final List<String> texts = log.xpath("@index");
-            if (texts.size() == 1) {
-                final String text = texts.get(0);
-                try {
-                    index = Integer.parseInt(text);
-                } catch (final NumberFormatException exception) {
-                    Logger.error(
-                        this,
-                        String.format(
-                            "Invalid index number '%s'",
-                            text
-                        )
-                    );
-                }
-                if (index > max) {
-                    max = index;
-                }
+            final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
+            if (logs.isEmpty()) {
+                index = max + 1;
+            } else {
+                index = this.max(talk) + 1;
             }
+            talk.modify(
+                new Directives().xpath("//talk").add("request")
+                    .attr(INDEX, Integer.toString(index))
+                    .attr("id", this.createRequestId())
+                    .add("type").set(INDEX)
+                    .up()
+                    .add("args")
+            );
+            newMax += 1;
         }
-        return max;
+
+        return newMax;
+    }
+
+    private int max(final Talk talk) throws IOException {
+        final Iterable<Integer> indexes = Iterables.transform(
+            talk.read()
+            .xpath("/talk/archive/log/@index|/talk/request/@index"),
+            new Function<String, Integer>() {
+                @Override
+                public Integer apply(final String input) {
+                    return Integer.parseInt(input);
+                }
+            });
+        System.out.println("indexes.iterator().hasNext(): " +
+            indexes.iterator().hasNext());
+
+        if (indexes.iterator().hasNext()) {
+            return Ordering.<Integer>natural().max(indexes);
+        }
+        else {
+            return 0;
+        }
     }
 
     /**
@@ -123,12 +144,10 @@ public final class IndexesRequests implements SuperAgent {
      *  list
      * @throws IOException Thrown, when problems with reading XML occur.
      */
-    private int getMaxTalkIndex(final Talks talks) throws IOException {
+    private int max(final Talks talks) throws IOException {
         int max = 0;
         for (final Talk talk : talks.active()) {
-            final int index = this.getMaxLogIndex(talk.read()
-                .nodes(ARCHIVE_LOG)
-            );
+            final int index = max(talk);
             if (index > max) {
                 max = index;
             }
