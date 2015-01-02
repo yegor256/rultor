@@ -123,9 +123,9 @@ public final class IndexesRequestsTest {
         );
         new IndexesRequests().execute(talks);
 
-        System.out.println("first: " + first);
-        System.out.println("second: " + second);
-        System.out.println("third: " + third);
+        System.out.println("first: " + talks.get(first));
+        System.out.println("second: " + talks.get(second));
+        System.out.println("third: " + talks.get(third));
 
         MatcherAssert.assertThat(
             talks.get(third).read(),
