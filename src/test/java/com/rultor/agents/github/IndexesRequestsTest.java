@@ -127,7 +127,7 @@ public final class IndexesRequestsTest {
         talks.create("", third);
         talks.get(third).modify(
             new Directives()
-                .xpath("/talk").add("wire").add("href").set("#5").up()
+                .xpath("/talk").add("wire").add("href").set("#5").up().up()
                 .add("archive")
                 .add("log").attr("id", "5").attr("title", "title5")
                 .up()
