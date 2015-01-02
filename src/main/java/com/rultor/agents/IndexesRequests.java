@@ -81,9 +81,13 @@ public final class IndexesRequests implements SuperAgent {
         if (requests.isEmpty()) {
             final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
             if (!logs.isEmpty()) {
+                int index = this.max(talk);
+                if (index < 1) {
+                    index = max;
+                }
                 talk.modify(
                     new Directives().xpath("//talk").add("request")
-                        .attr(INDEX, Integer.toString(this.max(talk) + 1))
+                        .attr(INDEX, Integer.toString(index + 1))
                         .attr("id", this.createRequestId())
                         .add("type").set(INDEX)
                         .up()
