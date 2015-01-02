@@ -58,27 +58,26 @@ public final class IndexesRequests implements SuperAgent {
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
-        int maxTalkIndex = this.getMaxTalkIndex(talks);
+        int maxTalk = this.getMaxTalkIndex(talks);
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
             if (requests.isEmpty()) {
-                int indexValue = 0;
+                int index = 0;
                 final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
                 if (logs.isEmpty()) {
-                    indexValue = maxTalkIndex + 1;
+                    index = maxTalk + 1;
                 } else {
-                    final int maxLogIndex = this.getMaxLogIndex(logs);
-                    indexValue = maxLogIndex + 1;
+                    index = this.getMaxLogIndex(logs) + 1;
                 }
                 talk.modify(
                     new Directives().xpath("//talk").add("request")
-                        .attr(INDEX, Integer.toString(indexValue))
+                        .attr(INDEX, Integer.toString(index))
                         .attr("id", this.createRequestId())
                         .add("type").set(INDEX)
                         .up()
                         .add("args")
                 );
-                maxTalkIndex += 1;
+                maxTalk += 1;
             }
         }
     }
@@ -91,29 +90,29 @@ public final class IndexesRequests implements SuperAgent {
      *  in the logs list.
      */
     private int getMaxLogIndex(final List<XML> logs) {
-        int maxLogIndex = 0;
+        int max = 0;
         for (final XML log : logs) {
-            int curIndex = 0;
-            final List<String> indexTexts = log.xpath("@index");
-            if (indexTexts.size() == 1) {
-                final String indexText = indexTexts.get(0);
+            int index = 0;
+            final List<String> texts = log.xpath("@index");
+            if (texts.size() == 1) {
+                final String text = texts.get(0);
                 try {
-                    curIndex = Integer.parseInt(indexText);
+                    index = Integer.parseInt(text);
                 } catch (final NumberFormatException exception) {
                     Logger.error(
                         this,
                         String.format(
                             "Invalid index number '%s'",
-                            indexText
+                            text
                         )
                     );
                 }
-                if (curIndex > maxLogIndex) {
-                    maxLogIndex = curIndex;
+                if (index > max) {
+                    max = index;
                 }
             }
         }
-        return maxLogIndex;
+        return max;
     }
 
     /**
@@ -125,16 +124,16 @@ public final class IndexesRequests implements SuperAgent {
      * @throws IOException Thrown, when problems with reading XML occur.
      */
     private int getMaxTalkIndex(final Talks talks) throws IOException {
-        int maxIndex = 0;
+        int max = 0;
         for (final Talk talk : talks.active()) {
-            final int talkIndex = this.getMaxLogIndex(talk.read()
+            final int index = this.getMaxLogIndex(talk.read()
                 .nodes(ARCHIVE_LOG)
             );
-            if (talkIndex > maxIndex) {
-                maxIndex = talkIndex;
+            if (index > max) {
+                max = index;
             }
         }
-        return maxIndex;
+        return max;
     }
 
     /**
