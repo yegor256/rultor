@@ -94,24 +94,19 @@ public final class IndexesRequests implements SuperAgent {
         final List<String> requests = talk.read().xpath("//request");
         int newMax = max;
         if (requests.isEmpty()) {
-            int index = 0;
             final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
-            if (logs.isEmpty()) {
-                index = max + 1;
-            } else {
-                index = this.max(talk) + 1;
+            if (!logs.isEmpty()) {
+                talk.modify(
+                    new Directives().xpath("//talk").add("request")
+                        .attr(INDEX, Integer.toString(this.max(talk) + 1))
+                        .attr("id", this.createRequestId())
+                        .add("type").set(INDEX)
+                        .up()
+                        .add("args")
+                );
+                newMax += 1;
             }
-            talk.modify(
-                new Directives().xpath("//talk").add("request")
-                    .attr(INDEX, Integer.toString(index))
-                    .attr("id", this.createRequestId())
-                    .add("type").set(INDEX)
-                    .up()
-                    .add("args")
-            );
-            newMax += 1;
         }
-
         return newMax;
     }
 

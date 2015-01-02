@@ -33,6 +33,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.IndexesRequests;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
+import static org.hamcrest.core.Is.is;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -58,13 +59,11 @@ public final class IndexesRequestsTest {
             new Directives()
                 .xpath("/talk").add("wire").add("href").set("#1").up()
         );
-
-        System.out.println("talks.get(name): " + talks.get(name).read());
-
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
-            talks.get(name).read(),
-            XhtmlMatchers.hasXPaths("/talk/request[@index='1']")
+            talks.get(name).read().xpath("/talk/request[@index='1']/text()")
+            .isEmpty(),
+            is(true)
         );
     }
 
