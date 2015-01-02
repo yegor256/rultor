@@ -47,7 +47,8 @@ import org.xembly.Directives;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class IndexesRequestsTest {
     /**
-     * IndexesRequests should store index when it doesn't exist.
+     * IndexesRequests should not store index, if a talk has no archive/log
+     *  nodes
      * @throws Exception In case of error.
      */
     @Test

@@ -61,35 +61,20 @@ public final class IndexesRequests implements SuperAgent {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
         int max = this.max(talks);
-        for (Talk talk : talks.active()) {
+        for (final Talk talk : talks.active()) {
             max = this.update(talk, max);
         }
-/*
-        int maxTalk = this.max(talks);
-        for (final Talk talk : talks.active()) {
-            final List<String> requests = talk.read().xpath("//request");
-            if (requests.isEmpty()) {
-                int index = 0;
-                final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
-                if (logs.isEmpty()) {
-                    index = maxTalk + 1;
-                } else {
-                    index = this.getMaxLogIndex(logs) + 1;
-                }
-                talk.modify(
-                    new Directives().xpath("//talk").add("request")
-                        .attr(INDEX, Integer.toString(index))
-                        .attr("id", this.createRequestId())
-                        .add("type").set(INDEX)
-                        .up()
-                        .add("args")
-                );
-                maxTalk += 1;
-            }
-        }
-        */
     }
 
+    /**
+     * Creates an index node in the specified talk node, if it has archive/log
+     * nodes.
+     * @param talk Talk, to which the index node should be appended.
+     * @param max Maximal index value among all talks
+     * @return New maximal value. If an index node was added, it is equal to
+     *  (max+1), otherwise - max.
+     * @throws IOException Thrown in case of XML parsing errors.
+     */
     private int update(final Talk talk, final int max) throws IOException {
         final List<String> requests = talk.read().xpath("//request");
         int newMax = max;
