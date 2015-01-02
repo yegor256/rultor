@@ -122,11 +122,6 @@ public final class IndexesRequestsTest {
                 .xpath("/talk").add("wire").add("href").set("#5").up()
         );
         new IndexesRequests().execute(talks);
-
-        System.out.println("first: " + talks.get(first));
-        System.out.println("second: " + talks.get(second));
-        System.out.println("third: " + talks.get(third));
-
         MatcherAssert.assertThat(
             talks.get(third).read(),
             XhtmlMatchers.hasXPaths("/talk/request[@index='3']")
