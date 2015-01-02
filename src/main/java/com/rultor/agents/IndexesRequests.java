@@ -48,12 +48,12 @@ public final class IndexesRequests implements SuperAgent {
     /**
      * Xpath expression for retrieving log entries from a talk's XML.
      */
-    public static final String ARCHIVE_LOG = "//archive/log";
+    private static final String ARCHIVE_LOG = "//archive/log";
 
     /**
      * Name of the log index attribute.
      */
-    public static final String INDEX = "index";
+    private static final String INDEX = "index";
 
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")

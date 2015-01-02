@@ -93,6 +93,11 @@ public final class IndexesRequestsTest {
     /**
      * IndexesRequests should retrieve index from sibling.
      * @throws Exception In case of error.
+     * @todo #700 Find out, why the talks.get(third) contains a request node
+     *  with index=5, if you run the test on Windows. If you run the same test
+     *  under Ubuntu, that XML document contains a node with index=3. The tests
+     *  were run with the
+     *  "mvn test -Dtest=com.rultor.agents.github.IndexesRequestsTest" command.
      */
     @Test
     public void retrievesIndexFromSibling() throws Exception {
