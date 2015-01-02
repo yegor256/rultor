@@ -128,6 +128,9 @@ public final class IndexesRequestsTest {
         talks.get(third).modify(
             new Directives()
                 .xpath("/talk").add("wire").add("href").set("#5").up()
+                .add("archive")
+                .add("log").attr("id", "5").attr("title", "title5")
+                .up()
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
