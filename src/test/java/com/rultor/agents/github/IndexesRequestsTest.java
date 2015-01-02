@@ -33,7 +33,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.IndexesRequests;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
-import static org.hamcrest.core.Is.is;
+import org.hamcrest.core.Is;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -48,7 +48,7 @@ import org.xembly.Directives;
 public final class IndexesRequestsTest {
     /**
      * IndexesRequests should not store index, if a talk has no archive/log
-     *  nodes
+     *  nodes.
      * @throws Exception In case of error.
      */
     @Test
@@ -64,7 +64,7 @@ public final class IndexesRequestsTest {
         MatcherAssert.assertThat(
             talks.get(name).read().xpath("/talk/request[@index='1']/text()")
             .isEmpty(),
-            is(true)
+            Is.is(true)
         );
     }
 

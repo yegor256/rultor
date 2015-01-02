@@ -77,7 +77,7 @@ public final class IndexesRequests implements SuperAgent {
      */
     private int update(final Talk talk, final int max) throws IOException {
         final List<String> requests = talk.read().xpath("//request");
-        int newMax = max;
+        int newmax = max;
         if (requests.isEmpty()) {
             final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
             if (!logs.isEmpty()) {
@@ -89,31 +89,35 @@ public final class IndexesRequests implements SuperAgent {
                         .up()
                         .add("args")
                 );
-                newMax += 1;
+                newmax += 1;
             }
         }
-        return newMax;
+        return newmax;
     }
 
+    /**
+     * Calculates maximum index value of all archive/log nodes.
+     * @param talk Talk, for whose archve/log nodes the maximum should be
+     *  calculated.
+     * @return Maximum value of index attribute among all archive/log nodes of
+     *  talk.
+     * @throws IOException Thrown in case of XML parsing problems.
+     */
     private int max(final Talk talk) throws IOException {
         final Iterable<Integer> indexes = Iterables.transform(
             talk.read()
-            .xpath("/talk/archive/log/@index|/talk/request/@index"),
+                .xpath("/talk/archive/log/@index|/talk/request/@index"),
             new Function<String, Integer>() {
                 @Override
                 public Integer apply(final String input) {
                     return Integer.parseInt(input);
                 }
             });
-        System.out.println("indexes.iterator().hasNext(): " +
-            indexes.iterator().hasNext());
-
+        int max = 0;
         if (indexes.iterator().hasNext()) {
-            return Ordering.<Integer>natural().max(indexes);
+            max = Ordering.<Integer>natural().max(indexes);
         }
-        else {
-            return 0;
-        }
+        return max;
     }
 
     /**
