@@ -57,9 +57,6 @@ public final class IndexesRequests implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        if (talks == null) {
-            return;
-        }
         int maxTalkIndex = this.getMaxTalkIndex(talks);
         for (final Talk talk : talks.active()) {
             final List<String> requests = talk.read().xpath("//request");
