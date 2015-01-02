@@ -106,7 +106,7 @@ public final class DecryptTest {
     public void decryptsAssets() throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
-                createProfileXml(),
+                this.createProfileXml(),
                 TEST_PROFILE_NAME
             )
         ).commands();
@@ -143,15 +143,6 @@ public final class DecryptTest {
         );
     }
 
-    private XMLDocument createProfileXml() {
-        return new XMLDocument(
-            StringUtils.join(
-                "<p><entry key='decrypt'><entry key='a.txt'>",
-                "a.txt.asc</entry></entry></p>"
-            )
-        );
-    }
-
     /**
      * This test reproduces issue #635 and validates that Decrypt uses HTTP
      *  proxy server settings when running gpg, if they are provided.
@@ -161,14 +152,18 @@ public final class DecryptTest {
     public void testHttpProxyHandling() throws IOException {
         final Decrypt decrypt = new Decrypt(
             new Profile.Fixed(
-                createProfileXml(),
+                this.createProfileXml(),
                 TEST_PROFILE_NAME
             )
         );
-        System.getProperties().setProperty(Decrypt.HTTP_PROXY_HOST,
-            "http://someserver.com");
-        System.getProperties().setProperty(Decrypt.HTTP_PROXY_PORT,
-            "8080");
+        System.getProperties().setProperty(
+            Decrypt.HTTP_PROXY_HOST,
+            "http://someserver.com"
+        );
+        System.getProperties().setProperty(
+            Decrypt.HTTP_PROXY_PORT,
+            "8080"
+        );
         final Iterable<String> commands = decrypt.commands();
         MatcherAssert.assertThat(
             commands.iterator().next(),
@@ -178,6 +173,19 @@ public final class DecryptTest {
                     "http-proxy=http://someserver.com:8080",
                     "--verbose --recv-keys 9AF0FA4C"
                 )
+            )
+        );
+    }
+
+    /**
+     * Creates a profile XML for testing purposes.
+     * @return XML document
+     */
+    private XMLDocument createProfileXml() {
+        return new XMLDocument(
+            StringUtils.join(
+                "<p><entry key='decrypt'><entry key='a.txt'>",
+                "a.txt.asc</entry></entry></p>"
             )
         );
     }
