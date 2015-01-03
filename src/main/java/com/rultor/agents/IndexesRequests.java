@@ -47,16 +47,6 @@ import org.xembly.Directives;
  * @version $Id$
  */
 public final class IndexesRequests implements SuperAgent {
-    /**
-     * Xpath expression for retrieving log entries from a talk's XML.
-     */
-    private static final String ARCHIVE_LOG = "//archive/log";
-
-    /**
-     * Name of the log index attribute.
-     */
-    private static final String INDEX = "index";
-
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
@@ -77,7 +67,7 @@ public final class IndexesRequests implements SuperAgent {
      */
     private int update(final Talk talk, final int max) throws IOException {
         final List<String> requests = talk.read().xpath("//request");
-        final List<XML> logs = talk.read().nodes(ARCHIVE_LOG);
+        final List<XML> logs = talk.read().nodes("//archive/log");
         int newmax = max;
         int index = this.max(talk);
         if (index < 1) {
@@ -86,9 +76,9 @@ public final class IndexesRequests implements SuperAgent {
         if (requests.isEmpty() && !logs.isEmpty()) {
             talk.modify(
                 new Directives().xpath("//talk").add("request")
-                    .attr(INDEX, Integer.toString(index + 1))
+                    .attr("index", Integer.toString(index + 1))
                     .attr("id", this.createRequestId())
-                    .add("type").set(INDEX)
+                    .add("type").set("index")
                     .up()
                     .add("args")
             );
