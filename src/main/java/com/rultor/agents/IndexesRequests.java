@@ -59,7 +59,7 @@ public final class IndexesRequests implements SuperAgent {
 
     /**
      * Sets the index value of a request node, if it exists and if the talk node
-     * has archive/log nodes.
+     *  has archive/log nodes.
      * @param talk Talk, to which the index node should be appended.
      * @param max Maximal index value among all talks
      * @return New maximal value. If an index node was added, it is equal to
