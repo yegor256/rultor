@@ -135,11 +135,10 @@ final class Decrypt {
      * @throws IOException Thrown in case of XML parse error.
      */
     private String composeProxyClause() throws IOException {
-        String proxyClause = "proxy";
+        String clause = "proxy";
         final String proxyHost = System.getProperty(HTTP_PROXY_HOST);
         final String proxyporttxt = System.getProperty(HTTP_PROXY_PORT);
-        if (StringUtils.isNotBlank(proxyHost)
-            && StringUtils.isNotBlank(proxyporttxt)) {
+        if (StringUtils.isNotBlank(proxyHost)) {
             int proxyPort = 80;
             try {
                 proxyPort = Integer.parseInt(proxyporttxt);
@@ -155,7 +154,7 @@ final class Decrypt {
                 throw new IllegalStateException(message);
             }
             if (proxyPort > 0) {
-                proxyClause = Joiner.on("").join(
+                clause = Joiner.on("").join(
                     "http-proxy=",
                     proxyHost,
                     ":",
@@ -163,6 +162,6 @@ final class Decrypt {
                 );
             }
         }
-        return proxyClause;
+        return clause;
     }
 }
