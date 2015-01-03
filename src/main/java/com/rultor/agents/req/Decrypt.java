@@ -140,7 +140,7 @@ final class Decrypt {
         final String proxyporttxt = System.getProperty(HTTP_PROXY_PORT);
         if (StringUtils.isNotBlank(proxyHost)
             && StringUtils.isNotBlank(proxyporttxt)) {
-            int proxyPort = 0;
+            int proxyPort = 80;
             try {
                 proxyPort = Integer.parseInt(proxyporttxt);
             } catch (final NumberFormatException exception) {
