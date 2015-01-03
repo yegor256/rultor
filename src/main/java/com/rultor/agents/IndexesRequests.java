@@ -98,7 +98,9 @@ public final class IndexesRequests implements SuperAgent {
     private int max(final Talk talk) throws IOException {
         final Iterable<Integer> indexes = Iterables.transform(
             talk.read()
-                .xpath("/talk/archive/log/@index|/talk/request/@index"),
+                .xpath(
+                    "/talk/archive/log/@index|/talk/request/@index"
+                ),
             new Function<String, Integer>() {
                 @Override
                 public Integer apply(final String input) {
