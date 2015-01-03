@@ -58,8 +58,8 @@ public final class IndexesRequests implements SuperAgent {
     }
 
     /**
-     * Creates an index node in the specified talk node, if it has archive/log
-     * nodes.
+     * Sets the index value of a request node, if it exists and if the talk node
+     * has archive/log nodes.
      * @param talk Talk, to which the index node should be appended.
      * @param max Maximal index value among all talks
      * @return New maximal value. If an index node was added, it is equal to
@@ -67,22 +67,18 @@ public final class IndexesRequests implements SuperAgent {
      * @throws IOException Thrown in case of XML parsing errors.
      */
     private int update(final Talk talk, final int max) throws IOException {
-        final List<String> requests = talk.read().xpath("//request");
         final List<XML> logs = talk.read().nodes("//archive/log");
         int newmax = max;
         int index = this.max(talk);
         if (index < 1) {
             index = max;
         }
-        if (requests.isEmpty() && !logs.isEmpty()) {
-            talk.modify(
-                new Directives().xpath("//talk").add("request")
-                    .attr("index", Integer.toString(index + 1))
-                    .attr("id", this.createRequestId())
-                    .add("type").set("index")
-                    .up()
-                    .add("args")
-            );
+        final List<XML> nodes = talk.read()
+            .nodes("//deploy|//merge|//release|//stop");
+        if (!nodes.isEmpty() && !logs.isEmpty()) {
+            talk.modify(new Directives()
+                .xpath("(//deploy|//merge|//release|//stop)[1]")
+                .attr("index", Integer.toString(index + 1)));
             newmax += 1;
         }
         return newmax;
