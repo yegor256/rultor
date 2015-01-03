@@ -136,16 +136,16 @@ final class Decrypt {
      */
     private String composeProxyClause() throws IOException {
         String clause = "proxy";
-        final String proxyHost = System.getProperty(HTTP_PROXY_HOST);
-        final String proxyporttxt = System.getProperty(HTTP_PROXY_PORT);
-        if (StringUtils.isNotBlank(proxyHost)) {
+        final String host = System.getProperty(HTTP_PROXY_HOST);
+        final String porttxt = System.getProperty(HTTP_PROXY_PORT);
+        if (StringUtils.isNotBlank(host)) {
             int proxyPort = 80;
             try {
-                proxyPort = Integer.parseInt(proxyporttxt);
+                proxyPort = Integer.parseInt(porttxt);
             } catch (final NumberFormatException exception) {
                 final String message = Joiner.on(" ").join(
                     "Can't parse proxy port",
-                    proxyporttxt
+                    porttxt
                 );
                 Logger.error(
                     this,
@@ -156,7 +156,7 @@ final class Decrypt {
             if (proxyPort > 0) {
                 clause = Joiner.on("").join(
                     "http-proxy=",
-                    proxyHost,
+                    host,
                     ":",
                     proxyPort
                 );

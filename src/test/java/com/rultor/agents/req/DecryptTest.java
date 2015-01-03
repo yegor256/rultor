@@ -61,16 +61,6 @@ public final class DecryptTest {
     public static final String TEST_PROFILE_NAME = "test/test";
 
     /**
-     * Profile key specification text.
-     */
-    public static final String ENTRY_KEY = "<entry key='";
-
-    /**
-     * Greter than sign.
-     */
-    public static final String GREATER_THAN = "'>";
-
-    /**
      * Encoded test file.
      */
     private static final String ASC = Joiner.on('\n').join(
