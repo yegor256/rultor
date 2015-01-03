@@ -104,7 +104,8 @@ public final class IndexesRequests implements SuperAgent {
                 public Integer apply(final String input) {
                     return Integer.parseInt(input);
                 }
-            });
+            }
+        );
         int max = 0;
         if (indexes.iterator().hasNext()) {
             max = Ordering.<Integer>natural().max(indexes);
