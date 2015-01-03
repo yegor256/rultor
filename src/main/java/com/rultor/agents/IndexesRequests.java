@@ -37,6 +37,7 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import org.xembly.Directives;
@@ -125,9 +126,10 @@ public final class IndexesRequests implements SuperAgent {
      */
     private int max(final Talks talks) throws IOException {
         int max = 0;
-        for (final Talk talk : talks.active()) {
-            final int index = max(talk);
-            if (index > max) {
+        final Iterator<Talk> iterator = talks.active().iterator();
+        while ((max == 0) && iterator.hasNext()) {
+            final int index = max(iterator.next());
+            if (index > 0) {
                 max = index;
             }
         }
