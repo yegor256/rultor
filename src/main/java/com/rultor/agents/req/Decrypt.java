@@ -144,13 +144,15 @@ final class Decrypt {
             try {
                 proxyPort = Integer.parseInt(proxyporttxt);
             } catch (final NumberFormatException exception) {
+                final String message = Joiner.on(" ").join(
+                    "Can't parse proxy port",
+                    proxyporttxt
+                );
                 Logger.error(
                     this,
-                    Joiner.on(" ").join(
-                        "Can't parse proxy port",
-                        proxyporttxt
-                    )
+                    message
                 );
+                throw new IllegalStateException(message);
             }
             if (proxyPort > 0) {
                 proxyClause = Joiner.on("").join(
