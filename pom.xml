@@ -531,6 +531,7 @@
                             <systemPropertyVariables combine.children="append">
                                 <tomcat.home>http://localhost:${tomcat.port}</tomcat.home>
                             </systemPropertyVariables>
+                            <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl</argLine>
                             <reuseForks>false</reuseForks>
                         </configuration>
                         <executions>
@@ -725,6 +726,7 @@
                             <systemPropertyVariables combine.children="append">
                                 <dynamo.port>${dynamodblocal.port}</dynamo.port>
                             </systemPropertyVariables>
+                            <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl</argLine>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -745,6 +747,7 @@
                                 <failsafe.docker.login>${failsafe.docker.login}</failsafe.docker.login>
                                 <failsafe.docker.key>${failsafe.docker.key}</failsafe.docker.key>
                             </systemPropertyVariables>
+                            <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl</argLine>
                         </configuration>
                     </plugin>
                 </plugins>
