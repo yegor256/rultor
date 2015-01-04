@@ -46,6 +46,12 @@ for fun :) Here is our [selection criteria](http://www.yegor256.com/2014/10/05/t
 [circleci.io](http://www.circleci.io)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
 
+[magnum-ci.com](http://www.magnum-ci.com)<br/>
+[![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
+
+[shippable.com](http://www.shippable.com)<br/>
+[![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
+
 Less interesting and/or stable stuff:
 
 [snap-ci.com](http://www.snap-ci.com)<br/>
@@ -56,12 +62,6 @@ Less interesting and/or stable stuff:
 
 [drone.io](http://www.drone.io)<br/>
 [![Build Status](https://drone.io/github.com/yegor256/rultor/status.png)](https://drone.io/github.com/yegor256/rultor/latest)
-
-[magnum-ci.com](http://www.magnum-ci.com)<br/>
-[![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
-
-[shippable.com](http://www.shippable.com)<br/>
-[![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
 
 [solanolabs.com](http://ci.solanolabs.com)<br/>
 [![sonolabs status](https://ci.solanolabs.com:443/yegor256/rultor/badges/120059.png?badge_token=6c00577e47c05198703fe752d6d26cd4e4a4d011)](https://ci.solanolabs.com:443/yegor256/rultor/suites/120059)
