@@ -1,1 +1,6 @@
 box: wercker/default
+build:
+  steps:
+    - script:
+      name: maven
+      code: mvn clean install -Pqulice --batch-mode
