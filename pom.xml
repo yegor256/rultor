@@ -455,6 +455,20 @@
                                     </arguments>
                                 </configuration>
                             </execution>
+                            <execution>
+                            	<id>jekyll-copy-license</id>
+                            	<phase>pre-site</phase>
+                            	<goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cp</executable>
+                                    <arguments>
+                                        <argument>LICENSE.txt</argument>
+                                        <argument>${project.build.directory}/site</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                 </plugins>
