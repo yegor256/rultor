@@ -12,6 +12,6 @@ build:
           rm apache-maven-$MAVEN_VERSION-bin.tar.gz
           PATH=$MAVEN_HOME/bin:$PATH
           unset GEM_PATH
-          MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
-          JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+          export MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+          export JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
           mvn clean install -Pqulice --batch-mode
