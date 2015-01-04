@@ -1,4 +1,4 @@
-box: wercker/default
+box: wercker/android
 build:
   steps:
     - script:
