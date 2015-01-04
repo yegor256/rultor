@@ -30,9 +30,11 @@
 package com.rultor.dynamo;
 
 import co.stateful.mock.MkSttc;
+
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
@@ -82,6 +84,7 @@ public final class DyTalksITCase {
      */
     @Test
     public void listsRecentTalks() throws Exception {
+        Logger.warn(this, "***!!*** " + System.getProperty("javax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom"));
         final Talks talks = new DyTalks(
             this.dynamo(), new MkSttc().counters().get("")
         );
