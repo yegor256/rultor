@@ -119,57 +119,68 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>     <strong class="jxr_keyword">private</strong> Iterable&lt;Directive&gt; end(<strong class="jxr_keyword">final</strong> Shell shell,
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">final</strong> String dir) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">final</strong> String dirasgn = String.format(<span class="jxr_string">"dir=%s"</span>, SSH.escape(dir));
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> exit = Integer.parseInt(
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">new</strong> Shell.Plain(<strong class="jxr_keyword">new</strong> Shell.Safe(shell)).exec(
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>                 Joiner.on(EndsDaemon.SHELL_JOINER).join(
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>                     dirasgn,
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>                     <span class="jxr_string">"if [ ! -e \&quot;${dir}/status\&quot; ]; then echo 127; exit 0; fi"</span>,
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>                     <span class="jxr_string">"cat \&quot;${dir}/status\&quot;"</span>
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>                 )
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>             ).trim()
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>         );
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">final</strong> String stdout = Joiner.on(<span class="jxr_string">"\n"</span>).join(
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>             Iterables.transform(
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>                 Iterables.filter(
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>                     Splitter.on(System.lineSeparator()).split(
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>                         <strong class="jxr_keyword">new</strong> Shell.Plain(<strong class="jxr_keyword">new</strong> Shell.Safe(shell)).exec(
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>                             Joiner.on(EndsDaemon.SHELL_JOINER).join(
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>                                 dirasgn,
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>                                 <span class="jxr_string">"cat \&quot;${dir}/stdout\&quot;"</span>
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>                             )
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>                         )
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>                     ),
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>                     <strong class="jxr_keyword">new</strong> Predicate&lt;String&gt;() {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>                         @Override
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>                         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> apply(<strong class="jxr_keyword">final</strong> String input) {
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>                             <strong class="jxr_keyword">return</strong> input.startsWith(
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>                                 EndsDaemon.HIGHLIGHTS_PREFIX
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>                             );
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>                         }
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>                     }
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>                 ), <strong class="jxr_keyword">new</strong> Function&lt;String, String&gt;() {
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>                     @Override
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>                     <strong class="jxr_keyword">public</strong> String apply(<strong class="jxr_keyword">final</strong> String str) {
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>                         <strong class="jxr_keyword">return</strong> StringUtils.removeStart(
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>                             str, EndsDaemon.HIGHLIGHTS_PREFIX
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>                         );
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>                     }
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>                 }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>             )
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>         );
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>         Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"daemon finished at %s, exit: %d"</span>, dir, exit);
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives()
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>             .xpath(<span class="jxr_string">"/talk/daemon"</span>)
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>             .strict(1)
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>             .add(<span class="jxr_string">"ended"</span>).set(<strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/Time.html">Time</a>().iso()).up()
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>             .add(<span class="jxr_string">"code"</span>).set(Integer.toString(exit)).up()
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>             .add(<span class="jxr_string">"highlights"</span>).set(stdout);
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     }
-<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> }
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> exit = <strong class="jxr_keyword">this</strong>.exit(shell, dir);
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">final</strong> String stdout = Joiner.on(<span class="jxr_string">"\n"</span>).join(
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>             Iterables.transform(
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>                 Iterables.filter(
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>                     Splitter.on(System.lineSeparator()).split(
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>                         <strong class="jxr_keyword">new</strong> Shell.Plain(<strong class="jxr_keyword">new</strong> Shell.Safe(shell)).exec(
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>                             Joiner.on(EndsDaemon.SHELL_JOINER).join(
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>                                 String.format(<span class="jxr_string">"dir=%s"</span>, SSH.escape(dir)),
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>                                 <span class="jxr_string">"cat \&quot;${dir}/stdout\&quot;"</span>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                             )
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                         )
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                     ),
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>                     <strong class="jxr_keyword">new</strong> Predicate&lt;String&gt;() {
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>                         @Override
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>                         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> apply(<strong class="jxr_keyword">final</strong> String input) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>                             <strong class="jxr_keyword">return</strong> input.startsWith(
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>                                 EndsDaemon.HIGHLIGHTS_PREFIX
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>                             );
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>                         }
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>                     }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>                 ), <strong class="jxr_keyword">new</strong> Function&lt;String, String&gt;() {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>                     @Override
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>                     <strong class="jxr_keyword">public</strong> String apply(<strong class="jxr_keyword">final</strong> String str) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>                         <strong class="jxr_keyword">return</strong> StringUtils.removeStart(
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>                             str, EndsDaemon.HIGHLIGHTS_PREFIX
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                         );
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>                     }
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                 }
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>             )
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         );
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"daemon finished at %s, exit: %d"</span>, dir, exit);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives()
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>             .xpath(<span class="jxr_string">"/talk/daemon"</span>)
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>             .strict(1)
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>             .add(<span class="jxr_string">"ended"</span>).set(<strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/Time.html">Time</a>().iso()).up()
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>             .add(<span class="jxr_string">"code"</span>).set(Integer.toString(exit)).up()
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>             .add(<span class="jxr_string">"highlights"</span>).set(stdout);
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * Get exit code.</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * @param shell Shell</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * @param dir The dir</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * @return Exit code</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> exit(<strong class="jxr_keyword">final</strong> Shell shell, <strong class="jxr_keyword">final</strong> String dir) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">return</strong> Integer.parseInt(
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <strong class="jxr_keyword">new</strong> Shell.Plain(<strong class="jxr_keyword">new</strong> Shell.Safe(shell)).exec(
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                 Joiner.on(EndsDaemon.SHELL_JOINER).join(
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                     String.format(<span class="jxr_string">"cd %s"</span>, SSH.escape(dir)),
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>                     <span class="jxr_string">"if [ ! -e status ]; then echo 127; exit; fi"</span>,
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                     <span class="jxr_string">"if ! grep -q '^[0-9]+$' status; then echo 1; exit; fi"</span>,
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                     <span class="jxr_string">"cat status"</span>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>                 )
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>             ).trim()
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         );
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     }
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>
