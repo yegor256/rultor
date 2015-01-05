@@ -158,16 +158,20 @@ public final class EndsDaemon extends AbstractAgent {
      * @throws IOException If fails
      */
     private int exit(final Shell shell, final String dir) throws IOException {
-        return Integer.parseInt(
-            new Shell.Plain(new Shell.Safe(shell)).exec(
-                Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                    String.format("cd %s", SSH.escape(dir)),
-                    "if [ ! -e status ]; then echo 127; exit; fi",
-                    "if ! grep -q '^[0-9]+$' status; then echo 1; exit; fi",
-                    "cat status"
-                )
-            ).trim()
-        );
+        final String status = new Shell.Plain(new Shell.Safe(shell)).exec(
+            Joiner.on(EndsDaemon.SHELL_JOINER).join(
+                String.format("cd %s", SSH.escape(dir)),
+                "if [ ! -e status ]; then echo 127; exit; fi",
+                "cat status"
+            )
+        ).trim().replaceAll("[^0-9]", "");
+        final int exit;
+        if (status.isEmpty()) {
+            exit = 1;
+        } else {
+            exit = Integer.parseInt(status);
+        }
+        return exit;
     }
 
 }
