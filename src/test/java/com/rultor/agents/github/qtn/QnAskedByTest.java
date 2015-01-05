@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.jcabi.github.User;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
@@ -55,10 +56,10 @@ public final class QnAskedByTest {
      */
     @Test
     public void excludesRultorFromListOfCommanders() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final MkGithub github = new MkGithub();
+        final User self = github.users().self();
+        final Repo repo = github.randomRepo();
         repo.collaborators().add("testuser1");
-        repo.collaborators().add("rultor");
-        repo.collaborators().add("testuser2");
         final Issue issue = repo.issues().create("title", "body");
         issue.comments().post("comment");
         final Comment.Smart comment = new Comment.Smart(
@@ -69,6 +70,7 @@ public final class QnAskedByTest {
             "//test",
             Mockito.mock(Question.class)
         );
+        github.relogin("rultor");
         qab.understand(comment, new URI("http://localhost"));
         final Comment.Smart reply = new Comment.Smart(issue.comments().get(2));
         MatcherAssert.assertThat(

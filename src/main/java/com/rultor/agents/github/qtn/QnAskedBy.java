@@ -108,7 +108,8 @@ public final class QnAskedBy implements Question {
             new Answer(comment).post(
                 String.format(
                     QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
-                    this.commandersAsDelimitedList(logins)
+                    this.commandersAsDelimitedList(logins,
+                        comment.issue().repo().github().users().self().login())
                 )
             );
             req = Req.EMPTY;
@@ -119,9 +120,11 @@ public final class QnAskedBy implements Question {
     /**
      * Format list of commanders with {@code @} prefix, comma-delimited.
      * @param logins Commanders
+     * @param excluded Excluded commander
      * @return Comma-delimited names
      */
-    private String commandersAsDelimitedList(final Collection<String> logins) {
+    private String commandersAsDelimitedList(final Collection<String> logins,
+            final String excluded) {
         return StringUtils.join(
             Iterables.transform(
                 Iterables.filter(
@@ -129,7 +132,7 @@ public final class QnAskedBy implements Question {
                     new Predicate<Object>() {
                         @Override
                         public boolean apply(final Object input) {
-                            return !"rultor".equals(input);
+                            return !excluded.equals(input);
                         }
                     }
                 ),
