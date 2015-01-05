@@ -92,6 +92,7 @@
     <properties>
         <jersey.version>1.18.1</jersey.version>
         <saxon.version>9.1.0.8</saxon.version>
+        <xpathfactorypropfile>${basedir}/src/test/resources/XPathFactory.properties</xpathfactorypropfile>
     </properties>
     <dependencies>
         <dependency>
@@ -326,13 +327,14 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl -Duser.language=en -Duser.region=US</argLine>
+                        <argLine>-Duser.language=en -Duser.region=US</argLine>
+                        <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
-                        <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl</argLine>
+                        <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
                     </configuration>
                 </plugin>
             </plugins>
@@ -531,7 +533,6 @@
                             <systemPropertyVariables combine.children="append">
                                 <tomcat.home>http://localhost:${tomcat.port}</tomcat.home>
                             </systemPropertyVariables>
-                            <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl</argLine>
                             <reuseForks>false</reuseForks>
                         </configuration>
                         <executions>
@@ -726,7 +727,6 @@
                             <systemPropertyVariables combine.children="append">
                                 <dynamo.port>${dynamodblocal.port}</dynamo.port>
                             </systemPropertyVariables>
-                            <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl</argLine>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -747,7 +747,6 @@
                                 <failsafe.docker.login>${failsafe.docker.login}</failsafe.docker.login>
                                 <failsafe.docker.key>${failsafe.docker.key}</failsafe.docker.key>
                             </systemPropertyVariables>
-                            <argLine>-Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl</argLine>
                         </configuration>
                     </plugin>
                 </plugins>
