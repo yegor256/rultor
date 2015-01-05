@@ -111,23 +111,14 @@ public final class EndsDaemon extends AbstractAgent {
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
-        final String dirasgn = String.format("dir=%s", SSH.escape(dir));
-        final int exit = Integer.parseInt(
-            new Shell.Plain(new Shell.Safe(shell)).exec(
-                Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                    dirasgn,
-                    "if [ ! -e \"${dir}/status\" ]; then echo 127; exit 0; fi",
-                    "cat \"${dir}/status\""
-                )
-            ).trim()
-        );
+        final int exit = this.exit(shell, dir);
         final String stdout = Joiner.on("\n").join(
             Iterables.transform(
                 Iterables.filter(
                     Splitter.on(System.lineSeparator()).split(
                         new Shell.Plain(new Shell.Safe(shell)).exec(
                             Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                                dirasgn,
+                                String.format("dir=%s", SSH.escape(dir)),
                                 "cat \"${dir}/stdout\""
                             )
                         )
@@ -157,6 +148,26 @@ public final class EndsDaemon extends AbstractAgent {
             .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit)).up()
             .add("highlights").set(stdout);
+    }
+
+    /**
+     * Get exit code.
+     * @param shell Shell
+     * @param dir The dir
+     * @return Exit code
+     * @throws IOException If fails
+     */
+    private int exit(final Shell shell, final String dir) throws IOException {
+        return Integer.parseInt(
+            new Shell.Plain(new Shell.Safe(shell)).exec(
+                Joiner.on(EndsDaemon.SHELL_JOINER).join(
+                    String.format("cd %s", SSH.escape(dir)),
+                    "if [ ! -e status ]; then echo 127; exit; fi",
+                    "if ! grep -q '^[0-9]+$' status; then echo 1; exit; fi",
+                    "cat status"
+                )
+            ).trim()
+        );
     }
 
 }
