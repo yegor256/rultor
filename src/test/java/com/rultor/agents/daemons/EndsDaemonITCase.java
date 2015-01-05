@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,21 +65,62 @@ public final class EndsDaemonITCase {
      */
     @Test
     public void parsesHighlightedStdout() throws IOException {
+        final Talk talk = new Talk.InFile();
+        this.start(
+            talk,
+            String.format(
+                "some random\n%s%s\nother",
+                EndsDaemon.HIGHLIGHTS_PREFIX,
+                "text output"
+            )
+        );
+        final Agent agent = new EndsDaemon();
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPaths(
+                "/talk/daemon/highlights",
+                "/talk/daemon/highlights[.='text output']"
+            )
+        );
+    }
+
+    /**
+     * EndsDaemon can read exit code.
+     * @throws IOException In case of error.
+     */
+    @Test
+    public void readsExitCodeCorrectly() throws IOException {
+        final Talk talk = new Talk.InFile();
+        final File home = this.start(talk, "");
+        FileUtils.write(new File(home.getAbsolutePath(), "status"), "123");
+        final Agent agent = new EndsDaemon();
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
+        );
+    }
+
+    /**
+     * Start a talk.
+     * @param talk Talk to start
+     * @param stdout Std out
+     * @return Home
+     * @throws IOException In case of error.
+     */
+    private File start(final Talk talk, final String stdout)
+        throws IOException {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
         final SSHD sshd = new SSHD(this.temp.newFolder());
         final int port = sshd.port();
-        final File home = new File(sshd.home(), "test");
+        final File home = new File(sshd.home(), "test-home");
         FileUtils.forceMkdir(home);
-        final String hlight = "text output";
-        final String output = String.format(
-            "some random\n%s%s\nother", EndsDaemon.HIGHLIGHTS_PREFIX, hlight
-        );
-        FileUtils.write(new File(home.getAbsolutePath(), "stdout"), output);
-        final Talk talk = new Talk.InFile();
+        FileUtils.write(new File(home.getAbsolutePath(), "stdout"), stdout);
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon")
-                // @checkstyle MultipleStringLiterals (1 line)
+                    // @checkstyle MultipleStringLiterals (1 line)
                 .attr("id", "abcd")
                 .add("title").set("merge").up()
                 .add("script").set("ls").up()
@@ -92,14 +133,6 @@ public final class EndsDaemonITCase {
                 .add("login").set(sshd.login()).up()
                 .add("key").set(sshd.key()).up().up()
         );
-        final Agent agent = new EndsDaemon();
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPaths(
-                "/talk/daemon/highlights",
-                "/talk/daemon/highlights[.='text output']"
-            )
-        );
+        return home;
     }
 }

@@ -7,7 +7,7 @@
 # Source: http://github.com/yegor256/jekyll-git-hash
 #
 # Distributed under the MIT license
-# Copyright Yegor Bugayenko, 2014
+# Copyright Yegor Bugayenko, 2015
 
 module Jekyll
   class GitHashGenerator < Generator
