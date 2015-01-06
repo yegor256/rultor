@@ -32,7 +32,6 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.User;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
