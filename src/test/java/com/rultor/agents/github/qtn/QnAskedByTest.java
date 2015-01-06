@@ -57,7 +57,6 @@ public final class QnAskedByTest {
     @Test
     public void excludesRultorFromListOfCommanders() throws Exception {
         final MkGithub github = new MkGithub();
-        final User self = github.users().self();
         final Repo repo = github.randomRepo();
         repo.collaborators().add("testuser1");
         final Issue issue = repo.issues().create("title", "body");
