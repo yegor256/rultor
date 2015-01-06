@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,6 @@ import org.junit.Test;
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class GithubProfileTest {
-
     /**
      * GithubProfile can fetch a YAML config.
      * @throws Exception In case of error.

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -92,6 +92,7 @@
     <properties>
         <jersey.version>1.18.1</jersey.version>
         <saxon.version>9.1.0.8</saxon.version>
+        <xpathfactorypropfile>${basedir}/src/test/resources/XPathFactory.properties</xpathfactorypropfile>
     </properties>
     <dependencies>
         <dependency>
@@ -322,6 +323,19 @@
                         </systemProperties>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -451,6 +465,20 @@
                                         <argument>--source</argument>
                                         <argument>${basedir}/src/jekyll</argument>
                                         <argument>--destination</argument>
+                                        <argument>${project.build.directory}/site</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                            	<id>jekyll-copy-license</id>
+                            	<phase>pre-site</phase>
+                            	<goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cp</executable>
+                                    <arguments>
+                                        <argument>LICENSE.txt</argument>
                                         <argument>${project.build.directory}/site</argument>
                                     </arguments>
                                 </configuration>

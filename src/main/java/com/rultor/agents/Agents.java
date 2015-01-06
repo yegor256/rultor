@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -177,6 +177,14 @@ public final class Agents {
                                                     this.commands(profile)
                                                 )
                                             )
+                                        ),
+                                        new QnIfContains(
+                                            "stop",
+                                            new QnAskedBy(
+                                                profile,
+                                                Agents.commanders("stop"),
+                                                new QnStop()
+                                            )
                                         )
                                     )
                                 )
@@ -257,14 +265,6 @@ public final class Agents {
                             profile,
                             Agents.commanders("release"),
                             new QnRelease()
-                        )
-                    ),
-                    new QnIfContains(
-                        "stop",
-                        new QnAskedBy(
-                            profile,
-                            Agents.commanders("stop"),
-                            new QnStop()
                         )
                     )
                 )
