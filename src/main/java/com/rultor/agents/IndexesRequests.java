@@ -29,18 +29,99 @@
  */
 package com.rultor.agents;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
+import com.jcabi.xml.XML;
 import com.rultor.spi.SuperAgent;
+import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import org.xembly.Directives;
 
 /**
  * Adds index to all the requests received.
+ *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  */
+@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 public final class IndexesRequests implements SuperAgent {
     @Override
     public void execute(final Talks talks) throws IOException {
-        throw new UnsupportedOperationException();
+        if (talks == null) {
+            return;
+        }
+        int idx = this.index(talks);
+        for (final Talk talk : talks.active()) {
+            final XML xml = talk.read();
+            final List<XML> requestNodes = xml.nodes("/talk/request");
+            final int current = idx + 1;
+            final String index = "index";
+            if (requestNodes.isEmpty()) {
+                talk.modify(new Directives().xpath("/talk").addIf("request")
+                        .attr(index, Integer.toString(current))
+                        .attr("id", this.generateRequestID()).add("type")
+                        .set(index).up().add("args")
+                );
+                idx = current;
+            }
+        }
+    }
+
+    /**
+     * Generates unique request ID value based on a {@link UUID} object.
+     *
+     * @return Unique request ID value
+     */
+    private String generateRequestID() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    /**
+     * Calculates maximal index value for a {@link Talks} object.
+     *
+     * @param talks The {@link Talks} object
+     * @return The maximal index value
+     * @throws IOException if the content of one {@link Talk} object can't be read
+     */
+    private int index(final Talks talks) throws IOException {
+        int index = 0;
+        for (final Talk talk : talks.active()) {
+            final int idx = this.index(talk);
+            if (idx > index) {
+                index = idx;
+            }
+        }
+        return index;
+    }
+
+    /**
+     * Calculates maximal (existing) index value of a {@link Talk} object.
+     *
+     * @param talk The {@link Talk} object
+     * @return The maximal index value
+     * @throws IOException if the content of the {@link Talk} object can't be read
+     */
+    private int index(final Talk talk) throws IOException {
+        final Iterable<Integer> indexes = Iterables.transform(
+                talk.read()
+                .xpath("/talk/archive/log/@index|/talk/request/@index"),
+            new Function<String, Integer>() {
+                @Override
+                public Integer apply(final String input) {
+                    return Integer.parseInt(input);
+                }
+            }
+        );
+        int index;
+        if (indexes.iterator().hasNext()) {
+            index = Ordering.natural().max(indexes);
+        } else {
+            index = 0;
+        }
+        return index;
     }
 }
