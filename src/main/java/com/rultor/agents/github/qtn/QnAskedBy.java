@@ -108,8 +108,10 @@ public final class QnAskedBy implements Question {
             new Answer(comment).post(
                 String.format(
                     QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
-                    this.commandersAsDelimitedList(logins,
-                        comment.issue().repo().github().users().self().login())
+                    this.commandersAsDelimitedList(
+                        logins,
+                        comment.issue().repo().github().users().self().login()
+                    )
                 )
             );
             req = Req.EMPTY;
