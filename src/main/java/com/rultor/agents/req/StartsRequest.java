@@ -49,6 +49,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -63,6 +64,21 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "profile")
 public final class StartsRequest extends AbstractAgent {
+    /**
+     * Default port value to be used with Decrypt.
+     */
+    private static final int DEFAULT_PROXY_PORT = 80;
+
+    /**
+     * HTTP proxy port system property key.
+     */
+    private static final String HTTP_PROXY_PORT_KEY = "http.proxyPort";
+
+    /**
+     * HTTP proxy host system property key.
+     */
+    private static final String HTTP_PROXY_HOST_KEY = "http.proxyHost";
+
     /**
      * Command types not requiring _head.sh.
      */
@@ -159,7 +175,7 @@ public final class StartsRequest extends AbstractAgent {
                         }
                     }
                 ),
-                new Decrypt(this.profile).commands(),
+                createDecrypt().commands(),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream(
@@ -170,6 +186,30 @@ public final class StartsRequest extends AbstractAgent {
                 )
             )
         );
+    }
+
+    private Decrypt createDecrypt() {
+        final String host = System.getProperty(HTTP_PROXY_HOST_KEY, StringUtils.EMPTY);
+
+        if (StringUtils.isNotBlank(host)) {
+            final String port = System.getProperty(HTTP_PROXY_PORT_KEY, StringUtils.EMPTY);
+            int portValue = DEFAULT_PROXY_PORT;
+
+            if (StringUtils.isNotBlank(port)) {
+                try {
+                    portValue = Integer.parseInt(port);
+                } catch (final NumberFormatException e) {
+                    throw new IllegalStateException(
+                            Joiner.on(' ').join(
+                                    "Can't parse proxy port",
+                                    port),
+                            e);
+                }
+            }
+            return new Decrypt(this.profile, host, portValue);
+        } else {
+            return new Decrypt(this.profile);
+        }
     }
 
     /**

@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Decrypt.
@@ -58,11 +59,28 @@ final class Decrypt {
     private final transient Profile profile;
 
     /**
+     * Proxy usage command string.
+     */
+    private final transient String proxyString;
+
+    /**
+     * Ctor.
+     * @param prof Profile
+     * @param host proxy host
+     * @param port proxy port
+     */
+    Decrypt(final Profile prof, String host, int port) {
+        this.profile = prof;
+        proxyString = createProxyString(host, port);
+    }
+
+    /**
      * Ctor.
      * @param prof Profile
      */
     Decrypt(final Profile prof) {
         this.profile = prof;
+        proxyString = StringUtils.EMPTY;
     }
 
     /**
@@ -78,6 +96,7 @@ final class Decrypt {
             commands.add(
                 Joiner.on(' ').join(
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
+                    proxyString,
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
@@ -115,4 +134,11 @@ final class Decrypt {
         return commands;
     }
 
+    private String createProxyString(String host, int port) {
+        return Joiner.on("").join(
+                "http-proxy=",
+                host,
+                ":",
+                port);
+    }
 }
