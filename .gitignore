@@ -4,3 +4,6 @@ target/
 *.iml
 _site
 .sass-cache
+/.classpath
+/.project
+.settings
