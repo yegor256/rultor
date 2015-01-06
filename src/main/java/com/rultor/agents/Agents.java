@@ -177,6 +177,14 @@ public final class Agents {
                                                     this.commands(profile)
                                                 )
                                             )
+                                        ),
+                                        new QnIfContains(
+                                            "stop",
+                                            new QnAskedBy(
+                                                profile,
+                                                Agents.commanders("stop"),
+                                                new QnStop()
+                                            )
                                         )
                                     )
                                 )
@@ -257,14 +265,6 @@ public final class Agents {
                             profile,
                             Agents.commanders("release"),
                             new QnRelease()
-                        )
-                    ),
-                    new QnIfContains(
-                        "stop",
-                        new QnAskedBy(
-                            profile,
-                            Agents.commanders("stop"),
-                            new QnStop()
                         )
                     )
                 )
