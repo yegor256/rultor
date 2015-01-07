@@ -61,17 +61,17 @@ final class Decrypt {
     /**
      * Proxy usage command string.
      */
-    private final transient String proxyString;
+    private final transient String proxy;
 
     /**
      * Ctor.
      * @param prof Profile
-     * @param host proxy host
-     * @param port proxy port
+     * @param host Proxy host
+     * @param port Proxy port
      */
-    Decrypt(final Profile prof, String host, int port) {
+    Decrypt(final Profile prof, final String host, final int port) {
         this.profile = prof;
-        proxyString = createProxyString(host, port);
+        this.proxy = this.createProxyString(host, port);
     }
 
     /**
@@ -80,7 +80,7 @@ final class Decrypt {
      */
     Decrypt(final Profile prof) {
         this.profile = prof;
-        proxyString = StringUtils.EMPTY;
+        this.proxy = StringUtils.EMPTY;
     }
 
     /**
@@ -96,7 +96,7 @@ final class Decrypt {
             commands.add(
                 Joiner.on(' ').join(
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
-                    proxyString,
+                    this.proxy,
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
@@ -134,11 +134,18 @@ final class Decrypt {
         return commands;
     }
 
-    private String createProxyString(String host, int port) {
+    /**
+     * Proxy usage command creation.
+     * @param host Host.
+     * @param port Port.
+     * @return Command string.
+     */
+    private String createProxyString(final String host, final int port) {
         return Joiner.on("").join(
-                "http-proxy=",
-                host,
-                ":",
-                port);
+            "http-proxy=",
+            host,
+            ":",
+            port
+        );
     }
 }

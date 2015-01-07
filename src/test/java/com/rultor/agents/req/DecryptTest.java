@@ -97,7 +97,7 @@ public final class DecryptTest {
     public void decryptsAssets() throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
-                createTestProfileXML(),
+                this.createTestProfileXML(),
                 TEST_PROFILE_NAME
             )
         ).commands();
@@ -142,18 +142,19 @@ public final class DecryptTest {
     @Test
     public void testHttpProxyHandling() throws IOException {
         final Decrypt decrypt = new Decrypt(
-                new Profile.Fixed(
-                        this.createTestProfileXML(),
-                        TEST_PROFILE_NAME
-                ),
-                "http://someserver.com",
-                8080);
+            new Profile.Fixed(
+                this.createTestProfileXML(),
+                TEST_PROFILE_NAME
+            ),
+            "http://someserver.com",
+            8080
+        );
         final Iterable<String> commands = decrypt.commands();
         MatcherAssert.assertThat(
-                commands.iterator().next(),
-                Matchers.containsString(
-                        " http-proxy=http://someserver.com:8080 "
-                )
+            commands.iterator().next(),
+            Matchers.containsString(
+                " http-proxy=http://someserver.com:8080 "
+            )
         );
     }
 
@@ -164,10 +165,10 @@ public final class DecryptTest {
      */
     private XMLDocument createTestProfileXML() {
         return new XMLDocument(
-                StringUtils.join(
-                        "<p><entry key='decrypt'><entry key='a.txt'>",
-                        "a.txt.asc</entry></entry></p>"
-                )
+            StringUtils.join(
+                "<p><entry key='decrypt'><entry key='a.txt'>",
+                "a.txt.asc</entry></entry></p>"
+            )
         );
     }
 }

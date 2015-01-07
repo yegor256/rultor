@@ -67,17 +67,17 @@ public final class StartsRequest extends AbstractAgent {
     /**
      * Default port value to be used with Decrypt.
      */
-    private static final int DEFAULT_PROXY_PORT = 80;
+    private static final int DEFAULT_PORT = 80;
 
     /**
      * HTTP proxy port system property key.
      */
-    private static final String HTTP_PROXY_PORT_KEY = "http.proxyPort";
+    private static final String PORT_KEY = "http.proxyPort";
 
     /**
      * HTTP proxy host system property key.
      */
-    private static final String HTTP_PROXY_HOST_KEY = "http.proxyHost";
+    private static final String HOST_KEY = "http.proxyHost";
 
     /**
      * Command types not requiring _head.sh.
@@ -168,14 +168,15 @@ public final class StartsRequest extends AbstractAgent {
                             this.getClass().getResourceAsStream("_head.sh"),
                             CharEncoding.UTF_8
                         )
-                    ), new Predicate<String>() {
+                    ),
+                    new Predicate<String>() {
                         @Override
                         public boolean apply(final String input) {
                             return !StartsRequest.HEADLESS.contains(type);
                         }
                     }
                 ),
-                createDecrypt().commands(),
+                this.createDecrypt().commands(),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream(
@@ -188,28 +189,40 @@ public final class StartsRequest extends AbstractAgent {
         );
     }
 
+    /**
+     * Obtain proxy settings and create a Decrypt instance.
+     * @return Decrypt instance.
+     */
     private Decrypt createDecrypt() {
-        final String host = System.getProperty(HTTP_PROXY_HOST_KEY, StringUtils.EMPTY);
-
+        final String host = System.getProperty(
+            HOST_KEY,
+            StringUtils.EMPTY
+        );
+        Decrypt result;
         if (StringUtils.isNotBlank(host)) {
-            final String port = System.getProperty(HTTP_PROXY_PORT_KEY, StringUtils.EMPTY);
-            int portValue = DEFAULT_PROXY_PORT;
-
+            final String port = System.getProperty(
+                PORT_KEY,
+                StringUtils.EMPTY
+            );
+            int portValue = DEFAULT_PORT;
             if (StringUtils.isNotBlank(port)) {
                 try {
                     portValue = Integer.parseInt(port);
-                } catch (final NumberFormatException e) {
+                } catch (final NumberFormatException exception) {
                     throw new IllegalStateException(
-                            Joiner.on(' ').join(
-                                    "Can't parse proxy port",
-                                    port),
-                            e);
+                        Joiner.on(' ').join(
+                            "Can't parse proxy port",
+                            port
+                        ),
+                        exception
+                    );
                 }
             }
-            return new Decrypt(this.profile, host, portValue);
+            result = new Decrypt(this.profile, host, portValue);
         } else {
-            return new Decrypt(this.profile);
+            result = new Decrypt(this.profile);
         }
+        return result;
     }
 
     /**
@@ -262,5 +275,4 @@ public final class StartsRequest extends AbstractAgent {
         vars.put("scripts", docker.script());
         return vars.build();
     }
-
 }
