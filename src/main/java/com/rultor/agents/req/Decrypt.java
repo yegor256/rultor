@@ -31,6 +31,7 @@ package com.rultor.agents.req;
 
 import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
@@ -39,6 +40,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Decrypt.
@@ -51,6 +53,15 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "profile")
 final class Decrypt {
+    /**
+     * Name of the system property, which specifies HTTP proxy host.
+     */
+    public static final String HTTP_PROXY_HOST = "http.proxyHost";
+
+    /**
+     * Name of the system property, which specifies HTTP proxy port.
+     */
+    public static final String HTTP_PROXY_PORT = "http.proxyPort";
 
     /**
      * Profile.
@@ -75,9 +86,11 @@ final class Decrypt {
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
         if (!assets.isEmpty()) {
+            final String proxyClause = this.composeProxyClause();
             commands.add(
                 Joiner.on(' ').join(
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
+                    proxyClause,
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
@@ -115,4 +128,40 @@ final class Decrypt {
         return commands;
     }
 
+    /**
+     * Creates the part of the gpg command, which specifies the proxy settings.
+     * @return String with proxy settings, e. g.
+     *  "http-proxy=http://someserver.com:8080"
+     * @throws IOException Thrown in case of XML parse error.
+     */
+    private String composeProxyClause() throws IOException {
+        String clause = "proxy";
+        final String host = System.getProperty(HTTP_PROXY_HOST);
+        final String porttxt = System.getProperty(HTTP_PROXY_PORT);
+        if (StringUtils.isNotBlank(host)) {
+            int proxyPort = 80;
+            try {
+                proxyPort = Integer.parseInt(porttxt);
+            } catch (final NumberFormatException exception) {
+                final String message = Joiner.on(" ").join(
+                    "Can't parse proxy port",
+                    porttxt
+                );
+                Logger.error(
+                    this,
+                    message
+                );
+                throw new IllegalStateException(message);
+            }
+            if (proxyPort > 0) {
+                clause = Joiner.on("").join(
+                    "http-proxy=",
+                    host,
+                    ":",
+                    proxyPort
+                );
+            }
+        }
+        return clause;
+    }
 }

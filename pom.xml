@@ -854,6 +854,7 @@
                                 <exclude>xml:/src/test/webapp/xml/.*</exclude>
                                 <exclude>duplicatefinder:.*</exclude>
                             </excludes>
+                            <license>file:${basedir}/LICENSE.txt</license>
                         </configuration>
                     </plugin>
                 </plugins>

@@ -94,7 +94,6 @@ public final class StartsRequestTest {
             )
         );
     }
-
     /**
      * StartsRequest can start a request.
      * @throws Exception In case of error.
@@ -440,5 +439,4 @@ public final class StartsRequestTest {
         ).stdout();
         return repo;
     }
-
 }

@@ -49,7 +49,6 @@ import java.util.Map;
  */
 @Immutable
 public interface Profile {
-
     /**
      * Schema.
      */
