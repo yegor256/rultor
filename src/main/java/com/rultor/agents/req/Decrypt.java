@@ -40,6 +40,7 @@ import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Decrypt.
@@ -51,6 +52,13 @@ import org.apache.commons.lang3.StringUtils;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "profile")
+/**
+ * Tests for {@link Decrypt}.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.37.4
+ */
 final class Decrypt {
 
     /**
@@ -66,21 +74,26 @@ final class Decrypt {
     /**
      * Ctor.
      * @param prof Profile
-     * @param host Proxy host
-     * @param port Proxy port
+     * @param settings Proxy settings container
      */
-    Decrypt(final Profile prof, final String host, final int port) {
+    public Decrypt(final Profile prof, final Pair<String, Integer> settings) {
         this.profile = prof;
-        this.proxy = this.createProxyString(host, port);
+        if (StringUtils.isNotBlank(settings.getLeft())) {
+            this.proxy = createProxyString(
+                settings.getLeft(),
+                settings.getRight()
+            );
+        } else {
+            this.proxy = StringUtils.EMPTY;
+        }
     }
 
     /**
      * Ctor.
      * @param prof Profile
      */
-    Decrypt(final Profile prof) {
-        this.profile = prof;
-        this.proxy = StringUtils.EMPTY;
+    public Decrypt(final Profile prof) {
+        this(prof, Pair.of(StringUtils.EMPTY, 0));
     }
 
     /**
@@ -139,13 +152,9 @@ final class Decrypt {
      * @param host Host.
      * @param port Port.
      * @return Command string.
+     * @see #proxy
      */
-    private String createProxyString(final String host, final int port) {
-        return Joiner.on("").join(
-            "http-proxy=",
-            host,
-            ":",
-            port
-        );
+    private static String createProxyString(final String host, final int port) {
+        return Joiner.on("").join("http-proxy=", host, ":", port);
     }
 }
