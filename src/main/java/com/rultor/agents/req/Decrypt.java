@@ -76,10 +76,10 @@ final class Decrypt {
      * @param prof Profile
      * @param settings Proxy settings container
      */
-    public Decrypt(final Profile prof, final Pair<String, Integer> settings) {
+    Decrypt(final Profile prof, final Pair<String, Integer> settings) {
         this.profile = prof;
         if (StringUtils.isNotBlank(settings.getLeft())) {
-            this.proxy = createProxyString(
+            this.proxy = proxyString(
                 settings.getLeft(),
                 settings.getRight()
             );
@@ -92,7 +92,7 @@ final class Decrypt {
      * Ctor.
      * @param prof Profile
      */
-    public Decrypt(final Profile prof) {
+    Decrypt(final Profile prof) {
         this(prof, Pair.of(StringUtils.EMPTY, 0));
     }
 
@@ -101,7 +101,7 @@ final class Decrypt {
      * @return Instructions
      * @throws IOException If fails
      */
-    public Iterable<String> commands() throws IOException {
+    Iterable<String> commands() throws IOException {
         final Collection<XML> assets =
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
@@ -154,7 +154,7 @@ final class Decrypt {
      * @return Command string.
      * @see #proxy
      */
-    private static String createProxyString(final String host, final int port) {
+    private static String proxyString(final String host, final int port) {
         return Joiner.on("").join("http-proxy=", host, ":", port);
     }
 }
