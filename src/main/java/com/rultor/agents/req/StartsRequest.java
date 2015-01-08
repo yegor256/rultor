@@ -175,7 +175,7 @@ public final class StartsRequest extends AbstractAgent {
                         }
                     }
                 ),
-                this.createDecrypt().commands(),
+                this.decryptor().commands(),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream(
@@ -192,7 +192,7 @@ public final class StartsRequest extends AbstractAgent {
      * Obtain proxy settings and create a Decrypt instance.
      * @return Decrypt instance.
      */
-    private Decrypt createDecrypt() {
+    private Decrypt decryptor() {
         return new Decrypt(this.profile, obtainProxySettings());
     }
 
