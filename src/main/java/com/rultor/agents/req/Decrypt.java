@@ -101,7 +101,7 @@ final class Decrypt {
      * @return Instructions
      * @throws IOException If fails
      */
-    public Iterable<String> commands() throws IOException {
+    Iterable<String> commands() throws IOException {
         final Collection<XML> assets =
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
