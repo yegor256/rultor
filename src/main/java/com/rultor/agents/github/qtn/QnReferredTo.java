@@ -32,10 +32,12 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -50,6 +52,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "login", "origin" })
 public final class QnReferredTo implements Question {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * My login.
@@ -78,6 +86,15 @@ public final class QnReferredTo implements Question {
         final Req req;
         if (comment.body().trim().startsWith(prefix)) {
             req = this.origin.understand(comment, home);
+        } else if (comment.body().trim().contains(prefix)) {
+            new Answer(comment).post(
+                String.format(
+                    QnReferredTo.PHRASES.getString("QnReferredTo.mentioned"),
+                    prefix
+                )
+            );
+            Logger.info(this, "mention found in #%d", comment.issue().number());
+            req = Req.DONE;
         } else {
             Logger.info(
                 this,
