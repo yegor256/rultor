@@ -44,6 +44,7 @@ import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Reports;
+import com.rultor.agents.github.Stars;
 import com.rultor.agents.github.StartsTalks;
 import com.rultor.agents.github.Understands;
 import com.rultor.agents.github.UnlocksRepo;
@@ -227,7 +228,8 @@ public final class Agents {
                         )
                     ).bucket(Manifests.read("Rultor-S3Bucket"))
                 ),
-                new Publishes(profile)
+                new Publishes(profile),
+                new Stars(this.github)
             )
         );
     }
