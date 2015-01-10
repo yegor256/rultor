@@ -36,7 +36,6 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.UUID;
 import org.xembly.Directives;
 
 /**
@@ -49,29 +48,16 @@ import org.xembly.Directives;
 public final class IndexesRequests implements SuperAgent {
     @Override
     public void execute(final Talks talks) throws IOException {
-        if (talks != null) {
-            int idx = this.index(talks);
-            for (final Talk talk : talks.active()) {
-                final int current = idx + 1;
-                final String index = "index";
-                if (talk.read().nodes("/talk/request").isEmpty()) {
-                    talk.modify(new Directives().xpath("/talk").addIf("request")
-                            .attr(index, Integer.toString(current))
-                            .attr("id", this.uuid()).add("type")
-                            .set(index).up().add("args")
-                    );
-                    idx = current;
-                }
-            }
+        int idx = this.index(talks);
+        for (final Talk talk : talks.active()) {
+            final int current = idx + 1;
+            talk.modify(
+                new Directives()
+                    .xpath("/talk/request")
+                    .attr("index", Integer.toString(current))
+            );
+            idx = current;
         }
-    }
-
-    /**
-     * Generates unique request ID value based on a {@link UUID} object.
-     * @return Unique request ID value
-     */
-    private String uuid() {
-        return UUID.randomUUID().toString().replace("-", "");
     }
 
     /**

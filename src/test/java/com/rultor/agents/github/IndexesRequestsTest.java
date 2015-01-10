@@ -33,6 +33,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.IndexesRequests;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -59,7 +60,10 @@ public final class IndexesRequestsTest {
         talks.create("", name);
         talks.get(name).modify(
             new Directives()
-                .xpath("/talk").add("wire").add("href").set("#1").up()
+                .xpath("/talk").add("wire").add("href").set("#1").up().up()
+                .add("request").attr("id", "a12345")
+                .add("args").up()
+                .add("type").set("deploy").up()
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
@@ -84,7 +88,10 @@ public final class IndexesRequestsTest {
                 .add("log").attr("id", "1").attr("title", "title1")
                 .attr("index", "1").up()
                 .add("log").attr("id", "2").attr("title", "title2")
-                .attr("index", "2").up()
+                .attr("index", "2").up().up()
+                .add("request").attr("id", "a12345")
+                .add("args").up()
+                .add("type").set("deploy").up()
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
@@ -122,12 +129,37 @@ public final class IndexesRequestsTest {
         talks.create("", third);
         talks.get(third).modify(
             new Directives()
-                .xpath("/talk").add("wire").add("href").set("#5").up()
+                .xpath("/talk").add("wire").add("href").set("#5").up().up()
+                .add("request").attr("id", "a67890")
+                .add("args").up()
+                .add("type").set("merge").up()
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
             talks.get(third).read(),
             XhtmlMatchers.hasXPaths("/talk/request[@index='3']")
+        );
+    }
+
+    /**
+     * IndexesRequests should not store index when request tag doesn't exist.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void notStoreIndexWithoutRequest() throws Exception {
+        final String name = "talk";
+        final Talks talks = new Talks.InDir();
+        talks.create("", name);
+        talks.get(name).modify(
+            new Directives()
+                .xpath("/talk").add("wire").add("href").set("#1").up()
+        );
+        new IndexesRequests().execute(talks);
+        MatcherAssert.assertThat(
+            talks.get(name).read(),
+            Matchers.not(
+                XhtmlMatchers.hasXPaths("/talk/request")
+            )
         );
     }
 }
