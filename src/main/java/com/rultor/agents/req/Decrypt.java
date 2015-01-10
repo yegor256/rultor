@@ -39,8 +39,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Decrypt.
@@ -74,17 +72,15 @@ final class Decrypt {
     /**
      * Ctor.
      * @param prof Profile
-     * @param settings Proxy settings container
+     * @param host Host
+     * @param port Port
      */
-    Decrypt(final Profile prof, final Pair<String, Integer> settings) {
+    Decrypt(final Profile prof, final String host, final int port) {
         this.profile = prof;
-        if (StringUtils.isNotBlank(settings.getLeft())) {
-            this.proxy = proxyString(
-                settings.getLeft(),
-                settings.getRight()
-            );
+        if (host.isEmpty()) {
+            this.proxy = "";
         } else {
-            this.proxy = StringUtils.EMPTY;
+            this.proxy = proxyString(host, port);
         }
     }
 
@@ -93,7 +89,7 @@ final class Decrypt {
      * @param prof Profile
      */
     Decrypt(final Profile prof) {
-        this(prof, Pair.of(StringUtils.EMPTY, 0));
+        this(prof, "", 0);
     }
 
     /**

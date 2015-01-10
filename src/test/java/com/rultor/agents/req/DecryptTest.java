@@ -40,7 +40,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -147,7 +146,8 @@ public final class DecryptTest {
                 this.createTestProfileXML(),
                 TEST_PROFILE_NAME
             ),
-            Pair.of("http://someserver.com", 8080)
+            "http://someserver.com",
+            8080
         );
         final Iterable<String> commands = decrypt.commands();
         MatcherAssert.assertThat(

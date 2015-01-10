@@ -49,8 +49,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -193,7 +191,29 @@ public final class StartsRequest extends AbstractAgent {
      * @return Decrypt instance.
      */
     private Decrypt decryptor() {
-        return new Decrypt(this.profile, obtainProxySettings());
+        final String host = System.getProperty(HOST_KEY, "");
+        Decrypt result;
+        if (host.isEmpty()) {
+            result = new Decrypt(this.profile);
+        } else {
+            final String port = System.getProperty(PORT_KEY, "");
+            int portValue = DEFAULT_PORT;
+            if (!port.isEmpty()) {
+                try {
+                    portValue = Integer.parseInt(port);
+                } catch (final NumberFormatException exception) {
+                    throw new IllegalStateException(
+                        Joiner.on(' ').join(
+                            "Can't parse proxy port",
+                            port
+                        ),
+                        exception
+                    );
+                }
+            }
+            result = new Decrypt(this.profile, host, portValue);
+        }
+        return result;
     }
 
     /**
@@ -245,41 +265,5 @@ public final class StartsRequest extends AbstractAgent {
         );
         vars.put("scripts", docker.script());
         return vars.build();
-    }
-
-    /**
-     * Get system proxy setting properties.
-     * @return Pair containing system property values.
-     */
-    private static Pair<String, Integer> obtainProxySettings() {
-        final String host = System.getProperty(
-            HOST_KEY,
-            StringUtils.EMPTY
-        );
-        Pair<String, Integer> result;
-        if (StringUtils.isNotBlank(host)) {
-            final String port = System.getProperty(
-                PORT_KEY,
-                StringUtils.EMPTY
-            );
-            int portValue = DEFAULT_PORT;
-            if (StringUtils.isNotBlank(port)) {
-                try {
-                    portValue = Integer.parseInt(port);
-                } catch (final NumberFormatException exception) {
-                    throw new IllegalStateException(
-                        Joiner.on(' ').join(
-                            "Can't parse proxy port",
-                            port
-                        ),
-                        exception
-                    );
-                }
-            }
-            result = Pair.of(host, portValue);
-        } else {
-            result = Pair.of(StringUtils.EMPTY, 0);
-        }
-        return result;
     }
 }
