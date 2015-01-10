@@ -57,11 +57,6 @@ import org.junit.rules.TemporaryFolder;
 public final class DecryptTest {
 
     /**
-     * Test profile name.
-     */
-    public static final String PROFILE_NAME = "test/test";
-
-    /**
      * Encoded test file.
      */
     private static final String ASC = Joiner.on('\n').join(
@@ -104,7 +99,7 @@ public final class DecryptTest {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
                 this.createTestProfileXML(),
-                PROFILE_NAME
+                "test/test"
             )
         ).commands();
         final String script = Joiner.on('\n').join(
@@ -151,7 +146,7 @@ public final class DecryptTest {
             new Decrypt(
                 new Profile.Fixed(
                     this.createTestProfileXML(),
-                    PROFILE_NAME
+                    "test1/test1"
                 ),
                 "http://someserver.com",
                 PORT
