@@ -80,7 +80,7 @@ final class Decrypt {
         if (host.isEmpty()) {
             this.proxy = "";
         } else {
-            this.proxy = proxyString(host, port);
+            this.proxy = String.format("http-proxy=%s:%d", host, port);
         }
     }
 
@@ -141,16 +141,5 @@ final class Decrypt {
         }
         commands.add("rm -rf .gpg");
         return commands;
-    }
-
-    /**
-     * Proxy usage command creation.
-     * @param host Host.
-     * @param port Port.
-     * @return Command string.
-     * @see #proxy
-     */
-    private static String proxyString(final String host, final int port) {
-        return Joiner.on("").join("http-proxy=", host, ":", port);
     }
 }

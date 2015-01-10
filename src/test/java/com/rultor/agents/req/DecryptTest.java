@@ -57,6 +57,11 @@ import org.junit.rules.TemporaryFolder;
 public final class DecryptTest {
 
     /**
+     * Test profile name.
+     */
+    public static final String PROFILE_NAME = "test/test";
+
+    /**
      * Encoded test file.
      */
     private static final String ASC = Joiner.on('\n').join(
@@ -77,9 +82,10 @@ public final class DecryptTest {
     );
 
     /**
-     * Test profile name.
+     * Test port for proxy settings test.
+     * @see #testHttpProxyHandling()
      */
-    private static final String TEST_PROFILE_NAME = "test/test";
+    private static final int PORT = 8080;
 
     /**
      * Temp directory.
@@ -98,7 +104,7 @@ public final class DecryptTest {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
                 this.createTestProfileXML(),
-                TEST_PROFILE_NAME
+                PROFILE_NAME
             )
         ).commands();
         final String script = Joiner.on('\n').join(
@@ -141,17 +147,15 @@ public final class DecryptTest {
      */
     @Test
     public void testHttpProxyHandling() throws IOException {
-        final Decrypt decrypt = new Decrypt(
-            new Profile.Fixed(
-                this.createTestProfileXML(),
-                TEST_PROFILE_NAME
-            ),
-            "http://someserver.com",
-            8080
-        );
-        final Iterable<String> commands = decrypt.commands();
         MatcherAssert.assertThat(
-            commands.iterator().next(),
+            new Decrypt(
+                new Profile.Fixed(
+                    this.createTestProfileXML(),
+                    PROFILE_NAME
+                ),
+                "http://someserver.com",
+                PORT
+            ).commands().iterator().next(),
             Matchers.containsString(
                 " http-proxy=http://someserver.com:8080 "
             )
