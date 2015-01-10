@@ -72,7 +72,7 @@ public final class StartsRequest extends AbstractAgent {
     /**
      * Default port value to be used with Decrypt.
      */
-    private static final int DEFAULT_PORT = 80;
+    private static final String DEFAULT_PORT = "80";
     /**
      * HTTP proxy port system property key.
      */
@@ -191,29 +191,11 @@ public final class StartsRequest extends AbstractAgent {
      * @return Decrypt instance.
      */
     private Decrypt decryptor() {
-        final String host = System.getProperty(HOST_KEY, "");
-        Decrypt result;
-        if (host.isEmpty()) {
-            result = new Decrypt(this.profile);
-        } else {
-            final String port = System.getProperty(PORT_KEY, "");
-            int portValue = DEFAULT_PORT;
-            if (!port.isEmpty()) {
-                try {
-                    portValue = Integer.parseInt(port);
-                } catch (final NumberFormatException exception) {
-                    throw new IllegalStateException(
-                        Joiner.on(' ').join(
-                            "Can't parse proxy port",
-                            port
-                        ),
-                        exception
-                    );
-                }
-            }
-            result = new Decrypt(this.profile, host, portValue);
-        }
-        return result;
+        return new Decrypt(
+            this.profile,
+            System.getProperty(HOST_KEY, ""),
+            Integer.parseInt(System.getProperty(PORT_KEY, DEFAULT_PORT))
+        );
     }
 
     /**
