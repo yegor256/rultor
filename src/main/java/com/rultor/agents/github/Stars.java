@@ -45,11 +45,6 @@ import org.xembly.Directives;
  */
 public final class Stars extends AbstractAgent {
     /**
-     * Name of user for starring.
-     */
-    public static final String NAME = "rultor";
-
-    /**
      * Github.
      */
     private final transient Github github;
@@ -71,8 +66,9 @@ public final class Stars extends AbstractAgent {
                     .xpath("github-repo/text()").get(0)
             )
         );
-        if (!repo.stars().starred(Stars.NAME, repo.coordinates().repo())) {
-            repo.stars().star(Stars.NAME, repo.coordinates().repo());
+        final String login = this.github.users().self().login();
+        if (!repo.stars().starred(login, repo.coordinates().repo())) {
+            repo.stars().star(login, repo.coordinates().repo());
         }
         return new Directives();
     }
