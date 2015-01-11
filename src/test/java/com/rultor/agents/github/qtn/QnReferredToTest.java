@@ -83,9 +83,10 @@ public final class QnReferredToTest {
     public void answerWhenMentioned() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        issue.comments().post("hello @xx deploy");
+        final String login = "xx";
+        issue.comments().post(String.format("hello @%s deploy", login));
         MatcherAssert.assertThat(
-            new QnReferredTo("xx", new QnDeploy()).understand(
+            new QnReferredTo(login, new QnDeploy()).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
@@ -96,7 +97,8 @@ public final class QnReferredToTest {
                 StringUtils.join(
                     "I see you're talking about me, but I don't",
                     " understand it. If you want to say something to me",
-                    " directly, start a message with @xx"
+                    " directly, start a message with @",
+                    login
                 )
             )
         );

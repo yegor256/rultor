@@ -86,7 +86,7 @@ public final class QnReferredTo implements Question {
         final Req req;
         if (comment.body().trim().startsWith(prefix)) {
             req = this.origin.understand(comment, home);
-        } else if (comment.body().trim().contains(prefix)) {
+        } else if (comment.body().contains(prefix)) {
             new Answer(comment).post(
                 String.format(
                     QnReferredTo.PHRASES.getString("QnReferredTo.mentioned"),
