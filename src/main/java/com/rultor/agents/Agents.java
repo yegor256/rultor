@@ -124,7 +124,8 @@ public final class Agents {
     public SuperAgent starter() {
         return new SuperAgent.Iterative(
             new Array<SuperAgent>(
-                new StartsTalks(this.github)
+                new StartsTalks(this.github),
+                new IndexesRequests()
             )
         );
     }
