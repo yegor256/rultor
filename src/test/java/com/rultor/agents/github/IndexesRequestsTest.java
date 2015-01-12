@@ -33,7 +33,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.IndexesRequests;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
+import org.hamcrest.core.Is;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -43,18 +43,15 @@ import org.xembly.Directives;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @todo #674 Implement behavior tested in storeIndexIfNone,
- *  retrievesIndexFromLog, retrievesIndexFromSibling and remove Ignore
- *  annotation. Add this SuperAgent to com.rultor.agents.Agents.starter method.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class IndexesRequestsTest {
     /**
-     * IndexesRequests should store index when it doesn't exist.
+     * IndexesRequests should not store index, if a talk has no archive/log
+     *  nodes.
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void storesIndexIfNone() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();
@@ -65,8 +62,9 @@ public final class IndexesRequestsTest {
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
-            talks.get(name).read(),
-            XhtmlMatchers.hasXPaths("/talk/request[@index='1']")
+            talks.get(name).read().xpath("/talk/request[@index='1']/text()")
+            .isEmpty(),
+            Is.is(true)
         );
     }
 
@@ -75,7 +73,6 @@ public final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void retrievesIndexFromLog() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();
@@ -99,9 +96,13 @@ public final class IndexesRequestsTest {
     /**
      * IndexesRequests should retrieve index from sibling.
      * @throws Exception In case of error.
+     * @todo #700 Find out, why the talks.get(third) contains a request node
+     *  with index=5, if you run the test on Windows. If you run the same test
+     *  under Ubuntu, that XML document contains a node with index=3. The tests
+     *  were run with the
+     *  "mvn test -Dtest=com.rultor.agents.github.IndexesRequestsTest" command.
      */
     @Test
-    @Ignore
     public void retrievesIndexFromSibling() throws Exception {
         final String first = "first";
         final Talks talks = new Talks.InDir();
@@ -126,7 +127,10 @@ public final class IndexesRequestsTest {
         talks.create("", third);
         talks.get(third).modify(
             new Directives()
-                .xpath("/talk").add("wire").add("href").set("#5").up()
+                .xpath("/talk").add("wire").add("href").set("#5").up().up()
+                .add("archive")
+                .add("log").attr("id", "5").attr("title", "title5")
+                .up()
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(

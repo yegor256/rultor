@@ -29,9 +29,18 @@
  */
 package com.rultor.agents;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
+import com.jcabi.xml.XML;
 import com.rultor.spi.SuperAgent;
+import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import org.xembly.Directives;
 
 /**
  * Adds index to all the requests received.
@@ -40,7 +49,95 @@ import java.io.IOException;
  */
 public final class IndexesRequests implements SuperAgent {
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
-        throw new UnsupportedOperationException();
+        int max = this.max(talks);
+        for (final Talk talk : talks.active()) {
+            max = this.update(talk, max);
+        }
+    }
+
+    /**
+     * Sets the index value of a request node, if it exists and if the talk node
+     *  has archive/log nodes.
+     * @param talk Talk, to which the index node should be appended.
+     * @param max Maximal index value among all talks
+     * @return New maximal value. If an index node was added, it is equal to
+     *  (max+1), otherwise - max.
+     * @throws IOException Thrown in case of XML parsing errors.
+     */
+    private int update(final Talk talk, final int max) throws IOException {
+        final List<XML> logs = talk.read().nodes("//archive/log");
+        int newmax = max;
+        int index = this.max(talk);
+        if (index < 1) {
+            index = max;
+        }
+        final List<XML> nodes = talk.read()
+            .nodes("//deploy|//merge|//release|//stop");
+        if (!nodes.isEmpty() && !logs.isEmpty()) {
+            talk.modify(new Directives()
+                .xpath("(//deploy|//merge|//release|//stop)[1]")
+                .attr("index", Integer.toString(index + 1)));
+            newmax += 1;
+        }
+        return newmax;
+    }
+
+    /**
+     * Calculates maximum index value of all archive/log nodes.
+     * @param talk Talk, for whose archve/log nodes the maximum should be
+     *  calculated.
+     * @return Maximum value of index attribute among all archive/log nodes of
+     *  talk.
+     * @throws IOException Thrown in case of XML parsing problems.
+     */
+    private int max(final Talk talk) throws IOException {
+        final Iterable<Integer> indexes = Iterables.transform(
+            talk.read()
+                .xpath(
+                    "/talk/archive/log/@index|/talk/request/@index"
+                ),
+            new Function<String, Integer>() {
+                @Override
+                public Integer apply(final String input) {
+                    return Integer.parseInt(input);
+                }
+            }
+        );
+        int max = 0;
+        if (indexes.iterator().hasNext()) {
+            max = Ordering.<Integer>natural().max(indexes);
+        }
+        return max;
+    }
+
+    /**
+     * Returns the highest index of all log nodes in all talks contained in
+     *  the talks list.
+     * @param talks The list of talks to traverse.
+     * @return Highest value of the index attribute of all talks in the talks
+     *  list
+     * @throws IOException Thrown, when problems with reading XML occur.
+     */
+    private int max(final Talks talks) throws IOException {
+        int max = 0;
+        final Iterator<Talk> iterator = talks.active().iterator();
+        while ((max == 0) && iterator.hasNext()) {
+            final int index = max(iterator.next());
+            if (index > 0) {
+                max = index;
+            }
+        }
+        return max;
+    }
+
+    /**
+     * Creates a unique alphanumeric identifier.
+     * @return Random unique identifier without dashes (only numbers and
+     *  letters).
+     */
+    private String createRequestId() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 }
