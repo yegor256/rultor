@@ -109,6 +109,76 @@ public final class GithubProfileValidationTest {
     }
 
     /**
+     * GithubProfile can accept YAML with script in merge command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithOnlyMerge() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "merge:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
+     * GithubProfile can accept YAML with script in release command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithOnlyRelease() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "release:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
+     * GithubProfile can accept YAML with script in deploy command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithOnlyDeploy() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "deploy:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
+     * GithubProfile can accept YAML with script in all command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithAllCommands() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "deploy:",
+                " script:",
+                "  - pwd",
+                "release:",
+                " script:",
+                "  - pwd",
+                "merge:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
      * Create repo with .rultor.yml inside.
      * @param yaml Content of .rultor.yml file
      * @return Created repo.
