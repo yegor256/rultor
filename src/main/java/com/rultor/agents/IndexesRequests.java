@@ -50,13 +50,12 @@ public final class IndexesRequests implements SuperAgent {
     public void execute(final Talks talks) throws IOException {
         int idx = this.index(talks);
         for (final Talk talk : talks.active()) {
-            final int current = idx + 1;
+            idx += 1;
             talk.modify(
                 new Directives()
                     .xpath("/talk/request")
-                    .attr("index", Integer.toString(current))
+                    .attr("index", Integer.toString(idx))
             );
-            idx = current;
         }
     }
 
