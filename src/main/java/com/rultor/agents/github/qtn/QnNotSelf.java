@@ -31,38 +31,24 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
-import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Question.
+ * Question asked NOT by myself.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.46.7
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "login", "origin" })
-public final class QnReferredTo implements Question {
-
-    /**
-     * Message bundle.
-     */
-    private static final ResourceBundle PHRASES =
-        ResourceBundle.getBundle("phrases");
-
-    /**
-     * My login.
-     */
-    private final transient String login;
+@EqualsAndHashCode(of = "origin")
+public final class QnNotSelf implements Question {
 
     /**
      * Original question.
@@ -71,38 +57,22 @@ public final class QnReferredTo implements Question {
 
     /**
      * Ctor.
-     * @param self Self login
      * @param qtn Original question
      */
-    public QnReferredTo(final String self, final Question qtn) {
-        this.login = self;
+    public QnNotSelf(final Question qtn) {
         this.origin = qtn;
     }
 
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        final String prefix = String.format("@%s ", this.login);
         final Req req;
-        if (comment.body().trim().startsWith(prefix)) {
-            req = this.origin.understand(comment, home);
-        } else if (comment.body().contains(prefix)) {
-            new Answer(comment).post(
-                String.format(
-                    QnReferredTo.PHRASES.getString("QnReferredTo.mentioned"),
-                    prefix
-                )
-            );
-            Logger.info(this, "mention found in #%d", comment.issue().number());
-            req = Req.DONE;
-        } else {
-            Logger.info(
-                this,
-                "comment #%d in %s#%d is not for me (no \"%s\" prefix)",
-                comment.number(), comment.issue().repo().coordinates(),
-                comment.issue().number(), prefix
-            );
+        final String self = comment.issue().repo()
+            .github().users().self().login();
+        if (self.equals(comment.author().login())) {
             req = Req.EMPTY;
+        } else {
+            req = this.origin.understand(comment, home);
         }
         return req;
     }

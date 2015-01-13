@@ -58,6 +58,7 @@ import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.agents.github.qtn.QnMerge;
+import com.rultor.agents.github.qtn.QnNotSelf;
 import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
@@ -125,7 +126,8 @@ public final class Agents {
     public SuperAgent starter() {
         return new SuperAgent.Iterative(
             new Array<SuperAgent>(
-                new StartsTalks(this.github)
+                new StartsTalks(this.github),
+                new IndexesRequests()
             )
         );
     }
@@ -150,49 +152,50 @@ public final class Agents {
      * @param profile Profile
      * @return The agent
      * @throws IOException If fails
-     * @checkstyle LineLength (150 lines)
      */
     public Agent agent(final Talk talk, final Profile profile)
         throws IOException {
         final Locks locks = this.sttc.locks();
-        return new Agent.Iterative(
-            new Array<Agent>(
-                new Understands(
-                    this.github,
-                    new QnSince(
-                        // @checkstyle MagicNumber (1 line)
-                        49092213,
-                        new QnReferredTo(
-                            this.github.users().self().login(),
-                            new QnParametrized(
-                                new Question.FirstOf(
-                                    new Array<Question>(
-                                        new QnIfContains("config", new QnConfig(profile)),
-                                        new QnIfContains("status", new QnStatus(talk)),
-                                        new QnIfContains("version", new QnVersion()),
-                                        new QnIfContains("hello", new QnHello()),
-                                        new QnFollow(
-                                            new QnIfCollaborator(
-                                                new QnAlone(
-                                                    talk, locks,
-                                                    this.commands(profile)
-                                                )
-                                            )
-                                        ),
-                                        new QnIfContains(
-                                            "stop",
-                                            new QnAskedBy(
-                                                profile,
-                                                Agents.commanders("stop"),
-                                                new QnStop()
-                                            )
+        final Question question = new QnSince(
+            // @checkstyle MagicNumber (1 line)
+            49092213,
+            new QnNotSelf(
+                new QnReferredTo(
+                    this.github.users().self().login(),
+                    new QnParametrized(
+                        new Question.FirstOf(
+                            new Array<Question>(
+                                new QnIfContains(
+                                    "config", new QnConfig(profile)
+                                ),
+                                new QnIfContains("status", new QnStatus(talk)),
+                                new QnIfContains("version", new QnVersion()),
+                                new QnIfContains("hello", new QnHello()),
+                                new QnFollow(
+                                    new QnIfCollaborator(
+                                        new QnAlone(
+                                            talk, locks,
+                                            this.commands(profile)
                                         )
+                                    )
+                                ),
+                                new QnIfContains(
+                                    "stop",
+                                    new QnAskedBy(
+                                        profile,
+                                        Agents.commanders("stop"),
+                                        new QnStop()
                                     )
                                 )
                             )
                         )
                     )
-                ),
+                )
+            )
+        );
+        return new Agent.Iterative(
+            new Array<Agent>(
+                new Understands(this.github, question),
                 new StartsRequest(profile),
                 new RegistersShell(
                     profile,
