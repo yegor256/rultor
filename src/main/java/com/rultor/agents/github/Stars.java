@@ -66,9 +66,9 @@ public final class Stars extends AbstractAgent {
                     .xpath("github-repo/text()").get(0)
             )
         );
-        final String login = this.github.users().self().login();
-        if (!repo.stars().starred(login, repo.coordinates().repo())) {
-            repo.stars().star(login, repo.coordinates().repo());
+        final Coordinates coords = repo.coordinates();
+        if (!repo.stars().starred(coords.user(), coords.repo())) {
+            repo.stars().star(coords.user(), coords.repo());
         }
         return new Directives();
     }
