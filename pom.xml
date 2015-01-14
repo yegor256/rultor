@@ -366,11 +366,11 @@
                         <phase>validate</phase>
                         <configuration>
                             <rules>
-                                <!-- @todo #686 Check if Rultor can be built on mac and loosen this rule if needed -->
                                 <requireOS>
                                     <family>unix</family>
+                                    <family>mac</family>
                                     <message>
-                                        You should use Unix-like OS to successfully build Rultor.
+                                        You should use Unix-like or Mac OS to successfully build Rultor.
                                         With an other OS you are still able to check sources with the command:
                                         'mvn qulice:check -Pqulice'
                                     </message>
