@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,7 +101,11 @@ public final class DaemonRs extends BaseRs {
         if (!this.granted(this.talks().get(this.number))) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
-                "according to .rultor.yml, you're not allowed to see this",
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "according to .rultor.yml, you (%s) are not allowed to see this",
+                    this.auth().identity().urn()
+                ),
                 Level.WARNING
             );
         }
