@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,8 +34,11 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.agents.github.Req;
 import java.net.URI;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -72,4 +75,32 @@ public final class QnReferredToTest {
         );
     }
 
+    /**
+     * QnReferredTo can answer when mention.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void answerWhenMentioned() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final String login = "xx";
+        issue.comments().post(String.format("hello @%s deploy", login));
+        MatcherAssert.assertThat(
+            new QnReferredTo(login, new QnDeploy()).understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            ),
+            Matchers.is(Req.DONE)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.containsString(
+                StringUtils.join(
+                    "I see you're talking about me, but I don't",
+                    " understand it. If you want to say something to me",
+                    " directly, start a message with @",
+                    login
+                )
+            )
+        );
+    }
 }

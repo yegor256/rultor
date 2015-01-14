@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,11 +63,24 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "profile")
 public final class StartsRequest extends AbstractAgent {
+
     /**
      * Command types not requiring _head.sh.
      */
     private static final Collection<String> HEADLESS =
         Collections.singleton("stop");
+    /**
+     * Default port value to be used with Decrypt.
+     */
+    private static final String DEFAULT_PORT = "80";
+    /**
+     * HTTP proxy port system property key.
+     */
+    private static final String PORT_KEY = "http.proxyPort";
+    /**
+     * HTTP proxy host system property key.
+     */
+    private static final String HOST_KEY = "http.proxyHost";
 
     /**
      * Profile.
@@ -152,14 +165,15 @@ public final class StartsRequest extends AbstractAgent {
                             this.getClass().getResourceAsStream("_head.sh"),
                             CharEncoding.UTF_8
                         )
-                    ), new Predicate<String>() {
+                    ),
+                    new Predicate<String>() {
                         @Override
                         public boolean apply(final String input) {
                             return !StartsRequest.HEADLESS.contains(type);
                         }
                     }
                 ),
-                new Decrypt(this.profile).commands(),
+                this.decryptor().commands(),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream(
@@ -169,6 +183,18 @@ public final class StartsRequest extends AbstractAgent {
                     )
                 )
             )
+        );
+    }
+
+    /**
+     * Obtain proxy settings and create a Decrypt instance.
+     * @return Decrypt instance.
+     */
+    private Decrypt decryptor() {
+        return new Decrypt(
+            this.profile,
+            System.getProperty(HOST_KEY, ""),
+            Integer.parseInt(System.getProperty(PORT_KEY, DEFAULT_PORT))
         );
     }
 
@@ -222,5 +248,4 @@ public final class StartsRequest extends AbstractAgent {
         vars.put("scripts", docker.script());
         return vars.build();
     }
-
 }

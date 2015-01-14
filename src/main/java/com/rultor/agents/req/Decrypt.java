@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2014, rultor.com
+ * Copyright (c) 2009-2015, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,6 +50,13 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "profile")
+/**
+ * Tests for {@link Decrypt}.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.37.4
+ */
 final class Decrypt {
 
     /**
@@ -58,11 +65,31 @@ final class Decrypt {
     private final transient Profile profile;
 
     /**
+     * Proxy usage command string.
+     */
+    private final transient String proxy;
+
+    /**
+     * Ctor.
+     * @param prof Profile
+     * @param host Host
+     * @param port Port
+     */
+    Decrypt(final Profile prof, final String host, final int port) {
+        this.profile = prof;
+        if (host.isEmpty()) {
+            this.proxy = "";
+        } else {
+            this.proxy = String.format("http-proxy=%s:%d", host, port);
+        }
+    }
+
+    /**
      * Ctor.
      * @param prof Profile
      */
     Decrypt(final Profile prof) {
-        this.profile = prof;
+        this(prof, "", 0);
     }
 
     /**
@@ -78,6 +105,7 @@ final class Decrypt {
             commands.add(
                 Joiner.on(' ').join(
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
+                    this.proxy,
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
@@ -114,5 +142,4 @@ final class Decrypt {
         commands.add("rm -rf .gpg");
         return commands;
     }
-
 }
