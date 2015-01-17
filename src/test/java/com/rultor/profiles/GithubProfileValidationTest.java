@@ -50,7 +50,11 @@ import org.junit.Test;
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressWarnings({
+    "PMD.AvoidDuplicateLiterals",
+    "PMD.TooManyMethods",
+    "PMD.UseConcurrentHashMap"
+})
 public final class GithubProfileValidationTest {
     /**
      * GithubProfile will accept empty rultor configuration.
