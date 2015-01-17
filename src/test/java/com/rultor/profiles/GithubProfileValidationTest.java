@@ -35,8 +35,12 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 import javax.json.Json;
 import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -45,8 +49,6 @@ import org.junit.Test;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @todo #561:30min Implement validation tests based on 2014-07-13-basics.md
- *  file.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class GithubProfileValidationTest {
@@ -109,6 +111,163 @@ public final class GithubProfileValidationTest {
     }
 
     /**
+     * GithubProfile can accept YAML with script in merge command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithOnlyMerge() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "merge:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
+     * GithubProfile can accept YAML with script in release command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithOnlyRelease() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "release:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
+     * GithubProfile can accept YAML with script in deploy command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithOnlyDeploy() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "deploy:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
+     * GithubProfile can accept YAML with script in all command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsYamlWithAllCommands() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "deploy:",
+                " script:",
+                "  - pwd",
+                "release:",
+                " script:",
+                "  - pwd",
+                "merge:",
+                " script:",
+                "  - pwd"
+            )
+        );
+        new GithubProfile(repo).read();
+    }
+
+    /**
+     * GithubProfile get the assets in the YAML.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void getExistAssets() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "friends:",
+                " - jeff/test",
+                "assets:",
+                " settings.xml: \"jeff/test#exist.txt\""
+            )
+        );
+        final Map<String, InputStream> map = new GithubProfile(repo).assets();
+        MatcherAssert.assertThat(
+            map.keySet(),
+            Matchers.<String>iterableWithSize(1)
+        );
+    }
+
+    /**
+     * GithubProfile reject get assets over not exist file.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void rejectGetAssetWithNotExistFile() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "friends:",
+                " - jeff/test",
+                "assets:",
+                " settings.xml: \"jeff/test#something.txt\""
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
+     * GithubProfile reject get assets with wrong repository.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void rejectGetAssetWithWrongRepo() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "friends:",
+                " - jeff/test",
+                "assets:",
+                " settings.xml: \"jeff/fail#exist.txt\""
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
+     * GithubProfile reject get assets with no friend user.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void rejectGetAssetWithNoFriendUser() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "friends:",
+                " - zheus/test",
+                "assets:",
+                " settings.xml: \"jeff/test#exist.txt\""
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
+     * GithubProfile reject get assets with no friends.
+     * @throws Exception In case of error.
+     */
+    @Test(expected = Profile.ConfigException.class)
+    public void rejectGetAssetWithNoFriends() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            Joiner.on('\n').join(
+                "assets:",
+                " settings.xml: \"jeff/test#exist.txt\""
+            )
+        );
+        new GithubProfile(repo).assets();
+    }
+
+    /**
      * Create repo with .rultor.yml inside.
      * @param yaml Content of .rultor.yml file
      * @return Created repo.
@@ -124,6 +283,13 @@ public final class GithubProfileValidationTest {
                 .add("path", ".rultor.yml")
                 .add("message", "just test")
                 .add("content", Base64.encodeBase64String(yaml.getBytes()))
+                .build()
+        );
+        repo.contents().create(
+            Json.createObjectBuilder()
+                .add("path", "exist.txt")
+                .add("message", "file exist")
+                .add("content", "")
                 .build()
         );
         return repo;

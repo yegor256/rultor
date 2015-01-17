@@ -95,7 +95,10 @@ public final class EndsDaemon extends AbstractAgent {
         );
         final Directives dirs = new Directives();
         if (exit == 0) {
-            Logger.info(this, "the daemon is still running in %s", dir);
+            Logger.info(
+                this, "the daemon is still running in %s (%s)",
+                dir, xml.xpath("/talk/@name").get(0)
+            );
         } else {
             dirs.append(this.end(shell, dir));
         }
