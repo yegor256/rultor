@@ -48,7 +48,11 @@ import org.junit.Test;
  * @todo #561:30min Implement validation tests based on 2014-07-13-basics.md
  *  file.
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressWarnings({
+    "PMD.AvoidDuplicateLiterals",
+    "PMD.TooManyMethods",
+    "PMD.UseConcurrentHashMap"
+})
 public final class GithubProfileValidationTest {
     /**
      * GithubProfile will accept empty rultor configuration.
