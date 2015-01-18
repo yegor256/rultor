@@ -44,13 +44,16 @@ import org.xembly.Directives;
  * Starts Amazon EC2 instance.
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
- * @todo 629 Implement StopsEC2 agent.
- * @todo 629 RegistersShell must use SSH params for EC2
- *  if ec2 settings presents.
- * @todo 629 Inbound StartsEC2 and StopsEC2 agents into
- *  Agents.
- * @todo 629 Write documentation for ec2 section
  * @since 2.0
+ * @todo #629 Implement StopsEC2 agent. It must stopped EC2 on-demand
+ *  instance if it was started at StartsEC2 agent.
+ * @todo #629 RegistersShell must register SSH params "host", "port",
+ *  "login", "key" for ec2 on-demand instance, if this one was successfully
+ *  started.
+ * @todo #629 Add new instance creation classes for StartsEC2 and StopsEC2
+ *  to com.rultor.agents.Agents
+ * @todo #629 Write documentation for configuring ec2 via .rultor.yml at
+ *  2014-07-13-reference.md
  */
 @Immutable
 @ToString
