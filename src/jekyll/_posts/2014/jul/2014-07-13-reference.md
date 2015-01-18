@@ -10,7 +10,7 @@ description:
 Rultor is configured solely through the YAML `.rultor.yml` file stored in the
 root directory of your Github repository. There is no control or management
 panel. Everything you want to say to Rultor is placed into your `.rultor.yml`
-file.
+file. This file may be empty but it must exist.
 
 This page contains a complete reference of YAML instructions in alphabetic order.
 
@@ -226,7 +226,7 @@ merge: # or "deploy" or "release"
   script:
     - "sudo apt-get install graphviz"
     - "mvn clean install"
-{% endhighlight %}
+{% endhighlight %}                                       
 
 Environment variables have to be configured, as an associative array with names
 of variables as keys, in the `env` property.
@@ -238,6 +238,13 @@ The list of Github accounts able to give commands to Rultor is specified in
 `commanders`. By default, only Github repository collaborators can give
 commands. Configured commanders don't replace collaborators. In other words,
 Github collaborators *and* accounts mentioned here are allowed to give commands.
+
+Any of these commands are optional in `.rultor.yml`. You can invoke these commands
+anyway. Action's set depends on command:
+ * `merge` clone master branch, merge master branch and forked branch 
+ and push master after merging
+ * `deploy` clone master branch and do nothing
+ * `release` clone master, add new tag and push it
 
 ## Uninstall Script
 
