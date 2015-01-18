@@ -226,7 +226,7 @@ merge: # or "deploy" or "release"
   script:
     - "sudo apt-get install graphviz"
     - "mvn clean install"
-{% endhighlight %}                                       
+{% endhighlight %}
 
 Environment variables have to be configured, as an associative array with names
 of variables as keys, in the `env` property.
