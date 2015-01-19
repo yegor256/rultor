@@ -1,4 +1,4 @@
-Rultor-Revision: BUILD
+Rultor-Revision: f26fe73
 Rultor-Version: ${project.version}
 Rultor-Date: ${maven.build.timestamp}
 Rultor-DynamoKey: ${dynamo.key}
