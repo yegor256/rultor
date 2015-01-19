@@ -32,6 +32,7 @@ package com.rultor.agents.shells;
 import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.io.InputStream;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
@@ -94,9 +95,9 @@ final class PfShell {
     /**
      * Get host.
      * @return Host name
-     * @throws Profile.ConfigException If fails
+     * @throws IOException If fails
      */
-    public String host() throws Profile.ConfigException {
+    public String host() throws IOException {
         return new Profile.Defaults(this.profile).text(
             "/p/entry[@key='ssh']/entry[@key='host']", this.addr
         );
@@ -105,9 +106,9 @@ final class PfShell {
     /**
      * Get port.
      * @return Port
-     * @throws Profile.ConfigException If fails
+     * @throws IOException If fails
      */
-    public int port() throws Profile.ConfigException {
+    public int port() throws IOException {
         return Integer.parseInt(
             new Profile.Defaults(this.profile).text(
                 "/p/entry[@key='ssh']/entry[@key='port']",
@@ -119,9 +120,9 @@ final class PfShell {
     /**
      * Get login.
      * @return SSH login
-     * @throws Profile.ConfigException If fails
+     * @throws IOException If fails
      */
-    public String login() throws Profile.ConfigException {
+    public String login() throws IOException {
         return new Profile.Defaults(this.profile).text(
             "/p/entry[@key='ssh']/entry[@key='login']", this.user
         );
@@ -130,9 +131,9 @@ final class PfShell {
     /**
      * Get private key.
      * @return Private SSH key
-     * @throws Profile.ConfigException If fails
+     * @throws IOException If fails
      */
-    public String key() throws Profile.ConfigException {
+    public String key() throws IOException {
         final String path = new Profile.Defaults(this.profile).text(
             "/p/entry[@key='ssh']/entry[@key='key']", ""
         );
@@ -140,6 +141,12 @@ final class PfShell {
         if (path.isEmpty()) {
             key = this.pvt;
         } else {
+            final InputStream asset = this.profile.assets().get(path);
+            if (asset == null) {
+                throw new Profile.ConfigException(
+                    String.format("private SSH key not found at %s", path)
+                );
+            }
             try {
                 key = IOUtils.toString(this.profile.assets().get(path));
             } catch (final IOException ex) {

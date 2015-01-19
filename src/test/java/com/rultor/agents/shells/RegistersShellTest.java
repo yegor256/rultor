@@ -35,8 +35,6 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -59,7 +57,7 @@ public final class RegistersShellTest {
     public void registersShell() throws Exception {
         final String host = "local";
         final int port = 221;
-        final String key = "/com/rultor/agents/rultor.key";
+        final String key = "";
         final String login = "john";
         final Agent agent = new RegistersShell(
             new Profile.Fixed(
@@ -74,7 +72,7 @@ public final class RegistersShellTest {
                     )
                 )
             ),
-            "localhost", 22, "rultor", ""
+            "localhost", 22, "rultor", "def-key"
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -90,13 +88,7 @@ public final class RegistersShellTest {
                 String.format("/talk/shell[@id='abcd']/host[.='%s']", host),
                 String.format("/talk/shell[@id='abcd']/port[.='%d']", port),
                 String.format("/talk/shell[@id='abcd']/login[.='%s']", login),
-                String.format(
-                    "/talk/shell[@id='abcd']/key[.='%s']",
-                    IOUtils.toString(
-                        this.getClass().getResourceAsStream(key),
-                        CharEncoding.UTF_8
-                    )
-                )
+                "/talk/shell[@id='abcd']/key[.='def-key']"
             )
         );
     }

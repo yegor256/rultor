@@ -34,6 +34,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -72,23 +73,28 @@ public final class RegistersShell extends AbstractAgent {
     }
 
     @Override
-    public Iterable<Directive> process(final XML xml) {
+    public Iterable<Directive> process(final XML xml) throws IOException {
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
+        final Directives dirs = new Directives();
         try {
             Logger.info(
                 this, "shell %s registered as %s:%d in %s",
                 hash, this.shell.host(), this.shell.port(),
                 xml.xpath("/talk/@name").get(0)
             );
-            return new Directives()
-                .xpath("/talk").add("shell")
+            dirs.xpath("/talk").add("shell")
                 .attr("id", hash)
                 .add("host").set(this.shell.host()).up()
                 .add("port").set(Integer.toString(this.shell.port())).up()
                 .add("login").set(this.shell.login()).up()
                 .add("key").set(this.shell.key());
         } catch (final Profile.ConfigException ex) {
-            throw new IllegalStateException(ex);
+            dirs.xpath("/talk/daemon/script").set(
+                String.format(
+                    "failed to read profile: %s", ex.getLocalizedMessage()
+                )
+            );
         }
+        return dirs;
     }
 }

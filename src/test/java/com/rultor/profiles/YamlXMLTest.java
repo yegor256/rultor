@@ -85,7 +85,7 @@ public final class YamlXMLTest {
     public void parsesBrokenConfigsAndThrows() throws Exception {
         final String[] yamls = {
             "thre\n\t\\/\u0000",
-            "first: \"привет \\/\t\r\""
+            "first: \"привет \\/\t\r\"",
         };
         for (final String yaml : yamls) {
             try {
