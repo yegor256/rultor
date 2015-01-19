@@ -35,7 +35,6 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -50,7 +49,7 @@ public final class StarsTest {
      * Stars can star a new repo.
      * @throws java.io.IOException In case of error
      */
-    @Ignore
+    @Test
     public void starsNewRepo() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
@@ -68,7 +67,7 @@ public final class StarsTest {
      * Stars should leave already starred repo.
      * @throws java.io.IOException In case of error
      */
-    @Ignore
+    @Test
     public void leavesStarredRepo() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
