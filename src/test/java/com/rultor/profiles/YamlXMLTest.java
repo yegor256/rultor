@@ -30,7 +30,9 @@
 package com.rultor.profiles;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -73,6 +75,26 @@ public final class YamlXMLTest {
                 "/p/entry[@key='c']/item[.='beta']"
             )
         );
+    }
+
+    /**
+     * YamlXML can parse a broken text and throw.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void parsesBrokenConfigsAndThrows() throws Exception {
+        final String[] yamls = {
+            "thre\n\t\\/\u0000",
+            "first: \"привет \\/\t\r\""
+        };
+        for (final String yaml : yamls) {
+            try {
+                new YamlXML(yaml).get();
+                Assert.fail(String.format("exception expected for %s", yaml));
+            } catch (final Profile.ConfigException ex) {
+                continue;
+            }
+        }
     }
 
 }

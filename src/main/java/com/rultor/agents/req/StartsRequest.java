@@ -107,9 +107,7 @@ public final class StartsRequest extends AbstractAgent {
         String script;
         try {
             script = this.script(
-                req,
-                type,
-                xml.xpath("/talk/@name").get(0)
+                req, type, xml.xpath("/talk/@name").get(0)
             );
             Logger.info(this, "request %s/%s started", type, hash);
         } catch (final Profile.ConfigException ex) {

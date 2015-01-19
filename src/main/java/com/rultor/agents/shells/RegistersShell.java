@@ -81,38 +81,36 @@ public final class RegistersShell extends AbstractAgent {
      * @param prt Default Port of server
      * @param user Defaul Login
      * @param priv Default Private SSH key
+     * @throws IOException If fails
      * @checkstyle ParameterNumberCheck (6 lines)
      */
     public RegistersShell(final Profile profile, final String adr,
-        final int prt, final String user, final String priv) {
+        final int prt, final String user, final String priv)
+        throws IOException {
         super("/talk[daemon and not(shell)]");
-        try {
-            final Profile.Defaults prof = new Profile.Defaults(profile);
-            this.addr = prof.text(
-                "/p/entry[@key='ssh']/entry[@key='host']", adr
+        final Profile.Defaults prof = new Profile.Defaults(profile);
+        this.addr = prof.text(
+            "/p/entry[@key='ssh']/entry[@key='host']", adr
+        );
+        this.port = Integer.parseInt(
+            prof.text(
+                "/p/entry[@key='ssh']/entry[@key='port']",
+                Integer.toString(prt)
+            )
+        );
+        this.login = prof.text(
+            "/p/entry[@key='ssh']/entry[@key='login']", user
+        );
+        final String keypath = prof.text(
+            "/p/entry[@key='ssh']/entry[@key='key']", ""
+        );
+        if (keypath.isEmpty()) {
+            this.key = priv;
+        } else {
+            this.key = IOUtils.toString(
+                this.getClass().getResourceAsStream(keypath),
+                CharEncoding.UTF_8
             );
-            this.port = Integer.parseInt(
-                prof.text(
-                    "/p/entry[@key='ssh']/entry[@key='port']",
-                    Integer.toString(prt)
-                )
-            );
-            this.login = prof.text(
-                "/p/entry[@key='ssh']/entry[@key='login']", user
-            );
-            final String keypath = prof.text(
-                "/p/entry[@key='ssh']/entry[@key='key']", ""
-            );
-            if (keypath.isEmpty()) {
-                this.key = priv;
-            } else {
-                this.key = IOUtils.toString(
-                    this.getClass().getResourceAsStream(keypath),
-                    CharEncoding.UTF_8
-                );
-            }
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
         }
     }
 
