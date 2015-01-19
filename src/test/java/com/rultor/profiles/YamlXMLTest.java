@@ -82,6 +82,7 @@ public final class YamlXMLTest {
      * @throws Exception In case of error.
      */
     @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void parsesBrokenConfigsAndThrows() throws Exception {
         final String[] yamls = {
             "thre\n\t\\/\u0000",
