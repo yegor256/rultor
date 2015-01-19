@@ -56,9 +56,7 @@ public final class StarsTest {
         final Talk talk = this.talk(repo);
         new Stars(github).execute(talk);
         MatcherAssert.assertThat(
-            repo.stars().starred(
-                github.users().self().login(), repo.coordinates().repo()
-            ),
+            repo.stars().starred(),
             Matchers.is(true)
         );
     }
@@ -73,10 +71,10 @@ public final class StarsTest {
         final Repo repo = github.randomRepo();
         final Talk talk = this.talk(repo);
         final String login = github.users().self().login();
-        repo.stars().star(login, repo.coordinates().repo());
+        repo.stars().star();
         new Stars(github).execute(talk);
         MatcherAssert.assertThat(
-            repo.stars().starred(login, repo.coordinates().repo()),
+            repo.stars().starred(),
             Matchers.is(true)
         );
     }

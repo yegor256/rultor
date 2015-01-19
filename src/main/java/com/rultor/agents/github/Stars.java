@@ -67,8 +67,8 @@ public final class Stars extends AbstractAgent {
             )
         );
         final Coordinates coords = repo.coordinates();
-        if (!repo.stars().starred(coords.user(), coords.repo())) {
-            repo.stars().star(coords.user(), coords.repo());
+        if (!repo.stars().starred()) {
+            repo.stars().star();
         }
         return new Directives();
     }
