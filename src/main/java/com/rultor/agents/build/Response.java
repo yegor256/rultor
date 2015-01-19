@@ -36,16 +36,16 @@ package com.rultor.agents.build;
  * @version $Id$
  * @since 1.0
  */
-public class Response {
+public final class Response {
 
     /**
      * Message.
      */
-    private final String message;
+    private final transient String message;
     /**
      * Build status.
      */
-    private final Status status;
+    private final transient Status status;
 
     /**
      * Constructor.
@@ -61,7 +61,7 @@ public class Response {
      * Message getter.
      * @return Message.
      */
-    public final String getMessage() {
+    public String message() {
         return this.message;
     }
 
@@ -69,7 +69,7 @@ public class Response {
      * Status getter.
      * @return Build status.
      */
-    public final Status getStatus() {
+    public Status status() {
         return this.status;
     }
 }
