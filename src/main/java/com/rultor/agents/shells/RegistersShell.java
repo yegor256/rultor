@@ -34,11 +34,8 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
-import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -51,82 +48,47 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = { "addr", "port", "login", "key" })
+@EqualsAndHashCode(callSuper = false, of = "shell")
 public final class RegistersShell extends AbstractAgent {
 
     /**
-     * IP address of the server.
+     * Shell in profile.
      */
-    private final transient String addr;
-
-    /**
-     * Port to use.
-     */
-    private final transient int port;
-
-    /**
-     * User name.
-     */
-    private final transient String login;
-
-    /**
-     * Private SSH key.
-     */
-    private final transient String key;
+    private final transient PfShell shell;
 
     /**
      * Constructor.
      * @param profile Profile
-     * @param adr Default IP address
-     * @param prt Default Port of server
+     * @param host Default IP address
+     * @param port Default Port of server
      * @param user Defaul Login
-     * @param priv Default Private SSH key
-     * @throws IOException If fails
+     * @param key Default Private SSH key
      * @checkstyle ParameterNumberCheck (6 lines)
      */
-    public RegistersShell(final Profile profile, final String adr,
-        final int prt, final String user, final String priv)
-        throws IOException {
+    public RegistersShell(final Profile profile, final String host,
+        final int port, final String user, final String key) {
         super("/talk[daemon and not(shell)]");
-        final Profile.Defaults prof = new Profile.Defaults(profile);
-        this.addr = prof.text(
-            "/p/entry[@key='ssh']/entry[@key='host']", adr
-        );
-        this.port = Integer.parseInt(
-            prof.text(
-                "/p/entry[@key='ssh']/entry[@key='port']",
-                Integer.toString(prt)
-            )
-        );
-        this.login = prof.text(
-            "/p/entry[@key='ssh']/entry[@key='login']", user
-        );
-        final String keypath = prof.text(
-            "/p/entry[@key='ssh']/entry[@key='key']", ""
-        );
-        if (keypath.isEmpty()) {
-            this.key = priv;
-        } else {
-            this.key = IOUtils.toString(
-                this.getClass().getResourceAsStream(keypath),
-                CharEncoding.UTF_8
-            );
-        }
+        this.shell = new PfShell(profile, host, port, user, key);
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) {
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
-        Logger.info(
-            this, "shell %s registered as %s:%d in %s",
-            hash, this.addr, this.port, xml.xpath("/talk/@name").get(0)
-        );
-        return new Directives()
-            .xpath("/talk").add("shell")
-            .attr("id", hash)
-            .add("host").set(this.addr).up()
-            .add("port").set(Integer.toString(this.port)).up()
-            .add("login").set(this.login).up()
-            .add("key").set(this.key);
+        try {
+            Logger.info(
+                this, "shell %s registered as %s:%d in %s",
+                hash, this.shell.host(), this.shell.port(),
+                xml.xpath("/talk/@name").get(0)
+            );
+            return new Directives()
+                .xpath("/talk").add("shell")
+                .attr("id", hash)
+                .add("host").set(this.shell.host()).up()
+                .add("port").set(Integer.toString(this.shell.port())).up()
+                .add("login").set(this.shell.login()).up()
+                .add("key").set(this.shell.key());
+        } catch (final Profile.ConfigException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 }
