@@ -44,15 +44,12 @@ import org.xembly.Directives;
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
- * @todo #498 When MkStars (issues jcabi/jcabi-github#965 and
- *  jcabi/jcabi-github#965) is implemented remove Ignore annotations.
  */
 public final class StarsTest {
     /**
      * Stars can star a new repo.
      * @throws java.io.IOException In case of error
      */
-    @Test
     @Ignore
     public void starsNewRepo() throws IOException {
         final MkGithub github = new MkGithub();
@@ -71,7 +68,6 @@ public final class StarsTest {
      * Stars should leave already starred repo.
      * @throws java.io.IOException In case of error
      */
-    @Test
     @Ignore
     public void leavesStarredRepo() throws IOException {
         final MkGithub github = new MkGithub();
