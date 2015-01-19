@@ -29,16 +29,15 @@
  */
 package com.rultor.agents.shells;
 
+import com.google.common.base.Joiner;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
@@ -58,12 +57,12 @@ public final class RegistersShellTest {
     public void registersShell() throws Exception {
         final String host = "local";
         final int port = 221;
-        final String key = "/com/rultor/agents/rultor.key";
+        final String key = "";
         final String login = "john";
         final Agent agent = new RegistersShell(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    Joiner.on(' ').join(
                         "<p><entry key='ssh'>",
                         String.format("<entry key='host'>%s</entry>", host),
                         String.format("<entry key='port'>%d</entry>", port),
@@ -73,7 +72,7 @@ public final class RegistersShellTest {
                     )
                 )
             ),
-            "localhost", 22, "rultor", ""
+            "localhost", 22, "rultor", "def-key"
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -89,15 +88,24 @@ public final class RegistersShellTest {
                 String.format("/talk/shell[@id='abcd']/host[.='%s']", host),
                 String.format("/talk/shell[@id='abcd']/port[.='%d']", port),
                 String.format("/talk/shell[@id='abcd']/login[.='%s']", login),
-                String.format(
-                    "/talk/shell[@id='abcd']/key[.='%s']",
-                    IOUtils.toString(
-                        this.getClass().getResourceAsStream(key),
-                        CharEncoding.UTF_8
-                    )
-                )
+                "/talk/shell[@id='abcd']/key[.='def-key']"
             )
         );
+    }
+
+    /**
+     * RegistersShell can handle broken profile.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void handlesBrokenProfileGracefully() throws Exception {
+        final Profile profile = Mockito.mock(Profile.class);
+        Mockito.doThrow(new Profile.ConfigException("")).when(profile).read();
+        final Agent agent = new RegistersShell(
+            profile, "test-host", 1, "", ""
+        );
+        final Talk talk = new Talk.InFile();
+        agent.execute(talk);
     }
 
 }

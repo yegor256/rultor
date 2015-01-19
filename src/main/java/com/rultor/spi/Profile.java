@@ -130,11 +130,12 @@ public interface Profile {
         public String text(final String xpath, final String def)
             throws IOException {
             final XML xml = this.origin.read();
+            final String path = String.format("%s/text()", xpath);
             final String text;
-            if (xml.nodes(xpath).isEmpty()) {
+            if (xml.nodes(path).isEmpty()) {
                 text = def;
             } else {
-                text = xml.xpath(String.format("%s/text()", xpath)).get(0);
+                text = xml.xpath(path).get(0);
             }
             return text;
         }

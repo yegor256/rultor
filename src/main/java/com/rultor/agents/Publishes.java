@@ -69,10 +69,14 @@ public final class Publishes extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final boolean pub = this.profile
-            .read()
-            .nodes("/p/entry[@key='readers']/item")
-            .isEmpty();
+        boolean pub;
+        try {
+            pub = this.profile.read()
+                .nodes("/p/entry[@key='readers']/item")
+                .isEmpty();
+        } catch (final Profile.ConfigException ex) {
+            pub = false;
+        }
         return new Directives()
             .xpath("/talk")
             .attr("public", Boolean.toString(pub));
