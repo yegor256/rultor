@@ -241,8 +241,7 @@ Github collaborators *and* accounts mentioned here are allowed to give commands.
 
 Any of these commands are optional in `.rultor.yml`. You can invoke these commands
 anyway. Action's set depends on command:
- * `merge` clone master branch, merge master branch and forked branch 
- and push master after merging
+ * `merge` clone master branch, merge it with forked branch and push it back
  * `deploy` clone master branch and do nothing
  * `release` clone master, add new tag and push it
 
