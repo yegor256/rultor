@@ -45,7 +45,6 @@ import java.io.IOException;
  *  client.runInstances(com.amazonaws.services.ec2.model.RunInstancesRequest)
  *  to run on-demand instance. Method runOnDemand must finally
  *  wait for started instance and check if start was successful.
- *  .
  */
 @Immutable
 public interface Amazon {
