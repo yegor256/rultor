@@ -29,7 +29,8 @@
  */
 package com.rultor.agents.build;
 
-import junit.framework.Assert;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -48,7 +49,10 @@ public final class ResponseTest {
     @Test
     public void returnsMessage() throws Exception {
         final Response response = new Response("A message", Status.OK);
-        Assert.assertEquals(Status.OK, response.status());
+        MatcherAssert.assertThat(
+            response.status(),
+            Matchers.equalTo(Status.OK)
+        );
     }
 
     /**
@@ -58,6 +62,9 @@ public final class ResponseTest {
     @Test
     public void returnsStatus() throws Exception {
         final Response response = new Response("A message", Status.OK);
-        Assert.assertEquals("A message", response.message());
+        MatcherAssert.assertThat(
+            response.message(),
+            Matchers.equalTo("A message")
+        );
     }
 }
