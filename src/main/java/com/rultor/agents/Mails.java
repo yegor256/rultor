@@ -58,7 +58,6 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = { "profile", "postman" })
 public final class Mails extends AbstractAgent {
 
     /**
