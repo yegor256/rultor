@@ -45,13 +45,16 @@ import org.xembly.Directives;
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
  * @since 2.0
- * @todo #629 Implement StopsEC2 agent. It must stopped EC2 on-demand
- *  instance if it was started at StartsEC2 agent.
+ * @todo #629 Implement com.rultor.agents.ec2.StopsEC2 agent. It must
+ *  stopped EC2 on-demand instance if it was started at StartsEC2 agent.
+ *  StopsEC2 must use instance id from /talk/ec2/[@id] to stop it.
  * @todo #629 RegistersShell must register SSH params "host", "port",
  *  "login", "key" for ec2 on-demand instance, if this one was successfully
- *  started.
+ *  started. Successfully start means that these parameters exist in
+ *  /talk/ec2
  * @todo #629 Add new instance creation classes for StartsEC2 and StopsEC2
- *  to com.rultor.agents.Agents
+ *  to com.rultor.agents.Agents. StartsEC2 must be invoked before
+ *  RegistersShell agent. StopsEC2 must be invoked after RemovesShell agent.
  * @todo #629 Write documentation for configuring ec2 via .rultor.yml at
  *  2014-07-13-reference.md
  */
@@ -74,7 +77,7 @@ public final class StartsEC2 extends AbstractAgent {
     }
 
     @Override
-    //@todo #629 Add all Instance params to Directive.
+    //@todo #629 Add Instance params to Directive, for example publicIpAddress
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Instance instance = this.amazon.runOnDemand();
         Logger.info(

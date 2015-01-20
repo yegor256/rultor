@@ -49,7 +49,6 @@ public final class StartsEC2Test {
     /**
      * StartsEC2 can start On-Demand Instance.
      * @throws Exception In case of error.
-     *  @todo 629 create integration test for AmazonAPI
      */
     @Test
     public void startsOnDemandInstance() throws Exception {
