@@ -27,49 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.build;
 
 /**
- * Build service response.
+ * Build service tests.
  *
  * @author Eugene Bukhtin (maurezen@gmail.com)
  * @version $Id$
  * @since 1.0
  */
-public final class Response {
-
-    /**
-     * Message.
-     */
-    private final transient String msg;
-    /**
-     * Build status.
-     */
-    private final transient Status stts;
-
-    /**
-     * Constructor.
-     * @param message Message.
-     * @param status Build status.
-     */
-    public Response(final String message, final Status status) {
-        this.msg = message;
-        this.stts = status;
-    }
-
-    /**
-     * Message getter.
-     * @return Message.
-     */
-    public String message() {
-        return this.msg;
-    }
-
-    /**
-     * Status getter.
-     * @return Build status.
-     */
-    public Status status() {
-        return this.stts;
-    }
-}
+package com.rultor.agents.build;

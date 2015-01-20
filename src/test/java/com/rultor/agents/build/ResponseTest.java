@@ -29,47 +29,35 @@
  */
 package com.rultor.agents.build;
 
+import junit.framework.Assert;
+import org.junit.Test;
+
 /**
- * Build service response.
+ * Tests for ${@link Response}.
  *
  * @author Eugene Bukhtin (maurezen@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class Response {
-
+public final class ResponseTest {
     /**
-     * Message.
+     * Response can return message.
+     * @throws Exception In case of error.
      */
-    private final transient String msg;
-    /**
-     * Build status.
-     */
-    private final transient Status stts;
-
-    /**
-     * Constructor.
-     * @param message Message.
-     * @param status Build status.
-     */
-    public Response(final String message, final Status status) {
-        this.msg = message;
-        this.stts = status;
+    @Test
+    public void returnsMessage() throws Exception {
+        final Response mock = new Response("A message", Status.OK);
+        Assert.assertEquals(Status.OK, mock.status());
     }
 
     /**
-     * Message getter.
-     * @return Message.
+     * Response can return status.
+     * @throws Exception In case of error.
      */
-    public String message() {
-        return this.msg;
-    }
-
-    /**
-     * Status getter.
-     * @return Build status.
-     */
-    public Status status() {
-        return this.stts;
+    @Test
+    public void returnsStatus() throws Exception {
+        final Response mock = new Response("A message", Status.OK);
+        Assert.assertEquals("A message", mock.message());
     }
 }
