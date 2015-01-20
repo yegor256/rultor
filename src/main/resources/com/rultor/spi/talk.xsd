@@ -125,6 +125,9 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="ec2">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
     <xs:element name="talk">
         <xs:complexType>
             <xs:all>
@@ -133,6 +136,7 @@
                 <xs:element name="shell" type="shell" minOccurs="0"/>
                 <xs:element name="request" type="request" minOccurs="0"/>
                 <xs:element name="archive" type="archive" minOccurs="0"/>
+                <xs:element name="ec2" type="ec2" minOccurs="0"/>
             </xs:all>
             <xs:attribute name="name" use="required" type="xs:string"/>
             <xs:attribute name="number" use="required" type="xs:integer"/>
