@@ -47,8 +47,8 @@ public final class ResponseTest {
      */
     @Test
     public void returnsMessage() throws Exception {
-        final Response mock = new Response("A message", Status.OK);
-        Assert.assertEquals(Status.OK, mock.status());
+        final Response response = new Response("A message", Status.OK);
+        Assert.assertEquals(Status.OK, response.status());
     }
 
     /**
@@ -57,7 +57,7 @@ public final class ResponseTest {
      */
     @Test
     public void returnsStatus() throws Exception {
-        final Response mock = new Response("A message", Status.OK);
-        Assert.assertEquals("A message", mock.message());
+        final Response response = new Response("A message", Status.OK);
+        Assert.assertEquals("A message", response.message());
     }
 }
