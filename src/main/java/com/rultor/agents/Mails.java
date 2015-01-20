@@ -62,27 +62,17 @@ import org.xembly.Directives;
 public final class Mails extends AbstractAgent {
 
     /**
-     * Profile.
-     */
-    private final transient Profile profile;
-
-    /**
-     * Postman for sending mails.
-     */
-    private final transient Postman postman;
-
-    /**
      * Ctor.
      * @param prfl Profile
      * @param pstmn Mail client
      */
+
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     public Mails(final Profile prfl,
                  final Postman pstmn) {
         super(
             "/talk/request[@id and type='release' and success='true']"
         );
-        this.postman = pstmn;
-        this.profile = prfl;
     }
 
     @Override
