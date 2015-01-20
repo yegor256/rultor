@@ -104,7 +104,7 @@ public final class MailsTest {
     }
 
     /**
-     * Profile for test
+     * Profile for test.
      * @return Profile
      */
     private Profile.Fixed profile() {
