@@ -34,7 +34,6 @@ import com.jcabi.email.Postman;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
