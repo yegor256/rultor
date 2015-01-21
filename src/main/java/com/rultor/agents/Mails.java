@@ -65,7 +65,6 @@ public final class Mails extends AbstractAgent {
      * @param prfl Profile
      * @param pstmn Mail client
      */
-
     @SuppressWarnings("PMD.UnusedFormalParameter")
     public Mails(final Profile prfl,
                  final Postman pstmn) {
