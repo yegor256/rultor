@@ -108,6 +108,11 @@
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-ec2</artifactId>
+            <version>1.9.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-dynamodb</artifactId>
             <version>1.9.8</version>
         </dependency>
@@ -273,7 +278,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
-            <version>0.18.6</version>
+            <version>0.18.7</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

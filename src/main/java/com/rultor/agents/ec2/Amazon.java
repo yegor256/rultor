@@ -27,48 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.ec2;
 
-import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
-import com.jcabi.github.Repo;
-import com.jcabi.xml.XML;
-import com.rultor.agents.AbstractAgent;
+import com.amazonaws.services.ec2.model.Instance;
+import com.jcabi.aspects.Immutable;
 import java.io.IOException;
-import org.xembly.Directive;
-import org.xembly.Directives;
 
 /**
- * Stars repos used.
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * Amazon EC2 abstraction.
+ *
+ * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
+ * @since 2.0
+ * @todo #629 Add implementation for com.rultor.agents.ec2.Amazon.
+ *  It must create com.amazonaws.services.ec2.AmazonEC2 client
+ *  with config params "credentials", "zone", "type", "key". Use
+ *  client.runInstances(com.amazonaws.services.ec2.model.RunInstancesRequest)
+ *  to run on-demand instance. Method runOnDemand must finally
+ *  wait for started instance and check if start was successful.
  */
-public final class Stars extends AbstractAgent {
-    /**
-     * Github.
-     */
-    private final transient Github github;
+@Immutable
+public interface Amazon {
 
     /**
-     * Ctor.
-     * @param ghub Github client
+     * Run EC2 OnDemand instance.
+     * @return EC2 Instance
+     * @throws IOException if fails
      */
-    public Stars(final Github ghub) {
-        super("/talk/wire[github-repo]");
-        this.github = ghub;
-    }
+    Instance runOnDemand() throws IOException;
 
-    @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
-        final Repo repo = this.github.repos().get(
-            new Coordinates.Simple(
-                xml.nodes("/talk/wire").get(0)
-                    .xpath("github-repo/text()").get(0)
-            )
-        );
-        if (!repo.stars().starred()) {
-            repo.stars().star();
-        }
-        return new Directives();
-    }
 }

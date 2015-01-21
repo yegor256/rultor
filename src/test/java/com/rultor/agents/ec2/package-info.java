@@ -27,48 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
-
-import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
-import com.jcabi.github.Repo;
-import com.jcabi.xml.XML;
-import com.rultor.agents.AbstractAgent;
-import java.io.IOException;
-import org.xembly.Directive;
-import org.xembly.Directives;
 
 /**
- * Stars repos used.
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * Amazon interaction tests.
+ *
+ * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
+ * @since 2.0
  */
-public final class Stars extends AbstractAgent {
-    /**
-     * Github.
-     */
-    private final transient Github github;
-
-    /**
-     * Ctor.
-     * @param ghub Github client
-     */
-    public Stars(final Github ghub) {
-        super("/talk/wire[github-repo]");
-        this.github = ghub;
-    }
-
-    @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
-        final Repo repo = this.github.repos().get(
-            new Coordinates.Simple(
-                xml.nodes("/talk/wire").get(0)
-                    .xpath("github-repo/text()").get(0)
-            )
-        );
-        if (!repo.stars().starred()) {
-            repo.stars().star();
-        }
-        return new Directives();
-    }
-}
+package com.rultor.agents.ec2;

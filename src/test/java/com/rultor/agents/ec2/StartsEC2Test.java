@@ -27,70 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.ec2;
 
-import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.amazonaws.services.ec2.model.Instance;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
-import java.io.IOException;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
- * Tests for {@link Stars}.
- *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * Tests for ${@link com.rultor.agents.ec2.StartsEC2}.
+ * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
+ * @since 1.0
  */
-public final class StarsTest {
-    /**
-     * Stars can star a new repo.
-     * @throws java.io.IOException In case of error
-     */
-    @Test
-    public void starsNewRepo() throws IOException {
-        final MkGithub github = new MkGithub();
-        final Repo repo = github.randomRepo();
-        final Talk talk = this.talk(repo);
-        new Stars(github).execute(talk);
-        MatcherAssert.assertThat(
-            repo.stars().starred(),
-            Matchers.is(true)
-        );
-    }
+public final class StartsEC2Test {
 
     /**
-     * Stars should leave already starred repo.
-     * @throws java.io.IOException In case of error
+     * StartsEC2 can start On-Demand Instance.
+     * @throws Exception In case of error.
      */
     @Test
-    public void leavesStarredRepo() throws IOException {
-        final MkGithub github = new MkGithub();
-        final Repo repo = github.randomRepo();
-        final Talk talk = this.talk(repo);
-        repo.stars().star();
-        new Stars(github).execute(talk);
-        MatcherAssert.assertThat(
-            repo.stars().starred(),
-            Matchers.is(true)
-        );
-    }
-
-    /**
-     * Create a test talk.
-     * @param repo Repo to use
-     * @return Test Talk.
-     * @throws IOException In case of error.
-     */
-    private Talk talk(final Repo repo) throws IOException {
+    public void startsOnDemandInstance() throws Exception {
+        final Instance instance = Mockito.mock(Instance.class);
+        Mockito.doReturn("1").when(instance).getInstanceId();
+        final Amazon amazon = Mockito.mock(Amazon.class);
+        Mockito.doReturn(instance).when(amazon).runOnDemand();
+        final Agent agent = new StartsEC2(amazon);
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
-                .add("wire").add("href").set("#").up()
-                .add("github-repo").set(repo.coordinates().toString()).up()
+                .add("daemon").attr("id", "abcd")
+                .add("title").set("something").up()
+                .add("script").set("test")
         );
-        return talk;
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPaths(
+                "/talk/ec2[@id='1']"
+            )
+        );
     }
 }
