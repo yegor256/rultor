@@ -136,7 +136,7 @@ public final class IndexesRequestsTest {
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
             talks.get(third).read(),
-            XhtmlMatchers.hasXPaths("/talk/request[@index='3']")
+            XhtmlMatchers.hasXPaths("/talk/request[@index='5']")
         );
     }
 
