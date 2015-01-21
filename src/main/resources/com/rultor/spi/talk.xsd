@@ -39,7 +39,7 @@
     </xs:simpleType>
     <xs:complexType name="daemon">
         <xs:annotation>
-            <xs:documentation source="description">This type describe the specification of the daemon task.</xs:documentation>
+            <xs:documentation source="description">This type describes the specification of the daemon task.</xs:documentation>
         </xs:annotation>
         <xs:all>
             <xs:element name="script" type="xs:string">
@@ -59,7 +59,7 @@
             </xs:element>
             <xs:element name="dir" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation source="description">This element define the directory of the daemon.</xs:documentation>
+                    <xs:documentation source="description">This element defines the directory of the daemon.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -87,7 +87,7 @@
     </xs:complexType>
     <xs:complexType name="shell">
         <xs:annotation>
-            <xs:documentation source="description">This type describe the specification about the shell task.</xs:documentation>
+            <xs:documentation source="description">This type describes the specification about the shell task.</xs:documentation>
         </xs:annotation>
         <xs:all>
             <xs:element name="host" type="xs:string">
@@ -102,7 +102,7 @@
             </xs:element>
             <xs:element name="login" type="xs:string">
                 <xs:annotation>
-                    <xs:documentation source="description">This element has the user to use in the connection.</xs:documentation>
+                    <xs:documentation source="description">TThis element has the username of the connection.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="key" type="xs:string">
@@ -115,12 +115,12 @@
     </xs:complexType>
     <xs:complexType name="request">
         <xs:annotation>
-            <xs:documentation source="description">This type describe the specification about the request task.</xs:documentation>
+            <xs:documentation source="description">This type describes the specification about the request task.</xs:documentation>
         </xs:annotation>
         <xs:all>
             <xs:element name="success" type="xs:boolean" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation source="description">This element has the flag that indicate if the request was successfully.</xs:documentation>
+                    <xs:documentation source="description">This element has the flag that indicates if the request was successfully.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="msec" type="xs:integer" minOccurs="0">
@@ -130,7 +130,7 @@
             </xs:element>
             <xs:element name="highlights" type="xs:string" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation source="description">This element has the description about the request task.</xs:documentation>
+                    <xs:documentation source="description">This element has the description of the request task.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="type">
@@ -145,7 +145,7 @@
             </xs:element>
             <xs:element name="args">
                 <xs:annotation>
-                    <xs:documentation source="description">This element has the list of argument of the request.</xs:documentation>
+                    <xs:documentation source="description">This element has the list arguments.</xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
@@ -183,7 +183,7 @@
     </xs:complexType>
     <xs:complexType name="wire">
         <xs:annotation>
-            <xs:documentation source="description">This type describe the specification of the wire task.</xs:documentation>
+            <xs:documentation source="description">This type describes the specification of the wire task.</xs:documentation>
         </xs:annotation>
         <xs:all>
             <xs:element name="href" type="xs:anyURI">
@@ -210,7 +210,7 @@
     </xs:complexType>
     <xs:complexType name="archive">
         <xs:annotation>
-            <xs:documentation source="description">This type describe the specification of the archive task.</xs:documentation>
+            <xs:documentation source="description">This type describes the specification of the archive task.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element name="log" minOccurs="0" maxOccurs="unbounded">
