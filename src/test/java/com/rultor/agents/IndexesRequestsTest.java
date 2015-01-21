@@ -103,7 +103,6 @@ public final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void retrievesIndexFromSibling() throws Exception {
         final String first = "first";
         final Talks talks = new Talks.InDir();
