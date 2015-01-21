@@ -102,7 +102,7 @@
             </xs:element>
             <xs:element name="login" type="xs:string">
                 <xs:annotation>
-                    <xs:documentation source="description">TThis element has the username of the connection.</xs:documentation>
+                    <xs:documentation source="description">This element has the username of the connection.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="key" type="xs:string">
