@@ -65,8 +65,7 @@ public final class Mails extends AbstractAgent {
      * @param pstmn Mail client
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
-    public Mails(final Profile prfl,
-                 final Postman pstmn) {
+    public Mails(final Profile prfl, final Postman pstmn) {
         super(
             "/talk/request[@id and type='release' and success='true']"
         );
