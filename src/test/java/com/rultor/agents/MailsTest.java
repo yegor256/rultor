@@ -63,13 +63,11 @@ public final class MailsTest {
     @Ignore
     public void sendsMail() throws Exception {
         final Postman postman = Mockito.spy(Postman.CONSOLE);
-        final Profile profile = this.profile();
         final Agent agent = new Mails(
-            profile,
+            this.profile(),
             postman
         );
-        final Talk talk = MailsTest.talk();
-        agent.execute(talk);
+        agent.execute(MailsTest.talk());
         final ArgumentCaptor<Envelope> captor =
             ArgumentCaptor.forClass(Envelope.class);
         Mockito.verify(postman).send(captor.capture());
