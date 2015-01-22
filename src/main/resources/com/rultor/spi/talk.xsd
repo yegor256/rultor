@@ -151,7 +151,7 @@
             <xs:element name="success" type="xs:boolean" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="description">
-                        This element has the flag that indicates if the request 
+                        This element has the flag that indicates if the request
                         was successfully.
                     </xs:documentation>
                 </xs:annotation>
@@ -159,7 +159,7 @@
             <xs:element name="msec" type="xs:integer" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="description">
-                        This element has the number of milliseconds that takes 
+                        This element has the number of milliseconds that takes
                         the request.
                     </xs:documentation>
                 </xs:annotation>
@@ -191,7 +191,7 @@
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="arg" minOccurs="0" 
+                        <xs:element name="arg" minOccurs="0"
                             maxOccurs="unbounded">
                             <xs:annotation>
                                 <xs:documentation source="description">
@@ -201,11 +201,11 @@
                             <xs:complexType>
                                 <xs:simpleContent>
                                     <xs:extension base="xs:string">
-                                        <xs:attribute name="name" 
+                                        <xs:attribute name="name"
                                             use="required">
                                             <xs:simpleType>
                                                 <xs:restriction base="xs:string">
-                                                    <xs:pattern 
+                                                    <xs:pattern
                                                         value="[a-zA-Z_]+"/>
                                                 </xs:restriction>
                                             </xs:simpleType>
@@ -277,7 +277,7 @@
             <xs:element name="log" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation source="description">
-                        This element has the log specification for the archive 
+                        This element has the log specification for the archive
                         task.
                     </xs:documentation>
                 </xs:annotation>
@@ -285,9 +285,9 @@
                     <xs:simpleContent>
                         <xs:extension base="xs:anyURI">
                             <xs:attribute name="id" type="hash" use="required"/>
-                            <xs:attribute name="title" type="xs:string" 
+                            <xs:attribute name="title" type="xs:string"
                                 use="required"/>
-                            <xs:attribute name="index" type="xs:integer" 
+                            <xs:attribute name="index" type="xs:integer"
                                 use="optional"/>
                         </xs:extension>
                     </xs:simpleContent>
@@ -362,7 +362,7 @@
         <xs:unique name="daemonID">
             <xs:annotation>
                 <xs:documentation source="description">
-                    This is an unique constraint over the id attribute of log 
+                    This is an unique constraint over the id attribute of log
                     in the element type archive
                 </xs:documentation>
             </xs:annotation>
