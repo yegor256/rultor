@@ -82,7 +82,7 @@ public final class IndexesRequests implements SuperAgent {
      * @return The maximal index value
      * @throws IOException if the content of the {@link Talk} object can't be read
      */
-    protected int index(final Talk talk) throws IOException {
+    private int index(final Talk talk) throws IOException {
         final Iterable<Integer> indexes = Iterables.transform(
                 talk.read()
                 .xpath("/talk/archive/log/@index|/talk/request/@index"),
