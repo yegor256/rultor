@@ -33,7 +33,6 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -132,6 +131,14 @@ public final class IndexesRequestsTest {
                 .add("args").up()
                 .add("type").set("merge").up()
         );
+
+        System.out.println("Index one: " +
+            new IndexesRequests().index(talks.get(first)));
+        System.out.println("Index one: " +
+            new IndexesRequests().index(talks.get(second)));
+        System.out.println("Index one: " +
+            new IndexesRequests().index(talks.get(third)));
+
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
             talks.get(third).read(),
