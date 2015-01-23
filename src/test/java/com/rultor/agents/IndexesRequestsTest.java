@@ -132,11 +132,11 @@ public final class IndexesRequestsTest {
                 .add("type").set("merge").up()
         );
 
-        System.out.println("Index one: " +
+        System.out.println("Index first: " +
             new IndexesRequests().index(talks.get(first)));
-        System.out.println("Index one: " +
+        System.out.println("Index second: " +
             new IndexesRequests().index(talks.get(second)));
-        System.out.println("Index one: " +
+        System.out.println("Index third: " +
             new IndexesRequests().index(talks.get(third)));
 
         new IndexesRequests().execute(talks);
