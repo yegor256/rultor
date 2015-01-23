@@ -30,6 +30,7 @@
 package com.rultor.agents;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -131,6 +132,16 @@ public final class IndexesRequestsTest {
                 .add("args").up()
                 .add("type").set("merge").up()
         );
+
+        final Iterable<Talk> activeTalks = talks.active();
+
+        System.out.println("activeTalks (START)");
+
+        for (final Talk talk : activeTalks) {
+            System.out.println("Talk XML: " + talk.read().toString());
+        }
+
+        System.out.println("activeTalks (END)");
 
         System.out.println("Index first: " +
             new IndexesRequests().index(talks.get(first)));
