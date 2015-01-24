@@ -39,12 +39,6 @@ import java.io.IOException;
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
  * @since 2.0
- * @todo #629 Add implementation for com.rultor.agents.ec2.Amazon.
- *  It must create com.amazonaws.services.ec2.AmazonEC2 client
- *  with config params "credentials", "zone", "type", "key". Use
- *  client.runInstances(com.amazonaws.services.ec2.model.RunInstancesRequest)
- *  to run on-demand instance. Method runOnDemand must finally
- *  wait for started instance and check if start was successful.
  */
 @Immutable
 public interface Amazon {
