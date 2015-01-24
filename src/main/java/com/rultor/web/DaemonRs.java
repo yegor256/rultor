@@ -30,7 +30,9 @@
 package com.rultor.web;
 
 import com.rultor.agents.daemons.Tail;
+import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,6 +42,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Single daemon.
@@ -109,20 +113,31 @@ public final class DaemonRs extends BaseRs {
                 Level.WARNING
             );
         }
-        return Response.ok().entity(
-            new SequenceInputStream(
-                Collections.enumeration(
-                    Arrays.asList(
-                        this.getClass().getResourceAsStream("daemon/head.html"),
-                        new Tail(
-                            this.talks().get(this.number).read(),
-                            this.hash
-                        ).read(),
-                        this.getClass().getResourceAsStream("daemon/tail.html")
-                    )
+        return Response.ok()
+            .entity(this.html())
+            .type("text/html; charset=utf-8").build();
+    }
+
+    /**
+     * Get HTML.
+     * @return HTML
+     * @throws IOException If fails
+     */
+    private InputStream html() throws IOException {
+        final Talk talk = this.talks().get(this.number);
+        final String head = IOUtils.toString(
+            this.getClass().getResourceAsStream("daemon/head.html"),
+            CharEncoding.UTF_8
+        ).replace("TALK_NAME", talk.name());
+        return new SequenceInputStream(
+            Collections.enumeration(
+                Arrays.asList(
+                    IOUtils.toInputStream(head),
+                    new Tail(talk.read(), this.hash).read(),
+                    this.getClass().getResourceAsStream("daemon/tail.html")
                 )
             )
-        ).type("text/html; charset=utf-8").build();
+        );
     }
 
 }

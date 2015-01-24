@@ -10,7 +10,7 @@ description:
 Rultor is configured solely through the YAML `.rultor.yml` file stored in the
 root directory of your Github repository. There is no control or management
 panel. Everything you want to say to Rultor is placed into your `.rultor.yml`
-file.
+file. The file is mandatory, but all content is optional.
 
 This page contains a complete reference of YAML instructions in alphabetic order.
 

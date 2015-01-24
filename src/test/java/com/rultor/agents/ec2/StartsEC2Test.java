@@ -27,75 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.profiles;
+package com.rultor.agents.ec2;
 
+import com.amazonaws.services.ec2.model.Instance;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.spi.Profile;
+import com.rultor.spi.Agent;
+import com.rultor.spi.Talk;
 import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.xembly.Directives;
 
 /**
- * Tests for ${@link YamlXML}.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Tests for ${@link com.rultor.agents.ec2.StartsEC2}.
+ * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
  * @since 1.0
  */
-public final class YamlXMLTest {
+public final class StartsEC2Test {
 
     /**
-     * YamlXML can parse.
+     * StartsEC2 can start On-Demand Instance.
      * @throws Exception In case of error.
      */
     @Test
-    public void parsesYamlConfig() throws Exception {
+    public void startsOnDemandInstance() throws Exception {
+        final Instance instance = Mockito.mock(Instance.class);
+        Mockito.doReturn("1").when(instance).getInstanceId();
+        final Amazon amazon = Mockito.mock(Amazon.class);
+        Mockito.doReturn(instance).when(amazon).runOnDemand();
+        final Agent agent = new StartsEC2(amazon);
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("daemon").attr("id", "abcd")
+                .add("title").set("something").up()
+                .add("script").set("test")
+        );
+        agent.execute(talk);
         MatcherAssert.assertThat(
-            new YamlXML("a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e").get(),
+            talk.read(),
             XhtmlMatchers.hasXPaths(
-                "/p/entry[@key='a' and .='test']",
-                "/p/entry[@key='b' and .='hello']",
-                "/p/entry[@key='c']/item[.='one']",
-                "/p/entry[@key='d']/entry[@key='f' and .='e']"
+                "/talk/ec2[@id='1']"
             )
         );
     }
-
-    /**
-     * YamlXML can parse a broken text.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void parsesYamlConfigWhenBroken() throws Exception {
-        MatcherAssert.assertThat(
-            new YamlXML("a: alpha\nb:\nc:\n  - beta").get(),
-            XhtmlMatchers.hasXPaths(
-                "/p/entry[@key='a' and .='alpha']",
-                "/p/entry[@key='b' and .='']",
-                "/p/entry[@key='c']/item[.='beta']"
-            )
-        );
-    }
-
-    /**
-     * YamlXML can parse a broken text and throw.
-     * @throws Exception In case of error.
-     */
-    @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void parsesBrokenConfigsAndThrows() throws Exception {
-        final String[] yamls = {
-            "thre\n\t\\/\u0000",
-            "first: \"привет \\/\t\r\"",
-        };
-        for (final String yaml : yamls) {
-            try {
-                new YamlXML(yaml).get();
-                Assert.fail(String.format("exception expected for %s", yaml));
-            } catch (final Profile.ConfigException ex) {
-                continue;
-            }
-        }
-    }
-
 }

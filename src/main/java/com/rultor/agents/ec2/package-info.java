@@ -27,59 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import com.rultor.spi.Profile;
-import java.io.IOException;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.xembly.Directive;
-import org.xembly.Directives;
 
 /**
- * Publishes if it's public.
+ * Amazon EC2.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
- * @since 1.32.7
+ * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(callSuper = false, of = "profile")
-public final class Publishes extends AbstractAgent {
-
-    /**
-     * Profile.
-     */
-    private final transient Profile profile;
-
-    /**
-     * Ctor.
-     * @param prf Profile
-     */
-    public Publishes(final Profile prf) {
-        super(
-            "/talk[@public!='false']",
-            "/talk/archive/log"
-        );
-        this.profile = prf;
-    }
-
-    @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
-        boolean pub;
-        try {
-            pub = this.profile.read()
-                .nodes("/p/entry[@key='readers']/item")
-                .isEmpty();
-        } catch (final Profile.ConfigException ex) {
-            pub = false;
-        }
-        return new Directives()
-            .xpath("/talk")
-            .attr("public", Boolean.toString(pub));
-    }
-
-}
+package com.rultor.agents.ec2;

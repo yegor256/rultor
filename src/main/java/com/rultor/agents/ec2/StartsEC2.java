@@ -27,11 +27,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents;
+package com.rultor.agents.ec2;
 
+import com.amazonaws.services.ec2.model.Instance;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.spi.Profile;
+import com.rultor.agents.AbstractAgent;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -39,47 +41,52 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Publishes if it's public.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Starts Amazon EC2 instance.
+ * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
- * @since 1.32.7
+ * @since 2.0
+ * @todo #629 Implement com.rultor.agents.ec2.StopsEC2 agent. It must
+ *  stopped EC2 on-demand instance if it was started at StartsEC2 agent.
+ *  StopsEC2 must use instance id from /talk/ec2/[@id] to stop it.
+ * @todo #629 RegistersShell must register SSH params "host", "port",
+ *  "login", "key" for ec2 on-demand instance, if this one was successfully
+ *  started. Successfully start means that these parameters exist in
+ *  /talk/ec2
+ * @todo #629 Add new instance creation classes for StartsEC2 and StopsEC2
+ *  to com.rultor.agents.Agents. StartsEC2 must be invoked before
+ *  RegistersShell agent. StopsEC2 must be invoked after RemovesShell agent.
+ * @todo #629 Write documentation for configuring ec2 via .rultor.yml at
+ *  2014-07-13-reference.md
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = "profile")
-public final class Publishes extends AbstractAgent {
-
+@EqualsAndHashCode(callSuper = false, of = { "amazon" })
+public final class StartsEC2 extends AbstractAgent {
     /**
-     * Profile.
+     * AmazonEC2 client provider.
      */
-    private final transient Profile profile;
+    private final transient Amazon amazon;
 
     /**
      * Ctor.
-     * @param prf Profile
+     * @param amaz Amazon
      */
-    public Publishes(final Profile prf) {
-        super(
-            "/talk[@public!='false']",
-            "/talk/archive/log"
-        );
-        this.profile = prf;
+    public StartsEC2(final Amazon amaz) {
+        super("/talk[daemon and not(shell)]");
+        this.amazon = amaz;
     }
 
     @Override
+    //@todo #629 Add Instance params to Directive, for example publicIpAddress
     public Iterable<Directive> process(final XML xml) throws IOException {
-        boolean pub;
-        try {
-            pub = this.profile.read()
-                .nodes("/p/entry[@key='readers']/item")
-                .isEmpty();
-        } catch (final Profile.ConfigException ex) {
-            pub = false;
-        }
-        return new Directives()
-            .xpath("/talk")
-            .attr("public", Boolean.toString(pub));
+        final Instance instance = this.amazon.runOnDemand();
+        Logger.info(
+            this,
+            "EC2 instance %s created",
+            instance
+        );
+        return new Directives().xpath("/talk")
+            .add("ec2")
+            .attr("id", instance.getInstanceId());
     }
-
 }

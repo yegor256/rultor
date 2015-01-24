@@ -39,7 +39,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
-import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -83,11 +82,7 @@ final class YamlXML {
                 throw new Profile.ConfigException(ex);
             }
         }
-        try {
-            return new XMLDocument(new Xembler(dirs).xml());
-        } catch (final ImpossibleModificationException ex) {
-            throw new IllegalStateException(ex);
-        }
+        return new XMLDocument(new Xembler(dirs).xmlQuietly());
     }
 
     /**
