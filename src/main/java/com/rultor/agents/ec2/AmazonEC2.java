@@ -37,8 +37,10 @@ import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -95,11 +97,7 @@ public class AmazonEC2 implements Amazon {
             this.credentials
         );
         client.setEndpoint(this.region);
-        final RunInstancesRequest request = new RunInstancesRequest();
-        request.withKeyName(this.keyname);
-        request.withMinCount(1);
-        request.withMaxCount(1);
-        request.setInstanceType(this.itype);
+        final RunInstancesRequest request = this.createRequest();
         final List<Instance> instances = client.runInstances(
             request
         ).getReservation().getInstances();
@@ -112,6 +110,11 @@ public class AmazonEC2 implements Amazon {
                 new DescribeInstanceStatusRequest();
             statusreq.withInstanceIds(instance.getInstanceId());
             while (state.getCode() < 16) {
+                try {
+                    TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
+                } catch (final InterruptedException ex) {
+                    continue;
+                }
                 final DescribeInstanceStatusResult instanceStatus = client
                     .describeInstanceStatus(statusreq);
                 state = instanceStatus.getInstanceStatuses().get(0)
@@ -119,5 +122,18 @@ public class AmazonEC2 implements Amazon {
             }
         }
         return instance;
+    }
+
+    /**
+     * Creates a new {@link RunInstancesRequest}.
+     * @return The {@link RunInstancesRequest} created
+     */
+    private RunInstancesRequest createRequest() {
+        final RunInstancesRequest request = new RunInstancesRequest();
+        request.withKeyName(this.keyname);
+        request.withMinCount(1);
+        request.withMaxCount(1);
+        request.setInstanceType(this.itype);
+        return request;
     }
 }
