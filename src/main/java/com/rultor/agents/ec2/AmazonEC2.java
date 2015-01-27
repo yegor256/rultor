@@ -36,7 +36,6 @@ import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.util.List;
@@ -44,28 +43,28 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 
 /**
- * Amazon EC2 instance on demand.
+ * Amazon EC2 instance on demand. Takes all the mandatory data for running
+ * an EC2 instance in a defined region when it's needed.
  *
  * @author Marton Horvath (marton.horvath@m323.org)
  * @version $Id$
  * @since 2.0
  */
-@Immutable
 public class AmazonEC2 implements Amazon {
     /**
      * The integer value of the Running {@link InstanceState}.
      */
     private static final int RUNNING_STATE = 16;
     /**
-     * AWS credentials.
+     * AWS credentials used when authenticating at AWS.
      */
     private final transient AWSCredentials credentials;
     /**
-     * AWS region.
+     * AWS region to be used for the instance to be run.
      */
     private final transient String region;
     /**
-     * EC2 instance type.
+     * EC2 instance type (like <i>t1.micro</i>, <i>m1.small</i> etc.).
      */
     private final transient String type;
     /**
@@ -75,7 +74,7 @@ public class AmazonEC2 implements Amazon {
 
     /**
      * Public ctor.
-     * @param cred Credentials
+     * @param cred Credentials for AWS
      * @param zone AWS region
      * @param instype Instance type
      * @param key Instance key pair name
@@ -93,7 +92,6 @@ public class AmazonEC2 implements Amazon {
         this.keyname = key;
     }
 
-    @SuppressWarnings("PMD.ConfusingTernary")
     @Override
     public final Instance runOnDemand() throws IOException {
         Instance instance;
@@ -104,12 +102,12 @@ public class AmazonEC2 implements Amazon {
         final List<Instance> instances = client.runInstances(
             this.create()
         ).getReservation().getInstances();
-        if ((instances != null) && !instances.isEmpty()) {
-            instance = instances.get(0);
-        } else {
+        if (instances.isEmpty()) {
             throw new IllegalStateException(
                 "No Instance was available in the RunInstanceRequest reply!"
             );
+        } else {
+            instance = instances.get(0);
         }
         InstanceState state = instance.getState();
         if (state.getCode() < RUNNING_STATE) {
@@ -133,7 +131,9 @@ public class AmazonEC2 implements Amazon {
     }
 
     /**
-     * Creates a new {@link RunInstancesRequest}.
+     * Creates a new {@link RunInstancesRequest} with the {@link #keyname} and
+     * {@link #type} set. The minimal and maximal number of instances created
+     * by the request is limited to one.
      * @return The {@link RunInstancesRequest} created
      */
     private RunInstancesRequest create() {
