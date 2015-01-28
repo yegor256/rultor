@@ -126,7 +126,7 @@ public final class Tweets extends AbstractAgent {
             .append(" released https://github.com/")
             .append(repo.coordinates());
         for (final Language lang : repo.languages()) {
-            text.append(String.format(" #%s", lang));
+            text.append(String.format(" #%s", lang.name()));
         }
         return text.toString();
     }

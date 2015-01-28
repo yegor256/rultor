@@ -260,6 +260,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
+            <version>1.10.2</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -278,7 +279,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
-            <version>0.18.7</version>
+            <version>0.18.9</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
