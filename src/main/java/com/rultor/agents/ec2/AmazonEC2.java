@@ -94,53 +94,40 @@ public class AmazonEC2 implements Amazon {
 
     @Override
     public final Instance runOnDemand() throws IOException {
-        Instance instance;
         final AmazonEC2Client client = new AmazonEC2Client(
             this.credentials
         );
         client.setEndpoint(this.region);
         final List<Instance> instances = client.runInstances(
-            this.create()
+            new RunInstancesRequest()
+                .withKeyName(this.keyname)
+                .withMinCount(1)
+                .withMaxCount(1)
+                .withInstanceType(this.type)
         ).getReservation().getInstances();
         if (instances.isEmpty()) {
             throw new IllegalStateException(
                 "No Instance was available in the RunInstanceRequest reply!"
             );
-        } else {
-            instance = instances.get(0);
         }
+        final Instance instance = instances.get(0);
         InstanceState state = instance.getState();
         if (state.getCode() < RUNNING_STATE) {
-            final DescribeInstanceStatusRequest statusreq =
+            final DescribeInstanceStatusRequest req =
                 new DescribeInstanceStatusRequest();
-            statusreq.withInstanceIds(instance.getInstanceId());
+            req.withInstanceIds(instance.getInstanceId());
             while (state.getCode() < RUNNING_STATE) {
                 try {
                     TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
                 } catch (final InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
+                    throw new IllegalArgumentException(ex);
                 }
                 final DescribeInstanceStatusResult instanceStatus = client
-                    .describeInstanceStatus(statusreq);
+                    .describeInstanceStatus(req);
                 state = instanceStatus.getInstanceStatuses().get(0)
                     .getInstanceState();
             }
         }
         return instance;
-    }
-
-    /**
-     * Creates a new {@link RunInstancesRequest} with the {@link #keyname} and
-     * {@link #type} set. The minimal and maximal number of instances created
-     * by the request is limited to one.
-     * @return The {@link RunInstancesRequest} created
-     */
-    private RunInstancesRequest create() {
-        return new RunInstancesRequest()
-            .withKeyName(this.keyname)
-            .withMinCount(1)
-            .withMaxCount(1)
-            .withInstanceType(this.type);
     }
 }
