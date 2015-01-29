@@ -29,12 +29,15 @@
  */
 package com.rultor.agents.twitter;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.jcabi.github.Issue;
+import com.jcabi.github.Language;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
-import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
-import org.junit.Ignore;
+import java.io.IOException;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -54,12 +57,53 @@ public final class TweetsTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void postsTweet() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
         final Twitter twitter = Mockito.mock(Twitter.class);
-        final Agent agent = new Tweets(repo.github(), twitter);
+        final Talk talk = TweetsTest.talk(repo, repo.issues().create("", ""));
+        new Tweets(repo.github(), twitter).execute(talk);
+        Mockito.verify(twitter).post(
+            Matchers.contains("test")
+        );
+    }
+
+    /**
+     * Tweets can post a tweet with language tags.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void postsTweetWithLanguages() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Twitter twitter = Mockito.mock(Twitter.class);
+        new Tweets(repo.github(), twitter).execute(
+            TweetsTest.talk(repo, repo.issues().create("", ""))
+        );
+        Mockito.verify(twitter).post(
+            Matchers.contains(
+                Joiner.on(' ').join(
+                    Iterables.transform(
+                        repo.languages(),
+                        new Function<Language, String>() {
+                            @Override
+                            public String apply(final Language lang) {
+                                return String.format("#%s", lang.name());
+                            }
+                        }
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Creates a talk with repo and issue.
+     * @param repo Repo to use
+     * @param issue Issue to use
+     * @return Created Talk
+     * @throws IOException In case of error
+     */
+    private static Talk talk(final Repo repo, final Issue issue)
+        throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk").add("wire")
@@ -73,10 +117,6 @@ public final class TweetsTest {
                 .add("type").set("release").up()
                 .add("args").add("arg").attr("name", "tag").set("1.7")
         );
-        agent.execute(talk);
-        Mockito.verify(twitter).post(
-            Matchers.contains("test")
-        );
+        return talk;
     }
-
 }
