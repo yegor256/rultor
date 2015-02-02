@@ -89,6 +89,11 @@ function docker_when_possible {
   docker run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main \
     --name="${container}" "${image}" /main/entry.sh
+  if [ -f "$(pwd)/cid" ]; then
+    cid=$(cat "$(pwd)/cid")
+    docker stop "${cid}" || true
+    docker rm -f "${cid}" || true
+  fi
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
   fi
