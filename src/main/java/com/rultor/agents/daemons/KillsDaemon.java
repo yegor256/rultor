@@ -87,6 +87,8 @@ public final class KillsDaemon extends AbstractAgent {
                 String.format("dir=%s", SSH.escape(dir)),
                 "if [ ! -e \"${dir}/pid\" ]; then exit 0; fi",
                 "pid=$(cat \"${dir}/pid\")",
+                "if [ -n \"$(ps -p $pid -opid=)\" ]; then kill ${pid}; fi",
+                "sleep 15",
                 "if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 ${pid}; fi",
                 "rm -f \"${dir}/pid\""
             )
