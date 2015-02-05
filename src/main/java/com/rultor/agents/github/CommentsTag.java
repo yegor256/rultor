@@ -124,6 +124,7 @@ public final class CommentsTag extends AbstractAgent {
             final Date prev = this.previous(repo);
             final Release.Smart rel = new Release.Smart(rels.create(tag));
             rel.name(issue.title());
+            rel.prerelease(true);
             rel.body(
                 String.format(
                     // @checkstyle LineLength (1 line)
