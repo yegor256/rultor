@@ -43,6 +43,7 @@ import com.rultor.agents.daemons.KillsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Question;
+import com.rultor.agents.github.ReleaseBinaries;
 import com.rultor.agents.github.Reports;
 import com.rultor.agents.github.Stars;
 import com.rultor.agents.github.StartsTalks;
@@ -221,6 +222,7 @@ public final class Agents {
                     )
                 ),
                 new CommentsTag(this.github),
+                new ReleaseBinaries(this.github, profile),
                 new Reports(this.github),
                 new RemovesShell(),
                 new ArchivesDaemon(
