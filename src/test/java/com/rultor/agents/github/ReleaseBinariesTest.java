@@ -75,7 +75,6 @@ public final class ReleaseBinariesTest {
     @Ignore
     public void attachesBinaryToRelease() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
         final String tag = "v1.0";
         final File dir = this.temp.newFolder();
         final String target = "target";
@@ -86,7 +85,8 @@ public final class ReleaseBinariesTest {
         Files.createParentDirs(bin);
         final byte[] content = RandomUtils.nextBytes(Tv.HUNDRED);
         Files.write(content, bin);
-        final Talk talk = ReleaseBinariesTest.talk(issue, tag, dir);
+        final Talk talk = ReleaseBinariesTest
+            .talk(repo.issues().create("", ""), tag, dir);
         new CommentsTag(repo.github()).execute(talk);
         new ReleaseBinaries(
             repo.github(),
@@ -124,11 +124,9 @@ public final class ReleaseBinariesTest {
         final String identifier = "id";
         talk.modify(
             new Directives().xpath("/talk")
-                .attr("later", Boolean.TRUE.toString())
                 .add("daemon").attr(identifier, "123")
                 .add("title").set("merge").up()
                 .add("script").set("empty").up()
-                .add("code").set("-7").up()
                 .add("dir").set(dir.getAbsolutePath()).up().up()
                 .add("wire")
                 .add("href").set("http://test2").up()
