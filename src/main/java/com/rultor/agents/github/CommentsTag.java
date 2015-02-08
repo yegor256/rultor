@@ -32,7 +32,6 @@ package com.rultor.agents.github;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Commit;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
@@ -162,12 +161,11 @@ public final class CommentsTag extends AbstractAgent {
             repo.commits().iterate(params)
         );
         for (final RepoCommit.Smart commit : commits) {
-            final Commit cmt = repo.git().commits().get(commit.sha());
             lines.add(
                 String.format(
                     " * %s by @%s: %s",
                     commit.sha(),
-                    cmt.json().getJsonObject("author").get("login"),
+                    commit.json().getJsonObject("author").getString("login"),
                     commit.message().replaceAll("[^\\p{Print}]", " ")
                 )
             );
