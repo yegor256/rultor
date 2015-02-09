@@ -279,7 +279,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
-            <version>0.18.10</version>
+            <version>0.20</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
