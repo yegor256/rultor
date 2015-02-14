@@ -82,6 +82,7 @@ public final class QnMerge implements Question {
                 issue.repo().coordinates(), issue.number(), comment.number()
             );
             req = QnMerge.pack(
+                comment,
                 new Pull.Smart(
                     issue.repo().pulls().get(issue.number())
                 )
@@ -102,34 +103,51 @@ public final class QnMerge implements Question {
 
     /**
      * Pack a pull request.
+     * @param comment The comment we're in
      * @param pull Pull
      * @return Req
      * @throws IOException If fails
      */
-    private static Req pack(final JsonReadable pull) throws IOException {
+    private static Req pack(final Comment.Smart comment,
+        final JsonReadable pull) throws IOException {
         final JsonObject head = pull.json().getJsonObject("head");
         final JsonObject base = pull.json().getJsonObject("base");
-        return new Req.Simple(
-            "merge",
-            new ImmutableMap.Builder<String, String>()
-                .put("fork_branch", head.getString("ref"))
-                .put("head_branch", base.getString("ref"))
-                .put(
-                    "head",
-                    String.format(
-                        "git@github.com:%s.git",
-                        base.getJsonObject("repo").getString("full_name")
+        final Req req;
+        final String repo = "repo";
+        if (head.isNull(repo)) {
+            new Answer(comment).post(
+                QnMerge.PHRASES.getString("QnMerge.head-is-gone")
+            );
+            req = Req.EMPTY;
+        } else if (base.isNull(repo)) {
+            new Answer(comment).post(
+                QnMerge.PHRASES.getString("QnMerge.base-is-gone")
+            );
+            req = Req.EMPTY;
+        } else {
+            req = new Req.Simple(
+                "merge",
+                new ImmutableMap.Builder<String, String>()
+                    .put("fork_branch", head.getString("ref"))
+                    .put("head_branch", base.getString("ref"))
+                    .put(
+                        "head",
+                        String.format(
+                            "git@github.com:%s.git",
+                            base.getJsonObject(repo).getString("full_name")
+                        )
                     )
-                )
-                .put(
-                    "fork",
-                    String.format(
-                        "git@github.com:%s.git",
-                        head.getJsonObject("repo").getString("full_name")
+                    .put(
+                        "fork",
+                        String.format(
+                            "git@github.com:%s.git",
+                            head.getJsonObject(repo).getString("full_name")
+                        )
                     )
-                )
-                .build()
-        );
+                    .build()
+            );
+        }
+        return req;
     }
 
 }
