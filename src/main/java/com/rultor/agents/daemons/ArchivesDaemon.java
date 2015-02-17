@@ -95,7 +95,7 @@ public final class ArchivesDaemon extends AbstractAgent {
             Joiner.on("; ").join(
                 String.format("dir=%s", SSH.escape(dir)),
                 "if [ -r \"${dir}/stdout\" ]",
-                "then cat \"${dir}/stdout\" | col -b 2>&1",
+                "then cat \"${dir}/stdout\" | col -b",
                 "else echo 'stdout not found, internal error'",
                 "fi"
             ),
