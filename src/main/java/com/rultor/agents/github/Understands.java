@@ -148,7 +148,8 @@ public final class Understands extends AbstractAgent {
                 issue.repo().coordinates(), issue.number(), next
             );
         } else {
-            dirs.xpath("/talk[not(request)]").strict(1).add("request")
+            dirs.xpath("/talk/request").remove()
+                .xpath("/talk[not(request)]").strict(1).add("request")
                 .attr("id", Integer.toString(next))
                 .append(req.dirs());
         }
