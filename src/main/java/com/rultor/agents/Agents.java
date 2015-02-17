@@ -172,20 +172,20 @@ public final class Agents {
                                 new QnIfContains("status", new QnStatus(talk)),
                                 new QnIfContains("version", new QnVersion()),
                                 new QnIfContains("hello", new QnHello()),
-                                new QnFollow(
-                                    new QnIfCollaborator(
-                                        new QnAlone(
-                                            talk, locks,
-                                            this.commands(profile)
-                                        )
-                                    )
-                                ),
                                 new QnIfContains(
                                     "stop",
                                     new QnAskedBy(
                                         profile,
                                         Agents.commanders("stop"),
                                         new QnStop()
+                                    )
+                                ),
+                                new QnFollow(
+                                    new QnIfCollaborator(
+                                        new QnAlone(
+                                            talk, locks,
+                                            this.commands(profile)
+                                        )
                                     )
                                 )
                             )
