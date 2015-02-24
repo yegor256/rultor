@@ -75,7 +75,7 @@ public final class QnIfContainsTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("something else to MErge");
         new QnIfContains("merge", new QnHello()).understand(
-            new Comment.Smart(issue.comments().get(1)), new URI("#")
+            new Comment.Smart(issue.comments().get(1)), new URI("#test")
         ).dirs();
         MatcherAssert.assertThat(
             issue.comments().iterate(),
