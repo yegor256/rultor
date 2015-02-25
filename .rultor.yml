@@ -1,12 +1,12 @@
+architect: 
+- yegor256
+- alex-palevsky
 install: |-
    sudo apt-get install bsdmainutils
    sudo gem install pdd
    cd src/bundle
    sudo bundle install
    cd ../..
-architect: 
-- yegor256
-- alex-palevsky
 assets: 
    secring.gpg: yegor256/home#assets/secring.gpg
    id_rsa: yegor256/home#assets/heroku-key
