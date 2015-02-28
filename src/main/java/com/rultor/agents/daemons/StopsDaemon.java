@@ -72,10 +72,10 @@ public final class StopsDaemon extends AbstractAgent {
         new Shell.Empty(new Shell.Safe(shell)).exec(
             Joiner.on(" && ").join(
                 String.format("dir=%s", SSH.escape(dir)),
-                "if [ ! -e \"${dir}/repo/cid\" ]; then exit 0; fi",
-                "cid=$(cat \"${dir}/repo/cid\")",
+                "if [ ! -e \"${dir}/cid\" ]; then exit 0; fi",
+                "cid=$(cat \"${dir}/cid\")",
                 "sudo docker stop \"${cid}\"",
-                "rm \"${dir}/repo/cid\""
+                "rm \"${dir}/cid\""
             )
         );
         Logger.info(this, "docker stopped by request at %s", dir);
