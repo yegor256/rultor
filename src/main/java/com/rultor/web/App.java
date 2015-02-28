@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.rultor.spi.Talks;
 import java.io.IOException;
 import org.takes.Request;
 import org.takes.Take;
@@ -41,13 +42,21 @@ import org.takes.ts.TsRegex;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.26
+ * @since 1.50
  */
 public final class App implements Takes {
 
-    @Override
-    public Take take(final Request request) throws IOException {
-        return new TsRegex()
+    /**
+     * Takes.
+     */
+    private final transient Takes takes;
+
+    /**
+     * Ctor.
+     * @param talks Talks
+     */
+    public App(final Talks talks) {
+        this.takes = new TsRegex()
             .with(
                 "/b/([/a-zA-Z0-9_\\-\\.]+)",
                 new TsRegex.Fast() {
@@ -63,12 +72,18 @@ public final class App implements Takes {
                     @Override
                     public Take take(final RqRegex req) {
                         return new TkDaemon(
-                            Integer.parseInt(req.matcher().group(1)),
+                            req, talks,
+                            Long.parseLong(req.matcher().group(1)),
                             req.matcher().group(1)
                         );
                     }
                 }
-            )
-            .take(request);
+            );
     }
+
+    @Override
+    public Take take(final Request request) throws IOException {
+        return this.takes.take(request);
+    }
+
 }
