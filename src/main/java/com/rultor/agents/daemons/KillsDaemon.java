@@ -72,7 +72,7 @@ public final class KillsDaemon extends AbstractAgent {
             "/talk/daemon[started and not(code) and not(ended)]",
             String.format(
                 // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
+                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d or request/type='stop']",
                 mins
         )
         );
