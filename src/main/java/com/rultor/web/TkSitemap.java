@@ -34,12 +34,13 @@ import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
+import com.rultor.spi.Talks;
 import java.io.IOException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.takes.Response;
+import org.takes.Take;
+import org.takes.rs.RsWithBody;
+import org.takes.rs.RsWithType;
 
 /**
  * Sitemap.
@@ -48,25 +49,42 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * @version $Id$
  * @since 1.26
  */
-@Path("/sitemap.xml")
-public final class SitemapRs extends BaseRs {
+final class TkSitemap implements Take {
+
+    /**
+     * Talks.
+     */
+    private final transient Talks talks;
+
+    /**
+     * Ctor.
+     * @param tks Talks
+     */
+    TkSitemap(final Talks tks) {
+        this.talks = tks;
+    }
+
+    @Override
+    public Response act() throws IOException {
+        return new RsWithType(
+            new RsWithBody(this.xml()),
+            "text/xml"
+        );
+    }
 
     /**
      * XML.
      * @return XML
      * @throws IOException If fails
      */
-    @GET
-    @Path("/")
-    @Produces(MediaType.TEXT_XML)
-    public String xml() throws IOException {
+    private String xml() throws IOException {
         final StringBuilder doc = new StringBuilder(Tv.THOUSAND).append(
             "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>"
         );
-        for (final Talk talk : this.talks().recent()) {
+        for (final Talk talk : this.talks.recent()) {
             final XML xml = talk.read();
             for (final String hash : xml.xpath("/talk/archive/log/@id")) {
-                doc.append(SitemapRs.toXML(talk, xml, hash));
+                doc.append(TkSitemap.toXML(talk, xml, hash));
             }
         }
         return doc.append("</urlset>").toString();

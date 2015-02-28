@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -39,6 +40,7 @@ import org.takes.Takes;
 import org.takes.rq.RqRegex;
 import org.takes.tk.TkRedirect;
 import org.takes.ts.TsRegex;
+import org.takes.ts.TsWithHeaders;
 
 /**
  * App.
@@ -60,11 +62,12 @@ public final class App implements Takes {
      * @param ticks Ticks
      */
     public App(final Talks talks, final Collection<Pulse.Tick> ticks) {
-        this.takes = new TsRegex()
+        final Takes regex = new TsRegex()
             .with("/robots.txt", "")
             .with("/", new TkHome(talks))
             .with("/svg", new TkSVG(ticks))
             .with("/s/.*", new TkRedirect("/"))
+            .with("/sitemap", new TkSitemap(talks))
             .with(
                 "/b/([/a-zA-Z0-9_\\-\\.]+)",
                 new TsRegex.Fast() {
@@ -119,6 +122,12 @@ public final class App implements Takes {
                         );
                     }
                 }
+            );
+        this.takes = new TsWithHeaders(regex)
+            .with("Vary", "Cookie")
+            .with(
+                "X-Rultor-Revision",
+                Manifests.read("Rultor-Revision")
             );
     }
 

@@ -124,28 +124,6 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Supplementary inset.
-     * @return The inset
-     * @throws IOException If fails
-     */
-    @Inset.Runtime
-    @NotNull(message = "supplementary inset can never be NULL")
-    public final Inset insetSupplementary() throws IOException {
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                builder.type(MediaType.TEXT_XML);
-                builder.header(HttpHeaders.VARY, "Cookie");
-                builder.header(
-                    "X-Rultor-Revision",
-                    Manifests.read("Rultor-Revision")
-                );
-            }
-        };
-    }
-
-    /**
      * Toggles inset.
      * @return The inset
      * @throws IOException If fails
@@ -181,17 +159,6 @@ public class BaseRs extends BaseResource {
                 Level.WARNING
             );
         }
-    }
-
-    /**
-     * Get all talks.
-     * @return The talks
-     */
-    @NotNull(message = "Talks can't be NULL")
-    protected final Talks talks() {
-        return Talks.class.cast(
-            this.servletContext().getAttribute(Talks.class.getName())
-        );
     }
 
     /**

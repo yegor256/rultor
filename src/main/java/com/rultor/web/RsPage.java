@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import org.takes.Response;
+import org.takes.rs.RsWithType;
 import org.takes.rs.RsXSLT;
 import org.takes.rs.xe.RsXembly;
 import org.takes.rs.xe.XeAppend;
@@ -62,16 +63,19 @@ final class RsPage implements Response {
      * @param src Source
      */
     RsPage(final String xsl, final XeSource... src) {
-        this.origin = new RsXSLT(
-            new RsXembly(
-                new XeStylesheet(xsl),
-                new XeAppend(
-                    "page",
-                    new XeMillis(false),
-                    new XeChain(src),
-                    new XeMillis(true)
+        this.origin = new RsWithType(
+            new RsXSLT(
+                new RsXembly(
+                    new XeStylesheet(xsl),
+                    new XeAppend(
+                        "page",
+                        new XeMillis(false),
+                        new XeChain(src),
+                        new XeMillis(true)
+                    )
                 )
-            )
+            ),
+            "text/xml"
         );
     }
 
