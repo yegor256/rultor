@@ -52,6 +52,7 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Show current status.
@@ -105,12 +106,15 @@ public final class QnStatus implements Question {
                 String.format(
                     " * Docker container ID: `%s...`",
                     shell.exec(
-                        String.format(
-                            // @checkstyle LineLength (1 line)
-                            "dir=\"%s\"; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
-                            dir
+                        StringUtils.substring(
+                            String.format(
+                                // @checkstyle LineLength (1 line)
+                                "dir=\"%s\"; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
+                                dir
+                            ),
+                            0, Tv.TWENTY
                         )
-                    ).substring(0, Tv.TWENTY)
+                    )
                 )
             );
             lines.add(
