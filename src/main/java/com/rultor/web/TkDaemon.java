@@ -37,24 +37,26 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.logging.Level;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.takes.Request;
 import org.takes.Take;
+import org.takes.rs.RsFluent;
+import org.takes.rs.RsForward;
 
 /**
  * Single daemon.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
- * @checkstyle MultipleStringLiterals (500 lines)
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.50
  */
 final class TkDaemon implements Take {
+
+    /**
+     * User.
+     */
+    private final transient User user;
 
     /**
      * Talks.
@@ -73,11 +75,14 @@ final class TkDaemon implements Take {
 
     /**
      * Ctor.
+     * @param req Request
      * @param tlks Talks
      * @param num Talk number
      * @param hsh Hash of the daemon
      */
-    TkDaemon(final Talks tlks, final long num, final String hsh) {
+    TkDaemon(final Request req, final Talks tlks,
+        final long num, final String hsh) {
+        this.user = new User(req);
         this.talks = tlks;
         this.number = num;
         this.hash = hsh;
@@ -86,36 +91,22 @@ final class TkDaemon implements Take {
     @Override
     public org.takes.Response print() throws IOException {
         if (!this.talks.exists(this.number)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                "there is no such page here",
-                Level.WARNING
-            );
+            throw new RsForward("/");
+//                "there is no such page here",
+//                Level.WARNING
         }
-    }
-
-    /**
-     * Get front.
-     * @return The JAX-RS response
-     * @throws IOException If fails
-     */
-    @GET
-    @Path("/")
-    public Response index() throws IOException {
-        if (!this.granted(this.talks().get(this.number))) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "according to .rultor.yml, you (%s) are not allowed to see this",
-                    this.auth().identity().urn()
-                ),
-                Level.WARNING
-            );
+        if (!this.user.canSee(this.talks.get(this.number))) {
+            throw new RsForward("/");
+//                String.format(
+//                    // @checkstyle LineLength (1 line)
+//                    "according to .rultor.yml, you (%s) are not allowed to see this",
+//                    this.user.identity().urn()
+//                ),
+//                Level.WARNING
         }
-        return Response.ok()
-            .entity(this.html())
-            .type("text/html; charset=utf-8").build();
+        return new RsFluent()
+            .withBody(this.html())
+            .withContentType("text/html; charset=utf-8");
     }
 
     /**
@@ -124,7 +115,7 @@ final class TkDaemon implements Take {
      * @throws IOException If fails
      */
     private InputStream html() throws IOException {
-        final Talk talk = this.talks().get(this.number);
+        final Talk talk = this.talks.get(this.number);
         final String head = IOUtils.toString(
             this.getClass().getResourceAsStream("daemon/head.html"),
             CharEncoding.UTF_8
