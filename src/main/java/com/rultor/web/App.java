@@ -30,59 +30,45 @@
 package com.rultor.web;
 
 import java.io.IOException;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
+import org.takes.Request;
+import org.takes.Take;
+import org.takes.Takes;
+import org.takes.rq.RqRegex;
+import org.takes.ts.TsRegex;
 
 /**
- * Button.
+ * App.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.26
  */
-@Path("/b/{name : [/a-zA-Z0-9_\\-\\.]+}")
-public final class ButtonRs extends BaseRs {
+public final class App implements Takes {
 
-    /**
-     * Repo name.
-     */
-    private transient String name;
-
-    /**
-     * Inject it from query.
-     * @param repo Repo name
-     */
-    @PathParam("name")
-    public void setName(@NotNull(message = "repo name is mandatory")
-        final String repo) {
-        this.name = repo;
-    }
-
-    /**
-     * SVG button.
-     * @return SVG
-     * @throws IOException If fails
-     */
-    @GET
-    @Path("/")
-    public Response svg() throws IOException {
-        assert this.name != null;
-        return Response.ok()
-            .type("image/svg+xml")
-            .header(HttpHeaders.CACHE_CONTROL, "no-cache")
-            .entity(
-                IOUtils.toString(
-                    this.getClass().getResourceAsStream("button.svg"),
-                    CharEncoding.UTF_8
-                )
+    @Override
+    public Take take(final Request request) throws IOException {
+        return new TsRegex()
+            .with(
+                "/b/([/a-zA-Z0-9_\\-\\.]+)",
+                new TsRegex.Fast() {
+                    @Override
+                    public Take take(final RqRegex req) {
+                        return new TkButton(req.matcher().group(1));
+                    }
+                }
             )
-            .build();
+            .with(
+                "/t/([0-9]+)-([a-f0-9]+)",
+                new TsRegex.Fast() {
+                    @Override
+                    public Take take(final RqRegex req) {
+                        return new TkDaemon(
+                            Integer.parseInt(req.matcher().group(1)),
+                            req.matcher().group(1)
+                        );
+                    }
+                }
+            )
+            .take(request);
     }
-
 }

@@ -30,7 +30,6 @@
 package com.rultor.web;
 
 import java.io.File;
-import org.apache.catalina.startup.Tomcat;
 
 /**
  * Launch (used only for heroku).

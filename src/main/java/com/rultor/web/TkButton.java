@@ -29,21 +29,44 @@
  */
 package com.rultor.web;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.takes.Response;
+import org.takes.Take;
+import org.takes.rs.RsWithBody;
+import org.takes.rs.RsWithHeaders;
+import org.takes.rs.RsWithType;
 
 /**
- * Empty RESTful page.
- *
- * <p>All other JAXB pages are inherited from this class, in runtime,
- * by means of {@link com.rexsl.page.PageBuilder}.
+ * Button.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.50
  */
-@XmlRootElement(name = "page")
-@XmlAccessorType(XmlAccessType.NONE)
-public class EmptyPage extends com.rexsl.page.BasePage<EmptyPage, BaseRs> {
+final class TkButton implements Take {
+
+    /**
+     * Repo name.
+     */
+    private final transient String name;
+
+    /**
+     * Ctor.
+     * @param repo Repo name
+     */
+    TkButton(final String repo) {
+        this.name = repo;
+    }
+
+    @Override
+    public Response print() {
+        return new RsWithType(
+            new RsWithHeaders(
+                new RsWithBody(
+                    this.getClass().getResourceAsStream("button.svg")
+                ),
+                "Cache-Control: no-cache"
+            ),
+            "image/svg+xml"
+        );
+    }
 }

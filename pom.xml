@@ -40,7 +40,7 @@
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
     <version>2.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>rultor</name>
     <description>Rultor.com, Coding Team Assistant</description>
     <url>http://www.rultor.com</url>
@@ -95,6 +95,11 @@
         <xpathfactorypropfile>${basedir}/src/test/resources/XPathFactory.properties</xpathfactorypropfile>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.takes</groupId>
+            <artifactId>takes</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
@@ -212,17 +217,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl</artifactId>
-            <version>1.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jsr173_api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-matchers</artifactId>
         </dependency>
@@ -310,10 +304,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
             <scope>runtime</scope>
@@ -339,18 +329,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>1.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                    <configuration>
-                        <port>9099</port>
-                        <path>/</path>
-                        <systemProperties>
-                            <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
-                        </systemProperties>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
@@ -397,17 +375,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warSourceExcludes>js/**, xsl/**, css/**</warSourceExcludes>
-                    <webResources combine.children="append">
-                        <resource>
-                            <directory>${project.build.directory}/minify</directory>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.jasig.maven</groupId>
                 <artifactId>sass-maven-plugin</artifactId>
                 <version>1.1.1</version>
@@ -432,7 +399,7 @@
                 <configuration>
                     <charset>UTF-8</charset>
                     <nosuffix>true</nosuffix>
-                    <webappTargetDir>${project.build.directory}/minify</webappTargetDir>
+                    <webappTargetDir>${project.build.outputDirectory}</webappTargetDir>
                 </configuration>
                 <executions>
                     <execution>
@@ -477,8 +444,8 @@
                             <goal>xml</goal>
                         </goals>
                         <configuration>
-                            <srcFolder>${basedir}/src/main/webapp/xsl</srcFolder>
-                            <targetFolder>${project.build.directory}/${project.build.finalName}/xsl</targetFolder>
+                            <srcFolder>${basedir}/src/main/resources/xsl</srcFolder>
+                            <targetFolder>${project.build.outputDirectory}/xsl</targetFolder>
                             <fileExt>
                                 <ext>xsl</ext>
                             </fileExt>
@@ -540,41 +507,15 @@
             </build>
         </profile>
         <profile>
-            <id>tomcat-test</id>
+            <id>takes-test</id>
             <activation>
                 <property><name>!skipTests</name></property>
             </activation>
             <properties>
                 <failsafe.sttc.urn>urn:test:1</failsafe.sttc.urn>
-                <tomcat.home>${project.build.directory}/webapp-test</tomcat.home>
             </properties>
             <build>
                 <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>prepare-webapp-for-tests</id>
-                                <goals>
-                                    <goal>exploded</goal>
-                                </goals>
-                                <configuration>
-                                    <warSourceExcludes>nothing/**</warSourceExcludes>
-                                    <webappDirectory>${tomcat.home}</webappDirectory>
-                                    <webResources combine.children="append">
-                                        <resource>
-                                            <directory>src/test/resources</directory>
-                                            <filtering>true</filtering>
-                                            <targetPath>WEB-INF/classes</targetPath>
-                                        </resource>
-                                        <resource>
-                                            <directory>src/test/webapp</directory>
-                                        </resource>
-                                    </webResources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -585,7 +526,7 @@
                                 </goals>
                                 <configuration>
                                     <portNames>
-                                        <portName>tomcat.port</portName>
+                                        <portName>takes.port</portName>
                                     </portNames>
                                 </configuration>
                             </execution>
@@ -595,7 +536,7 @@
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables combine.children="append">
-                                <tomcat.home>http://localhost:${tomcat.port}</tomcat.home>
+                                <takes.home>http://localhost:${takes.port}</takes.home>
                             </systemPropertyVariables>
                             <reuseForks>false</reuseForks>
                         </configuration>
@@ -604,33 +545,6 @@
                                 <goals>
                                     <goal>integration-test</goal>
                                     <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <configuration>
-                            <warDirectory>${tomcat.home}</warDirectory>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>start-tomcat</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>run-war-only</goal>
-                                </goals>
-                                <configuration>
-                                    <port>${tomcat.port}</port>
-                                    <fork>true</fork>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-tomcat</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>shutdown</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -686,7 +600,7 @@
                                         <argument>--verbose</argument>
                                         <argument>--no-colors</argument>
                                         <argument>--concise</argument>
-                                        <argument>--home=http://localhost:${tomcat.port}</argument>
+                                        <argument>--home=http://localhost:${takes.port}</argument>
                                         <argument>--engine=phantomjs</argument>
                                         <argument>${basedir}/src/test/casperjs</argument>
                                     </arguments>
@@ -821,28 +735,6 @@
             <activation>
                 <file><exists>pom.xml</exists></file>
             </activation>
-            <properties>
-                <tomcat.version>7.0.34</tomcat.version>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-core</artifactId>
-                    <version>${tomcat.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-logging-juli</artifactId>
-                    <version>${tomcat.version}</version>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-jasper</artifactId>
-                    <version>${tomcat.version}</version>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
             <build>
                 <finalName>rultor</finalName>
                 <plugins>
