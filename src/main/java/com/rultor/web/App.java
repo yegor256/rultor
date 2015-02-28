@@ -29,12 +29,15 @@
  */
 package com.rultor.web;
 
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.Collection;
 import org.takes.Request;
 import org.takes.Take;
 import org.takes.Takes;
 import org.takes.rq.RqRegex;
+import org.takes.tk.TkRedirect;
 import org.takes.ts.TsRegex;
 
 /**
@@ -54,9 +57,14 @@ public final class App implements Takes {
     /**
      * Ctor.
      * @param talks Talks
+     * @param ticks Ticks
      */
-    public App(final Talks talks) {
+    public App(final Talks talks, final Collection<Pulse.Tick> ticks) {
         this.takes = new TsRegex()
+            .with("/robots.txt", "")
+            .with("/", new TkHome(talks))
+            .with("/svg", new TkSVG(ticks))
+            .with("/s/.*", new TkRedirect("/"))
             .with(
                 "/b/([/a-zA-Z0-9_\\-\\.]+)",
                 new TsRegex.Fast() {
@@ -82,8 +90,8 @@ public final class App implements Takes {
     }
 
     @Override
-    public Take take(final Request request) throws IOException {
-        return this.takes.take(request);
+    public Take route(final Request request) throws IOException {
+        return this.takes.route(request);
     }
 
 }

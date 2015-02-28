@@ -40,6 +40,7 @@ import java.util.Collections;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.takes.Request;
+import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsFluent;
 import org.takes.rs.RsForward;
@@ -89,7 +90,7 @@ final class TkDaemon implements Take {
     }
 
     @Override
-    public org.takes.Response print() throws IOException {
+    public Response act() throws IOException {
         if (!this.talks.exists(this.number)) {
             throw new RsForward("/");
 //                "there is no such page here",

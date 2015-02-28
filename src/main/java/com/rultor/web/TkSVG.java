@@ -29,45 +29,76 @@
  */
 package com.rultor.web;
 
+import com.jcabi.xml.XML;
+import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSL;
+import com.jcabi.xml.XSLDocument;
+import com.rultor.spi.Pulse;
+import java.util.Collection;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsWithBody;
-import org.takes.rs.RsWithHeaders;
 import org.takes.rs.RsWithType;
+import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
- * Button.
+ * SVG with pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-final class TkButton implements Take {
+final class TkSVG implements Take {
 
     /**
-     * Repo name.
+     * XSLT for pulse render.
      */
-    private final transient String name;
+    private static final XSL PULSE = XSLDocument.make(
+        HomeRs.class.getResourceAsStream("pulse.xsl")
+    );
+
+    /**
+     * Ticks.
+     */
+    private final transient Collection<Pulse.Tick> ticks;
 
     /**
      * Ctor.
-     * @param repo Repo name
+     * @param tks Ticks
      */
-    TkButton(final String repo) {
-        this.name = repo;
+    TkSVG(final Collection<Pulse.Tick> tks) {
+        this.ticks = tks;
     }
 
     @Override
     public Response act() {
-        assert this.name != null;
         return new RsWithType(
-            new RsWithHeaders(
-                new RsWithBody(
-                    this.getClass().getResourceAsStream("button.svg")
-                ),
-                "Cache-Control: no-cache"
+            new RsWithBody(
+                TkSVG.PULSE.transform(
+                    this.dirs()
+                ).nodes("/*").get(0).toString()
             ),
             "image/svg+xml"
         );
     }
+
+    /**
+     * Turn ticks into XML.
+     * @return XML
+     */
+    private XML dirs() {
+        final long now = System.currentTimeMillis();
+        final Directives dirs = new Directives().add("pulse");
+        for (final Pulse.Tick tick : this.ticks) {
+            dirs.add("tick")
+                .attr("total", Integer.toString(tick.total()))
+                .attr("start", Long.toString(tick.start() - now))
+                .attr("msec", Long.toString(tick.duration()))
+                .up();
+        }
+        return new XMLDocument(new Xembler(dirs).xmlQuietly());
+    }
+
 }
