@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker stop "$(pwd)/repo/cid"
+docker stop $(cat $(pwd)/repo/cid)
