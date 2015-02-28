@@ -38,13 +38,8 @@ import java.io.IOException;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.rs.RsXSLT;
-import org.takes.rs.xe.RsXembly;
-import org.takes.rs.xe.XeAppend;
 import org.takes.rs.xe.XeDirectives;
 import org.takes.rs.xe.XeLink;
-import org.takes.rs.xe.XeMillis;
-import org.takes.rs.xe.XeStylesheet;
 import org.xembly.Directives;
 
 /**
@@ -72,17 +67,10 @@ final class TkHome implements Take {
 
     @Override
     public Response act() throws IOException {
-        return new RsXSLT(
-            new RsXembly(
-                new XeStylesheet("/xsl/home.xsl"),
-                new XeAppend(
-                    "page",
-                    new XeMillis(false),
-                    new XeDirectives(this.recent()),
-                    new XeLink("svg", "/svg", "image/svg+xml"),
-                    new XeMillis(true)
-                )
-            )
+        return new RsPage(
+            "/xsl/home.xsl",
+            new XeDirectives(this.recent()),
+            new XeLink("svg", "/svg", "image/svg+xml")
         );
     }
 

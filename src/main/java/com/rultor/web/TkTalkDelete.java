@@ -29,76 +29,54 @@
  */
 package com.rultor.web;
 
-import com.jcabi.xml.XML;
-import com.jcabi.xml.XMLDocument;
-import com.jcabi.xml.XSL;
-import com.jcabi.xml.XSLDocument;
-import com.rultor.spi.Pulse;
-import java.util.Collection;
+import com.rultor.spi.Talk;
+import com.rultor.spi.Talks;
+import java.io.IOException;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.rs.RsWithBody;
-import org.takes.rs.RsWithType;
-import org.xembly.Directives;
-import org.xembly.Xembler;
+import org.takes.rs.RsForward;
 
 /**
- * SVG with pulse.
+ * Front page of a talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-final class TkSVG implements Take {
+final class TkTalkDelete implements Take {
 
     /**
-     * XSLT for pulse render.
+     * Talks.
      */
-    private static final XSL PULSE = XSLDocument.make(
-        TkSVG.class.getResourceAsStream("pulse.xsl")
-    );
+    private final transient Talks talks;
 
     /**
-     * Ticks.
+     * Talk unique number.
      */
-    private final transient Collection<Pulse.Tick> ticks;
+    private final transient long number;
 
     /**
      * Ctor.
-     * @param tks Ticks
+     * @param tks Talks
+     * @param talk Talk number
      */
-    TkSVG(final Collection<Pulse.Tick> tks) {
-        this.ticks = tks;
+    TkTalkDelete(final Talks tks, final long talk) {
+        this.talks = tks;
+        this.number = talk;
     }
 
     @Override
-    public Response act() {
-        return new RsWithType(
-            new RsWithBody(
-                TkSVG.PULSE.transform(
-                    this.dirs()
-                ).nodes("/*").get(0).toString()
-            ),
-            "image/svg+xml"
-        );
-    }
-
-    /**
-     * Turn ticks into XML.
-     * @return XML
-     */
-    private XML dirs() {
-        final long now = System.currentTimeMillis();
-        final Directives dirs = new Directives().add("pulse");
-        for (final Pulse.Tick tick : this.ticks) {
-            dirs.add("tick")
-                .attr("total", Integer.toString(tick.total()))
-                .attr("start", Long.toString(tick.start() - now))
-                .attr("msec", Long.toString(tick.duration()))
-                .up();
+    public Response act() throws IOException {
+        if (!this.talks.exists(this.number)) {
+            throw new RsForward("/");
+//                "there is no such page here",
+//                Level.WARNING
         }
-        return new XMLDocument(new Xembler(dirs).xmlQuietly());
+        final Talk talk = this.talks.get(this.number);
+        this.talks.delete(talk.name());
+        return new RsForward("/");
+//        String.format("talk #%d deleted", this.number),
+//            Level.INFO
     }
 
 }

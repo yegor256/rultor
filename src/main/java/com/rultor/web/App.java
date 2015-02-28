@@ -86,6 +86,39 @@ public final class App implements Takes {
                         );
                     }
                 }
+            )
+            .with(
+                "/t/([0-9]+)",
+                new TsRegex.Fast() {
+                    @Override
+                    public Take take(final RqRegex req) {
+                        return new TkTalk(
+                            talks, Long.parseLong(req.matcher().group(1))
+                        );
+                    }
+                }
+            )
+            .with(
+                "/t/([0-9]+)/kill",
+                new TsRegex.Fast() {
+                    @Override
+                    public Take take(final RqRegex req) {
+                        return new TkTalkKill(
+                            talks, Long.parseLong(req.matcher().group(1))
+                        );
+                    }
+                }
+            )
+            .with(
+                "/t/([0-9]+)/delete",
+                new TsRegex.Fast() {
+                    @Override
+                    public Take take(final RqRegex req) {
+                        return new TkTalkDelete(
+                            talks, Long.parseLong(req.matcher().group(1))
+                        );
+                    }
+                }
             );
     }
 

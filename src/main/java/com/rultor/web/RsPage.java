@@ -29,76 +29,59 @@
  */
 package com.rultor.web;
 
-import com.jcabi.xml.XML;
-import com.jcabi.xml.XMLDocument;
-import com.jcabi.xml.XSL;
-import com.jcabi.xml.XSLDocument;
-import com.rultor.spi.Pulse;
-import java.util.Collection;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import org.takes.Response;
-import org.takes.Take;
-import org.takes.rs.RsWithBody;
-import org.takes.rs.RsWithType;
-import org.xembly.Directives;
-import org.xembly.Xembler;
+import org.takes.rs.RsXSLT;
+import org.takes.rs.xe.RsXembly;
+import org.takes.rs.xe.XeAppend;
+import org.takes.rs.xe.XeChain;
+import org.takes.rs.xe.XeMillis;
+import org.takes.rs.xe.XeSource;
+import org.takes.rs.xe.XeStylesheet;
 
 /**
- * SVG with pulse.
+ * Index resource, front page of the website.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-final class TkSVG implements Take {
+final class RsPage implements Response {
 
     /**
-     * XSLT for pulse render.
+     * Origin.
      */
-    private static final XSL PULSE = XSLDocument.make(
-        TkSVG.class.getResourceAsStream("pulse.xsl")
-    );
-
-    /**
-     * Ticks.
-     */
-    private final transient Collection<Pulse.Tick> ticks;
+    private final transient Response origin;
 
     /**
      * Ctor.
-     * @param tks Ticks
+     * @param xsl XSL
+     * @param src Source
      */
-    TkSVG(final Collection<Pulse.Tick> tks) {
-        this.ticks = tks;
-    }
-
-    @Override
-    public Response act() {
-        return new RsWithType(
-            new RsWithBody(
-                TkSVG.PULSE.transform(
-                    this.dirs()
-                ).nodes("/*").get(0).toString()
-            ),
-            "image/svg+xml"
+    RsPage(final String xsl, final XeSource... src) {
+        this.origin = new RsXSLT(
+            new RsXembly(
+                new XeStylesheet(xsl),
+                new XeAppend(
+                    "page",
+                    new XeMillis(false),
+                    new XeChain(src),
+                    new XeMillis(true)
+                )
+            )
         );
     }
 
-    /**
-     * Turn ticks into XML.
-     * @return XML
-     */
-    private XML dirs() {
-        final long now = System.currentTimeMillis();
-        final Directives dirs = new Directives().add("pulse");
-        for (final Pulse.Tick tick : this.ticks) {
-            dirs.add("tick")
-                .attr("total", Integer.toString(tick.total()))
-                .attr("start", Long.toString(tick.start() - now))
-                .attr("msec", Long.toString(tick.duration()))
-                .up();
-        }
-        return new XMLDocument(new Xembler(dirs).xmlQuietly());
+    @Override
+    public List<String> head() throws IOException {
+        return this.origin.head();
     }
 
+    @Override
+    public InputStream body() throws IOException {
+        return this.origin.body();
+    }
 }
