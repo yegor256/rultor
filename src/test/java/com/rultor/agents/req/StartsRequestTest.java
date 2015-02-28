@@ -226,31 +226,6 @@ public final class StartsRequestTest {
     }
 
     /**
-     * StartsRequest can perform stop request.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void performsStopRequest() throws Exception {
-        final Agent agent = new StartsRequest(
-            new Profile.Fixed(new XMLDocument("<p></p>"))
-        );
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk")
-                .add("request").attr("id", "a8b9c2")
-                .add("type").set("stop").up()
-                .add("args")
-        );
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            this.exec(talk),
-            Matchers.containsString(
-                "docker stop"
-            )
-        );
-    }
-
-    /**
      * StartsRequest can run release with dockerfile (the test is disabled,
      * because it doesn't work on Mac, see #702).
      * @throws Exception In case of error.

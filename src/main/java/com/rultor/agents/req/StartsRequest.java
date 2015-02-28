@@ -31,7 +31,6 @@ package com.rultor.agents.req;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
@@ -42,7 +41,6 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -64,11 +62,6 @@ import org.xembly.Directives;
 @EqualsAndHashCode(callSuper = false, of = "profile")
 public final class StartsRequest extends AbstractAgent {
 
-    /**
-     * Command types not requiring _head.sh.
-     */
-    private static final Collection<String> HEADLESS =
-        Collections.singleton("stop");
     /**
      * Default port value to be used with Decrypt.
      */
@@ -94,7 +87,7 @@ public final class StartsRequest extends AbstractAgent {
     public StartsRequest(final Profile prof) {
         super(
             "/talk/request[@id and type and not(success)]",
-            "/talk[not(daemon) or request/type='stop']"
+            "/talk[not(daemon)]"
         );
         this.profile = prof;
     }
@@ -157,19 +150,11 @@ public final class StartsRequest extends AbstractAgent {
                     }
                 ),
                 Collections.singleton(this.asRoot()),
-                Iterables.filter(
-                    Collections.singleton(
-                        IOUtils.toString(
-                            this.getClass().getResourceAsStream("_head.sh"),
-                            CharEncoding.UTF_8
-                        )
-                    ),
-                    new Predicate<String>() {
-                        @Override
-                        public boolean apply(final String input) {
-                            return !StartsRequest.HEADLESS.contains(type);
-                        }
-                    }
+                Collections.singleton(
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream("_head.sh"),
+                        CharEncoding.UTF_8
+                    )
                 ),
                 this.decryptor().commands(),
                 Collections.singleton(
