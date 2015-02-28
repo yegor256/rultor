@@ -38,43 +38,30 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Kills daemon if too old.
+ * Stops daemon if STOP request is present.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.50
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public final class KillsDaemon extends AbstractAgent {
+public final class StopsDaemon extends AbstractAgent {
 
     /**
      * Ctor.
      */
-    public KillsDaemon() {
-        this(TimeUnit.HOURS.toMinutes(1L));
-    }
-
-    /**
-     * Ctor.
-     * @param mins Maximum minutes per build
-     */
-    public KillsDaemon(final long mins) {
+    public StopsDaemon() {
         super(
-            "/talk/daemon[started and not(code) and not(ended)]",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-        )
+            "/talk/request[type='stop']",
+            "/talk/daemon[started and not(code) and not(ended)]"
         );
     }
 
@@ -85,15 +72,13 @@ public final class KillsDaemon extends AbstractAgent {
         new Shell.Empty(new Shell.Safe(shell)).exec(
             Joiner.on(" && ").join(
                 String.format("dir=%s", SSH.escape(dir)),
-                "if [ ! -e \"${dir}/pid\" ]; then exit 0; fi",
-                "pid=$(cat \"${dir}/pid\")",
-                "if [ -n \"$(ps -p $pid -opid=)\" ]; then kill ${pid}; fi",
-                "sleep 15",
-                "if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 ${pid}; fi",
-                "rm -f \"${dir}/pid\""
+                "if [ ! -e \"${dir}/cid\" ]; then exit 0; fi",
+                "cid=$(cat \"${dir}/cid\")",
+                "sudo docker stop \"${cid}\"",
+                "rm \"${dir}/cid\""
             )
         );
-        Logger.info(this, "daemon killed because of delay in %s", dir);
+        Logger.info(this, "docker stopped by request at %s", dir);
         return new Directives();
     }
 
