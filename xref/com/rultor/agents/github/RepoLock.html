@@ -91,7 +91,7 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> lock(<strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Talk.html">Talk</a> talk) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">final</strong> String name = RepoLock.label(talk);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> done = <strong class="jxr_keyword">this</strong>.lock().lock(name);
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"lock of %s: %B"</span>, name, done);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          Logger.debug(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"lock of %s: %B"</span>, name, done);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>          <strong class="jxr_keyword">return</strong> done;
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>      }
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> unlock(<strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Talk.html">Talk</a> talk) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">final</strong> String name = RepoLock.label(talk);
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> done = <strong class="jxr_keyword">this</strong>.lock().unlock(name);
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>          Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"unlock of %s: %B"</span>, name, done);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          Logger.debug(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"unlock of %s: %B"</span>, name, done);
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         <strong class="jxr_keyword">return</strong> done;
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>     }
 <a class="jxr_linenumber" name="L102" href="#L102">102</a> 
