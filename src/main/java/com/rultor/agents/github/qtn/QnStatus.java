@@ -35,6 +35,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XSL;
@@ -109,8 +110,8 @@ public final class QnStatus implements Question {
                         StringUtils.substring(
                             String.format(
                                 // @checkstyle LineLength (1 line)
-                                "dir=\"%s\"; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
-                                dir
+                                "dir=%s; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
+                                SSH.escape(dir)
                             ),
                             0, Tv.TWENTY
                         )
