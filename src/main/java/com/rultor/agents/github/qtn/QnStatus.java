@@ -35,6 +35,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XSL;
@@ -52,6 +53,7 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Show current status.
@@ -104,8 +106,16 @@ public final class QnStatus implements Question {
             lines.add(
                 String.format(
                     " * Docker container ID: `%s...`",
-                    shell.exec(String.format("cd \"%s\"; cat cid", dir))
-                        .substring(0, Tv.TWENTY)
+                    StringUtils.substring(
+                        shell.exec(
+                            String.format(
+                                // @checkstyle LineLength (1 line)
+                                "dir=%s; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
+                                SSH.escape(dir)
+                            )
+                        ),
+                        0, Tv.TWENTY
+                    )
                 )
             );
             lines.add(
