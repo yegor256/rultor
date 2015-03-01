@@ -63,4 +63,12 @@ final class User {
         return true;
     }
 
+    /**
+     * Am I anonymous?
+     * @return TRUE if I am anonymous
+     */
+    public boolean anonymous() {
+        return true;
+    }
+
 }

@@ -109,32 +109,6 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Inset with a version of the product.
-     * @return The inset
-     */
-    @Inset.Runtime
-    @NotNull(message = "version can never be NULL")
-    public final Inset insetVersion() {
-        return new VersionInset(
-            Manifests.read("Rultor-Version"),
-            // @checkstyle MultipleStringLiterals (1 line)
-            Manifests.read("Rultor-Revision"),
-            Manifests.read("Rultor-Date")
-        );
-    }
-
-    /**
-     * Toggles inset.
-     * @return The inset
-     * @throws IOException If fails
-     */
-    @Inset.Runtime
-    @NotNull(message = "toggles inset can never be NULL")
-    public final Inset toggles() throws IOException {
-        return new TogglesInset(this);
-    }
-
-    /**
      * Authentication inset.
      * @return The inset
      */

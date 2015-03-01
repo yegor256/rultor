@@ -32,14 +32,17 @@ package com.rultor.web;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
+import com.rultor.Toggles;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.xe.XeDirectives;
 import org.takes.rs.xe.XeLink;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -58,11 +61,25 @@ final class TkHome implements Take {
     private final transient Talks talks;
 
     /**
+     * Toggles.
+     */
+    private final transient Toggles toggles;
+
+    /**
+     * User.
+     */
+    private final transient User user;
+
+    /**
      * Ctor.
      * @param tlks Talks
+     * @param tgls Toggles
+     * @param req Request
      */
-    TkHome(final Talks tlks) {
+    TkHome(final Talks tlks, final Toggles tgls, final Request req) {
         this.talks = tlks;
+        this.toggles = tgls;
+        this.user = new User(req);
     }
 
     @Override
@@ -70,7 +87,8 @@ final class TkHome implements Take {
         return new RsPage(
             "/xsl/home.xsl",
             new XeDirectives(this.recent()),
-            new XeLink("svg", "/svg", "image/svg+xml")
+            new XeLink("svg", "/svg", "image/svg+xml"),
+            new XeDirectives(this.flags())
         );
     }
 
@@ -93,6 +111,22 @@ final class TkHome implements Take {
                     talk.read().xpath("/talk/wire/href/text()").get(0)
                 );
             }
+        }
+        return dirs;
+    }
+
+    /**
+     * Flags/toggles to show.
+     * @return Directives
+     */
+    private Iterable<Directive> flags() {
+        final Directives dirs = new Directives().add("toggles");
+        dirs.add("read-only")
+            .set(Boolean.toString(this.toggles.readOnly())).up();
+        if (!this.user.anonymous()) {
+            dirs.append(
+                new XeLink("sw:read-only", "/toggles/read-only").toXembly()
+            );
         }
         return dirs;
     }

@@ -31,9 +31,9 @@ package com.rultor.web;
 
 import com.rultor.Toggles;
 import java.io.IOException;
-import java.util.logging.Level;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import org.takes.Response;
+import org.takes.Take;
+import org.takes.rs.RsForward;
 
 /**
  * Toggles.
@@ -42,24 +42,28 @@ import javax.ws.rs.Path;
  * @version $Id$
  * @since 1.0
  */
-@Path("/toggles")
-public final class TogglesRs extends BaseRs {
+final class TkToggles implements Take {
 
     /**
-     * Set read-only mode.
-     * @throws IOException If fails
+     * Toggles.
      */
-    @GET
-    @Path("/read-only")
-    public void readOnly() throws IOException {
-        this.adminOnly();
-        final Toggles toggles = new Toggles();
-        toggles.toggle();
-        throw this.flash().redirect(
-            this.uriInfo().getBaseUri(),
-            String.format("read-only mode set to %B", toggles.readOnly()),
-            Level.INFO
-        );
+    private final transient Toggles toggles;
+
+    /**
+     * Ctor.
+     * @param tgls Toggles
+     */
+    TkToggles(final Toggles tgls) {
+        this.toggles = tgls;
+    }
+
+    @Override
+    public Response act() throws IOException {
+//        this.adminOnly();
+        this.toggles.toggle();
+        return new RsForward("/");
+//            String.format("read-only mode set to %B", toggles.readOnly()),
+//            Level.INFO
     }
 
 }

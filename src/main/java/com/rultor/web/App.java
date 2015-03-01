@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
+import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -64,14 +65,25 @@ public final class App implements Takes {
      * Ctor.
      * @param talks Talks
      * @param ticks Ticks
+     * @param toggles Toggles
      */
-    public App(final Talks talks, final Collection<Pulse.Tick> ticks) {
+    public App(final Talks talks, final Collection<Pulse.Tick> ticks,
+        final Toggles toggles) {
         final Takes regex = new TsRegex()
             .with("/robots.txt", "")
-            .with("/", new TkHome(talks))
             .with("/svg", new TkSVG(ticks))
             .with("/s/.*", new TkRedirect("/"))
             .with("/sitemap", new TkSitemap(talks))
+            .with("/toggles/read-only", new TkToggles(toggles))
+            .with(
+                "/",
+                new TsRegex.Fast() {
+                    @Override
+                    public Take take(final RqRegex req) {
+                        return new TkHome(talks, toggles, req);
+                    }
+                }
+            )
             .with(
                 "/b/([/a-zA-Z0-9_\\-\\.]+)",
                 new TsRegex.Fast() {
@@ -98,8 +110,10 @@ public final class App implements Takes {
                 "/p/([/a-zA-Z0-9_\\-\\.]+)",
                 new TsRegex.Fast() {
                     @Override
-                    public Take take(final RqRegex req) {
-                        return new TkSiblings(talks, req.matcher().group(1));
+                    public Take take(final RqRegex req) throws IOException {
+                        return new TkSiblings(
+                            talks, req.matcher().group(1), req
+                        );
                     }
                 }
             )

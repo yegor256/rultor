@@ -44,6 +44,7 @@ import com.jcabi.http.wire.RetryWire;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
+import com.rultor.Toggles;
 import com.rultor.dynamo.DyTalks;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
@@ -102,7 +103,7 @@ public final class Entry {
             talks, ticks, this.github(), this.sttc()
         );
         try {
-            final App app = new App(talks, ticks);
+            final App app = new App(talks, ticks, new Toggles());
             new FtCLI(app, this.arguments).start(Exit.NEVER);
         } finally {
             routine.close();

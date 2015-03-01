@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -71,7 +72,22 @@ final class RsPage implements Response {
                         "page",
                         new XeMillis(false),
                         new XeChain(src),
-                        new XeMillis(true)
+                        new XeMillis(true),
+                        new XeAppend(
+                            "version",
+                            new XeAppend(
+                                "name",
+                                Manifests.read("Rultor-Version")
+                            ),
+                            new XeAppend(
+                                "revision",
+                                Manifests.read("Rultor-Revision")
+                            ),
+                            new XeAppend(
+                                "date",
+                                Manifests.read("Rultor-Date")
+                            )
+                        )
                     )
                 )
             ),
