@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Internal application error</title>
-        <link href="//doc.rultor.com/css/layout.css?${buildNumber}" rel="stylesheet" type="text/css"/>
-        <link href="/css/style.css?${buildNumber}" rel="stylesheet" type="text/css"/>
+        <link href="//doc.rultor.com/css/layout.css?${rev}" rel="stylesheet" type="text/css"/>
+        <link href="/css/style.css?${rev}" rel="stylesheet" type="text/css"/>
         <link rel="icon" type="image/gif" href="//doc.rultor.com/favicon.ico"/>
     </head>
     <body>
@@ -12,7 +12,7 @@
                 <a class="logo" href="//www.rultor.com">R</a>
             </li>
             <li>
-                <code>${buildNumber}</code>
+                <code>${rev}</code>
             </li>
             <li class="text-danger">
                 Internal Application Error
@@ -38,7 +38,7 @@
                 If you want to help us, please post this text as a new issue to
                 <a href="https://github.com/rultor/rultor/issues/new">Github</a>.
             </p>
-            <pre>${text}</pre>
+            <pre>${req.throwable}</pre>
         </article>
     </body>
 </html>

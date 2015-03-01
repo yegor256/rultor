@@ -37,8 +37,12 @@ import java.util.Collection;
 import org.takes.Request;
 import org.takes.Take;
 import org.takes.Takes;
+import org.takes.rq.RqFallback;
 import org.takes.rq.RqRegex;
+import org.takes.rs.RsVelocity;
+import org.takes.tk.TkFixed;
 import org.takes.tk.TkRedirect;
+import org.takes.ts.TsFallback;
 import org.takes.ts.TsRegex;
 import org.takes.ts.TsWithHeaders;
 
@@ -91,6 +95,15 @@ public final class App implements Takes {
                 }
             )
             .with(
+                "/p/([/a-zA-Z0-9_\\-\\.]+)",
+                new TsRegex.Fast() {
+                    @Override
+                    public Take take(final RqRegex req) {
+                        return new TkSiblings(talks, req.matcher().group(1));
+                    }
+                }
+            )
+            .with(
                 "/t/([0-9]+)",
                 new TsRegex.Fast() {
                     @Override
@@ -123,12 +136,22 @@ public final class App implements Takes {
                     }
                 }
             );
-        this.takes = new TsWithHeaders(regex)
-            .with("Vary", "Cookie")
-            .with(
-                "X-Rultor-Revision",
-                Manifests.read("Rultor-Revision")
-            );
+        final String rev = Manifests.read("Rultor-Revision");
+        this.takes = new TsFallback(
+            new TsWithHeaders(regex)
+                .with("Vary", "Cookie")
+                .with("X-Rultor-Revision", rev),
+            new TsFallback.Fast() {
+                @Override
+                public Take take(final RqFallback req) throws IOException {
+                    return new TkFixed(
+                        new RsVelocity(
+                            this.getClass().getResource("/error.html.vm")
+                        ).with("req", req).with("rev", rev)
+                    );
+                }
+            }
+        );
     }
 
     @Override

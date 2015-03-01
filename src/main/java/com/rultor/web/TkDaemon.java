@@ -107,7 +107,7 @@ final class TkDaemon implements Take {
         }
         return new RsFluent()
             .withBody(this.html())
-            .withContentType("text/html; charset=utf-8");
+            .withType("text/html; charset=utf-8");
     }
 
     /**

@@ -102,7 +102,7 @@ public final class Entry {
             talks, ticks, this.github(), this.sttc()
         );
         try {
-            final App app = new App(talks);
+            final App app = new App(talks, ticks);
             new FtCLI(app, this.arguments).start(Exit.NEVER);
         } finally {
             routine.close();
