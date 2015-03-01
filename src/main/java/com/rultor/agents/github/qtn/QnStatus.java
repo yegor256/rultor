@@ -106,15 +106,15 @@ public final class QnStatus implements Question {
             lines.add(
                 String.format(
                     " * Docker container ID: `%s...`",
-                    shell.exec(
-                        StringUtils.substring(
+                    StringUtils.substring(
+                        shell.exec(
                             String.format(
                                 // @checkstyle LineLength (1 line)
                                 "dir=%s; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
                                 SSH.escape(dir)
-                            ),
-                            0, Tv.TWENTY
-                        )
+                            )
+                        ),
+                        0, Tv.TWENTY
                     )
                 )
             );
