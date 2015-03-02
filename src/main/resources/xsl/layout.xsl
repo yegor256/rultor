@@ -112,12 +112,14 @@
             itemprop="softwareVersion">
             <xsl:value-of select="name"/>
         </span>
-        <span>
-            <a href="https://github.com/yegor256/rultor/commit/{revision}"
-                title="Github revision deployed is {revision}">
-                <xsl:value-of select="substring(revision,1,3)"/>
-            </a>
-        </span>
+        <xsl:if test="revision != 'BUILD'">
+            <span>
+                <a href="https://github.com/yegor256/rultor/commit/{revision}"
+                    title="Github revision deployed is {revision}">
+                    <xsl:value-of select="substring(revision,1,3)"/>
+                </a>
+            </span>
+        </xsl:if>
         <span title="server time to build this page">
             <xsl:attribute name="style">
                 <xsl:text>color:</xsl:text>
