@@ -38,12 +38,20 @@ import java.util.Collection;
 import org.takes.Request;
 import org.takes.Take;
 import org.takes.Takes;
-import org.takes.rq.RqFallback;
+import org.takes.f.auth.CcPlain;
+import org.takes.f.auth.CcSalted;
+import org.takes.f.auth.CcXOR;
+import org.takes.f.auth.PsChain;
+import org.takes.f.auth.PsCookie;
+import org.takes.f.auth.PsGithub;
+import org.takes.f.auth.TsAuth;
+import org.takes.f.fallback.Fallback;
+import org.takes.f.fallback.RqFallback;
+import org.takes.f.fallback.TsFallback;
 import org.takes.rq.RqRegex;
 import org.takes.rs.RsVelocity;
 import org.takes.tk.TkFixed;
 import org.takes.tk.TkRedirect;
-import org.takes.ts.TsFallback;
 import org.takes.ts.TsRegex;
 import org.takes.ts.TsWithHeaders;
 
@@ -59,7 +67,7 @@ public final class App implements Takes {
     /**
      * Takes.
      */
-    private final transient Takes takes;
+    private final transient Takes origin;
 
     /**
      * Ctor.
@@ -69,12 +77,20 @@ public final class App implements Takes {
      */
     public App(final Talks talks, final Collection<Pulse.Tick> ticks,
         final Toggles toggles) {
-        final Takes regex = new TsRegex()
+        Takes takes = new TsRegex()
             .with("/robots.txt", "")
             .with("/svg", new TkSVG(ticks))
             .with("/s/.*", new TkRedirect("/"))
             .with("/sitemap", new TkSitemap(talks))
-            .with("/toggles/read-only", new TkToggles(toggles))
+            .with(
+                "/toggles/read-only",
+                new Takes() {
+                    @Override
+                    public Take route(final Request req) throws IOException {
+                        return new TkAdminOnly(new TkToggles(toggles), req);
+                    }
+                }
+            )
             .with(
                 "/",
                 new TsRegex.Fast() {
@@ -123,7 +139,7 @@ public final class App implements Takes {
                     @Override
                     public Take take(final RqRegex req) {
                         return new TkTalk(
-                            talks, Long.parseLong(req.matcher().group(1))
+                            talks, req, Long.parseLong(req.matcher().group(1))
                         );
                     }
                 }
@@ -132,9 +148,12 @@ public final class App implements Takes {
                 "/t/([0-9]+)/kill",
                 new TsRegex.Fast() {
                     @Override
-                    public Take take(final RqRegex req) {
-                        return new TkTalkKill(
-                            talks, Long.parseLong(req.matcher().group(1))
+                    public Take take(final RqRegex req) throws IOException {
+                        return new TkAdminOnly(
+                            new TkTalkKill(
+                                talks, Long.parseLong(req.matcher().group(1))
+                            ),
+                            req
                         );
                     }
                 }
@@ -143,19 +162,22 @@ public final class App implements Takes {
                 "/t/([0-9]+)/delete",
                 new TsRegex.Fast() {
                     @Override
-                    public Take take(final RqRegex req) {
-                        return new TkTalkDelete(
-                            talks, Long.parseLong(req.matcher().group(1))
+                    public Take take(final RqRegex req) throws IOException {
+                        return new TkAdminOnly(
+                            new TkTalkDelete(
+                                talks, Long.parseLong(req.matcher().group(1))
+                            ),
+                            req
                         );
                     }
                 }
             );
         final String rev = Manifests.read("Rultor-Revision");
-        this.takes = new TsFallback(
-            new TsWithHeaders(regex)
+        takes = new TsFallback(
+            new TsWithHeaders(takes)
                 .with("Vary", "Cookie")
                 .with("X-Rultor-Revision", rev),
-            new TsFallback.Fast() {
+            new Fallback() {
                 @Override
                 public Take take(final RqFallback req) throws IOException {
                     return new TkFixed(
@@ -166,11 +188,29 @@ public final class App implements Takes {
                 }
             }
         );
+        takes = new TsAuth(
+            takes,
+            new PsChain(
+                new PsFake(),
+                new PsCookie(
+                    new CcXOR(
+                        new CcSalted(new CcPlain()),
+                        Manifests.read("Rultor-SecurityKey")
+                    )
+                ),
+                new PsGithub(
+                    Manifests.read("Rultor-GithubId"),
+                    Manifests.read("Rultor-GithubSecret")
+                )
+            )
+
+        );
+        this.origin = takes;
     }
 
     @Override
     public Take route(final Request request) throws IOException {
-        return this.takes.route(request);
+        return this.origin.route(request);
     }
 
 }

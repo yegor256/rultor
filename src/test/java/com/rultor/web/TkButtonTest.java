@@ -29,66 +29,32 @@
  */
 package com.rultor.web;
 
-import com.rultor.agents.daemons.KillsDaemon;
-import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
-import java.io.IOException;
-import java.util.logging.Level;
-import org.takes.Response;
-import org.takes.Take;
-import org.takes.f.flash.RsFlash;
-import org.takes.f.forward.RsForward;
+import com.jcabi.matchers.XhtmlMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
 
 /**
- * Kill a talk.
- *
+ * Test case for {@link TkButton}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
  */
-final class TkTalkKill implements Take {
+public final class TkButtonTest {
 
     /**
-     * Talks.
+     * TkButton can render SVG.
+     * @throws Exception If some problem inside
      */
-    private final transient Talks talks;
-
-    /**
-     * Talk unique number.
-     */
-    private final transient long number;
-
-    /**
-     * Ctor.
-     * @param tks Talks
-     * @param talk Talk number
-     */
-    TkTalkKill(final Talks tks, final long talk) {
-        this.talks = tks;
-        this.number = talk;
-    }
-
-    @Override
-    public Response act() throws IOException {
-        if (!this.talks.exists(this.number)) {
-            throw new RsForward(
-                new RsFlash(
-                    "there is no such page here",
-                    Level.WARNING
-                ),
-                "/"
-            );
-        }
-        final Talk talk = this.talks.get(this.number);
-        new KillsDaemon().process(talk.read());
-        return new RsForward(
-            new RsFlash(
-                String.format(
-                    "talk #%d daemon requested to kill", talk.number()
-                ),
-                Level.INFO
-            ),
-            "/"
+    @Test
+    public void rendersSvg() throws Exception {
+        final ButtonRs home = new ButtonRs();
+        home.setName("test/test");
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(home.svg().getEntity()),
+            XhtmlMatchers.hasXPaths(
+                "/svg:svg",
+                "//svg:svg[count(svg:rect) >= 2]"
+            )
         );
     }
 

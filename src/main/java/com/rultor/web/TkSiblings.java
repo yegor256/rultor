@@ -39,12 +39,14 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
+import org.takes.f.flash.RsFlash;
+import org.takes.f.forward.RsForward;
 import org.takes.rq.RqQuery;
-import org.takes.rs.RsForward;
 import org.takes.rs.xe.XeAppend;
 import org.takes.rs.xe.XeDirectives;
 import org.takes.rs.xe.XeLink;
@@ -79,7 +81,7 @@ final class TkSiblings implements Take {
     /**
      * User.
      */
-    private final transient User user;
+    private final transient Request request;
 
     /**
      * Ctor.
@@ -92,12 +94,13 @@ final class TkSiblings implements Take {
         throws IOException {
         this.talks = tks;
         this.repo = name;
-        this.since = new Date(
-            Long.parseLong(
-                new RqQuery(req).param("since", Long.toString(Long.MAX_VALUE))
-            )
-        );
-        this.user = new User(req);
+        final List<String> args = new RqQuery(req).param("since");
+        if (args.isEmpty()) {
+            this.since = new Date(Long.MAX_VALUE);
+        } else {
+            this.since = new Date(Long.parseLong(args.get(0)));
+        }
+        this.request = req;
     }
 
     @Override
@@ -107,13 +110,19 @@ final class TkSiblings implements Take {
                 this.talks.siblings(this.repo, this.since), Tv.TWENTY
             )
         );
-        if (!siblings.isEmpty() && !this.user.canSee(siblings.get(0))) {
-            throw new RsForward("/");
-//                "according to .rultor.yml, you're not allowed to see this",
-//                Level.WARNING
+        if (!siblings.isEmpty()
+            && !new User(this.request).canSee(siblings.get(0))) {
+            throw new RsForward(
+                new RsFlash(
+                    "according to .rultor.yml, you're not allowed to see this",
+                    Level.WARNING
+                ),
+                "/"
+            );
         }
         return new RsPage(
             "/xsl/siblings.xsl",
+            this.request,
             new XeAppend("repo", this.repo),
             new XeAppend("since", Long.toString(this.since.getTime())),
             this.more(siblings),

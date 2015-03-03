@@ -29,67 +29,51 @@
  */
 package com.rultor.web;
 
-import com.rultor.agents.daemons.KillsDaemon;
-import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.logging.Level;
+import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
+import org.takes.f.auth.RqAuth;
 import org.takes.f.flash.RsFlash;
 import org.takes.f.forward.RsForward;
 
 /**
- * Kill a talk.
+ * Admin only.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
  */
-final class TkTalkKill implements Take {
+final class TkAdminOnly implements Take {
 
     /**
-     * Talks.
+     * Original take.
      */
-    private final transient Talks talks;
-
-    /**
-     * Talk unique number.
-     */
-    private final transient long number;
+    private final transient Take origin;
 
     /**
      * Ctor.
-     * @param tks Talks
-     * @param talk Talk number
+     * @param take Original
+     * @param req Request
+     * @throws IOException If fails
      */
-    TkTalkKill(final Talks tks, final long talk) {
-        this.talks = tks;
-        this.number = talk;
-    }
-
-    @Override
-    public Response act() throws IOException {
-        if (!this.talks.exists(this.number)) {
+    TkAdminOnly(final Take take, final Request req) throws IOException {
+        if (!"urn:github:526301".equals(new RqAuth(req).identity().urn())) {
             throw new RsForward(
                 new RsFlash(
-                    "there is no such page here",
+                    "sorry, but this entrance is \"staff only\"",
                     Level.WARNING
                 ),
                 "/"
             );
         }
-        final Talk talk = this.talks.get(this.number);
-        new KillsDaemon().process(talk.read());
-        return new RsForward(
-            new RsFlash(
-                String.format(
-                    "talk #%d daemon requested to kill", talk.number()
-                ),
-                Level.INFO
-            ),
-            "/"
-        );
+        this.origin = take;
+    }
+
+    @Override
+    public Response act() throws IOException {
+        return this.origin.act();
     }
 
 }

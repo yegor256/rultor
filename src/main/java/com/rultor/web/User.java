@@ -29,8 +29,18 @@
  */
 package com.rultor.web;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.jcabi.xml.XML;
+import com.rultor.profiles.Profiles;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import java.io.IOException;
+import java.util.Collection;
 import org.takes.Request;
+import org.takes.f.auth.RqAuth;
+import org.takes.f.flash.RsFlash;
+import org.takes.f.forward.RsForward;
 
 /**
  * Web user.
@@ -58,17 +68,34 @@ final class User {
      * Can I see this talk?
      * @param talk The talk
      * @return TRUE if I can see it
+     * @throws IOException If fails
      */
-    public boolean canSee(final Talk talk) {
-        return true;
-    }
-
-    /**
-     * Am I anonymous?
-     * @return TRUE if I am anonymous
-     */
-    public boolean anonymous() {
-        return true;
+    public boolean canSee(final Talk talk) throws IOException {
+        final XML xml;
+        try {
+            xml = new Profiles().fetch(talk).read();
+        } catch (final Profile.ConfigException ex) {
+            throw new RsForward(new RsFlash(ex), "/");
+        }
+        final boolean granted;
+        final Collection<String> readers = xml.xpath(
+            "/p/entry[@key='readers']/item/text()"
+        );
+        if (readers.isEmpty()) {
+            granted = true;
+        } else {
+            final String self = new RqAuth(this.request).identity().urn();
+            granted = Iterables.any(
+                readers,
+                new Predicate<String>() {
+                    @Override
+                    public boolean apply(final String input) {
+                        return input.trim().equals(self);
+                    }
+                }
+            );
+        }
+        return granted;
     }
 
 }

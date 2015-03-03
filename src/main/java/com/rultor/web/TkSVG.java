@@ -35,6 +35,7 @@ import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
 import com.rultor.spi.Pulse;
 import java.util.Collection;
+import java.util.Collections;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsWithBody;
@@ -69,7 +70,7 @@ final class TkSVG implements Take {
      * @param tks Ticks
      */
     TkSVG(final Collection<Pulse.Tick> tks) {
-        this.ticks = tks;
+        this.ticks = Collections.unmodifiableCollection(tks);
     }
 
     @Override

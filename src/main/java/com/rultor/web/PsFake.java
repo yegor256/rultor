@@ -29,67 +29,47 @@
  */
 package com.rultor.web;
 
-import com.rultor.agents.daemons.KillsDaemon;
-import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
-import java.io.IOException;
-import java.util.logging.Level;
+import com.jcabi.immutable.ArrayMap;
+import com.jcabi.manifests.Manifests;
+import java.util.Map;
+import org.takes.Request;
 import org.takes.Response;
-import org.takes.Take;
-import org.takes.f.flash.RsFlash;
-import org.takes.f.forward.RsForward;
+import org.takes.f.auth.Identity;
+import org.takes.f.auth.Pass;
 
 /**
- * Kill a talk.
+ * Fake pass.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
  */
-final class TkTalkKill implements Take {
+final class PsFake implements Pass {
 
-    /**
-     * Talks.
-     */
-    private final transient Talks talks;
-
-    /**
-     * Talk unique number.
-     */
-    private final transient long number;
-
-    /**
-     * Ctor.
-     * @param tks Talks
-     * @param talk Talk number
-     */
-    TkTalkKill(final Talks tks, final long talk) {
-        this.talks = tks;
-        this.number = talk;
+    @Override
+    public Identity enter(final Request request) {
+        final Identity identity;
+        if (Manifests.read("Rultor-DynamoKey").startsWith("AAAAA")) {
+            identity = new Identity() {
+                @Override
+                public String urn() {
+                    return "urn:facebook:1";
+                }
+                @Override
+                public Map<String, String> properties() {
+                    return new ArrayMap<String, String>()
+                        .with("login", "localhost")
+                        .with("avatar", "http://doc.rultor.com/images/none.png");
+                }
+            };
+        } else {
+            identity = Identity.ANONYMOUS;
+        }
+        return identity;
     }
 
     @Override
-    public Response act() throws IOException {
-        if (!this.talks.exists(this.number)) {
-            throw new RsForward(
-                new RsFlash(
-                    "there is no such page here",
-                    Level.WARNING
-                ),
-                "/"
-            );
-        }
-        final Talk talk = this.talks.get(this.number);
-        new KillsDaemon().process(talk.read());
-        return new RsForward(
-            new RsFlash(
-                String.format(
-                    "talk #%d daemon requested to kill", talk.number()
-                ),
-                Level.INFO
-            ),
-            "/"
-        );
+    public Response exit(final Response response, final Identity identity) {
+        return response;
     }
-
 }

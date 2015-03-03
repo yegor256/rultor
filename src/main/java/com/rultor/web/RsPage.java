@@ -33,7 +33,9 @@ import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import org.takes.Request;
 import org.takes.Response;
+import org.takes.f.auth.XeGithubLink;
 import org.takes.rs.RsWithType;
 import org.takes.rs.RsXSLT;
 import org.takes.rs.xe.RsXembly;
@@ -61,36 +63,27 @@ final class RsPage implements Response {
     /**
      * Ctor.
      * @param xsl XSL
+     * @param req Request
      * @param src Source
+     * @throws IOException If fails
      */
-    RsPage(final String xsl, final XeSource... src) {
+    RsPage(final String xsl, final Request req, final XeSource... src)
+        throws IOException {
+        final XeSource xml = new XeAppend(
+            "page",
+            new XeMillis(false),
+            new XeChain(src),
+            new XeMillis(true),
+            new XeGithubLink(req, Manifests.read("Rultor-GithubKey")),
+            new XeAppend(
+                "version",
+                new XeAppend("name", Manifests.read("Rultor-Version")),
+                new XeAppend("revision", Manifests.read("Rultor-Revision")),
+                new XeAppend("date", Manifests.read("Rultor-Date"))
+            )
+        );
         this.origin = new RsWithType(
-            new RsXSLT(
-                new RsXembly(
-                    new XeStylesheet(xsl),
-                    new XeAppend(
-                        "page",
-                        new XeMillis(false),
-                        new XeChain(src),
-                        new XeMillis(true),
-                        new XeAppend(
-                            "version",
-                            new XeAppend(
-                                "name",
-                                Manifests.read("Rultor-Version")
-                            ),
-                            new XeAppend(
-                                "revision",
-                                Manifests.read("Rultor-Revision")
-                            ),
-                            new XeAppend(
-                                "date",
-                                Manifests.read("Rultor-Date")
-                            )
-                        )
-                    )
-                )
-            ),
+            new RsXSLT(new RsXembly(new XeStylesheet(xsl), xml)),
             "text/xml"
         );
     }

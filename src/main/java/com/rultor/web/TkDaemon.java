@@ -37,13 +37,15 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
+import org.takes.f.flash.RsFlash;
+import org.takes.f.forward.RsForward;
 import org.takes.rs.RsFluent;
-import org.takes.rs.RsForward;
 
 /**
  * Single daemon.
@@ -92,18 +94,26 @@ final class TkDaemon implements Take {
     @Override
     public Response act() throws IOException {
         if (!this.talks.exists(this.number)) {
-            throw new RsForward("/");
-//                "there is no such page here",
-//                Level.WARNING
+            throw new RsForward(
+                new RsFlash(
+                    "there is no such page here",
+                    Level.WARNING
+                ),
+                "/"
+            );
         }
         if (!this.user.canSee(this.talks.get(this.number))) {
-            throw new RsForward("/");
-//                String.format(
-//                    // @checkstyle LineLength (1 line)
-//                    "according to .rultor.yml, you (%s) are not allowed to see this",
-//                    this.user.identity().urn()
-//                ),
-//                Level.WARNING
+            throw new RsForward(
+                new RsFlash(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "according to .rultor.yml, you (%s) are not allowed to see this",
+                        this.user
+                    ),
+                    Level.WARNING
+                ),
+                "/"
+            );
         }
         return new RsFluent()
             .withBody(this.html())

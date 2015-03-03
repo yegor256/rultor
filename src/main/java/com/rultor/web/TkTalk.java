@@ -32,9 +32,12 @@ package com.rultor.web;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.logging.Level;
+import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.rs.RsForward;
+import org.takes.f.flash.RsFlash;
+import org.takes.f.forward.RsForward;
 import org.takes.rs.xe.XeDirectives;
 import org.xembly.Directives;
 
@@ -58,25 +61,37 @@ final class TkTalk implements Take {
     private final transient long number;
 
     /**
+     * Request.
+     */
+    private final transient Request request;
+
+    /**
      * Ctor.
      * @param tks Talks
+     * @param req Request
      * @param talk Talk number
      */
-    TkTalk(final Talks tks, final long talk) {
+    TkTalk(final Talks tks, final Request req, final long talk) {
         this.talks = tks;
+        this.request = req;
         this.number = talk;
     }
 
     @Override
     public Response act() throws IOException {
         if (!this.talks.exists(this.number)) {
-            throw new RsForward("/");
-//                "there is no such page here",
-//                Level.WARNING
+            throw new RsForward(
+                new RsFlash(
+                    "there is no such page here",
+                    Level.WARNING
+                ),
+                "/"
+            );
         }
         final Talk talk = this.talks.get(this.number);
         return new RsPage(
             "/xsl/talk.xsl",
+            this.request,
             new XeDirectives(
                 new Directives().add("talk")
                     .add("number").set(Long.toString(talk.number())).up()

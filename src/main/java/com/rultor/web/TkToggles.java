@@ -31,9 +31,11 @@ package com.rultor.web;
 
 import com.rultor.Toggles;
 import java.io.IOException;
+import java.util.logging.Level;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.rs.RsForward;
+import org.takes.f.flash.RsFlash;
+import org.takes.f.forward.RsForward;
 
 /**
  * Toggles.
@@ -59,11 +61,16 @@ final class TkToggles implements Take {
 
     @Override
     public Response act() throws IOException {
-//        this.adminOnly();
         this.toggles.toggle();
-        return new RsForward("/");
-//            String.format("read-only mode set to %B", toggles.readOnly()),
-//            Level.INFO
+        return new RsForward(
+            new RsFlash(
+                String.format(
+                    "read-only mode set to %B", this.toggles.readOnly()
+                ),
+                Level.INFO
+            ),
+            "/"
+        );
     }
 
 }

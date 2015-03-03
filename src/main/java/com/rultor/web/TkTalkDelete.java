@@ -32,9 +32,11 @@ package com.rultor.web;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.logging.Level;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.rs.RsForward;
+import org.takes.f.flash.RsFlash;
+import org.takes.f.forward.RsForward;
 
 /**
  * Front page of a talk.
@@ -68,15 +70,23 @@ final class TkTalkDelete implements Take {
     @Override
     public Response act() throws IOException {
         if (!this.talks.exists(this.number)) {
-            throw new RsForward("/");
-//                "there is no such page here",
-//                Level.WARNING
+            throw new RsForward(
+                new RsFlash(
+                    "there is no such page here",
+                    Level.WARNING
+                ),
+                "/"
+            );
         }
         final Talk talk = this.talks.get(this.number);
         this.talks.delete(talk.name());
-        return new RsForward("/");
-//        String.format("talk #%d deleted", this.number),
-//            Level.INFO
+        return new RsForward(
+            new RsFlash(
+                String.format("talk #%d deleted", this.number),
+                Level.INFO
+            ),
+            "/"
+        );
     }
 
 }

@@ -40,6 +40,8 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
+import org.takes.f.auth.Identity;
+import org.takes.f.auth.RqAuth;
 import org.takes.rs.xe.XeDirectives;
 import org.takes.rs.xe.XeLink;
 import org.xembly.Directive;
@@ -66,9 +68,9 @@ final class TkHome implements Take {
     private final transient Toggles toggles;
 
     /**
-     * User.
+     * Request.
      */
-    private final transient User user;
+    private final transient Request request;
 
     /**
      * Ctor.
@@ -79,13 +81,14 @@ final class TkHome implements Take {
     TkHome(final Talks tlks, final Toggles tgls, final Request req) {
         this.talks = tlks;
         this.toggles = tgls;
-        this.user = new User(req);
+        this.request = req;
     }
 
     @Override
     public Response act() throws IOException {
         return new RsPage(
             "/xsl/home.xsl",
+            this.request,
             new XeDirectives(this.recent()),
             new XeLink("svg", "/svg", "image/svg+xml"),
             new XeDirectives(this.flags())
@@ -118,12 +121,13 @@ final class TkHome implements Take {
     /**
      * Flags/toggles to show.
      * @return Directives
+     * @throws IOException If fails
      */
-    private Iterable<Directive> flags() {
+    private Iterable<Directive> flags() throws IOException {
         final Directives dirs = new Directives().add("toggles");
         dirs.add("read-only")
             .set(Boolean.toString(this.toggles.readOnly())).up();
-        if (!this.user.anonymous()) {
+        if (!new RqAuth(this.request).identity().equals(Identity.ANONYMOUS)) {
             dirs.append(
                 new XeLink("sw:read-only", "/toggles/read-only").toXembly()
             );
