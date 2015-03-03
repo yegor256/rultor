@@ -29,14 +29,22 @@
  */
 package com.rultor.web;
 
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
+import com.jcabi.http.wire.VerboseWire;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.takes.Takes;
+import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
 
@@ -69,6 +77,39 @@ public final class AppTest {
                 "/page/link[@rel='svg']",
                 "/page/toggles[read-only='false']"
             )
+        );
+    }
+
+    /**
+     * App can render front page.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersHomePageViaHttp() throws Exception {
+        final Takes app = new App(
+            new Talks.InDir(), Collections.<Pulse.Tick>emptyList(),
+            new Toggles()
+        );
+        new FtRemote(app).exec(
+            new FtRemote.Script() {
+                @Override
+                public void exec(final URI home) throws IOException {
+                    new JdkRequest(home)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/xhtml:html");
+                    new JdkRequest(home)
+                        .through(VerboseWire.class)
+                        .header("Accept", "application/xml")
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/page/version");
+                }
+            }
         );
     }
 
