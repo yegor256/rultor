@@ -1,34 +1,39 @@
 install: |-
+   sudo locale-gen en_US en_US.UTF-8
+   sudo dpkg-reconfigure locales
+   export LC_ALL=en_US.UTF-8
+   export LANG=en_US.UTF-8
+   export LANGUAGE=en_US.UTF-8
    sudo apt-get install bsdmainutils
    sudo gem install pdd
    cd src/bundle
    sudo bundle install
    cd ../..
-architect: 
+architect:
 - yegor256
 - alex-palevsky
-assets: 
+assets:
    secring.gpg: yegor256/home#assets/secring.gpg
    id_rsa: yegor256/home#assets/heroku-key
    settings.xml: yegor256/home#assets/rultor/settings.xml
    pubring.gpg: yegor256/home#assets/pubring.gpg
    id_rsa.pub: yegor256/home#assets/heroku-key.pub
    s3cfg: yegor256/home#assets/s3cfg
-merge: 
+merge:
    script: |-
       mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
       mvn clean site -Psite --errors --settings ../settings.xml
       mvn clean
       pdd --source=$(pwd) --verbose --file=/dev/null
-deploy: 
+deploy:
    script: |-
       mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode
       mvn clean
       pdd --source=$(pwd) --verbose --file=rultor.xml
       s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml
-env: 
+env:
    MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
-release: 
+release:
    script: |-
       mvn versions:set "-DnewVersion=${tag}"
       git commit -am "${tag}"
