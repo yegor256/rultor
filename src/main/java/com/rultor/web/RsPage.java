@@ -85,10 +85,7 @@ final class RsPage implements Response {
         );
         final Response raw = new RsXembly(new XeStylesheet(xsl), xml);
         this.origin = new RsNegotiation(req)
-            .with(
-                "*/*",
-                new RsXSLT(new RsWithType(raw, "text/xml"))
-            )
+            .with("*/*", new RsXSLT(new RsWithType(raw, "text/html")))
             .with(
                 "application/xml,text/xml",
                 new RsWithType(raw, "text/xml")

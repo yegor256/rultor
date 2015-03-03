@@ -61,6 +61,8 @@ import org.takes.ts.TsWithHeaders;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
 public final class App implements Takes {
 
@@ -80,7 +82,7 @@ public final class App implements Takes {
         Takes takes = new TsRegex()
             .with("/robots.txt", "")
             .with("/svg", new TkSVG(ticks))
-            .with("/s/.*", new TkRedirect("/"))
+            .with("/s/.*", new TkRedirect())
             .with("/sitemap", new TkSitemap(talks))
             .with(
                 "/toggles/read-only",
@@ -182,7 +184,7 @@ public final class App implements Takes {
                 public Take take(final RqFallback req) throws IOException {
                     return new TkFixed(
                         new RsVelocity(
-                            this.getClass().getResource("/error.html.vm")
+                            this.getClass().getResource("error.html.vm")
                         ).with("req", req).with("rev", rev)
                     );
                 }
@@ -203,7 +205,6 @@ public final class App implements Takes {
                     Manifests.read("Rultor-GithubSecret")
                 )
             )
-
         );
         this.origin = takes;
     }

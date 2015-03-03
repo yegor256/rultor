@@ -60,6 +60,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkSiblings implements Take {
 
@@ -94,7 +95,7 @@ final class TkSiblings implements Take {
         throws IOException {
         this.talks = tks;
         this.repo = name;
-        final List<String> args = new RqQuery(req).param("since");
+        final List<String> args = new RqQuery(req).param("s");
         if (args.isEmpty()) {
             this.since = new Date(Long.MAX_VALUE);
         } else {
@@ -116,8 +117,7 @@ final class TkSiblings implements Take {
                 new RsFlash(
                     "according to .rultor.yml, you're not allowed to see this",
                     Level.WARNING
-                ),
-                "/"
+                )
             );
         }
         return new RsPage(
@@ -143,7 +143,7 @@ final class TkSiblings implements Take {
             src = new XeLink(
                 "more",
                 String.format(
-                    "/p/%s?since=%s",
+                    "/p/%s?s=%s",
                     this.repo, last.updated().getTime()
                 )
             );
@@ -181,6 +181,7 @@ final class TkSiblings implements Take {
             dirs.append(TkSiblings.log(xml, log));
         }
         return dirs.up().add("name").set(talk.name()).up()
+            // @checkstyle MultipleStringLiteralsCheck (1 line)
             .add("href").set(xml.xpath("/talk/wire/href/text()").get(0)).up()
             .add("updated").set(Long.toString(talk.updated().getTime())).up()
             .add("timeago").set(new PrettyTime().format(talk.updated())).up()

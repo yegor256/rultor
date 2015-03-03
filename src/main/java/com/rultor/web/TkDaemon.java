@@ -82,6 +82,7 @@ final class TkDaemon implements Take {
      * @param tlks Talks
      * @param num Talk number
      * @param hsh Hash of the daemon
+     * @checkstyle ParameterNumberCheck (5 lines)
      */
     TkDaemon(final Request req, final Talks tlks,
         final long num, final String hsh) {
@@ -98,8 +99,7 @@ final class TkDaemon implements Take {
                 new RsFlash(
                     "there is no such page here",
                     Level.WARNING
-                ),
-                "/"
+                )
             );
         }
         if (!this.user.canSee(this.talks.get(this.number))) {
@@ -111,8 +111,7 @@ final class TkDaemon implements Take {
                         this.user
                     ),
                     Level.WARNING
-                ),
-                "/"
+                )
             );
         }
         return new RsFluent()

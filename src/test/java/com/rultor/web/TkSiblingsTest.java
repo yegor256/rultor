@@ -58,7 +58,7 @@ public final class TkSiblingsTest {
         final Take take = new TkSiblings(
             talks, "x",
             new RqWithHeader(
-                new RqFake("GET", "/aa?since=123"),
+                new RqFake("GET", "/aa?s=123"),
                 "Accept", "text/xml"
             )
         );

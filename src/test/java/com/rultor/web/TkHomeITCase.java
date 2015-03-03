@@ -63,21 +63,6 @@ public final class TkHomeITCase {
     }
 
     /**
-     * IndexRs can render exception trap page.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void rendersExceptionTrapPage() throws Exception {
-        new JdkRequest(TkHomeITCase.HOME).uri().path("/trap").back()
-            .method(Request.GET)
-            .fetch()
-            .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .as(XmlResponse.class)
-            .assertXPath("//xhtml:title[.='Internal application error']");
-    }
-
-    /**
      * IndexRs can render absent pages.
      * @throws Exception If some problem inside
      */

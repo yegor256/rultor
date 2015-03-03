@@ -59,7 +59,10 @@ final class PsFake implements Pass {
                 public Map<String, String> properties() {
                     return new ArrayMap<String, String>()
                         .with("login", "localhost")
-                        .with("avatar", "http://doc.rultor.com/images/none.png");
+                        .with(
+                            "avatar",
+                            "http://doc.rultor.com/images/none.png"
+                        );
                 }
             };
         } else {

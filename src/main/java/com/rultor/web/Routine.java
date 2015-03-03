@@ -80,6 +80,11 @@ final class Routine implements Runnable, Closeable {
 
     /**
      * Ctor.
+     * @param tlks Talks
+     * @param ticks Ticks
+     * @param github Github client
+     * @param sttc Sttc client
+     * @checkstyle ParameterNumberCheck (4 lines)
      */
     Routine(final Talks tlks, final Collection<Pulse.Tick> ticks,
         final Github github, final Sttc sttc) {
@@ -93,6 +98,7 @@ final class Routine implements Runnable, Closeable {
         this.down.set(true);
     }
 
+    @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void run() {
         try {

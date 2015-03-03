@@ -84,8 +84,7 @@ final class TkTalk implements Take {
                 new RsFlash(
                     "there is no such page here",
                     Level.WARNING
-                ),
-                "/"
+                )
             );
         }
         final Talk talk = this.talks.get(this.number);

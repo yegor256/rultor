@@ -74,18 +74,13 @@ final class TkTalkDelete implements Take {
                 new RsFlash(
                     "there is no such page here",
                     Level.WARNING
-                ),
-                "/"
+                )
             );
         }
         final Talk talk = this.talks.get(this.number);
         this.talks.delete(talk.name());
         return new RsForward(
-            new RsFlash(
-                String.format("talk #%d deleted", this.number),
-                Level.INFO
-            ),
-            "/"
+            new RsFlash(String.format("talk #%d deleted", this.number))
         );
     }
 

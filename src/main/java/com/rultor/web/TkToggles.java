@@ -31,7 +31,6 @@ package com.rultor.web;
 
 import com.rultor.Toggles;
 import java.io.IOException;
-import java.util.logging.Level;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.flash.RsFlash;
@@ -66,10 +65,8 @@ final class TkToggles implements Take {
             new RsFlash(
                 String.format(
                     "read-only mode set to %B", this.toggles.readOnly()
-                ),
-                Level.INFO
-            ),
-            "/"
+                )
+            )
         );
     }
 

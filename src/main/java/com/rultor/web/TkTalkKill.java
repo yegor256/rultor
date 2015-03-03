@@ -75,8 +75,7 @@ final class TkTalkKill implements Take {
                 new RsFlash(
                     "there is no such page here",
                     Level.WARNING
-                ),
-                "/"
+                )
             );
         }
         final Talk talk = this.talks.get(this.number);
@@ -85,10 +84,8 @@ final class TkTalkKill implements Take {
             new RsFlash(
                 String.format(
                     "talk #%d daemon requested to kill", talk.number()
-                ),
-                Level.INFO
-            ),
-            "/"
+                )
+            )
         );
     }
 

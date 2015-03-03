@@ -64,8 +64,7 @@ final class TkAdminOnly implements Take {
                 new RsFlash(
                     "sorry, but this entrance is \"staff only\"",
                     Level.WARNING
-                ),
-                "/"
+                )
             );
         }
         this.origin = take;
