@@ -29,53 +29,38 @@
  */
 package com.rultor.web;
 
-import com.jcabi.http.Request;
-import com.jcabi.http.request.JdkRequest;
-import com.jcabi.http.response.RestResponse;
-import com.jcabi.http.response.XmlResponse;
-import java.net.HttpURLConnection;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import org.junit.Assume;
-import org.junit.BeforeClass;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Talk;
+import com.rultor.spi.Talks;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.takes.Take;
+import org.takes.rq.RqFake;
+import org.takes.rs.RsPrint;
 
 /**
- * Integration case for {@link SiblingsRs}.
+ * Test case for {@link TkDaemon}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.23
+ * @since 1.50
  */
-public final class SiblingsRsITCase {
+public final class TkDaemonTest {
 
     /**
-     * Home page of Tomcat.
-     */
-    private static final String HOME = System.getProperty("tomcat.home");
-
-    /**
-     * Before the entire test.
-     */
-    @BeforeClass
-    public static void before() {
-        Assume.assumeNotNull(SiblingsRsITCase.HOME);
-    }
-
-    /**
-     * SiblingsRs can render index page.
+     * TkDaemon can show log in HTML.
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersListOfTalks() throws Exception {
-        new JdkRequest(SiblingsRsITCase.HOME).uri().path("/p/test/me").back()
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .method(Request.GET)
-            .fetch()
-            .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .as(XmlResponse.class)
-            .assertXPath("/page[repo='test/me']")
-            .assertXPath("/page/siblings[count(talk)=0]");
+    public void showsLogInHtml() throws Exception {
+        final Talks talks = new Talks.InDir();
+        final Take take = new TkDaemon(
+            new RqFake(), talks, 1L, "abcdef"
+        );
+        talks.create("test", Talk.TEST_NAME);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(new RsPrint(take.act()).printBody()),
+            XhtmlMatchers.hasXPath("/xhtml:html/xhtml:body")
+        );
     }
 
 }

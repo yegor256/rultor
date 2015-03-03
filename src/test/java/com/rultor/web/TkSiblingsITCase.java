@@ -29,33 +29,53 @@
  */
 package com.rultor.web;
 
-import com.jcabi.matchers.XhtmlMatchers;
-import org.hamcrest.MatcherAssert;
+import com.jcabi.http.Request;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
+import java.net.HttpURLConnection;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Test case for {@link ButtonRs}.
+ * Integration case for {@link SiblingsRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.26
+ * @since 1.23
  */
-public final class ButtonRsTest {
+public final class TkSiblingsITCase {
 
     /**
-     * ButtonRs can render SVG.
+     * Home page of Tomcat.
+     */
+    private static final String HOME = System.getProperty("takes.home");
+
+    /**
+     * Before the entire test.
+     */
+    @BeforeClass
+    public static void before() {
+        Assume.assumeNotNull(TkSiblingsITCase.HOME);
+    }
+
+    /**
+     * SiblingsRs can render index page.
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersSvg() throws Exception {
-        final ButtonRs home = new ButtonRs();
-        home.setName("test/test");
-        MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(home.svg().getEntity()),
-            XhtmlMatchers.hasXPaths(
-                "/svg:svg",
-                "//svg:svg[count(svg:rect) >= 2]"
-            )
-        );
+    public void rendersListOfTalks() throws Exception {
+        new JdkRequest(TkSiblingsITCase.HOME).uri().path("/p/test/me").back()
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .method(Request.GET)
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .as(XmlResponse.class)
+            .assertXPath("/page[repo='test/me']")
+            .assertXPath("/page/siblings[count(talk)=0]");
     }
 
 }

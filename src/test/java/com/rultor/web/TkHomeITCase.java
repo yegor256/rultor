@@ -47,19 +47,19 @@ import org.junit.Test;
  * @version $Id$
  * @since 0.5
  */
-public final class HomeRsITCase {
+public final class TkHomeITCase {
 
     /**
      * Home page of Tomcat.
      */
-    private static final String HOME = System.getProperty("tomcat.home");
+    private static final String HOME = System.getProperty("takes.home");
 
     /**
      * Before the entire test.
      */
     @BeforeClass
     public static void before() {
-        Assume.assumeNotNull(HomeRsITCase.HOME);
+        Assume.assumeNotNull(TkHomeITCase.HOME);
     }
 
     /**
@@ -68,7 +68,7 @@ public final class HomeRsITCase {
      */
     @Test
     public void rendersExceptionTrapPage() throws Exception {
-        new JdkRequest(HomeRsITCase.HOME).uri().path("/trap").back()
+        new JdkRequest(TkHomeITCase.HOME).uri().path("/trap").back()
             .method(Request.GET)
             .fetch()
             .as(RestResponse.class)
@@ -89,7 +89,7 @@ public final class HomeRsITCase {
             "/xsl/xsl-stylesheet-doesnt-exist.xsl",
             "/css/stylesheet-is-absent.css",
         };
-        final Request request = new JdkRequest(HomeRsITCase.HOME);
+        final Request request = new JdkRequest(TkHomeITCase.HOME);
         for (final String page : pages) {
             request.uri().path(page).back()
                 .method(Request.GET)
@@ -113,7 +113,7 @@ public final class HomeRsITCase {
             "/xsl/home.xsl",
             "/css/style.css",
         };
-        final Request request = new JdkRequest(HomeRsITCase.HOME);
+        final Request request = new JdkRequest(TkHomeITCase.HOME);
         for (final String page : pages) {
             request.uri().path(page).back()
                 .method(Request.GET)
@@ -129,7 +129,7 @@ public final class HomeRsITCase {
      */
     @Test
     public void showsVersion() throws Exception {
-        new JdkRequest(HomeRsITCase.HOME)
+        new JdkRequest(TkHomeITCase.HOME)
             .uri().path("/").back()
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .fetch()

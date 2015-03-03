@@ -29,50 +29,23 @@
  */
 package com.rultor.web;
 
-import com.jcabi.matchers.XhtmlMatchers;
-import com.rexsl.mock.MkServletContext;
-import com.rultor.spi.Talk;
-import com.rultor.spi.Talks;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.xembly.Directives;
 
 /**
- * Test case for {@link SitemapRs}.
+ * Test case for {@link TkHome}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.26
+ * @since 1.50
  */
-public final class SitemapRsTest {
+public final class TkHomeTest {
 
     /**
-     * SitemapRs can render a list.
+     * TkHome can render home page.
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersListOfTalks() throws Exception {
-        final SitemapRs home = new SitemapRs();
-        final Talks talks = new Talks.InDir();
-        talks.create("repo1", Talk.TEST_NAME);
-        talks.get(Talk.TEST_NAME).modify(
-            new Directives()
-                .xpath("/talk")
-                .add("wire").add("href").set("http://example.com").up()
-                .add("github-repo").set("yegor256/rultor").up()
-                .add("github-issue").set("555").up().up()
-                .add("archive").add("log").attr("title", "hello, world")
-                .attr("id", "a1b2c3").set("s3://test")
-        );
-        home.setServletContext(
-            new MkServletContext().withAttr(Talks.class.getName(), talks)
-        );
-        MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(home.xml()),
-            XhtmlMatchers.hasXPath(
-                "/ns1:urlset[count(ns1:url)=1]",
-                "http://www.sitemaps.org/schemas/sitemap/0.9"
-            )
-        );
+    public void rendersHomePage() throws Exception {
+        // todo
     }
 
 }

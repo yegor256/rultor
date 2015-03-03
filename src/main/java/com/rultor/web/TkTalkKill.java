@@ -36,8 +36,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.f.flash.RsFlash;
-import org.takes.f.forward.RsForward;
+import org.takes.facets.flash.RsFlash;
+import org.takes.facets.forward.RsForward;
 
 /**
  * Kill a talk.

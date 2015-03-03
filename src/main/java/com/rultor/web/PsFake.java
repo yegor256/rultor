@@ -34,8 +34,8 @@ import com.jcabi.manifests.Manifests;
 import java.util.Map;
 import org.takes.Request;
 import org.takes.Response;
-import org.takes.f.auth.Identity;
-import org.takes.f.auth.Pass;
+import org.takes.facets.auth.Identity;
+import org.takes.facets.auth.Pass;
 
 /**
  * Fake pass.

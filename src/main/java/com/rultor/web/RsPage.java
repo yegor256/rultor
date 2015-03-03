@@ -35,7 +35,8 @@ import java.io.InputStream;
 import java.util.List;
 import org.takes.Request;
 import org.takes.Response;
-import org.takes.f.auth.XeGithubLink;
+import org.takes.facets.auth.XeGithubLink;
+import org.takes.rs.RsNegotiation;
 import org.takes.rs.RsWithType;
 import org.takes.rs.RsXSLT;
 import org.takes.rs.xe.RsXembly;
@@ -74,7 +75,7 @@ final class RsPage implements Response {
             new XeMillis(false),
             new XeChain(src),
             new XeMillis(true),
-            new XeGithubLink(req, Manifests.read("Rultor-GithubKey")),
+            new XeGithubLink(req, Manifests.read("Rultor-GithubId")),
             new XeAppend(
                 "version",
                 new XeAppend("name", Manifests.read("Rultor-Version")),
@@ -82,10 +83,16 @@ final class RsPage implements Response {
                 new XeAppend("date", Manifests.read("Rultor-Date"))
             )
         );
-        this.origin = new RsWithType(
-            new RsXSLT(new RsXembly(new XeStylesheet(xsl), xml)),
-            "text/xml"
-        );
+        final Response raw = new RsXembly(new XeStylesheet(xsl), xml);
+        this.origin = new RsNegotiation(req)
+            .with(
+                "*/*",
+                new RsXSLT(new RsWithType(raw, "text/xml"))
+            )
+            .with(
+                "application/xml,text/xml",
+                new RsWithType(raw, "text/xml")
+            );
     }
 
     @Override

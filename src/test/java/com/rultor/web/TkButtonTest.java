@@ -32,6 +32,8 @@ package com.rultor.web;
 import com.jcabi.matchers.XhtmlMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.takes.Take;
+import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkButton}.
@@ -47,10 +49,9 @@ public final class TkButtonTest {
      */
     @Test
     public void rendersSvg() throws Exception {
-        final ButtonRs home = new ButtonRs();
-        home.setName("test/test");
+        final Take take = new TkButton("");
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(home.svg().getEntity()),
+            XhtmlMatchers.xhtml(new RsPrint(take.act()).printBody()),
             XhtmlMatchers.hasXPaths(
                 "/svg:svg",
                 "//svg:svg[count(svg:rect) >= 2]"

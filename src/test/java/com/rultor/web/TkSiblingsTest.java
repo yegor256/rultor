@@ -30,45 +30,59 @@
 package com.rultor.web;
 
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rexsl.mock.MkServletContext;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
-import java.io.InputStream;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.takes.Take;
+import org.takes.rq.RqFake;
+import org.takes.rq.RqWithHeader;
+import org.takes.rs.RsPrint;
+import org.xembly.Directives;
 
 /**
- * Test case for {@link DaemonRs}.
+ * Test case for {@link TkSiblings}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.32
+ * @since 1.23.1
  */
-public final class DaemonRsTest {
+public final class TkSiblingsTest {
 
     /**
-     * DaemonRs can show log in HTML.
+     * TkSiblings can render a list.
      * @throws Exception If some problem inside
      */
     @Test
-    public void showsLogInHtml() throws Exception {
-        final DaemonRs home = new DaemonRs();
+    public void rendersListOfTalks() throws Exception {
         final Talks talks = new Talks.InDir();
-        talks.create("test", Talk.TEST_NAME);
-        home.setServletContext(
-            new MkServletContext().withAttr(
-                Talks.class.getName(), talks
+        final Take take = new TkSiblings(
+            talks, "x",
+            new RqWithHeader(
+                new RqFake("GET", "/aa?since=123"),
+                "Accept", "text/xml"
             )
         );
-        home.setNumber(1L);
-        home.setHash("a1b2c3");
+        talks.create("repo1", Talk.TEST_NAME);
+        talks.get(Talk.TEST_NAME).modify(
+            new Directives()
+                .xpath("/talk")
+                .add("wire").add("href").set("http://example.com").up()
+                .add("github-repo").set("yegor256/rultor").up()
+                .add("github-issue").set("555").up().up()
+                .add("archive").add("log").attr("title", "hello, world")
+                .attr("id", "a1b2c3").set("s3://test")
+        );
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(
-                IOUtils.toString(
-                    InputStream.class.cast(home.index().getEntity())
-                )
-            ),
-            XhtmlMatchers.hasXPath("/xhtml:html/xhtml:body")
+            XhtmlMatchers.xhtml(new RsPrint(take.act()).printBody()),
+            XhtmlMatchers.hasXPaths(
+                "/page[repo='x']",
+                "/page[since='123']",
+                "/page/siblings[count(talk)=1]",
+                "/page/siblings/talk[timeago]",
+                "/page/siblings/talk/archive/log[id and href and title]",
+                "/page/siblings/talk/archive[count(log)=1]",
+                "//log[starts-with(href,'http://')]"
+            )
         );
     }
 

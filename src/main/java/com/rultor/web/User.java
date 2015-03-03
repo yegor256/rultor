@@ -38,9 +38,9 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Collection;
 import org.takes.Request;
-import org.takes.f.auth.RqAuth;
-import org.takes.f.flash.RsFlash;
-import org.takes.f.forward.RsForward;
+import org.takes.facets.auth.RqAuth;
+import org.takes.facets.flash.RsFlash;
+import org.takes.facets.forward.RsForward;
 
 /**
  * Web user.

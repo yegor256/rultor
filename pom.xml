@@ -318,6 +318,13 @@
             <groupId>net.sourceforge.saxon</groupId>
             <artifactId>saxon</artifactId>
             <version>${saxon.version}</version>
+            <classifier>dom</classifier>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>${saxon.version}</version>
             <classifier>xpath</classifier>
             <scope>runtime</scope>
         </dependency>
@@ -408,6 +415,7 @@
                             <goal>minify</goal>
                         </goals>
                         <configuration>
+                            <webappSourceDir>${project.basedir}/src/main</webappSourceDir>
                             <jsSourceIncludes>
                                 <include>*.js</include>
                             </jsSourceIncludes>
@@ -690,15 +698,6 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <configuration>
-                            <systemProperties combine.children="append">
-                                <dynamo.port>${dynamodblocal.port}</dynamo.port>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
                             <parallel>none</parallel>
@@ -766,14 +765,11 @@
                         <artifactId>qulice-maven-plugin</artifactId>
                         <configuration>
                             <excludes>
-                                <exclude>checkstyle:/src/main/webapp/.*</exclude>
                                 <exclude>checkstyle:/src/main/scss/.*</exclude>
                                 <exclude>checkstyle:/src/test/casperjs/.*</exclude>
                                 <exclude>checkstyle:/src/jekyll/guard-article.pdf</exclude>
                                 <exclude>checkstyle:/src/jekyll/images/.*</exclude>
                                 <exclude>findbugs:.*</exclude>
-                                <exclude>xml:/src/main/webapp/WEB-INF/web.xml</exclude>
-                                <exclude>xml:/src/test/webapp/xml/.*</exclude>
                                 <exclude>duplicatefinder:.*</exclude>
                             </excludes>
                             <license>file:${basedir}/LICENSE.txt</license>
