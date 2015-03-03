@@ -40,7 +40,7 @@
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
     <version>2.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>rultor</name>
     <description>Rultor.com, Coding Team Assistant</description>
     <url>http://www.rultor.com</url>
@@ -96,6 +96,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>org.takes</groupId>
+            <artifactId>takes</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
             <version>1.9.17</version>
@@ -119,7 +124,7 @@
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
             <artifactId>xembly</artifactId>
-            <version>0.20</version>
+            <version>0.20.1</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
@@ -203,24 +208,9 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl</artifactId>
-            <version>1.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jsr173_api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -242,10 +232,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
@@ -261,6 +247,12 @@
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
             <version>1.10.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -310,10 +302,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
             <scope>runtime</scope>
@@ -322,6 +310,13 @@
             <groupId>net.sourceforge.saxon</groupId>
             <artifactId>saxon</artifactId>
             <version>${saxon.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>${saxon.version}</version>
+            <classifier>dom</classifier>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -339,18 +334,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>1.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                    <configuration>
-                        <port>9099</port>
-                        <path>/</path>
-                        <systemProperties>
-                            <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
-                        </systemProperties>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
@@ -397,17 +380,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warSourceExcludes>js/**, xsl/**, css/**</warSourceExcludes>
-                    <webResources combine.children="append">
-                        <resource>
-                            <directory>${project.build.directory}/minify</directory>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.jasig.maven</groupId>
                 <artifactId>sass-maven-plugin</artifactId>
                 <version>1.1.1</version>
@@ -432,7 +404,7 @@
                 <configuration>
                     <charset>UTF-8</charset>
                     <nosuffix>true</nosuffix>
-                    <webappTargetDir>${project.build.directory}/minify</webappTargetDir>
+                    <webappTargetDir>${project.build.outputDirectory}</webappTargetDir>
                 </configuration>
                 <executions>
                     <execution>
@@ -441,6 +413,7 @@
                             <goal>minify</goal>
                         </goals>
                         <configuration>
+                            <webappSourceDir>${project.basedir}/src/main</webappSourceDir>
                             <jsSourceIncludes>
                                 <include>*.js</include>
                             </jsSourceIncludes>
@@ -477,8 +450,8 @@
                             <goal>xml</goal>
                         </goals>
                         <configuration>
-                            <srcFolder>${basedir}/src/main/webapp/xsl</srcFolder>
-                            <targetFolder>${project.build.directory}/${project.build.finalName}/xsl</targetFolder>
+                            <srcFolder>${basedir}/src/main/resources/xsl</srcFolder>
+                            <targetFolder>${project.build.outputDirectory}/xsl</targetFolder>
                             <fileExt>
                                 <ext>xsl</ext>
                             </fileExt>
@@ -540,41 +513,15 @@
             </build>
         </profile>
         <profile>
-            <id>tomcat-test</id>
+            <id>takes-test</id>
             <activation>
                 <property><name>!skipTests</name></property>
             </activation>
             <properties>
                 <failsafe.sttc.urn>urn:test:1</failsafe.sttc.urn>
-                <tomcat.home>${project.build.directory}/webapp-test</tomcat.home>
             </properties>
             <build>
                 <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>prepare-webapp-for-tests</id>
-                                <goals>
-                                    <goal>exploded</goal>
-                                </goals>
-                                <configuration>
-                                    <warSourceExcludes>nothing/**</warSourceExcludes>
-                                    <webappDirectory>${tomcat.home}</webappDirectory>
-                                    <webResources combine.children="append">
-                                        <resource>
-                                            <directory>src/test/resources</directory>
-                                            <filtering>true</filtering>
-                                            <targetPath>WEB-INF/classes</targetPath>
-                                        </resource>
-                                        <resource>
-                                            <directory>src/test/webapp</directory>
-                                        </resource>
-                                    </webResources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -585,7 +532,7 @@
                                 </goals>
                                 <configuration>
                                     <portNames>
-                                        <portName>tomcat.port</portName>
+                                        <portName>takes.port</portName>
                                     </portNames>
                                 </configuration>
                             </execution>
@@ -595,7 +542,7 @@
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables combine.children="append">
-                                <tomcat.home>http://localhost:${tomcat.port}</tomcat.home>
+                                <takes.home>http://localhost:${takes.port}</takes.home>
                             </systemPropertyVariables>
                             <reuseForks>false</reuseForks>
                         </configuration>
@@ -604,33 +551,6 @@
                                 <goals>
                                     <goal>integration-test</goal>
                                     <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <configuration>
-                            <warDirectory>${tomcat.home}</warDirectory>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>start-tomcat</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>run-war-only</goal>
-                                </goals>
-                                <configuration>
-                                    <port>${tomcat.port}</port>
-                                    <fork>true</fork>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-tomcat</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>shutdown</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -655,6 +575,28 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>1.3</version>
                         <executions>
+                            <execution>
+                                <id>start-takes-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>com.rultor.web.Entry</mainClass>
+                                    <classpathScope>test</classpathScope>
+                                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                                    <arguments>
+                                        <argument>--port=${takes.port}</argument>
+                                        <argument>--daemon=yes</argument>
+                                    </arguments>
+                                    <systemProperties>
+                                        <property>
+                                            <key>dynamo.port</key>
+                                            <value>${dynamodblocal.port}</value>
+                                        </property>
+                                    </systemProperties>
+                                </configuration>
+                            </execution>
                             <execution>
                                 <id>casperjs-install</id>
                                 <phase>pre-integration-test</phase>
@@ -686,7 +628,7 @@
                                         <argument>--verbose</argument>
                                         <argument>--no-colors</argument>
                                         <argument>--concise</argument>
-                                        <argument>--home=http://localhost:${tomcat.port}</argument>
+                                        <argument>--home=http://localhost:${takes.port}</argument>
                                         <argument>--engine=phantomjs</argument>
                                         <argument>${basedir}/src/test/casperjs</argument>
                                     </arguments>
@@ -776,15 +718,6 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <configuration>
-                            <systemProperties combine.children="append">
-                                <dynamo.port>${dynamodblocal.port}</dynamo.port>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
                             <parallel>none</parallel>
@@ -792,6 +725,44 @@
                                 <dynamo.port>${dynamodblocal.port}</dynamo.port>
                             </systemPropertyVariables>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>hit-refresh</id>
+            <properties>
+                <failsafe.sttc.urn>urn:test:1</failsafe.sttc.urn>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.3</version>
+                        <executions>
+                            <execution>
+                                <id>start-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>com.rultor.web.Entry</mainClass>
+                                    <classpathScope>test</classpathScope>
+                                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                                    <arguments>
+                                        <argument>--port=${port}</argument>
+                                    </arguments>
+                                    <systemProperties>
+                                        <property>
+                                            <key>dynamo.port</key>
+                                            <value>${dynamodblocal.port}</value>
+                                        </property>
+                                    </systemProperties>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -821,28 +792,6 @@
             <activation>
                 <file><exists>pom.xml</exists></file>
             </activation>
-            <properties>
-                <tomcat.version>7.0.34</tomcat.version>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-core</artifactId>
-                    <version>${tomcat.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-logging-juli</artifactId>
-                    <version>${tomcat.version}</version>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-jasper</artifactId>
-                    <version>${tomcat.version}</version>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
             <build>
                 <finalName>rultor</finalName>
                 <plugins>
@@ -874,14 +823,12 @@
                         <artifactId>qulice-maven-plugin</artifactId>
                         <configuration>
                             <excludes>
-                                <exclude>checkstyle:/src/main/webapp/.*</exclude>
+                                <exclude>checkstyle:/src/main/js/.*</exclude>
                                 <exclude>checkstyle:/src/main/scss/.*</exclude>
                                 <exclude>checkstyle:/src/test/casperjs/.*</exclude>
                                 <exclude>checkstyle:/src/jekyll/guard-article.pdf</exclude>
                                 <exclude>checkstyle:/src/jekyll/images/.*</exclude>
                                 <exclude>findbugs:.*</exclude>
-                                <exclude>xml:/src/main/webapp/WEB-INF/web.xml</exclude>
-                                <exclude>xml:/src/test/webapp/xml/.*</exclude>
                                 <exclude>duplicatefinder:.*</exclude>
                             </excludes>
                             <license>file:${basedir}/LICENSE.txt</license>
