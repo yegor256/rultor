@@ -38,7 +38,7 @@
                 If you want to help us, please post this text as a new issue to
                 <a href="https://github.com/rultor/rultor/issues/new">Github</a>.
             </p>
-            <pre>${req.throwable}</pre>
+            <pre>${req.throwable()}</pre>
         </article>
     </body>
 </html>

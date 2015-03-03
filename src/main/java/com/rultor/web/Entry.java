@@ -49,6 +49,7 @@ import com.rultor.dynamo.DyTalks;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -68,14 +69,14 @@ public final class Entry {
     /**
      * Arguments.
      */
-    private final transient String[] arguments;
+    private final transient Iterable<String> arguments;
 
     /**
      * Ctor.
      * @param args Command line args
      */
     public Entry(final String[] args) {
-        this.arguments = args;
+        this.arguments = Arrays.asList(args);
     }
 
     /**

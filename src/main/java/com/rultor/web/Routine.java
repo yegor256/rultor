@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.validation.constraints.NotNull;
 
 /**
  * Routine.
@@ -56,6 +57,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 1.50
  */
 @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES, threads = 1)
+@SuppressWarnings("PMD.DoNotUseThreads")
 final class Routine implements Runnable, Closeable {
 
     /**
@@ -86,7 +88,7 @@ final class Routine implements Runnable, Closeable {
      * @param sttc Sttc client
      * @checkstyle ParameterNumberCheck (4 lines)
      */
-    Routine(final Talks tlks, final Collection<Pulse.Tick> ticks,
+    Routine(@NotNull final Talks tlks, final Collection<Pulse.Tick> ticks,
         final Github github, final Sttc sttc) {
         this.talks = tlks;
         this.list = ticks;
