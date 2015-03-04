@@ -103,30 +103,7 @@ public final class App implements Takes {
             );
         }
         final String rev = Manifests.read("Rultor-Revision");
-        Takes takes = new TsFallback(
-            new TsWithHeaders(new TsForward(App.regex(talks, ticks, toggles)))
-                .with("Vary", "Cookie")
-                .with("X-Rultor-Revision", rev),
-            new Fallback() {
-                @Override
-                public Take take(final RqFallback req) throws IOException {
-                    final String err = ExceptionUtils.getStackTrace(
-                        req.throwable()
-                    );
-                    return new TkFixed(
-                        new RsWithStatus(
-                            new RsWithType(
-                                new RsVelocity(
-                                    this.getClass().getResource("error.html.vm")
-                                ).with("err", err).with("rev", rev),
-                                "text/html"
-                            ),
-                            HttpURLConnection.HTTP_INTERNAL_ERROR
-                        )
-                    );
-                }
-            }
-        );
+        Takes takes = new TsForward(App.regex(talks, ticks, toggles));
         takes = new TsAuth(
             takes,
             new PsChain(
@@ -149,6 +126,30 @@ public final class App implements Takes {
                     )
                 )
             )
+        );
+        takes = new TsFallback(
+            new TsWithHeaders(takes)
+                .with("Vary", "Cookie")
+                .with("X-Rultor-Revision", rev),
+            new Fallback() {
+                @Override
+                public Take take(final RqFallback req) throws IOException {
+                    final String err = ExceptionUtils.getStackTrace(
+                        req.throwable()
+                    );
+                    return new TkFixed(
+                        new RsWithStatus(
+                            new RsWithType(
+                                new RsVelocity(
+                                    this.getClass().getResource("error.html.vm")
+                                ).with("err", err).with("rev", rev),
+                                "text/html"
+                            ),
+                            HttpURLConnection.HTTP_INTERNAL_ERROR
+                        )
+                    );
+                }
+            }
         );
         this.origin = takes;
     }
