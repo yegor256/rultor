@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.manifests.Manifests;
 import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
@@ -44,6 +45,8 @@ import org.takes.facets.auth.CcHex;
 import org.takes.facets.auth.CcPlain;
 import org.takes.facets.auth.CcSalted;
 import org.takes.facets.auth.CcXOR;
+import org.takes.facets.auth.Pass;
+import org.takes.facets.auth.PsByFlag;
 import org.takes.facets.auth.PsChain;
 import org.takes.facets.auth.PsCookie;
 import org.takes.facets.auth.PsGithub;
@@ -127,9 +130,15 @@ public final class App implements Takes {
                         )
                     )
                 ),
-                new PsGithub(
-                    Manifests.read("Rultor-GithubId"),
-                    Manifests.read("Rultor-GithubSecret")
+                new PsByFlag(
+                    new ArrayMap<String, Pass>().with(
+                        "github",
+                        new PsGithub(
+                            Manifests.read("Rultor-GithubId"),
+                            Manifests.read("Rultor-GithubSecret")
+                        )
+                    )
+
                 )
             )
         );
