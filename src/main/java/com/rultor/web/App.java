@@ -231,9 +231,13 @@ public final class App implements Takes {
                 "/t/([0-9]+)",
                 new TsRegex.Fast() {
                     @Override
-                    public Take take(final RqRegex req) {
-                        return new TkTalk(
-                            talks, req, Long.parseLong(req.matcher().group(1))
+                    public Take take(final RqRegex req) throws IOException {
+                        return new TkAdminOnly(
+                            new TkTalk(
+                                talks, req,
+                                Long.parseLong(req.matcher().group(1))
+                            ),
+                            req
                         );
                     }
                 }
