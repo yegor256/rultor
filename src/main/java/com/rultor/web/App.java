@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.Collections;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Request;
 import org.takes.Take;
@@ -65,6 +64,7 @@ import org.takes.rs.RsWithType;
 import org.takes.tk.TkFixed;
 import org.takes.tk.TkRedirect;
 import org.takes.ts.TsClasspath;
+import org.takes.ts.TsMeasured;
 import org.takes.ts.TsRegex;
 import org.takes.ts.TsWithHeaders;
 import org.takes.ts.TsWithType;
@@ -155,8 +155,8 @@ public final class App implements Takes {
             }
         );
         this.origin = new TsWithHeaders(
-            takes,
-            Collections.singleton(String.format("X-Rultor-Revision: %s", rev))
+            new TsMeasured(takes),
+            String.format("X-Rultor-Revision: %s", rev)
         );
     }
 
