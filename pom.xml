@@ -800,9 +800,6 @@
                         <configuration>
                             <archive>
                                 <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                                <manifest>
-                                    <mainClass>com.rultor.web.Entry</mainClass>
-                                </manifest>
                             </archive>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
