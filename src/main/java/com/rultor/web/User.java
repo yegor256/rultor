@@ -66,6 +66,15 @@ final class User {
     }
 
     /**
+     * Is it an anonymous user?
+     * @return TRUE if I'm anonymous
+     * @throws IOException If fails
+     */
+    public boolean anonymous() throws IOException {
+        return new RqAuth(this.request).identity().equals(Identity.ANONYMOUS);
+    }
+
+    /**
      * Can I see this talk?
      * @param talk The talk
      * @return TRUE if I can see it

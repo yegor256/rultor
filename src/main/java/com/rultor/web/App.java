@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Collections;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Request;
 import org.takes.Take;
@@ -151,7 +152,10 @@ public final class App implements Takes {
                 }
             }
         );
-        this.origin = takes;
+        this.origin = new TsWithHeaders(
+            takes,
+            Collections.singleton(String.format("X-Rultor-Revision: %s", rev))
+        );
     }
 
     @Override

@@ -102,6 +102,14 @@ final class TkDaemon implements Take {
                 )
             );
         }
+        if (!this.user.anonymous()) {
+            throw new RsForward(
+                new RsFlash(
+                    "this page is for logged in users only",
+                    Level.WARNING
+                )
+            );
+        }
         if (!this.user.canSee(this.talks.get(this.number))) {
             throw new RsForward(
                 new RsFlash(
