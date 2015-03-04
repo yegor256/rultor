@@ -104,7 +104,7 @@ public final class App implements Takes {
         }
         final String rev = Manifests.read("Rultor-Revision");
         Takes takes = new TsFallback(
-            new TsWithHeaders(App.regex(talks, ticks, toggles))
+            new TsWithHeaders(new TsForward(App.regex(talks, ticks, toggles)))
                 .with("Vary", "Cookie")
                 .with("X-Rultor-Revision", rev),
             new Fallback() {
@@ -150,7 +150,7 @@ public final class App implements Takes {
                 )
             )
         );
-        this.origin = new TsForward(takes);
+        this.origin = takes;
     }
 
     @Override
