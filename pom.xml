@@ -796,19 +796,26 @@
                 <finalName>rultor</finalName>
                 <plugins>
                     <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                                <manifest>
+                                    <mainClass>com.rultor.web.Entry</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
                         <executions>
                             <execution>
+                                <id>make-heroku-jar</id>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>single</goal>
                                 </goals>
-                                <configuration>
-                                    <archive>
-                                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                                    </archive>
-                                </configuration>
-                            </execution>
+                                </execution>
                         </executions>
                     </plugin>
                 </plugins>
