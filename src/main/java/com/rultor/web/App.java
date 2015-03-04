@@ -58,6 +58,7 @@ import org.takes.facets.fallback.TsFallback;
 import org.takes.rq.RqRegex;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
+import org.takes.rs.RsWithType;
 import org.takes.tk.TkFixed;
 import org.takes.tk.TkRedirect;
 import org.takes.ts.TsClasspath;
@@ -113,9 +114,12 @@ public final class App implements Takes {
                     );
                     return new TkFixed(
                         new RsWithStatus(
-                            new RsVelocity(
-                                this.getClass().getResource("error.html.vm")
-                            ).with("error", err).with("rev", rev),
+                            new RsWithType(
+                                new RsVelocity(
+                                    this.getClass().getResource("error.html.vm")
+                                ).with("err", err).with("rev", rev),
+                                "text/html"
+                            ),
                             HttpURLConnection.HTTP_INTERNAL_ERROR
                         )
                     );
