@@ -1,2 +1,2 @@
-web: java -Dfile.encoding=UTF-8 -Xmx512m -XX:MaxPermSize=128m -cp target/deps/* -jar target/rultor.jar --port=${PORT}
+web: java -Dfile.encoding=UTF-8 -Xmx512m -XX:MaxPermSize=128m -cp target/rultor.jar:target/deps/* --port=${PORT}
 

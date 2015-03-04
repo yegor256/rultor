@@ -1,4 +1,3 @@
-Main-Class: com.rultor.web.Entry
 Rultor-Revision: BUILD
 Rultor-Version: ${project.version}
 Rultor-Date: ${maven.build.timestamp}
