@@ -66,7 +66,7 @@
                     <nav role="navigation" class="menu">
                         <xsl:if test="not(identity)">
                             <span>
-                                <a href="{links/link[@rel='rexsl:github']/@href}" title="login via Github">
+                                <a href="{links/link[@rel='takes:github']/@href}" title="login via Github">
                                     <xsl:text>login</xsl:text>
                                 </a>
                             </span>
@@ -191,7 +191,7 @@
             <xsl:value-of select="name"/>
         </span>
         <span>
-            <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
+            <a title="log out" href="{/page/links/link[@rel='takes:logout']/@href}">
                 <xsl:text>logout</xsl:text>
             </a>
         </span>
