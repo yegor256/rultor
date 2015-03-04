@@ -38,6 +38,7 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Collection;
 import org.takes.Request;
+import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.RqAuth;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.forward.RsForward;
@@ -84,13 +85,14 @@ final class User {
         if (readers.isEmpty()) {
             granted = true;
         } else {
-            final String self = new RqAuth(this.request).identity().urn();
+            final Identity self = new RqAuth(this.request).identity();
             granted = Iterables.any(
                 readers,
                 new Predicate<String>() {
                     @Override
                     public boolean apply(final String input) {
-                        return input.trim().equals(self);
+                        return !self.equals(Identity.ANONYMOUS)
+                            && input.trim().equals(self.urn());
                     }
                 }
             );
