@@ -109,7 +109,7 @@ public final class App implements Takes {
                             new RsVelocity(
                                 this.getClass().getResource("error.html.vm")
                             ).with("req", req).with("rev", rev),
-                            HttpURLConnection.HTTP_INTERNAL_ERROR
+                            HttpURLConnection.HTTP_OK
                         )
                     );
                 }
