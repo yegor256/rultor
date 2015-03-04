@@ -55,6 +55,7 @@ import org.takes.facets.auth.TsAuth;
 import org.takes.facets.fallback.Fallback;
 import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TsFallback;
+import org.takes.facets.forward.TsForward;
 import org.takes.rq.RqRegex;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
@@ -150,7 +151,7 @@ public final class App implements Takes {
                 )
             )
         );
-        this.origin = takes;
+        this.origin = new TsForward(takes);
     }
 
     @Override
