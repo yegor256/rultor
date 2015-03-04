@@ -34,6 +34,7 @@ import java.util.logging.Level;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
+import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.RqAuth;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.forward.RsForward;
@@ -59,7 +60,16 @@ final class TkAdminOnly implements Take {
      * @throws IOException If fails
      */
     TkAdminOnly(final Take take, final Request req) throws IOException {
-        if (!"urn:github:526301".equals(new RqAuth(req).identity().urn())) {
+        final Identity identity = new RqAuth(req).identity();
+        if (identity.equals(Identity.ANONYMOUS)) {
+            throw new RsForward(
+                new RsFlash(
+                    "sorry, you have to be logged in to see this page",
+                    Level.WARNING
+                )
+            );
+        }
+        if (!"urn:github:526301".equals(identity.urn())) {
             throw new RsForward(
                 new RsFlash(
                     "sorry, but this entrance is \"staff only\"",

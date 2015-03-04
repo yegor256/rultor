@@ -211,7 +211,7 @@
                 <xsl:text>s</xsl:text>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="format-number($millis, '#')"/>
+                <xsl:value-of select="format-number($millis, '0')"/>
                 <xsl:text>ms</xsl:text>
             </xsl:otherwise>
         </xsl:choose>

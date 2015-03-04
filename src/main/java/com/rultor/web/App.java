@@ -56,6 +56,7 @@ import org.takes.facets.auth.TsAuth;
 import org.takes.facets.fallback.Fallback;
 import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TsFallback;
+import org.takes.facets.flash.TsFlash;
 import org.takes.facets.forward.TsForward;
 import org.takes.rq.RqRegex;
 import org.takes.rs.RsVelocity;
@@ -128,6 +129,7 @@ public final class App implements Takes {
                 )
             )
         );
+        takes = new TsFlash(takes);
         takes = new TsFallback(
             new TsWithHeaders(takes)
                 .with("Vary", "Cookie")
