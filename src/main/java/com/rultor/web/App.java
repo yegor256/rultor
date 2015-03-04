@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Request;
 import org.takes.Take;
 import org.takes.Takes;
@@ -107,12 +108,15 @@ public final class App implements Takes {
             new Fallback() {
                 @Override
                 public Take take(final RqFallback req) throws IOException {
+                    final String err = ExceptionUtils.getStackTrace(
+                        req.throwable()
+                    );
                     return new TkFixed(
                         new RsWithStatus(
                             new RsVelocity(
                                 this.getClass().getResource("error.html.vm")
-                            ).with("req", req).with("rev", rev),
-                            HttpURLConnection.HTTP_OK
+                            ).with("error", err).with("rev", rev),
+                            HttpURLConnection.HTTP_INTERNAL_ERROR
                         )
                     );
                 }
