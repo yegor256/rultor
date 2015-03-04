@@ -75,7 +75,7 @@ public final class AppTest {
             ),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
-                "/page/link[@rel='svg']",
+                "/page/links/link[@rel='svg']",
                 "/page/toggles[read-only='false']"
             )
         );

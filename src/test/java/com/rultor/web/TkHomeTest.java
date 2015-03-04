@@ -29,7 +29,14 @@
  */
 package com.rultor.web;
 
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.Toggles;
+import com.rultor.spi.Talks;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.takes.Take;
+import org.takes.rq.RqFake;
+import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkHome}.
@@ -45,7 +52,20 @@ public final class TkHomeTest {
      */
     @Test
     public void rendersHomePage() throws Exception {
-        // todo
+        final Talks talks = new Talks.InDir();
+        final Take take = new TkHome(talks, new Toggles(), new RqFake());
+        talks.create("repo1", "test1");
+        talks.create("repo2", "test2");
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(new RsPrint(take.act()).printBody()),
+            XhtmlMatchers.hasXPaths(
+                "/page/millis",
+                "/page/recent[count(talk)=2]",
+                "/page/links/link[@rel='svg']",
+                "/page/links/link[@rel='takes:github']",
+                "/page/toggles/read-only"
+            )
+        );
     }
 
 }

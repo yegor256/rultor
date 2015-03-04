@@ -119,7 +119,7 @@ public final class App implements Takes {
                 ),
                 new PsByFlag(
                     new ArrayMap<String, Pass>().with(
-                        "github",
+                        PsGithub.class.getSimpleName(),
                         new PsGithub(
                             Manifests.read("Rultor-GithubId"),
                             Manifests.read("Rultor-GithubSecret")

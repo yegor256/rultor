@@ -42,7 +42,10 @@ import org.takes.rs.RsXSLT;
 import org.takes.rs.xe.RsXembly;
 import org.takes.rs.xe.XeAppend;
 import org.takes.rs.xe.XeChain;
+import org.takes.rs.xe.XeDate;
+import org.takes.rs.xe.XeLocalhost;
 import org.takes.rs.xe.XeMillis;
+import org.takes.rs.xe.XeSLA;
 import org.takes.rs.xe.XeSource;
 import org.takes.rs.xe.XeStylesheet;
 
@@ -75,6 +78,9 @@ final class RsPage implements Response {
             new XeMillis(false),
             new XeChain(src),
             new XeMillis(true),
+            new XeDate(),
+            new XeSLA(),
+            new XeLocalhost(),
             new XeGithubLink(req, Manifests.read("Rultor-GithubId")),
             new XeAppend(
                 "version",

@@ -102,8 +102,7 @@ final class TkHome implements Take {
         final Directives dirs = new Directives().add("recent");
         final PrettyTime pretty = new PrettyTime();
         for (final Talk talk : Iterables.limit(this.talks.recent(), Tv.FIVE)) {
-            dirs.add("talk")
-                .attr("name", talk.name())
+            dirs.add("talk").set(talk.name())
                 .attr("timeago", pretty.format(talk.updated()));
             final XML xml = talk.read();
             if (!xml.nodes("/talk/wire/href").isEmpty()) {
@@ -112,6 +111,7 @@ final class TkHome implements Take {
                     talk.read().xpath("/talk/wire/href/text()").get(0)
                 );
             }
+            dirs.up();
         }
         return dirs;
     }
