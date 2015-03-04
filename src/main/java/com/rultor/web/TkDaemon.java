@@ -116,7 +116,11 @@ final class TkDaemon implements Take {
         }
         return new RsFluent()
             .withBody(this.html())
-            .withType("text/html; charset=utf-8");
+            .withType("text/html; charset=utf-8")
+            .withHeader(
+                "X-Rultor-Daemon",
+                String.format("%s-%s", this.number, this.hash)
+            );
     }
 
     /**
