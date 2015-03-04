@@ -147,7 +147,6 @@ public final class App implements Takes {
                             Manifests.read("Rultor-GithubSecret")
                         )
                     )
-
                 )
             )
         );
