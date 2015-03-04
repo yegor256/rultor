@@ -40,8 +40,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.facets.auth.Identity;
-import org.takes.facets.auth.RqAuth;
 import org.takes.rs.xe.XeDirectives;
 import org.takes.rs.xe.XeLink;
 import org.xembly.Directive;
@@ -127,7 +125,7 @@ final class TkHome implements Take {
         final Directives dirs = new Directives().add("toggles");
         dirs.add("read-only")
             .set(Boolean.toString(this.toggles.readOnly())).up();
-        if (!new RqAuth(this.request).identity().equals(Identity.ANONYMOUS)) {
+        if (!new User(this.request).anonymous()) {
             dirs.append(
                 new XeLink("sw:read-only", "/toggles/read-only").toXembly()
             );

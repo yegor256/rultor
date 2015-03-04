@@ -224,7 +224,7 @@ public final class App implements Takes {
                         return new TkDaemon(
                             req, talks,
                             Long.parseLong(req.matcher().group(1)),
-                            req.matcher().group(1)
+                            req.matcher().group(2)
                         );
                     }
                 }
