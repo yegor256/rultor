@@ -102,7 +102,7 @@ final class TkDaemon implements Take {
                 )
             );
         }
-        if (!this.user.anonymous()) {
+        if (this.user.anonymous()) {
             throw new RsForward(
                 new RsFlash(
                     "this page is for logged in users only",
