@@ -36,6 +36,7 @@ import java.util.List;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.facets.auth.XeGithubLink;
+import org.takes.facets.auth.XeIdentity;
 import org.takes.facets.flash.XeFlash;
 import org.takes.rs.RsNegotiation;
 import org.takes.rs.RsWithType;
@@ -82,6 +83,7 @@ final class RsPage implements Response {
             new XeDate(),
             new XeSLA(),
             new XeLocalhost(),
+            new XeIdentity(req),
             new XeFlash(req),
             new XeGithubLink(req, Manifests.read("Rultor-GithubId")),
             new XeAppend(
