@@ -40,8 +40,8 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.rs.xe.XeDirectives;
 import org.takes.rs.xe.XeLink;
+import org.takes.rs.xe.XeSource;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -87,9 +87,19 @@ final class TkHome implements Take {
         return new RsPage(
             "/xsl/home.xsl",
             this.request,
-            new XeDirectives(this.recent()),
+            new XeSource() {
+                @Override
+                public Iterable<Directive> toXembly() throws IOException {
+                    return TkHome.this.recent();
+                }
+            },
             new XeLink("svg", "/svg", "image/svg+xml"),
-            new XeDirectives(this.flags())
+            new XeSource() {
+                @Override
+                public Iterable<Directive> toXembly() throws IOException {
+                    return TkHome.this.flags();
+                }
+            }
         );
     }
 
