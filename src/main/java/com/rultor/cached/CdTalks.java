@@ -34,10 +34,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -122,7 +124,7 @@ public final class CdTalks implements Talks {
     }
 
     @Override
-    @Cacheable
+    @Cacheable(lifetime = Tv.TWENTY, unit = TimeUnit.MINUTES)
     public Iterable<Talk> recent() {
         return Lists.newArrayList(
             Iterables.transform(
