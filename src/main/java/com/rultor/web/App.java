@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Request;
 import org.takes.Take;
@@ -57,7 +58,6 @@ import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TsFallback;
 import org.takes.facets.flash.TsFlash;
 import org.takes.facets.forward.TsForward;
-import org.takes.rq.RqRegex;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
 import org.takes.rs.RsWithType;
@@ -65,9 +65,13 @@ import org.takes.tk.TkFixed;
 import org.takes.tk.TkRedirect;
 import org.takes.ts.TsClasspath;
 import org.takes.ts.TsMeasured;
-import org.takes.ts.TsRegex;
 import org.takes.ts.TsWithHeaders;
 import org.takes.ts.TsWithType;
+import org.takes.ts.fork.FkParams;
+import org.takes.ts.fork.FkRegex;
+import org.takes.ts.fork.RqRegex;
+import org.takes.ts.fork.Target;
+import org.takes.ts.fork.TsFork;
 
 /**
  * App.
@@ -174,24 +178,29 @@ public final class App implements Takes {
      */
     private static Takes regex(final Talks talks,
         final Collection<Pulse.Tick> ticks, final Toggles toggles) {
-        return new TsRegex()
-            .with("/robots.txt", "")
-            .with("/svg", new TkSVG(ticks))
-            .with("/s/.*", new TkRedirect())
-            .with("/sitemap", new TkSitemap(talks))
-            .with(
+        return new TsFork(
+            new FkParams(
+                PsByFlag.class.getSimpleName(),
+                Pattern.compile(".+"),
+                new TkRedirect()
+            ),
+            new FkRegex("/robots.txt", ""),
+            new FkRegex("/svg", new TkSVG(ticks)),
+            new FkRegex("/s/.*", new TkRedirect()),
+            new FkRegex("/sitemap", new TkSitemap(talks)),
+            new FkRegex(
                 "/xsl/.*",
                 new TsWithType(new TsClasspath(), "text/xsl")
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/js/.*",
                 new TsWithType(new TsClasspath(), "text/javascript")
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/css/.*",
                 new TsWithType(new TsClasspath(), "text/css")
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/toggles/read-only",
                 new Takes() {
                     @Override
@@ -199,30 +208,30 @@ public final class App implements Takes {
                         return new TkAdminOnly(new TkToggles(toggles), req);
                     }
                 }
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/",
-                new TsRegex.Fast() {
+                new Target<RqRegex>() {
                     @Override
-                    public Take take(final RqRegex req) {
+                    public Take route(final RqRegex req) {
                         return new TkHome(talks, toggles, req);
                     }
                 }
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/b/([/a-zA-Z0-9_\\-\\.]+)",
-                new TsRegex.Fast() {
+                new Target<RqRegex>() {
                     @Override
-                    public Take take(final RqRegex req) {
+                    public Take route(final RqRegex req) {
                         return new TkButton(req.matcher().group(1));
                     }
                 }
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/t/([0-9]+)-([a-f0-9]+)",
-                new TsRegex.Fast() {
+                new Target<RqRegex>() {
                     @Override
-                    public Take take(final RqRegex req) {
+                    public Take route(final RqRegex req) {
                         return new TkDaemon(
                             req, talks,
                             Long.parseLong(req.matcher().group(1)),
@@ -230,23 +239,23 @@ public final class App implements Takes {
                         );
                     }
                 }
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/p/([/a-zA-Z0-9_\\-\\.]+)",
-                new TsRegex.Fast() {
+                new Target<RqRegex>() {
                     @Override
-                    public Take take(final RqRegex req) throws IOException {
+                    public Take route(final RqRegex req) throws IOException {
                         return new TkSiblings(
                             talks, req.matcher().group(1), req
                         );
                     }
                 }
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/t/([0-9]+)",
-                new TsRegex.Fast() {
+                new Target<RqRegex>() {
                     @Override
-                    public Take take(final RqRegex req) throws IOException {
+                    public Take route(final RqRegex req) throws IOException {
                         return new TkAdminOnly(
                             new TkTalk(
                                 talks, req,
@@ -256,12 +265,12 @@ public final class App implements Takes {
                         );
                     }
                 }
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/t/([0-9]+)/kill",
-                new TsRegex.Fast() {
+                new Target<RqRegex>() {
                     @Override
-                    public Take take(final RqRegex req) throws IOException {
+                    public Take route(final RqRegex req) throws IOException {
                         return new TkAdminOnly(
                             new TkTalkKill(
                                 talks, Long.parseLong(req.matcher().group(1))
@@ -270,12 +279,12 @@ public final class App implements Takes {
                         );
                     }
                 }
-            )
-            .with(
+            ),
+            new FkRegex(
                 "/t/([0-9]+)/delete",
-                new TsRegex.Fast() {
+                new Target<RqRegex>() {
                     @Override
-                    public Take take(final RqRegex req) throws IOException {
+                    public Take route(final RqRegex req) throws IOException {
                         return new TkAdminOnly(
                             new TkTalkDelete(
                                 talks, Long.parseLong(req.matcher().group(1))
@@ -284,7 +293,8 @@ public final class App implements Takes {
                         );
                     }
                 }
-            );
+            )
+        );
     }
 
 }
