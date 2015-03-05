@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.takes</groupId>
             <artifactId>takes</artifactId>
-            <version>0.4.2</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>

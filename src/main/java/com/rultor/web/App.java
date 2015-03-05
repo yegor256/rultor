@@ -43,17 +43,17 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Request;
 import org.takes.Take;
 import org.takes.Takes;
-import org.takes.facets.auth.CcHex;
-import org.takes.facets.auth.CcPlain;
-import org.takes.facets.auth.CcSafe;
-import org.takes.facets.auth.CcSalted;
-import org.takes.facets.auth.CcXOR;
 import org.takes.facets.auth.Pass;
 import org.takes.facets.auth.PsByFlag;
 import org.takes.facets.auth.PsChain;
 import org.takes.facets.auth.PsCookie;
-import org.takes.facets.auth.PsGithub;
 import org.takes.facets.auth.TsAuth;
+import org.takes.facets.auth.codecs.CcCompact;
+import org.takes.facets.auth.codecs.CcHex;
+import org.takes.facets.auth.codecs.CcSafe;
+import org.takes.facets.auth.codecs.CcSalted;
+import org.takes.facets.auth.codecs.CcXOR;
+import org.takes.facets.auth.social.PsGithub;
 import org.takes.facets.fallback.Fallback;
 import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TsFallback;
@@ -120,7 +120,7 @@ public final class App implements Takes {
                     new CcSafe(
                         new CcHex(
                             new CcXOR(
-                                new CcSalted(new CcPlain()),
+                                new CcSalted(new CcCompact()),
                                 Manifests.read("Rultor-SecurityKey")
                             )
                         )
