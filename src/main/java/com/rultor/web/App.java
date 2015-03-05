@@ -45,6 +45,7 @@ import org.takes.Take;
 import org.takes.Takes;
 import org.takes.facets.auth.CcHex;
 import org.takes.facets.auth.CcPlain;
+import org.takes.facets.auth.CcSafe;
 import org.takes.facets.auth.CcSalted;
 import org.takes.facets.auth.CcXOR;
 import org.takes.facets.auth.Pass;
@@ -115,10 +116,12 @@ public final class App implements Takes {
             new PsChain(
                 new PsFake(),
                 new PsCookie(
-                    new CcHex(
-                        new CcXOR(
-                            new CcSalted(new CcPlain()),
-                            Manifests.read("Rultor-SecurityKey")
+                    new CcSafe(
+                        new CcHex(
+                            new CcXOR(
+                                new CcSalted(new CcPlain()),
+                                Manifests.read("Rultor-SecurityKey")
+                            )
                         )
                     )
                 ),
