@@ -188,7 +188,7 @@
     </xsl:template>
     <xsl:template match="identity">
         <span title="Github account logged in: {urn}">
-            <xsl:value-of select="name"/>
+            <xsl:value-of select="login"/>
         </span>
         <span>
             <a title="log out" href="{/page/links/link[@rel='takes:logout']/@href}">
