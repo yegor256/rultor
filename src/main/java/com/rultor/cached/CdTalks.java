@@ -106,6 +106,7 @@ public final class CdTalks implements Talks {
     }
 
     @Override
+    @Cacheable
     public Iterable<Talk> active() {
         return Lists.newArrayList(
             Iterables.transform(
@@ -121,6 +122,7 @@ public final class CdTalks implements Talks {
     }
 
     @Override
+    @Cacheable
     public Iterable<Talk> recent() {
         return Lists.newArrayList(
             Iterables.transform(
