@@ -250,40 +250,43 @@ public final class DyTalks implements Talks {
 
     @Override
     public Iterable<Talk> recent() {
-        return Iterables.filter(
-            Iterables.transform(
-                this.region.table(DyTalks.TBL)
-                    .frame()
-                    .through(
-                        new QueryValve()
-                            .withIndexName(DyTalks.IDX_ACTIVE)
-                            .withScanIndexForward(false)
-                            .withConsistentRead(false)
-                            .withLimit(Tv.TWENTY)
-                            .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
-                    )
-                    .where(
-                        DyTalks.ATTR_ACTIVE, Boolean.toString(false)
-                    ),
-                new Function<Item, Talk>() {
+        return Iterables.limit(
+            Iterables.filter(
+                Iterables.transform(
+                    this.region.table(DyTalks.TBL)
+                        .frame()
+                        .through(
+                            new QueryValve()
+                                .withIndexName(DyTalks.IDX_ACTIVE)
+                                .withScanIndexForward(false)
+                                .withConsistentRead(false)
+                                .withLimit(Tv.FIVE)
+                                .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
+                        )
+                        .where(
+                            DyTalks.ATTR_ACTIVE, Boolean.toString(false)
+                        ),
+                    new Function<Item, Talk>() {
+                        @Override
+                        public Talk apply(final Item input) {
+                            return new DyTalk(input);
+                        }
+                    }
+                ),
+                new Predicate<Talk>() {
                     @Override
-                    public Talk apply(final Item input) {
-                        return new DyTalk(input);
+                    public boolean apply(final Talk talk) {
+                        try {
+                            return !talk.read().nodes(
+                                "/talk[@public='true']"
+                            ).isEmpty();
+                        } catch (final IOException ex) {
+                            throw new IllegalStateException(ex);
+                        }
                     }
                 }
             ),
-            new Predicate<Talk>() {
-                @Override
-                public boolean apply(final Talk talk) {
-                    try {
-                        return !talk.read().nodes(
-                            "/talk[@public='true']"
-                        ).isEmpty();
-                    } catch (final IOException ex) {
-                        throw new IllegalStateException(ex);
-                    }
-                }
-            }
+            Tv.FIVE
         );
     }
 
