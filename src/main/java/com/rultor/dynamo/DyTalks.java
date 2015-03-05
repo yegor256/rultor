@@ -38,8 +38,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
@@ -250,45 +248,42 @@ public final class DyTalks implements Talks {
         );
     }
 
-    @Cacheable
     @Override
     public Iterable<Talk> recent() {
-        return Lists.newArrayList(
-            Iterables.filter(
-                Iterables.transform(
-                    this.region.table(DyTalks.TBL)
-                        .frame()
-                        .through(
-                            new QueryValve()
-                                .withIndexName(DyTalks.IDX_ACTIVE)
-                                .withScanIndexForward(false)
-                                .withConsistentRead(false)
-                                .withLimit(Tv.TWENTY)
-                                .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
-                        )
-                        .where(
-                            DyTalks.ATTR_ACTIVE, Boolean.toString(false)
-                        ),
-                    new Function<Item, Talk>() {
-                        @Override
-                        public Talk apply(final Item input) {
-                            return new DyTalk(input);
-                        }
-                    }
-                ),
-                new Predicate<Talk>() {
+        return Iterables.filter(
+            Iterables.transform(
+                this.region.table(DyTalks.TBL)
+                    .frame()
+                    .through(
+                        new QueryValve()
+                            .withIndexName(DyTalks.IDX_ACTIVE)
+                            .withScanIndexForward(false)
+                            .withConsistentRead(false)
+                            .withLimit(Tv.TWENTY)
+                            .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
+                    )
+                    .where(
+                        DyTalks.ATTR_ACTIVE, Boolean.toString(false)
+                    ),
+                new Function<Item, Talk>() {
                     @Override
-                    public boolean apply(final Talk talk) {
-                        try {
-                            return !talk.read().nodes(
-                                "/talk[@public='true']"
-                            ).isEmpty();
-                        } catch (final IOException ex) {
-                            throw new IllegalStateException(ex);
-                        }
+                    public Talk apply(final Item input) {
+                        return new DyTalk(input);
                     }
                 }
-            )
+            ),
+            new Predicate<Talk>() {
+                @Override
+                public boolean apply(final Talk talk) {
+                    try {
+                        return !talk.read().nodes(
+                            "/talk[@public='true']"
+                        ).isEmpty();
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                }
+            }
         );
     }
 

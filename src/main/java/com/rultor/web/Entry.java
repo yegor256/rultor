@@ -45,6 +45,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rultor.Toggles;
+import com.rultor.cached.CdTalks;
 import com.rultor.dynamo.DyTalks;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
@@ -93,8 +94,10 @@ public final class Entry {
      * @throws IOException If fails
      */
     public void exec() throws IOException {
-        final Talks talks = new DyTalks(
-            this.dynamo(), this.sttc().counters().get("rt-talk")
+        final Talks talks = new CdTalks(
+            new DyTalks(
+                this.dynamo(), this.sttc().counters().get("rt-talk")
+            )
         );
         final Collection<Pulse.Tick> ticks = Collections.synchronizedCollection(
             EvictingQueue.<Pulse.Tick>create(
