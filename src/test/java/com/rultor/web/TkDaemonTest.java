@@ -34,7 +34,10 @@ import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.takes.Request;
 import org.takes.Take;
+import org.takes.Takes;
+import org.takes.facets.auth.TsAuth;
 import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
 
@@ -53,12 +56,20 @@ public final class TkDaemonTest {
     @Test
     public void showsLogInHtml() throws Exception {
         final Talks talks = new Talks.InDir();
-        final Take take = new TkDaemon(
-            new RqFake(), talks, 1L, "abcdef"
+        final Takes takes = new TsAuth(
+            new Takes() {
+                @Override
+                public Take route(final Request request) {
+                    return new TkDaemon(request, talks, 1L, "abcdef");
+                }
+            },
+            new PsFake()
         );
         talks.create("test", Talk.TEST_NAME);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new RsPrint(take.act()).printBody()),
+            XhtmlMatchers.xhtml(
+                new RsPrint(takes.route(new RqFake()).act()).printBody()
+            ),
             XhtmlMatchers.hasXPath("/xhtml:html/xhtml:body")
         );
     }
