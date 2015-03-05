@@ -33,6 +33,7 @@ import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.facets.auth.XeGithubLink;
@@ -59,6 +60,7 @@ import org.takes.rs.xe.XeStylesheet;
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
+@EqualsAndHashCode(of = "origin")
 final class RsPage implements Response {
 
     /**

@@ -66,6 +66,7 @@ import org.takes.tk.TkFixed;
 import org.takes.tk.TkRedirect;
 import org.takes.ts.TsClasspath;
 import org.takes.ts.TsMeasured;
+import org.takes.ts.TsVersioned;
 import org.takes.ts.TsWithHeaders;
 import org.takes.ts.TsWithType;
 import org.takes.ts.fork.FkParams;
@@ -138,9 +139,7 @@ public final class App implements Takes {
         );
         takes = new TsFlash(takes);
         takes = new TsFallback(
-            new TsWithHeaders(takes)
-                .with("Vary", "Cookie")
-                .with("X-Rultor-Revision", rev),
+            takes,
             new Fallback() {
                 @Override
                 public Take take(final RqFallback req) throws IOException {
@@ -161,10 +160,9 @@ public final class App implements Takes {
                 }
             }
         );
-        this.origin = new TsWithHeaders(
-            new TsMeasured(takes),
-            String.format("X-Rultor-Revision: %s", rev)
-        );
+        this.origin = new TsWithHeaders(new TsVersioned(new TsMeasured(takes)))
+            .with("X-Rultor-Revision", rev)
+            .with("Vary", "Cookie");
     }
 
     @Override
