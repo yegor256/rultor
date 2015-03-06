@@ -91,77 +91,71 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">     * @param num Talk number</em>
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">     * @param hsh Hash of the daemon</em>
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">     * @checkstyle ParameterNumberCheck (5 lines)</em>
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <a href="../../../com/rultor/web/TkDaemon.html">TkDaemon</a>(<strong class="jxr_keyword">final</strong> Request req, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talks.html">Talks</a> tlks,
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> num, <strong class="jxr_keyword">final</strong> String hsh) {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">this</strong>.user = <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/User.html">User</a>(req);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>          <strong class="jxr_keyword">this</strong>.talks = tlks;
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>          <strong class="jxr_keyword">this</strong>.number = num;
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>          <strong class="jxr_keyword">this</strong>.hash = hsh;
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      @Override
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">public</strong> Response act() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.talks.exists(<strong class="jxr_keyword">this</strong>.number)) {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RsForward(
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <strong class="jxr_keyword">new</strong> RsFlash(
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>                     <span class="jxr_string">"there is no such page here"</span>,
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>                     Level.WARNING
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>                 )
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>             );
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>         }
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.user.anonymous()) {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RsForward(
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>                 <strong class="jxr_keyword">new</strong> RsFlash(
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>                     <span class="jxr_string">"this page is for logged in users only"</span>,
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>                     Level.WARNING
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>                 )
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>             );
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>         }
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.user.canSee(<strong class="jxr_keyword">this</strong>.talks.get(<strong class="jxr_keyword">this</strong>.number))) {
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RsForward(
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>                 <strong class="jxr_keyword">new</strong> RsFlash(
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>                     String.format(
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>                         <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>                         <span class="jxr_string">"according to .rultor.yml, you (%s) are not allowed to see this"</span>,
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>                         <strong class="jxr_keyword">this</strong>.user
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>                     ),
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>                     Level.WARNING
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>                 )
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>             );
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         }
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> RsFluent()
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>             .withBody(<strong class="jxr_keyword">this</strong>.html())
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>             .withType(<span class="jxr_string">"text/html; charset=utf-8"</span>)
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>             .withHeader(
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>                 <span class="jxr_string">"X-Rultor-Daemon"</span>,
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>                 String.format(<span class="jxr_string">"%s-%s"</span>, <strong class="jxr_keyword">this</strong>.number, <strong class="jxr_keyword">this</strong>.hash)
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>             );
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     }
-<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * Get HTML.</em>
-<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * @return HTML</em>
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">private</strong> InputStream html() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> talk = <strong class="jxr_keyword">this</strong>.talks.get(<strong class="jxr_keyword">this</strong>.number);
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <strong class="jxr_keyword">final</strong> String head = IOUtils.toString(
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>             <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"daemon/head.html"</span>),
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>             CharEncoding.UTF_8
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>         ).replace(<span class="jxr_string">"TALK_NAME"</span>, talk.name());
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SequenceInputStream(
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>             Collections.enumeration(
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>                 Arrays.asList(
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>                     IOUtils.toInputStream(head),
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/Tail.html">Tail</a>(talk.read(), <strong class="jxr_keyword">this</strong>.hash).read(),
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>                     <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"daemon/tail.html"</span>)
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>                 )
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>             )
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>         );
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>     }
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
-<a class="jxr_linenumber" name="L156" href="#L156">156</a> }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <a href="../../../com/rultor/web/TkDaemon.html">TkDaemon</a>(<strong class="jxr_keyword">final</strong> Request req, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talks.html">Talks</a> tlks,
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> num, <strong class="jxr_keyword">final</strong> String hsh) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          <strong class="jxr_keyword">this</strong>.user = <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/User.html">User</a>(req);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          <strong class="jxr_keyword">this</strong>.talks = tlks;
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          <strong class="jxr_keyword">this</strong>.number = num;
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          <strong class="jxr_keyword">this</strong>.hash = hsh;
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      }
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      @Override
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">public</strong> Response act() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.talks.exists(<strong class="jxr_keyword">this</strong>.number)) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RsForward(
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>                 <strong class="jxr_keyword">new</strong> RsFlash(
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>                     <span class="jxr_string">"there is no such page here"</span>,
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>                     Level.WARNING
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>                 )
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>             );
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.user.anonymous()
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>             &amp;&amp; !<strong class="jxr_keyword">this</strong>.user.canSee(<strong class="jxr_keyword">this</strong>.talks.get(<strong class="jxr_keyword">this</strong>.number))) {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RsForward(
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>                 <strong class="jxr_keyword">new</strong> RsFlash(
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>                     String.format(
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>                         <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>                         <span class="jxr_string">"according to .rultor.yml, you (%s) are not allowed to see this"</span>,
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>                         <strong class="jxr_keyword">this</strong>.user
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>                     ),
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>                     Level.WARNING
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>                 )
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>             );
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         }
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> RsFluent()
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             .withBody(<strong class="jxr_keyword">this</strong>.html())
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>             .withType(<span class="jxr_string">"text/html; charset=utf-8"</span>)
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>             .withHeader(
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                 <span class="jxr_string">"X-Rultor-Daemon"</span>,
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                 String.format(<span class="jxr_string">"%s-%s"</span>, <strong class="jxr_keyword">this</strong>.number, <strong class="jxr_keyword">this</strong>.hash)
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>             );
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     }
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">     * Get HTML.</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">     * @return HTML</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">private</strong> InputStream html() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> talk = <strong class="jxr_keyword">this</strong>.talks.get(<strong class="jxr_keyword">this</strong>.number);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>         <strong class="jxr_keyword">final</strong> String head = IOUtils.toString(
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>             <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"daemon/head.html"</span>),
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>             CharEncoding.UTF_8
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         ).replace(<span class="jxr_string">"TALK_NAME"</span>, talk.name());
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SequenceInputStream(
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>             Collections.enumeration(
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                 Arrays.asList(
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>                     IOUtils.toInputStream(head),
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/Tail.html">Tail</a>(talk.read(), <strong class="jxr_keyword">this</strong>.hash).read(),
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>                     <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"daemon/tail.html"</span>)
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>                 )
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>             )
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>         );
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     }
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

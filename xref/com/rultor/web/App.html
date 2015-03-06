@@ -240,7 +240,7 @@
 <a class="jxr_linenumber" name="L232" href="#L232">232</a>                 <span class="jxr_string">"/t/([0-9]+)-([a-f0-9]+)"</span>,
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>                 <strong class="jxr_keyword">new</strong> Target&lt;RqRegex&gt;() {
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>                     @Override
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>                     <strong class="jxr_keyword">public</strong> Take route(<strong class="jxr_keyword">final</strong> RqRegex req) {
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>                     <strong class="jxr_keyword">public</strong> Take route(<strong class="jxr_keyword">final</strong> RqRegex req) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>                         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/TkDaemon.html">TkDaemon</a>(
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>                             req, talks,
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>                             Long.parseLong(req.matcher().group(1)),
