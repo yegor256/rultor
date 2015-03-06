@@ -53,25 +53,30 @@ import org.takes.facets.forward.RsForward;
 final class User {
 
     /**
-     * Request.
+     * Identity.
      */
-    private final transient Request request;
+    private final transient Identity identity;
 
     /**
      * Ctor.
      * @param req Request
+     * @throws IOException If fails
      */
-    User(final Request req) {
-        this.request = req;
+    User(final Request req) throws IOException {
+        this.identity = new RqAuth(req).identity();
+    }
+
+    @Override
+    public String toString() {
+        return this.identity.toString();
     }
 
     /**
      * Is it an anonymous user?
      * @return TRUE if I'm anonymous
-     * @throws IOException If fails
      */
-    public boolean anonymous() throws IOException {
-        return new RqAuth(this.request).identity().equals(Identity.ANONYMOUS);
+    public boolean anonymous() {
+        return this.identity.equals(Identity.ANONYMOUS);
     }
 
     /**
@@ -94,14 +99,13 @@ final class User {
         if (readers.isEmpty()) {
             granted = true;
         } else {
-            final Identity self = new RqAuth(this.request).identity();
             granted = Iterables.any(
                 readers,
                 new Predicate<String>() {
                     @Override
                     public boolean apply(final String input) {
-                        return !self.equals(Identity.ANONYMOUS)
-                            && input.trim().equals(self.urn());
+                        return !User.this.identity.equals(Identity.ANONYMOUS)
+                            && input.trim().equals(User.this.identity.urn());
                     }
                 }
             );

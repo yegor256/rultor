@@ -83,9 +83,10 @@ final class TkDaemon implements Take {
      * @param num Talk number
      * @param hsh Hash of the daemon
      * @checkstyle ParameterNumberCheck (5 lines)
+     * @throws IOException If fails
      */
     TkDaemon(final Request req, final Talks tlks,
-        final long num, final String hsh) {
+        final long num, final String hsh) throws IOException {
         this.user = new User(req);
         this.talks = tlks;
         this.number = num;
@@ -102,15 +103,8 @@ final class TkDaemon implements Take {
                 )
             );
         }
-        if (this.user.anonymous()) {
-            throw new RsForward(
-                new RsFlash(
-                    "this page is for logged in users only",
-                    Level.WARNING
-                )
-            );
-        }
-        if (!this.user.canSee(this.talks.get(this.number))) {
+        if (!this.user.anonymous()
+            && !this.user.canSee(this.talks.get(this.number))) {
             throw new RsForward(
                 new RsFlash(
                     String.format(

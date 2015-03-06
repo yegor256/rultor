@@ -232,7 +232,7 @@ public final class App implements Takes {
                 "/t/([0-9]+)-([a-f0-9]+)",
                 new Target<RqRegex>() {
                     @Override
-                    public Take route(final RqRegex req) {
+                    public Take route(final RqRegex req) throws IOException {
                         return new TkDaemon(
                             req, talks,
                             Long.parseLong(req.matcher().group(1)),

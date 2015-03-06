@@ -32,6 +32,7 @@ package com.rultor.web;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
+import java.io.IOException;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.takes.Request;
@@ -59,7 +60,7 @@ public final class TkDaemonTest {
         final Takes takes = new TsAuth(
             new Takes() {
                 @Override
-                public Take route(final Request request) {
+                public Take route(final Request request) throws IOException {
                     return new TkDaemon(request, talks, 1L, "abcdef");
                 }
             },
