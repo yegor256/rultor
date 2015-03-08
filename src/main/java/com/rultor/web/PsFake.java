@@ -31,6 +31,8 @@ package com.rultor.web;
 
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.manifests.Manifests;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import org.takes.Request;
 import org.takes.Response;
@@ -47,28 +49,28 @@ import org.takes.facets.auth.Pass;
 final class PsFake implements Pass {
 
     @Override
-    public Identity enter(final Request request) {
-        final Identity identity;
+    public Collection<Identity> enter(final Request request) {
+        final Collection<Identity> users = new ArrayList<Identity>(1);
         if (Manifests.read("Rultor-DynamoKey").startsWith("AAAAA")) {
-            identity = new Identity() {
-                @Override
-                public String urn() {
-                    return "urn:facebook:1";
+            users.add(
+                new Identity() {
+                    @Override
+                    public String urn() {
+                        return "urn:facebook:1";
+                    }
+                    @Override
+                    public Map<String, String> properties() {
+                        return new ArrayMap<String, String>()
+                            .with("login", "localhost")
+                            .with(
+                                "avatar",
+                                "http://doc.rultor.com/images/none.png"
+                            );
+                    }
                 }
-                @Override
-                public Map<String, String> properties() {
-                    return new ArrayMap<String, String>()
-                        .with("login", "localhost")
-                        .with(
-                            "avatar",
-                            "http://doc.rultor.com/images/none.png"
-                        );
-                }
-            };
-        } else {
-            identity = Identity.ANONYMOUS;
+            );
         }
-        return identity;
+        return users;
     }
 
     @Override

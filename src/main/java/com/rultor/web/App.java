@@ -174,16 +174,6 @@ public final class App extends TsWrap {
             takes,
             new PsChain(
                 new PsFake(),
-                new PsCookie(
-                    new CcSafe(
-                        new CcHex(
-                            new CcXOR(
-                                new CcSalted(new CcCompact()),
-                                Manifests.read("Rultor-SecurityKey")
-                            )
-                        )
-                    )
-                ),
                 new PsByFlag(
                     new PsByFlag.Pair(
                         PsGithub.class.getSimpleName(),
@@ -195,6 +185,16 @@ public final class App extends TsWrap {
                     new PsByFlag.Pair(
                         PsLogout.class.getSimpleName(),
                         new PsLogout()
+                    )
+                ),
+                new PsCookie(
+                    new CcSafe(
+                        new CcHex(
+                            new CcXOR(
+                                new CcSalted(new CcCompact()),
+                                Manifests.read("Rultor-SecurityKey")
+                            )
+                        )
                     )
                 )
             )
