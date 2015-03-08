@@ -31,16 +31,17 @@ package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 import lombok.EqualsAndHashCode;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.facets.auth.XeIdentity;
+import org.takes.facets.auth.XeLogoutLink;
 import org.takes.facets.auth.social.XeGithubLink;
 import org.takes.facets.flash.XeFlash;
-import org.takes.rs.RsNegotiation;
+import org.takes.facets.fork.FkTypes;
+import org.takes.facets.fork.RsFork;
 import org.takes.rs.RsWithType;
+import org.takes.rs.RsWrap;
 import org.takes.rs.RsXSLT;
 import org.takes.rs.xe.RsXembly;
 import org.takes.rs.xe.XeAppend;
@@ -60,13 +61,8 @@ import org.takes.rs.xe.XeStylesheet;
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-@EqualsAndHashCode(of = "origin")
-final class RsPage implements Response {
-
-    /**
-     * Origin.
-     */
-    private final transient Response origin;
+@EqualsAndHashCode(callSuper = true)
+final class RsPage extends RsWrap {
 
     /**
      * Ctor.
@@ -77,40 +73,52 @@ final class RsPage implements Response {
      */
     RsPage(final String xsl, final Request req, final XeSource... src)
         throws IOException {
-        final XeSource xml = new XeAppend(
-            "page",
-            new XeMillis(false),
-            new XeChain(src),
-            new XeMillis(true),
-            new XeDate(),
-            new XeSLA(),
-            new XeLocalhost(),
-            new XeIdentity(req),
-            new XeFlash(req),
-            new XeGithubLink(req, Manifests.read("Rultor-GithubId")),
+        super(RsPage.make(xsl, req, src));
+    }
+
+    /**
+     * Make it.
+     * @param xsl XSL
+     * @param req Request
+     * @param src Source
+     * @return Response
+     * @throws IOException If fails
+     */
+    private static Response make(final String xsl, final Request req,
+        final XeSource... src) throws IOException {
+        final Response raw = new RsXembly(
+            new XeStylesheet(xsl),
             new XeAppend(
-                "version",
-                new XeAppend("name", Manifests.read("Rultor-Version")),
-                new XeAppend("revision", Manifests.read("Rultor-Revision")),
-                new XeAppend("date", Manifests.read("Rultor-Date"))
+                "page",
+                new XeMillis(false),
+                new XeChain(src),
+                new XeMillis(true),
+                new XeDate(),
+                new XeSLA(),
+                new XeLocalhost(),
+                new XeIdentity(req),
+                new XeFlash(req),
+                new XeGithubLink(req, Manifests.read("Rultor-GithubId")),
+                new XeLogoutLink(req),
+                new XeAppend(
+                    "version",
+                    new XeAppend("name", Manifests.read("Rultor-Version")),
+                    new XeAppend("revision", Manifests.read("Rultor-Revision")),
+                    new XeAppend("date", Manifests.read("Rultor-Date"))
+                )
             )
         );
-        final Response raw = new RsXembly(new XeStylesheet(xsl), xml);
-        this.origin = new RsNegotiation(req)
-            .with("*/*", new RsXSLT(new RsWithType(raw, "text/html")))
-            .with(
+        return new RsFork(
+            req,
+            new FkTypes(
                 "application/xml,text/xml",
                 new RsWithType(raw, "text/xml")
-            );
+            ),
+            new FkTypes(
+                "*/*",
+                new RsXSLT(new RsWithType(raw, "text/html"))
+            )
+        );
     }
 
-    @Override
-    public List<String> head() throws IOException {
-        return this.origin.head();
-    }
-
-    @Override
-    public InputStream body() throws IOException {
-        return this.origin.body();
-    }
 }

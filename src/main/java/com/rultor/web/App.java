@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.immutable.ArrayMap;
 import com.jcabi.manifests.Manifests;
 import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
@@ -43,10 +42,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Request;
 import org.takes.Take;
 import org.takes.Takes;
-import org.takes.facets.auth.Pass;
 import org.takes.facets.auth.PsByFlag;
 import org.takes.facets.auth.PsChain;
 import org.takes.facets.auth.PsCookie;
+import org.takes.facets.auth.PsLogout;
 import org.takes.facets.auth.TsAuth;
 import org.takes.facets.auth.codecs.CcCompact;
 import org.takes.facets.auth.codecs.CcHex;
@@ -58,6 +57,11 @@ import org.takes.facets.fallback.Fallback;
 import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TsFallback;
 import org.takes.facets.flash.TsFlash;
+import org.takes.facets.fork.FkParams;
+import org.takes.facets.fork.FkRegex;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.Target;
+import org.takes.facets.fork.TsFork;
 import org.takes.facets.forward.TsForward;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
@@ -69,11 +73,7 @@ import org.takes.ts.TsMeasured;
 import org.takes.ts.TsVersioned;
 import org.takes.ts.TsWithHeaders;
 import org.takes.ts.TsWithType;
-import org.takes.ts.fork.FkParams;
-import org.takes.ts.fork.FkRegex;
-import org.takes.ts.fork.RqRegex;
-import org.takes.ts.fork.Target;
-import org.takes.ts.fork.TsFork;
+import org.takes.ts.TsWrap;
 
 /**
  * App.
@@ -88,12 +88,12 @@ import org.takes.ts.fork.TsFork;
     "PMD.TooManyMethods", "PMD.ExcessiveMethodLength",
     "PMD.ExcessiveImports"
 })
-public final class App implements Takes {
+public final class App extends TsWrap {
 
     /**
-     * Takes.
+     * Revision of rultor.
      */
-    private final transient Takes origin;
+    private static final String REV = Manifests.read("Rultor-Revision");
 
     /**
      * Ctor.
@@ -103,6 +103,18 @@ public final class App implements Takes {
      */
     public App(final Talks talks, final Collection<Pulse.Tick> ticks,
         final Toggles toggles) {
+        super(App.make(talks, ticks, toggles));
+    }
+
+    /**
+     * Ctor.
+     * @param talks Talks
+     * @param ticks Ticks
+     * @param toggles Toggles
+     * @return Takes
+     */
+    private static Takes make(final Talks talks,
+        final Collection<Pulse.Tick> ticks, final Toggles toggles) {
         if (!"UTF-8".equals(Charset.defaultCharset().name())) {
             throw new IllegalStateException(
                 String.format(
@@ -110,9 +122,55 @@ public final class App implements Takes {
                 )
             );
         }
-        final String rev = Manifests.read("Rultor-Revision");
-        Takes takes = new TsForward(App.regex(talks, ticks, toggles));
-        takes = new TsAuth(
+        final Takes takes = App.fallback(
+            new TsFlash(
+                App.auth(
+                    new TsForward(App.regex(talks, ticks, toggles))
+                )
+            )
+        );
+        return new TsWithHeaders(new TsVersioned(new TsMeasured(takes)))
+            .with("X-Rultor-Revision", App.REV)
+            .with("Vary", "Cookie");
+    }
+
+    /**
+     * Authenticated.
+     * @param takes Takes
+     * @return Authenticated takes
+     */
+    private static Takes fallback(final Takes takes) {
+        return new TsFallback(
+            takes,
+            new Fallback() {
+                @Override
+                public Take take(final RqFallback req) throws IOException {
+                    final String err = ExceptionUtils.getStackTrace(
+                        req.throwable()
+                    );
+                    return new TkFixed(
+                        new RsWithStatus(
+                            new RsWithType(
+                                new RsVelocity(
+                                    this.getClass().getResource("error.html.vm")
+                                ).with("err", err).with("rev", App.REV),
+                                "text/html"
+                            ),
+                            HttpURLConnection.HTTP_INTERNAL_ERROR
+                        )
+                    );
+                }
+            }
+        );
+    }
+
+    /**
+     * Authenticated.
+     * @param takes Takes
+     * @return Authenticated takes
+     */
+    private static Takes auth(final Takes takes) {
+        return new TsAuth(
             takes,
             new PsChain(
                 new PsFake(),
@@ -127,47 +185,20 @@ public final class App implements Takes {
                     )
                 ),
                 new PsByFlag(
-                    new ArrayMap<String, Pass>().with(
+                    new PsByFlag.Pair(
                         PsGithub.class.getSimpleName(),
                         new PsGithub(
                             Manifests.read("Rultor-GithubId"),
                             Manifests.read("Rultor-GithubSecret")
                         )
+                    ),
+                    new PsByFlag.Pair(
+                        PsLogout.class.getSimpleName(),
+                        new PsLogout()
                     )
                 )
             )
         );
-        takes = new TsFlash(takes);
-        takes = new TsFallback(
-            takes,
-            new Fallback() {
-                @Override
-                public Take take(final RqFallback req) throws IOException {
-                    final String err = ExceptionUtils.getStackTrace(
-                        req.throwable()
-                    );
-                    return new TkFixed(
-                        new RsWithStatus(
-                            new RsWithType(
-                                new RsVelocity(
-                                    this.getClass().getResource("error.html.vm")
-                                ).with("err", err).with("rev", rev),
-                                "text/html"
-                            ),
-                            HttpURLConnection.HTTP_INTERNAL_ERROR
-                        )
-                    );
-                }
-            }
-        );
-        this.origin = new TsWithHeaders(new TsVersioned(new TsMeasured(takes)))
-            .with("X-Rultor-Revision", rev)
-            .with("Vary", "Cookie");
-    }
-
-    @Override
-    public Take route(final Request request) throws IOException {
-        return this.origin.route(request);
     }
 
     /**

@@ -46,7 +46,7 @@ import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.forward.RsForward;
-import org.takes.rq.RqQuery;
+import org.takes.rq.RqHref;
 import org.takes.rs.xe.XeAppend;
 import org.takes.rs.xe.XeDirectives;
 import org.takes.rs.xe.XeLink;
@@ -95,7 +95,7 @@ final class TkSiblings implements Take {
         throws IOException {
         this.talks = tks;
         this.repo = name;
-        final List<String> args = new RqQuery(req).param("s");
+        final List<String> args = new RqHref(req).href().param("s");
         if (args.isEmpty()) {
             this.since = new Date(Long.MAX_VALUE);
         } else {
