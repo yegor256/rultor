@@ -9,10 +9,16 @@ install: |-
   cd src/bundle
   sudo bundle install
   cd ../..
-architect: [yegor256, alex-palevsky]
-assets: {secring.gpg: yegor256/home#assets/secring.gpg, id_rsa: yegor256/home#assets/heroku-key,
-  settings.xml: yegor256/home#assets/rultor/settings.xml, pubring.gpg: yegor256/home#assets/pubring.gpg,
-  id_rsa.pub: yegor256/home#assets/heroku-key.pub, s3cfg: yegor256/home#assets/s3cfg}
+architect:
+- yegor256
+- alex-palevsky
+assets:
+  secring.gpg: yegor256/home#assets/secring.gpg
+  id_rsa: yegor256/home#assets/heroku-key
+  settings.xml: yegor256/home#assets/rultor/settings.xml
+  pubring.gpg: yegor256/home#assets/pubring.gpg
+  id_rsa.pub: yegor256/home#assets/heroku-key.pub
+  s3cfg: yegor256/home#assets/s3cfg
 merge:
   script: |-
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
@@ -25,7 +31,8 @@ deploy:
     mvn clean
     pdd --source=$(pwd) --verbose --file=rultor.xml
     s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml
-env: {MAVEN_OPTS: '-XX:MaxPermSize=256m -Xmx1g'}
+env:
+  MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 release:
   script: |-
     mvn versions:set "-DnewVersion=${tag}"
