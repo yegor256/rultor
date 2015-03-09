@@ -93,12 +93,13 @@
         <jersey.version>1.18.1</jersey.version>
         <saxon.version>9.1.0.8</saxon.version>
         <xpathfactorypropfile>${basedir}/src/test/resources/XPathFactory.properties</xpathfactorypropfile>
+        <timestamp>${maven.build.timestamp}</timestamp>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.takes</groupId>
             <artifactId>takes</artifactId>
-            <version>0.8.3</version>
+            <version>0.8.4</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>

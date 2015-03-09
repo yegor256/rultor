@@ -1,6 +1,6 @@
 Rultor-Revision: ${buildNumber}
 Rultor-Version: ${project.version}
-Rultor-Date: 1-Jan-2015
+Rultor-Date: ${timestamp}
 Rultor-DynamoKey: ${failsafe.dynamo.key}
 Rultor-DynamoSecret: ${failsafe.dynamo.secret}
 Rultor-GithubId: ${failsafe.github.id}
