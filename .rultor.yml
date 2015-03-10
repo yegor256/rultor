@@ -25,6 +25,13 @@ merge:
     mvn clean site -Psite --errors --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=/dev/null
+  commanders:
+  - yegor256
+  - carlosmiranda
+  - pinaf
+  - ggajos
+  - krzyk
+  - longtimeago
 deploy:
   script: |-
     mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode
