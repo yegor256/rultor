@@ -66,3 +66,5 @@ release:
     git reset HEAD~1
     curl -f --connect-timeout 30 --retry 8 --retry-delay 60 http://www.rultor.com
     mvn clean site-deploy -Psite --errors --settings ../settings.xml --batch-mode
+  commanders:
+  - yegor256
