@@ -10,8 +10,8 @@ install: |-
   sudo bundle install
   cd ../..
 architect:
-- alex-palevsky
 - yegor256
+- alex-palevsky
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
   id_rsa: yegor256/home#assets/heroku-key
