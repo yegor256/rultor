@@ -38,6 +38,7 @@ import org.junit.Test;
 import org.takes.Request;
 import org.takes.Take;
 import org.takes.Takes;
+import org.takes.facets.auth.PsFake;
 import org.takes.facets.auth.TsAuth;
 import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
@@ -64,7 +65,7 @@ public final class TkDaemonTest {
                     return new TkDaemon(request, talks, 1L, "abcdef");
                 }
             },
-            new PsFake()
+            new PsFake(true)
         );
         talks.create("test", Talk.TEST_NAME);
         MatcherAssert.assertThat(

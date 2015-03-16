@@ -45,6 +45,7 @@ import org.takes.Takes;
 import org.takes.facets.auth.PsByFlag;
 import org.takes.facets.auth.PsChain;
 import org.takes.facets.auth.PsCookie;
+import org.takes.facets.auth.PsFake;
 import org.takes.facets.auth.PsLogout;
 import org.takes.facets.auth.TsAuth;
 import org.takes.facets.auth.codecs.CcCompact;
@@ -173,7 +174,9 @@ public final class App extends TsWrap {
         return new TsAuth(
             takes,
             new PsChain(
-                new PsFake(),
+                new PsFake(
+                    Manifests.read("Rultor-DynamoKey").startsWith("AAAA")
+                ),
                 new PsByFlag(
                     new PsByFlag.Pair(
                         PsGithub.class.getSimpleName(),
