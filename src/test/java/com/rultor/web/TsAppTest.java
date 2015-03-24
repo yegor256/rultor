@@ -49,13 +49,13 @@ import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
 
 /**
- * Test case for {@link App}.
+ * Test case for {@link TsApp}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class AppTest {
+public final class TsAppTest {
 
     /**
      * App can render front page.
@@ -63,7 +63,7 @@ public final class AppTest {
      */
     @Test
     public void rendersHomePage() throws Exception {
-        final Takes takes = new App(
+        final Takes takes = new TsApp(
             new Talks.InDir(), Collections.<Pulse.Tick>emptyList(),
             new Toggles()
         );
@@ -87,7 +87,7 @@ public final class AppTest {
      */
     @Test
     public void rendersHomePageViaHttp() throws Exception {
-        final Takes app = new App(
+        final Takes app = new TsApp(
             new Talks.InDir(), Collections.<Pulse.Tick>emptyList(),
             new Toggles()
         );

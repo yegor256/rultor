@@ -89,7 +89,7 @@ import org.takes.ts.TsWrap;
     "PMD.TooManyMethods", "PMD.ExcessiveMethodLength",
     "PMD.ExcessiveImports"
 })
-public final class App extends TsWrap {
+public final class TsApp extends TsWrap {
 
     /**
      * Revision of rultor.
@@ -102,9 +102,9 @@ public final class App extends TsWrap {
      * @param ticks Ticks
      * @param toggles Toggles
      */
-    public App(final Talks talks, final Collection<Pulse.Tick> ticks,
+    public TsApp(final Talks talks, final Collection<Pulse.Tick> ticks,
         final Toggles toggles) {
-        super(App.make(talks, ticks, toggles));
+        super(TsApp.make(talks, ticks, toggles));
     }
 
     /**
@@ -123,15 +123,15 @@ public final class App extends TsWrap {
                 )
             );
         }
-        final Takes takes = App.fallback(
+        final Takes takes = TsApp.fallback(
             new TsFlash(
-                App.auth(
-                    new TsForward(App.regex(talks, ticks, toggles))
+                TsApp.auth(
+                    new TsForward(TsApp.regex(talks, ticks, toggles))
                 )
             )
         );
         return new TsWithHeaders(new TsVersioned(new TsMeasured(takes)))
-            .with("X-Rultor-Revision", App.REV)
+            .with("X-Rultor-Revision", TsApp.REV)
             .with("Vary", "Cookie");
     }
 
@@ -154,7 +154,7 @@ public final class App extends TsWrap {
                             new RsWithType(
                                 new RsVelocity(
                                     this.getClass().getResource("error.html.vm")
-                                ).with("err", err).with("rev", App.REV),
+                                ).with("err", err).with("rev", TsApp.REV),
                                 "text/html"
                             ),
                             HttpURLConnection.HTTP_INTERNAL_ERROR
