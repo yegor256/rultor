@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
@@ -160,15 +161,23 @@ public final class CommentsTag extends AbstractAgent {
         final Iterable<RepoCommit.Smart> commits = new Smarts<RepoCommit.Smart>(
             repo.commits().iterate(params)
         );
+        int count = 0;
         for (final RepoCommit.Smart commit : commits) {
+            if (count > Tv.TWENTY) {
+                lines.add(" * and more...");
+                break;
+            }
             lines.add(
                 String.format(
                     " * %s by @%s: %s",
                     commit.sha(),
                     commit.json().getJsonObject("author").getString("login"),
-                    commit.message().replaceAll("[^\\p{Print}]", " ")
+                    commit.message()
+                        .replaceAll("[^\\p{Print}]", " ")
+                        .replaceAll("(?<=.{50}).*", "...")
                 )
             );
+            ++count;
         }
         return Joiner.on('\n').join(lines);
     }
