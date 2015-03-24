@@ -38,6 +38,7 @@ import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -95,11 +96,12 @@ final class TkSiblings implements Take {
         throws IOException {
         this.talks = tks;
         this.repo = name;
-        final List<String> args = new RqHref(req).href().param("s");
-        if (args.isEmpty()) {
-            this.since = new Date(Long.MAX_VALUE);
+        final Iterator<String> args = new RqHref(req).href()
+            .param("s").iterator();
+        if (args.hasNext()) {
+            this.since = new Date(Long.parseLong(args.next()));
         } else {
-            this.since = new Date(Long.parseLong(args.get(0)));
+            this.since = new Date(Long.MAX_VALUE);
         }
         this.request = req;
     }
