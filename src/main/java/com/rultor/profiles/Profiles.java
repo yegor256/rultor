@@ -79,12 +79,12 @@ public final class Profiles {
                     Profiles.github().repos().get(
                         new Coordinates.Simple(
                             xml.xpath(
-                                "//request/args/arg[@name='head']/text()"
+                                "//request/args/arg[@name='fork']/text()"
                             ).get(0)
                         )
                     ),
                     xml.xpath(
-                        "//request/args/arg[@name='head_branch']/text()"
+                        "//request/args/arg[@name='fork_branch']/text()"
                     ).get(0)
                 );
             }
