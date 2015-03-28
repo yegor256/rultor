@@ -103,8 +103,8 @@ final class CommitsLog {
                     commit.sha(),
                     commit.json().getJsonObject("author").getString("login"),
                     commit.message()
-                        .replaceAll("[^\\p{Print}]", " ")
-                        .replaceAll("(?<=.{50}).*", "...")
+                        .replaceAll("[\\p{Cntrl}\\p{Space}]+", " ")
+                        .replaceAll("(?<=^.{30}).+$", "...")
                 )
             );
             ++count;
