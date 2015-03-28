@@ -123,6 +123,16 @@ docker:
   image: "ubuntu:12.10"
 {% endhighlight %}
 
+You can also use your own `Dockerfile` and build your own Docker image,
+right before the build. Put `Dockerfile` in some directory in the repository
+together with all other Docker files (if you need them) and provide a location
+of that directory:
+
+{% highlight yaml %}
+docker:
+  directory: repo/my-docker-image
+{% endhighlight %}
+
 ## Environment Variables
 
 You can specify environment variables common for all
