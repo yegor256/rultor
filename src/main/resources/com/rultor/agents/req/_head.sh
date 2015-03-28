@@ -86,6 +86,9 @@ function docker_when_possible {
     use_image="${image}"
     docker pull "${use_image}"
   fi
+  if docker ps --filter=status=exited | grep --quiet "\s${container}\s*\$"; then
+    docker rm -f "${container}"
+  fi
   docker run --rm -v "$(pwd):/main" "${vars[@]}" \
     --memory=4g "--cidfile=$(pwd)/cid" -w=/main \
     --name="${container}" "${image}" /main/entry.sh
