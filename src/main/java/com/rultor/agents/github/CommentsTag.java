@@ -29,16 +29,12 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
-import com.jcabi.github.RepoCommit;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -47,14 +43,8 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -129,57 +119,14 @@ public final class CommentsTag extends AbstractAgent {
                 String.format(
                     // @checkstyle LineLength (1 line)
                     "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
-                    issue.number(), this.log(repo, prev, rel.publishedAt()),
+                    issue.number(),
+                    new CommitsLog(repo).build(prev, rel.publishedAt()),
                     Manifests.read("Rultor-Version"), home
                 )
             );
             Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
-    }
-
-    /**
-     * Release body text.
-     * @param repo Repo with releases.
-     * @param prev Previous release date.
-     * @param current Current release date.
-     * @return Release body text.
-     * @throws IOException In case of problem communicating with git.
-     */
-    private String log(final Repo repo, final Date prev, final Date current)
-        throws IOException {
-        final DateFormat format = new SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH
-        );
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        final Collection<String> lines = new LinkedList<String>();
-        final ImmutableMap<String, String> params =
-            new ImmutableMap.Builder<String, String>()
-                .put("since", format.format(prev))
-                .put("until", format.format(current))
-                .build();
-        final Iterable<RepoCommit.Smart> commits = new Smarts<RepoCommit.Smart>(
-            repo.commits().iterate(params)
-        );
-        int count = 0;
-        for (final RepoCommit.Smart commit : commits) {
-            if (count > Tv.TWENTY) {
-                lines.add(" * and more...");
-                break;
-            }
-            lines.add(
-                String.format(
-                    " * %s by @%s: %s",
-                    commit.sha(),
-                    commit.json().getJsonObject("author").getString("login"),
-                    commit.message()
-                        .replaceAll("[^\\p{Print}]", " ")
-                        .replaceAll("(?<=.{50}).*", "...")
-                )
-            );
-            ++count;
-        }
-        return Joiner.on('\n').join(lines);
     }
 
     /**
@@ -190,9 +137,10 @@ public final class CommentsTag extends AbstractAgent {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Date previous(final Repo repo) throws IOException {
-        Date prev = new Date(0);
-        for (final Release release : repo.releases().iterate()) {
-            final Release.Smart rel = new Release.Smart(release);
+        Date prev = new Date(0L);
+        final Iterable<Release.Smart> releases =
+            new Smarts<Release.Smart>(repo.releases().iterate());
+        for (final Release.Smart rel : releases) {
             if (prev.before(rel.publishedAt())) {
                 prev = rel.publishedAt();
             }
