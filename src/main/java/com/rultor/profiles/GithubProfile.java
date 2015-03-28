@@ -34,12 +34,9 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
-import com.rultor.agents.github.TalkIssues;
 import com.rultor.spi.Profile;
-import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,29 +89,6 @@ final class GithubProfile implements Profile {
      * Branch name.
      */
     private final transient String branch;
-
-    /**
-     * Ctor.
-     * @param github Github we're in
-     * @param talk Talk we're in
-     * @throws IOException If fails
-     */
-    GithubProfile(final Github github, final Talk talk) throws IOException {
-        this(new TalkIssues(github, talk.read()).get().repo());
-    }
-
-    /**
-     * Ctor.
-     * @param github Github we're in
-     * @param talk Talk we're in
-     * @param brnch Branch
-     * @since 1.51
-     * @throws IOException If fails
-     */
-    GithubProfile(final Github github, final Talk talk, final String brnch)
-        throws IOException {
-        this(new TalkIssues(github, talk.read()).get().repo(), brnch);
-    }
 
     /**
      * Ctor.

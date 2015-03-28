@@ -35,6 +35,7 @@ import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.http.wire.RetryWire;
 import com.jcabi.manifests.Manifests;
+import com.rultor.agents.github.TalkIssues;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
@@ -64,7 +65,9 @@ public final class Profiles {
         if (Talk.TEST_NAME.equals(talk.name())) {
             profile = new Profile.Fixed();
         } else {
-            profile = new GithubProfile(Profiles.github(), talk);
+            profile = new GithubProfile(
+                new TalkIssues(Profiles.github(), talk.read()).get().repo()
+            );
         }
         return profile;
     }
