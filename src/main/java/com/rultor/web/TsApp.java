@@ -70,6 +70,7 @@ import org.takes.rs.RsWithType;
 import org.takes.tk.TkFixed;
 import org.takes.tk.TkRedirect;
 import org.takes.ts.TsClasspath;
+import org.takes.ts.TsGzip;
 import org.takes.ts.TsMeasured;
 import org.takes.ts.TsVersioned;
 import org.takes.ts.TsWithHeaders;
@@ -123,10 +124,12 @@ public final class TsApp extends TsWrap {
                 )
             );
         }
-        final Takes takes = TsApp.fallback(
-            new TsFlash(
-                TsApp.auth(
-                    new TsForward(TsApp.regex(talks, ticks, toggles))
+        final Takes takes = new TsGzip(
+            TsApp.fallback(
+                new TsFlash(
+                    TsApp.auth(
+                        new TsForward(TsApp.regex(talks, ticks, toggles))
+                    )
                 )
             )
         );
