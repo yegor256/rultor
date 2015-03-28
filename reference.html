@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?2374b8a"/>
+    <link rel="stylesheet" href="/css/layout.css?0bfdb95"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
     <script>//<![CDATA[
@@ -134,6 +134,14 @@ into <code>secret.txt</code>.</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="s">&quot;ubuntu:12.10&quot;</span></code></pre></div>
+
+<p>You can also use your own <code>Dockerfile</code> and build your own Docker image,
+right before the build. Put <code>Dockerfile</code> in some directory in the repository
+together with all other Docker files (if you need them) and provide a location
+of that directory:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">directory</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">repo/my-docker-image</span></code></pre></div>
 
 <h2 id="environment-variables">Environment Variables</h2>
 
@@ -306,7 +314,7 @@ resources, created during installation.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/2374b8a">2374b8a</a>
+          <a href="https://github.com/yegor256/rultor/commit/0bfdb95">0bfdb95</a>
         </p>
       </footer>
     </div>
