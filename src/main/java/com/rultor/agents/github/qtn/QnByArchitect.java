@@ -31,6 +31,7 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -92,8 +93,10 @@ public final class QnByArchitect implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
+        final Issue.Smart issue = new Issue.Smart(comment.issue());
         final List<String> logins = this.profile.read().xpath(this.xpath);
-        if (logins.isEmpty() || logins.contains(comment.author().login())) {
+        if (logins.isEmpty() || logins.contains(comment.author().login())
+            || logins.contains(issue.author().login())) {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
