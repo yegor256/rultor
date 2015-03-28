@@ -31,14 +31,17 @@ package com.rultor.profiles;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.http.wire.RetryWire;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.xml.XML;
 import com.rultor.agents.github.TalkIssues;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -65,9 +68,26 @@ public final class Profiles {
         if (Talk.TEST_NAME.equals(talk.name())) {
             profile = new Profile.Fixed();
         } else {
-            profile = new GithubProfile(
-                new TalkIssues(Profiles.github(), talk.read()).get().repo()
-            );
+            final XML xml = talk.read();
+            final List<String> type = xml.xpath("//request/type/text()");
+            if (type.isEmpty() || !"merge".equals(type.get(0))) {
+                profile = new GithubProfile(
+                    new TalkIssues(Profiles.github(), xml).get().repo()
+                );
+            } else {
+                profile = new GithubProfile(
+                    Profiles.github().repos().get(
+                        new Coordinates.Simple(
+                            xml.xpath(
+                                "//request/args/arg[@name='head']/text()"
+                            ).get(0)
+                        )
+                    ),
+                    xml.xpath(
+                        "//request/args/arg[@name='head_branch']/text()"
+                    ).get(0)
+                );
+            }
         }
         return profile;
     }
