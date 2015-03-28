@@ -77,11 +77,6 @@ final class GithubProfile implements Profile {
     private static final String FILE = ".rultor.yml";
 
     /**
-     * Branch name.
-     */
-    private static final String BRANCH = "master";
-
-    /**
      * Path pattern.
      */
     private static final Pattern PATH = Pattern.compile(
@@ -92,6 +87,11 @@ final class GithubProfile implements Profile {
      * Repo.
      */
     private final transient Repo repo;
+
+    /**
+     * Branch name.
+     */
+    private final transient String branch;
 
     /**
      * Ctor.
@@ -105,10 +105,34 @@ final class GithubProfile implements Profile {
 
     /**
      * Ctor.
+     * @param github Github we're in
+     * @param talk Talk we're in
+     * @param brnch Branch
+     * @since 1.51
+     * @throws IOException If fails
+     */
+    GithubProfile(final Github github, final Talk talk, final String brnch)
+        throws IOException {
+        this(new TalkIssues(github, talk.read()).get().repo(), brnch);
+    }
+
+    /**
+     * Ctor.
      * @param rpo Repo
      */
     GithubProfile(final Repo rpo) {
+        this(rpo, "master");
+    }
+
+    /**
+     * Ctor.
+     * @param rpo Repo
+     * @param brnch Branch
+     * @since 1.51
+     */
+    GithubProfile(final Repo rpo, final String brnch) {
         this.repo = rpo;
+        this.branch = brnch;
     }
 
     @Override
@@ -151,7 +175,7 @@ final class GithubProfile implements Profile {
         final Repo rpo = this.repo.github().repos().get(
             new Coordinates.Simple(matcher.group(1))
         );
-        if (!rpo.contents().exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
+        if (!rpo.contents().exists(GithubProfile.FILE, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
@@ -191,12 +215,11 @@ final class GithubProfile implements Profile {
      */
     private InputStream buildAssetStream(final Repo rpo, final String filename)
         throws IOException {
-        if (!rpo.contents().exists(filename, GithubProfile.BRANCH)) {
+        if (!rpo.contents().exists(filename, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(
                     "`%s` on `%s` does not exist.",
-                    filename,
-                    GithubProfile.BRANCH
+                    filename, this.branch
                 )
             );
         }
@@ -217,7 +240,7 @@ final class GithubProfile implements Profile {
     private String yml() throws IOException {
         final String yml;
         if (this.repo.contents()
-            .exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
+            .exists(GithubProfile.FILE, this.branch)) {
             yml = new String(
                 new Content.Smart(
                     this.repo.contents().get(GithubProfile.FILE)
