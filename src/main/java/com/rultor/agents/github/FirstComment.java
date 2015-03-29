@@ -99,7 +99,7 @@ final class FirstComment implements Comment {
             )
         );
         final String body;
-        if (false /*this.home.hasBody()*/) {
+        if (this.home.hasBody()) {
             body = this.home.body();
         } else {
             body = "";
