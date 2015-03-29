@@ -35,6 +35,7 @@ import com.jcabi.github.Issue;
 import java.io.IOException;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -90,15 +91,21 @@ final class FirstComment implements Comment {
 
     @Override
     public JsonObject json() throws IOException {
-        return Json.createObjectBuilder()
-            .add("body", this.home.body())
-            .add(
-                "user",
-                Json.createObjectBuilder().add(
-                    "login", this.home.author().login()
-                )
+        final JsonObjectBuilder json = Json.createObjectBuilder();
+        json.add(
+            "user",
+            Json.createObjectBuilder().add(
+                "login", this.home.author().login()
             )
-            .build();
-    };
+        );
+        final String body;
+        if (false /*this.home.hasBody()*/) {
+            body = this.home.body();
+        } else {
+            body = "";
+        }
+        json.add("body", body);
+        return json.build();
+    }
 }
 
