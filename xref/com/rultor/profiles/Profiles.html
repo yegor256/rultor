@@ -87,12 +87,12 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>                      Profiles.github().repos().get(
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>                          <strong class="jxr_keyword">new</strong> Coordinates.Simple(
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>                              xml.xpath(
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>                                  <span class="jxr_string">"//request/args/arg[@name='head']/text()"</span>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                                  <span class="jxr_string">"//request/args/arg[@name='fork']/text()"</span>
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>                              ).get(0)
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>                          )
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>                      ),
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>                      xml.xpath(
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>                          <span class="jxr_string">"//request/args/arg[@name='head_branch']/text()"</span>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>                          <span class="jxr_string">"//request/args/arg[@name='fork_branch']/text()"</span>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>                      ).get(0)
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>                  );
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>              }
