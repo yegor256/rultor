@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rendersHomePage() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">final</strong> Takes takes = <strong class="jxr_keyword">new</strong> TsApp(
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>              <strong class="jxr_keyword">new</strong> Talks.InDir(), Collections.&lt;Pulse.Tick&gt;emptyList(),
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>              <strong class="jxr_keyword">new</strong> Toggles()
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>              <strong class="jxr_keyword">new</strong> Toggles.InFile()
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          );
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>              XhtmlMatchers.xhtml(
@@ -97,7 +97,7 @@
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rendersHomePageViaHttp() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>          <strong class="jxr_keyword">final</strong> Takes app = <strong class="jxr_keyword">new</strong> TsApp(
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>              <strong class="jxr_keyword">new</strong> Talks.InDir(), Collections.&lt;Pulse.Tick&gt;emptyList(),
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>              <strong class="jxr_keyword">new</strong> Toggles()
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>              <strong class="jxr_keyword">new</strong> Toggles.InFile()
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>          );
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>          <strong class="jxr_keyword">new</strong> FtRemote(app).exec(
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>              <strong class="jxr_keyword">new</strong> FtRemote.Script() {
