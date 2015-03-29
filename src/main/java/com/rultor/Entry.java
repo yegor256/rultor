@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor;
 
 import co.stateful.RtSttc;
 import co.stateful.Sttc;
@@ -44,11 +44,11 @@ import com.jcabi.http.wire.RetryWire;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
-import com.rultor.Toggles;
 import com.rultor.cached.CdTalks;
 import com.rultor.dynamo.DyTalks;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
+import com.rultor.web.TsApp;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;

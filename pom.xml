@@ -583,7 +583,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>com.rultor.web.Entry</mainClass>
+                                    <mainClass>com.rultor.Entry</mainClass>
                                     <classpathScope>test</classpathScope>
                                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                                     <arguments>
@@ -749,7 +749,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>com.rultor.web.Entry</mainClass>
+                                    <mainClass>com.rultor.Entry</mainClass>
                                     <classpathScope>test</classpathScope>
                                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                                     <arguments>

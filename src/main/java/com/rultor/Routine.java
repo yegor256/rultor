@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor;
 
 import co.stateful.Sttc;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
@@ -35,7 +35,6 @@ import com.jcabi.aspects.Timeable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.log.Logger;
-import com.rultor.Toggles;
 import com.rultor.agents.Agents;
 import com.rultor.profiles.Profiles;
 import com.rultor.spi.Profile;
