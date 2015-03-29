@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
-import com.jcabi.github.JsonReadable;
 import com.jcabi.github.Pull;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
@@ -109,7 +108,7 @@ public final class QnMerge implements Question {
      * @throws IOException If fails
      */
     private static Req pack(final Comment.Smart comment,
-        final JsonReadable pull) throws IOException {
+        final Pull pull) throws IOException {
         final JsonObject head = pull.json().getJsonObject("head");
         final JsonObject base = pull.json().getJsonObject("base");
         final Req req;
@@ -128,6 +127,7 @@ public final class QnMerge implements Question {
             req = new Req.Simple(
                 "merge",
                 new ImmutableMap.Builder<String, String>()
+                    .put("pull_id", Integer.toString(pull.number()))
                     .put("fork_branch", head.getString("ref"))
                     .put("head_branch", base.getString("ref"))
                     .put(

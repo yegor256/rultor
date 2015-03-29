@@ -16,3 +16,5 @@ mv Linux_All_DBG.OBJ/jsl /usr/local/bin
 # xdebug
 pecl install xdebug
 echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
+
+sudo apt-get install jq
