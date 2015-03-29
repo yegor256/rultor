@@ -53,7 +53,7 @@ public final class TkHomeTest {
     @Test
     public void rendersHomePage() throws Exception {
         final Talks talks = new Talks.InDir();
-        final Take take = new TkHome(talks, new Toggles(), new RqFake());
+        final Take take = new TkHome(talks, new Toggles.InFile(), new RqFake());
         talks.create("repo1", "test1");
         talks.create("repo2", "test2");
         MatcherAssert.assertThat(

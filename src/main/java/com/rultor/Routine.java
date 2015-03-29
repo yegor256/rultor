@@ -143,7 +143,7 @@ final class Routine implements Runnable, Closeable {
     private long safe() throws IOException {
         final long start = System.currentTimeMillis();
         int total = 0;
-        if (new Toggles().readOnly()) {
+        if (new Toggles.InFile().readOnly()) {
             Logger.info(this, "read-only mode");
         } else {
             total = this.process();

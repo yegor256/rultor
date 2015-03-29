@@ -108,7 +108,7 @@ public final class Entry {
             talks, ticks, this.github(), this.sttc()
         );
         try {
-            final TsApp app = new TsApp(talks, ticks, new Toggles());
+            final TsApp app = new TsApp(talks, ticks, new Toggles.InFile());
             new FtCLI(app, this.arguments).start(Exit.NEVER);
         } finally {
             routine.close();

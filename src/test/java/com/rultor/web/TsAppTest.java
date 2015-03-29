@@ -65,7 +65,7 @@ public final class TsAppTest {
     public void rendersHomePage() throws Exception {
         final Takes takes = new TsApp(
             new Talks.InDir(), Collections.<Pulse.Tick>emptyList(),
-            new Toggles()
+            new Toggles.InFile()
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
@@ -89,7 +89,7 @@ public final class TsAppTest {
     public void rendersHomePageViaHttp() throws Exception {
         final Takes app = new TsApp(
             new Talks.InDir(), Collections.<Pulse.Tick>emptyList(),
-            new Toggles()
+            new Toggles.InFile()
         );
         new FtRemote(app).exec(
             new FtRemote.Script() {
