@@ -223,6 +223,7 @@ public final class TsApp extends TsWrap {
             ),
             new FkRegex("/robots.txt", ""),
             new FkRegex("/ticks", new TkTicks(pulse)),
+            new FkRegex("/status", new TkStatus(pulse)),
             new FkRegex("/s/.*", new TkRedirect()),
             new FkRegex("/sitemap", new TkSitemap(talks)),
             new FkRegex(
