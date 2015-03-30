@@ -243,14 +243,14 @@ final class DockerRun {
      * @return Items
      */
     private static Iterable<String> envs(final XML xml, final String path) {
-        final Collection<String> envs = new LinkedList<String>();
+        final Collection<String> envs = new LinkedList<>();
         if (!xml.nodes(path).isEmpty()) {
             final XML node = xml.nodes(path).get(0);
             final Collection<String> parts;
             if (node.nodes("item").iterator().hasNext()) {
                 parts = node.xpath("item/text()");
             } else if (node.nodes("entry").iterator().hasNext()) {
-                parts = new LinkedList<String>();
+                parts = new LinkedList<>();
                 for (final XML env : node.nodes("./entry")) {
                     parts.add(
                         String.format(
