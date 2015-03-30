@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Tick;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -58,14 +59,14 @@ public final class TkTicksTest {
         final Take home = new TkTicks(
             new Pulse() {
                 @Override
-                public void add(final Pulse.Tick tick) {
+                public void add(final Tick tick) {
                     throw new UnsupportedOperationException("#add()");
                 }
                 @Override
-                public Iterable<Pulse.Tick> ticks() {
+                public Iterable<Tick> ticks() {
                     return Arrays.asList(
-                        new Pulse.Tick(1L, 1L, 1),
-                        new Pulse.Tick(2L, 1L, 1)
+                        new Tick(1L, 1L, 1),
+                        new Tick(2L, 1L, 1)
                     );
                 }
             }

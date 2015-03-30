@@ -49,6 +49,7 @@ import com.rultor.cached.CdTalks;
 import com.rultor.dynamo.DyTalks;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
+import com.rultor.spi.Tick;
 import com.rultor.web.TsApp;
 import java.io.IOException;
 import java.util.Arrays;
@@ -184,16 +185,16 @@ public final class Entry {
      */
     @Cacheable(forever = true)
     private static Pulse pulse() {
-        final Collection<Pulse.Tick> ticks = Collections.synchronizedCollection(
-            EvictingQueue.<Pulse.Tick>create((int) TimeUnit.HOURS.toMinutes(1L))
+        final Collection<Tick> ticks = Collections.synchronizedCollection(
+            EvictingQueue.<Tick>create((int) TimeUnit.HOURS.toMinutes(1L))
         );
         return new Pulse() {
             @Override
-            public void add(final Pulse.Tick tick) {
+            public void add(final Tick tick) {
                 ticks.add(tick);
             }
             @Override
-            public Iterable<Pulse.Tick> ticks() {
+            public Iterable<Tick> ticks() {
                 return Collections.unmodifiableCollection(ticks);
             }
         };

@@ -34,6 +34,7 @@ import com.jcabi.xml.XMLDocument;
 import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Tick;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.apache.batik.transcoder.TranscoderException;
@@ -114,7 +115,7 @@ final class TkTicks implements Take {
     private XML dirs() {
         final long now = System.currentTimeMillis();
         final Directives dirs = new Directives().add("pulse");
-        for (final Pulse.Tick tick : this.pulse.ticks()) {
+        for (final Tick tick : this.pulse.ticks()) {
             dirs.add("tick")
                 .attr("total", Integer.toString(tick.total()))
                 .attr("start", Long.toString(tick.start() - now))

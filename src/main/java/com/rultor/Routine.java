@@ -41,6 +41,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
+import com.rultor.spi.Tick;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Date;
@@ -158,7 +159,7 @@ final class Routine implements Runnable, Closeable {
             total = this.process();
         }
         final long msec = System.currentTimeMillis() - begin;
-        this.pulse.add(new Pulse.Tick(begin, msec, total));
+        this.pulse.add(new Tick(begin, msec, total));
         return msec;
     }
 

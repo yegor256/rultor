@@ -29,41 +29,68 @@
  */
 package com.rultor.spi;
 
-import java.util.Collections;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Pulse.
+ * Tick.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.20
+ * @since 1.52
  */
-public interface Pulse {
+@Immutable
+public final class Tick {
 
     /**
-     * Empty.
+     * When was it started.
      */
-    Pulse EMPTY = new Pulse() {
-        @Override
-        public void add(final Tick tick) {
-            throw new UnsupportedOperationException("#add()");
-        }
-        @Override
-        public Iterable<Tick> ticks() {
-            return Collections.emptyList();
-        }
-    };
+    private final transient long when;
 
     /**
-     * Add new tick.
-     * @param tick The tick
+     * Duration.
      */
-    void add(Tick tick);
+    private final transient long msec;
 
     /**
-     * Get ticks.
-     * @return Ticks
+     * Talks processed or -1.
      */
-    Iterable<Tick> ticks();
+    private final transient int talks;
+
+    /**
+     * Ctor.
+     * @param date When
+     * @param duration Duration in msec
+     * @param total Total processed or negative if failed
+     */
+    public Tick(final long date, final long duration,
+        final int total) {
+        this.when = date;
+        this.msec = duration;
+        this.talks = total;
+    }
+
+    /**
+     * Time of start.
+     * @return Time of start
+     */
+    public long start() {
+        return this.when;
+    }
+
+    /**
+     * Duration in msec.
+     * @return Duration
+     */
+    public long duration() {
+        return this.msec;
+    }
+
+    /**
+     * Total processed or negative.
+     * @return Number of talks
+     */
+    public int total() {
+        return this.talks;
+    }
 
 }
