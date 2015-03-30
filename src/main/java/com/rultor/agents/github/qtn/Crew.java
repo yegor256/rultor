@@ -69,7 +69,7 @@ final class Crew {
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public Collection<String> names() {
-        final Collection<String> names = new LinkedList<String>();
+        final Collection<String> names = new LinkedList<>();
         try {
             for (final User user : this.repo.collaborators().iterate()) {
                 names.add(user.login());

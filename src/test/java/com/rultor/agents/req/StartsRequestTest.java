@@ -106,7 +106,7 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    Joiner.on(' ').join(
                         "<p><entry key='deploy'>",
                         "<entry key='script'>echo HEY</entry>",
                         "<entry key='env'><entry key='MAVEN_OPTS'>",

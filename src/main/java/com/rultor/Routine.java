@@ -44,6 +44,7 @@ import com.rultor.spi.Talks;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.constraints.NotNull;
@@ -120,8 +121,8 @@ final class Routine implements Runnable, Closeable {
             }
         }
         Logger.info(
-            this, "I'm alive for %[ms]s",
-            System.currentTimeMillis() - this.start
+            this, "I'm alive for %[ms]s: %tc",
+            System.currentTimeMillis() - this.start, new Date()
         );
     }
 
