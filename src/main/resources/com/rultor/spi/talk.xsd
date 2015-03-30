@@ -100,6 +100,13 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="tail" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation source="description">
+                        The last few lines of the build log
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:all>
         <xs:attribute name="id" type="hash" use="required"/>
     </xs:complexType>
@@ -168,6 +175,13 @@
                 <xs:annotation>
                     <xs:documentation source="description">
                         This element has the description of the request task.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="tail" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation source="description">
+                        The last few lines of the stdout
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>

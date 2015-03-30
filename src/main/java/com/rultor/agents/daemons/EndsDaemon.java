@@ -35,6 +35,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
@@ -115,17 +116,18 @@ public final class EndsDaemon extends AbstractAgent {
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = this.exit(shell, dir);
-        final String stdout = Joiner.on("\n").join(
+        final String stdout = new Shell.Plain(new Shell.Safe(shell)).exec(
+            Joiner.on(EndsDaemon.SHELL_JOINER).join(
+                String.format("dir=%s", SSH.escape(dir)),
+                "cat \"${dir}/stdout\""
+            )
+        );
+        final Iterable<String> lines =
+            Splitter.on(System.lineSeparator()).split(stdout);
+        final String highlights = Joiner.on("\n").join(
             Iterables.transform(
                 Iterables.filter(
-                    Splitter.on(System.lineSeparator()).split(
-                        new Shell.Plain(new Shell.Safe(shell)).exec(
-                            Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                                String.format("dir=%s", SSH.escape(dir)),
-                                "cat \"${dir}/stdout\""
-                            )
-                        )
-                    ),
+                    lines,
                     new Predicate<String>() {
                         @Override
                         public boolean apply(final String input) {
@@ -134,7 +136,8 @@ public final class EndsDaemon extends AbstractAgent {
                             );
                         }
                     }
-                ), new Function<String, String>() {
+                ),
+                new Function<String, String>() {
                     @Override
                     public String apply(final String str) {
                         return StringUtils.removeStart(
@@ -150,7 +153,13 @@ public final class EndsDaemon extends AbstractAgent {
             .strict(1)
             .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit)).up()
-            .add("highlights").set(stdout);
+            .add("highlights").set(highlights).up()
+            .add("tail")
+            .set(
+                Joiner.on(System.lineSeparator()).join(
+                    Iterables.limit(lines, Tv.HUNDRED)
+                )
+            );
     }
 
     /**

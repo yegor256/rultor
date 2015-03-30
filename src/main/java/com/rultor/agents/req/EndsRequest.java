@@ -72,10 +72,14 @@ public final class EndsRequest extends AbstractAgent {
         Logger.info(this, "request finished: %b", success);
         final Directives dirs = new Directives().xpath("/talk/request")
             .add("msec").set(Long.toString(msec)).up()
-            .add("success").set(Boolean.toString(success));
+            .add("success").set(Boolean.toString(success)).up();
         final List<String> highlights = daemon.xpath("highlights/text()");
         if (!highlights.isEmpty()) {
-            dirs.up().add("highlights").set(highlights.get(0));
+            dirs.add("highlights").set(highlights.get(0)).up();
+        }
+        final List<String> tail = daemon.xpath("tail/text()");
+        if (!tail.isEmpty()) {
+            dirs.add("tail").set(tail.get(0)).up();
         }
         return dirs;
     }
