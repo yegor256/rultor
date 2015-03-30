@@ -114,7 +114,6 @@ final class Routine implements Runnable, Closeable {
                 this.safe(),
                 System.currentTimeMillis() - this.start, new Date()
             );
-            Logger.info(this, "tick");
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Exception ex) {
             if (!this.down.get()) {
@@ -147,11 +146,11 @@ final class Routine implements Runnable, Closeable {
 
     /**
      * Routine every-minute proc.
-     * @return Milliseconds spent
+     * @return Total talks processed
      * @throws IOException If fails
      */
     @Timeable(limit = Tv.FIVE, unit = TimeUnit.MINUTES)
-    private long safe() throws IOException {
+    private int safe() throws IOException {
         final long begin = System.currentTimeMillis();
         int total = 0;
         if (new Toggles.InFile().readOnly()) {
@@ -159,9 +158,10 @@ final class Routine implements Runnable, Closeable {
         } else {
             total = this.process();
         }
-        final long msec = System.currentTimeMillis() - begin;
-        this.pulse.add(new Tick(begin, msec, total));
-        return msec;
+        this.pulse.add(
+            new Tick(begin, System.currentTimeMillis() - begin, total)
+        );
+        return total;
     }
 
 }
