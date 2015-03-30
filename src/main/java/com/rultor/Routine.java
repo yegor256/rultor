@@ -114,6 +114,7 @@ final class Routine implements Runnable, Closeable {
                 }
             }
         }
+        Logger.info(this, "we're alive");
     }
 
     /**
