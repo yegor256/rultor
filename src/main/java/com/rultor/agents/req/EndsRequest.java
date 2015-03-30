@@ -34,6 +34,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -50,10 +51,6 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public final class EndsRequest extends AbstractAgent {
-    /**
-     * Log highligts text node.
-     */
-    private static final String HIGHLIGHTS_TEXT = "highlights/text()";
 
     /**
      * Ctor.
@@ -76,9 +73,9 @@ public final class EndsRequest extends AbstractAgent {
         final Directives dirs = new Directives().xpath("/talk/request")
             .add("msec").set(Long.toString(msec)).up()
             .add("success").set(Boolean.toString(success));
-        if (!daemon.xpath(EndsRequest.HIGHLIGHTS_TEXT).isEmpty()) {
-            dirs.up().add("highlights")
-                .set(daemon.xpath(EndsRequest.HIGHLIGHTS_TEXT).get(0));
+        final List<String> highlights = daemon.xpath("highlights/text()");
+        if (!highlights.isEmpty()) {
+            dirs.up().add("highlights").set(highlights.get(0));
         }
         return dirs;
     }

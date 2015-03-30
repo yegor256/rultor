@@ -64,7 +64,7 @@ public final class Reports extends AbstractAgent {
         ResourceBundle.getBundle("phrases");
 
     /**
-     * Log highligts text node.
+     * Log highlights text node.
      */
     private static final String HIGHLIGHTS_TEXT = "highlights/text()";
 
@@ -115,7 +115,7 @@ public final class Reports extends AbstractAgent {
             highlights
         );
         final int number = Integer.parseInt(req.xpath("@id").get(0));
-        new Answer(this.origin(issue, number)).post(msg);
+        new Answer(Reports.origin(issue, number)).post(msg);
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")
@@ -128,7 +128,8 @@ public final class Reports extends AbstractAgent {
      * @param number Its number
      * @return Comment
      */
-    private Comment.Smart origin(final Issue.Smart issue, final int number) {
+    private static Comment.Smart origin(final Issue.Smart issue,
+        final int number) {
         final Comment comment;
         if (number == 1) {
             comment = new FirstComment(issue);
