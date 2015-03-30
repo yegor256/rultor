@@ -61,7 +61,7 @@ public final class TkHomeTest {
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
                 "/page/recent[count(talk)=2]",
-                "/page/links/link[@rel='svg']",
+                "/page/links/link[@rel='ticks']",
                 "/page/links/link[@rel='takes:github']",
                 "/page/toggles/read-only"
             )

@@ -327,6 +327,17 @@
             <classifier>xpath</classifier>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>1.7</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>

@@ -93,7 +93,7 @@ final class TkHome implements Take {
                     return TkHome.this.recent();
                 }
             },
-            new XeLink("svg", "/svg", "image/svg+xml"),
+            new XeLink("ticks", "/ticks", "image/png"),
             new XeSource() {
                 @Override
                 public Iterable<Directive> toXembly() throws IOException {

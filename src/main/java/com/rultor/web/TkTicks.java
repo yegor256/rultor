@@ -34,12 +34,19 @@ import com.jcabi.xml.XMLDocument;
 import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
 import com.rultor.spi.Pulse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsWithBody;
 import org.takes.rs.RsWithType;
+import org.w3c.dom.Document;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -51,13 +58,13 @@ import org.xembly.Xembler;
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-final class TkSVG implements Take {
+final class TkTicks implements Take {
 
     /**
      * XSLT for pulse render.
      */
     private static final XSL PULSE = XSLDocument.make(
-        TkSVG.class.getResourceAsStream("pulse.xsl")
+        TkTicks.class.getResourceAsStream("pulse.xsl")
     );
 
     /**
@@ -69,20 +76,37 @@ final class TkSVG implements Take {
      * Ctor.
      * @param tks Ticks
      */
-    TkSVG(final Collection<Pulse.Tick> tks) {
+    TkTicks(final Collection<Pulse.Tick> tks) {
         this.ticks = Collections.unmodifiableCollection(tks);
     }
 
     @Override
-    public Response act() {
+    public Response act() throws IOException {
         return new RsWithType(
-            new RsWithBody(
-                TkSVG.PULSE.transform(
-                    this.dirs()
-                ).nodes("/*").get(0).toString()
-            ),
-            "image/svg+xml"
+            new RsWithBody(this.png()),
+            "image/png"
         );
+    }
+
+    /**
+     * Make PNG in bytes.
+     * @return Bytes
+     * @throws IOException If fails
+     */
+    private byte[] png() throws IOException {
+        final TranscoderInput input = new TranscoderInput(
+            Document.class.cast(
+                TkTicks.PULSE.transform(this.dirs()).node()
+            )
+        );
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final TranscoderOutput output = new TranscoderOutput(baos);
+        try {
+            new PNGTranscoder().transcode(input, output);
+        } catch (final TranscoderException ex) {
+            throw new IOException(ex);
+        }
+        return baos.toByteArray();
     }
 
     /**

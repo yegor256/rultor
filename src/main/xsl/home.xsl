@@ -66,8 +66,8 @@
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue and start from there.</xsl:text>
             </p>
-            <div id="pulse" data-href="{links/link[@rel='svg']/@href}">
-                <img src="{links/link[@rel='svg']/@href}" alt="status bar"/>
+            <div id="pulse" data-href="{links/link[@rel='ticks']/@href}">
+                <img src="{links/link[@rel='ticks']/@href}" alt="status bar"/>
             </div>
             <xsl:if test="recent/talk">
                 <p>

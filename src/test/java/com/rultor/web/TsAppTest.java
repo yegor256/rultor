@@ -75,7 +75,7 @@ public final class TsAppTest {
             ),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
-                "/page/links/link[@rel='svg']",
+                "/page/links/link[@rel='ticks']",
                 "/page/toggles[read-only='false']"
             )
         );
