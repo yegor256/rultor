@@ -123,6 +123,15 @@ public interface Profile {
         /**
          * Get text item.
          * @param xpath Path
+         * @return Value
+         * @throws IOException If fails
+         */
+        public String text(final String xpath) throws IOException {
+            return this.text(xpath, "");
+        }
+        /**
+         * Get text item.
+         * @param xpath Path
          * @param def Default, if it's absent
          * @return Value
          * @throws IOException If fails

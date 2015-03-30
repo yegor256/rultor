@@ -206,7 +206,7 @@ public final class StartsRequest extends AbstractAgent {
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
         final ImmutableMap.Builder<String, String> vars =
-            new ImmutableMap.Builder<String, String>();
+            new ImmutableMap.Builder<>();
         for (final XML arg : req.nodes("args/arg")) {
             vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
         }
@@ -214,19 +214,24 @@ public final class StartsRequest extends AbstractAgent {
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
         vars.put("vars", docker.envs(vars.build()));
+        final Profile.Defaults def = new Profile.Defaults(this.profile);
         vars.put(
             "image",
-            new Profile.Defaults(this.profile).text(
+            def.text(
                 "/p/entry[@key='docker']/entry[@key='image']",
                 "yegor256/rultor"
             )
         );
         vars.put(
-            "directory",
-            new Profile.Defaults(this.profile).text(
-                "/p/entry[@key='docker']/entry[@key='directory']",
-                ""
+            "squash",
+            def.text(
+                "/p/entry[@key='merge']/entry[@key='squash']",
+                "false"
             )
+        );
+        vars.put(
+            "directory",
+            def.text("/p/entry[@key='docker']/entry[@key='directory']")
         );
         vars.put("scripts", docker.script());
         return vars.build();

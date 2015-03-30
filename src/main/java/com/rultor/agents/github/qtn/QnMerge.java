@@ -108,7 +108,7 @@ public final class QnMerge implements Question {
      * @throws IOException If fails
      */
     private static Req pack(final Comment.Smart comment,
-        final Pull pull) throws IOException {
+        final Pull.Smart pull) throws IOException {
         final JsonObject head = pull.json().getJsonObject("head");
         final JsonObject base = pull.json().getJsonObject("base");
         final Req req;
@@ -127,6 +127,7 @@ public final class QnMerge implements Question {
             req = new Req.Simple(
                 "merge",
                 new ImmutableMap.Builder<String, String>()
+                    .put("pull_title", new Issue.Smart(pull.issue()).title())
                     .put("pull_id", Integer.toString(pull.number()))
                     .put("fork_branch", head.getString("ref"))
                     .put("head_branch", base.getString("ref"))
