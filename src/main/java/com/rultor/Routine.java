@@ -65,6 +65,11 @@ final class Routine implements Runnable, Closeable {
     private final transient AtomicBoolean down = new AtomicBoolean();
 
     /**
+     * When I started.
+     */
+    private final transient long start = System.currentTimeMillis();
+
+    /**
      * Ticks.
      */
     private final transient Collection<Pulse.Tick> list;
@@ -114,7 +119,10 @@ final class Routine implements Runnable, Closeable {
                 }
             }
         }
-        Logger.info(this, "we're alive");
+        Logger.info(
+            this, "I'm alive for %[ms]s",
+            System.currentTimeMillis() - this.start
+        );
     }
 
     /**
