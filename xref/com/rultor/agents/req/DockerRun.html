@@ -251,14 +251,14 @@
 <a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     * @return Items</em>
 <a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Iterable&lt;String&gt; envs(<strong class="jxr_keyword">final</strong> XML xml, <strong class="jxr_keyword">final</strong> String path) {
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; envs = <strong class="jxr_keyword">new</strong> LinkedList&lt;String&gt;();
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; envs = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;();
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>         <strong class="jxr_keyword">if</strong> (!xml.nodes(path).isEmpty()) {
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>             <strong class="jxr_keyword">final</strong> XML node = xml.nodes(path).get(0);
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>             <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; parts;
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>             <strong class="jxr_keyword">if</strong> (node.nodes(<span class="jxr_string">"item"</span>).iterator().hasNext()) {
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>                 parts = node.xpath(<span class="jxr_string">"item/text()"</span>);
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (node.nodes(<span class="jxr_string">"entry"</span>).iterator().hasNext()) {
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>                 parts = <strong class="jxr_keyword">new</strong> LinkedList&lt;String&gt;();
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>                 parts = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;();
 <a class="jxr_linenumber" name="L254" href="#L254">254</a>                 <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML env : node.nodes(<span class="jxr_string">"./entry"</span>)) {
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>                     parts.add(
 <a class="jxr_linenumber" name="L256" href="#L256">256</a>                         String.format(

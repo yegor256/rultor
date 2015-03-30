@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      @SuppressWarnings(<span class="jxr_string">"PMD.AvoidCatchingThrowable"</span>)
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; names() {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; names = <strong class="jxr_keyword">new</strong> LinkedList&lt;String&gt;();
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; names = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>              <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> User user : <strong class="jxr_keyword">this</strong>.repo.collaborators().iterate()) {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>                  names.add(user.login());
