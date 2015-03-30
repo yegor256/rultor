@@ -109,7 +109,11 @@ final class Routine implements Runnable, Closeable {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void run() {
         try {
-            this.safe();
+            Logger.info(
+                this, "%d active talks, alive for %[ms]s: %tc",
+                this.safe(),
+                System.currentTimeMillis() - this.start, new Date()
+            );
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Exception ex) {
             if (!this.down.get()) {
@@ -120,10 +124,6 @@ final class Routine implements Runnable, Closeable {
                 }
             }
         }
-        Logger.info(
-            this, "I'm alive for %[ms]s: %tc",
-            System.currentTimeMillis() - this.start, new Date()
-        );
     }
 
     /**
