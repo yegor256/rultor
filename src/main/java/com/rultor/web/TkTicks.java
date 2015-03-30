@@ -36,8 +36,6 @@ import com.jcabi.xml.XSLDocument;
 import com.rultor.spi.Pulse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -68,16 +66,16 @@ final class TkTicks implements Take {
     );
 
     /**
-     * Ticks.
+     * Pulse.
      */
-    private final transient Collection<Pulse.Tick> ticks;
+    private final transient Pulse pulse;
 
     /**
      * Ctor.
-     * @param tks Ticks
+     * @param pls Pulse
      */
-    TkTicks(final Collection<Pulse.Tick> tks) {
-        this.ticks = Collections.unmodifiableCollection(tks);
+    TkTicks(final Pulse pls) {
+        this.pulse = pls;
     }
 
     @Override
@@ -116,7 +114,7 @@ final class TkTicks implements Take {
     private XML dirs() {
         final long now = System.currentTimeMillis();
         final Directives dirs = new Directives().add("pulse");
-        for (final Pulse.Tick tick : this.ticks) {
+        for (final Pulse.Tick tick : this.pulse.ticks()) {
             dirs.add("tick")
                 .attr("total", Integer.toString(tick.total()))
                 .attr("start", Long.toString(tick.start() - now))

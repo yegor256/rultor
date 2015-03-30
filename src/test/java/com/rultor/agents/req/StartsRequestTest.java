@@ -109,8 +109,9 @@ public final class StartsRequestTest {
                     Joiner.on(' ').join(
                         "<p><entry key='deploy'>",
                         "<entry key='script'>echo HEY</entry>",
-                        "<entry key='env'><entry key='MAVEN_OPTS'>",
-                        "-Xmx2g -Xms1g</entry></entry></entry></p>"
+                        "<entry key='env'>",
+                        "<entry key='MAVEN_OPTS'>-Xmx2g -Xms1g</entry>",
+                        "</entry></entry></p>"
                     )
                 )
             )

@@ -59,8 +59,8 @@ public final class DockerRunTest {
                     "<p><entry key='a'><entry key='env'>",
                     "<item>A=5</item><item>B=f e</item></entry></entry>",
                     "<entry key='b'><entry key='env'>HELLO='1'</entry></entry>",
-                    "<entry key='c'><entry key='env'><entry key='MVN'>",
-                    "works</entry></entry></entry></p>"
+                    "<entry key='c'><entry key='env'>",
+                    "<entry key='MVN'>works</entry></entry></entry></p>"
                 )
             )
         );

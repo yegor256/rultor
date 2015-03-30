@@ -43,7 +43,6 @@ import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,7 +72,7 @@ final class Routine implements Runnable, Closeable {
     /**
      * Ticks.
      */
-    private final transient Collection<Pulse.Tick> list;
+    private final transient Pulse pulse;
 
     /**
      * Talks.
@@ -88,15 +87,15 @@ final class Routine implements Runnable, Closeable {
     /**
      * Ctor.
      * @param tlks Talks
-     * @param ticks Ticks
+     * @param pls Pulse
      * @param github Github client
      * @param sttc Sttc client
      * @checkstyle ParameterNumberCheck (4 lines)
      */
-    Routine(@NotNull final Talks tlks, final Collection<Pulse.Tick> ticks,
+    Routine(@NotNull final Talks tlks, final Pulse pls,
         final Github github, final Sttc sttc) {
         this.talks = tlks;
-        this.list = ticks;
+        this.pulse = pls;
         this.agents = new Agents(github, sttc);
     }
 
@@ -159,9 +158,7 @@ final class Routine implements Runnable, Closeable {
             total = this.process();
         }
         final long msec = System.currentTimeMillis() - begin;
-        if (!this.list.add(new Pulse.Tick(begin, msec, total))) {
-            throw new IllegalStateException("failed to add tick");
-        }
+        this.pulse.add(new Pulse.Tick(begin, msec, total));
         return msec;
     }
 

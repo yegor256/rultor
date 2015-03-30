@@ -112,7 +112,7 @@ public final class ArchivesDaemon extends AbstractAgent {
         final String title = this.title(xml, file);
         Logger.info(
             this, "daemon of %s archived into %s: %s",
-            xml.xpath("@name").get(0), uri, title
+            xml.xpath("/talk/@name").get(0), uri, title
         );
         FileUtils.deleteQuietly(file);
         return new Directives().xpath("/talk/daemon").remove()

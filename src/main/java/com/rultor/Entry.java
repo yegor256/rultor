@@ -40,6 +40,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
+import com.jcabi.github.mock.MkGithub;
 import com.jcabi.http.wire.RetryWire;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -99,16 +100,13 @@ public final class Entry {
                 this.dynamo(), this.sttc().counters().get("rt-talk")
             )
         );
-        final Collection<Pulse.Tick> ticks = Collections.synchronizedCollection(
-            EvictingQueue.<Pulse.Tick>create(
-                (int) TimeUnit.HOURS.toMinutes(1L)
-            )
-        );
         final Routine routine = new Routine(
-            talks, ticks, this.github(), this.sttc()
+            talks, Entry.pulse(), this.github(), this.sttc()
         );
         try {
-            final TsApp app = new TsApp(talks, ticks, new Toggles.InFile());
+            final TsApp app = new TsApp(
+                talks, Entry.pulse(), new Toggles.InFile()
+            );
             new FtCLI(app, this.arguments).start(Exit.NEVER);
         } finally {
             routine.close();
@@ -122,11 +120,15 @@ public final class Entry {
      */
     @Cacheable(forever = true)
     private Github github() throws IOException {
-        final Github github = new RtGithub(
-            new RtGithub(
-                Manifests.read("Rultor-GithubToken")
-            ).entry().through(RetryWire.class)
-        );
+        final String token = Manifests.read("Rultor-GithubToken");
+        final Github github;
+        if (token.startsWith("${")) {
+            github = new MkGithub();
+        } else {
+            github = new RtGithub(
+                new RtGithub(token).entry().through(RetryWire.class)
+            );
+        }
         Logger.info(
             this, "Github connected as @%s",
             github.users().self().login()
@@ -174,6 +176,27 @@ public final class Entry {
         return new Region.Prefixed(
             new ReRegion(new Region.Simple(creds)), "rt-"
         );
+    }
+
+    /**
+     * Create pulse.
+     * @return Pulse
+     */
+    @Cacheable(forever = true)
+    private static Pulse pulse() {
+        final Collection<Pulse.Tick> ticks = Collections.synchronizedCollection(
+            EvictingQueue.<Pulse.Tick>create((int) TimeUnit.HOURS.toMinutes(1L))
+        );
+        return new Pulse() {
+            @Override
+            public void add(final Pulse.Tick tick) {
+                ticks.add(tick);
+            }
+            @Override
+            public Iterable<Pulse.Tick> ticks() {
+                return Collections.unmodifiableCollection(ticks);
+            }
+        };
     }
 
 }

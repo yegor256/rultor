@@ -95,7 +95,7 @@ public final class KillsDaemon extends AbstractAgent {
         );
         Logger.info(
             this, "daemon of %s killed due to delay, in %s",
-            xml.xpath("@name").get(0), dir
+            xml.xpath("/talk/@name").get(0), dir
         );
         return new Directives();
     }

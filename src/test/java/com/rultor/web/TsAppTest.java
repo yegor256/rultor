@@ -40,7 +40,6 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.takes.Takes;
@@ -64,7 +63,7 @@ public final class TsAppTest {
     @Test
     public void rendersHomePage() throws Exception {
         final Takes takes = new TsApp(
-            new Talks.InDir(), Collections.<Pulse.Tick>emptyList(),
+            new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
         MatcherAssert.assertThat(
@@ -88,7 +87,7 @@ public final class TsAppTest {
     @Test
     public void rendersHomePageViaHttp() throws Exception {
         final Takes app = new TsApp(
-            new Talks.InDir(), Collections.<Pulse.Tick>emptyList(),
+            new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
         new FtRemote(app).exec(

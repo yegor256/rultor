@@ -36,7 +36,6 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Request;
@@ -100,23 +99,23 @@ public final class TsApp extends TsWrap {
     /**
      * Ctor.
      * @param talks Talks
-     * @param ticks Ticks
+     * @param pulse Pulse
      * @param toggles Toggles
      */
-    public TsApp(final Talks talks, final Collection<Pulse.Tick> ticks,
+    public TsApp(final Talks talks, final Pulse pulse,
         final Toggles toggles) {
-        super(TsApp.make(talks, ticks, toggles));
+        super(TsApp.make(talks, pulse, toggles));
     }
 
     /**
      * Ctor.
      * @param talks Talks
-     * @param ticks Ticks
+     * @param pulse Pulse
      * @param toggles Toggles
      * @return Takes
      */
     private static Takes make(final Talks talks,
-        final Collection<Pulse.Tick> ticks, final Toggles toggles) {
+        final Pulse pulse, final Toggles toggles) {
         if (!"UTF-8".equals(Charset.defaultCharset().name())) {
             throw new IllegalStateException(
                 String.format(
@@ -128,7 +127,7 @@ public final class TsApp extends TsWrap {
             TsApp.fallback(
                 new TsFlash(
                     TsApp.auth(
-                        new TsForward(TsApp.regex(talks, ticks, toggles))
+                        new TsForward(TsApp.regex(talks, pulse, toggles))
                     )
                 )
             )
@@ -210,12 +209,12 @@ public final class TsApp extends TsWrap {
     /**
      * Regex takes.
      * @param talks Talks
-     * @param ticks Ticks
+     * @param pulse Pulse
      * @param toggles Toggles
      * @return Takes
      */
     private static Takes regex(final Talks talks,
-        final Collection<Pulse.Tick> ticks, final Toggles toggles) {
+        final Pulse pulse, final Toggles toggles) {
         return new TsFork(
             new FkParams(
                 PsByFlag.class.getSimpleName(),
@@ -223,7 +222,7 @@ public final class TsApp extends TsWrap {
                 new TkRedirect()
             ),
             new FkRegex("/robots.txt", ""),
-            new FkRegex("/ticks", new TkTicks(ticks)),
+            new FkRegex("/ticks", new TkTicks(pulse)),
             new FkRegex("/s/.*", new TkRedirect()),
             new FkRegex("/sitemap", new TkSitemap(talks)),
             new FkRegex(

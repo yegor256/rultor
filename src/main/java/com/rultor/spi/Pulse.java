@@ -29,6 +29,8 @@
  */
 package com.rultor.spi;
 
+import java.util.Collections;
+
 /**
  * Pulse.
  *
@@ -37,6 +39,26 @@ package com.rultor.spi;
  * @since 1.20
  */
 public interface Pulse {
+
+    /**
+     * Empty.
+     */
+    Pulse EMPTY = new Pulse() {
+        @Override
+        public void add(final Tick tick) {
+            throw new UnsupportedOperationException("#add()");
+        }
+        @Override
+        public Iterable<Tick> ticks() {
+            return Collections.emptyList();
+        }
+    };
+
+    /**
+     * Add new tick.
+     * @param tick The tick
+     */
+    void add(Pulse.Tick tick);
 
     /**
      * Get ticks.

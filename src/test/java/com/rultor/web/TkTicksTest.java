@@ -34,7 +34,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import javax.imageio.ImageIO;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -57,10 +56,19 @@ public final class TkTicksTest {
     @Test
     public void rendersSvg() throws Exception {
         final Take home = new TkTicks(
-            Arrays.asList(
-                new Pulse.Tick(1L, 1L, 1),
-                new Pulse.Tick(2L, 1L, 1)
-            )
+            new Pulse() {
+                @Override
+                public void add(final Pulse.Tick tick) {
+                    throw new UnsupportedOperationException("#add()");
+                }
+                @Override
+                public Iterable<Pulse.Tick> ticks() {
+                    return Arrays.asList(
+                        new Pulse.Tick(1L, 1L, 1),
+                        new Pulse.Tick(2L, 1L, 1)
+                    );
+                }
+            }
         );
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new RsPrint(home.act()).printBody(baos);
@@ -80,9 +88,7 @@ public final class TkTicksTest {
      */
     @Test
     public void rendersSvgWithoutTicks() throws Exception {
-        final Take home = new TkTicks(
-            Collections.<Pulse.Tick>emptyList()
-        );
+        final Take home = new TkTicks(Pulse.EMPTY);
         MatcherAssert.assertThat(
             new RsPrint(home.act()).printBody(),
             Matchers.notNullValue()
