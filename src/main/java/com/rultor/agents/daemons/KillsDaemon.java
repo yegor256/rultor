@@ -93,7 +93,10 @@ public final class KillsDaemon extends AbstractAgent {
                 "rm -f \"${dir}/pid\""
             )
         );
-        Logger.info(this, "daemon killed because of delay in %s", dir);
+        Logger.info(
+            this, "daemon of %s killed due to delay, in %s",
+            xml.xpath("@name").get(0), dir
+        );
         return new Directives();
     }
 
