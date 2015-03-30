@@ -34,6 +34,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
@@ -44,6 +45,7 @@ import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
+import java.util.Collection;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -122,8 +124,9 @@ public final class EndsDaemon extends AbstractAgent {
                 "cat \"${dir}/stdout\""
             )
         );
-        final Iterable<String> lines =
-            Splitter.on(System.lineSeparator()).split(stdout);
+        final Collection<String> lines = Lists.newArrayList(
+            Splitter.on(System.lineSeparator()).split(stdout)
+        );
         final String highlights = Joiner.on("\n").join(
             Iterables.transform(
                 Iterables.filter(
@@ -157,7 +160,10 @@ public final class EndsDaemon extends AbstractAgent {
             .add("tail")
             .set(
                 Joiner.on(System.lineSeparator()).join(
-                    Iterables.limit(lines, Tv.HUNDRED)
+                    Iterables.skip(
+                        lines,
+                        Math.max(lines.size() - Tv.HUNDRED, 0)
+                    )
                 )
             );
     }
