@@ -114,6 +114,7 @@ final class Routine implements Runnable, Closeable {
                 this.safe(),
                 System.currentTimeMillis() - this.start, new Date()
             );
+            Logger.info(this, "tick");
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Exception ex) {
             if (!this.down.get()) {
