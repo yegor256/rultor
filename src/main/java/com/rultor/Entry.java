@@ -118,15 +118,20 @@ public final class Entry {
     /**
      * Make github.
      * @return Github
+     * @throws IOException If fails
      */
     @Cacheable(forever = true)
-    private Github github() {
-        Logger.warn(this, "Github connected");
-        return new RtGithub(
+    private Github github() throws IOException {
+        final Github github = new RtGithub(
             new RtGithub(
                 Manifests.read("Rultor-GithubToken")
             ).entry().through(RetryWire.class)
         );
+        Logger.info(
+            this, "Github connected as @%s",
+            github.users().self().login()
+        );
+        return github;
     }
 
     /**
@@ -135,8 +140,7 @@ public final class Entry {
      */
     @Cacheable(forever = true)
     private Sttc sttc() {
-        Logger.warn(this, "Sttc connected");
-        return new CdSttc(
+        final Sttc sttc = new CdSttc(
             new ReSttc(
                 RtSttc.make(
                     URN.create(Manifests.read("Rultor-SttcUrn")),
@@ -144,6 +148,8 @@ public final class Entry {
                 )
             )
         );
+        Logger.info(this, "Sttc connected as %s", sttc);
+        return sttc;
     }
 
     /**
@@ -164,6 +170,7 @@ public final class Entry {
             creds = new Credentials.Direct(creds, port);
             Logger.warn(this, "test DynamoDB at port #%d", port);
         }
+        Logger.info(this, "DynamoDB connected as %s", key);
         return new Region.Prefixed(
             new ReRegion(new Region.Simple(creds)), "rt-"
         );
