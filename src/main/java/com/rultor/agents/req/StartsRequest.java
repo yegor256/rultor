@@ -102,7 +102,10 @@ public final class StartsRequest extends AbstractAgent {
             script = this.script(
                 req, type, xml.xpath("/talk/@name").get(0)
             );
-            Logger.info(this, "request %s/%s started", type, hash);
+            Logger.info(
+                this, "request %s/%s started for %s",
+                type, hash, xml.xpath("/talk/@name").get(0)
+            );
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
                 "cat <<EOT\n%[exception]s\nEOT\nexit -1", ex
