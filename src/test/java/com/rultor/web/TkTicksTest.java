@@ -30,8 +30,12 @@
 package com.rultor.web;
 
 import com.rultor.spi.Pulse;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import javax.imageio.ImageIO;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -58,9 +62,15 @@ public final class TkTicksTest {
                 new Pulse.Tick(2L, 1L, 1)
             )
         );
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new RsPrint(home.act()).printBody(baos);
+        final BufferedImage image = ImageIO.read(
+            new ByteArrayInputStream(baos.toByteArray())
+        );
         MatcherAssert.assertThat(
-            new RsPrint(home.act()).printBody(),
-            Matchers.notNullValue()
+            image.getHeight(),
+            // @checkstyle MagicNumber (1 line)
+            Matchers.equalTo(400)
         );
     }
 
