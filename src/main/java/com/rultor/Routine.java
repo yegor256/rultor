@@ -151,15 +151,15 @@ final class Routine implements Runnable, Closeable {
      */
     @Timeable(limit = Tv.FIVE, unit = TimeUnit.MINUTES)
     private long safe() throws IOException {
-        final long start = System.currentTimeMillis();
+        final long begin = System.currentTimeMillis();
         int total = 0;
         if (new Toggles.InFile().readOnly()) {
             Logger.info(this, "read-only mode");
         } else {
             total = this.process();
         }
-        final long msec = System.currentTimeMillis() - start;
-        if (!this.list.add(new Pulse.Tick(start, msec, total))) {
+        final long msec = System.currentTimeMillis() - begin;
+        if (!this.list.add(new Pulse.Tick(begin, msec, total))) {
             throw new IllegalStateException("failed to add tick");
         }
         return msec;
