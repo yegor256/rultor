@@ -97,7 +97,7 @@ public final class QnStatus implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final XML xml = this.talk.read();
-        final Collection<String> lines = new LinkedList<String>();
+        final Collection<String> lines = new LinkedList<>();
         if (!xml.nodes("/talk[shell/host and daemon/dir]").isEmpty()) {
             final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
             final Shell.Plain shell = new Shell.Plain(
