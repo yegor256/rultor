@@ -132,9 +132,11 @@ public final class TsApp extends TsWrap {
                 )
             )
         );
-        return new TsWithHeaders(new TsVersioned(new TsMeasured(takes)))
-            .with("X-Rultor-Revision", TsApp.REV)
-            .with("Vary", "Cookie");
+        return new TsWithHeaders(
+            new TsVersioned(new TsMeasured(takes)),
+            String.format("X-Rultor-Revision: %s", TsApp.REV),
+            "Vary: Cookie"
+        );
     }
 
     /**
@@ -155,8 +157,10 @@ public final class TsApp extends TsWrap {
                         new RsWithStatus(
                             new RsWithType(
                                 new RsVelocity(
-                                    this.getClass().getResource("error.html.vm")
-                                ).with("err", err).with("rev", TsApp.REV),
+                                    this.getClass().getResource("error.html.vm"),
+                                    new RsVelocity.Pair("err", err),
+                                    new RsVelocity.Pair("rev", TsApp.REV)
+                                ),
                                 "text/html"
                             ),
                             HttpURLConnection.HTTP_INTERNAL_ERROR
