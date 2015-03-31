@@ -29,12 +29,12 @@
  */
 package com.rultor.web;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
 import java.net.HttpURLConnection;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import org.takes.Response;
 import org.takes.Take;
@@ -66,10 +66,16 @@ final class TkStatus implements Take {
 
     @Override
     public Response act() {
-        final Iterator<Tick> ticks = this.pulse.ticks().iterator();
+        final Iterable<Tick> ticks = this.pulse.ticks();
         final Response response;
-        if (ticks.hasNext()) {
-            final long age = System.currentTimeMillis() - ticks.next().start();
+        if (Iterables.isEmpty(ticks)) {
+            response = new RsWithBody(
+                new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
+                "there is no activity yet"
+            );
+        } else {
+            final long age = System.currentTimeMillis()
+                - Iterables.getLast(ticks).start();
             if (age > TimeUnit.MINUTES.toMillis((long) Tv.FIVE)) {
                 response = new RsWithBody(
                     new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
@@ -80,11 +86,6 @@ final class TkStatus implements Take {
                     Logger.format("it is up and running, %[ms]s", age)
                 );
             }
-        } else {
-            response = new RsWithBody(
-                new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
-                "there is no activity yet"
-            );
         }
         return response;
     }
