@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.aspects.Tv;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
 import java.awt.image.BufferedImage;
@@ -78,8 +79,7 @@ public final class TkTicksTest {
         );
         MatcherAssert.assertThat(
             image.getHeight(),
-            // @checkstyle MagicNumber (1 line)
-            Matchers.equalTo(400)
+            Matchers.equalTo(Tv.THOUSAND)
         );
     }
 

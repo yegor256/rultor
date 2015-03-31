@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.jcabi.xml.XSL;
@@ -100,8 +101,15 @@ final class TkTicks implements Take {
         );
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final TranscoderOutput output = new TranscoderOutput(baos);
+        final PNGTranscoder transcoder = new PNGTranscoder();
+        transcoder.addTranscodingHint(
+            PNGTranscoder.KEY_WIDTH, (float) Tv.THOUSAND
+        );
+        transcoder.addTranscodingHint(
+            PNGTranscoder.KEY_HEIGHT, (float) Tv.THOUSAND
+        );
         try {
-            new PNGTranscoder().transcode(input, output);
+            transcoder.transcode(input, output);
         } catch (final TranscoderException ex) {
             throw new IOException(ex);
         }
