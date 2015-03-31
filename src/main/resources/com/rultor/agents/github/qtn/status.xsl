@@ -122,8 +122,11 @@
     </xsl:template>
     <xsl:function name="r:ago">
         <xsl:param name="time"/>
+        <xsl:variable name="seconds" select="60"/>
+        <!--
         <xsl:variable name="seconds"
             select="number((current-dateTime() - xs:dateTime($time)) div xs:dayTimeDuration('PT1S'))"/>
+        -->
         <xsl:choose>
             <xsl:when test="$seconds &gt; 60 * 60">
                 <xsl:value-of select="format-number($seconds div (60 * 60), '0.0')"/>
