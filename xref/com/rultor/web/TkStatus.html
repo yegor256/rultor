@@ -37,12 +37,12 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.web;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.Logger;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pulse;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tick;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.net.HttpURLConnection;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Iterator;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.Iterables;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.Logger;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pulse;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tick;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.net.HttpURLConnection;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.takes.Response;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.takes.Take;
@@ -74,30 +74,31 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      @Override
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">public</strong> Response act() {
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">final</strong> Iterator&lt;Tick&gt; ticks = <strong class="jxr_keyword">this</strong>.pulse.ticks().iterator();
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">final</strong> Iterable&lt;Tick&gt; ticks = <strong class="jxr_keyword">this</strong>.pulse.ticks();
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          <strong class="jxr_keyword">final</strong> Response response;
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">if</strong> (ticks.hasNext()) {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>              <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> age = System.currentTimeMillis() - ticks.next().start();
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>              <strong class="jxr_keyword">if</strong> (age &gt; TimeUnit.MINUTES.toMillis((<strong class="jxr_keyword">long</strong>) Tv.FIVE)) {
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  response = <strong class="jxr_keyword">new</strong> RsWithBody(
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>                      <strong class="jxr_keyword">new</strong> RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>                      Logger.format(<span class="jxr_string">"the system is down, for %[ms]s"</span>, age)
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>                  );
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>              } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>                  response = <strong class="jxr_keyword">new</strong> RsWithBody(
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>                      Logger.format(<span class="jxr_string">"it is up and running, %[ms]s"</span>, age)
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>                  );
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>              }
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>          } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>              response = <strong class="jxr_keyword">new</strong> RsWithBody(
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>                  <strong class="jxr_keyword">new</strong> RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>                  <span class="jxr_string">"there is no activity yet"</span>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>              );
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          }
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">return</strong> response;
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>  }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">if</strong> (Iterables.isEmpty(ticks)) {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>              response = <strong class="jxr_keyword">new</strong> RsWithBody(
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  <strong class="jxr_keyword">new</strong> RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  <span class="jxr_string">"there is no activity yet"</span>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>              );
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>              <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> age = System.currentTimeMillis()
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                  - Iterables.getLast(ticks).start();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>              <strong class="jxr_keyword">if</strong> (age &gt; TimeUnit.MINUTES.toMillis((<strong class="jxr_keyword">long</strong>) Tv.FIVE)) {
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  response = <strong class="jxr_keyword">new</strong> RsWithBody(
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>                      <strong class="jxr_keyword">new</strong> RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                      Logger.format(<span class="jxr_string">"the system is down, for %[ms]s"</span>, age)
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>                  );
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>              } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>                  response = <strong class="jxr_keyword">new</strong> RsWithBody(
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>                      Logger.format(<span class="jxr_string">"it is up and running, %[ms]s"</span>, age)
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>                  );
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>              }
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          }
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          <strong class="jxr_keyword">return</strong> response;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

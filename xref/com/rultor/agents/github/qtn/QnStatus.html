@@ -105,7 +105,7 @@
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../com/rultor/agents/github/Req.html">Req</a> understand(<strong class="jxr_keyword">final</strong> Comment.Smart comment,
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">final</strong> URI home) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>          <strong class="jxr_keyword">final</strong> XML xml = <strong class="jxr_keyword">this</strong>.talk.read();
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; lines = <strong class="jxr_keyword">new</strong> LinkedList&lt;String&gt;();
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; lines = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;();
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         <strong class="jxr_keyword">if</strong> (!xml.nodes(<span class="jxr_string">"/talk[shell/host and daemon/dir]"</span>).isEmpty()) {
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>             <strong class="jxr_keyword">final</strong> String dir = xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0);
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>             <strong class="jxr_keyword">final</strong> Shell.Plain shell = <strong class="jxr_keyword">new</strong> Shell.Plain(
