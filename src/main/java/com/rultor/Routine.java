@@ -117,6 +117,7 @@ final class Routine implements Runnable, Closeable {
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Exception ex) {
             if (!this.down.get()) {
+                Logger.error(this, "#run(): %[exception]s", ex);
                 try {
                     TimeUnit.MICROSECONDS.sleep(1L);
                 } catch (final InterruptedException iex) {
