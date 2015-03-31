@@ -51,6 +51,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done.
@@ -156,13 +157,15 @@ public final class EndsDaemon extends AbstractAgent {
             .strict(1)
             .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit)).up()
-            .add("highlights").set(highlights).up()
+            .add("highlights").set(Xembler.escape(highlights)).up()
             .add("tail")
             .set(
-                Joiner.on(System.lineSeparator()).join(
-                    Iterables.skip(
-                        lines,
-                        Math.max(lines.size() - Tv.HUNDRED, 0)
+                Xembler.escape(
+                    Joiner.on(System.lineSeparator()).join(
+                        Iterables.skip(
+                            lines,
+                            Math.max(lines.size() - Tv.HUNDRED, 0)
+                        )
                     )
                 )
             );
