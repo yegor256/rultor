@@ -78,7 +78,7 @@ public final class TkTicksTest {
             new ByteArrayInputStream(baos.toByteArray())
         );
         MatcherAssert.assertThat(
-            image.getHeight(),
+            image.getWidth(),
             Matchers.equalTo(Tv.THOUSAND)
         );
     }

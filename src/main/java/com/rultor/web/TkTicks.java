@@ -106,7 +106,7 @@ final class TkTicks implements Take {
             PNGTranscoder.KEY_WIDTH, (float) Tv.THOUSAND
         );
         transcoder.addTranscodingHint(
-            PNGTranscoder.KEY_HEIGHT, (float) Tv.THOUSAND
+            PNGTranscoder.KEY_HEIGHT, (float) Tv.HUNDRED
         );
         try {
             transcoder.transcode(input, output);
