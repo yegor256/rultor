@@ -147,6 +147,7 @@ public final class TsApp extends TsWrap {
     private static Takes fallback(final Takes takes) {
         return new TsFallback(
             takes,
+            // @checkstyle AnonInnerLengthCheck (50 lines)
             new Fallback() {
                 @Override
                 public Take take(final RqFallback req) throws IOException {
@@ -157,7 +158,9 @@ public final class TsApp extends TsWrap {
                         new RsWithStatus(
                             new RsWithType(
                                 new RsVelocity(
-                                    this.getClass().getResource("error.html.vm"),
+                                    this.getClass().getResource(
+                                        "error.html.vm"
+                                    ),
                                     new RsVelocity.Pair("err", err),
                                     new RsVelocity.Pair("rev", TsApp.REV)
                                 ),
