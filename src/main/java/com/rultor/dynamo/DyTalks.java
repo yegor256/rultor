@@ -117,6 +117,11 @@ public final class DyTalks implements Talks {
     public static final String ATTR_XML = "xml";
 
     /**
+     * XML of the talk, gzip.
+     */
+    public static final String ATTR_XML_ZIP = "zipxml";
+
+    /**
      * When updated.
      */
     public static final String ATTR_UPDATED = "updated";

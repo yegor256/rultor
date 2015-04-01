@@ -29,6 +29,9 @@
  */
 package com.rultor.dynamo;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeAction;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
@@ -39,10 +42,18 @@ import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.jcabi.xml.XSLDocument;
 import com.rultor.spi.Talk;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.Date;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Node;
 import org.xembly.Directive;
 import org.xembly.ImpossibleModificationException;
@@ -54,6 +65,7 @@ import org.xembly.Xembler;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -91,10 +103,16 @@ public final class DyTalk implements Talk {
 
     @Override
     public XML read() throws IOException {
+        final String xml;
+        if (this.item.has(DyTalks.ATTR_XML_ZIP)) {
+            xml = DyTalk.unzip(
+                this.item.get(DyTalks.ATTR_XML_ZIP).getB().array()
+            );
+        } else {
+            xml = this.item.get(DyTalks.ATTR_XML).getS();
+        }
         return new StrictXML(
-            Talk.UPGRADE.transform(
-                new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS())
-            ),
+            Talk.UPGRADE.transform(new XMLDocument(xml)),
             Talk.SCHEMA
         );
     }
@@ -115,16 +133,25 @@ public final class DyTalk implements Talk {
                     ex
                 );
             }
-            final String body = XSLDocument.STRIP.transform(
-                new StrictXML(new XMLDocument(node), Talk.SCHEMA)
-            ).toString();
-            if (body.length() > Tv.FIFTY * Tv.THOUSAND) {
-                throw new IllegalArgumentException("XML is too big");
+            final byte[] body = DyTalk.zip(
+                XSLDocument.STRIP.transform(
+                    new StrictXML(new XMLDocument(node), Talk.SCHEMA)
+                ).toString()
+            );
+            if (body.length > Tv.SIXTY * Tv.THOUSAND) {
+                throw new IllegalArgumentException(
+                    "XML is too big, even after ZIP"
+                );
             }
+            final AttributeValue value = new AttributeValue();
+            value.setB(ByteBuffer.wrap(body));
             this.item.put(
                 new AttributeUpdates()
-                    .with(DyTalks.ATTR_XML, body)
                     .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
+                    .with(
+                        DyTalks.ATTR_XML_ZIP,
+                        new AttributeValueUpdate(value, AttributeAction.PUT)
+                    )
             );
         }
     }
@@ -136,6 +163,38 @@ public final class DyTalk implements Talk {
                 .with(DyTalks.ATTR_ACTIVE, yes)
                 .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
         );
+    }
+
+    /**
+     * Zip the XML.
+     * @param xml The XML content
+     * @return Zipped content
+     * @throws IOException If fails
+     */
+    private static byte[] zip(final String xml) throws IOException {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final OutputStream output = new GZIPOutputStream(baos);
+        IOUtils.copy(
+            IOUtils.toInputStream(xml, Charsets.UTF_8),
+            output
+        );
+        output.close();
+        return baos.toByteArray();
+    }
+
+    /**
+     * Unzip the XML.
+     * @param bytes The XML content
+     * @return Unzipped content
+     * @throws IOException If fails
+     */
+    private static String unzip(final byte[] bytes) throws IOException {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        IOUtils.copy(
+            new GZIPInputStream(new ByteArrayInputStream(bytes)),
+            baos
+        );
+        return new String(baos.toByteArray(), Charsets.UTF_8);
     }
 
 }
