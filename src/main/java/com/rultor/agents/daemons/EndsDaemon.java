@@ -164,7 +164,7 @@ public final class EndsDaemon extends AbstractAgent {
                     Joiner.on(System.lineSeparator()).join(
                         Iterables.skip(
                             lines,
-                            Math.max(lines.size() - Tv.HUNDRED, 0)
+                            Math.max(lines.size() - Tv.SIXTY, 0)
                         )
                     )
                 )

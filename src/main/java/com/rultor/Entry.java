@@ -105,10 +105,10 @@ public final class Entry {
             talks, Entry.pulse(), this.github(), this.sttc()
         );
         try {
-            final TsApp app = new TsApp(
-                talks, Entry.pulse(), new Toggles.InFile()
-            );
-            new FtCLI(app, this.arguments).start(Exit.NEVER);
+            new FtCLI(
+                new TsApp(talks, Entry.pulse(), new Toggles.InFile()),
+                this.arguments
+            ).start(Exit.NEVER);
         } finally {
             routine.close();
         }
