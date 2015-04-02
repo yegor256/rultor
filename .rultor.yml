@@ -5,7 +5,7 @@ install: |-
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
   sudo apt-get install bsdmainutils
-  sudo gem install pdd
+  sudo gem install --no-rdoc --no-ri pdd
   cd src/bundle
   sudo bundle install
   cd ../..
