@@ -20,4 +20,4 @@ git checkout -b "${BRANCH_NAME}"
 docker_when_possible
 
 git tag "${tag}" -m "${tag}: tagged by rultor.com"
-git push origin "${tag}"
+git push --all origin
