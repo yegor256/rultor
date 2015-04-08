@@ -140,9 +140,10 @@ public final class QnStatus implements Question {
                 QnStatus.PHRASES.getString("QnStatus.response"),
                 Joiner.on('\n').join(
                     Iterables.concat(
-                        Collections.singleton(
-                            QnStatus.REPORT.applyTo(xml).trim()
-                        ),
+                        //Collections.singleton(
+                        //    QnStatus.REPORT.applyTo(xml).trim()
+                        //),
+                        Collections.emptyList(),
                         lines
                     )
                 )
