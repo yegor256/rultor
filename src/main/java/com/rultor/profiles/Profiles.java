@@ -69,25 +69,40 @@ public final class Profiles {
             profile = new Profile.Fixed();
         } else {
             final XML xml = talk.read();
-            final List<String> type = xml.xpath("//request/type/text()");
-            if (type.isEmpty() || !"merge".equals(type.get(0))) {
-                profile = new GithubProfile(
-                    new TalkIssues(Profiles.github(), xml).get().repo()
-                );
+            if (xml.nodes("/talk/wire").isEmpty()) {
+                profile = Profile.EMPTY;
             } else {
-                profile = new GithubProfile(
-                    Profiles.github().repos().get(
-                        new Coordinates.Simple(
-                            xml.xpath(
-                                "//request/args/arg[@name='fork']/text()"
-                            ).get(0)
-                        )
-                    ),
-                    xml.xpath(
-                        "//request/args/arg[@name='fork_branch']/text()"
-                    ).get(0)
-                );
+                profile = Profiles.fetch(xml);
             }
+        }
+        return profile;
+    }
+
+    /**
+     * Fetch a profile from an XML.
+     * @param xml The XML
+     * @return Profile found
+     */
+    private static Profile fetch(final XML xml) {
+        final Profile profile;
+        final List<String> type = xml.xpath("//request/type/text()");
+        if (type.isEmpty() || !"merge".equals(type.get(0))) {
+            profile = new GithubProfile(
+                new TalkIssues(Profiles.github(), xml).get().repo()
+            );
+        } else {
+            profile = new GithubProfile(
+                Profiles.github().repos().get(
+                    new Coordinates.Simple(
+                        xml.xpath(
+                            "//request/args/arg[@name='fork']/text()"
+                        ).get(0)
+                    )
+                ),
+                xml.xpath(
+                    "//request/args/arg[@name='fork_branch']/text()"
+                ).get(0)
+            );
         }
         return profile;
     }

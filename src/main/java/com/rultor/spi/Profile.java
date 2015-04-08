@@ -58,6 +58,11 @@ public interface Profile {
     );
 
     /**
+     * Empty.
+     */
+    Profile EMPTY = new Profile.Fixed();
+
+    /**
      * Name of the repo.
      * @return Name
      * @since 1.36
@@ -195,7 +200,7 @@ public interface Profile {
         }
         @Override
         public Map<String, InputStream> assets() {
-            return new ArrayMap<String, InputStream>();
+            return new ArrayMap<>();
         }
     }
 }
