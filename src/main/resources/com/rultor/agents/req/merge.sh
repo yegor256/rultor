@@ -11,4 +11,4 @@ fi
 
 docker_when_possible
 
-git push origin "${head_branch}"
+git push --all origin
