@@ -20,4 +20,8 @@ git checkout -b "${BRANCH_NAME}"
 docker_when_possible
 
 git tag "${tag}" -m "${tag}: tagged by rultor.com"
+git reset --hard
+git clean -fd
+git checkout master
+git branch -D "${BRANCH_NAME}"
 git push --all origin
