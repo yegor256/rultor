@@ -19,6 +19,7 @@ git checkout -b "${BRANCH_NAME}"
 
 docker_when_possible
 
+git checkout "${BRANCH_NAME}"
 git tag "${tag}" -m "${tag}: tagged by rultor.com"
 git reset --hard
 git clean -fd
