@@ -52,6 +52,7 @@ import com.rultor.spi.Talks;
 import com.rultor.spi.Tick;
 import com.rultor.web.TsApp;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -188,6 +189,9 @@ public final class Entry {
         final Collection<Tick> ticks = Collections.synchronizedCollection(
             EvictingQueue.<Tick>create((int) TimeUnit.HOURS.toMinutes(1L))
         );
+        final Collection<Throwable> error = Collections.synchronizedCollection(
+            new ArrayList<Throwable>(1)
+        );
         return new Pulse() {
             @Override
             public void add(final Tick tick) {
@@ -196,6 +200,17 @@ public final class Entry {
             @Override
             public Iterable<Tick> ticks() {
                 return Collections.unmodifiableCollection(ticks);
+            }
+            @Override
+            public Iterable<Throwable> error() {
+                return Collections.unmodifiableCollection(error);
+            }
+            @Override
+            public void error(final Iterable<Throwable> errors) {
+                error.clear();
+                for (final Throwable err : errors) {
+                    error.add(err);
+                }
             }
         };
     }

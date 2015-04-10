@@ -44,6 +44,7 @@ import com.rultor.spi.Talks;
 import com.rultor.spi.Tick;
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -114,8 +115,9 @@ final class Routine implements Runnable, Closeable {
                 this.safe(),
                 System.currentTimeMillis() - this.start, new Date()
             );
+            this.pulse.error(Collections.<Throwable>emptyList());
             // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Exception ex) {
+        } catch (final Throwable ex) {
             if (!this.down.get()) {
                 Logger.error(this, "#run(): %[exception]s", ex);
                 try {
@@ -124,25 +126,8 @@ final class Routine implements Runnable, Closeable {
                     Logger.info(this, "%[exception]s", iex);
                 }
             }
+            this.pulse.error(Collections.singleton(ex));
         }
-    }
-
-    /**
-     * Routine every-minute proc.
-     * @return Total talks processed
-     * @throws IOException If fails
-     */
-    private int process() throws IOException {
-        this.agents.starter().execute(this.talks);
-        final Profiles profiles = new Profiles();
-        int total = 0;
-        for (final Talk talk : this.talks.active()) {
-            ++total;
-            final Profile profile = profiles.fetch(talk);
-            this.agents.agent(talk, profile).execute(talk);
-        }
-        this.agents.closer().execute(this.talks);
-        return total;
     }
 
     /**
@@ -162,6 +147,24 @@ final class Routine implements Runnable, Closeable {
         this.pulse.add(
             new Tick(begin, System.currentTimeMillis() - begin, total)
         );
+        return total;
+    }
+
+    /**
+     * Routine every-minute proc.
+     * @return Total talks processed
+     * @throws IOException If fails
+     */
+    private int process() throws IOException {
+        this.agents.starter().execute(this.talks);
+        final Profiles profiles = new Profiles();
+        int total = 0;
+        for (final Talk talk : this.talks.active()) {
+            ++total;
+            final Profile profile = profiles.fetch(talk);
+            this.agents.agent(talk, profile).execute(talk);
+        }
+        this.agents.closer().execute(this.talks);
         return total;
     }
 

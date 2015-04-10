@@ -70,6 +70,14 @@ public final class TkTicksTest {
                         new Tick(2L, 1L, 1)
                     );
                 }
+                @Override
+                public Iterable<Throwable> error() {
+                    throw new UnsupportedOperationException("#error()");
+                }
+                @Override
+                public void error(final Iterable<Throwable> errors) {
+                    throw new UnsupportedOperationException("#error(..)");
+                }
             }
         );
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();

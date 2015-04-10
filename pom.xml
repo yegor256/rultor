@@ -358,13 +358,14 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
+                        <argLine>-Djava.awt.headless=true</argLine>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <argLine>-Duser.language=en -Duser.region=US</argLine>
+                        <argLine>-Duser.language=en -Duser.region=US -Djava.awt.headless=true</argLine>
                         <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
                     </configuration>
                 </plugin>

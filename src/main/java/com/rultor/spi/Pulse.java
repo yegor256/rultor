@@ -52,6 +52,14 @@ public interface Pulse {
         public Iterable<Tick> ticks() {
             return Collections.emptyList();
         }
+        @Override
+        public Iterable<Throwable> error() {
+            return Collections.emptyList();
+        }
+        @Override
+        public void error(final Iterable<Throwable> errors) {
+            throw new UnsupportedOperationException("#error()");
+        }
     };
 
     /**
@@ -65,5 +73,17 @@ public interface Pulse {
      * @return Ticks
      */
     Iterable<Tick> ticks();
+
+    /**
+     * Most recent exception (or empty).
+     * @return Problems
+     */
+    Iterable<Throwable> error();
+
+    /**
+     * Set recent exception (or empty).
+     * @param errors Errors or empty if none
+     */
+    void error(Iterable<Throwable> errors);
 
 }

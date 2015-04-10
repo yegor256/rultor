@@ -38,6 +38,7 @@ import java.net.HttpURLConnection;
 import java.util.concurrent.TimeUnit;
 import org.takes.Response;
 import org.takes.Take;
+import org.takes.rs.RsEmpty;
 import org.takes.rs.RsWithBody;
 import org.takes.rs.RsWithStatus;
 
@@ -67,27 +68,32 @@ final class TkStatus implements Take {
     @Override
     public Response act() {
         final Iterable<Tick> ticks = this.pulse.ticks();
+        final StringBuilder msg = new StringBuilder(Tv.THOUSAND);
         final Response response;
         if (Iterables.isEmpty(ticks)) {
-            response = new RsWithBody(
-                new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
-                "there is no activity yet"
-            );
+            response = new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR);
+            msg.append("there is no activity yet");
         } else {
             final long age = System.currentTimeMillis()
                 - Iterables.getLast(ticks).start();
             if (age > TimeUnit.MINUTES.toMillis((long) Tv.FIVE)) {
-                response = new RsWithBody(
-                    new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR),
-                    Logger.format("the system is down, for %[ms]s", age)
+                response = new RsWithStatus(
+                    HttpURLConnection.HTTP_INTERNAL_ERROR
+                );
+                msg.append(
+                    Logger.format(
+                        "the system is down, for %[ms]s\n\n%[exception]s", age
+                    )
                 );
             } else {
-                response = new RsWithBody(
-                    Logger.format("it is up and running, %[ms]s", age)
-                );
+                response = new RsEmpty();
+                msg.append(Logger.format("it is up and running, %[ms]s", age));
             }
         }
-        return response;
+        for (final Throwable error : this.pulse.error()) {
+            msg.append(Logger.format("\n\n%[exception]s", error));
+        }
+        return new RsWithBody(response, msg.toString());
     }
 
 }
