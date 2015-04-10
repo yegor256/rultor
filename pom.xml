@@ -91,7 +91,6 @@
     </distributionManagement>
     <properties>
         <jersey.version>1.18.1</jersey.version>
-        <saxon.version>9.6.0-5</saxon.version>
         <xpathfactorypropfile>${basedir}/src/test/resources/XPathFactory.properties</xpathfactorypropfile>
         <timestamp>${maven.build.timestamp}</timestamp>
     </properties>
@@ -310,7 +309,7 @@
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
-            <version>${saxon.version}</version>
+            <version>9.6.0-5</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
