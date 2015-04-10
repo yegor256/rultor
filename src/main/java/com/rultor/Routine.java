@@ -107,7 +107,7 @@ final class Routine implements Runnable, Closeable {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void run() {
         try {
             Logger.info(

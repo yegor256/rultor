@@ -68,6 +68,7 @@ import org.takes.http.FtCLI;
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class Entry {
 
     /**
@@ -192,6 +193,7 @@ public final class Entry {
         final Collection<Throwable> error = Collections.synchronizedCollection(
             new ArrayList<Throwable>(1)
         );
+        // @checkstyle AnonInnerLengthCheck (50 lines)
         return new Pulse() {
             @Override
             public void add(final Tick tick) {

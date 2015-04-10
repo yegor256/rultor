@@ -40,7 +40,6 @@ import com.rultor.spi.Talk;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -59,7 +58,6 @@ public final class QnStatusTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void buildsReport() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");

@@ -58,6 +58,7 @@ public final class TkTicksTest {
     @Test
     public void rendersSvg() throws Exception {
         final Take home = new TkTicks(
+            // @checkstyle AnonInnerLengthCheck (50 lines)
             new Pulse() {
                 @Override
                 public void add(final Tick tick) {
