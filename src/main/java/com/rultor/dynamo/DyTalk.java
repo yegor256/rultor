@@ -140,7 +140,10 @@ public final class DyTalk implements Talk {
             );
             if (body.length > Tv.SIXTY * Tv.THOUSAND) {
                 throw new IllegalArgumentException(
-                    "XML is too big, even after ZIP"
+                    String.format(
+                        "XML is too big (%d bytes), even after ZIP, in \"%s\"",
+                        body.length, this.item.get(DyTalks.HASH).getS()
+                    )
                 );
             }
             final AttributeValue value = new AttributeValue();
