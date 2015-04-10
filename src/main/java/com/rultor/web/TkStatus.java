@@ -81,9 +81,7 @@ final class TkStatus implements Take {
                     HttpURLConnection.HTTP_INTERNAL_ERROR
                 );
                 msg.append(
-                    Logger.format(
-                        "the system is down, for %[ms]s\n\n%[exception]s", age
-                    )
+                    Logger.format("the system is down, for %[ms]s", age)
                 );
             } else {
                 response = new RsEmpty();
