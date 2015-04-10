@@ -34,7 +34,6 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.AttributeUpdates;
 import com.jcabi.dynamo.Item;
 import com.jcabi.xml.StrictXML;
@@ -71,6 +70,13 @@ import org.xembly.Xembler;
 @ToString
 @EqualsAndHashCode(of = "item")
 public final class DyTalk implements Talk {
+
+    /**
+     * Maximum amount of bytes per item in DynamoDB (400Kb).
+     * @link http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html
+     */
+    private static final int LIMIT = 399 << 10;
+
     /**
      * Item.
      */
@@ -138,11 +144,13 @@ public final class DyTalk implements Talk {
                     new StrictXML(new XMLDocument(node), Talk.SCHEMA)
                 ).toString()
             );
-            if (body.length > Tv.SIXTY * Tv.THOUSAND) {
+            if (body.length > DyTalk.LIMIT) {
                 throw new IllegalArgumentException(
                     String.format(
-                        "XML is too big (%d bytes), even after ZIP, in \"%s\"",
-                        body.length, this.item.get(DyTalks.HASH).getS()
+                        // @checkstyle LineLength (1 line)
+                        "XML is too big (%d bytes, maximum is %d), even after ZIP, in \"%s\"",
+                        body.length, DyTalk.LIMIT,
+                        this.item.get(DyTalks.HASH).getS()
                     )
                 );
             }
