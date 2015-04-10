@@ -91,7 +91,6 @@
     </distributionManagement>
     <properties>
         <jersey.version>1.18.1</jersey.version>
-        <xpathfactorypropfile>${basedir}/src/test/resources/XPathFactory.properties</xpathfactorypropfile>
         <timestamp>${maven.build.timestamp}</timestamp>
     </properties>
     <dependencies>
@@ -342,7 +341,6 @@
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
-                        <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
                         <argLine>-Djava.awt.headless=true</argLine>
                     </configuration>
                 </plugin>
@@ -351,7 +349,6 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <argLine>-Duser.language=en -Duser.region=US -Djava.awt.headless=true</argLine>
-                        <systemPropertiesFile>${xpathfactorypropfile}</systemPropertiesFile>
                     </configuration>
                 </plugin>
             </plugins>
