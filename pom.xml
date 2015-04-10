@@ -123,7 +123,7 @@
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
             <artifactId>xembly</artifactId>
-            <version>0.20.1</version>
+            <version>0.21.1</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
@@ -306,9 +306,23 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
-            <version>9.6.0-5</version>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>9.1.0.8</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>9.1.0.8</version>
+            <classifier>dom</classifier>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>9.1.0.8</version>
+            <classifier>xpath</classifier>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -345,7 +359,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <argLine>-Duser.language=en -Duser.region=US -Djava.awt.headless=true</argLine>
