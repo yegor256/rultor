@@ -93,6 +93,7 @@ final class TkHome implements Take {
                     return TkHome.this.recent();
                 }
             },
+            new XeLink("status", "/status"),
             new XeLink("ticks", "/ticks", "image/png"),
             new XeSource() {
                 @Override

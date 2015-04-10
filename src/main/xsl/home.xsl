@@ -67,7 +67,9 @@
                 <xsl:text> in a Github issue and start from there.</xsl:text>
             </p>
             <div id="pulse" data-href="{links/link[@rel='ticks']/@href}">
-                <img src="{links/link[@rel='ticks']/@href}" alt="status bar"/>
+                <a href="{links/link[@rel='status']/@href}">
+                    <img src="{links/link[@rel='ticks']/@href}" alt="status bar"/>
+                </a>
             </div>
             <xsl:if test="recent/talk">
                 <p>
