@@ -123,7 +123,7 @@
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
             <artifactId>xembly</artifactId>
-            <version>0.21.1</version>
+            <version>0.21</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
