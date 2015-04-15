@@ -31,6 +31,7 @@ package com.rultor.agents.github;
 
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
@@ -40,6 +41,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Answer to post.
@@ -113,7 +115,10 @@ public final class Answer {
         try {
             msg = String.format(
                 "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
+                StringUtils.abbreviate(
+                    this.comment.body().replace("\n", " "),
+                    Tv.HUNDRED
+                ),
                 this.comment.author().login(),
                 text
             );

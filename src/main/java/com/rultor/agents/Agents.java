@@ -127,7 +127,7 @@ public final class Agents {
      */
     public SuperAgent starter() {
         return new SuperAgent.Iterative(
-            new Array<SuperAgent>(
+            new Array<>(
                 new StartsTalks(this.github),
                 new IndexesRequests()
             )
@@ -141,7 +141,7 @@ public final class Agents {
      */
     public SuperAgent closer() throws IOException {
         return new SuperAgent.Iterative(
-            new Array<SuperAgent>(
+            new Array<>(
                 new UnlocksRepo(this.sttc.locks(), this.github),
                 new DeactivatesTalks()
             )
@@ -166,7 +166,7 @@ public final class Agents {
                     this.github.users().self().login(),
                     new QnParametrized(
                         new Question.FirstOf(
-                            new Array<Question>(
+                            new Array<>(
                                 new QnIfContains(
                                     "config", new QnConfig(profile)
                                 ),

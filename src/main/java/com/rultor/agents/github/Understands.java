@@ -97,10 +97,10 @@ public final class Understands extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
-        final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(
+        final Iterable<Comment.Smart> comments = new Smarts<>(
             Iterables.concat(
                 Collections.singleton(new FirstComment(issue)),
-                new Bulk<Comment>(issue.comments().iterate())
+                new Bulk<>(issue.comments().iterate())
             )
         );
         final int seen = Understands.seen(xml);
