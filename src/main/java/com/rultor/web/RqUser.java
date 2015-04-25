@@ -42,6 +42,7 @@ import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.RqAuth;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.forward.RsForward;
+import org.takes.rq.RqWrap;
 
 /**
  * Web user.
@@ -50,33 +51,23 @@ import org.takes.facets.forward.RsForward;
  * @version $Id$
  * @since 1.50
  */
-final class RqUser {
-
-    /**
-     * Identity.
-     */
-    private final transient Identity identity;
+final class RqUser extends RqWrap {
 
     /**
      * Ctor.
      * @param req Request
-     * @throws IOException If fails
      */
-    RqUser(final Request req) throws IOException {
-        this.identity = new RqAuth(req).identity();
-    }
-
-    @Override
-    public String toString() {
-        return this.identity.toString();
+    RqUser(final Request req) {
+        super(req);
     }
 
     /**
      * Is it an anonymous user?
      * @return TRUE if I'm anonymous
+     * @throws IOException If fails
      */
-    public boolean anonymous() {
-        return this.identity.equals(Identity.ANONYMOUS);
+    public boolean anonymous() throws IOException {
+        return this.identity().equals(Identity.ANONYMOUS);
     }
 
     /**
@@ -99,18 +90,28 @@ final class RqUser {
         if (readers.isEmpty()) {
             granted = true;
         } else {
+            final Identity identity = this.identity();
             granted = Iterables.any(
                 readers,
                 new Predicate<String>() {
                     @Override
                     public boolean apply(final String input) {
-                        return !RqUser.this.identity.equals(Identity.ANONYMOUS)
-                            && input.trim().equals(RqUser.this.identity.urn());
+                        return !identity.equals(Identity.ANONYMOUS)
+                            && input.trim().equals(identity.urn());
                     }
                 }
             );
         }
         return granted;
+    }
+
+    /**
+     * Get identity.
+     * @return Identity
+     * @throws IOException If fails
+     */
+    private Identity identity() throws IOException {
+        return new RqAuth(this).identity();
     }
 
 }
