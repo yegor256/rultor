@@ -66,27 +66,20 @@ final class TkHome implements Take {
     private final transient Toggles toggles;
 
     /**
-     * Request.
-     */
-    private final transient Request request;
-
-    /**
      * Ctor.
      * @param tlks Talks
      * @param tgls Toggles
-     * @param req Request
      */
-    TkHome(final Talks tlks, final Toggles tgls, final Request req) {
+    TkHome(final Talks tlks, final Toggles tgls) {
         this.talks = tlks;
         this.toggles = tgls;
-        this.request = req;
     }
 
     @Override
-    public Response act() throws IOException {
+    public Response act(final Request req) throws IOException {
         return new RsPage(
             "/xsl/home.xsl",
-            this.request,
+            req,
             new XeSource() {
                 @Override
                 public Iterable<Directive> toXembly() throws IOException {
@@ -98,7 +91,7 @@ final class TkHome implements Take {
             new XeSource() {
                 @Override
                 public Iterable<Directive> toXembly() throws IOException {
-                    return TkHome.this.flags();
+                    return TkHome.this.flags(req);
                 }
             }
         );
@@ -129,14 +122,15 @@ final class TkHome implements Take {
 
     /**
      * Flags/toggles to show.
+     * @param req Request
      * @return Directives
      * @throws IOException If fails
      */
-    private Iterable<Directive> flags() throws IOException {
+    private Iterable<Directive> flags(final Request req) throws IOException {
         final Directives dirs = new Directives().add("toggles");
         dirs.add("read-only")
             .set(Boolean.toString(this.toggles.readOnly())).up();
-        if (!new User(this.request).anonymous()) {
+        if (!new RqUser(req).anonymous()) {
             dirs.append(
                 new XeLink("sw:read-only", "/toggles/read-only").toXembly()
             );

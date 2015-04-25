@@ -34,8 +34,9 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.takes.Response;
-import org.takes.Take;
 import org.takes.facets.flash.RsFlash;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.TkRegex;
 import org.takes.facets.forward.RsForward;
 
 /**
@@ -45,7 +46,7 @@ import org.takes.facets.forward.RsForward;
  * @version $Id$
  * @since 1.50
  */
-final class TkTalkDelete implements Take {
+final class TkTalkDelete implements TkRegex {
 
     /**
      * Talks.
@@ -53,23 +54,17 @@ final class TkTalkDelete implements Take {
     private final transient Talks talks;
 
     /**
-     * Talk unique number.
-     */
-    private final transient long number;
-
-    /**
      * Ctor.
      * @param tks Talks
-     * @param talk Talk number
      */
-    TkTalkDelete(final Talks tks, final long talk) {
+    TkTalkDelete(final Talks tks) {
         this.talks = tks;
-        this.number = talk;
     }
 
     @Override
-    public Response act() throws IOException {
-        if (!this.talks.exists(this.number)) {
+    public Response act(final RqRegex req) throws IOException {
+        final long number = Long.parseLong(req.matcher().group(1));
+        if (!this.talks.exists(number)) {
             throw new RsForward(
                 new RsFlash(
                     "there is no such page here",
@@ -77,10 +72,10 @@ final class TkTalkDelete implements Take {
                 )
             );
         }
-        final Talk talk = this.talks.get(this.number);
+        final Talk talk = this.talks.get(number);
         this.talks.delete(talk.name());
         return new RsForward(
-            new RsFlash(String.format("talk #%d deleted", this.number))
+            new RsFlash(String.format("talk #%d deleted", number))
         );
     }
 

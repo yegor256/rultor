@@ -36,17 +36,18 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.takes.Request;
+import org.takes.Response;
 import org.takes.Take;
-import org.takes.Takes;
 import org.takes.facets.auth.PsByFlag;
 import org.takes.facets.auth.PsChain;
 import org.takes.facets.auth.PsCookie;
 import org.takes.facets.auth.PsFake;
 import org.takes.facets.auth.PsLogout;
-import org.takes.facets.auth.TsAuth;
+import org.takes.facets.auth.TkAuth;
 import org.takes.facets.auth.codecs.CcCompact;
 import org.takes.facets.auth.codecs.CcHex;
 import org.takes.facets.auth.codecs.CcSafe;
@@ -55,26 +56,23 @@ import org.takes.facets.auth.codecs.CcXOR;
 import org.takes.facets.auth.social.PsGithub;
 import org.takes.facets.fallback.Fallback;
 import org.takes.facets.fallback.RqFallback;
-import org.takes.facets.fallback.TsFallback;
-import org.takes.facets.flash.TsFlash;
+import org.takes.facets.fallback.TkFallback;
+import org.takes.facets.flash.TkFlash;
 import org.takes.facets.fork.FkParams;
 import org.takes.facets.fork.FkRegex;
-import org.takes.facets.fork.RqRegex;
-import org.takes.facets.fork.Target;
-import org.takes.facets.fork.TsFork;
-import org.takes.facets.forward.TsForward;
+import org.takes.facets.fork.TkFork;
+import org.takes.facets.forward.TkForward;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
 import org.takes.rs.RsWithType;
-import org.takes.tk.TkFixed;
+import org.takes.tk.TkClasspath;
+import org.takes.tk.TkGzip;
+import org.takes.tk.TkMeasured;
 import org.takes.tk.TkRedirect;
-import org.takes.ts.TsClasspath;
-import org.takes.ts.TsGzip;
-import org.takes.ts.TsMeasured;
-import org.takes.ts.TsVersioned;
-import org.takes.ts.TsWithHeaders;
-import org.takes.ts.TsWithType;
-import org.takes.ts.TsWrap;
+import org.takes.tk.TkVersioned;
+import org.takes.tk.TkWithHeaders;
+import org.takes.tk.TkWithType;
+import org.takes.tk.TkWrap;
 
 /**
  * App.
@@ -89,7 +87,7 @@ import org.takes.ts.TsWrap;
     "PMD.TooManyMethods", "PMD.ExcessiveMethodLength",
     "PMD.ExcessiveImports"
 })
-public final class TsApp extends TsWrap {
+public final class TkApp extends TkWrap {
 
     /**
      * Revision of rultor.
@@ -102,9 +100,9 @@ public final class TsApp extends TsWrap {
      * @param pulse Pulse
      * @param toggles Toggles
      */
-    public TsApp(final Talks talks, final Pulse pulse,
+    public TkApp(final Talks talks, final Pulse pulse,
         final Toggles toggles) {
-        super(TsApp.make(talks, pulse, toggles));
+        super(TkApp.make(talks, pulse, toggles));
     }
 
     /**
@@ -114,7 +112,7 @@ public final class TsApp extends TsWrap {
      * @param toggles Toggles
      * @return Takes
      */
-    private static Takes make(final Talks talks,
+    private static Take make(final Talks talks,
         final Pulse pulse, final Toggles toggles) {
         if (!"UTF-8".equals(Charset.defaultCharset().name())) {
             throw new IllegalStateException(
@@ -123,18 +121,18 @@ public final class TsApp extends TsWrap {
                 )
             );
         }
-        final Takes takes = new TsGzip(
-            TsApp.fallback(
-                new TsFlash(
-                    TsApp.auth(
-                        new TsForward(TsApp.regex(talks, pulse, toggles))
+        final Take takes = new TkGzip(
+            TkApp.fallback(
+                new TkFlash(
+                    TkApp.auth(
+                        new TkForward(TkApp.regex(talks, pulse, toggles))
                     )
                 )
             )
         );
-        return new TsWithHeaders(
-            new TsVersioned(new TsMeasured(takes)),
-            String.format("X-Rultor-Revision: %s", TsApp.REV),
+        return new TkWithHeaders(
+            new TkVersioned(new TkMeasured(takes)),
+            String.format("X-Rultor-Revision: %s", TkApp.REV),
             "Vary: Cookie"
         );
     }
@@ -144,17 +142,18 @@ public final class TsApp extends TsWrap {
      * @param takes Takes
      * @return Authenticated takes
      */
-    private static Takes fallback(final Takes takes) {
-        return new TsFallback(
+    private static Take fallback(final Take takes) {
+        return new TkFallback(
             takes,
             // @checkstyle AnonInnerLengthCheck (50 lines)
             new Fallback() {
                 @Override
-                public Take take(final RqFallback req) throws IOException {
+                public Iterator<Response> route(final RqFallback req)
+                    throws IOException {
                     final String err = ExceptionUtils.getStackTrace(
                         req.throwable()
                     );
-                    return new TkFixed(
+                    return Collections.<Response>singleton(
                         new RsWithStatus(
                             new RsWithType(
                                 new RsVelocity(
@@ -162,13 +161,13 @@ public final class TsApp extends TsWrap {
                                         "error.html.vm"
                                     ),
                                     new RsVelocity.Pair("err", err),
-                                    new RsVelocity.Pair("rev", TsApp.REV)
+                                    new RsVelocity.Pair("rev", TkApp.REV)
                                 ),
                                 "text/html"
                             ),
                             HttpURLConnection.HTTP_INTERNAL_ERROR
                         )
-                    );
+                    ).iterator();
                 }
             }
         );
@@ -176,12 +175,12 @@ public final class TsApp extends TsWrap {
 
     /**
      * Authenticated.
-     * @param takes Takes
+     * @param take Takes
      * @return Authenticated takes
      */
-    private static Takes auth(final Takes takes) {
-        return new TsAuth(
-            takes,
+    private static Take auth(final Take take) {
+        return new TkAuth(
+            take,
             new PsChain(
                 new PsFake(
                     Manifests.read("Rultor-DynamoKey").startsWith("AAAA")
@@ -220,9 +219,9 @@ public final class TsApp extends TsWrap {
      * @param toggles Toggles
      * @return Takes
      */
-    private static Takes regex(final Talks talks,
+    private static Take regex(final Talks talks,
         final Pulse pulse, final Toggles toggles) {
-        return new TsFork(
+        return new TkFork(
             new FkParams(
                 PsByFlag.class.getSimpleName(),
                 Pattern.compile(".+"),
@@ -235,109 +234,27 @@ public final class TsApp extends TsWrap {
             new FkRegex("/sitemap", new TkSitemap(talks)),
             new FkRegex(
                 "/xsl/.*",
-                new TsWithType(new TsClasspath(), "text/xsl")
+                new TkWithType(new TkClasspath(), "text/xsl")
             ),
             new FkRegex(
                 "/js/.*",
-                new TsWithType(new TsClasspath(), "text/javascript")
+                new TkWithType(new TkClasspath(), "text/javascript")
             ),
             new FkRegex(
                 "/css/.*",
-                new TsWithType(new TsClasspath(), "text/css")
+                new TkWithType(new TkClasspath(), "text/css")
             ),
-            new FkRegex(
-                "/toggles/read-only",
-                new Takes() {
-                    @Override
-                    public Take route(final Request req) throws IOException {
-                        return new TkAdminOnly(new TkToggles(toggles), req);
-                    }
-                }
-            ),
-            new FkRegex(
-                "/",
-                new Target<RqRegex>() {
-                    @Override
-                    public Take route(final RqRegex req) {
-                        return new TkHome(talks, toggles, req);
-                    }
-                }
-            ),
-            new FkRegex(
-                "/b/([/a-zA-Z0-9_\\-\\.]+)",
-                new Target<RqRegex>() {
-                    @Override
-                    public Take route(final RqRegex req) {
-                        return new TkButton(req.matcher().group(1));
-                    }
-                }
-            ),
-            new FkRegex(
-                "/t/([0-9]+)-([a-f0-9]+)",
-                new Target<RqRegex>() {
-                    @Override
-                    public Take route(final RqRegex req) throws IOException {
-                        return new TkDaemon(
-                            req, talks,
-                            Long.parseLong(req.matcher().group(1)),
-                            req.matcher().group(2)
-                        );
-                    }
-                }
-            ),
-            new FkRegex(
-                "/p/([/a-zA-Z0-9_\\-\\.]+)",
-                new Target<RqRegex>() {
-                    @Override
-                    public Take route(final RqRegex req) throws IOException {
-                        return new TkSiblings(
-                            talks, req.matcher().group(1), req
-                        );
-                    }
-                }
-            ),
-            new FkRegex(
-                "/t/([0-9]+)",
-                new Target<RqRegex>() {
-                    @Override
-                    public Take route(final RqRegex req) throws IOException {
-                        return new TkAdminOnly(
-                            new TkTalk(
-                                talks, req,
-                                Long.parseLong(req.matcher().group(1))
-                            ),
-                            req
-                        );
-                    }
-                }
-            ),
-            new FkRegex(
-                "/t/([0-9]+)/kill",
-                new Target<RqRegex>() {
-                    @Override
-                    public Take route(final RqRegex req) throws IOException {
-                        return new TkAdminOnly(
-                            new TkTalkKill(
-                                talks, Long.parseLong(req.matcher().group(1))
-                            ),
-                            req
-                        );
-                    }
-                }
-            ),
-            new FkRegex(
-                "/t/([0-9]+)/delete",
-                new Target<RqRegex>() {
-                    @Override
-                    public Take route(final RqRegex req) throws IOException {
-                        return new TkAdminOnly(
-                            new TkTalkDelete(
-                                talks, Long.parseLong(req.matcher().group(1))
-                            ),
-                            req
-                        );
-                    }
-                }
+            new FkRegex("/", new TkHome(talks, toggles)),
+            new FkRegex("/b/([/a-zA-Z0-9_\\-\\.]+)", new TkButton()),
+            new FkRegex("/t/([0-9]+)-([a-f0-9]+)", new TkDaemon(talks)),
+            new FkRegex("/p/([/a-zA-Z0-9_\\-\\.]+)", new TkSiblings(talks)),
+            new FkAdminOnly(
+                new TkFork(
+                    new FkRegex("/t/([0-9]+)", new TkTalk(talks)),
+                    new FkRegex("/t/([0-9]+)/kill", new TkTalkKill(talks)),
+                    new FkRegex("/t/([0-9]+)/delete", new TkTalkDelete(talks)),
+                    new FkRegex("/toggles/read-only", new TkToggles(toggles))
+                )
             )
         );
     }

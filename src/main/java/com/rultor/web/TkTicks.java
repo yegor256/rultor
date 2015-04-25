@@ -42,6 +42,7 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsWithBody;
@@ -81,7 +82,7 @@ final class TkTicks implements Take {
     }
 
     @Override
-    public Response act() throws IOException {
+    public Response act(final Request req) throws IOException {
         return new RsWithType(
             new RsWithBody(this.png()),
             "image/png"

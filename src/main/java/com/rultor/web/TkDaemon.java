@@ -40,10 +40,10 @@ import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
-import org.takes.Request;
 import org.takes.Response;
-import org.takes.Take;
 import org.takes.facets.flash.RsFlash;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.TkRegex;
 import org.takes.facets.forward.RsForward;
 import org.takes.rs.RsFluent;
 
@@ -54,12 +54,7 @@ import org.takes.rs.RsFluent;
  * @version $Id$
  * @since 1.50
  */
-final class TkDaemon implements Take {
-
-    /**
-     * User.
-     */
-    private final transient User user;
+final class TkDaemon implements TkRegex {
 
     /**
      * Talks.
@@ -67,35 +62,17 @@ final class TkDaemon implements Take {
     private final transient Talks talks;
 
     /**
-     * Talk unique number.
-     */
-    private final transient long number;
-
-    /**
-     * Daemon hash ID.
-     */
-    private final transient String hash;
-
-    /**
      * Ctor.
-     * @param req Request
      * @param tlks Talks
-     * @param num Talk number
-     * @param hsh Hash of the daemon
-     * @checkstyle ParameterNumberCheck (5 lines)
-     * @throws IOException If fails
      */
-    TkDaemon(final Request req, final Talks tlks,
-        final long num, final String hsh) throws IOException {
-        this.user = new User(req);
+    TkDaemon(final Talks tlks) {
         this.talks = tlks;
-        this.number = num;
-        this.hash = hsh;
     }
 
     @Override
-    public Response act() throws IOException {
-        if (!this.talks.exists(this.number)) {
+    public Response act(final RqRegex req) throws IOException {
+        final long number = Long.parseLong(req.matcher().group(1));
+        if (!this.talks.exists(number)) {
             throw new RsForward(
                 new RsFlash(
                     "there is no such page here",
@@ -103,35 +80,40 @@ final class TkDaemon implements Take {
                 )
             );
         }
-        if (!this.user.anonymous()
-            && !this.user.canSee(this.talks.get(this.number))) {
+        final RqUser user = new RqUser(req);
+        if (!user.anonymous()
+            && !user.canSee(this.talks.get(number))) {
             throw new RsForward(
                 new RsFlash(
                     String.format(
                         // @checkstyle LineLength (1 line)
                         "according to .rultor.yml, you (%s) are not allowed to see this",
-                        this.user
+                        user
                     ),
                     Level.WARNING
                 )
             );
         }
+        final String hash = req.matcher().group(2);
         return new RsFluent()
-            .withBody(this.html())
+            .withBody(this.html(number, hash))
             .withType("text/html; charset=utf-8")
             .withHeader(
                 "X-Rultor-Daemon",
-                String.format("%s-%s", this.number, this.hash)
+                String.format("%s-%s", number, hash)
             );
     }
 
     /**
      * Get HTML.
+     * @param number Number
+     * @param hash Hash
      * @return HTML
      * @throws IOException If fails
      */
-    private InputStream html() throws IOException {
-        final Talk talk = this.talks.get(this.number);
+    private InputStream html(final long number, final String hash)
+        throws IOException {
+        final Talk talk = this.talks.get(number);
         final String head = IOUtils.toString(
             this.getClass().getResourceAsStream("daemon/head.html"),
             CharEncoding.UTF_8
@@ -140,7 +122,7 @@ final class TkDaemon implements Take {
             Collections.enumeration(
                 Arrays.asList(
                     IOUtils.toInputStream(head),
-                    new Tail(talk.read(), this.hash).read(),
+                    new Tail(talk.read(), hash).read(),
                     this.getClass().getResourceAsStream("daemon/tail.html")
                 )
             )

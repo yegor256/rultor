@@ -42,19 +42,19 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.takes.Takes;
+import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
 
 /**
- * Test case for {@link TsApp}.
+ * Test case for {@link TkApp}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class TsAppTest {
+public final class TkAppTest {
 
     /**
      * App can render front page.
@@ -62,14 +62,14 @@ public final class TsAppTest {
      */
     @Test
     public void rendersHomePage() throws Exception {
-        final Takes takes = new TsApp(
+        final Take take = new TkApp(
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new RsPrint(
-                    takes.route(new RqFake("GET", "/")).act()
+                    take.act(new RqFake("GET", "/"))
                 ).printBody()
             ),
             XhtmlMatchers.hasXPaths(
@@ -86,7 +86,7 @@ public final class TsAppTest {
      */
     @Test
     public void rendersHomePageViaHttp() throws Exception {
-        final Takes app = new TsApp(
+        final Take app = new TkApp(
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );

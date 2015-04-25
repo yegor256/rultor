@@ -34,7 +34,8 @@ import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.takes.Take;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.TkRegex;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqWithHeader;
 import org.takes.rs.RsPrint;
@@ -55,13 +56,7 @@ public final class TkSiblingsTest {
     @Test
     public void rendersListOfTalks() throws Exception {
         final Talks talks = new Talks.InDir();
-        final Take take = new TkSiblings(
-            talks, "x",
-            new RqWithHeader(
-                new RqFake("GET", "/aa?s=123"),
-                "Accept", "text/xml"
-            )
-        );
+        final TkRegex take = new TkSiblings(talks);
         talks.create("repo1", Talk.TEST_NAME);
         talks.get(Talk.TEST_NAME).modify(
             new Directives()
@@ -73,7 +68,20 @@ public final class TkSiblingsTest {
                 .attr("id", "a1b2c3").set("s3://test")
         );
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new RsPrint(take.act()).printBody()),
+            XhtmlMatchers.xhtml(
+                new RsPrint(
+                    take.act(
+                        new RqRegex.Fake(
+                            new RqWithHeader(
+                                new RqFake("GET", "/aa?s=123"),
+                                "Accept", "text/xml"
+                            ),
+                            "(.*)",
+                            "x"
+                        )
+                    )
+                ).printBody()
+            ),
             XhtmlMatchers.hasXPaths(
                 "/page[repo='x']",
                 "/page[since='123']",

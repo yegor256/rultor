@@ -33,15 +33,16 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.takes.Request;
+import org.takes.Response;
 import org.takes.Take;
-import org.takes.Takes;
 import org.takes.facets.auth.PsFake;
-import org.takes.facets.auth.TsAuth;
+import org.takes.facets.auth.TkAuth;
+import org.takes.facets.fork.RqRegex;
 import org.takes.rq.RqFake;
-import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkDaemon}.
@@ -58,19 +59,21 @@ public final class TkDaemonTest {
     @Test
     public void showsLogInHtml() throws Exception {
         final Talks talks = new Talks.InDir();
-        final Takes takes = new TsAuth(
-            new Takes() {
+        talks.create("test", Talk.TEST_NAME);
+        final Take take = new TkAuth(
+            new Take() {
                 @Override
-                public Take route(final Request request) throws IOException {
-                    return new TkDaemon(request, talks, 1L, "abcdef");
+                public Response act(final Request request) throws IOException {
+                    return new TkDaemon(talks).act(
+                        new RqRegex.Fake("(.*)-(.*)", "1-abcd")
+                    );
                 }
             },
             new PsFake(true)
         );
-        talks.create("test", Talk.TEST_NAME);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                new RsPrint(takes.route(new RqFake()).act()).printBody()
+                IOUtils.toString(take.act(new RqFake()).body())
             ),
             XhtmlMatchers.hasXPath("/xhtml:html/xhtml:body")
         );

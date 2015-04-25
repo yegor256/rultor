@@ -36,6 +36,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
 import java.net.HttpURLConnection;
 import java.util.concurrent.TimeUnit;
+import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsEmpty;
@@ -66,7 +67,7 @@ final class TkStatus implements Take {
     }
 
     @Override
-    public Response act() {
+    public Response act(final Request req) {
         final Iterable<Tick> ticks = this.pulse.ticks();
         final StringBuilder msg = new StringBuilder(Tv.THOUSAND);
         final Response response;

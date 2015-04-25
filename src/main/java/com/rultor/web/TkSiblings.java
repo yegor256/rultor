@@ -38,14 +38,13 @@ import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import org.ocpsoft.prettytime.PrettyTime;
-import org.takes.Request;
 import org.takes.Response;
-import org.takes.Take;
 import org.takes.facets.flash.RsFlash;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.TkRegex;
 import org.takes.facets.forward.RsForward;
 import org.takes.rq.RqHref;
 import org.takes.rs.xe.XeAppend;
@@ -63,7 +62,7 @@ import org.xembly.Directives;
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-final class TkSiblings implements Take {
+final class TkSiblings implements TkRegex {
 
     /**
      * Talks.
@@ -71,50 +70,30 @@ final class TkSiblings implements Take {
     private final transient Talks talks;
 
     /**
-     * Repo.
-     */
-    private final transient String repo;
-
-    /**
-     * Since.
-     */
-    private final transient Date since;
-
-    /**
-     * User.
-     */
-    private final transient Request request;
-
-    /**
      * Ctor.
      * @param tks Talks
-     * @param name Repo name
-     * @param req Request
-     * @throws IOException If fails
      */
-    TkSiblings(final Talks tks, final String name, final Request req)
-        throws IOException {
+    TkSiblings(final Talks tks) {
         this.talks = tks;
-        this.repo = name;
-        final Iterator<String> args = new RqHref(req).href()
-            .param("s").iterator();
-        if (args.hasNext()) {
-            this.since = new Date(Long.parseLong(args.next()));
-        } else {
-            this.since = new Date(Long.MAX_VALUE);
-        }
-        this.request = req;
     }
 
     @Override
-    public Response act() throws IOException {
+    public Response act(final RqRegex req) throws IOException {
+        final Date since = new Date(
+            Long.parseLong(
+                new RqHref.Smart(new RqHref.Base(req)).single(
+                    "s", Long.toString(Long.MAX_VALUE)
+                )
+            )
+        );
+        final String repo = req.matcher().group(1);
         final List<Talk> siblings = Lists.newArrayList(
             Iterables.limit(
-                this.talks.siblings(this.repo, this.since), Tv.TWENTY
+                this.talks.siblings(repo, since), Tv.TWENTY
             )
         );
         if (!siblings.isEmpty()
-            && !new User(this.request).canSee(siblings.get(0))) {
+            && !new RqUser(req).canSee(siblings.get(0))) {
             throw new RsForward(
                 new RsFlash(
                     "according to .rultor.yml, you're not allowed to see this",
@@ -124,21 +103,23 @@ final class TkSiblings implements Take {
         }
         return new RsPage(
             "/xsl/siblings.xsl",
-            this.request,
-            new XeAppend("repo", this.repo),
-            new XeAppend("since", Long.toString(this.since.getTime())),
-            this.more(siblings),
+            req,
+            new XeAppend("repo", repo),
+            new XeAppend("since", Long.toString(since.getTime())),
+            this.more(repo, siblings),
             new XeDirectives(this.list(siblings))
         );
     }
 
     /**
      * Link to more, if necessary.
+     * @param repo Repo name
      * @param siblings Siblings
      * @return Link or empty
      * @throws IOException If fails
      */
-    private XeSource more(final List<Talk> siblings) throws IOException {
+    private XeSource more(final String repo, final List<Talk> siblings)
+        throws IOException {
         final XeSource src;
         if (siblings.size() == Tv.TWENTY) {
             final Talk last = siblings.get(siblings.size() - 1);
@@ -146,7 +127,7 @@ final class TkSiblings implements Take {
                 "more",
                 String.format(
                     "/p/%s?s=%s",
-                    this.repo, last.updated().getTime()
+                    repo, last.updated().getTime()
                 )
             );
         } else {

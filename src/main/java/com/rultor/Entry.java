@@ -50,7 +50,7 @@ import com.rultor.dynamo.DyTalks;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import com.rultor.spi.Tick;
-import com.rultor.web.TsApp;
+import com.rultor.web.TkApp;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,7 +108,7 @@ public final class Entry {
         );
         try {
             new FtCLI(
-                new TsApp(talks, Entry.pulse(), new Toggles.InFile()),
+                new TkApp(talks, Entry.pulse(), new Toggles.InFile()),
                 this.arguments
             ).start(Exit.NEVER);
         } finally {

@@ -37,6 +37,7 @@ import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsWithBody;
@@ -65,7 +66,7 @@ final class TkSitemap implements Take {
     }
 
     @Override
-    public Response act() throws IOException {
+    public Response act(final Request req) throws IOException {
         return new RsWithType(
             new RsWithBody(this.xml()),
             "text/xml"

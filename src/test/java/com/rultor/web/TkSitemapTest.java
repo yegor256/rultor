@@ -35,6 +35,7 @@ import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.takes.Take;
+import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
 import org.xembly.Directives;
 
@@ -65,7 +66,9 @@ public final class TkSitemapTest {
                 .attr("id", "a1b2c3").set("s3://test")
         );
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new RsPrint(take.act()).printBody()),
+            XhtmlMatchers.xhtml(
+                new RsPrint(take.act(new RqFake())).printBody()
+            ),
             XhtmlMatchers.hasXPath(
                 "/ns1:urlset[count(ns1:url)=1]",
                 "http://www.sitemaps.org/schemas/sitemap/0.9"

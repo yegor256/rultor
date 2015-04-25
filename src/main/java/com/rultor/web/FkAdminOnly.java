@@ -29,88 +29,65 @@
  */
 package com.rultor.web;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.jcabi.xml.XML;
-import com.rultor.profiles.Profiles;
-import com.rultor.spi.Profile;
-import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.logging.Level;
 import org.takes.Request;
+import org.takes.Response;
+import org.takes.Take;
 import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.RqAuth;
 import org.takes.facets.flash.RsFlash;
+import org.takes.facets.fork.Fork;
 import org.takes.facets.forward.RsForward;
+import org.takes.misc.Opt;
 
 /**
- * Web user.
+ * Admin only.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.50
  */
-final class User {
+final class FkAdminOnly implements Fork {
 
     /**
-     * Identity.
+     * Original take.
      */
-    private final transient Identity identity;
+    private final transient Take origin;
 
     /**
      * Ctor.
-     * @param req Request
-     * @throws IOException If fails
+     * @param take Original
      */
-    User(final Request req) throws IOException {
-        this.identity = new RqAuth(req).identity();
+    FkAdminOnly(final Take take) {
+        this.origin = take;
     }
 
     @Override
-    public String toString() {
-        return this.identity.toString();
-    }
-
-    /**
-     * Is it an anonymous user?
-     * @return TRUE if I'm anonymous
-     */
-    public boolean anonymous() {
-        return this.identity.equals(Identity.ANONYMOUS);
-    }
-
-    /**
-     * Can I see this talk?
-     * @param talk The talk
-     * @return TRUE if I can see it
-     * @throws IOException If fails
-     */
-    public boolean canSee(final Talk talk) throws IOException {
-        final XML xml;
-        try {
-            xml = new Profiles().fetch(talk).read();
-        } catch (final Profile.ConfigException ex) {
-            throw new RsForward(new RsFlash(ex), "/");
-        }
-        final boolean granted;
-        final Collection<String> readers = xml.xpath(
-            "/p/entry[@key='readers']/item/text()"
-        );
-        if (readers.isEmpty()) {
-            granted = true;
+    public Opt<Response> route(final Request req) throws IOException {
+        final Identity identity = new RqAuth(req).identity();
+        final Opt<Response> opt;
+        if (identity.equals(Identity.ANONYMOUS)) {
+            opt = new Opt.Single<Response>(
+                new RsForward(
+                    new RsFlash(
+                        "sorry, you have to be logged in to see this page",
+                        Level.WARNING
+                    )
+                )
+            );
+        } else if ("urn:github:526301".equals(identity.urn())) {
+            opt = new Opt.Single<>(this.origin.act(req));
         } else {
-            granted = Iterables.any(
-                readers,
-                new Predicate<String>() {
-                    @Override
-                    public boolean apply(final String input) {
-                        return !User.this.identity.equals(Identity.ANONYMOUS)
-                            && input.trim().equals(User.this.identity.urn());
-                    }
-                }
+            opt = new Opt.Single<Response>(
+                new RsForward(
+                    new RsFlash(
+                        "sorry, but this entrance is \"staff only\"",
+                        Level.WARNING
+                    )
+                )
             );
         }
-        return granted;
+        return opt;
     }
-
 }

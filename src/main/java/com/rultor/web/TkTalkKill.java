@@ -35,8 +35,9 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.takes.Response;
-import org.takes.Take;
 import org.takes.facets.flash.RsFlash;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.TkRegex;
 import org.takes.facets.forward.RsForward;
 
 /**
@@ -46,7 +47,7 @@ import org.takes.facets.forward.RsForward;
  * @version $Id$
  * @since 1.50
  */
-final class TkTalkKill implements Take {
+final class TkTalkKill implements TkRegex {
 
     /**
      * Talks.
@@ -54,23 +55,17 @@ final class TkTalkKill implements Take {
     private final transient Talks talks;
 
     /**
-     * Talk unique number.
-     */
-    private final transient long number;
-
-    /**
      * Ctor.
      * @param tks Talks
-     * @param talk Talk number
      */
-    TkTalkKill(final Talks tks, final long talk) {
+    TkTalkKill(final Talks tks) {
         this.talks = tks;
-        this.number = talk;
     }
 
     @Override
-    public Response act() throws IOException {
-        if (!this.talks.exists(this.number)) {
+    public Response act(final RqRegex req) throws IOException {
+        final long number = Long.parseLong(req.matcher().group(1));
+        if (!this.talks.exists(number)) {
             throw new RsForward(
                 new RsFlash(
                     "there is no such page here",
@@ -78,7 +73,7 @@ final class TkTalkKill implements Take {
                 )
             );
         }
-        final Talk talk = this.talks.get(this.number);
+        final Talk talk = this.talks.get(number);
         new KillsDaemon().process(talk.read());
         return new RsForward(
             new RsFlash(

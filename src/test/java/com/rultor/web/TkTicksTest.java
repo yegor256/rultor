@@ -41,6 +41,7 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.takes.Take;
+import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
 
 /**
@@ -82,7 +83,7 @@ public final class TkTicksTest {
             }
         );
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new RsPrint(home.act()).printBody(baos);
+        new RsPrint(home.act(new RqFake())).printBody(baos);
         final BufferedImage image = ImageIO.read(
             new ByteArrayInputStream(baos.toByteArray())
         );
@@ -100,7 +101,7 @@ public final class TkTicksTest {
     public void rendersSvgWithoutTicks() throws Exception {
         final Take home = new TkTicks(Pulse.EMPTY);
         MatcherAssert.assertThat(
-            new RsPrint(home.act()).printBody(),
+            new RsPrint(home.act(new RqFake())).printBody(),
             Matchers.notNullValue()
         );
     }

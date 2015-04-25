@@ -30,7 +30,8 @@
 package com.rultor.web;
 
 import org.takes.Response;
-import org.takes.Take;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.TkRegex;
 import org.takes.rs.RsWithBody;
 import org.takes.rs.RsWithHeaders;
 import org.takes.rs.RsWithType;
@@ -42,24 +43,10 @@ import org.takes.rs.RsWithType;
  * @version $Id$
  * @since 1.50
  */
-final class TkButton implements Take {
-
-    /**
-     * Repo name.
-     */
-    private final transient String name;
-
-    /**
-     * Ctor.
-     * @param repo Repo name
-     */
-    TkButton(final String repo) {
-        this.name = repo;
-    }
+final class TkButton implements TkRegex {
 
     @Override
-    public Response act() {
-        assert this.name != null;
+    public Response act(final RqRegex req) {
         return new RsWithType(
             new RsWithHeaders(
                 new RsWithBody(
