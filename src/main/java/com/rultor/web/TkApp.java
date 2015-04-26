@@ -33,38 +33,12 @@ import com.jcabi.manifests.Manifests;
 import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.regex.Pattern;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.takes.Response;
 import org.takes.Take;
-import org.takes.facets.auth.PsByFlag;
-import org.takes.facets.auth.PsChain;
-import org.takes.facets.auth.PsCookie;
-import org.takes.facets.auth.PsFake;
-import org.takes.facets.auth.PsLogout;
-import org.takes.facets.auth.TkAuth;
-import org.takes.facets.auth.codecs.CcCompact;
-import org.takes.facets.auth.codecs.CcHex;
-import org.takes.facets.auth.codecs.CcSafe;
-import org.takes.facets.auth.codecs.CcSalted;
-import org.takes.facets.auth.codecs.CcXOR;
-import org.takes.facets.auth.social.PsGithub;
-import org.takes.facets.fallback.Fallback;
-import org.takes.facets.fallback.RqFallback;
-import org.takes.facets.fallback.TkFallback;
 import org.takes.facets.flash.TkFlash;
-import org.takes.facets.fork.FkParams;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
 import org.takes.facets.forward.TkForward;
-import org.takes.rs.RsVelocity;
-import org.takes.rs.RsWithStatus;
-import org.takes.rs.RsWithType;
 import org.takes.tk.TkClasspath;
 import org.takes.tk.TkGzip;
 import org.takes.tk.TkMeasured;
@@ -81,12 +55,7 @@ import org.takes.tk.TkWrap;
  * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
-@SuppressWarnings({
-    "PMD.TooManyMethods", "PMD.ExcessiveMethodLength",
-    "PMD.ExcessiveImports"
-})
 public final class TkApp extends TkWrap {
 
     /**
@@ -121,94 +90,24 @@ public final class TkApp extends TkWrap {
                 )
             );
         }
-        final Take takes = new TkGzip(
-            TkApp.fallback(
-                new TkFlash(
-                    TkApp.auth(
-                        new TkForward(TkApp.regex(talks, pulse, toggles))
-                    )
-                )
-            )
-        );
         return new TkWithHeaders(
-            new TkVersioned(new TkMeasured(takes)),
-            String.format("X-Rultor-Revision: %s", TkApp.REV),
-            "Vary: Cookie"
-        );
-    }
-
-    /**
-     * Authenticated.
-     * @param takes Takes
-     * @return Authenticated takes
-     */
-    private static Take fallback(final Take takes) {
-        return new TkFallback(
-            takes,
-            // @checkstyle AnonInnerLengthCheck (50 lines)
-            new Fallback() {
-                @Override
-                public Iterator<Response> route(final RqFallback req)
-                    throws IOException {
-                    final String err = ExceptionUtils.getStackTrace(
-                        req.throwable()
-                    );
-                    return Collections.<Response>singleton(
-                        new RsWithStatus(
-                            new RsWithType(
-                                new RsVelocity(
-                                    this.getClass().getResource(
-                                        "error.html.vm"
-                                    ),
-                                    new RsVelocity.Pair("err", err),
-                                    new RsVelocity.Pair("rev", TkApp.REV)
-                                ),
-                                "text/html"
-                            ),
-                            HttpURLConnection.HTTP_INTERNAL_ERROR
-                        )
-                    ).iterator();
-                }
-            }
-        );
-    }
-
-    /**
-     * Authenticated.
-     * @param take Takes
-     * @return Authenticated takes
-     */
-    private static Take auth(final Take take) {
-        return new TkAuth(
-            take,
-            new PsChain(
-                new PsFake(
-                    Manifests.read("Rultor-DynamoKey").startsWith("AAAA")
-                ),
-                new PsByFlag(
-                    new PsByFlag.Pair(
-                        PsGithub.class.getSimpleName(),
-                        new PsGithub(
-                            Manifests.read("Rultor-GithubId"),
-                            Manifests.read("Rultor-GithubSecret")
-                        )
-                    ),
-                    new PsByFlag.Pair(
-                        PsLogout.class.getSimpleName(),
-                        new PsLogout()
-                    )
-                ),
-                new PsCookie(
-                    new CcSafe(
-                        new CcHex(
-                            new CcXOR(
-                                new CcSalted(new CcCompact()),
-                                Manifests.read("Rultor-SecurityKey")
+            new TkVersioned(
+                new TkMeasured(
+                    new TkGzip(
+                        new TkAppFallback(
+                            new TkFlash(
+                                new TkAppAuth(
+                                    new TkForward(
+                                        TkApp.regex(talks, pulse, toggles)
+                                    )
+                                )
                             )
                         )
                     )
                 )
-            )
+            ),
+            String.format("X-Rultor-Revision: %s", TkApp.REV),
+            "Vary: Cookie"
         );
     }
 
@@ -222,11 +121,6 @@ public final class TkApp extends TkWrap {
     private static Take regex(final Talks talks,
         final Pulse pulse, final Toggles toggles) {
         return new TkFork(
-            new FkParams(
-                PsByFlag.class.getSimpleName(),
-                Pattern.compile(".+"),
-                new TkRedirect()
-            ),
             new FkRegex("/robots.txt", ""),
             new FkRegex("/ticks", new TkTicks(pulse)),
             new FkRegex("/status", new TkStatus(pulse)),
