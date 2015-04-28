@@ -29,7 +29,9 @@
  */
 package com.rultor.profiles;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
@@ -43,6 +45,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -122,7 +125,7 @@ final class GithubProfile implements Profile {
     @Override
     public Map<String, InputStream> assets() throws IOException {
         final ImmutableMap.Builder<String, InputStream> assets =
-            new ImmutableMap.Builder<String, InputStream>();
+            new ImmutableMap.Builder<>();
         final XML xml = this.read();
         for (final XML asset : xml.nodes("/p/entry[@key='assets']/entry")) {
             assets.put(
@@ -158,15 +161,25 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        final Collection<String> friends = new YamlXML(
-            new String(
-                new Content.Smart(
-                    rpo.contents().get(GithubProfile.FILE)
-                ).decoded(),
-                CharEncoding.UTF_8
-            )
-        ).get().xpath("/p/entry[@key='friends']/item/text()");
-        if (!friends.contains(this.repo.coordinates().toString())) {
+        final Collection<String> friends = Collections2.transform(
+            new YamlXML(
+                new String(
+                    new Content.Smart(
+                        rpo.contents().get(GithubProfile.FILE)
+                    ).decoded(),
+                    CharEncoding.UTF_8
+                )
+            ).get().xpath("/p/entry[@key='friends']/item/text()"),
+            new Function<String, String>() {
+                @Override
+                public String apply(final String input) {
+                    return input.toLowerCase(Locale.ENGLISH);
+                }
+            }
+        );
+        final String coords = this.repo.coordinates()
+            .toString().toLowerCase(Locale.ENGLISH);
+        if (!friends.contains(coords)) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
