@@ -53,10 +53,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
-import org.xembly.Xembler;
 
 /**
  * Starts daemon.
@@ -95,12 +93,12 @@ public final class StartsDaemon extends AbstractAgent {
             .strict(1)
             .add("started").set(new Time().iso()).up();
         try {
-            dirs.add("dir").set(this.run(xml));
+            final String dir = this.run(xml);
+            dirs.add("dir").set(dir);
         } catch (final IOException ex) {
             dirs.add("ended").set(new Time().iso()).up()
                 .add("code").set("128").up()
-                .add("tail")
-                .set(Xembler.escape(ExceptionUtils.getStackTrace(ex)));
+                .add("tail").set(ex.getLocalizedMessage());
         }
         return dirs;
     }
