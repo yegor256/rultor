@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-chown 600 ~/.ssh/config
+chmod 600 ~/.ssh/config
 git clone --branch="${head_branch}" --depth=10 "${head}" repo
 cd repo
 git config user.email "me@rultor.com"
