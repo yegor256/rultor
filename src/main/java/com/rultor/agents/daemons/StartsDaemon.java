@@ -53,8 +53,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
  * Starts daemon.
@@ -88,6 +90,28 @@ public final class StartsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
+        final Directives dirs = new Directives()
+            .xpath("/talk/daemon[not(started)]")
+            .strict(1)
+            .add("started").set(new Time().iso()).up();
+        try {
+            dirs.add("dir").set(this.run(xml));
+        } catch (final IOException ex) {
+            dirs.add("ended").set(new Time().iso()).up()
+                .add("code").set("128").up()
+                .add("tail")
+                .set(Xembler.escape(ExceptionUtils.getStackTrace(ex)));
+        }
+        return dirs;
+    }
+
+    /**
+     * Run daemon.
+     * @param xml XML with talk
+     * @return Directory where it started
+     * @throws IOException If fails
+     */
+    public String run(final XML xml) throws IOException {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final Shell shell = new TalkShells(xml).get();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -137,11 +161,7 @@ public final class StartsDaemon extends AbstractAgent {
             )
         );
         Logger.info(this, "daemon started at %s", dir);
-        return new Directives()
-            .xpath("/talk/daemon[not(started)]")
-            .strict(1)
-            .add("started").set(new Time().iso()).up()
-            .add("dir").set(dir);
+        return dir;
     }
 
     /**
