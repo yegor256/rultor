@@ -91,12 +91,13 @@ public final class StartsDaemon extends AbstractAgent {
         final Directives dirs = new Directives()
             .xpath("/talk/daemon[not(started)]")
             .strict(1)
-            .add("started").set(new Time().iso()).up();
+            .add("started").set(new Time().iso()).up()
+            .add("dir");
         try {
-            final String dir = this.run(xml);
-            dirs.add("dir").set(dir);
+            dirs.set(this.run(xml));
         } catch (final IOException ex) {
-            dirs.add("ended").set(new Time().iso()).up()
+            dirs.set("/tmp")
+                .add("ended").set(new Time().iso()).up()
                 .add("code").set("128").up()
                 .add("tail").set(ex.getLocalizedMessage());
         }
