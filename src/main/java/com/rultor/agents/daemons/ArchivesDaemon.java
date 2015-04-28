@@ -80,7 +80,7 @@ public final class ArchivesDaemon extends AbstractAgent {
      */
     public ArchivesDaemon(final Bucket bkt) {
         super(
-            "/talk/daemon[started and code and ended]",
+            "/talk/daemon[started and code and ended and dir]",
             "/talk/shell"
         );
         this.bucket = bkt;

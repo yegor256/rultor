@@ -87,14 +87,14 @@ public final class StartsDaemon extends AbstractAgent {
     }
 
     @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
+    public Iterable<Directive> process(final XML xml) {
         final Directives dirs = new Directives()
             .xpath("/talk/daemon[not(started)]")
             .strict(1)
-            .add("started").set(new Time().iso()).up()
-            .add("dir");
+            .add("started").set(new Time().iso()).up();
         try {
-            dirs.set(this.run(xml));
+            final String dir = this.run(xml);
+            dirs.add("dir").set(dir);
         } catch (final IOException ex) {
             dirs.set("/tmp")
                 .add("ended").set(new Time().iso()).up()
