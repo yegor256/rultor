@@ -96,8 +96,7 @@ public final class StartsDaemon extends AbstractAgent {
             final String dir = this.run(xml);
             dirs.add("dir").set(dir);
         } catch (final IOException ex) {
-            dirs.set("/tmp")
-                .add("ended").set(new Time().iso()).up()
+            dirs.add("ended").set(new Time().iso()).up()
                 .add("code").set("128").up()
                 .add("tail").set(ex.getLocalizedMessage());
         }
