@@ -202,7 +202,7 @@ public final class Agents {
                 new RegistersShell(
                     profile,
                     // @checkstyle MagicNumber (1 line)
-                    "b2.rultor.com", 22,
+                    "b3.rultor.com", 22,
                     "rultor",
                     IOUtils.toString(
                         this.getClass().getResourceAsStream("rultor.key"),
