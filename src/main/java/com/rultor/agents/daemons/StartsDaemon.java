@@ -31,6 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.ssh.SSH;
@@ -109,6 +110,7 @@ public final class StartsDaemon extends AbstractAgent {
      * @return Directory where it started
      * @throws IOException If fails
      */
+    @RetryOnFailure
     public String run(final XML xml) throws IOException {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final Shell shell = new TalkShells(xml).get();
