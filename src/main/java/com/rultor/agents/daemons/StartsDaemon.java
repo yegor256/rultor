@@ -100,6 +100,7 @@ public final class StartsDaemon extends AbstractAgent {
             dirs.add("ended").set(new Time().iso()).up()
                 .add("code").set("128").up()
                 .add("tail").set(ex.getLocalizedMessage());
+            Logger.warn(this, "%[exception]s", ex);
         }
         return dirs;
     }
