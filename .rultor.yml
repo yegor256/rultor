@@ -51,7 +51,7 @@ release:
     cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Prultor --errors --batch-mode
     git remote add heroku git@heroku.com:rultor.git
-    mkdir ~/.ssh
+    mkdir -p ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
     chmod -R 600 ~/.ssh/*
     echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
