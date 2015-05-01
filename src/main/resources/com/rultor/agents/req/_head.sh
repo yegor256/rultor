@@ -1,5 +1,6 @@
 #!/bin/sh
 
+mkdir -p .ssh
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 chmod 600 ~/.ssh/config
 git clone --branch="${head_branch}" --depth=10 "${head}" repo
