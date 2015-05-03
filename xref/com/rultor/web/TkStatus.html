@@ -92,18 +92,21 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>                  msg.append(
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>                      Logger.format(<span class="jxr_string">"the system is down, for %[ms]s"</span>, age)
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>                  );
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>              } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  response = <strong class="jxr_keyword">new</strong> RsEmpty();
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  msg.append(Logger.format(<span class="jxr_string">"it is up and running, %[ms]s"</span>, age));
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>              }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>          }
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Throwable error : <strong class="jxr_keyword">this</strong>.pulse.error()) {
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>              msg.append(Logger.format(<span class="jxr_string">"\n\n%[exception]s"</span>, error));
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>                  msg.append(
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                      <span class="jxr_string">"\n\nPlease, email this page to bug@rultor.com"</span>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  );
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>              } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>                  response = <strong class="jxr_keyword">new</strong> RsEmpty();
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>                  msg.append(Logger.format(<span class="jxr_string">"it is up and running, %[ms]s"</span>, age));
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>              }
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>          }
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> RsWithBody(response, msg.toString());
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      }
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  }
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Throwable error : <strong class="jxr_keyword">this</strong>.pulse.error()) {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              msg.append(Logger.format(<span class="jxr_string">"\n\n%[exception]s"</span>, error));
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> RsWithBody(response, msg.toString());
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      }
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
