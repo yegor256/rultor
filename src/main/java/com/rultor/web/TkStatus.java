@@ -84,6 +84,9 @@ final class TkStatus implements Take {
                 msg.append(
                     Logger.format("the system is down, for %[ms]s", age)
                 );
+                msg.append(
+                    "\n\nPlease, email this page to bug@rultor.com"
+                );
             } else {
                 response = new RsEmpty();
                 msg.append(Logger.format("it is up and running, %[ms]s", age));
