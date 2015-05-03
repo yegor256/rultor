@@ -85,11 +85,14 @@ public final class KillsDaemon extends AbstractAgent {
         new Shell.Empty(new Shell.Safe(shell)).exec(
             Joiner.on(" && ").join(
                 String.format("dir=%s", SSH.escape(dir)),
-                Joiner.on("; ").join(
-                    "if [ -e \"${dir}/cid\" ]",
-                    // @checkstyle LineLength (1 line)
-                    "then docker rm -f $(cat \"${dir}/pid\") && rm -f $(cat \"${dir}/pid\")",
-                    "fi"
+                String.format(
+                    "if [ -e \"${dir}/cid\" ]; then %s; fi",
+                    Joiner.on(" &&  ").join(
+                        "cid=$(cat \"${dir}/cid\")",
+                        // @checkstyle LineLength (1 line)
+                        "if docker ps -qa | grep --quiet ${cid}; then docker rm -f ${cid}; fi",
+                        "rm -f \"${dir}/cid\""
+                    )
                 ),
                 "if [ ! -e \"${dir}/pid\" ]; then exit 0; fi",
                 "pid=$(cat \"${dir}/pid\")",
