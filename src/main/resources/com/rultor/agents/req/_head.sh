@@ -3,7 +3,7 @@
 mkdir -p ~/.ssh
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 chmod 600 ~/.ssh/config
-git clone --depth=10 "${head}" repo
+git clone "${head}" repo
 cd repo
 git config user.email "me@rultor.com"
 git config user.name "rultor"
