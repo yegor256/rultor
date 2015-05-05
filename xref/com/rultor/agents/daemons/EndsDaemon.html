@@ -99,9 +99,9 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>          <strong class="jxr_keyword">final</strong> String dir = xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0);
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> exit = <strong class="jxr_keyword">new</strong> Shell.Empty(shell).exec(
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>              Joiner.on(EndsDaemon.SHELL_JOINER).join(
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>                  String.format(<span class="jxr_string">"dir=%s "</span>, SSH.escape(dir)),
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>                  <span class="jxr_string">"if [ ! -e \&quot;${dir}/pid\&quot; ]; then exit 1; fi"</span>,
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>                  <span class="jxr_string">"pid=$(cat \&quot;${dir}/pid\&quot;)"</span>,
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>                  String.format(<span class="jxr_string">"cd %s "</span>, SSH.escape(dir)),
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>                  <span class="jxr_string">"if [ ! -e pid ]; then exit 1; fi"</span>,
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>                  <span class="jxr_string">"pid=$(cat pid)"</span>,
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>                  <span class="jxr_string">"ps -p \&quot;${pid}\&quot; &gt;/dev/null"</span>
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>              )
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>          );
