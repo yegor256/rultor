@@ -31,44 +31,52 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
+import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
-import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
+import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.Directive;
-import org.xembly.Directives;
 
 /**
- * Stops daemon if STOP request is present.
+ * Script to run.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.50
+ * @since 1.53
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public final class StopsDaemon extends AbstractAgent {
+final class Script {
 
     /**
-     * Ctor.
+     * Execute.
+     * @param xml Talk xml
+     * @param name Name of the script resource
+     * @return Exit code
+     * @throws IOException If fails
      */
-    public StopsDaemon() {
-        super(
-            "/talk/request[type='stop']",
-            "/talk/daemon[started and not(code) and not(ended)]"
+    public int exec(final XML xml, final String name) throws IOException {
+        final Shell shell = new TalkShells(xml).get();
+        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
+        new Shell.Safe(shell).exec(
+            String.format(
+                "cd %s && cat > %s && chmod a+x %1$s",
+                SSH.escape(dir), SSH.escape(name)
+            ),
+            this.getClass().getResourceAsStream(name),
+            Logger.stream(Level.INFO, this),
+            Logger.stream(Level.WARNING, this)
         );
-    }
-
-    @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
-        new Script().exec(xml, "stop.sh");
-        Logger.info(
-            this, "docker stopped by request at %s",
-            xml.xpath("/talk/@name").get(0)
+        return new Shell.Empty(new Shell.Safe(shell)).exec(
+            String.format(
+                "cd %s && /bin/bash %s >> stdout",
+                SSH.escape(dir), SSH.escape(name)
+            )
         );
-        return new Directives();
     }
 
 }

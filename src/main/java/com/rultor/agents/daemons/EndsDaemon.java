@@ -91,9 +91,9 @@ public final class EndsDaemon extends AbstractAgent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Shell.Empty(shell).exec(
             Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("dir=%s ", SSH.escape(dir)),
-                "if [ ! -e \"${dir}/pid\" ]; then exit 1; fi",
-                "pid=$(cat \"${dir}/pid\")",
+                String.format("cd %s ", SSH.escape(dir)),
+                "if [ ! -e pid ]; then exit 1; fi",
+                "pid=$(cat pid)",
                 "ps -p \"${pid}\" >/dev/null"
             )
         );
