@@ -63,7 +63,6 @@ release:
     git commit -m 'build number set'
     git add settings.xml
     git commit -m 'settings.xml'
-    git fetch --unshallow
     git push -f heroku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     curl -f --connect-timeout 30 --retry 8 --retry-delay 60 http://www.rultor.com
