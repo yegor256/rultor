@@ -38,8 +38,11 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.fallback.Fallback;
+import org.takes.facets.fallback.FbChain;
+import org.takes.facets.fallback.FbStatus;
 import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TkFallback;
+import org.takes.rs.RsText;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
 import org.takes.rs.RsWithType;
@@ -51,6 +54,7 @@ import org.takes.tk.TkWrap;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.53
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkAppFallback extends TkWrap {
 
@@ -75,33 +79,47 @@ final class TkAppFallback extends TkWrap {
     private static Take make(final Take take) {
         return new TkFallback(
             take,
-            // @checkstyle AnonInnerLengthCheck (50 lines)
-            new Fallback() {
-                @Override
-                public Iterator<Response> route(final RqFallback req)
-                    throws IOException {
-                    final String err = ExceptionUtils.getStackTrace(
-                        req.throwable()
-                    );
-                    return Collections.<Response>singleton(
-                        new RsWithStatus(
-                            new RsWithType(
-                                new RsVelocity(
-                                    this.getClass().getResource(
-                                        "error.html.vm"
-                                    ),
-                                    new RsVelocity.Pair("err", err),
-                                    new RsVelocity.Pair(
-                                        "rev", TkAppFallback.REV
-                                    )
-                                ),
-                                "text/html"
-                            ),
-                            HttpURLConnection.HTTP_INTERNAL_ERROR
-                        )
-                    ).iterator();
+            new FbChain(
+                new FbStatus(
+                    HttpURLConnection.HTTP_NOT_FOUND,
+                    new RsWithStatus(
+                        new RsText("page not found"),
+                        HttpURLConnection.HTTP_NOT_FOUND
+                    )
+                ),
+                new Fallback() {
+                    @Override
+                    public Iterator<Response> route(final RqFallback req)
+                        throws IOException {
+                        return Collections.singleton(
+                            TkAppFallback.fatal(req)
+                        ).iterator();
+                    }
                 }
-            }
+            )
+        );
+    }
+
+    /**
+     * Make fatal error page.
+     * @param req Request
+     * @return Response
+     * @throws IOException If fails
+     */
+    private static Response fatal(final RqFallback req) throws IOException {
+        return new RsWithStatus(
+            new RsWithType(
+                new RsVelocity(
+                    TkAppFallback.class.getResource("error.html.vm"),
+                    new RsVelocity.Pair(
+                        "err",
+                        ExceptionUtils.getStackTrace(req.throwable())
+                    ),
+                    new RsVelocity.Pair("rev", TkAppFallback.REV)
+                ),
+                "text/html"
+            ),
+            HttpURLConnection.HTTP_INTERNAL_ERROR
         );
     }
 
