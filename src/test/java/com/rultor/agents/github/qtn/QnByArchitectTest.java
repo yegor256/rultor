@@ -37,6 +37,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
+import java.util.Locale;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -95,7 +96,9 @@ public final class QnByArchitectTest {
                 new XMLDocument(
                     String.format(
                         "<p><entry key='b'>%s</entry></p>",
-                        repo.github().users().self().login()
+                        repo.github().users().self().login().toUpperCase(
+                            Locale.ENGLISH
+                        )
                     )
                 )
             ),
