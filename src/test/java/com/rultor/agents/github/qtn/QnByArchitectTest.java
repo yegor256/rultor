@@ -77,4 +77,31 @@ public final class QnByArchitectTest {
         );
     }
 
+    /**
+     * QnByArchitect can accept if an architect.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsIfArchitect() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().post("release")
+        );
+        final Question question = Mockito.mock(Question.class);
+        final URI home = new URI("#1");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument(
+                    String.format(
+                        "<p><entry key='b'>%s</entry></p>",
+                        repo.github().users().self().login()
+                    )
+                )
+            ),
+            "/p/entry[@key='b']/text()", question
+        ).understand(comment, home);
+        Mockito.verify(question).understand(comment, home);
+    }
+
 }
