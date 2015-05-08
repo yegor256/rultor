@@ -29,6 +29,8 @@
  */
 package com.rultor.agents.github.qtn;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
@@ -39,6 +41,7 @@ import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -94,15 +97,29 @@ public final class QnByArchitect implements Question {
         final URI home) throws IOException {
         final Req req;
         final Issue.Smart issue = new Issue.Smart(comment.issue());
-        final List<String> logins = this.profile.read().xpath(this.xpath);
-        if (logins.isEmpty() || logins.contains(comment.author().login())
-            || logins.contains(issue.author().login())) {
+        final List<String> logins = Lists.transform(
+            this.profile.read().xpath(this.xpath),
+            new Function<String, String>() {
+                @Override
+                public String apply(final String input) {
+                    return input.toLowerCase(Locale.ENGLISH);
+                }
+            }
+        );
+        final boolean legal = logins.isEmpty()
+            || logins.contains(
+                comment.author().login().toLowerCase(Locale.ENGLISH)
+            )
+            || logins.contains(
+                issue.author().login().toLowerCase(Locale.ENGLISH)
+            );
+        if (legal) {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
                 String.format(
                     QnByArchitect.PHRASES.getString("QnByArchitect.denied"),
-                    logins.get(0)
+                    logins.get(0).toLowerCase(Locale.ENGLISH)
                 )
             );
             req = Req.EMPTY;
