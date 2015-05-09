@@ -40,6 +40,7 @@ import com.jcabi.s3.retry.ReRegion;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
+import com.rultor.agents.daemons.SanitizesDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.daemons.StopsDaemon;
 import com.rultor.agents.daemons.WipesDaemon;
@@ -198,6 +199,8 @@ public final class Agents {
         );
         return new Agent.Iterative(
             new Array<Agent>(
+                new SanitizesDaemon(),
+                new WipesDaemon(),
                 new Understands(this.github, question),
                 new StartsRequest(profile),
                 new RegistersShell(
@@ -236,7 +239,6 @@ public final class Agents {
                         )
                     ).bucket(Manifests.read("Rultor-S3Bucket"))
                 ),
-                new WipesDaemon(),
                 new Publishes(profile),
                 new Stars(this.github)
             )

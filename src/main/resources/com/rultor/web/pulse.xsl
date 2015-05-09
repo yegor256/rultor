@@ -73,7 +73,7 @@
                 <xsl:choose>
                     <xsl:when test="not($age) or $age &gt; 600">
                         <tspan style="fill:red">
-                            <xsl:text>system outage :(</xsl:text>
+                            <xsl:text>system outage :( click here</xsl:text>
                         </tspan>
                     </xsl:when>
                     <xsl:when test="$age &gt; 240">

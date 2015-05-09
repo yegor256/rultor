@@ -108,7 +108,7 @@ public final class ArchivesDaemon extends AbstractAgent {
         );
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final URI uri = this.upload(file, hash);
-        final String title = this.title(xml, file);
+        final String title = ArchivesDaemon.title(xml, file);
         Logger.info(
             this, "daemon of %s archived into %s: %s",
             xml.xpath("/talk/@name").get(0), uri, title
@@ -145,7 +145,8 @@ public final class ArchivesDaemon extends AbstractAgent {
      * @return Title
      * @throws IOException If fails
      */
-    private String title(final XML xml, final File file) throws IOException {
+    private static String title(final XML xml, final File file)
+        throws IOException {
         final int code = Integer.parseInt(
             xml.xpath("/talk/daemon/code/text()").get(0)
         );

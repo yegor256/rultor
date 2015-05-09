@@ -118,11 +118,11 @@ public final class EndsDaemon extends AbstractAgent {
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
-        final int exit = this.exit(shell, dir);
+        final int exit = EndsDaemon.exit(shell, dir);
         final String stdout = new Shell.Plain(new Shell.Safe(shell)).exec(
             Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("dir=%s", SSH.escape(dir)),
-                "cat \"${dir}/stdout\""
+                String.format("cd %s", SSH.escape(dir)),
+                "cat stdout"
             )
         );
         final Collection<String> lines = Lists.newArrayList(
@@ -178,10 +178,11 @@ public final class EndsDaemon extends AbstractAgent {
      * @return Exit code
      * @throws IOException If fails
      */
-    private int exit(final Shell shell, final String dir) throws IOException {
+    private static int exit(final Shell shell, final String dir)
+        throws IOException {
         final String status = new Shell.Plain(new Shell.Safe(shell)).exec(
             Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("cd %s", SSH.escape(dir)),
+                String.format("cd   %s", SSH.escape(dir)),
                 "if [ ! -e status ]; then echo 127; exit; fi",
                 "cat status"
             )
