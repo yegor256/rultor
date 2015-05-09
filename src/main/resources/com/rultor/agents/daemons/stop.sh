@@ -5,5 +5,7 @@ if [ ! -e cid ]; then
   exit 0
 fi
 cid=$(cat cid)
-docker stop "${cid}"
+if docker ps -qa | grep --quiet "${cid}"; then
+  docker stop "${cid}"
+fi
 rm cid
