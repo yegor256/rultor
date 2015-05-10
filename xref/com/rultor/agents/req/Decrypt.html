@@ -110,47 +110,49 @@
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>             <strong class="jxr_keyword">this</strong>.profile.read().nodes(<span class="jxr_string">"/p/entry[@key='decrypt']/entry"</span>);
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; commands = <strong class="jxr_keyword">new</strong> LinkedList&lt;String&gt;();
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>         <strong class="jxr_keyword">if</strong> (!assets.isEmpty()) {
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>             commands.add(
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>                 Joiner.on(' ').join(
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>                     <span class="jxr_string">"gpg --keyserver hkp://pool.sks-keyservers.net"</span>,
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>                     <strong class="jxr_keyword">this</strong>.proxy,
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>                     <span class="jxr_string">"--verbose --recv-keys 9AF0FA4C"</span>
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>                 )
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>             );
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>         }
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML asset : assets) {
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">final</strong> String key = asset.xpath(<span class="jxr_string">"@key"</span>).get(0);
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>             <strong class="jxr_keyword">final</strong> String enc = String.format(<span class="jxr_string">"%s.enc"</span>, key);
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>             commands.add(
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>                 Joiner.on(' ').join(
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>                     <span class="jxr_string">"gpg --verbose \&quot;--keyring=$(pwd)/.gpg/pubring.gpg\&quot;"</span>,
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>                     <span class="jxr_string">"\&quot;--secret-keyring=$(pwd)/.gpg/secring.gpg\&quot;"</span>,
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>                     String.format(
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>                         <span class="jxr_string">"--decrypt %s &gt; %s"</span>,
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>                         SSH.escape(asset.xpath(<span class="jxr_string">"./text()"</span>).get(0)),
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>                         SSH.escape(enc)
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>                     )
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>                 )
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>             );
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>             commands.add(
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 String.format(
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>                     Joiner.on(' ').join(
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>                         <span class="jxr_string">"gpg --no-tty --batch --verbose --decrypt"</span>,
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>                         <span class="jxr_string">"--passphrase %s %s &gt; %s"</span>
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>                     ),
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>                     SSH.escape(
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>                         String.format(<span class="jxr_string">"rultor-key:%s"</span>, <strong class="jxr_keyword">this</strong>.profile.name())
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>                     ),
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>                     SSH.escape(enc),
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>                     SSH.escape(key)
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>                 )
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>             );
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>             commands.add(String.format(<span class="jxr_string">"rm -rf %s"</span>, SSH.escape(enc)));
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>         }
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>         commands.add(<span class="jxr_string">"rm -rf .gpg"</span>);
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">return</strong> commands;
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>     }
-<a class="jxr_linenumber" name="L145" href="#L145">145</a> }
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>             commands.add(<span class="jxr_string">"gpgconf --reload gpg-agent"</span>);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>             commands.add(
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>                 Joiner.on(' ').join(
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>                     <span class="jxr_string">"gpg --keyserver hkp://pool.sks-keyservers.net"</span>,
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>                     <strong class="jxr_keyword">this</strong>.proxy,
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>                     <span class="jxr_string">"--verbose --recv-keys 9AF0FA4C"</span>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>                 )
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>             );
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>             commands.add(<span class="jxr_string">"gpg --version"</span>);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         }
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML asset : assets) {
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">final</strong> String key = asset.xpath(<span class="jxr_string">"@key"</span>).get(0);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>             <strong class="jxr_keyword">final</strong> String enc = String.format(<span class="jxr_string">"%s.enc"</span>, key);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>             commands.add(
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>                 Joiner.on(' ').join(
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>                     <span class="jxr_string">"gpg --verbose \&quot;--keyring=$(pwd)/.gpg/pubring.gpg\&quot;"</span>,
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>                     <span class="jxr_string">"\&quot;--secret-keyring=$(pwd)/.gpg/secring.gpg\&quot;"</span>,
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>                     String.format(
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                         <span class="jxr_string">"--decrypt %s &gt; %s"</span>,
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                         SSH.escape(asset.xpath(<span class="jxr_string">"./text()"</span>).get(0)),
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                         SSH.escape(enc)
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>                     )
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>                 )
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>             );
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>             commands.add(
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>                 String.format(
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>                     Joiner.on(' ').join(
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>                         <span class="jxr_string">"gpg --no-tty --batch --verbose --decrypt"</span>,
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>                         <span class="jxr_string">"--passphrase %s %s &gt; %s"</span>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>                     ),
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>                     SSH.escape(
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>                         String.format(<span class="jxr_string">"rultor-key:%s"</span>, <strong class="jxr_keyword">this</strong>.profile.name())
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>                     ),
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>                     SSH.escape(enc),
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                     SSH.escape(key)
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>                 )
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>             );
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>             commands.add(String.format(<span class="jxr_string">"rm -rf %s"</span>, SSH.escape(enc)));
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         }
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         commands.add(<span class="jxr_string">"rm -rf .gpg"</span>);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">return</strong> commands;
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
