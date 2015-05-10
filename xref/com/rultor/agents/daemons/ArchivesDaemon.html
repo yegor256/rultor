@@ -116,7 +116,7 @@
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>         );
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">final</strong> String hash = xml.xpath(<span class="jxr_string">"/talk/daemon/@id"</span>).get(0);
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>         <strong class="jxr_keyword">final</strong> URI uri = <strong class="jxr_keyword">this</strong>.upload(file, hash);
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">final</strong> String title = <strong class="jxr_keyword">this</strong>.title(xml, file);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">final</strong> String title = ArchivesDaemon.title(xml, file);
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>         Logger.info(
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>             <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"daemon of %s archived into %s: %s"</span>,
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>             xml.xpath(<span class="jxr_string">"/talk/@name"</span>).get(0), uri, title
@@ -153,28 +153,29 @@
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">     * @return Title</em>
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
 <a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">private</strong> String title(<strong class="jxr_keyword">final</strong> XML xml, <strong class="jxr_keyword">final</strong> File file) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> code = Integer.parseInt(
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>             xml.xpath(<span class="jxr_string">"/talk/daemon/code/text()"</span>).get(0)
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>         );
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">final</strong> String status;
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">if</strong> (code == 0) {
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>             status = <span class="jxr_string">"SUCCESS"</span>;
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>             status = <span class="jxr_string">"FAILURE"</span>;
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>         }
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>         <strong class="jxr_keyword">return</strong> Logger.format(
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>             <span class="jxr_string">"%s: %d (%s) in %[ms]s, %d lines"</span>,
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>             xml.xpath(<span class="jxr_string">"/talk/daemon/title/text()"</span>).get(0),
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>             code,
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>             status,
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/Time.html">Time</a>(xml.xpath(<span class="jxr_string">"/talk/daemon/ended/text()"</span>).get(0)).msec()
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>             - <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/Time.html">Time</a>(xml.xpath(<span class="jxr_string">"/talk/daemon/started/text()"</span>).get(0)).msec(),
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>             FileUtils.readLines(file).size()
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>         );
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>     }
-<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
-<a class="jxr_linenumber" name="L169" href="#L169">169</a> }
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String title(<strong class="jxr_keyword">final</strong> XML xml, <strong class="jxr_keyword">final</strong> File file)
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>         <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> code = Integer.parseInt(
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>             xml.xpath(<span class="jxr_string">"/talk/daemon/code/text()"</span>).get(0)
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         );
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">final</strong> String status;
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>         <strong class="jxr_keyword">if</strong> (code == 0) {
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>             status = <span class="jxr_string">"SUCCESS"</span>;
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             status = <span class="jxr_string">"FAILURE"</span>;
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>         }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <strong class="jxr_keyword">return</strong> Logger.format(
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>             <span class="jxr_string">"%s: %d (%s) in %[ms]s, %d lines"</span>,
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             xml.xpath(<span class="jxr_string">"/talk/daemon/title/text()"</span>).get(0),
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             code,
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             status,
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/Time.html">Time</a>(xml.xpath(<span class="jxr_string">"/talk/daemon/ended/text()"</span>).get(0)).msec()
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             - <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/Time.html">Time</a>(xml.xpath(<span class="jxr_string">"/talk/daemon/started/text()"</span>).get(0)).msec(),
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>             FileUtils.readLines(file).size()
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         );
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     }
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
