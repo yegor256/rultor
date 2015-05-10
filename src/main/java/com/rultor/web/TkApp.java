@@ -94,8 +94,8 @@ public final class TkApp extends TkWrap {
             new TkVersioned(
                 new TkMeasured(
                     new TkGzip(
-                        new TkAppFallback(
-                            new TkFlash(
+                        new TkFlash(
+                            new TkAppFallback(
                                 new TkAppAuth(
                                     new TkForward(
                                         TkApp.regex(talks, pulse, toggles)
