@@ -102,6 +102,7 @@ final class Decrypt {
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
         if (!assets.isEmpty()) {
+            commands.add("gpgconf --reload gpg-agent");
             commands.add(
                 Joiner.on(' ').join(
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
