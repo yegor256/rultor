@@ -109,6 +109,7 @@ final class Decrypt {
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
+            commands.add("gpg --version");
         }
         for (final XML asset : assets) {
             final String key = asset.xpath("@key").get(0);
