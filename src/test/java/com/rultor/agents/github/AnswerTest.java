@@ -56,7 +56,7 @@ public final class AnswerTest {
     @Test
     public void postsGithubComment() throws Exception {
         final Issue issue = AnswerTest.issue();
-        issue.comments().post("hey, do it");
+        issue.comments().post("hey, do it\u0000");
         new Answer(new Comment.Smart(issue.comments().get(1))).post("hey");
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
