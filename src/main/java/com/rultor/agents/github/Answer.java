@@ -42,6 +42,7 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.xembly.Xembler;
 
 /**
  * Answer to post.
@@ -126,7 +127,7 @@ public final class Answer {
         } catch (final Throwable ex) {
             msg = text;
         }
-        return msg;
+        return Xembler.escape(msg);
     }
 
 }
