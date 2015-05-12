@@ -37,6 +37,7 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -83,9 +84,14 @@ public final class Answer {
     public void post(final String msg, final Object... args)
         throws IOException {
         final Issue issue = this.comment.issue();
-        final List<Comment.Smart> comments = Lists.newArrayList(
-            new Smarts<Comment.Smart>(issue.comments().iterate())
-        );
+        List<Comment.Smart> comments;
+        try {
+            comments = Lists.newArrayList(
+                new Smarts<Comment.Smart>(issue.comments().iterate())
+            );
+        } catch (IllegalStateException ex) {
+            comments = new ArrayList<>();
+        }
         Collections.reverse(comments);
         final String self = issue.repo().github().users().self().login();
         int mine = 0;
