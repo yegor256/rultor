@@ -102,7 +102,11 @@ public final class Answer {
             ++mine;
         }
         if (mine < Answer.MAX) {
-            issue.comments().post(this.msg(Logger.format(msg, args)));
+            try {
+                issue.comments().post(this.msg(Logger.format(msg, args)));
+            } catch (IllegalStateException ex) {
+                // none
+            }
         } else {
             Logger.error(
                 this, "too many (%d) comments from %s already in %s#%d",
