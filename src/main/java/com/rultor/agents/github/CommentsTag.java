@@ -112,7 +112,9 @@ public final class CommentsTag extends AbstractAgent {
         } else {
             final Repo repo = issue.repo();
             final Date prev = this.previous(repo);
-            final Release.Smart rel = new Release.Smart(rels.create(tag));
+            final Release.Smart rel = new Release.Smart(
+                rels.create(tag.trim())
+            );
             rel.name(issue.title());
             rel.prerelease(true);
             rel.body(
