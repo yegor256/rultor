@@ -5,6 +5,13 @@ if [ -z "${tag}" ]; then
   exit -1
 fi
 
+if [[ "${tag}" =~ ^[a-zA-Z0-9\\.\\-]+$ ]]; then
+  echo "tag name is valid: \"${tag}\""
+else
+  echo "tag name contains invalid characters: \"${tag}\""
+  exit -1
+fi
+
 cd repo
 if [ $(git tag -l "${tag}") ]; then
   echo "Tag ${tag} already exists!"
