@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.TimeZone;
+import javax.json.JsonObject;
 
 /**
  * Log of commits.
@@ -82,31 +83,36 @@ final class CommitsLog {
             "yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        final Collection<String> lines = new LinkedList<String>();
+        final Collection<String> lines = new LinkedList<>();
         final ImmutableMap<String, String> params =
             new ImmutableMap.Builder<String, String>()
                 .put("since", format.format(prev))
                 .put("until", format.format(current))
                 .build();
-        final Iterable<RepoCommit.Smart> commits = new Smarts<RepoCommit.Smart>(
+        final Iterable<RepoCommit.Smart> commits = new Smarts<>(
             this.repo.commits().iterate(params)
         );
         int count = 0;
+        final StringBuilder line = new StringBuilder(0);
         for (final RepoCommit.Smart commit : commits) {
             if (count > Tv.TWENTY) {
                 lines.add(" * and more...");
                 break;
             }
-            lines.add(
-                String.format(
-                    " * %s by @%s: %s",
-                    commit.sha(),
-                    commit.json().getJsonObject("author").getString("login"),
+            final JsonObject json = commit.json();
+            line.setLength(0);
+            line.append(" * ").append(commit.sha());
+            line.append(" by @").append(
+                json.getJsonObject("author").getString("login")
+            );
+            if (!json.getJsonObject("commit").isNull("message")) {
+                line.append(": ").append(
                     commit.message()
                         .replaceAll("[\\p{Cntrl}\\p{Space}]+", " ")
                         .replaceAll("(?<=^.{30}).+$", "...")
-                )
-            );
+                );
+            }
+            lines.add(line.toString());
             ++count;
         }
         return Joiner.on('\n').join(lines);
