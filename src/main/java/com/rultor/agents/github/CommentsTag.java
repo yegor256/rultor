@@ -111,7 +111,7 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "duplicate tag %s commented", tag);
         } else {
             final Repo repo = issue.repo();
-            final Date prev = this.previous(repo);
+            final Date prev = CommentsTag.previous(repo);
             final Release.Smart rel = new Release.Smart(
                 rels.create(tag.trim())
             );
@@ -137,12 +137,14 @@ public final class CommentsTag extends AbstractAgent {
      * @return Previous release time or start of epoch.
      * @throws IOException In case of problem communicating with repo.
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private Date previous(final Repo repo) throws IOException {
+    private static Date previous(final Repo repo) throws IOException {
         Date prev = new Date(0L);
         final Iterable<Release.Smart> releases =
-            new Smarts<Release.Smart>(repo.releases().iterate());
+            new Smarts<>(repo.releases().iterate());
         for (final Release.Smart rel : releases) {
+            if (rel.json().isNull("published_at")) {
+                continue;
+            }
             if (prev.before(rel.publishedAt())) {
                 prev = rel.publishedAt();
             }
