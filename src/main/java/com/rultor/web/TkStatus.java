@@ -92,7 +92,12 @@ final class TkStatus implements Take {
                 );
             } else {
                 response = new RsEmpty();
-                msg.append(Logger.format("it is up and running, %[ms]s", age));
+                msg.append(
+                    Logger.format(
+                        "it is up and running, last check done %[ms]s ago",
+                        age
+                    )
+                );
             }
         }
         for (final Throwable error : this.pulse.error()) {
