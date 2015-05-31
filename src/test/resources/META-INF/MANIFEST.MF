@@ -5,6 +5,7 @@ Rultor-DynamoKey: ${failsafe.dynamo.key}
 Rultor-DynamoSecret: ${failsafe.dynamo.secret}
 Rultor-GithubId: ${failsafe.github.id}
 Rultor-GithubSecret: ${failsafe.github.secret}
+Rultor-GithubThreshold: ${failsafe.github.threshold}
 Rultor-SecurityKey: ${failsafe.security.key}
 Rultor-SttcUrn: ${failsafe.sttc.urn}
 Rultor-SttcToken: ${failsafe.sttc.token}

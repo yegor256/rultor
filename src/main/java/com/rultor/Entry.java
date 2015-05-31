@@ -41,7 +41,7 @@ import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.mock.MkGithub;
-import com.jcabi.http.wire.RetryWire;
+import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
@@ -129,7 +129,10 @@ public final class Entry {
             github = new MkGithub();
         } else {
             github = new RtGithub(
-                new RtGithub(token).entry().through(RetryWire.class)
+                new RtGithub(token).entry().through(
+                    RetryCarefulWire.class,
+                    Manifests.read("Rultor-GithubThreshold")
+                )
             );
         }
         Logger.info(
