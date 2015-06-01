@@ -35,6 +35,7 @@ import co.stateful.cached.CdSttc;
 import co.stateful.retry.ReSttc;
 import com.google.common.collect.EvictingQueue;
 import com.jcabi.aspects.Cacheable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
@@ -131,7 +132,7 @@ public final class Entry {
             github = new RtGithub(
                 new RtGithub(token).entry().through(
                     RetryCarefulWire.class,
-                    Manifests.read("Rultor-GithubThreshold")
+                    Tv.HUNDRED
                 )
             );
         }

@@ -31,6 +31,7 @@ package com.rultor.profiles;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
@@ -118,7 +119,7 @@ public final class Profiles {
                 Manifests.read("Rultor-GithubToken")
             ).entry().through(
                 RetryCarefulWire.class,
-                Manifests.read("Rultor-GithubThreshold")
+                Tv.HUNDRED
             )
         );
     }
