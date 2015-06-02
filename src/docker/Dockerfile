@@ -18,3 +18,4 @@ pecl install xdebug
 echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
 
 sudo apt-get install jq
+sudo apt-get install gnupg gnupg2
