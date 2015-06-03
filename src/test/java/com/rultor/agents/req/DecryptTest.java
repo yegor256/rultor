@@ -165,9 +165,12 @@ public final class DecryptTest {
      */
     private XMLDocument createTestProfileXML() {
         return new XMLDocument(
-            Joiner.on(' ').join(
-                "<p><entry key='decrypt'><entry key='a.txt'>",
-                "a.txt.asc</entry></entry></p>"
+            Joiner.on("").join(
+                "<p>",
+                "<entry key='decrypt'>",
+                "<entry key='a.txt'>a.txt.asc</entry>",
+                "</entry>",
+                "</p>"
             )
         );
     }
