@@ -3,7 +3,7 @@ set -x
 
 if [ -e cid ]; then
   cid=$(cat cid)
-  if docker ps -qa | grep --quiet "${cid}"; then
+  if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
     docker rm -f "${cid}"
   fi
   rm -f cid

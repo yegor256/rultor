@@ -73,7 +73,7 @@ final class Script {
         );
         return new Shell.Empty(new Shell.Safe(shell)).exec(
             String.format(
-                "cd %s && /bin/bash %s >> stdout",
+                "cd %s && /bin/bash %s 2>&1 >>stdout",
                 SSH.escape(dir), SSH.escape(name)
             )
         );
