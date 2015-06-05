@@ -35,13 +35,14 @@ import co.stateful.cached.CdSttc;
 import co.stateful.retry.ReSttc;
 import com.google.common.collect.EvictingQueue;
 import com.jcabi.aspects.Cacheable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.mock.MkGithub;
-import com.jcabi.http.wire.RetryWire;
+import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
@@ -129,7 +130,10 @@ public final class Entry {
             github = new MkGithub();
         } else {
             github = new RtGithub(
-                new RtGithub(token).entry().through(RetryWire.class)
+                new RtGithub(token).entry().through(
+                    RetryCarefulWire.class,
+                    Tv.HUNDRED
+                )
             );
         }
         Logger.info(

@@ -31,10 +31,11 @@ package com.rultor.profiles;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
-import com.jcabi.http.wire.RetryWire;
+import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
 import com.rultor.agents.github.TalkIssues;
@@ -116,7 +117,10 @@ public final class Profiles {
         return new RtGithub(
             new RtGithub(
                 Manifests.read("Rultor-GithubToken")
-            ).entry().through(RetryWire.class)
+            ).entry().through(
+                RetryCarefulWire.class,
+                Tv.HUNDRED
+            )
         );
     }
 
