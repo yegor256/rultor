@@ -34,7 +34,6 @@ merge:
   - krzyk
   - longtimeago
   - pinaf
-  - yegor256
 deploy:
   script: |-
     mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode
