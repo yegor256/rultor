@@ -89,16 +89,16 @@ public final class CommitsLogTest {
     @SuppressWarnings("unchecked")
     public void createsLongReleaseLog() throws Exception {
         final RepoCommits commits = Mockito.mock(RepoCommits.class);
-        final Collection<RepoCommit> list = new LinkedList<RepoCommit>();
+        final Collection<RepoCommit> list = new LinkedList<>();
         for (int idx = 0; idx < Tv.HUNDRED; ++idx) {
-            list.add(this.commit(String.format("%d commit", idx)));
+            list.add(this.commit(String.format("commit #%d", idx)));
         }
         Mockito.doReturn(list).when(commits).iterate(Mockito.any(Map.class));
         final Repo repo = Mockito.mock(Repo.class);
         Mockito.doReturn(commits).when(repo).commits();
         MatcherAssert.assertThat(
             new CommitsLog(repo).build(new Date(), new Date()),
-            Matchers.containsString("* and more..")
+            Matchers.containsString("* and 80 more..")
         );
     }
 

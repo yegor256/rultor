@@ -32,8 +32,6 @@ package com.rultor.web;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Collections;
-import java.util.Iterator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Response;
 import org.takes.Take;
@@ -42,6 +40,7 @@ import org.takes.facets.fallback.FbChain;
 import org.takes.facets.fallback.FbStatus;
 import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TkFallback;
+import org.takes.misc.Opt;
 import org.takes.rs.RsText;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
@@ -89,11 +88,9 @@ final class TkAppFallback extends TkWrap {
                 ),
                 new Fallback() {
                     @Override
-                    public Iterator<Response> route(final RqFallback req)
+                    public Opt<Response> route(final RqFallback req)
                         throws IOException {
-                        return Collections.singleton(
-                            TkAppFallback.fatal(req)
-                        ).iterator();
+                        return new Opt.Single<>(TkAppFallback.fatal(req));
                     }
                 }
             )

@@ -31,6 +31,7 @@ package com.rultor.agents.github;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Repo;
@@ -42,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import javax.json.JsonObject;
@@ -56,6 +58,11 @@ import javax.json.JsonObject;
  */
 @Immutable
 final class CommitsLog {
+
+    /**
+     * Maximum to show.
+     */
+    private static final int MAX = 20;
 
     /**
      * Repo.
@@ -89,13 +96,20 @@ final class CommitsLog {
                 .put("since", format.format(prev))
                 .put("until", format.format(current))
                 .build();
-        final Iterable<RepoCommit.Smart> commits = new Smarts<>(
-            this.repo.commits().iterate(params)
+        final List<RepoCommit.Smart> commits = Lists.newArrayList(
+            new Smarts<RepoCommit.Smart>(
+                this.repo.commits().iterate(params)
+            )
         );
         int count = 0;
         for (final RepoCommit.Smart commit : commits) {
-            if (count > Tv.TWENTY) {
-                lines.add(" * and more...");
+            if (count >= CommitsLog.MAX) {
+                lines.add(
+                    String.format(
+                        " * and %d more...",
+                        commits.size() - CommitsLog.MAX
+                    )
+                );
                 break;
             }
             lines.add(CommitsLog.asText(commit));
