@@ -45,6 +45,7 @@ import java.util.ResourceBundle;
 import javax.json.Json;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -74,15 +75,7 @@ public final class QnUnlock implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        final XML args = new XMLDocument(
-            new Xembler(
-                new Directives().add("args").append(
-                    new QnParametrized(Question.EMPTY)
-                        .understand(comment, home)
-                        .dirs()
-                )
-            ).xmlQuietly()
-        );
+        final XML args = QnUnlock.args(comment, home);
         final String branch;
         if (args.nodes("//arg[@name='branch']").isEmpty()) {
             branch = "master";
@@ -128,6 +121,37 @@ public final class QnUnlock implements Question {
         }
         Logger.info(this, "unlock request in #%d", comment.issue().number());
         return Req.DONE;
+    }
+
+    /**
+     * Get args.
+     * @param comment The comment
+     * @param home Home
+     * @return Args
+     * @throws IOException If fails
+     */
+    private static XML args(final Comment.Smart comment, final URI home)
+        throws IOException {
+        return new XMLDocument(
+            new Xembler(
+                new Directives().add("args").up().append(
+                    new QnParametrized(
+                        new Question() {
+                            @Override
+                            public Req understand(final Comment.Smart cmt,
+                                final URI hme) {
+                                return new Req() {
+                                    @Override
+                                    public Iterable<Directive> dirs() {
+                                        return new Directives().xpath("/");
+                                    }
+                                };
+                            }
+                        }
+                    ).understand(comment, home).dirs()
+                )
+            ).xmlQuietly()
+        );
     }
 
 }
