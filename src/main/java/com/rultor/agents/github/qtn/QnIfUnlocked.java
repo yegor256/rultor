@@ -29,6 +29,9 @@
  */
 package com.rultor.agents.github.qtn;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Contents;
@@ -39,12 +42,14 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
@@ -87,11 +92,28 @@ public final class QnIfUnlocked implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        if (QnIfUnlocked.allowed(comment)) {
+        final Issue issue = comment.issue();
+        final Pull pull = issue.repo().pulls().get(issue.number());
+        final JsonObject base = pull.json().getJsonObject("base");
+        final String branch = base.getString("ref");
+        final Collection<String> guards = QnIfUnlocked.guards(pull, branch);
+        if (guards.isEmpty() || guards.contains(comment.author().login())) {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
-                QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied")
+                QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied"),
+                branch,
+                Joiner.on(", ").join(
+                    Iterables.transform(
+                        guards,
+                        new Function<String, String>() {
+                            @Override
+                            public String apply(final String input) {
+                                return String.format("@%s", input);
+                            }
+                        }
+                    )
+                )
             );
             req = Req.EMPTY;
         }
@@ -100,25 +122,26 @@ public final class QnIfUnlocked implements Question {
 
     /**
      * Is it allowed to merge?
-     * @param comment Comment we're in
+     * @param pull The pull
+     * @param branch The branch
      * @return TRUE if allowed
      * @throws IOException If fails
      */
-    private static boolean allowed(final Comment.Smart comment)
-        throws IOException {
-        final Issue issue = comment.issue();
-        final Pull pull = issue.repo().pulls().get(issue.number());
-        final JsonObject base = pull.json().getJsonObject("base");
-        final String branch = base.getString("ref");
+    private static Collection<String> guards(final Pull pull,
+        final String branch) throws IOException {
         final Contents contents = pull.repo().contents();
-        return !contents.exists(QnIfUnlocked.PATH, branch)
-            || ArrayUtils.contains(
-                IOUtils.toString(
-                    contents.get(QnIfUnlocked.PATH, branch).raw(),
-                    CharEncoding.UTF_8
-                ).split("\n"),
-                comment.author().login()
+        final Collection<String> guards = new LinkedHashSet<>(0);
+        if (contents.exists(QnIfUnlocked.PATH, branch)) {
+            guards.addAll(
+                Arrays.asList(
+                    IOUtils.toString(
+                        contents.get(QnIfUnlocked.PATH, branch).raw(),
+                        CharEncoding.UTF_8
+                    ).split("\n")
+                )
             );
+        }
+        return guards;
     }
 
 }

@@ -156,7 +156,8 @@ public final class QnLock implements Question {
             new Answer(comment).post(
                 String.format(
                     QnLock.PHRASES.getString("QnLock.response"),
-                    branch, Joiner.on(", ").join(
+                    branch,
+                    Joiner.on(", ").join(
                         Iterables.transform(
                             users,
                             new Function<String, String>() {

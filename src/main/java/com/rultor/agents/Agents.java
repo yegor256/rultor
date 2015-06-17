@@ -190,7 +190,7 @@ public final class Agents {
                                     new QnIfCollaborator(
                                         new QnAlone(
                                             talk, locks,
-                                            this.commands(profile)
+                                            Agents.commands(profile)
                                         )
                                     )
                                 )
@@ -253,7 +253,7 @@ public final class Agents {
      * @param profile Profile to uuse
      * @return Array of questions.
      */
-    private Question commands(final Profile profile) {
+    private static Question commands(final Profile profile) {
         return new QnByArchitect(
             profile,
             "/p/entry[@key='architect']/item/text()",
