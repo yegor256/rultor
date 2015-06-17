@@ -67,7 +67,7 @@ public final class QnUnlockTest {
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString(
-                "I removed `.rultor.lock` file from the `master` branch"
+                "File `.rultor.lock` doesn't exist in `master` branch"
             )
         );
     }

@@ -90,13 +90,6 @@ public final class QnUnlock implements Question {
         }
         final Contents contents = comment.issue().repo().contents();
         if (contents.exists(QnUnlock.PATH, branch)) {
-            new Answer(comment).post(
-                String.format(
-                    QnUnlock.PHRASES.getString("QnUnlock.does-not-exist"),
-                    branch
-                )
-            );
-        } else {
             contents.remove(
                 Json.createObjectBuilder()
                     .add("path", QnUnlock.PATH)
@@ -115,6 +108,13 @@ public final class QnUnlock implements Question {
             new Answer(comment).post(
                 String.format(
                     QnUnlock.PHRASES.getString("QnUnlock.response"),
+                    branch
+                )
+            );
+        } else {
+            new Answer(comment).post(
+                String.format(
+                    QnUnlock.PHRASES.getString("QnUnlock.does-not-exist"),
                     branch
                 )
             );
