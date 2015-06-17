@@ -61,6 +61,7 @@ import com.rultor.agents.github.qtn.QnFollow;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnLock;
 import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnNotSelf;
 import com.rultor.agents.github.qtn.QnParametrized;
@@ -256,6 +257,10 @@ public final class Agents {
             "/p/entry[@key='architect']/item/text()",
             new Question.FirstOf(
                 new Array<Question>(
+                    new QnIfContains(
+                        "lock",
+                        new QnLock()
+                    ),
                     new QnIfContains(
                         "merge",
                         new QnAskedBy(
