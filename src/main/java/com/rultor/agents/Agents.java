@@ -260,12 +260,12 @@ public final class Agents {
             new Question.FirstOf(
                 new Array<Question>(
                     new QnIfContains(
-                        "lock",
-                        new QnLock()
-                    ),
-                    new QnIfContains(
                         "unlock",
                         new QnUnlock()
+                    ),
+                    new QnIfContains(
+                        "lock",
+                        new QnLock()
                     ),
                     new QnIfContains(
                         "merge",
