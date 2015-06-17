@@ -31,6 +31,7 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Content;
 import com.jcabi.github.Contents;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -90,9 +91,16 @@ public final class QnUnlock implements Question {
         }
         final Contents contents = comment.issue().repo().contents();
         if (contents.exists(QnUnlock.PATH, branch)) {
+            ;
             contents.remove(
                 Json.createObjectBuilder()
                     .add("path", QnUnlock.PATH)
+                    .add(
+                        "sha",
+                        new Content.Smart(
+                            contents.get(QnUnlock.PATH, branch)
+                        ).sha()
+                    )
                     .add(
                         "message",
                         String.format(
