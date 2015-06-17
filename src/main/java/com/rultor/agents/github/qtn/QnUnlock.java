@@ -103,9 +103,10 @@ public final class QnUnlock implements Question {
                     .add(
                         "message",
                         String.format(
-                            "by request of @%s in #%d",
-                            comment.author().login(),
-                            comment.issue().number()
+                            "#%d branch \"%s\" unlocked, by request of @%s",
+                            comment.issue().number(),
+                            branch,
+                            comment.author().login()
                         )
                     )
                     .add("branch", branch)

@@ -136,9 +136,10 @@ public final class QnLock implements Question {
                     .add(
                         "message",
                         String.format(
-                            "by request of @%s in #%d",
-                            comment.author().login(),
-                            comment.issue().number()
+                            "#%d: branch \"%s\" locked by request of @%s",
+                            comment.issue().number(),
+                            branch,
+                            comment.author().login()
                         )
                     )
                     .add(
