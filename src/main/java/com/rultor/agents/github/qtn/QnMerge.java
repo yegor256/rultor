@@ -82,9 +82,7 @@ public final class QnMerge implements Question {
             );
             req = QnMerge.pack(
                 comment,
-                new Pull.Smart(
-                    issue.repo().pulls().get(issue.number())
-                )
+                issue.repo().pulls().get(issue.number())
             );
         } else if (issue.isOpen()) {
             new Answer(comment).post(
@@ -108,7 +106,7 @@ public final class QnMerge implements Question {
      * @throws IOException If fails
      */
     private static Req pack(final Comment.Smart comment,
-        final Pull.Smart pull) throws IOException {
+        final Pull pull) throws IOException {
         final JsonObject head = pull.json().getJsonObject("head");
         final JsonObject base = pull.json().getJsonObject("base");
         final Req req;
