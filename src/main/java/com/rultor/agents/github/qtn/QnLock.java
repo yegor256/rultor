@@ -52,6 +52,8 @@ import java.util.ResourceBundle;
 import javax.json.Json;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -139,7 +141,14 @@ public final class QnLock implements Question {
                             comment.issue().number()
                         )
                     )
-                    .add("content", Joiner.on("\n").join(users))
+                    .add(
+                        "content",
+                        Base64.encodeBase64String(
+                            Joiner.on("\n").join(users).getBytes(
+                                CharEncoding.UTF_8
+                            )
+                        )
+                    )
                     .add("branch", branch)
                     .build()
             );
