@@ -71,6 +71,7 @@ import com.rultor.agents.github.qtn.QnRelease;
 import com.rultor.agents.github.qtn.QnSince;
 import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnStop;
+import com.rultor.agents.github.qtn.QnUnlock;
 import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
@@ -261,6 +262,10 @@ public final class Agents {
                     new QnIfContains(
                         "lock",
                         new QnLock()
+                    ),
+                    new QnIfContains(
+                        "unlock",
+                        new QnUnlock()
                     ),
                     new QnIfContains(
                         "merge",
