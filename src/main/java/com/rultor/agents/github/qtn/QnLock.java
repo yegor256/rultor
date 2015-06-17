@@ -55,6 +55,7 @@ import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
+import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -64,6 +65,7 @@ import org.xembly.Xembler;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.53
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -84,15 +86,7 @@ public final class QnLock implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        final XML args = new XMLDocument(
-            new Xembler(
-                new Directives().add("args").append(
-                    new QnParametrized(Question.EMPTY)
-                        .understand(comment, home)
-                        .dirs()
-                )
-            ).xmlQuietly()
-        );
+        final XML args = QnLock.args(comment, home);
         final String branch;
         if (args.nodes("//arg[@name='branch']").isEmpty()) {
             branch = "master";
@@ -113,7 +107,7 @@ public final class QnLock implements Question {
                         @Override
                         public String apply(final String input) {
                             return StringUtils.stripStart(
-                                input.toLowerCase(Locale.ENGLISH),
+                                input.trim().toLowerCase(Locale.ENGLISH),
                                 "@"
                             );
                         }
@@ -173,6 +167,37 @@ public final class QnLock implements Question {
         }
         Logger.info(this, "lock request in #%d", comment.issue().number());
         return Req.DONE;
+    }
+
+    /**
+     * Get args.
+     * @param comment The comment
+     * @param home Home
+     * @return Args
+     * @throws IOException If fails
+     */
+    private static XML args(final Comment.Smart comment, final URI home)
+        throws IOException {
+        return new XMLDocument(
+            new Xembler(
+                new Directives().add("args").up().append(
+                    new QnParametrized(
+                        new Question() {
+                            @Override
+                            public Req understand(final Comment.Smart cmt,
+                                final URI hme) {
+                                return new Req() {
+                                    @Override
+                                    public Iterable<Directive> dirs() {
+                                        return new Directives().xpath("/");
+                                    }
+                                };
+                            }
+                        }
+                    ).understand(comment, home).dirs()
+                )
+            ).xmlQuietly()
+        );
     }
 
 }

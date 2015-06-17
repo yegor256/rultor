@@ -57,7 +57,7 @@ public final class QnLockTest {
     public void locksBranch() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        issue.comments().post("lock");
+        issue.comments().post("lock users=`@test1, test2`");
         MatcherAssert.assertThat(
             new QnLock().understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
@@ -66,8 +66,11 @@ public final class QnLockTest {
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString(
-                "I added `.rultor.lock` file to the `master` branch"
+            Matchers.allOf(
+                Matchers.containsString(
+                    "I added `.rultor.lock` file to the `master` branch"
+                ),
+                Matchers.containsString("only @jeff, @test1, @test2 can merge")
             )
         );
     }

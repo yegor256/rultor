@@ -91,7 +91,6 @@ public final class QnUnlock implements Question {
         }
         final Contents contents = comment.issue().repo().contents();
         if (contents.exists(QnUnlock.PATH, branch)) {
-            ;
             contents.remove(
                 Json.createObjectBuilder()
                     .add("path", QnUnlock.PATH)
