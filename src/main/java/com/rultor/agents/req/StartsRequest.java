@@ -233,6 +233,13 @@ public final class StartsRequest extends AbstractAgent {
             )
         );
         vars.put(
+            "ff",
+            def.text(
+                "/p/entry[@key='merge']/entry[@key='fast-forward']",
+                "default"
+            )
+        );
+        vars.put(
             "directory",
             def.text("/p/entry[@key='docker']/entry[@key='directory']")
         );

@@ -171,6 +171,26 @@ deploy:
 In this example, `texlive` package will be installed before merge
 and before deploy commands execution.
 
+## Merge
+
+There are a few additional configurable parameters for `merge` section:
+
+{% highlight yaml %}
+merge:
+  script: |
+    echo "testing..."
+    echo "building..."
+    echo "packaging..."
+  squash: true
+  fast-forward: default
+{% endhighlight %}
+
+`squash` option may be set to `true` or `false` (default).
+
+`fast-forward` may be either `default`
+(`--ff` argument for Git), `only` (`--ff-only`) or `no` (`--no-ff`).
+More information about it [here](http://git-scm.com/docs/git-merge).
+
 ## Readers
 
 By default, anyone can see your build logs. This may not be desired

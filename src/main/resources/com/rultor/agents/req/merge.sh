@@ -3,11 +3,20 @@
 cd repo
 git remote add fork "${fork}"
 git remote update
+args=""
 if [ "${squash}" == "true" ]; then
-  git merge --squash -m "${pull_title}" "fork/${fork_branch}"
-else
-  git merge "fork/${fork_branch}"
+  args="${args} --squash -m \"${pull_title}\""
 fi
+if [ "${ff}" == "default" ]; then
+  args="${args} --ff"
+fi
+if [ "${ff}" == "no" ]; then
+  args="${args} --no-ff"
+fi
+if [ "${ff}" == "only" ]; then
+  args="${args} --ff-only"
+fi
+git merge ${args} "fork/${fork_branch}"
 
 docker_when_possible
 
