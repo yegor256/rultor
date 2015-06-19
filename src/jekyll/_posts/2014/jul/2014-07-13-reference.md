@@ -171,26 +171,6 @@ deploy:
 In this example, `texlive` package will be installed before merge
 and before deploy commands execution.
 
-## Merge
-
-There are a few additional configurable parameters for `merge` section:
-
-{% highlight yaml %}
-merge:
-  script: |
-    echo "testing..."
-    echo "building..."
-    echo "packaging..."
-  squash: true
-  fast-forward: default
-{% endhighlight %}
-
-`squash` option may be set to `true` or `false` (default).
-
-`fast-forward` may be either `default`
-(`--ff` argument for Git), `only` (`--ff-only`) or `no` (`--no-ff`).
-More information about it [here](http://git-scm.com/docs/git-merge).
-
 ## Readers
 
 By default, anyone can see your build logs. This may not be desired
@@ -268,6 +248,27 @@ The list of Github accounts able to give commands to Rultor is specified in
 `commanders`. By default, only Github repository collaborators can give
 commands. Configured commanders don't replace collaborators. In other words,
 Github collaborators *and* accounts mentioned here are allowed to give commands.
+
+There are a few additional configurable parameters for `merge` section:
+
+{% highlight yaml %}
+merge:
+  script: |
+    echo "testing..."
+    echo "building..."
+    echo "packaging..."
+  squash: true
+  fast-forward: default
+{% endhighlight %}
+
+`squash` option may be set to `true` or `false` (default).
+
+`fast-forward` may be either `default`
+(`--ff` argument for Git), `only` (`--ff-only`) or `no` (`--no-ff`).
+More information about it [here](http://git-scm.com/docs/git-merge).
+
+`rebase` option may be set to `true` or `false` (default). If it's set
+to `true`, your fork branch will be "rebased" from origin before the merge.
 
 ## Uninstall Script
 

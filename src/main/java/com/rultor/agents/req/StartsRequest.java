@@ -42,6 +42,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -226,24 +227,33 @@ public final class StartsRequest extends AbstractAgent {
             )
         );
         vars.put(
-            "squash",
-            def.text(
-                "/p/entry[@key='merge']/entry[@key='squash']",
-                "false"
-            )
-        );
-        vars.put(
-            "ff",
-            def.text(
-                "/p/entry[@key='merge']/entry[@key='fast-forward']",
-                "default"
-            )
-        );
-        vars.put(
             "directory",
             def.text("/p/entry[@key='docker']/entry[@key='directory']")
         );
         vars.put("scripts", docker.script());
+        if (!this.profile.read().nodes("/p/entry[@key='merge']").isEmpty()) {
+            vars.put(
+                "squash",
+                def.text(
+                    "/p/entry[@key='merge']/entry[@key='squash']",
+                    Boolean.FALSE.toString()
+                ).toLowerCase(Locale.ENGLISH)
+            );
+            vars.put(
+                "ff",
+                def.text(
+                    "/p/entry[@key='merge']/entry[@key='fast-forward']",
+                    "default"
+                ).toLowerCase(Locale.ENGLISH)
+            );
+            vars.put(
+                "rebase",
+                def.text(
+                    "/p/entry[@key='merge']/entry[@key='rebase']",
+                    Boolean.FALSE.toString()
+                ).toLowerCase(Locale.ENGLISH)
+            );
+        }
         return vars.build();
     }
 }

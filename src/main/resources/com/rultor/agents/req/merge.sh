@@ -16,6 +16,13 @@ fi
 if [ "${ff}" == "only" ]; then
   args="${args} --ff-only"
 fi
+
+if [ "${rebase}" == "true" ]; then
+  git checkout "fork/${fork_branch}"
+  git rebase "origin/${head_branch}"
+  git checkout "origin/${head_branch}"
+fi
+
 git merge ${args} "fork/${fork_branch}"
 
 docker_when_possible
