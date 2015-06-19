@@ -20,6 +20,7 @@ assets:
   id_rsa.pub: yegor256/home#assets/heroku-key.pub
   s3cfg: yegor256/home#assets/s3cfg
 merge:
+  fast-forward: only
   script: |-
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml
