@@ -17,14 +17,23 @@ if [ "${ff}" == "only" ]; then
   args="${args} --ff-only"
 fi
 
+export BRANCH=__rultor
+while [ $(git show-branch "${BRANCH}" 2>/dev/null | wc -l) -gt 0 ]; do
+  export BRANCH="__rultor-$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 16)"
+done
+
+git checkout "fork/${fork_branch}"
+git checkout -b "${BRANCH}"
+git checkout "${head_branch}"
+
 if [ "${rebase}" == "true" ]; then
-  git checkout "fork/${fork_branch}"
-  git rebase "origin/${head_branch}"
-  git checkout "origin/${head_branch}"
+  git checkout -b "${BRANCH}"
+  git rebase "${head_branch}"
+  git checkout "${head_branch}"
 fi
 
-git merge ${args} "fork/${fork_branch}"
+git merge ${args} "${BRANCH}"
 
 docker_when_possible
 
-git push origin ${head_branch}
+git push origin "${head_branch}"
