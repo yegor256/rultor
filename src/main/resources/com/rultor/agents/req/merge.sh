@@ -27,7 +27,7 @@ git checkout -b "${BRANCH}"
 git checkout "${head_branch}"
 
 if [ "${rebase}" == "true" ]; then
-  git checkout -b "${BRANCH}"
+  git checkout "${BRANCH}"
   git rebase "${head_branch}"
   git checkout "${head_branch}"
 fi
