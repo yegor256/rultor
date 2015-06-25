@@ -4,9 +4,6 @@ cd repo
 git remote add fork "${fork}"
 git remote update
 args=""
-if [ "${squash}" == "true" ]; then
-  args="${args} --squash -m \"${pull_title}\""
-fi
 if [ "${ff}" == "default" ]; then
   args="${args} --ff"
 fi
@@ -32,7 +29,12 @@ if [ "${rebase}" == "true" ]; then
   git checkout "${head_branch}"
 fi
 
-git merge ${args} "${BRANCH}"
+if [ "${squash}" == "true" ]; then
+  git merge ${args} --squash "${BRANCH}"
+  git commit -m "${pull_title}"
+else
+  git merge ${args} "${BRANCH}"
+fi
 
 docker_when_possible
 
