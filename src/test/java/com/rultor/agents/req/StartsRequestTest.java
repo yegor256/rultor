@@ -91,7 +91,8 @@ public final class StartsRequestTest {
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon[@id='abcd' and script]",
                 "/talk/daemon/title",
-                "//script[contains(.,'hey=hello!')]"
+                "//script[contains(.,'--env=hey=')]",
+                "//script[contains(.,'hello!')]"
             )
         );
     }
@@ -221,6 +222,7 @@ public final class StartsRequestTest {
                 .add("arg").attr("name", "head_branch").set("master").up()
                 .add("arg").attr("name", "fork").set(repo.toString()).up()
                 .add("arg").attr("name", "fork_branch").set("frk").up()
+                .add("arg").attr("name", "pull_title").set("the \"title").up()
         );
         agent.execute(talk);
         this.exec(talk);

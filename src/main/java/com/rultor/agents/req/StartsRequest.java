@@ -37,6 +37,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
+import com.jcabi.ssh.SSH;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
@@ -212,7 +213,10 @@ public final class StartsRequest extends AbstractAgent {
         final ImmutableMap.Builder<String, String> vars =
             new ImmutableMap.Builder<>();
         for (final XML arg : req.nodes("args/arg")) {
-            vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
+            vars.put(
+                arg.xpath("@name").get(0),
+                SSH.escape(arg.xpath("text()").get(0))
+            );
         }
         final DockerRun docker = new DockerRun(
             this.profile, String.format("/p/entry[@key='%s']", type)

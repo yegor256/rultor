@@ -126,6 +126,7 @@ public final class QnMerge implements Question {
                 "merge",
                 new ImmutableMap.Builder<String, String>()
                     .put("pull_id", Integer.toString(pull.number()))
+                    .put("pull_title", new Issue.Smart(comment.issue()).title())
                     .put("fork_branch", head.getString("ref"))
                     .put("head_branch", base.getString("ref"))
                     .put(
