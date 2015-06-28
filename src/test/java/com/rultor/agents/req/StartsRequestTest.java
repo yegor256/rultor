@@ -91,8 +91,8 @@ public final class StartsRequestTest {
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon[@id='abcd' and script]",
                 "/talk/daemon/title",
-                "//script[contains(.,'--env=hey=')]",
-                "//script[contains(.,'hello!')]"
+                "//script[contains(.,'hey='hello!')]",
+                "//script[contains(.,'--env=hey=hello!')]"
             )
         );
     }
