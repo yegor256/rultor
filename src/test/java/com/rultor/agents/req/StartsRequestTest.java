@@ -83,7 +83,7 @@ public final class StartsRequestTest {
                 .add("request").attr("id", "abcd")
                 .add("type").set("merge").up()
                 .add("args")
-                .add("arg").attr("name", "hey").set("hello!")
+                .add("arg").attr("name", "hey").set("hello dude!")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -91,8 +91,8 @@ public final class StartsRequestTest {
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon[@id='abcd' and script]",
                 "/talk/daemon/title",
-                "//script[contains(.,'hey='hello!')]",
-                "//script[contains(.,'--env=hey=hello!')]"
+                "//script[contains(.,\"hey='hello dude!'\")]",
+                "//script[contains(.,'--env=hey=hello dude!')]"
             )
         );
     }

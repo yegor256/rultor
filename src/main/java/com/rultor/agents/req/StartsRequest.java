@@ -149,7 +149,7 @@ public final class StartsRequest extends AbstractAgent {
                             final Map.Entry<String, String> input) {
                             return String.format(
                                 "%s=%s", input.getKey(),
-                                input.getValue()
+                                StartsRequest.escape(input.getValue())
                             );
                         }
                     }
@@ -215,7 +215,7 @@ public final class StartsRequest extends AbstractAgent {
         for (final XML arg : req.nodes("args/arg")) {
             vars.put(
                 arg.xpath("@name").get(0),
-                SSH.escape(arg.xpath("text()").get(0))
+                arg.xpath("text()").get(0)
             );
         }
         final DockerRun docker = new DockerRun(
@@ -259,5 +259,20 @@ public final class StartsRequest extends AbstractAgent {
             );
         }
         return vars.build();
+    }
+
+    /**
+     * Escape var.
+     * @param raw The variable
+     * @return Escaped one
+     */
+    private static String escape(final String raw) {
+        final String esc;
+        if (raw.matches("\\(.*\\)")) {
+            esc = raw;
+        } else {
+            esc = SSH.escape(raw);
+        }
+        return esc;
     }
 }
