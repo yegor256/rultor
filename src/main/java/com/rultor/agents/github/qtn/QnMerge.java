@@ -34,6 +34,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
+import com.jcabi.github.PullRef;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
@@ -41,7 +42,6 @@ import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
-import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -110,17 +110,17 @@ public final class QnMerge implements Question {
      */
     private static Req pack(final Comment.Smart comment,
         final Pull pull) throws IOException {
-        final JsonObject head = pull.json().getJsonObject("head");
-        final JsonObject base = pull.json().getJsonObject("base");
+        final PullRef head = pull.head();
+        final PullRef base = pull.base();
         final Req req;
         final String repo = "repo";
-        if (head.isNull(repo)) {
+        if (head.json().isNull(repo)) {
             new Answer(comment).post(
                 false,
                 QnMerge.PHRASES.getString("QnMerge.head-is-gone")
             );
             req = Req.EMPTY;
-        } else if (base.isNull(repo)) {
+        } else if (base.json().isNull(repo)) {
             new Answer(comment).post(
                 false,
                 QnMerge.PHRASES.getString("QnMerge.base-is-gone")
@@ -132,20 +132,20 @@ public final class QnMerge implements Question {
                 new ImmutableMap.Builder<String, String>()
                     .put("pull_id", Integer.toString(pull.number()))
                     .put("pull_title", new Issue.Smart(comment.issue()).title())
-                    .put("fork_branch", head.getString("ref"))
-                    .put("head_branch", base.getString("ref"))
+                    .put("fork_branch", head.ref())
+                    .put("head_branch", base.ref())
                     .put(
                         "head",
                         String.format(
                             "git@github.com:%s.git",
-                            base.getJsonObject(repo).getString("full_name")
+                            base.repo().coordinates().toString()
                         )
                     )
                     .put(
                         "fork",
                         String.format(
                             "git@github.com:%s.git",
-                            head.getJsonObject(repo).getString("full_name")
+                            head.repo().coordinates().toString()
                         )
                     )
                     .build()
