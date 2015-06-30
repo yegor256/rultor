@@ -126,7 +126,7 @@ public final class Answer {
                 String.format(
                     "> %s\n\n",
                     StringUtils.abbreviate(
-                        this.comment.body().replace("\n", " "),
+                        this.comment.body().replaceAll("\\p{Space}", " "),
                         Tv.HUNDRED
                     )
                 )
