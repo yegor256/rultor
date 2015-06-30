@@ -120,7 +120,7 @@ public final class Answer {
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private String msg(final boolean success, final String text) {
-        final StringBuilder msg = new StringBuilder();
+        final StringBuilder msg = new StringBuilder(Tv.HUNDRED);
         try {
             msg.append(
                 String.format(
