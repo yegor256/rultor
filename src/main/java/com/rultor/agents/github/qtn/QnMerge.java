@@ -71,6 +71,7 @@ public final class QnMerge implements Question {
         final Req req;
         if (issue.isPull() && issue.isOpen()) {
             new Answer(comment).post(
+                true,
                 String.format(
                     QnMerge.PHRASES.getString("QnMerge.start"),
                     home.toASCIIString()
@@ -86,11 +87,13 @@ public final class QnMerge implements Question {
             );
         } else if (issue.isOpen()) {
             new Answer(comment).post(
+                false,
                 QnMerge.PHRASES.getString("QnMerge.not-pull-request")
             );
             req = Req.EMPTY;
         } else {
             new Answer(comment).post(
+                false,
                 QnMerge.PHRASES.getString("QnMerge.already-closed")
             );
             req = Req.EMPTY;
@@ -113,11 +116,13 @@ public final class QnMerge implements Question {
         final String repo = "repo";
         if (head.isNull(repo)) {
             new Answer(comment).post(
+                false,
                 QnMerge.PHRASES.getString("QnMerge.head-is-gone")
             );
             req = Req.EMPTY;
         } else if (base.isNull(repo)) {
             new Answer(comment).post(
+                false,
                 QnMerge.PHRASES.getString("QnMerge.base-is-gone")
             );
             req = Req.EMPTY;

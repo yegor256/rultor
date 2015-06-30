@@ -63,7 +63,7 @@ public final class QnHello implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
-            QnHello.PHRASES.getString("QnHello.intro")
+            true, QnHello.PHRASES.getString("QnHello.intro")
         );
         Logger.info(this, "hello found in #%d", comment.issue().number());
         return Req.DONE;

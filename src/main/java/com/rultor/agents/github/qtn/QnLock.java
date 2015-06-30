@@ -118,6 +118,7 @@ public final class QnLock implements Question {
         final Contents contents = comment.issue().repo().contents();
         if (contents.exists(QnLock.PATH, branch)) {
             new Answer(comment).post(
+                false,
                 String.format(
                     QnLock.PHRASES.getString("QnLock.already-exists"),
                     branch
@@ -148,6 +149,7 @@ public final class QnLock implements Question {
                     .build()
             );
             new Answer(comment).post(
+                true,
                 String.format(
                     QnLock.PHRASES.getString("QnLock.response"),
                     branch,

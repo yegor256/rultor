@@ -107,6 +107,7 @@ public final class QnUnlock implements Question {
                     .build()
             );
             new Answer(comment).post(
+                true,
                 String.format(
                     QnUnlock.PHRASES.getString("QnUnlock.response"),
                     branch
@@ -114,6 +115,7 @@ public final class QnUnlock implements Question {
             );
         } else {
             new Answer(comment).post(
+                false,
                 String.format(
                     QnUnlock.PHRASES.getString("QnUnlock.does-not-exist"),
                     branch

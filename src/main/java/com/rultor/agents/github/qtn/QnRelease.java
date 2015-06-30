@@ -66,6 +66,7 @@ public final class QnRelease implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnRelease.PHRASES.getString("QnRelease.start"),
                 home.toASCIIString()

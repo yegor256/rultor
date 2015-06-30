@@ -64,6 +64,7 @@ public final class QnStop implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnStop.PHRASES.getString("QnStop.stop"),
                 home.toASCIIString()

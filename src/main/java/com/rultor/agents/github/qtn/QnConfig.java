@@ -77,6 +77,7 @@ public final class QnConfig implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnConfig.PHRASES.getString("QnConfig.response"),
                 this.profile.read().toString()

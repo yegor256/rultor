@@ -29,6 +29,9 @@
  */
 package com.rultor.agents.github;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
@@ -37,8 +40,10 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -76,12 +81,13 @@ public final class Answer {
 
     /**
      * Post it..
+     * @param success Is it a report about success?
      * @param msg Message
      * @param args Arguments
      * @throws IOException If fails
      */
-    public void post(final String msg, final Object... args)
-        throws IOException {
+    public void post(final boolean success, final String msg,
+        final Object... args) throws IOException {
         final Issue issue = this.comment.issue();
         final List<Comment.Smart> comments = Lists.newArrayList(
             new Smarts<Comment.Smart>(issue.comments().iterate())
@@ -96,7 +102,7 @@ public final class Answer {
             ++mine;
         }
         if (mine < Answer.MAX) {
-            issue.comments().post(this.msg(Logger.format(msg, args)));
+            issue.comments().post(this.msg(success, Logger.format(msg, args)));
         } else {
             Logger.error(
                 this, "too many (%d) comments from %s already in %s#%d",
@@ -107,27 +113,49 @@ public final class Answer {
 
     /**
      * Make a message to post.
+     * @param success Is it a report about success?
      * @param text The text
      * @return Text to post
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    private String msg(final String text) {
-        String msg;
+    private String msg(final boolean success, final String text) {
+        final StringBuilder msg = new StringBuilder();
         try {
-            msg = String.format(
-                "> %s\n\n@%s %s",
-                StringUtils.abbreviate(
-                    this.comment.body().replace("\n", " "),
-                    Tv.HUNDRED
-                ),
-                this.comment.author().login(),
-                text
+            msg.append(
+                String.format(
+                    "> %s\n\n",
+                    StringUtils.abbreviate(
+                        this.comment.body().replace("\n", " "),
+                        Tv.HUNDRED
+                    )
+                )
             );
+            final Collection<String> logins = new TreeSet<>();
+            logins.add(this.comment.author().login());
+            if (!success) {
+                logins.add(
+                    new Issue.Smart(this.comment.issue()).author().login()
+                );
+            }
+            msg.append(
+                Joiner.on(' ').join(
+                    Iterables.transform(
+                        logins,
+                        new Function<String, String>() {
+                            @Override
+                            public String apply(final String login) {
+                                return String.format("@%s", login);
+                            }
+                        }
+                    )
+                )
+            );
+            msg.append(text);
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {
-            msg = text;
+            msg.append(text);
         }
-        return Xembler.escape(msg);
+        return Xembler.escape(msg.toString());
     }
 
 }

@@ -64,6 +64,7 @@ public final class QnVersion implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnVersion.PHRASES.getString("QnVersion.intro"),
                 Manifests.read("Rultor-Version"),

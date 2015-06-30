@@ -106,7 +106,7 @@ public final class Reports extends AbstractAgent {
             msg.append(Reports.tail(req));
         }
         final int number = Integer.parseInt(req.xpath("@id").get(0));
-        new Answer(Reports.origin(issue, number)).post(msg.toString());
+        new Answer(Reports.origin(issue, number)).post(success, msg.toString());
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")

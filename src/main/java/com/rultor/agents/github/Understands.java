@@ -178,6 +178,7 @@ public final class Understands extends AbstractAgent {
             );
         } catch (final Profile.ConfigException ex) {
             new Answer(comment).post(
+                false,
                 String.format(
                     Understands.PHRASES.getString("Understands.broken-profile"),
                     ExceptionUtils.getRootCauseMessage(ex)

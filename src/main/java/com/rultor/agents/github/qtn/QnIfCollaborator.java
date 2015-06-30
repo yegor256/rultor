@@ -84,6 +84,7 @@ public final class QnIfCollaborator implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
+                false,
                 QnIfCollaborator.PHRASES.getString("QnIfCollaborator.denied")
             );
             req = Req.EMPTY;

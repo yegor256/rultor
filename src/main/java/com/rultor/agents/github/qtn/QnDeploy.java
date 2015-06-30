@@ -67,6 +67,7 @@ public final class QnDeploy implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnDeploy.PHRASES.getString("QnDeploy.start"),
                 home.toASCIIString()

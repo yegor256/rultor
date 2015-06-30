@@ -101,6 +101,7 @@ public final class QnIfUnlocked implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
+                false,
                 QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied"),
                 branch,
                 Joiner.on(", ").join(

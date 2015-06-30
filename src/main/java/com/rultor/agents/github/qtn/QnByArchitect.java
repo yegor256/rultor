@@ -117,6 +117,7 @@ public final class QnByArchitect implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
+                false,
                 String.format(
                     QnByArchitect.PHRASES.getString("QnByArchitect.denied"),
                     logins.get(0).toLowerCase(Locale.ENGLISH)

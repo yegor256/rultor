@@ -58,7 +58,7 @@ public final class AnswerTest {
         final Issue issue = AnswerTest.issue();
         issue.comments().post("hey, do it");
         new Answer(new Comment.Smart(issue.comments().get(1))).post(
-            "hey you\u0000"
+            true, "hey you\u0000"
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
@@ -81,7 +81,7 @@ public final class AnswerTest {
         );
         final Answer answer = new Answer(comment);
         for (int idx = 0; idx < Tv.TEN; ++idx) {
-            answer.post("oops");
+            answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
             Iterables.size(issue.comments().iterate()),

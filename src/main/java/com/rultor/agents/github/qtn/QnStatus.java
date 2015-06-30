@@ -136,6 +136,7 @@ public final class QnStatus implements Question {
             );
         }
         new Answer(comment).post(
+            true,
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
                 Joiner.on('\n').join(
