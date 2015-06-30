@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -144,13 +145,15 @@ public final class Answer {
                         new Function<String, String>() {
                             @Override
                             public String apply(final String login) {
-                                return String.format("@%s", login);
+                                return String.format(
+                                    "@%s", login.toLowerCase(Locale.ENGLISH)
+                                );
                             }
                         }
                     )
                 )
             );
-            msg.append(text);
+            msg.append(' ').append(text);
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {
             msg.append(text);
