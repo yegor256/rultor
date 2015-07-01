@@ -33,6 +33,7 @@ import com.google.common.base.Joiner;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
+import com.jcabi.github.Repos;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
@@ -163,7 +164,7 @@ public final class GithubProfileTest {
         final Github github = new MkGithub("jeff");
         final String name = "te.st";
         final Repo repo = github.repos().create(
-            Json.createObjectBuilder().add("name", name).build()
+            new Repos.RepoCreate(name, false)
         );
         repo.contents().create(
             Json.createObjectBuilder()
@@ -257,7 +258,7 @@ public final class GithubProfileTest {
     private static Repo repo(final String yaml) throws IOException {
         final Github github = new MkGithub("jeff");
         github.repos()
-            .create(Json.createObjectBuilder().add("name", "test1").build())
+            .create(new Repos.RepoCreate("test1", false))
             .contents()
             .create(
                 Json.createObjectBuilder()
@@ -267,7 +268,7 @@ public final class GithubProfileTest {
                     .build()
             );
         final Repo repo = github.repos().create(
-            Json.createObjectBuilder().add("name", "test2").build()
+            new Repos.RepoCreate("test2", false)
         );
         repo.contents().create(
             Json.createObjectBuilder()

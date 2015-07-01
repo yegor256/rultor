@@ -32,6 +32,7 @@ package com.rultor.profiles;
 import com.google.common.base.Joiner;
 import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
+import com.jcabi.github.Repos;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Profile;
 import java.io.IOException;
@@ -280,7 +281,7 @@ public final class GithubProfileValidationTest {
     private static Repo repo(final String yaml) throws IOException {
         final Github github = new MkGithub("jeff");
         final Repo repo = github.repos().create(
-            Json.createObjectBuilder().add("name", "test").build()
+            new Repos.RepoCreate("test", false)
         );
         repo.contents().create(
             Json.createObjectBuilder()
