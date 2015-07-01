@@ -63,7 +63,7 @@ public final class TweetsTest {
         final Talk talk = TweetsTest.talk(repo, repo.issues().create("", ""));
         new Tweets(repo.github(), twitter).execute(talk);
         Mockito.verify(twitter).post(
-            Matchers.contains("test")
+            Matchers.contains(repo.coordinates().repo())
         );
     }
 
