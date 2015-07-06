@@ -61,6 +61,7 @@ import com.rultor.agents.github.qtn.QnFollow;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnIfPull;
 import com.rultor.agents.github.qtn.QnIfUnlocked;
 import com.rultor.agents.github.qtn.QnLock;
 import com.rultor.agents.github.qtn.QnMerge;
@@ -276,7 +277,7 @@ public final class Agents {
                         new QnAskedBy(
                             profile,
                             Agents.commanders("merge"),
-                            new QnIfUnlocked(new QnMerge())
+                            new QnIfPull(new QnIfUnlocked(new QnMerge()))
                         )
                     ),
                     new QnIfContains(

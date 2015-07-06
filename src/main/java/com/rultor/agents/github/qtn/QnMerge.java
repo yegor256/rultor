@@ -85,12 +85,6 @@ public final class QnMerge implements Question {
                 comment,
                 issue.repo().pulls().get(issue.number())
             );
-        } else if (issue.isOpen()) {
-            new Answer(comment).post(
-                false,
-                QnMerge.PHRASES.getString("QnMerge.not-pull-request")
-            );
-            req = Req.EMPTY;
         } else {
             new Answer(comment).post(
                 false,
