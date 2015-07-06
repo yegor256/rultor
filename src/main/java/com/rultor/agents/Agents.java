@@ -68,6 +68,7 @@ import com.rultor.agents.github.qtn.QnNotSelf;
 import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
+import com.rultor.agents.github.qtn.QnSafe;
 import com.rultor.agents.github.qtn.QnSince;
 import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnStop;
@@ -204,7 +205,10 @@ public final class Agents {
             new Array<Agent>(
                 new SanitizesDaemon(),
                 new WipesDaemon(),
-                new Understands(this.github, question),
+                new Understands(
+                    this.github,
+                    new QnSafe(question)
+                ),
                 new StartsRequest(profile),
                 new RegistersShell(
                     profile,
