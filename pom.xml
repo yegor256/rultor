@@ -61,8 +61,8 @@
             <id>1</id>
             <name>Yegor Bugayenko</name>
             <email>yegor@teamed.io</email>
-            <organization>TPC2</organization>
-            <organizationUrl>http://www.tpc2.com</organizationUrl>
+            <organization>Teamed.io</organization>
+            <organizationUrl>http://www.teamed.io</organizationUrl>
             <roles>
                 <role>Architect</role>
                 <role>Developer</role>
