@@ -42,7 +42,7 @@ import org.takes.facets.forward.RsForward;
 /**
  * Front page of a talk.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.50
  */

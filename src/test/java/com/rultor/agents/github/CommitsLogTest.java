@@ -48,7 +48,7 @@ import org.mockito.Mockito;
 /**
  * Tests for ${@link CommitsLog}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.51
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

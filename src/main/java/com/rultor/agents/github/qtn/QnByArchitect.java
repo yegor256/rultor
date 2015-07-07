@@ -49,7 +49,7 @@ import lombok.ToString;
 /**
  * Question by architect only (if configured).
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.45
  */

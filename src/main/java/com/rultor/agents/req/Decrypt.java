@@ -43,7 +43,7 @@ import lombok.ToString;
 /**
  * Decrypt.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.37.4
  */
@@ -53,7 +53,7 @@ import lombok.ToString;
 /**
  * Tests for {@link Decrypt}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.37.4
  */

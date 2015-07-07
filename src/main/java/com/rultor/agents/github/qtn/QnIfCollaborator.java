@@ -45,7 +45,7 @@ import lombok.ToString;
 /**
  * If rultor is in the list of collaborators.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.7
  */

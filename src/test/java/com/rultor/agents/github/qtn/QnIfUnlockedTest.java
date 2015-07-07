@@ -44,7 +44,7 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnIfUnlocked}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.53
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

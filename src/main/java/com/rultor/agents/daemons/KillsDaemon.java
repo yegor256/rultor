@@ -43,7 +43,7 @@ import org.xembly.Directives;
 /**
  * Kills daemon if too old.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */

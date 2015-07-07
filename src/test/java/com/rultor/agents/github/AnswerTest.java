@@ -43,7 +43,7 @@ import org.junit.Test;
 /**
  * Tests for ${@link Answer}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.8.16
  */

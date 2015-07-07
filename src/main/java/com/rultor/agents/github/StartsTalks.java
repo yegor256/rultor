@@ -59,7 +59,7 @@ import org.xembly.Directives;
 /**
  * Starts talk when I'm mentioned in a Github issue.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */

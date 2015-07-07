@@ -52,7 +52,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Docker run command.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

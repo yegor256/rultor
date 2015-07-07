@@ -45,7 +45,7 @@ import lombok.ToString;
  * <p>It is used by {@link com.rultor.agents.github.qtn.QnAlone}
  * and {@link UnlocksRepo}.</p>
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.8.12
  */

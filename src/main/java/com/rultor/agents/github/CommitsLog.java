@@ -51,7 +51,7 @@ import javax.json.JsonObject;
 /**
  * Log of commits.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.51
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

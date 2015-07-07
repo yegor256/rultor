@@ -45,7 +45,7 @@ import org.junit.Test;
 /**
  * Tests for ${@link QnStatus}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.5
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

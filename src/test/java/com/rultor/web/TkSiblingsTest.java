@@ -43,7 +43,7 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link TkSiblings}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.23.1
  */

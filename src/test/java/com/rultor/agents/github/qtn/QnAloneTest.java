@@ -46,7 +46,7 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnAlone}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.6.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

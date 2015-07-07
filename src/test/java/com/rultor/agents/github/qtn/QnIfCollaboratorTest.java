@@ -43,7 +43,7 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnIfCollaborator}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.40.4
  */

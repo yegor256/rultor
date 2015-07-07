@@ -62,7 +62,7 @@ import org.xembly.Xembler;
 /**
  * Lock branch.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.53
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

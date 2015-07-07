@@ -44,7 +44,7 @@ import org.takes.misc.Opt;
 /**
  * Admin only.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.50
  */

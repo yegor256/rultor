@@ -54,7 +54,7 @@ import org.xembly.Xembler;
 /**
  * SVG with pulse.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
