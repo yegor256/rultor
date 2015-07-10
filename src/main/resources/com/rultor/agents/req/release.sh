@@ -32,4 +32,4 @@ git reset --hard
 git clean -fd
 git checkout master
 git branch -D "${BRANCH_NAME}"
-git push --all origin
+git push --all --tags origin
