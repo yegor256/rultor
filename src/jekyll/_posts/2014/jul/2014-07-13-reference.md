@@ -96,7 +96,7 @@ $ rultor encrypt -p me/test secret.txt
 
 Here `me/test` is the name of your Github project.
 
-This code encrypt `secret.txt` file. You will get a new file `secret.txt.asc`.
+This code encrypts `secret.txt` file. You will get a new file `secret.txt.asc`.
 Commit this file to your repository &mdash; nobody will be able
 to read it, except Rultor server itself.
 
@@ -109,7 +109,7 @@ decrypt:
 
 This configuration tells Rultor to get `scrt/secret.txt.asc` from the
 root directory of your repository, decrypt it and save the result
-into `secret.txt`.
+into `secret.txt`. You can access it from your script as `../secret.txt`.
 
 ## Docker Image
 
