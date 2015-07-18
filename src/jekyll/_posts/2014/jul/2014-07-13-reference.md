@@ -110,6 +110,8 @@ decrypt:
 This configuration tells Rultor to get `scrt/secret.txt.asc` from the
 root directory of your repository, decrypt it and save the result
 into `secret.txt`. You can access it from your script as `../secret.txt`.
+In other words, you can access it at `../secret.txt`, relative
+to the repository root from where your script is executed.
 
 ## Docker Image
 
