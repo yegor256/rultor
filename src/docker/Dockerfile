@@ -37,7 +37,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
-# Basic tools
+# Basic Linux tools
 RUN apt-get update
 RUN apt-get install -y wget bcrypt curl
 RUN apt-get install -y unzip zip
@@ -49,7 +49,7 @@ RUN apt-get install -y nodejs
 RUN apt-get install -y build-essential
 RUN apt-get install -y automake autoconf
 
-# SSHD
+# SSH Daemon
 RUN apt-get install -y ssh && \
   mkdir /var/run/sshd && \
   chmod 0755 /var/run/sshd
@@ -81,7 +81,7 @@ RUN apt-get install -y gdebi && \
 RUN git clone https://github.com/yegor256/rultor.git && \
   cd rultor && \
   gem install jekyll && \
-  mvn clean install site -Pqulice -Psite && \
+  mvn clean install -Pqulice && \
   cd .. && \
   rm -rf rultor
 
