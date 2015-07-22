@@ -29,8 +29,16 @@
 FROM ubuntu:14.04
 MAINTAINER Yegor Bugayenko <yegor@teamed.io>
 
+# UTF-8 locale
+RUN locale-gen en_US en_US.UTF-8
+RUN dpkg-reconfigure locales
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+
+# Basic tools
 RUN apt-get update
-RUN apt-get install -y wget bcrypt unzip zip gnupg gnupg2 jq git
+RUN apt-get install -y wget bcrypt unzip zip gnupg gnupg2 jq git bsdmainutils
 
 # Ruby
 RUN apt-get install -y ruby
