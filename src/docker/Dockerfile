@@ -30,6 +30,8 @@ FROM ubuntu:14.04
 MAINTAINER Yegor Bugayenko <yegor@teamed.io>
 WORKDIR /tmp
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # UTF-8 locale
 RUN locale-gen en_US en_US.UTF-8
 RUN dpkg-reconfigure locales
