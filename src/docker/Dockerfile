@@ -39,7 +39,14 @@ ENV LANGUAGE en_US.UTF-8
 
 # Basic tools
 RUN apt-get update
-RUN apt-get install -y wget bcrypt unzip zip gnupg gnupg2 jq git bsdmainutils
+RUN apt-get install -y wget bcrypt
+RUN apt-get install -y unzip zip
+RUN apt-get install -y gnupg gnupg2
+RUN apt-get install -y jq git bsdmainutils ssh
+RUN apt-get install -y jq
+RUN apt-get install -y git
+RUN apt-get install -y bsdmainutils
+RUN apt-get install -y ssh
 
 # Ruby
 RUN apt-get install -y ruby
