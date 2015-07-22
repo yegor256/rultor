@@ -28,6 +28,7 @@
 
 FROM ubuntu:14.04
 MAINTAINER Yegor Bugayenko <yegor@teamed.io>
+WORKDIR /tmp
 
 # UTF-8 locale
 RUN locale-gen en_US en_US.UTF-8
@@ -45,14 +46,13 @@ RUN apt-get install -y ruby
 
 # PHP
 RUN apt-get install -y php5-dev php-pear
-RUN cd /tmp && \
-  mkdir jsl && \
+RUN mkdir jsl && \
   wget http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
   tar xzf jsl-0.3.0-src.tar.gz && \
   cd jsl-0.3.0/src && \
   make -f Makefile.ref && \
   mv Linux_All_DBG.OBJ/jsl /usr/local/bin && \
-  cd /tmp && \
+  cd .. && \
   rm -rf jsl
 RUN pecl install xdebug && \
   echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
@@ -60,14 +60,13 @@ RUN pecl install xdebug && \
 # Java
 RUN apt-get install -y default-jdk
 RUN apt-get install -y gdebi && \
-  cd /tmp && \
   wget http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb && \
   gdebi -y maven3_3.2.1-0~ppa1_all.deb && \
-  ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn
-RUN cd /tmp && \
-  git clone https://github.com/yegor256/rultor.git && \
+  ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn && \
+  rm -rf maven3_3.2.1-0~ppa1_all.deb
+RUN git clone https://github.com/yegor256/rultor.git && \
   cd rultor && \
   mvn clean install site -Pqulice -Psite && \
-  cd /tmp && \
+  cd .. && \
   rm -rf rultor
 
