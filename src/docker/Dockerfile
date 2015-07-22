@@ -39,17 +39,24 @@ ENV LANGUAGE en_US.UTF-8
 
 # Basic tools
 RUN apt-get update
-RUN apt-get install -y wget bcrypt
+RUN apt-get install -y wget bcrypt curl
 RUN apt-get install -y unzip zip
 RUN apt-get install -y gnupg gnupg2
-RUN apt-get install -y jq git bsdmainutils ssh
 RUN apt-get install -y jq
-RUN apt-get install -y git
+RUN apt-get install -y git git-core
 RUN apt-get install -y bsdmainutils
-RUN apt-get install -y ssh
+RUN apt-get install -y nodejs
+RUN apt-get install -y build-essential
+RUN apt-get install -y automake autoconf
+
+# SSHD
+RUN apt-get install -y ssh && \
+  mkdir /var/run/sshd && \
+  chmod 0755 /var/run/sshd
 
 # Ruby
-RUN apt-get install -y ruby
+RUN apt-get install -y ruby ruby-dev
+RUN gem update
 
 # PHP
 RUN apt-get install -y php5-dev php-pear
@@ -73,6 +80,7 @@ RUN apt-get install -y gdebi && \
   rm -rf maven3_3.2.1-0~ppa1_all.deb
 RUN git clone https://github.com/yegor256/rultor.git && \
   cd rultor && \
+  gem install jekyll && \
   mvn clean install site -Pqulice -Psite && \
   cd .. && \
   rm -rf rultor
