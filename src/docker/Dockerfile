@@ -77,7 +77,7 @@ RUN pecl install xdebug && \
 RUN apt-get install -y default-jdk
 RUN apt-get install -y gdebi && \
   wget http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb && \
-  gdebi -y maven3_3.2.1-0~ppa1_all.deb && \
+  gdebi --non-interactive maven3_3.2.1-0~ppa1_all.deb && \
   ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn && \
   rm -rf maven3_3.2.1-0~ppa1_all.deb
 RUN git clone https://github.com/yegor256/rultor.git && \
