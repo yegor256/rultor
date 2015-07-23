@@ -59,7 +59,9 @@ RUN apt-get install -y ssh && \
 
 # Ruby
 RUN apt-get install -y ruby ruby-dev
+RUN apt-get install -y libmagic-dev
 RUN gem update
+RUN gem install nokogiri
 
 # PHP
 RUN apt-get install -y php5-dev php-pear
