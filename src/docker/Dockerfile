@@ -92,3 +92,5 @@ RUN git clone https://github.com/yegor256/rultor.git && \
 
 RUN apt-get install -y libxml2-utils
 
+RUN apt-get install -y s3cmd
+
