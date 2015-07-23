@@ -88,3 +88,5 @@ RUN git clone https://github.com/yegor256/rultor.git && \
   cd .. && \
   rm -rf rultor
 
+RUN apt-get install -y libxml2-utils
+
