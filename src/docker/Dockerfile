@@ -59,7 +59,7 @@ RUN apt-get install -y ssh && \
 
 # Ruby
 RUN apt-get install -y ruby ruby-dev
-RUN apt-get install -y libmagic-dev
+RUN apt-get install -y libmagic-dev zlib1g-dev
 RUN gem update
 RUN gem install nokogiri
 
