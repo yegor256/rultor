@@ -94,3 +94,5 @@ RUN apt-get install -y libxml2-utils
 
 RUN apt-get install -y s3cmd
 
+RUN rm -rf /tmp/*
+RUN rm -rf /root/.ssh
