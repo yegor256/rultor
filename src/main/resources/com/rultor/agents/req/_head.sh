@@ -1,7 +1,7 @@
 #!/bin/sh
 
 mkdir -p ~/.ssh
-echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 chmod 600 ~/.ssh/config
 git clone "${head}" repo
 cd repo
