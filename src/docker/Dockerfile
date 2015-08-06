@@ -52,6 +52,7 @@ RUN apt-get install -y build-essential
 RUN apt-get install -y automake autoconf
 
 # Git 2.0
+RUN apt-get install -y software-properties-common python-software-properties
 RUN add-apt-repository ppa:git-core/ppa
 RUN apt-get update
 RUN apt-get install -y git git-core
