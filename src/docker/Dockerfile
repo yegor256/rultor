@@ -46,11 +46,15 @@ RUN apt-get install -y wget bcrypt curl
 RUN apt-get install -y unzip zip
 RUN apt-get install -y gnupg gnupg2
 RUN apt-get install -y jq
-RUN apt-get install -y git git-core
 RUN apt-get install -y bsdmainutils
 RUN apt-get install -y nodejs
 RUN apt-get install -y build-essential
 RUN apt-get install -y automake autoconf
+
+# Git 2.0
+RUN add-apt-repository ppa:git-core/ppa
+RUN apt-get update
+RUN apt-get install -y git git-core
 
 # SSH Daemon
 RUN apt-get install -y ssh && \
