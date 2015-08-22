@@ -73,7 +73,7 @@ final class TkStatus implements Take {
         final Response response;
         if (Iterables.isEmpty(ticks)) {
             response = new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR);
-            msg.append("there is no activity yet, refresh in a few seconds");
+            msg.append("There is no activity yet, refresh in a few seconds");
         } else {
             final long age = System.currentTimeMillis()
                 - Iterables.getLast(ticks).start();
@@ -83,7 +83,7 @@ final class TkStatus implements Take {
                 );
                 msg.append(
                     Logger.format(
-                        "the system is down, for %[ms]s already",
+                        "Unfortunately, the system is down, for %[ms]s already",
                         age
                     )
                 );
@@ -94,7 +94,7 @@ final class TkStatus implements Take {
                 response = new RsEmpty();
                 msg.append(
                     Logger.format(
-                        "it is up and running, last check done %[ms]s ago",
+                        "It is up and running, last check done %[ms]s ago",
                         age
                     )
                 );
