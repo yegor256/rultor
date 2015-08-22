@@ -161,11 +161,14 @@ public final class EndsDaemon extends AbstractAgent {
             .add("tail")
             .set(
                 Xembler.escape(
-                    Joiner.on(System.lineSeparator()).join(
-                        Iterables.skip(
-                            lines,
-                            Math.max(lines.size() - Tv.SIXTY, 0)
-                        )
+                    StringUtils.substring(
+                        Joiner.on(System.lineSeparator()).join(
+                            Iterables.skip(
+                                lines,
+                                Math.max(lines.size() - Tv.SIXTY, 0)
+                            )
+                        ),
+                        -Tv.HUNDRED * Tv.THOUSAND
                     )
                 )
             );
