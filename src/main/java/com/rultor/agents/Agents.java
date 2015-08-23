@@ -37,6 +37,7 @@ import com.jcabi.immutable.Array;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
+import com.jcabi.ssh.SSH;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
@@ -44,6 +45,7 @@ import com.rultor.agents.daemons.SanitizesDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.daemons.StopsDaemon;
 import com.rultor.agents.daemons.WipesDaemon;
+import com.rultor.agents.docker.DockerExec;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.ReleaseBinaries;
@@ -131,12 +133,25 @@ public final class Agents {
     /**
      * Create super agent, starter.
      * @return The starter
+     * @throws IOException If fails
      */
-    public SuperAgent starter() {
+    public SuperAgent starter() throws IOException {
         return new SuperAgent.Iterative(
             new Array<>(
                 new StartsTalks(this.github),
-                new IndexesRequests()
+                new IndexesRequests(),
+                new DockerExec(
+                    new SSH(
+                        // @checkstyle MagicNumber (1 line)
+                        "b3.rultor.com", 22,
+                        "rultor",
+                        IOUtils.toString(
+                            this.getClass().getResourceAsStream("rultor.key"),
+                            CharEncoding.UTF_8
+                        )
+                    ),
+                    "rmi.sh"
+                )
             )
         );
     }
