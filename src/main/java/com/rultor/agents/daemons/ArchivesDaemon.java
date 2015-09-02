@@ -95,7 +95,8 @@ public final class ArchivesDaemon extends AbstractAgent {
             Joiner.on("; ").join(
                 String.format("cd %s", SSH.escape(dir)),
                 "if [ -r stdout ]",
-                "then cat stdout | iconv -f utf-8 -t utf-8 -c | col -bx",
+                // @checkstyle LineLength (1 line)
+                "then cat stdout | iconv -f utf-8 -t utf-8 -c | LANG=en_US.UTF-8 col -bx",
                 "else echo 'stdout not found, internal error'",
                 "fi"
             ),
