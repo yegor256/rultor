@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.req;
 
+import com.google.common.base.Joiner;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
@@ -40,7 +41,7 @@ import org.junit.Test;
 /**
  * Tests for ${@link DockerRun}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */
@@ -54,12 +55,12 @@ public final class DockerRunTest {
     public void fetchesEnvVars() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                Joiner.on(' ').join(
                     "<p><entry key='a'><entry key='env'>",
                     "<item>A=5</item><item>B=f e</item></entry></entry>",
                     "<entry key='b'><entry key='env'>HELLO='1'</entry></entry>",
-                    "<entry key='c'><entry key='env'><entry key='MVN'>",
-                    "works</entry></entry></entry></p>"
+                    "<entry key='c'><entry key='env'>",
+                    "<entry key='MVN'>works</entry></entry></entry></p>"
                 )
             )
         );
@@ -91,7 +92,7 @@ public final class DockerRunTest {
     public void fetchesScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                Joiner.on(' ').join(
                     "<p><entry key='x'><entry key='script'>",
                     "mvn clean</entry></entry>",
                     "<entry key='y'><entry key='script'>",
@@ -117,7 +118,7 @@ public final class DockerRunTest {
     public void executesWithComment() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                Joiner.on(' ').join(
                     "<p><entry key='z'><entry key='script'>",
                     "<item>echo \"first\"</item>",
                     "<item># some comment</item>",
@@ -179,7 +180,7 @@ public final class DockerRunTest {
     public void fetchesInstallScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                Joiner.on(' ').join(
                     "<p><entry key='f'><entry key='script'>hi</entry></entry>",
                     "<entry key='install'><item>one</item><item>two</item>",
                     "</entry></p>"
@@ -202,9 +203,9 @@ public final class DockerRunTest {
     public void fetchesUninstallScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                Joiner.on(' ').join(
                     "<p>",
-                    "<entry key='uninstall'>" ,
+                    "<entry key='uninstall'>",
                     "<item>one</item><item>two</item>",
                     "</entry>",
                     "<entry key='f'><entry key='script'>hi</entry></entry>",
@@ -229,7 +230,7 @@ public final class DockerRunTest {
     public void fetchesEnvVarsDefaults() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                Joiner.on(' ').join(
                     "<p><entry key='o'><entry key='env'>A=123</entry></entry>",
                     "<entry key='env'>ALPHA=909</entry></p>"
                 )

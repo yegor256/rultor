@@ -39,7 +39,6 @@ import java.util.logging.Level;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -50,7 +49,7 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Tests for {@link Decrypt}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.37.4
  */
@@ -149,10 +148,12 @@ public final class DecryptTest {
                     "test1/test1"
                 ),
                 "http://someserver.com",
-                PORT
-            ).commands().iterator().next(),
-            Matchers.containsString(
-                " http-proxy=http://someserver.com:8080 "
+                DecryptTest.PORT
+            ).commands(),
+            Matchers.hasItem(
+                Matchers.containsString(
+                    " http-proxy=http://someserver.com:8080 "
+                )
             )
         );
     }
@@ -164,9 +165,12 @@ public final class DecryptTest {
      */
     private XMLDocument createTestProfileXML() {
         return new XMLDocument(
-            StringUtils.join(
-                "<p><entry key='decrypt'><entry key='a.txt'>",
-                "a.txt.asc</entry></entry></p>"
+            Joiner.on("").join(
+                "<p>",
+                "<entry key='decrypt'>",
+                "<entry key='a.txt'>a.txt.asc</entry>",
+                "</entry>",
+                "</p>"
             )
         );
     }

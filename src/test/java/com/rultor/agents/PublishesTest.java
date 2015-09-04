@@ -40,7 +40,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link Publishes}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.32.7
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

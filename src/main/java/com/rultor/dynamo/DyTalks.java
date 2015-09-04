@@ -38,8 +38,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
@@ -57,7 +55,7 @@ import lombok.ToString;
 /**
  * Talks in Dynamo.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -117,6 +115,11 @@ public final class DyTalks implements Talks {
      * XML of the talk.
      */
     public static final String ATTR_XML = "xml";
+
+    /**
+     * XML of the talk, gzip.
+     */
+    public static final String ATTR_XML_ZIP = "zipxml";
 
     /**
      * When updated.
@@ -250,10 +253,9 @@ public final class DyTalks implements Talks {
         );
     }
 
-    @Cacheable
     @Override
     public Iterable<Talk> recent() {
-        return Lists.newArrayList(
+        return Iterables.limit(
             Iterables.filter(
                 Iterables.transform(
                     this.region.table(DyTalks.TBL)
@@ -263,7 +265,7 @@ public final class DyTalks implements Talks {
                                 .withIndexName(DyTalks.IDX_ACTIVE)
                                 .withScanIndexForward(false)
                                 .withConsistentRead(false)
-                                .withLimit(Tv.TWENTY)
+                                .withLimit(Tv.FIVE)
                                 .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                         )
                         .where(
@@ -288,7 +290,8 @@ public final class DyTalks implements Talks {
                         }
                     }
                 }
-            )
+            ),
+            Tv.FIVE
         );
     }
 

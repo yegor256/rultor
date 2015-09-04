@@ -59,7 +59,7 @@ import org.xembly.Directives;
 /**
  * Marks the daemon as done.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -80,7 +80,7 @@ public final class ArchivesDaemon extends AbstractAgent {
      */
     public ArchivesDaemon(final Bucket bkt) {
         super(
-            "/talk/daemon[started and code and ended]",
+            "/talk/daemon[started and code and ended and dir]",
             "/talk/shell"
         );
         this.bucket = bkt;
@@ -93,10 +93,11 @@ public final class ArchivesDaemon extends AbstractAgent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
             Joiner.on("; ").join(
-                String.format("dir=%s", SSH.escape(dir)),
-                "if [ -e \"${dir}/stdout\" ]",
-                "then cat \"${dir}/stdout\" | col -b 2>&1",
-                "else echo 'stdout not found, internal error!'",
+                String.format("cd %s", SSH.escape(dir)),
+                "if [ -r stdout ]",
+                // @checkstyle LineLength (1 line)
+                "then cat stdout | iconv -f utf-8 -t utf-8 -c | LANG=en_US.UTF-8 col -bx",
+                "else echo 'stdout not found, internal error'",
                 "fi"
             ),
             new NullInputStream(0L),
@@ -108,8 +109,11 @@ public final class ArchivesDaemon extends AbstractAgent {
         );
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final URI uri = this.upload(file, hash);
-        final String title = this.title(xml, file);
-        Logger.info(this, "daemon archived into %s: %s", uri, title);
+        final String title = ArchivesDaemon.title(xml, file);
+        Logger.info(
+            this, "daemon of %s archived into %s: %s",
+            xml.xpath("/talk/@name").get(0), uri, title
+        );
         FileUtils.deleteQuietly(file);
         return new Directives().xpath("/talk/daemon").remove()
             .xpath("/talk").addIf("archive")
@@ -142,7 +146,8 @@ public final class ArchivesDaemon extends AbstractAgent {
      * @return Title
      * @throws IOException If fails
      */
-    private String title(final XML xml, final File file) throws IOException {
+    private static String title(final XML xml, final File file)
+        throws IOException {
         final int code = Integer.parseInt(
             xml.xpath("/talk/daemon/code/text()").get(0)
         );

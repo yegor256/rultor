@@ -43,7 +43,7 @@ import lombok.ToString;
 /**
  * Decrypt.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.37.4
  */
@@ -53,7 +53,7 @@ import lombok.ToString;
 /**
  * Tests for {@link Decrypt}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.37.4
  */
@@ -102,6 +102,7 @@ final class Decrypt {
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<String>();
         if (!assets.isEmpty()) {
+            commands.add("gpgconf --reload gpg-agent");
             commands.add(
                 Joiner.on(' ').join(
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
@@ -109,6 +110,7 @@ final class Decrypt {
                     "--verbose --recv-keys 9AF0FA4C"
                 )
             );
+            commands.add("gpg --version");
         }
         for (final XML asset : assets) {
             final String key = asset.xpath("@key").get(0);

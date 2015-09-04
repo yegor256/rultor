@@ -45,7 +45,7 @@ import lombok.ToString;
  * <p>It is used by {@link com.rultor.agents.github.qtn.QnAlone}
  * and {@link UnlocksRepo}.</p>
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.8.12
  */
@@ -83,7 +83,7 @@ public final class RepoLock {
     public boolean lock(final Talk talk) throws IOException {
         final String name = RepoLock.label(talk);
         final boolean done = this.lock().lock(name);
-        Logger.info(this, "lock of %s: %B", name, done);
+        Logger.debug(this, "lock of %s: %B", name, done);
         return done;
     }
 
@@ -96,7 +96,7 @@ public final class RepoLock {
     public boolean unlock(final Talk talk) throws IOException {
         final String name = RepoLock.label(talk);
         final boolean done = this.lock().unlock(name);
-        Logger.info(this, "unlock of %s: %B", name, done);
+        Logger.debug(this, "unlock of %s: %B", name, done);
         return done;
     }
 

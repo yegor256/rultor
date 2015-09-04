@@ -40,7 +40,7 @@ import org.apache.commons.io.IOUtils;
 /**
  * Shell in profile.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.48
  */

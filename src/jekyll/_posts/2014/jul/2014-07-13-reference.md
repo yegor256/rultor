@@ -96,7 +96,7 @@ $ rultor encrypt -p me/test secret.txt
 
 Here `me/test` is the name of your Github project.
 
-This code encrypt `secret.txt` file. You will get a new file `secret.txt.asc`.
+This code encrypts `secret.txt` file. You will get a new file `secret.txt.asc`.
 Commit this file to your repository &mdash; nobody will be able
 to read it, except Rultor server itself.
 
@@ -109,7 +109,9 @@ decrypt:
 
 This configuration tells Rultor to get `scrt/secret.txt.asc` from the
 root directory of your repository, decrypt it and save the result
-into `secret.txt`.
+into `secret.txt`. You can access it from your script as `../secret.txt`.
+In other words, you can access it at `../secret.txt`, relative
+to the repository root from where your script is executed.
 
 ## Docker Image
 
@@ -121,6 +123,16 @@ You can change it to, say, `ubuntu:12.10`:
 {% highlight yaml %}
 docker:
   image: "ubuntu:12.10"
+{% endhighlight %}
+
+You can also use your own `Dockerfile` and build your own Docker image,
+right before the build. Put `Dockerfile` in some directory in the repository
+together with all other Docker files (if you need them) and provide a location
+of that directory:
+
+{% highlight yaml %}
+docker:
+  directory: repo/my-docker-image
 {% endhighlight %}
 
 ## Environment Variables
@@ -238,6 +250,27 @@ The list of Github accounts able to give commands to Rultor is specified in
 `commanders`. By default, only Github repository collaborators can give
 commands. Configured commanders don't replace collaborators. In other words,
 Github collaborators *and* accounts mentioned here are allowed to give commands.
+
+There are a few additional configurable parameters for `merge` section:
+
+{% highlight yaml %}
+merge:
+  script: |
+    echo "testing..."
+    echo "building..."
+    echo "packaging..."
+  squash: true
+  fast-forward: default
+{% endhighlight %}
+
+`squash` option may be set to `true` or `false` (default).
+
+`fast-forward` may be either `default`
+(`--ff` argument for Git), `only` (`--ff-only`) or `no` (`--no-ff`).
+More information about it [here](http://git-scm.com/docs/git-merge).
+
+`rebase` option may be set to `true` or `false` (default). If it's set
+to `true`, your fork branch will be "rebased" from origin before the merge.
 
 ## Uninstall Script
 

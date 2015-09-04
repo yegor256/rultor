@@ -41,61 +41,67 @@ import org.apache.commons.io.FileUtils;
 /**
  * Feature toggles.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode
-public final class Toggles {
-
-    /**
-     * Directory to work in.
-     */
-    private static final String DIR = String.format(
-        "/tmp/rultor-%s", Manifests.read("Rultor-Revision")
-    );
+public interface Toggles {
 
     /**
      * Toggle read only mode.
      * @throws IOException If fails
      */
-    public void toggle() throws IOException {
-        final File file = this.file();
-        synchronized (Toggles.class) {
-            if (this.readOnly()) {
-                if (!file.delete()) {
-                    throw new IllegalStateException(
-                        String.format("failed to delete %s", file)
-                    );
-                }
-            } else {
-                FileUtils.touch(file);
-            }
-        }
-    }
+    void toggle() throws IOException;
 
     /**
      * Is it read only mode now?
      * @return TRUE if read only
      */
-    public boolean readOnly() {
-        synchronized (Toggles.class) {
-            return this.file().exists();
-        }
-    }
+    boolean readOnly();
 
-    /**
-     * Get file.
-     * @return File
-     */
-    private File file() {
-        final File file = new File(Toggles.DIR, "read-only");
-        if (file.getParentFile().mkdirs()) {
-            Logger.info(this, "directory created for %s", file);
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    final class InFile implements Toggles {
+        /**
+         * Directory to work in.
+         */
+        private static final String DIR = String.format(
+            "/tmp/rultor-%s", Manifests.read("Rultor-Revision")
+        );
+        @Override
+        public void toggle() throws IOException {
+            final File file = this.file();
+            synchronized (Toggles.class) {
+                if (this.readOnly()) {
+                    if (!file.delete()) {
+                        throw new IllegalStateException(
+                            String.format("failed to delete %s", file)
+                        );
+                    }
+                } else {
+                    FileUtils.touch(file);
+                }
+            }
         }
-        return file;
+        @Override
+        public boolean readOnly() {
+            synchronized (Toggles.class) {
+                return this.file().exists();
+            }
+        }
+        /**
+         * Get file.
+         * @return File
+         */
+        private File file() {
+            final File file = new File(Toggles.InFile.DIR, "read-only");
+            if (file.getParentFile().mkdirs()) {
+                Logger.info(this, "directory created for %s", file);
+            }
+            return file;
+        }
     }
 
 }

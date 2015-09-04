@@ -31,19 +31,19 @@ package com.rultor.agents.req;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
+import com.jcabi.ssh.SSH;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -55,7 +55,7 @@ import org.xembly.Directives;
 /**
  * Merges.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */
@@ -64,11 +64,6 @@ import org.xembly.Directives;
 @EqualsAndHashCode(callSuper = false, of = "profile")
 public final class StartsRequest extends AbstractAgent {
 
-    /**
-     * Command types not requiring _head.sh.
-     */
-    private static final Collection<String> HEADLESS =
-        Collections.singleton("stop");
     /**
      * Default port value to be used with Decrypt.
      */
@@ -109,7 +104,10 @@ public final class StartsRequest extends AbstractAgent {
             script = this.script(
                 req, type, xml.xpath("/talk/@name").get(0)
             );
-            Logger.info(this, "request %s/%s started", type, hash);
+            Logger.info(
+                this, "request %s/%s started for %s",
+                type, hash, xml.xpath("/talk/@name ").get(0)
+            );
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
                 "cat <<EOT\n%[exception]s\nEOT\nexit -1", ex
@@ -151,25 +149,17 @@ public final class StartsRequest extends AbstractAgent {
                             final Map.Entry<String, String> input) {
                             return String.format(
                                 "%s=%s", input.getKey(),
-                                input.getValue()
+                                StartsRequest.escape(input.getValue())
                             );
                         }
                     }
                 ),
                 Collections.singleton(this.asRoot()),
-                Iterables.filter(
-                    Collections.singleton(
-                        IOUtils.toString(
-                            this.getClass().getResourceAsStream("_head.sh"),
-                            CharEncoding.UTF_8
-                        )
-                    ),
-                    new Predicate<String>() {
-                        @Override
-                        public boolean apply(final String input) {
-                            return !StartsRequest.HEADLESS.contains(type);
-                        }
-                    }
+                Collections.singleton(
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream("_head.sh"),
+                        CharEncoding.UTF_8
+                    )
                 ),
                 this.decryptor().commands(),
                 Collections.singleton(
@@ -221,29 +211,68 @@ public final class StartsRequest extends AbstractAgent {
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
         final ImmutableMap.Builder<String, String> vars =
-            new ImmutableMap.Builder<String, String>();
+            new ImmutableMap.Builder<>();
         for (final XML arg : req.nodes("args/arg")) {
-            vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
+            vars.put(
+                arg.xpath("@name").get(0),
+                arg.xpath("text()").get(0)
+            );
         }
         final DockerRun docker = new DockerRun(
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
         vars.put("vars", docker.envs(vars.build()));
+        final Profile.Defaults def = new Profile.Defaults(this.profile);
         vars.put(
             "image",
-            new Profile.Defaults(this.profile).text(
+            def.text(
                 "/p/entry[@key='docker']/entry[@key='image']",
                 "yegor256/rultor"
             )
         );
         vars.put(
             "directory",
-            new Profile.Defaults(this.profile).text(
-                "/p/entry[@key='docker']/entry[@key='directory']",
-                ""
-            )
+            def.text("/p/entry[@key='docker']/entry[@key='directory']")
         );
         vars.put("scripts", docker.script());
+        if (!this.profile.read().nodes("/p/entry[@key='merge']").isEmpty()) {
+            vars.put(
+                "squash",
+                def.text(
+                    "/p/entry[@key='merge']/entry[@key='squash']",
+                    Boolean.FALSE.toString()
+                ).toLowerCase(Locale.ENGLISH)
+            );
+            vars.put(
+                "ff",
+                def.text(
+                    "/p/entry[@key='merge']/entry[@key='fast-forward']",
+                    "default"
+                ).toLowerCase(Locale.ENGLISH)
+            );
+            vars.put(
+                "rebase",
+                def.text(
+                    "/p/entry[@key='merge']/entry[@key='rebase']",
+                    Boolean.FALSE.toString()
+                ).toLowerCase(Locale.ENGLISH)
+            );
+        }
         return vars.build();
+    }
+
+    /**
+     * Escape var.
+     * @param raw The variable
+     * @return Escaped one
+     */
+    private static String escape(final String raw) {
+        final String esc;
+        if (raw.matches("\\(.*\\)")) {
+            esc = raw;
+        } else {
+            esc = SSH.escape(raw);
+        }
+        return esc;
     }
 }

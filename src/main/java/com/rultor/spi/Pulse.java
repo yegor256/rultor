@@ -29,70 +29,61 @@
  */
 package com.rultor.spi;
 
+import java.util.Collections;
+
 /**
  * Pulse.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.20
  */
 public interface Pulse {
 
     /**
+     * Empty.
+     */
+    Pulse EMPTY = new Pulse() {
+        @Override
+        public void add(final Tick tick) {
+            throw new UnsupportedOperationException("#add()");
+        }
+        @Override
+        public Iterable<Tick> ticks() {
+            return Collections.emptyList();
+        }
+        @Override
+        public Iterable<Throwable> error() {
+            return Collections.emptyList();
+        }
+        @Override
+        public void error(final Iterable<Throwable> errors) {
+            throw new UnsupportedOperationException("#error()");
+        }
+    };
+
+    /**
+     * Add new tick.
+     * @param tick The tick
+     */
+    void add(Tick tick);
+
+    /**
      * Get ticks.
      * @return Ticks
      */
-    Iterable<Pulse.Tick> ticks();
+    Iterable<Tick> ticks();
 
     /**
-     * Tick.
+     * Most recent exception (or empty).
+     * @return Problems
      */
-    final class Tick {
-        /**
-         * When was it started.
-         */
-        private final transient long when;
-        /**
-         * Duration.
-         */
-        private final transient long msec;
-        /**
-         * Talks processed or -1.
-         */
-        private final transient int talks;
-        /**
-         * Ctor.
-         * @param date When
-         * @param duration Duration in msec
-         * @param total Total processed or negative if failed
-         */
-        public Tick(final long date, final long duration,
-            final int total) {
-            this.when = date;
-            this.msec = duration;
-            this.talks = total;
-        }
-        /**
-         * Time of start.
-         * @return Time of start
-         */
-        public long start() {
-            return this.when;
-        }
-        /**
-         * Duration in msec.
-         * @return Duration
-         */
-        public long duration() {
-            return this.msec;
-        }
-        /**
-         * Total processed or negative.
-         * @return Number of talks
-         */
-        public int total() {
-            return this.talks;
-        }
-    }
+    Iterable<Throwable> error();
+
+    /**
+     * Set recent exception (or empty).
+     * @param errors Errors or empty if none
+     */
+    void error(Iterable<Throwable> errors);
 
 }

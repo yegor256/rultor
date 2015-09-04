@@ -31,7 +31,7 @@
 /**
  * Front end, tests.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @since 1.0
  */
 package com.rultor.web;

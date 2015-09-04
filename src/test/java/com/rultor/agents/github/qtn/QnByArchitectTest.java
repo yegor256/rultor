@@ -37,6 +37,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
+import java.util.Locale;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -45,7 +46,7 @@ import org.mockito.Mockito;
 /**
  * Tests for {@link QnByArchitect}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.45
  */
@@ -75,6 +76,35 @@ public final class QnByArchitectTest {
             issue.comments().iterate(),
             Matchers.<Comment>iterableWithSize(2)
         );
+    }
+
+    /**
+     * QnByArchitect can accept if an architect.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void acceptsIfArchitect() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().post("release")
+        );
+        final Question question = Mockito.mock(Question.class);
+        final URI home = new URI("#1");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument(
+                    String.format(
+                        "<p><entry key='b'>%s</entry></p>",
+                        repo.github().users().self().login().toUpperCase(
+                            Locale.ENGLISH
+                        )
+                    )
+                )
+            ),
+            "/p/entry[@key='b']/text()", question
+        ).understand(comment, home);
+        Mockito.verify(question).understand(comment, home);
     }
 
 }

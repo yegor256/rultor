@@ -29,23 +29,23 @@
  */
 package com.rultor.profiles;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
-import com.rultor.agents.github.TalkIssues;
 import com.rultor.spi.Profile;
-import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +61,7 @@ import org.apache.commons.lang3.CharEncoding;
  * it is obvious that the configuration of the repository is stored
  * in Github.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -77,11 +77,6 @@ final class GithubProfile implements Profile {
     private static final String FILE = ".rultor.yml";
 
     /**
-     * Branch name.
-     */
-    private static final String BRANCH = "master";
-
-    /**
      * Path pattern.
      */
     private static final Pattern PATH = Pattern.compile(
@@ -94,21 +89,27 @@ final class GithubProfile implements Profile {
     private final transient Repo repo;
 
     /**
-     * Ctor.
-     * @param github Github we're in
-     * @param talk Talk we're in
-     * @throws IOException If fails
+     * Branch name.
      */
-    GithubProfile(final Github github, final Talk talk) throws IOException {
-        this(new TalkIssues(github, talk.read()).get().repo());
-    }
+    private final transient String branch;
 
     /**
      * Ctor.
      * @param rpo Repo
      */
     GithubProfile(final Repo rpo) {
+        this(rpo, "master");
+    }
+
+    /**
+     * Ctor.
+     * @param rpo Repo
+     * @param brnch Branch
+     * @since 1.51
+     */
+    GithubProfile(final Repo rpo, final String brnch) {
         this.repo = rpo;
+        this.branch = brnch;
     }
 
     @Override
@@ -124,7 +125,7 @@ final class GithubProfile implements Profile {
     @Override
     public Map<String, InputStream> assets() throws IOException {
         final ImmutableMap.Builder<String, InputStream> assets =
-            new ImmutableMap.Builder<String, InputStream>();
+            new ImmutableMap.Builder<>();
         final XML xml = this.read();
         for (final XML asset : xml.nodes("/p/entry[@key='assets']/entry")) {
             assets.put(
@@ -151,7 +152,7 @@ final class GithubProfile implements Profile {
         final Repo rpo = this.repo.github().repos().get(
             new Coordinates.Simple(matcher.group(1))
         );
-        if (!rpo.contents().exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
+        if (!rpo.contents().exists(GithubProfile.FILE, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
@@ -160,15 +161,25 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        final Collection<String> friends = new YamlXML(
-            new String(
-                new Content.Smart(
-                    rpo.contents().get(GithubProfile.FILE)
-                ).decoded(),
-                CharEncoding.UTF_8
-            )
-        ).get().xpath("/p/entry[@key='friends']/item/text()");
-        if (!friends.contains(this.repo.coordinates().toString())) {
+        final Collection<String> friends = Collections2.transform(
+            new YamlXML(
+                new String(
+                    new Content.Smart(
+                        rpo.contents().get(GithubProfile.FILE)
+                    ).decoded(),
+                    CharEncoding.UTF_8
+                )
+            ).get().xpath("/p/entry[@key='friends']/item/text()"),
+            new Function<String, String>() {
+                @Override
+                public String apply(final String input) {
+                    return input.toLowerCase(Locale.ENGLISH);
+                }
+            }
+        );
+        final String coords = this.repo.coordinates()
+            .toString().toLowerCase(Locale.ENGLISH);
+        if (!friends.contains(coords)) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
@@ -191,12 +202,11 @@ final class GithubProfile implements Profile {
      */
     private InputStream buildAssetStream(final Repo rpo, final String filename)
         throws IOException {
-        if (!rpo.contents().exists(filename, GithubProfile.BRANCH)) {
+        if (!rpo.contents().exists(filename, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(
                     "`%s` on `%s` does not exist.",
-                    filename,
-                    GithubProfile.BRANCH
+                    filename, this.branch
                 )
             );
         }
@@ -217,7 +227,7 @@ final class GithubProfile implements Profile {
     private String yml() throws IOException {
         final String yml;
         if (this.repo.contents()
-            .exists(GithubProfile.FILE, GithubProfile.BRANCH)) {
+            .exists(GithubProfile.FILE, this.branch)) {
             yml = new String(
                 new Content.Smart(
                     this.repo.contents().get(GithubProfile.FILE)

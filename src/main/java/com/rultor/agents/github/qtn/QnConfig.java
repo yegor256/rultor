@@ -45,7 +45,7 @@ import lombok.ToString;
 /**
  * Show current config.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.8
  */
@@ -77,6 +77,7 @@ public final class QnConfig implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnConfig.PHRASES.getString("QnConfig.response"),
                 this.profile.read().toString()

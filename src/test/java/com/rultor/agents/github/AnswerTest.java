@@ -43,7 +43,7 @@ import org.junit.Test;
 /**
  * Tests for ${@link Answer}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.8.16
  */
@@ -57,7 +57,9 @@ public final class AnswerTest {
     public void postsGithubComment() throws Exception {
         final Issue issue = AnswerTest.issue();
         issue.comments().post("hey, do it");
-        new Answer(new Comment.Smart(issue.comments().get(1))).post("hey");
+        new Answer(new Comment.Smart(issue.comments().get(1))).post(
+            true, "hey you\u0000"
+        );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("> hey, do it\n\n")
@@ -79,7 +81,7 @@ public final class AnswerTest {
         );
         final Answer answer = new Answer(comment);
         for (int idx = 0; idx < Tv.TEN; ++idx) {
-            answer.post("oops");
+            answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
             Iterables.size(issue.comments().iterate()),

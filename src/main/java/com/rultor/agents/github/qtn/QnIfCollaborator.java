@@ -45,7 +45,7 @@ import lombok.ToString;
 /**
  * If rultor is in the list of collaborators.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.7
  */
@@ -84,6 +84,7 @@ public final class QnIfCollaborator implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
+                false,
                 QnIfCollaborator.PHRASES.getString("QnIfCollaborator.denied")
             );
             req = Req.EMPTY;

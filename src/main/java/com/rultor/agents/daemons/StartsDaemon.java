@@ -31,6 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.ssh.SSH;
@@ -59,7 +60,7 @@ import org.xembly.Directives;
 /**
  * Starts daemon.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -87,7 +88,31 @@ public final class StartsDaemon extends AbstractAgent {
     }
 
     @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
+    public Iterable<Directive> process(final XML xml) {
+        final Directives dirs = new Directives()
+            .xpath("/talk/daemon[not(started)]")
+            .strict(1)
+            .add("started").set(new Time().iso()).up();
+        try {
+            final String dir = this.run(xml);
+            dirs.add("dir").set(dir);
+        } catch (final IOException ex) {
+            dirs.add("ended").set(new Time().iso()).up()
+                .add("code").set("128").up()
+                .add("tail").set(ex.getLocalizedMessage());
+            Logger.warn(this, "%[exception]s", ex);
+        }
+        return dirs;
+    }
+
+    /**
+     * Run daemon.
+     * @param xml XML with talk
+     * @return Directory where it started
+     * @throws IOException If fails
+     */
+    @RetryOnFailure
+    public String run(final XML xml) throws IOException {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final Shell shell = new TalkShells(xml).get();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -137,11 +162,7 @@ public final class StartsDaemon extends AbstractAgent {
             )
         );
         Logger.info(this, "daemon started at %s", dir);
-        return new Directives()
-            .xpath("/talk/daemon[not(started)]")
-            .strict(1)
-            .add("started").set(new Time().iso()).up()
-            .add("dir").set(dir);
+        return dir;
     }
 
     /**

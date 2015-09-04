@@ -29,16 +29,12 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Commit;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
-import com.jcabi.github.RepoCommit;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -47,14 +43,8 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -63,7 +53,7 @@ import org.xembly.Directives;
 /**
  * Comments a new tag in Github.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.31
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -121,14 +111,18 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "duplicate tag %s commented", tag);
         } else {
             final Repo repo = issue.repo();
-            final Date prev = this.previous(repo);
-            final Release.Smart rel = new Release.Smart(rels.create(tag));
+            final Date prev = CommentsTag.previous(repo);
+            final Release.Smart rel = new Release.Smart(
+                rels.create(tag.trim())
+            );
             rel.name(issue.title());
+            rel.prerelease(true);
             rel.body(
                 String.format(
                     // @checkstyle LineLength (1 line)
                     "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
-                    issue.number(), this.log(repo, prev, rel.publishedAt()),
+                    issue.number(),
+                    new CommitsLog(repo).build(prev, rel.publishedAt()),
                     Manifests.read("Rultor-Version"), home
                 )
             );
@@ -138,53 +132,19 @@ public final class CommentsTag extends AbstractAgent {
     }
 
     /**
-     * Release body text.
-     * @param repo Repo with releases.
-     * @param prev Previous release date.
-     * @param current Current release date.
-     * @return Release body text.
-     * @throws IOException In case of problem communicating with git.
-     */
-    private String log(final Repo repo, final Date prev, final Date current)
-        throws IOException {
-        final DateFormat format = new SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH
-        );
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        final Collection<String> lines = new LinkedList<String>();
-        final ImmutableMap<String, String> params =
-            new ImmutableMap.Builder<String, String>()
-                .put("since", format.format(prev))
-                .put("until", format.format(current))
-                .build();
-        final Iterable<RepoCommit.Smart> commits = new Smarts<RepoCommit.Smart>(
-            repo.commits().iterate(params)
-        );
-        for (final RepoCommit.Smart commit : commits) {
-            final Commit cmt = repo.git().commits().get(commit.sha());
-            lines.add(
-                String.format(
-                    " * %s by @%s: %s",
-                    commit.sha(),
-                    cmt.json().getJsonObject("author").get("login"),
-                    commit.message()
-                )
-            );
-        }
-        return Joiner.on('\n').join(lines);
-    }
-
-    /**
      * Get previous release time.
      * @param repo Repo in which to find the releases.
      * @return Previous release time or start of epoch.
      * @throws IOException In case of problem communicating with repo.
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private Date previous(final Repo repo) throws IOException {
-        Date prev = new Date(0);
-        for (final Release release : repo.releases().iterate()) {
-            final Release.Smart rel = new Release.Smart(release);
+    private static Date previous(final Repo repo) throws IOException {
+        Date prev = new Date(0L);
+        final Iterable<Release.Smart> releases =
+            new Smarts<>(repo.releases().iterate());
+        for (final Release.Smart rel : releases) {
+            if (rel.json().isNull("published_at")) {
+                continue;
+            }
             if (prev.before(rel.publishedAt())) {
                 prev = rel.publishedAt();
             }

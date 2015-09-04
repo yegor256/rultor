@@ -3,6 +3,9 @@
 [![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/rultor)](http://www.rultor.com/p/yegor256/rultor)
 
+[![Issue Stats](http://issuestats.com/github/yegor256/rultor/badge/issue)](http://issuestats.com/github/yegor256/rultor)
+[![Issue Stats](http://issuestats.com/github/yegor256/rultor/badge/pr)](http://issuestats.com/github/yegor256/rultor)
+
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
 
 These blog posts may be helpful:
@@ -10,6 +13,8 @@ These blog posts may be helpful:
 [Master Branch Must Be Read-Only](http://www.yegor256.com/2014/07/21/read-only-master-branch.html),
 [Rultor + Travis](http://www.yegor256.com/2014/07/31/travis-and-rultor.html), and
 [Rultor, a Merging Bot](http://www.yegor256.com/2014/07/24/rultor-automated-merging.html).
+
+Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yegor256/rultor/)
 
 ## How to contribute
 

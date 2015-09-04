@@ -34,7 +34,9 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
@@ -43,16 +45,18 @@ import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
+import java.util.Collection;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
@@ -87,9 +91,9 @@ public final class EndsDaemon extends AbstractAgent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Shell.Empty(shell).exec(
             Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("dir=%s ", SSH.escape(dir)),
-                "if [ ! -e \"${dir}/pid\" ]; then exit 1; fi",
-                "pid=$(cat \"${dir}/pid\")",
+                String.format("cd %s ", SSH.escape(dir)),
+                "if [ ! -e pid ]; then exit 1; fi",
+                "pid=$(cat pid)",
                 "ps -p \"${pid}\" >/dev/null"
             )
         );
@@ -114,18 +118,20 @@ public final class EndsDaemon extends AbstractAgent {
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
-        final int exit = this.exit(shell, dir);
-        final String stdout = Joiner.on("\n").join(
+        final int exit = EndsDaemon.exit(shell, dir);
+        final String stdout = new Shell.Plain(new Shell.Safe(shell)).exec(
+            Joiner.on(EndsDaemon.SHELL_JOINER).join(
+                String.format("cd %s", SSH.escape(dir)),
+                "cat stdout"
+            )
+        );
+        final Collection<String> lines = Lists.newArrayList(
+            Splitter.on(System.lineSeparator()).split(stdout)
+        );
+        final String highlights = Joiner.on("\n").join(
             Iterables.transform(
                 Iterables.filter(
-                    Splitter.on(System.lineSeparator()).split(
-                        new Shell.Plain(new Shell.Safe(shell)).exec(
-                            Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                                String.format("dir=%s", SSH.escape(dir)),
-                                "cat \"${dir}/stdout\""
-                            )
-                        )
-                    ),
+                    lines,
                     new Predicate<String>() {
                         @Override
                         public boolean apply(final String input) {
@@ -134,7 +140,8 @@ public final class EndsDaemon extends AbstractAgent {
                             );
                         }
                     }
-                ), new Function<String, String>() {
+                ),
+                new Function<String, String>() {
                     @Override
                     public String apply(final String str) {
                         return StringUtils.removeStart(
@@ -150,7 +157,21 @@ public final class EndsDaemon extends AbstractAgent {
             .strict(1)
             .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit)).up()
-            .add("highlights").set(stdout);
+            .add("highlights").set(Xembler.escape(highlights)).up()
+            .add("tail")
+            .set(
+                Xembler.escape(
+                    StringUtils.substring(
+                        Joiner.on(System.lineSeparator()).join(
+                            Iterables.skip(
+                                lines,
+                                Math.max(lines.size() - Tv.SIXTY, 0)
+                            )
+                        ),
+                        -Tv.HUNDRED * Tv.THOUSAND
+                    )
+                )
+            );
     }
 
     /**
@@ -160,10 +181,11 @@ public final class EndsDaemon extends AbstractAgent {
      * @return Exit code
      * @throws IOException If fails
      */
-    private int exit(final Shell shell, final String dir) throws IOException {
+    private static int exit(final Shell shell, final String dir)
+        throws IOException {
         final String status = new Shell.Plain(new Shell.Safe(shell)).exec(
             Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("cd %s", SSH.escape(dir)),
+                String.format("cd   %s", SSH.escape(dir)),
                 "if [ ! -e status ]; then echo 127; exit; fi",
                 "cat status"
             )

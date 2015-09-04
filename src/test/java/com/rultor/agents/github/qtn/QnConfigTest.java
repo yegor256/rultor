@@ -43,7 +43,7 @@ import org.junit.Test;
 /**
  * Tests for ${@link QnConfig}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.8
  */
@@ -67,7 +67,7 @@ public final class QnConfigTest {
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("<p/>\n```")
+            Matchers.containsString("<p/>")
         );
     }
 

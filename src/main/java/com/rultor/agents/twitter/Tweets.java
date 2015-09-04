@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
+import com.jcabi.github.Language;
 import com.jcabi.github.Repo;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -48,7 +49,7 @@ import org.xembly.Directives;
 /**
  * Tweets.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.30
  */
@@ -107,6 +108,7 @@ public final class Tweets extends AbstractAgent {
      * @return Tweet text
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.InsufficientStringBufferDeclaration")
     private static String tweet(final Repo.Smart repo, final String tag)
         throws IOException {
         final StringBuilder text = new StringBuilder(2 * Tv.HUNDRED);
@@ -120,10 +122,13 @@ public final class Tweets extends AbstractAgent {
                 )
             );
         }
-        return text.append(", ").append(tag)
+        text.append(", ").append(tag)
             .append(" released https://github.com/")
-            .append(repo.coordinates())
-            .toString();
+            .append(repo.coordinates());
+        for (final Language lang : repo.languages()) {
+            text.append(String.format(" #%s", lang.name()));
+        }
+        return text.toString();
     }
 
 }

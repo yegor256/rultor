@@ -1,3 +1,1 @@
-#!/bin/sh
-
-docker stop "$(pwd)/repo/cid"
+# there is nothing really to do here

@@ -54,7 +54,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link StartsRequest}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -83,7 +83,7 @@ public final class StartsRequestTest {
                 .add("request").attr("id", "abcd")
                 .add("type").set("merge").up()
                 .add("args")
-                .add("arg").attr("name", "hey").set("hello!")
+                .add("arg").attr("name", "hey").set("hello dude!")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -91,7 +91,8 @@ public final class StartsRequestTest {
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon[@id='abcd' and script]",
                 "/talk/daemon/title",
-                "//script[contains(.,'hey=hello!')]"
+                "//script[contains(.,\"hey='hello dude!'\")]",
+                "//script[contains(.,'--env=hey=hello dude!')]"
             )
         );
     }
@@ -106,11 +107,12 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    Joiner.on(' ').join(
                         "<p><entry key='deploy'>",
                         "<entry key='script'>echo HEY</entry>",
-                        "<entry key='env'><entry key='MAVEN_OPTS'>",
-                        "-Xmx2g -Xms1g</entry></entry></entry></p>"
+                        "<entry key='env'>",
+                        "<entry key='MAVEN_OPTS'>-Xmx2g -Xms1g</entry>",
+                        "</entry></entry></p>"
                     )
                 )
             )
@@ -220,34 +222,10 @@ public final class StartsRequestTest {
                 .add("arg").attr("name", "head_branch").set("master").up()
                 .add("arg").attr("name", "fork").set(repo.toString()).up()
                 .add("arg").attr("name", "fork_branch").set("frk").up()
+                .add("arg").attr("name", "pull_title").set("the \"title").up()
         );
         agent.execute(talk);
         this.exec(talk);
-    }
-
-    /**
-     * StartsRequest can perform stop request.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void performsStopRequest() throws Exception {
-        final Agent agent = new StartsRequest(
-            new Profile.Fixed(new XMLDocument("<p></p>"))
-        );
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk")
-                .add("request").attr("id", "a8b9c2")
-                .add("type").set("stop").up()
-                .add("args")
-        );
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            this.exec(talk),
-            Matchers.containsString(
-                "docker stop"
-            )
-        );
     }
 
     /**

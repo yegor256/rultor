@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * Profile.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */
@@ -56,6 +56,11 @@ public interface Profile {
     XSD SCHEMA = XSDDocument.make(
         Talk.class.getResourceAsStream("profile.xsd")
     );
+
+    /**
+     * Empty.
+     */
+    Profile EMPTY = new Profile.Fixed();
 
     /**
      * Name of the repo.
@@ -123,6 +128,15 @@ public interface Profile {
         /**
          * Get text item.
          * @param xpath Path
+         * @return Value
+         * @throws IOException If fails
+         */
+        public String text(final String xpath) throws IOException {
+            return this.text(xpath, "");
+        }
+        /**
+         * Get text item.
+         * @param xpath Path
          * @param def Default, if it's absent
          * @return Value
          * @throws IOException If fails
@@ -186,7 +200,7 @@ public interface Profile {
         }
         @Override
         public Map<String, InputStream> assets() {
-            return new ArrayMap<String, InputStream>();
+            return new ArrayMap<>();
         }
     }
 }

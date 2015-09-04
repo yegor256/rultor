@@ -37,12 +37,18 @@ import com.jcabi.immutable.Array;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
+import com.jcabi.ssh.SSH;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
+import com.rultor.agents.daemons.SanitizesDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
+import com.rultor.agents.daemons.StopsDaemon;
+import com.rultor.agents.daemons.WipesDaemon;
+import com.rultor.agents.docker.DockerExec;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Question;
+import com.rultor.agents.github.ReleaseBinaries;
 import com.rultor.agents.github.Reports;
 import com.rultor.agents.github.Stars;
 import com.rultor.agents.github.StartsTalks;
@@ -57,14 +63,19 @@ import com.rultor.agents.github.qtn.QnFollow;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnIfPull;
+import com.rultor.agents.github.qtn.QnIfUnlocked;
+import com.rultor.agents.github.qtn.QnLock;
 import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnNotSelf;
 import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
+import com.rultor.agents.github.qtn.QnSafe;
 import com.rultor.agents.github.qtn.QnSince;
 import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnStop;
+import com.rultor.agents.github.qtn.QnUnlock;
 import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
@@ -86,7 +97,7 @@ import org.apache.commons.lang3.CharEncoding;
 /**
  * Agents.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -122,12 +133,25 @@ public final class Agents {
     /**
      * Create super agent, starter.
      * @return The starter
+     * @throws IOException If fails
      */
-    public SuperAgent starter() {
+    public SuperAgent starter() throws IOException {
         return new SuperAgent.Iterative(
-            new Array<SuperAgent>(
+            new Array<>(
                 new StartsTalks(this.github),
-                new IndexesRequests()
+                new IndexesRequests(),
+                new DockerExec(
+                    new SSH(
+                        // @checkstyle MagicNumber (1 line)
+                        "b3.rultor.com", 22,
+                        "rultor",
+                        IOUtils.toString(
+                            this.getClass().getResourceAsStream("rultor.key"),
+                            CharEncoding.UTF_8
+                        )
+                    ),
+                    "rmi.sh"
+                )
             )
         );
     }
@@ -139,7 +163,7 @@ public final class Agents {
      */
     public SuperAgent closer() throws IOException {
         return new SuperAgent.Iterative(
-            new Array<SuperAgent>(
+            new Array<>(
                 new UnlocksRepo(this.sttc.locks(), this.github),
                 new DeactivatesTalks()
             )
@@ -164,27 +188,27 @@ public final class Agents {
                     this.github.users().self().login(),
                     new QnParametrized(
                         new Question.FirstOf(
-                            new Array<Question>(
+                            new Array<>(
                                 new QnIfContains(
                                     "config", new QnConfig(profile)
                                 ),
                                 new QnIfContains("status", new QnStatus(talk)),
                                 new QnIfContains("version", new QnVersion()),
                                 new QnIfContains("hello", new QnHello()),
-                                new QnFollow(
-                                    new QnIfCollaborator(
-                                        new QnAlone(
-                                            talk, locks,
-                                            this.commands(profile)
-                                        )
-                                    )
-                                ),
                                 new QnIfContains(
                                     "stop",
                                     new QnAskedBy(
                                         profile,
                                         Agents.commanders("stop"),
                                         new QnStop()
+                                    )
+                                ),
+                                new QnFollow(
+                                    new QnIfCollaborator(
+                                        new QnAlone(
+                                            talk, locks,
+                                            Agents.commands(profile)
+                                        )
                                     )
                                 )
                             )
@@ -195,12 +219,17 @@ public final class Agents {
         );
         return new Agent.Iterative(
             new Array<Agent>(
-                new Understands(this.github, question),
+                new SanitizesDaemon(),
+                new WipesDaemon(),
+                new Understands(
+                    this.github,
+                    new QnSafe(question)
+                ),
                 new StartsRequest(profile),
                 new RegistersShell(
                     profile,
                     // @checkstyle MagicNumber (1 line)
-                    "b1.rultor.com", 22,
+                    "b3.rultor.com", 22,
                     "rultor",
                     IOUtils.toString(
                         this.getClass().getResourceAsStream("rultor.key"),
@@ -209,6 +238,7 @@ public final class Agents {
                 ),
                 new StartsDaemon(profile),
                 new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
+                new StopsDaemon(),
                 new EndsDaemon(),
                 new EndsRequest(),
                 new Tweets(
@@ -221,6 +251,7 @@ public final class Agents {
                     )
                 ),
                 new CommentsTag(this.github),
+                new ReleaseBinaries(this.github, profile),
                 new Reports(this.github),
                 new RemovesShell(),
                 new ArchivesDaemon(
@@ -242,18 +273,26 @@ public final class Agents {
      * @param profile Profile to uuse
      * @return Array of questions.
      */
-    private Question commands(final Profile profile) {
+    private static Question commands(final Profile profile) {
         return new QnByArchitect(
             profile,
             "/p/entry[@key='architect']/item/text()",
             new Question.FirstOf(
                 new Array<Question>(
                     new QnIfContains(
+                        "unlock",
+                        new QnUnlock()
+                    ),
+                    new QnIfContains(
+                        "lock",
+                        new QnLock()
+                    ),
+                    new QnIfContains(
                         "merge",
                         new QnAskedBy(
                             profile,
                             Agents.commanders("merge"),
-                            new QnMerge()
+                            new QnIfPull(new QnIfUnlocked(new QnMerge()))
                         )
                     ),
                     new QnIfContains(

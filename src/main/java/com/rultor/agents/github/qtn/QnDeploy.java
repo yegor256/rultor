@@ -47,7 +47,7 @@ import lombok.ToString;
 /**
  * Deploy request.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -67,6 +67,7 @@ public final class QnDeploy implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnDeploy.PHRASES.getString("QnDeploy.start"),
                 home.toASCIIString()

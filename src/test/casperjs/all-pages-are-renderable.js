@@ -1,6 +1,5 @@
 /*globals casper:false */
 [
-  "/xml/index.xml",
   "/css/style.css",
   "/robots.txt",
   "/xsl/layout.xsl",

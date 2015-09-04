@@ -52,7 +52,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Question asked by one of them.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
  */
@@ -106,6 +106,7 @@ public final class QnAskedBy implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
+                false,
                 String.format(
                     QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
                     this.commandersAsDelimitedList(

@@ -80,7 +80,8 @@ public final class IndexesRequests implements SuperAgent {
      * Calculates maximal (existing) index value of a {@link Talk} object.
      * @param talk The {@link Talk} object
      * @return The maximal index value
-     * @throws IOException if the content of the {@link Talk} object can't be read
+     * @throws IOException if the content of the {@link Talk} object can't be
+     *  read
      */
     private int index(final Talk talk) throws IOException {
         final Iterable<Integer> indexes = Iterables.transform(

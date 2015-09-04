@@ -5,6 +5,13 @@ if [ -z "${tag}" ]; then
   exit -1
 fi
 
+if [[ "${tag}" =~ ^[a-zA-Z0-9\\.\\-]+$ ]]; then
+  echo "tag name is valid: \"${tag}\""
+else
+  echo "tag name contains invalid characters: \"${tag}\""
+  exit -1
+fi
+
 cd repo
 if [ $(git tag -l "${tag}") ]; then
   echo "Tag ${tag} already exists!"
@@ -19,5 +26,11 @@ git checkout -b "${BRANCH_NAME}"
 
 docker_when_possible
 
+git checkout "${BRANCH_NAME}"
 git tag "${tag}" -m "${tag}: tagged by rultor.com"
-git push origin "${tag}"
+git reset --hard
+git clean -fd
+git checkout master
+git branch -D "${BRANCH_NAME}"
+git push --all origin
+git push --tags origin

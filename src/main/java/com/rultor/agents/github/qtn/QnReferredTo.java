@@ -44,7 +44,7 @@ import lombok.ToString;
 /**
  * Question.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
  */
@@ -88,6 +88,7 @@ public final class QnReferredTo implements Question {
             req = this.origin.understand(comment, home);
         } else if (comment.body().contains(prefix)) {
             new Answer(comment).post(
+                true,
                 String.format(
                     QnReferredTo.PHRASES.getString("QnReferredTo.mentioned"),
                     prefix

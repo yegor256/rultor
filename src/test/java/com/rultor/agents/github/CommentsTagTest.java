@@ -30,6 +30,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.github.Issue;
+import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
@@ -44,7 +45,7 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link CommentsTag}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.41.1
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -88,6 +89,31 @@ public final class CommentsTagTest {
         MatcherAssert.assertThat(
             new Releases.Smart(repo.releases()).exists(tag),
             Matchers.is(true)
+        );
+    }
+
+    /**
+     * CommentsTag can create a proper release message.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void createsReleaseMessage() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        final String tag = "v1.5";
+        final Talk talk = CommentsTagTest.talk(issue, tag);
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            new Release.Smart(
+                new Releases.Smart(repo.releases()).find(tag)
+            ).body(),
+            Matchers.allOf(
+                Matchers.containsString("Released by Rultor"),
+                Matchers.containsString(
+                    "see [build log](http://www.rultor.com/t/1-abcdef)"
+                )
+            )
         );
     }
 

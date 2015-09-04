@@ -45,7 +45,7 @@ import lombok.ToString;
 /**
  * Show my current version.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3.1
  */
@@ -64,6 +64,7 @@ public final class QnVersion implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(
+            true,
             String.format(
                 QnVersion.PHRASES.getString("QnVersion.intro"),
                 Manifests.read("Rultor-Version"),

@@ -41,7 +41,7 @@ import lombok.ToString;
 /**
  * Question asked NOT by myself.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.46.7
  */

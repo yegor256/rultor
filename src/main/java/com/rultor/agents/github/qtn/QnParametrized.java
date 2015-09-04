@@ -48,7 +48,7 @@ import org.xembly.Directives;
 /**
  * Parametrized question.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3.6
  */
@@ -115,7 +115,7 @@ public final class QnParametrized implements Question {
     private static Map<String, String> params(final Comment.Smart comment)
         throws IOException {
         final ImmutableMap.Builder<String, String> map =
-            new ImmutableMap.Builder<String, String>();
+            new ImmutableMap.Builder<>();
         final Matcher matcher = QnParametrized.PTN.matcher(comment.body());
         while (matcher.find()) {
             map.put(matcher.group(1), matcher.group(2));

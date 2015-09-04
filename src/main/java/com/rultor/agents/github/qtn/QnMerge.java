@@ -33,8 +33,8 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
-import com.jcabi.github.JsonReadable;
 import com.jcabi.github.Pull;
+import com.jcabi.github.PullRef;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
@@ -42,14 +42,13 @@ import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
-import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Merge request.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -72,6 +71,7 @@ public final class QnMerge implements Question {
         final Req req;
         if (issue.isPull() && issue.isOpen()) {
             new Answer(comment).post(
+                true,
                 String.format(
                     QnMerge.PHRASES.getString("QnMerge.start"),
                     home.toASCIIString()
@@ -82,17 +82,12 @@ public final class QnMerge implements Question {
                 issue.repo().coordinates(), issue.number(), comment.number()
             );
             req = QnMerge.pack(
-                new Pull.Smart(
-                    issue.repo().pulls().get(issue.number())
-                )
+                comment,
+                issue.repo().pulls().get(issue.number())
             );
-        } else if (issue.isOpen()) {
-            new Answer(comment).post(
-                QnMerge.PHRASES.getString("QnMerge.not-pull-request")
-            );
-            req = Req.EMPTY;
         } else {
             new Answer(comment).post(
+                false,
                 QnMerge.PHRASES.getString("QnMerge.already-closed")
             );
             req = Req.EMPTY;
@@ -102,34 +97,55 @@ public final class QnMerge implements Question {
 
     /**
      * Pack a pull request.
+     * @param comment The comment we're in
      * @param pull Pull
      * @return Req
      * @throws IOException If fails
      */
-    private static Req pack(final JsonReadable pull) throws IOException {
-        final JsonObject head = pull.json().getJsonObject("head");
-        final JsonObject base = pull.json().getJsonObject("base");
-        return new Req.Simple(
-            "merge",
-            new ImmutableMap.Builder<String, String>()
-                .put("fork_branch", head.getString("ref"))
-                .put("head_branch", base.getString("ref"))
-                .put(
-                    "head",
-                    String.format(
-                        "git@github.com:%s.git",
-                        base.getJsonObject("repo").getString("full_name")
+    private static Req pack(final Comment.Smart comment,
+        final Pull pull) throws IOException {
+        final PullRef head = pull.head();
+        final PullRef base = pull.base();
+        final Req req;
+        final String repo = "repo";
+        if (head.json().isNull(repo)) {
+            new Answer(comment).post(
+                false,
+                QnMerge.PHRASES.getString("QnMerge.head-is-gone")
+            );
+            req = Req.EMPTY;
+        } else if (base.json().isNull(repo)) {
+            new Answer(comment).post(
+                false,
+                QnMerge.PHRASES.getString("QnMerge.base-is-gone")
+            );
+            req = Req.EMPTY;
+        } else {
+            req = new Req.Simple(
+                "merge",
+                new ImmutableMap.Builder<String, String>()
+                    .put("pull_id", Integer.toString(pull.number()))
+                    .put("pull_title", new Issue.Smart(comment.issue()).title())
+                    .put("fork_branch", head.ref())
+                    .put("head_branch", base.ref())
+                    .put(
+                        "head",
+                        String.format(
+                            "git@github.com:%s.git",
+                            base.repo().coordinates().toString()
+                        )
                     )
-                )
-                .put(
-                    "fork",
-                    String.format(
-                        "git@github.com:%s.git",
-                        head.getJsonObject("repo").getString("full_name")
+                    .put(
+                        "fork",
+                        String.format(
+                            "git@github.com:%s.git",
+                            head.repo().coordinates().toString()
+                        )
                     )
-                )
-                .build()
-        );
+                    .build()
+            );
+        }
+        return req;
     }
 
 }

@@ -53,7 +53,7 @@ import org.xembly.Directives;
 /**
  * Understands request.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
  */
@@ -97,10 +97,10 @@ public final class Understands extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
-        final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(
+        final Iterable<Comment.Smart> comments = new Smarts<>(
             Iterables.concat(
                 Collections.singleton(new FirstComment(issue)),
-                new Bulk<Comment>(issue.comments().iterate())
+                new Bulk<>(issue.comments().iterate())
             )
         );
         final int seen = Understands.seen(xml);
@@ -148,7 +148,8 @@ public final class Understands extends AbstractAgent {
                 issue.repo().coordinates(), issue.number(), next
             );
         } else {
-            dirs.xpath("/talk[not(request)]").strict(1).add("request")
+            dirs.xpath("/talk/request").remove()
+                .xpath("/talk[not(request)]").strict(1).add("request")
                 .attr("id", Integer.toString(next))
                 .append(req.dirs());
         }
@@ -177,6 +178,7 @@ public final class Understands extends AbstractAgent {
             );
         } catch (final Profile.ConfigException ex) {
             new Answer(comment).post(
+                false,
                 String.format(
                     Understands.PHRASES.getString("Understands.broken-profile"),
                     ExceptionUtils.getRootCauseMessage(ex)

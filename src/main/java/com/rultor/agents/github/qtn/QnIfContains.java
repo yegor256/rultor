@@ -35,13 +35,14 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Locale;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * If contains text.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
  */
@@ -66,7 +67,7 @@ public final class QnIfContains implements Question {
      * @param qtn Original question
      */
     public QnIfContains(final String ptn, final Question qtn) {
-        this.pattern = ptn;
+        this.pattern = ptn.toLowerCase(Locale.ENGLISH);
         this.origin = qtn;
     }
 
@@ -74,7 +75,7 @@ public final class QnIfContains implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        if (comment.body().contains(this.pattern)) {
+        if (comment.body().toLowerCase(Locale.ENGLISH).contains(this.pattern)) {
             req = this.origin.understand(comment, home);
         } else {
             req = Req.EMPTY;

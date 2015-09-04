@@ -39,6 +39,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -48,7 +49,7 @@ import org.xembly.Directives;
 /**
  * Posts merge results to Github pull request.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */
@@ -62,11 +63,6 @@ public final class Reports extends AbstractAgent {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
-
-    /**
-     * Log highligts text node.
-     */
-    private static final String HIGHLIGHTS_TEXT = "highlights/text()";
 
     /**
      * Github.
@@ -99,27 +95,54 @@ public final class Reports extends AbstractAgent {
         } else {
             pattern = "Reports.failure";
         }
-        final String highlights;
-        if (req.xpath(Reports.HIGHLIGHTS_TEXT).isEmpty()) {
-            highlights = "";
-        } else {
-            highlights = String.format(
-                Reports.PHRASES.getString("Reports.highlights"),
-                req.xpath(Reports.HIGHLIGHTS_TEXT).get(0)
-            );
+        final StringBuilder msg = new StringBuilder(
+            Logger.format(
+                Reports.PHRASES.getString(pattern),
+                home.toASCIIString(),
+                Long.parseLong(req.xpath("msec/text()").get(0))
+            )
+        ).append(Reports.highlights(req));
+        if (!success) {
+            msg.append(Reports.tail(req));
         }
-        final String msg = Logger.format(
-            Reports.PHRASES.getString(pattern),
-            home.toASCIIString(),
-            Long.parseLong(req.xpath("msec/text()").get(0)),
-            highlights
-        );
         final int number = Integer.parseInt(req.xpath("@id").get(0));
-        new Answer(this.origin(issue, number)).post(msg);
+        new Answer(Reports.origin(issue, number)).post(success, msg.toString());
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")
             .strict(1).remove();
+    }
+
+    /**
+     * Get highlights.
+     * @param req Request
+     * @return Highlights
+     */
+    private static String highlights(final XML req) {
+        final List<String> highlights = req.xpath("highlights/text()");
+        final String text;
+        if (highlights.isEmpty()) {
+            text = "";
+        } else {
+            text = String.format("\n\n%s", highlights.get(0));
+        }
+        return text;
+    }
+
+    /**
+     * Get tail.
+     * @param req Request
+     * @return Tail
+     */
+    private static String tail(final XML req) {
+        final List<String> tail = req.xpath("tail/text()");
+        final String text;
+        if (tail.isEmpty()) {
+            text = "";
+        } else {
+            text = String.format("\n\n```\n%s\n```", tail.get(0));
+        }
+        return text;
     }
 
     /**
@@ -128,7 +151,8 @@ public final class Reports extends AbstractAgent {
      * @param number Its number
      * @return Comment
      */
-    private Comment.Smart origin(final Issue.Smart issue, final int number) {
+    private static Comment.Smart origin(final Issue.Smart issue,
+        final int number) {
         final Comment comment;
         if (number == 1) {
             comment = new FirstComment(issue);

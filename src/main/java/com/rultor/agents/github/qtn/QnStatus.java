@@ -35,6 +35,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XSL;
@@ -52,11 +53,12 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Show current status.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.5
  */
@@ -95,7 +97,7 @@ public final class QnStatus implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final XML xml = this.talk.read();
-        final Collection<String> lines = new LinkedList<String>();
+        final Collection<String> lines = new LinkedList<>();
         if (!xml.nodes("/talk[shell/host and daemon/dir]").isEmpty()) {
             final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
             final Shell.Plain shell = new Shell.Plain(
@@ -104,8 +106,16 @@ public final class QnStatus implements Question {
             lines.add(
                 String.format(
                     " * Docker container ID: `%s...`",
-                    shell.exec(String.format("cd \"%s\"; cat cid", dir))
-                        .substring(0, Tv.TWENTY)
+                    StringUtils.substring(
+                        shell.exec(
+                            String.format(
+                                // @checkstyle LineLength (1 line)
+                                "dir=%s; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
+                                SSH.escape(dir)
+                            )
+                        ),
+                        0, Tv.TWENTY
+                    )
                 )
             );
             lines.add(
@@ -126,6 +136,7 @@ public final class QnStatus implements Question {
             );
         }
         new Answer(comment).post(
+            true,
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
                 Joiner.on('\n').join(

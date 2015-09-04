@@ -58,7 +58,7 @@ import org.xembly.Directives;
 /**
  * Integration test for ${@link StartsDaemon}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3.8
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

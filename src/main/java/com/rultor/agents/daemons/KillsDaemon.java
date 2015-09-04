@@ -29,14 +29,10 @@
  */
 package com.rultor.agents.daemons;
 
-import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
-import com.jcabi.ssh.SSH;
-import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
-import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
@@ -47,7 +43,7 @@ import org.xembly.Directives;
 /**
  * Kills daemon if too old.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */
@@ -80,18 +76,11 @@ public final class KillsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final Shell shell = new TalkShells(xml).get();
-        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        new Shell.Empty(new Shell.Safe(shell)).exec(
-            Joiner.on(" && ").join(
-                String.format("dir=%s", SSH.escape(dir)),
-                "if [ ! -e \"${dir}/pid\" ]; then exit 0; fi",
-                "pid=$(cat \"${dir}/pid\")",
-                "if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 ${pid}; fi",
-                "rm -f \"${dir}/pid\""
-            )
+        new Script().exec(xml, "kill.sh");
+        Logger.info(
+            this, "daemon of %s killed due to delay",
+            xml.xpath("/talk/@name").get(0)
         );
-        Logger.info(this, "daemon killed because of delay in %s", dir);
         return new Directives();
     }
 

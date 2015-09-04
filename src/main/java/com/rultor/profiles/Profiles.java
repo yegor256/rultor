@@ -31,20 +31,25 @@ package com.rultor.profiles;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
-import com.jcabi.http.wire.RetryWire;
+import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.xml.XML;
+import com.rultor.agents.github.TalkIssues;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Profiles.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
  */
@@ -64,7 +69,41 @@ public final class Profiles {
         if (Talk.TEST_NAME.equals(talk.name())) {
             profile = new Profile.Fixed();
         } else {
-            profile = new GithubProfile(Profiles.github(), talk);
+            final XML xml = talk.read();
+            if (xml.nodes("/talk/wire").isEmpty()) {
+                profile = Profile.EMPTY;
+            } else {
+                profile = Profiles.fetch(xml);
+            }
+        }
+        return profile;
+    }
+
+    /**
+     * Fetch a profile from an XML.
+     * @param xml The XML
+     * @return Profile found
+     */
+    private static Profile fetch(final XML xml) {
+        final Profile profile;
+        final List<String> type = xml.xpath("//request/type/text()");
+        if (type.isEmpty() || !"merge".equals(type.get(0))) {
+            profile = new GithubProfile(
+                new TalkIssues(Profiles.github(), xml).get().repo()
+            );
+        } else {
+            profile = new GithubProfile(
+                Profiles.github().repos().get(
+                    new Coordinates.Simple(
+                        xml.xpath(
+                            "//request/args/arg[@name='fork']/text()"
+                        ).get(0)
+                    )
+                ),
+                xml.xpath(
+                    "//request/args/arg[@name='fork_branch']/text()"
+                ).get(0)
+            );
         }
         return profile;
     }
@@ -78,7 +117,10 @@ public final class Profiles {
         return new RtGithub(
             new RtGithub(
                 Manifests.read("Rultor-GithubToken")
-            ).entry().through(RetryWire.class)
+            ).entry().through(
+                RetryCarefulWire.class,
+                Tv.HUNDRED
+            )
         );
     }
 

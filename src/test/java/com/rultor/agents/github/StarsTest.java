@@ -35,7 +35,6 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -44,8 +43,6 @@ import org.xembly.Directives;
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
- * @todo #498 When MkStars (issues jcabi/jcabi-github#965 and
- *  jcabi/jcabi-github#965) is implemented remove Ignore annotations.
  */
 public final class StarsTest {
     /**
@@ -53,16 +50,13 @@ public final class StarsTest {
      * @throws java.io.IOException In case of error
      */
     @Test
-    @Ignore
     public void starsNewRepo() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Talk talk = this.talk(repo);
         new Stars(github).execute(talk);
         MatcherAssert.assertThat(
-            repo.stars().starred(
-                github.users().self().login(), repo.coordinates().repo()
-            ),
+            repo.stars().starred(),
             Matchers.is(true)
         );
     }
@@ -72,16 +66,14 @@ public final class StarsTest {
      * @throws java.io.IOException In case of error
      */
     @Test
-    @Ignore
     public void leavesStarredRepo() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Talk talk = this.talk(repo);
-        final String login = github.users().self().login();
-        repo.stars().star(login, repo.coordinates().repo());
+        repo.stars().star();
         new Stars(github).execute(talk);
         MatcherAssert.assertThat(
-            repo.stars().starred(login, repo.coordinates().repo()),
+            repo.stars().starred(),
             Matchers.is(true)
         );
     }

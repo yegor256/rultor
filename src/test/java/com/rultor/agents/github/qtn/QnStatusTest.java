@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github.qtn;
 
+import com.google.common.base.Joiner;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
@@ -37,7 +38,6 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Talk;
 import java.net.URI;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -45,7 +45,7 @@ import org.junit.Test;
 /**
  * Tests for ${@link QnStatus}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.5
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -64,7 +64,7 @@ public final class QnStatusTest {
         issue.comments().post("status");
         final Talk talk = new Talk.InFile(
             new XMLDocument(
-                StringUtils.join(
+                Joiner.on(' ').join(
                     "<talk name='test' number='45' later='false'>",
                     "<request id='454'><type>merge</type><args/></request>",
                     "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
