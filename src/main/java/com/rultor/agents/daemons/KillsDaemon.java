@@ -76,10 +76,10 @@ public final class KillsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        new Script().exec(xml, "kill.sh");
         Logger.info(
-            this, "daemon of %s killed due to delay",
-            xml.xpath("/talk/@name").get(0)
+            this, "daemon of %s killed due to delay, code=%d",
+            xml.xpath("/talk/@name").get(0),
+            new Script().exec(xml, "kill.sh")
         );
         return new Directives();
     }

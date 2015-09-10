@@ -123,7 +123,7 @@ public final class StartsDaemon extends AbstractAgent {
         );
         final String dir = baos.toString(CharEncoding.UTF_8).trim();
         new Shell.Safe(shell).exec(
-            String.format("dir=%s; cat > \"${dir}/run.sh\"", SSH.escape(dir)),
+            String.format("cd %s; cat > run.sh", SSH.escape(dir)),
             IOUtils.toInputStream(
                 Joiner.on('\n').join(
                     "#!/bin/bash",
@@ -131,7 +131,7 @@ public final class StartsDaemon extends AbstractAgent {
                     "set -e",
                     "set -o pipefail",
                     "cd $(dirname $0)",
-                    "echo $$ > ./pid",
+                    "echo $$ > pid",
                     String.format(
                         "echo %s",
                         SSH.escape(
@@ -154,11 +154,11 @@ public final class StartsDaemon extends AbstractAgent {
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
             Joiner.on(" && ").join(
-                String.format("dir=%s", SSH.escape(dir)),
-                "chmod a+x \"${dir}/run.sh\"",
-                "echo 'run.sh failed to start' > \"${dir}/stdout\"",
+                String.format("cd %s", SSH.escape(dir)),
+                "chmod a+x run.sh",
+                "echo 'run.sh failed to start' > stdout",
                 // @checkstyle LineLength (1 line)
-                "( ( nohup \"${dir}/run.sh\" </dev/null >\"${dir}/stdout\" 2>&1; echo $? >\"${dir}/status\" ) </dev/null >/dev/null & )"
+                "( ( nohup run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null & )"
             )
         );
         Logger.info(this, "daemon started at %s", dir);
@@ -217,9 +217,9 @@ public final class StartsDaemon extends AbstractAgent {
             for (final String name : names) {
                 shell.exec(
                     Joiner.on(" &&  ").join(
-                        String.format("dir=%s  ", SSH.escape(dir)),
-                        "mkdir -p \"${dir}/.gpg\"",
-                        String.format("cat > \"${dir}/.gpg/%s\"", name)
+                        String.format("cd %s  ", SSH.escape(dir)),
+                        "mkdir -p .gpg",
+                        String.format("cat > \".gpg/%s\"", name)
                     ),
                     this.ring(name),
                     Logger.stream(Level.INFO, true),
