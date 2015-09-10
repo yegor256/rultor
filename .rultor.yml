@@ -47,6 +47,7 @@ deploy:
 env:
   MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 release:
+  pre: false
   script: |-
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
