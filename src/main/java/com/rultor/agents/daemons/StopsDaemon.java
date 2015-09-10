@@ -63,10 +63,10 @@ public final class StopsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        new Script().exec(xml, "stop.sh");
         Logger.info(
-            this, "docker stopped by request at %s",
-            xml.xpath("/talk/@name").get(0)
+            this, "docker stop attempt at %s, code=%d",
+            xml.xpath("/talk/@name").get(0),
+            new Script().exec(xml, "stop.sh")
         );
         return new Directives();
     }
