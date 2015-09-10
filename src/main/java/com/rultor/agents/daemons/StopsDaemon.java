@@ -56,6 +56,7 @@ public final class StopsDaemon extends AbstractAgent {
      */
     public StopsDaemon() {
         super(
+            "/talk/daemon/dir",
             "/talk/request[type='stop']",
             "/talk/daemon[started and not(code) and not(ended)]"
         );
