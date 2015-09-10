@@ -2,6 +2,8 @@
 set -e
 set -x
 
+echo "Trying to stop running docker container..."
+
 if [ ! -e cid ]; then
   exit 0
 fi
