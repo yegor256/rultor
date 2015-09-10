@@ -2,6 +2,8 @@
 set -e
 set -x
 
+echo "Trying to kill Docker container due to timeout..."
+
 if [ -e cid ]; then
   cid=$(cat cid)
   if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
