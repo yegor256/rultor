@@ -158,7 +158,7 @@ public final class StartsDaemon extends AbstractAgent {
                 "chmod a+x run.sh",
                 "echo 'run.sh failed to start' > stdout",
                 // @checkstyle LineLength (1 line)
-                "( ( nohup run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null & )"
+                "( ( nohup ./run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null & )"
             )
         );
         Logger.info(this, "daemon started at %s", dir);
