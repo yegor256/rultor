@@ -899,7 +899,7 @@
                 </plugins>
             </build>
         </profile>
-        <provile>
+        <profile>
             <id>coveralls</id>
             <activation>
                 <file><exists>pom.xml</exists></file>
@@ -940,6 +940,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </provile>
+        </profile>
     </profiles>
 </project>
