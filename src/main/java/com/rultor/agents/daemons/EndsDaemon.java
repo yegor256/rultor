@@ -60,8 +60,8 @@ import org.xembly.Xembler;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @todo @567 Refactor this class to use less objects and remove checkstyle
- *  exception above.
+ * @todo #567:30min/DEV Refactor this class to use less objects
+ *  and remove checkstyle exception above.
  */
 @Immutable
 @ToString
