@@ -81,7 +81,7 @@ public final class Entry {
      * Ctor.
      * @param args Command line args
      */
-    public Entry(final String[] args) {
+    public Entry(final String... args) {
         this.arguments = Arrays.asList(args);
     }
 

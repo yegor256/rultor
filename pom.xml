@@ -35,7 +35,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.32.1</version>
+        <version>0.37</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
@@ -97,38 +97,38 @@
         <dependency>
             <groupId>org.takes</groupId>
             <artifactId>takes</artifactId>
-            <version>0.20.2</version>
+            <version>0.23.3</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
-            <version>1.9.17</version>
+            <version>1.10.20</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.9.17</version>
+            <version>1.10.20</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ec2</artifactId>
-            <version>1.9.17</version>
+            <version>1.10.20</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-dynamodb</artifactId>
-            <version>1.9.17</version>
+            <version>1.10.20</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
             <artifactId>xembly</artifactId>
-            <version>0.21</version>
+            <version>0.21.1</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>co.stateful</groupId>
             <artifactId>java-sdk</artifactId>
-            <version>0.12.4</version>
+            <version>0.12.7</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -177,7 +177,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.14</version>
+            <version>1.16</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -198,12 +198,12 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-s3</artifactId>
-            <version>0.9</version>
+            <version>0.10</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-ssh</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -222,7 +222,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-xml</artifactId>
-            <version>0.15</version>
+            <version>0.16.2</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -245,7 +245,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
-            <version>1.10.4</version>
+            <version>1.12</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -265,7 +265,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>3.2.7.Final</version>
+            <version>4.0.0.Final</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -328,12 +328,18 @@
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-transcoder</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-codec</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>xmlgraphics-commons</artifactId>
+            <version>2.0.1</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
@@ -847,7 +853,7 @@
                         <groupId>com.qulice</groupId>
                         <artifactId>qulice-maven-plugin</artifactId>
                         <configuration>
-                            <excludes>
+                            <excludes combine.children="append">
                                 <exclude>checkstyle:/src/main/js/.*</exclude>
                                 <exclude>checkstyle:/src/main/scss/.*</exclude>
                                 <exclude>checkstyle:/src/test/casperjs/.*</exclude>

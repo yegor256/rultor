@@ -97,8 +97,8 @@ public final class MailsTest {
      */
     @Test
     @Ignore
-    @SuppressWarnings("PMD.UncommentedEmptyMethod")
     public void sendsToRecipients() throws Exception {
+        // nothing here
     }
 
     /**
