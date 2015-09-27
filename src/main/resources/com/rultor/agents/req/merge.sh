@@ -21,12 +21,12 @@ done
 
 git checkout "fork/${fork_branch}"
 git checkout -b "${BRANCH}"
-git checkout "origin/${head_branch}"
+git checkout "${head_branch}"
 
 if [ "${rebase}" == "true" ]; then
   git checkout "${BRANCH}"
-  git rebase "origin/${head_branch}"
-  git checkout "origin/${head_branch}"
+  git rebase "${head_branch}"
+  git checkout "${head_branch}"
 fi
 
 if [ "${squash}" == "true" ]; then
