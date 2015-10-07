@@ -6,7 +6,5 @@ env:
   global:
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
-before_install:
-  - unset GEM_PATH
 script:
   - mvn clean install -Pqulice --errors
