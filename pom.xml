@@ -198,12 +198,10 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-s3</artifactId>
-            <version>0.10</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-ssh</artifactId>
-            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -245,7 +243,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
-            <version>1.12</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -260,7 +257,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
-            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
@@ -270,12 +266,10 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
-            <version>0.24</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-email</artifactId>
-            <version>1.6.3</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
@@ -717,7 +711,6 @@
                     <plugin>
                         <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
-                        <version>0.7.1</version>
                         <executions>
                             <execution>
                                 <id>dynamodb-integration-test</id>
