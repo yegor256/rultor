@@ -243,7 +243,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
-            <version>1.10.1</version>
+            <version>1.12</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
