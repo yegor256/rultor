@@ -97,7 +97,7 @@
         <dependency>
             <groupId>org.takes</groupId>
             <artifactId>takes</artifactId>
-            <version>0.24</version>
+            <version>0.23.3</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -267,6 +267,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
+            <version>0.24</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
