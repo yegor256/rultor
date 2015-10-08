@@ -30,6 +30,7 @@
 package com.rultor;
 
 import co.stateful.RtSttc;
+import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
 import org.junit.Test;
 
@@ -42,7 +43,13 @@ import org.junit.Test;
 public final class EntryTest {
 
     /**
-     * RtSttc can work.
+     * RtSttc can work in production mode.
+     *
+     * <p>This test is actually checking not how RtSttc works, but
+     * whether it can work in current environment, with full list
+     * of project dependencies. If there will be any dependency issue,
+     * this test will crash with a different exception, not AssertionError.
+     *
      * @throws Exception If some problem inside
      */
     @Test(expected = AssertionError.class)
@@ -51,6 +58,21 @@ public final class EntryTest {
             URN.create("urn:test:1"),
             "invalid-token"
         ).counters().names();
+    }
+
+    /**
+     * RtGithub can work in production mode.
+     *
+     * <p>This test is actually checking not how RtGithug works, but
+     * whether it can work in current environment, with full list
+     * of project dependencies. If there will be any dependency issue,
+     * this test will crash with a different exception, not AssertionError.
+     *
+     * @throws Exception If some problem inside
+     */
+    @Test(expected = AssertionError.class)
+    public void githubConnects() throws Exception {
+        new RtGithub("intentionally-invalid-token").users().self().login();
     }
 
 }
