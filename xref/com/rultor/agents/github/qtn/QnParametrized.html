@@ -56,8 +56,8 @@
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * Parametrized question.</em>
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * @version $Id: 270fa794996f33ce55f6c1c03c56de52039af604 $</em>
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * @since 1.3.6</em>
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  @Immutable
@@ -123,7 +123,7 @@
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Map&lt;String, String&gt; params(<strong class="jxr_keyword">final</strong> Comment.Smart comment)
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>         <strong class="jxr_keyword">final</strong> ImmutableMap.Builder&lt;String, String&gt; map =
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>             <strong class="jxr_keyword">new</strong> ImmutableMap.Builder&lt;String, String&gt;();
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>             <strong class="jxr_keyword">new</strong> ImmutableMap.Builder&lt;&gt;();
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>         <strong class="jxr_keyword">final</strong> Matcher matcher = QnParametrized.PTN.matcher(comment.body());
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>         <strong class="jxr_keyword">while</strong> (matcher.find()) {
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>             map.put(matcher.group(1), matcher.group(2));

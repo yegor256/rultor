@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?2603ff6"/>
+    <link rel="stylesheet" href="/css/layout.css?37d7c1d"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
     <script>//<![CDATA[
@@ -112,7 +112,7 @@ $ rultor encrypt -p me/test secret.txt</code></pre></div>
 
 <p>Here <code>me/test</code> is the name of your Github project.</p>
 
-<p>This code encrypt <code>secret.txt</code> file. You will get a new file <code>secret.txt.asc</code>.
+<p>This code encrypts <code>secret.txt</code> file. You will get a new file <code>secret.txt.asc</code>.
 Commit this file to your repository &mdash; nobody will be able
 to read it, except Rultor server itself.</p>
 
@@ -123,7 +123,9 @@ to read it, except Rultor server itself.</p>
 
 <p>This configuration tells Rultor to get <code>scrt/secret.txt.asc</code> from the
 root directory of your repository, decrypt it and save the result
-into <code>secret.txt</code>.</p>
+into <code>secret.txt</code>. You can access it from your script as <code>../secret.txt</code>.
+In other words, you can access it at <code>../secret.txt</code>, relative
+to the repository root from where your script is executed.</p>
 
 <h2 id="docker-image">Docker Image</h2>
 
@@ -221,7 +223,7 @@ change that by providing your own SSH coordinates:</p>
 
 <p>Your servers must have <code>docker</code> installed. This is the only requirement.</p>
 
-<h2 id="merge,-deploy,-release">Merge, Deploy, Release</h2>
+<h2 id="merge-deploy-release">Merge, Deploy, Release</h2>
 
 <p>Three commands <code>merge</code>, <code>deploy</code> and <code>release</code> are
 configured similarly in <code>.rultor.yml</code>. For example:</p>
@@ -246,6 +248,25 @@ one. If any of them fails, execution stops.</p>
 <code>commanders</code>. By default, only Github repository collaborators can give
 commands. Configured commanders don&#39;t replace collaborators. In other words,
 Github collaborators <em>and</em> accounts mentioned here are allowed to give commands.</p>
+
+<p>There are a few additional configurable parameters for <code>merge</code> section:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+    <span class="no">echo &quot;testing...&quot;</span>
+    <span class="no">echo &quot;building...&quot;</span>
+    <span class="no">echo &quot;packaging...&quot;</span>
+  <span class="l-Scalar-Plain">squash</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+  <span class="l-Scalar-Plain">fast-forward</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">default</span></code></pre></div>
+
+<p><code>squash</code> option may be set to <code>true</code> or <code>false</code> (default).</p>
+
+<p><code>fast-forward</code> may be either <code>default</code>
+(<code>--ff</code> argument for Git), <code>only</code> (<code>--ff-only</code>) or <code>no</code> (<code>--no-ff</code>).
+More information about it <a href="http://git-scm.com/docs/git-merge">here</a>.</p>
+
+<p><code>rebase</code> option may be set to <code>true</code> or <code>false</code> (default). If it&#39;s set
+to <code>true</code>, your fork branch will be &quot;rebased&quot; from origin before the merge.</p>
 
 <h2 id="uninstall-script">Uninstall Script</h2>
 
@@ -314,7 +335,7 @@ resources, created during installation.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/2603ff6">2603ff6</a>
+          <a href="https://github.com/yegor256/rultor/commit/37d7c1d">37d7c1d</a>
         </p>
       </footer>
     </div>

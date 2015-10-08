@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?2603ff6"/>
+    <link rel="stylesheet" href="/css/layout.css?37d7c1d"/>
     <link rel="canonical" href="//doc.rultor.com/commands.html" />
     <title>Rultor Commands</title>
     <script>//<![CDATA[
@@ -69,6 +69,25 @@ from Rultor (well, within 60 seconds). If you don&#39;t get an answer, there
 is something wrong with Rultor. Feel free to post a bug to our
 <a href="https://github.com/yegor256/rultor/issues">issue tracker</a>.</p>
 
+<h2 id="lock-and-unlock">Lock and Unlock</h2>
+
+<p>You can &quot;lock&quot; any branch to prevent merges there. Sometimes this may
+be a very valuable feature, when, say, you want to make sure that
+for a short period of time only you will merge something into some
+branch, to stabilize it. When it&#39;s stable, you release a new version
+and unlock the branch. To lock it, say <code>@rultor lock</code>. That&#39;s it.</p>
+
+<p>By default, branch <code>master</code> will be locked. In order to lock a branch,
+Rultor creates a simple text file <code>.rultor.lock</code> in the branch. The file
+contains a list of Github user names, who are allowed to merge into
+the branch.</p>
+
+<p>If you want to change the list of users or lock some other branch,
+post <code>@rultor lock branch=`master`, users=`jeff,yegor256</code>`.</p>
+
+<p>To unlock, post <code>@rultor unlock branch=`master</code><code>. Again, the default
+branch is</code>master`.</p>
+
 <h2 id="merge">Merge</h2>
 
 <p>Merges pull request, checking its validity beforehand.
@@ -90,6 +109,11 @@ More details are <a href="/basics.html">here</a>.</p>
 <p>Checks the status of currently running command in current conversation.
 When a command takes long this command may be convenient to use. Just
 post <code>@rultor status</code> and see what Rultor says.</p>
+
+<h2 id="stop">Stop</h2>
+
+<p>Rultor will try to immediately stop/kill current command. Just post
+<code>@rultor stop</code>.</p>
 
 <h2 id="version">Version</h2>
 
@@ -145,7 +169,7 @@ post <code>@rultor status</code> and see what Rultor says.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/2603ff6">2603ff6</a>
+          <a href="https://github.com/yegor256/rultor/commit/37d7c1d">37d7c1d</a>
         </p>
       </footer>
     </div>

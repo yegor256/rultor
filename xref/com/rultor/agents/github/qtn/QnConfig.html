@@ -53,8 +53,8 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * Show current config.</em>
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * @version $Id: 0a6e7b1bdd18669708d12af8adb4c257f92712ef $</em>
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> * @since 1.8</em>
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  @Immutable
@@ -85,16 +85,17 @@
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../com/rultor/agents/github/Req.html">Req</a> understand(<strong class="jxr_keyword">final</strong> Comment.Smart comment,
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          <strong class="jxr_keyword">final</strong> URI home) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>          <strong class="jxr_keyword">new</strong> <a href="../../../../../com/rultor/agents/github/Answer.html">Answer</a>(comment).post(
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>              String.format(
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>                  QnConfig.PHRASES.getString(<span class="jxr_string">"QnConfig.response"</span>),
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>                  <strong class="jxr_keyword">this</strong>.profile.read().toString()
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>              )
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          );
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>          Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"config request in #%d"</span>, comment.issue().number());
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          <strong class="jxr_keyword">return</strong> Req.DONE;
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      }
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>              <strong class="jxr_keyword">true</strong>,
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>              String.format(
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                  QnConfig.PHRASES.getString(<span class="jxr_string">"QnConfig.response"</span>),
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>                  <strong class="jxr_keyword">this</strong>.profile.read().toString()
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>              )
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          );
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"config request in #%d"</span>, comment.issue().number());
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          <strong class="jxr_keyword">return</strong> Req.DONE;
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      }
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

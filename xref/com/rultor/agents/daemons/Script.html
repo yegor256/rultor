@@ -51,8 +51,8 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * Script to run.</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @version $Id: 41d46c1fe9fbd3c175d77f00a42e8f8e69415930 $</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @since 1.53</em>
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  @Immutable
@@ -81,7 +81,7 @@
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          );
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Shell.Empty(<strong class="jxr_keyword">new</strong> Shell.Safe(shell)).exec(
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>              String.format(
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>                  <span class="jxr_string">"cd %s &amp;&amp; /bin/bash %s &gt;&gt; stdout"</span>,
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>                  <span class="jxr_string">"cd %s &amp;&amp; /bin/bash %s 2&gt;&amp;1 &gt;&gt;stdout"</span>,
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>                  SSH.escape(dir), SSH.escape(name)
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>              )
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>          );

@@ -66,8 +66,8 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * Show current status.</em>
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * @version $Id: bb9e5dbaf76fd5a31aa0d45fa76acebb111026e2 $</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * @since 1.5</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  @Immutable
@@ -144,23 +144,24 @@
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>             );
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>         }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>         <strong class="jxr_keyword">new</strong> <a href="../../../../../com/rultor/agents/github/Answer.html">Answer</a>(comment).post(
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>             String.format(
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>                 QnStatus.PHRASES.getString(<span class="jxr_string">"QnStatus.response"</span>),
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>                 Joiner.on('\n').join(
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>                     Iterables.concat(
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>                         Collections.singleton(
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>                             QnStatus.REPORT.applyTo(xml).trim()
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>                         ),
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>                         lines
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>                     )
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>                 )
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>             )
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>         );
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>         Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"status request in #%d"</span>, comment.issue().number());
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">return</strong> Req.DONE;
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>     }
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> }
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>             <strong class="jxr_keyword">true</strong>,
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>             String.format(
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                 QnStatus.PHRASES.getString(<span class="jxr_string">"QnStatus.response"</span>),
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>                 Joiner.on('\n').join(
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                     Iterables.concat(
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>                         Collections.singleton(
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>                             QnStatus.REPORT.applyTo(xml).trim()
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>                         ),
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>                         lines
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                     )
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>                 )
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>             )
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         );
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"status request in #%d"</span>, comment.issue().number());
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">return</strong> Req.DONE;
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     }
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

@@ -53,8 +53,8 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * If rultor is in the list of collaborators.</em>
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * @version $Id: 93c8e0c5cf1245ee7bdca2d4b5bee8729d30082e $</em>
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> * @since 1.7</em>
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  @Immutable
@@ -92,14 +92,15 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>              req = <strong class="jxr_keyword">this</strong>.origin.understand(comment, home);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>          } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>              <strong class="jxr_keyword">new</strong> <a href="../../../../../com/rultor/agents/github/Answer.html">Answer</a>(comment).post(
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>                  QnIfCollaborator.PHRASES.getString(<span class="jxr_string">"QnIfCollaborator.denied"</span>)
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>              );
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>              req = Req.EMPTY;
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>          }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>          <strong class="jxr_keyword">return</strong> req;
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      }
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>                  false,
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  QnIfCollaborator.PHRASES.getString(<span class="jxr_string">"QnIfCollaborator.denied"</span>)
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>              );
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>              req = Req.EMPTY;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          <strong class="jxr_keyword">return</strong> req;
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

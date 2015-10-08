@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?2603ff6"/>
+    <link rel="stylesheet" href="/css/layout.css?37d7c1d"/>
     <link rel="canonical" href="//doc.rultor.com/basics.html" />
     <title>Basic Commands</title>
     <script>//<![CDATA[
@@ -127,11 +127,11 @@ the version of the product to 1.7 and build it.</p>
 <p>This is how we do it in jcabi <a href="https://github.com/jcabi/jcabi/blob/master/.rultor.yml"><code>rultor.yml</code></a>. For example:</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">release</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">versions:set</span><span class="nv"> </span><span class="s">\&quot;-DnewVersion=${tag}\&quot;&quot;</span>
-    <span class="p-Indicator">-</span> <span class="s">&quot;git</span><span class="nv"> </span><span class="s">commit</span><span class="nv"> </span><span class="s">-am</span><span class="nv"> </span><span class="s">\&quot;${tag}\&quot;&quot;</span>
-    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">deploy</span><span class="nv"> </span><span class="s">-Pqulice</span><span class="nv"> </span><span class="s">-Psonatype</span><span class="nv"> </span><span class="s">-Pjcabi&quot;</span>
-    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">site-deploy</span><span class="nv"> </span><span class="s">-Psite</span><span class="nv"> </span><span class="s">-Prempl</span><span class="nv"> </span><span class="s">--settings</span><span class="nv"> </span><span class="s">../settings.xml&quot;</span></code></pre></div>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+    <span class="no">mvn versions:set &quot;-DnewVersion=$tag&quot;</span>
+    <span class="no">git commit -am &quot;$tag&quot;</span>
+    <span class="no">mvn clean deploy -Pqulice -Psonatype -Pjcabi</span>
+    <span class="no">mvn clean site-deploy -Psite -Prempl --settings ../settings.xml</span></code></pre></div>
 
 <p>We change the version of the product to the one provided in
 <code>$tag</code>, then commit the changes, build and deploy to Sonatype. Next,
@@ -198,7 +198,7 @@ fails and you get a full log in the Github issue.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/2603ff6">2603ff6</a>
+          <a href="https://github.com/yegor256/rultor/commit/37d7c1d">37d7c1d</a>
         </p>
       </footer>
     </div>

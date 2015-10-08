@@ -61,8 +61,8 @@
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * Comments a new tag in Github.</em>
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * @version $Id: d40b4ad0d713690bd5bb41cf20519dfe30e4c8dc $</em>
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * @since 1.31</em>
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)</em>
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> */</em>
@@ -119,43 +119,47 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>             Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"duplicate tag %s commented"</span>, tag);
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>         } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>             <strong class="jxr_keyword">final</strong> Repo repo = issue.repo();
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">final</strong> Date prev = <strong class="jxr_keyword">this</strong>.previous(repo);
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>             <strong class="jxr_keyword">final</strong> Release.Smart rel = <strong class="jxr_keyword">new</strong> Release.Smart(rels.create(tag));
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>             rel.name(issue.title());
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>             rel.prerelease(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>             rel.body(
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>                 String.format(
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>                     <span class="jxr_string">"See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)"</span>,
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>                     issue.number(),
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/github/CommitsLog.html">CommitsLog</a>(repo).build(prev, rel.publishedAt()),
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>                     Manifests.read(<span class="jxr_string">"Rultor-Version"</span>), home
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>                 )
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>             );
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>             Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"tag %s created and commented"</span>, tag);
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>         }
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives();
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     }
-<a class="jxr_linenumber" name="L131" href="#L131">131</a> 
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">     * Get previous release time.</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">     * @param repo Repo in which to find the releases.</em>
-<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * @return Previous release time or start of epoch.</em>
-<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * @throws IOException In case of problem communicating with repo.</em>
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     @SuppressWarnings(<span class="jxr_string">"PMD.AvoidInstantiatingObjectsInLoops"</span>)
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">private</strong> Date previous(<strong class="jxr_keyword">final</strong> Repo repo) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>         Date prev = <strong class="jxr_keyword">new</strong> Date(0L);
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <strong class="jxr_keyword">final</strong> Iterable&lt;Release.Smart&gt; releases =
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>             <strong class="jxr_keyword">new</strong> Smarts&lt;Release.Smart&gt;(repo.releases().iterate());
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Release.Smart rel : releases) {
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>             <strong class="jxr_keyword">if</strong> (prev.before(rel.publishedAt())) {
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>                 prev = rel.publishedAt();
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>             }
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>         }
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <strong class="jxr_keyword">return</strong> prev;
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>     }
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> }
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">final</strong> Date prev = CommentsTag.previous(repo);
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>             <strong class="jxr_keyword">final</strong> Release.Smart rel = <strong class="jxr_keyword">new</strong> Release.Smart(
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>                 rels.create(tag.trim())
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>             );
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>             rel.name(issue.title());
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>             rel.prerelease(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             rel.body(
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>                 String.format(
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                     <span class="jxr_string">"See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)"</span>,
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                     issue.number(),
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/github/CommitsLog.html">CommitsLog</a>(repo).build(prev, rel.publishedAt()),
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>                     Manifests.read(<span class="jxr_string">"Rultor-Version"</span>), home
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>                 )
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>             );
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>             Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"tag %s created and commented"</span>, tag);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         }
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives();
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     }
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * Get previous release time.</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * @param repo Repo in which to find the releases.</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * @return Previous release time or start of epoch.</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * @throws IOException In case of problem communicating with repo.</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Date previous(<strong class="jxr_keyword">final</strong> Repo repo) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>         Date prev = <strong class="jxr_keyword">new</strong> Date(0L);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         <strong class="jxr_keyword">final</strong> Iterable&lt;Release.Smart&gt; releases =
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>             <strong class="jxr_keyword">new</strong> Smarts&lt;&gt;(repo.releases().iterate());
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Release.Smart rel : releases) {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>             <strong class="jxr_keyword">if</strong> (rel.json().isNull(<span class="jxr_string">"published_at"</span>)) {
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>             }
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>             <strong class="jxr_keyword">if</strong> (prev.before(rel.publishedAt())) {
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>                 prev = rel.publishedAt();
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>             }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">return</strong> prev;
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     }
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
