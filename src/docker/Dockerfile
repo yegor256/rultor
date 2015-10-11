@@ -47,7 +47,7 @@ RUN apt-get install -y unzip zip
 RUN apt-get install -y gnupg gnupg2
 RUN apt-get install -y jq
 RUN apt-get install -y bsdmainutils
-RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs npm
 RUN apt-get install -y build-essential
 RUN apt-get install -y automake autoconf
 
