@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.6100263852242744" branch-rate="0.17228177641653905" lines-covered="1156" lines-valid="1895" branches-covered="225" branches-valid="1306" complexity="1.556581986143187" version="2.1.1" timestamp="1444278244330">
+<coverage line-rate="0.6100263852242744" branch-rate="0.17228177641653905" lines-covered="1156" lines-valid="1895" branches-covered="225" branches-valid="1306" complexity="1.556581986143187" version="2.1.1" timestamp="1444530967008">
 	<sources>
 		<source>/home/r/repo/src/main/java</source>
 		<source>--source</source>
@@ -2534,8 +2534,8 @@
 									</conditions>
 								</line>
 								<line number="101" hits="10" branch="false"/>
-								<line number="103" hits="60" branch="false"/>
-								<line number="104" hits="60" branch="false"/>
+								<line number="103" hits="61" branch="false"/>
+								<line number="104" hits="61" branch="false"/>
 								<line number="105" hits="34" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
@@ -2584,8 +2584,8 @@
 							</conditions>
 						</line>
 						<line number="101" hits="10" branch="false"/>
-						<line number="103" hits="60" branch="false"/>
-						<line number="104" hits="60" branch="false"/>
+						<line number="103" hits="61" branch="false"/>
+						<line number="104" hits="61" branch="false"/>
 						<line number="105" hits="34" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
