@@ -69,7 +69,8 @@ RUN gem update
 RUN gem install nokogiri bundle
 
 # PHP
-RUN apt-get install -y php5-dev php-pear
+RUN apt-get install -y php5 php5-dev php-pear
+RUN curl -sS https://getcomposer.org/installer | php
 RUN mkdir jsl && \
   wget http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
   tar xzf jsl-0.3.0-src.tar.gz && \
