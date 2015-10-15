@@ -47,7 +47,7 @@ RUN apt-get install -y unzip zip
 RUN apt-get install -y gnupg gnupg2
 RUN apt-get install -y jq
 RUN apt-get install -y bsdmainutils
-RUN apt-get install -y nodejs npm
+RUN apt-get install -y nodejs npm && ln -s /usr/bin/nodejs /usr/bin/node
 RUN apt-get install -y build-essential
 RUN apt-get install -y automake autoconf
 
@@ -71,6 +71,7 @@ RUN gem install nokogiri bundle
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
 RUN curl -sS https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
 RUN mkdir jsl && \
   wget http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
   tar xzf jsl-0.3.0-src.tar.gz && \
