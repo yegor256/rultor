@@ -97,6 +97,16 @@ RUN git clone https://github.com/yegor256/rultor.git && \
   cd .. && \
   rm -rf rultor
 
+# LaTeX
+RUN apt-get install -y texlive-latex-extra
+RUN apt-get install -y xzdec
+RUN tlmgr init-usertree
+RUN tlmgr install helvetic
+RUN tlmgr install psnfss
+
+# PhantomJS
+RUN apt-get install -y phantomjs
+
 RUN apt-get install -y libxml2-utils
 
 RUN apt-get install -y s3cmd
