@@ -918,7 +918,7 @@
                         <artifactId>cobertura-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <phase>site</phase>
+                                <phase>pre-site</phase>
                                 <goals>
                                     <goal>cobertura</goal>
                                 </goals>
@@ -935,7 +935,7 @@
                         <version>4.0.0</version>
                         <executions>
                             <execution>
-                                <phase>site</phase>
+                                <phase>site-deploy</phase>
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
