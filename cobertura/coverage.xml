@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.6100263852242744" branch-rate="0.17228177641653905" lines-covered="1156" lines-valid="1895" branches-covered="225" branches-valid="1306" complexity="1.556581986143187" version="2.1.1" timestamp="1445038888579">
+<coverage line-rate="0.6100263852242744" branch-rate="0.17228177641653905" lines-covered="1156" lines-valid="1895" branches-covered="225" branches-valid="1306" complexity="1.556581986143187" version="2.1.1" timestamp="1445047007906">
 	<sources>
 		<source>/home/r/repo/src/main/java</source>
 		<source>--source</source>
@@ -9742,7 +9742,7 @@
 									</conditions>
 								</line>
 								<line number="99" hits="80" branch="false"/>
-								<line number="103" hits="79" branch="false"/>
+								<line number="103" hits="80" branch="false"/>
 								<line number="104" hits="70" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
@@ -9762,7 +9762,7 @@
 								</line>
 								<line number="109" hits="1" branch="false"/>
 								<line number="111" hits="49" branch="false"/>
-								<line number="113" hits="127" branch="false"/>
+								<line number="113" hits="129" branch="false"/>
 							</lines>
 						</method>
 						<method name="equals" signature="(Ljava/lang/Object;)Z" line-rate="1.0" branch-rate="1.0" complexity="0">
@@ -9845,7 +9845,7 @@
 							</conditions>
 						</line>
 						<line number="99" hits="80" branch="false"/>
-						<line number="103" hits="79" branch="false"/>
+						<line number="103" hits="80" branch="false"/>
 						<line number="104" hits="70" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
@@ -9865,7 +9865,7 @@
 						</line>
 						<line number="109" hits="1" branch="false"/>
 						<line number="111" hits="49" branch="false"/>
-						<line number="113" hits="127" branch="false"/>
+						<line number="113" hits="129" branch="false"/>
 					</lines>
 				</class>
 			</classes>
