@@ -925,7 +925,7 @@
                                         <argument>--source</argument>
                                         <argument>${basedir}/src/jekyll</argument>
                                         <argument>--destination</argument>
-                                        <argument>${project.build.directory}/site</argument>
+                                        <argument>${project.build.directory}/jekyll-site</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -939,6 +939,21 @@
                                     <executable>cp</executable>
                                     <arguments>
                                         <argument>LICENSE.txt</argument>
+                                        <argument>${project.build.directory}/jekyll-site</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>jekyll-copy-license</id>
+                                <phase>post-site</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cp</executable>
+                                    <arguments>
+                                        <argument>-r</argument>
+                                        <argument>${project.build.directory}/jekyll-site/*</argument>
                                         <argument>${project.build.directory}/site</argument>
                                     </arguments>
                                 </configuration>
