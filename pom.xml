@@ -952,8 +952,8 @@
                                 <configuration>
                                     <executable>cp</executable>
                                     <arguments>
-                                        <argument>-r</argument>
-                                        <argument>${project.build.directory}/jekyll-site/*</argument>
+                                        <argument>-ra</argument>
+                                        <argument>${project.build.directory}/jekyll-site/.</argument>
                                         <argument>${project.build.directory}/site</argument>
                                     </arguments>
                                 </configuration>
