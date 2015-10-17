@@ -944,7 +944,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>jekyll-copy-license</id>
+                                <id>jekyll-copy-content</id>
                                 <phase>post-site</phase>
                                 <goals>
                                     <goal>exec</goal>
