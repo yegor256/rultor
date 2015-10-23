@@ -36,6 +36,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.takes.Take;
 import org.takes.rq.RqFake;
+import org.takes.rq.RqWithHeader;
 import org.takes.rs.RsPrint;
 
 /**
@@ -58,7 +59,11 @@ public final class TkHomeTest {
         talks.create("repo2", "test2");
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                new RsPrint(take.act(new RqFake())).printBody()
+                new RsPrint(
+                    take.act(
+                        new RqWithHeader(new RqFake(), "Accept", "text/xml")
+                    )
+                ).printBody()
             ),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
