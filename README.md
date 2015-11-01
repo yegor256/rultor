@@ -19,7 +19,23 @@ These blog posts may be helpful:
 
 Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yegor256/rultor/)
 
-## How to contribute
+## What Is Rultor?
+
+TBD... _product statement_
+
+## What Problem Does Rultor Solve?
+
+TBD... _stakeholders and needs_
+
+## How Rultor Works?
+
+TBD... _actors and features_
+
+## What Is Rultor SLA?
+
+TBD... _quality requrirements_
+
+## How to Contribute
 
 Fork repository, make changes, send us a pull request. We will review
 your changes and apply them to the `master` branch shortly, provided
