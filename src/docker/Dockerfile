@@ -67,7 +67,6 @@ RUN apt-get install -y libmagic-dev zlib1g-dev
 RUN apt-add-repository -y ppa:rael-gc/rvm
 RUN apt-get update
 RUN sudo apt-get install -y rvm
-RUN source /usr/share/rvm/scripts/rvm
 RUN rvm install ruby
 RUN gem update
 RUN gem install nokogiri bundle
