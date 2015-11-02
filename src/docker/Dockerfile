@@ -71,7 +71,7 @@ RUN /bin/bash -l -c "rvm install ruby"
 RUN /bin/bash -l -c "gem update"
 RUN /bin/bash -l -c "gem install nokogiri"
 RUN /bin/bash -l -c "gem install bundler"
-RUN echo 'source /usr/local/rvm/scripts/rvm' >> /etc/bash.bashrc
+RUN echo 'source /usr/share/rvm/scripts/rvm' >> /etc/bash.bashrc
 
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
