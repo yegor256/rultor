@@ -67,12 +67,14 @@ RUN apt-get install -y ssh && \
 RUN apt-get install -y libmagic-dev zlib1g-dev
 RUN apt-add-repository -y ppa:rael-gc/rvm
 RUN apt-get update
-RUN sudo apt-get install -y rvm
-RUN /bin/bash -l -c "rvm install ruby"
-RUN /bin/bash -l -c "gem update"
-RUN /bin/bash -l -c "gem install nokogiri"
-RUN /bin/bash -l -c "gem install bundler"
-RUN echo 'source /usr/share/rvm/scripts/rvm' >> /etc/bash.bashrc
+RUN apt-get install -y ruby ruby-dev
+RUN gem update && gem install nokogiri && gem install bundler
+#RUN sudo apt-get install -y rvm
+#RUN /bin/bash -l -c "rvm install ruby"
+#RUN /bin/bash -l -c "gem update"
+#RUN /bin/bash -l -c "gem install nokogiri"
+#RUN /bin/bash -l -c "gem install bundler"
+#RUN echo 'source /usr/share/rvm/scripts/rvm' >> /etc/bash.bashrc
 
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
