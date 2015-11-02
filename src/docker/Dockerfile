@@ -120,5 +120,6 @@ RUN apt-get install -y s3cmd
 RUN apt-get update -y
 RUN apt-get upgrade -qq -y
 
+# Clean up
 RUN rm -rf /tmp/*
 RUN rm -rf /root/.ssh
