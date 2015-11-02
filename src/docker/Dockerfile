@@ -84,7 +84,7 @@ RUN mkdir jsl && \
   mv Linux_All_DBG.OBJ/jsl /usr/local/bin && \
   cd .. && \
   rm -rf jsl
-RUN pecl install xdebug && \
+RUN pecl install xdebug-beta && \
   echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
 
 # Java
