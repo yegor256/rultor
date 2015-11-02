@@ -95,7 +95,7 @@ RUN apt-get install -y gdebi && \
   rm -rf maven3_3.2.1-0~ppa1_all.deb
 RUN git clone https://github.com/yegor256/rultor.git && \
   cd rultor && \
-  gem install jekyll && \
+  /bin/bash -l -c "gem install jekyll" && \
   mvn clean install -Pqulice && \
   cd .. && \
   rm -rf rultor
