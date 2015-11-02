@@ -68,8 +68,8 @@ RUN apt-add-repository -y ppa:rael-gc/rvm
 RUN apt-get update
 RUN sudo apt-get install -y rvm
 RUN /bin/bash -l -c "rvm install ruby"
-RUN gem update
-RUN gem install nokogiri bundle
+RUN /bin/bash -l -c "gem update"
+RUN /bin/bash -l -c "gem install nokogiri bundle"
 
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
