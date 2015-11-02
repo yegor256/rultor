@@ -47,6 +47,7 @@ RUN apt-get install -y unzip zip
 RUN apt-get install -y gnupg gnupg2
 RUN apt-get install -y jq
 RUN apt-get install -y bsdmainutils
+RUN apt-get install -y libxml2-utils
 RUN apt-get install -y nodejs npm && ln -s /usr/bin/nodejs /usr/bin/node
 RUN apt-get install -y build-essential
 RUN apt-get install -y automake autoconf
@@ -75,10 +76,10 @@ RUN echo 'source /usr/share/rvm/scripts/rvm' >> /etc/bash.bashrc
 
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
-RUN curl -sS https://getcomposer.org/installer | php
+RUN curl --silent --show-error https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 RUN mkdir jsl && \
-  wget http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
+  wget –quiet http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
   tar xzf jsl-0.3.0-src.tar.gz && \
   cd jsl-0.3.0/src && \
   make -f Makefile.ref && \
@@ -91,14 +92,14 @@ RUN mkdir jsl && \
 # Java
 RUN apt-get install -y default-jdk
 RUN apt-get install -y gdebi && \
-  wget http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb && \
+  wget –quiet http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb && \
   gdebi --non-interactive maven3_3.2.1-0~ppa1_all.deb && \
   ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn && \
   rm -rf maven3_3.2.1-0~ppa1_all.deb
 RUN git clone https://github.com/yegor256/rultor.git && \
   cd rultor && \
   /bin/bash -l -c "gem install jekyll" && \
-  mvn clean install -Pqulice && \
+  mvn clean install -Pqulice --quiet && \
   cd .. && \
   rm -rf rultor
 
@@ -112,8 +113,7 @@ RUN tlmgr install psnfss
 # PhantomJS
 RUN apt-get install -y phantomjs
 
-RUN apt-get install -y libxml2-utils
-
+# S3cmd for AWS S3 integration
 RUN apt-get install -y s3cmd
 
 # One more time, right before the end
