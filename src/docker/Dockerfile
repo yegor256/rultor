@@ -69,6 +69,8 @@ RUN apt-add-repository ppa:brightbox/ruby-ng
 RUN apt-get update
 RUN apt-get install -y ruby2.2 ruby2.2-dev
 RUN gem update && gem install nokogiri && gem install bundler
+
+# Ruby via RVM
 #RUN apt-add-repository -y ppa:rael-gc/rvm
 #RUN apt-get update
 #RUN sudo apt-get install -y rvm
