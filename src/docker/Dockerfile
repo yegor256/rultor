@@ -65,10 +65,12 @@ RUN apt-get install -y ssh && \
 
 # Ruby
 RUN apt-get install -y libmagic-dev zlib1g-dev
-RUN apt-add-repository -y ppa:rael-gc/rvm
+RUN apt-add-repository ppa:brightbox/ruby-ng
 RUN apt-get update
-RUN apt-get install -y ruby ruby-dev
+RUN apt-get install ruby2.2
 RUN gem update && gem install nokogiri && gem install bundler
+#RUN apt-add-repository -y ppa:rael-gc/rvm
+#RUN apt-get update
 #RUN sudo apt-get install -y rvm
 #RUN /bin/bash -l -c "rvm install ruby"
 #RUN /bin/bash -l -c "gem update"
