@@ -67,7 +67,7 @@ RUN apt-get install -y ssh && \
 RUN apt-get install -y libmagic-dev zlib1g-dev
 RUN apt-add-repository ppa:brightbox/ruby-ng
 RUN apt-get update
-RUN apt-get install -y ruby2.2
+RUN apt-get install -y ruby2.2 ruby2.2-dev
 RUN gem update && gem install nokogiri && gem install bundler
 #RUN apt-add-repository -y ppa:rael-gc/rvm
 #RUN apt-get update
