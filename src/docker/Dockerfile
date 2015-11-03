@@ -81,7 +81,7 @@ RUN apt-get install -y php5 php5-dev php-pear
 RUN curl --silent --show-error https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 RUN mkdir jsl && \
-  wget –quiet http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
+  wget --quiet http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
   tar xzf jsl-0.3.0-src.tar.gz && \
   cd jsl-0.3.0/src && \
   make -f Makefile.ref && \
