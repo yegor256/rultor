@@ -94,13 +94,13 @@ RUN mkdir jsl && \
 # Java
 RUN apt-get install -y default-jdk
 RUN apt-get install -y gdebi && \
-  wget –quiet http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb && \
+  wget --quiet http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb && \
   gdebi --non-interactive maven3_3.2.1-0~ppa1_all.deb && \
   ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn && \
   rm -rf maven3_3.2.1-0~ppa1_all.deb
 RUN git clone https://github.com/yegor256/rultor.git && \
   cd rultor && \
-  /bin/bash -l -c "gem install jekyll" && \
+  gem install jekyll && \
   mvn clean install -Pqulice --quiet && \
   cd .. && \
   rm -rf rultor
