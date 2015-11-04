@@ -48,7 +48,6 @@ RUN apt-get install -y gnupg gnupg2
 RUN apt-get install -y jq
 RUN apt-get install -y bsdmainutils
 RUN apt-get install -y libxml2-utils
-RUN apt-get install -y nodejs npm && ln -s /usr/bin/nodejs /usr/bin/node
 RUN apt-get install -y build-essential
 RUN apt-get install -y automake autoconf
 
@@ -121,6 +120,11 @@ RUN apt-get install -y phantomjs
 
 # S3cmd for AWS S3 integration
 RUN apt-get install -y s3cmd
+
+# NodeJS
+RUN apt-get install -y nodejs npm
+RUN sudo npm install -g npm
+RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # One more time, right before the end
 RUN apt-get update -y
