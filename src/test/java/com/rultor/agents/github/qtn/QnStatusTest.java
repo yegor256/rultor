@@ -29,12 +29,10 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.base.Joiner;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
-import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Talk;
 import java.net.URI;
@@ -48,8 +46,6 @@ import org.junit.Test;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.5
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class QnStatusTest {
 
@@ -63,21 +59,18 @@ public final class QnStatusTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("status");
         final Talk talk = new Talk.InFile(
-            new XMLDocument(
-                Joiner.on(' ').join(
-                    "<talk name='test' number='45' later='false'>",
-                    "<request id='454'><type>merge</type><args/></request>",
-                    "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
-                    "<script>test</script><title>something</title>",
-                    "<code>3</code><dir>/tmp/abc</dir>",
-                    "</daemon>",
-                    "</talk>"
-                )
-            )
+            "<talk name='test' number='45' later='false'>",
+            "<request id='454'><type>merge</type><args/></request>",
+            "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
+            "<script>test</script><title>something</title>",
+            "<code>3</code><dir>/tmp/abc</dir>",
+            "</daemon>",
+            "</talk>"
         );
         MatcherAssert.assertThat(
             new QnStatus(talk).understand(
-                new Comment.Smart(issue.comments().get(1)), new URI("#")
+                new Comment.Smart(issue.comments().get(1)),
+                new URI("#")
             ),
             Matchers.is(Req.DONE)
         );

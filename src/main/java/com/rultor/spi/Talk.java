@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Node;
 import org.xembly.Directive;
 import org.xembly.ImpossibleModificationException;
@@ -152,6 +153,14 @@ public interface Talk {
                 new File(this.path),
                 String.format("<talk name='%s' number='1'/>", Talk.TEST_NAME)
             );
+        }
+        /**
+         * Ctor.
+         * @param lines Lines to concat
+         * @throws IOException If fails
+         */
+        public InFile(final String... lines) throws IOException {
+            this(new XMLDocument(StringUtils.join(lines)));
         }
         /**
          * Ctor.

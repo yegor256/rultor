@@ -56,7 +56,6 @@ public final class ReportsTest {
     public void reportsRequestResult() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        issue.comments().post("hey, do it");
         final Agent agent = new Reports(repo.github());
         final Talk talk = new Talk.InFile();
         talk.modify(
