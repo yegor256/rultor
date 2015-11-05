@@ -13,5 +13,5 @@ DES | @yegor256
 PO | @yegor256
 ITR | 
 QA | 
-SA | 
-HLP | 
+SA | @niinat, @sfarley85
+HLP | @niinat, @sfarley85
