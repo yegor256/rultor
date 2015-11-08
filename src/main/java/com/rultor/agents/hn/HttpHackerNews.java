@@ -77,7 +77,7 @@ public final class HttpHackerNews implements HackerNews {
             .method(Request.POST)
             .fetch()
             .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+            .assertStatus(HttpURLConnection.HTTP_MOVED_TEMP);
     }
 
 }
