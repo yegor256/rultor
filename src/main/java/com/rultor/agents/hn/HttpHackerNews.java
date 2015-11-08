@@ -30,23 +30,54 @@
 package com.rultor.agents.twitter;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.http.Request;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.rultor.agents.hn.HackerNews;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Twitter abstraction.
+ * Hacker News Update.
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @since 1.30
+ * @since 1.58
  */
 @Immutable
-public interface Twitter {
+@ToString
+@EqualsAndHashCode(of = "cookie")
+public final class HttpHackerNews implements HackerNews {
 
     /**
-     * Post a message.
-     * @param msg Message
-     * @throws IOException If it fails
+     * Auth cookie.
      */
-    void post(String msg) throws IOException;
+    private final transient String cookie;
+
+    /**
+     * Ctor.
+     * @param auth Authenticating cookie
+     */
+    public HttpHackerNews(final String auth) {
+        this.cookie = auth;
+    }
+
+    @Override
+    public void post(final String url, final String text) throws IOException {
+        new JdkRequest("https://news.ycombinator.com/r")
+            .header("cookie", this.cookie)
+            .body()
+            .formParam("fnid", "E6ytkjZ7sp0Ov50dAXcKTe")
+            .formParam("fnop", "submit-page")
+            .formParam("title", text)
+            .formParam("url", url)
+            .back()
+            .method(Request.POST)
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+    }
 
 }

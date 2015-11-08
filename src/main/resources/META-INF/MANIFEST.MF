@@ -16,3 +16,4 @@ Rultor-TwitterKey: ${twitter.key}
 Rultor-TwitterSecret: ${twitter.secret}
 Rultor-TwitterToken: ${twitter.token}
 Rultor-TwitterTokenSecret: ${twitter.tsecret}
+Rultor-HNCookie: ${hn.cookie}

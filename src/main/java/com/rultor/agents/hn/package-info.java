@@ -27,26 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.twitter;
-
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
 
 /**
- * Twitter abstraction.
+ * HackerNews interaction.
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @since 1.30
+ * @since 1.58
  */
-@Immutable
-public interface Twitter {
-
-    /**
-     * Post a message.
-     * @param msg Message
-     * @throws IOException If it fails
-     */
-    void post(String msg) throws IOException;
-
-}
+package com.rultor.agents.hn;

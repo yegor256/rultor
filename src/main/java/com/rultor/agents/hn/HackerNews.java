@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.twitter;
+package com.rultor.agents.hn;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
@@ -37,16 +37,17 @@ import java.io.IOException;
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @since 1.30
+ * @since 1.58
  */
 @Immutable
-public interface Twitter {
+public interface HackerNews {
 
     /**
-     * Post a message.
-     * @param msg Message
+     * Post URL and description.
+     * @param url URL
+     * @param text Text
      * @throws IOException If it fails
      */
-    void post(String msg) throws IOException;
+    void post(String url, String text) throws IOException;
 
 }

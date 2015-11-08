@@ -77,10 +77,12 @@ import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnStop;
 import com.rultor.agents.github.qtn.QnUnlock;
 import com.rultor.agents.github.qtn.QnVersion;
+import com.rultor.agents.hn.HnUpdates;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.RegistersShell;
 import com.rultor.agents.shells.RemovesShell;
+import com.rultor.agents.twitter.HttpHackerNews;
 import com.rultor.agents.twitter.OAuthTwitter;
 import com.rultor.agents.twitter.Tweets;
 import com.rultor.spi.Agent;
@@ -249,6 +251,10 @@ public final class Agents {
                         Manifests.read("Rultor-TwitterToken"),
                         Manifests.read("Rultor-TwitterTokenSecret")
                     )
+                ),
+                new HnUpdates(
+                    this.github,
+                    new HttpHackerNews(Manifests.read("Rultor-HNCookie"))
                 ),
                 new CommentsTag(this.github),
                 new ReleaseBinaries(this.github, profile),

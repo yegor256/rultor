@@ -27,26 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.twitter;
+package com.rultor.agents.hn;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
+import com.rultor.agents.twitter.HttpHackerNews;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
- * Twitter abstraction.
+ * Integration test for {@link HttpHackerNews}.
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @since 1.30
+ * @since 1.58
  */
-@Immutable
-public interface Twitter {
+public final class HttpHackerNewsITCase {
 
     /**
-     * Post a message.
-     * @param msg Message
-     * @throws IOException If it fails
+     * HttpHackerNews can post.
+     * @throws Exception In case of error.
      */
-    void post(String msg) throws IOException;
+    @Test
+    @Ignore
+    public void postsUpdate() throws Exception {
+        final HackerNews news = new HttpHackerNews(
+            "--secret--"
+        );
+        news.post(
+            "https://github.com/yegor256/takes",
+            "Immutable Java Web Framework"
+        );
+    }
 
 }
