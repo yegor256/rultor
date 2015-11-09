@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.github.TalkIssues;
@@ -115,6 +116,7 @@ public final class HnUpdates extends AbstractAgent {
             String.format("https://github.com/%s", repo.coordinates()),
             text.toString()
         );
+        Logger.info(this, "posted to Hacker News: %s", text);
     }
 
 }
