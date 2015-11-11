@@ -21,7 +21,41 @@ Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yego
 
 ## What Is Rultor?
 
-TBD... _product statement_
+Rultor is a DevOps team assistant. It helps your programmers and release managers automate routine operations, with an easy-to-use intuitive interface:
+
+- Merging of pull requests (ensures that builds remain clean)
+- Deploying to production and stage environments
+- Releasing and tagging
+
+There are three main operations you can perform with Rultor: merge, deploy and release. Every call to Rultor is posted in a Github issue as a comment (yes, any Github issue, in any Github project!)
+
+Commands must start with `@rultor` followed by command text.
+
+For example, in a pull request that is ready to be merged you post a new comment saying, literally:
+
+``@rultor please check and merge this pull request``
+It is important to start a command with `@rultor` and mention `merge` somewhere in the text. All the rest is ignored. You can achieve exactly the same thing by just posting:
+
+``@rultor merge``
+
+In order to find out more information please follow the following two links:
+
+- [Rultor Commands](http://doc.rultor.com/commands.html)
+- [Basic Commands](http://doc.rultor.com/basics.html)
+
+<h6>More Useful Information</h6>
+
+Rultor is not a replacement, but rather a powerful addition to your existing continuous integration solution, like [Jenkins](http://jenkins-ci.org/), [Go](https://www.thoughtworks.com/go/), [Travis](https://travis-ci.org/), [Drone](https://drone.io/), [Snap](https://snap-ci.com/), [Codeship](https://codeship.com/) or [Wercker](http://wercker.com/).
+
+Rultor is absolutely free, both for open source and commercial projects. It is sponsored by [teamed.io](http://www.teamed.io/).
+
+Here is how Rultor helps us to deploy/release automatically to [Maven Central](http://www.yegor256.com/2014/08/19/how-to-release-to-maven-central.html), [Rubygems](http://www.yegor256.com/2014/08/26/publish-to-rubygems.html), [Heroku](http://www.yegor256.com/2014/09/13/deploying-to-heroku.html), and [CloudBees](http://www.yegor256.com/2014/08/25/deploy-to-cloudbees.html).
+
+Yeah, BTW, every build runs in its own [Docker](http://doc.rultor.com/docker.html) container!
+
+
+
+
 
 ## What Problem Does Rultor Solve?
 
