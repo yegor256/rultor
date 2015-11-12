@@ -33,10 +33,10 @@ Commands must start with `@rultor` followed by command text.
 
 For example, in a pull request that is ready to be merged you post a new comment saying, literally:
 
-``@rultor please check and merge this pull request``
+```@rultor please check and merge this pull request```
 It is important to start a command with `@rultor` and mention `merge` somewhere in the text. All the rest is ignored. You can achieve exactly the same thing by just posting:
 
-``@rultor merge``
+```@rultor merge```
 
 In order to find out more information please see the following two links:
 
