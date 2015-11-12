@@ -27,7 +27,7 @@ Rultor is a DevOps team assistant. It helps your programmers and release manager
 - Deploying to production and stage environments
 - Releasing and tagging
 
-There are three main operations you can perform with Rultor: merge, deploy and release. Every call to Rultor is posted in a Github issue as a comment (yes, any Github issue, in any Github project!)
+There are three main operations you can perform with Rultor: merge, deploy and release. Every call to Rultor is posted in a Github issue as a comment (yes, any Github issue, in any Github project!).
 
 Commands must start with `@rultor` followed by command text.
 
@@ -38,7 +38,7 @@ It is important to start a command with `@rultor` and mention `merge` somewhere 
 
 ``@rultor merge``
 
-In order to find out more information please follow the following two links:
+In order to find out more information please see the following two links:
 
 - [Rultor Commands](http://doc.rultor.com/commands.html)
 - [Basic Commands](http://doc.rultor.com/basics.html)
