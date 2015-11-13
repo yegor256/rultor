@@ -44,24 +44,131 @@ It is important to start a command with ```@rultor``` and mention `merge` somewh
 @rultor merge
 ```
 
+<h3>Basic Commands</h3>
+<h5>Merge</h5>
 
-In order to find out more information please see the following two links:
+It is a very good practice, to run your automated build after merging a pull request into the master branch and right before pushing changes. When your pull request is ready, ask Rultor to merge it. Rultor will checkout your master branch, merge changes into it, run the automated build, and push the new version of master to your repo.
 
-- [Rultor Commands](http://doc.rultor.com/commands.html)
-- [Basic Commands](http://doc.rultor.com/basics.html)
-
-<h6>More Useful Information</h6>
-
-Rultor is not a replacement, but rather a powerful addition to your existing continuous integration solution, like [Jenkins](http://jenkins-ci.org/), [Go](https://www.thoughtworks.com/go/), [Travis](https://travis-ci.org/), [Drone](https://drone.io/), [Snap](https://snap-ci.com/), [Codeship](https://codeship.com/) or [Wercker](http://wercker.com/).
-
-Rultor is absolutely free, both for open source and commercial projects. It is sponsored by [teamed.io](http://www.teamed.io/).
-
-Here is how Rultor helps us to deploy/release automatically to [Maven Central](http://www.yegor256.com/2014/08/19/how-to-release-to-maven-central.html), [Rubygems](http://www.yegor256.com/2014/08/26/publish-to-rubygems.html), [Heroku](http://www.yegor256.com/2014/09/13/deploying-to-heroku.html), and [CloudBees](http://www.yegor256.com/2014/08/25/deploy-to-cloudbees.html).
-
-Yeah, BTW, every build runs in its own [Docker](http://doc.rultor.com/docker.html) container!
+Don't forget to create [rultor.yml](http://doc.rultor.com/reference.html) in the root directory of your repository and configure the build automation script there. For example,
 
 
+```
+merge:
+  script: mvn clean install
+```
 
+
+If you don't configure it, Rultor will try to guess your build automation tool and call it accordingly. If you have ``pom.xml`` in your root directory — it is [Maven](http://maven.apache.org/); if you have ``Gemfile`` — it is [Bundler](http://bundler.io/).
+
+We strongly recommend that you configure your script in [``rultor.yml``](http://doc.rultor.com/reference.html).
+
+<h5>Deploy</h5>
+
+All you need to do is define your deployment scenario as a bash script and configure it in [``.rultor.yml``](http://doc.rultor.com/reference.html).
+
+For example, this is how we deploy Rultor itself (see our [``.rultor.yml``](https://github.com/yegor256/rultor/blob/master/.rultor.yml) file):
+
+
+```
+deploy:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script:
+    - "sudo bundle"
+    - "mvn clean deploy -Prultor --settings ../settings.xml"
+    - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
+```
+
+First, we install all Ruby gems required for Jekyll (this is how this website is built). Then, we deploy the system to CloudBees. Then, we deploy the site to Github Pages.
+
+<h5>Release</h5>
+
+Release is when you package a stable version of your product and make it available for everybody in an artifact repository. For example, [Maven Central](http://search.maven.org/) or [RubyGems](https://rubygems.org/).
+
+The Release command automates this for you. The command does require one mandatory argument, though. You should call it like this:
+
+```
+@rultor release, tag=`1.7`
+```
+
+Then, in your script you get ``$tag`` environment variable, which will be set to ``1.7``. Your script should change the version of the product to 1.7 and build it.
+
+This is how we do it in jcabi [rultor.yml.](https://github.com/jcabi/jcabi/blob/master/.rultor.yml) For example:
+
+```
+release:
+  script: |
+    mvn versions:set "-DnewVersion=$tag"
+    git commit -am "$tag"
+    mvn clean deploy -Pqulice -Psonatype -Pjcabi
+    mvn clean site-deploy -Psite -Prempl --settings ../settings.xml
+```
+
+We change the version of the product to the one provided in ``$tag``, then commit the changes, build and deploy to Sonatype. Next, we build the project site and deploy it to Github Pages. All the rest is done by Rultor. Basically, this is what will be done:
+
+1. Check out your repository
+2. Run the script configured in .rultor.yml
+3. Tag the latest commit as $tag
+4. Push the new tag to the repository
+
+Of course, if any of these steps fails, the entire command fails and you get a full log in the Github issue.
+
+<h3>Rultor Commands</h3>
+
+All commands you give to Rultor should start with ``@rultor`` and be followed by a text, which includes a mnemo of a command. For example, in order to check the status of Rultor in current conversation (ticket), you can post a comment:
+
+```
+@rultor what is the current status?
+```
+
+The mnemo of the command here is ``status``. All the rest is ignored. You can achieve exactly the same by just posting:
+
+```
+@rultor status
+```
+
+BTW, all commands are configured through [rultor.yml](http://doc.rultor.com/reference.html).
+
+<h5>Config</h5>
+This command will show you how Rultor understands your ``.rultor.yml`` file. Rultor translates YAML into XML, for the sake of simplicity and strictness.
+
+<h5>Deploy</h5>
+
+Deploying packaged product to production (or test) environment, in order to make it available for end-users (or testers). More details are in above mentioned Basic Commands.
+
+<h5>Hello</h5>
+
+Sort of a "ping". Post ``@rultor hello`` and expect an immediate answer from Rultor (well, within 60 seconds). If you don't get an answer, there is something wrong with Rultor.
+
+<h5>Lock and Unlock</h5>
+
+You can "lock" any branch to prevent merges there. Sometimes this may be a very valuable feature, when, say, you want to make sure that for a short period of time only you will merge something into some branch, to stabilize it. When it's stable, you release a new version and unlock the branch. To lock it, say ``@rultor lock``. That's it.
+
+By default, branch ``master`` will be locked. In order to lock a branch, Rultor creates a simple text file ``.rultor.lock`` in the branch. The file contains a list of Github user names, who are allowed to merge into the branch.
+
+If you want to change the list of users or lock some other branch, post ``@rultor lock branch=`master`, users=`jeff,yegor256```.
+
+To unlock, post ``@rultor unlock branch=`master. Again, the default branch ismaster```.
+
+<h5>Merge</h5>
+
+Merges pull request, checking its validity beforehand. More details are in above mentioned Basic Commands.
+
+<h5>Release</h5>
+
+Releases a stable version of the product to artifact repository, like Maven Central of RubyGems. More details are here. More details are in above mentioned Basic Commands.
+
+<h5>Status</h5>
+
+Checks the status of currently running command in current conversation. When a command takes long this command may be convenient to use. Just post ``@rultor status`` and see what Rultor says.
+
+<h5>Stop</h5>
+
+Rultor will try to immediately stop/kill current command. Just post ``@rultor stop``.
+
+<h5>Version</h5>
+
+This command shows up current version of Rultor engine.
 
 
 ## What Problem Does Rultor Solve?
