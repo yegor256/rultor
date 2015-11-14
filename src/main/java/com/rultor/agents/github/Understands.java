@@ -43,6 +43,7 @@ import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -56,6 +57,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -104,18 +106,21 @@ public final class Understands extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
-        final Iterable<Comment.Smart> comments = new Smarts<>(
-            Iterables.concat(
-                Collections.singleton(new FirstComment(issue)),
-                new Bulk<>(issue.comments().iterate())
-            )
+        final Iterator<Comment.Smart> comments = new SafeIterator<>(
+            new Smarts<Comment.Smart>(
+                Iterables.concat(
+                    Collections.singleton(new FirstComment(issue)),
+                    new Bulk<>(issue.comments().iterate())
+                )
+            ).iterator()
         );
         final int seen = Understands.seen(xml);
         int next = seen;
         int fresh = 0;
         int total = 0;
         Req req = Req.EMPTY;
-        for (final Comment.Smart comment : comments) {
+        while (comments.hasNext()) {
+            final Comment.Smart comment = comments.next();
             ++total;
             if (comment.number() <= seen) {
                 continue;
