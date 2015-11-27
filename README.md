@@ -21,32 +21,51 @@ Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yego
 
 ## What Is Rultor?
 
-Rultor is a DevOps team assistant. It helps your programmers and release managers automate routine operations such as: 
+User performs three main operations via Rultor:
 
-- Merging of pull requests (ensures that builds remain clean)
-- Deploying to production and stage environments
-- Releasing and tagging
+- Merge
+- Deploy
+- Releas
 
-There are three main operations you can perform with Rultor: Merge, Deploy and Release. Every call to Rultor is posted in a Github issue as a comment.
+All commands start with `@rultor` followed by command text.
 
-Commands start with `@rultor` followed by command text.
-
-For example, in a pull request that is ready to be merged you post a new comment saying, literally:
-
+Example:
+If pull request is ready to be merged user types the following:
 ```
 @rultor please check and merge this pull request
 ```
-
-
-It is important to start a command with ``@rultor`` and mention ``merge`` somewhere in the text. All the rest is ignored. You can achieve exactly the same thing by just posting:
-
+or
 ```
 @rultor merge
 ```
 
-For each command you can find out an example by visiting the following [link](http://doc.rultor.com/basics.html).  
+- User should create [rultor.yml](http://doc.rultor.com/reference.html) in the root directory of his/her repository and configure the build automation script there.
+- User should configure all scripts in [rultor.yml](http://doc.rultor.com/reference.html).
 
-To get familiarized with the full list of Rultor Commands please click [here](http://doc.rultor.com/commands.html).
+See the link for [Basic Commands](http://doc.rultor.com/basics.html).
+
+#####Rultor Commands
+Rultor has the following commands:
+- Config
+- Deploy
+- Hello
+- Lock and Unlock
+- Merge
+- Release
+- Status
+- Stop
+- Version
+
+Example:
+```
+@rultor what is the current status?
+```
+or
+```
+@rultor status
+```
+
+See the link for [Rultor Commands](http://doc.rultor.com/commands.html).
 
 
 
