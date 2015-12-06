@@ -97,33 +97,33 @@
         <dependency>
             <groupId>org.takes</groupId>
             <artifactId>takes</artifactId>
-            <version>0.24.2</version>
+            <version>0.27</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
-            <version>1.10.20</version>
+            <version>1.10.39</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.10.20</version>
+            <version>1.10.39</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ec2</artifactId>
-            <version>1.10.20</version>
+            <version>1.10.39</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-dynamodb</artifactId>
-            <version>1.10.20</version>
+            <version>1.10.39</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
             <artifactId>xembly</artifactId>
-            <version>0.21.1</version>
+            <version>0.21.4</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>co.stateful</groupId>
             <artifactId>java-sdk</artifactId>
-            <version>0.12.7</version>
+            <version>0.13.1</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -220,7 +220,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-xml</artifactId>
-            <version>0.16.2</version>
+            <version>0.16.4</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -243,7 +243,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
-            <version>1.10.2</version>
+            <version>1.14</version>
         </dependency>
         <dependency>
             <groupId>org.cache2k</groupId>
@@ -268,12 +268,12 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>4.0.0.Final</version>
+            <version>4.0.1.Final</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
-            <version>0.24</version>
+            <version>0.25</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
