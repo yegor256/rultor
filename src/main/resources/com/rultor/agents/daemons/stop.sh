@@ -8,7 +8,7 @@ if [ ! -e cid ]; then
   exit 0
 fi
 cid=$(cat cid)
-if docker ps -qa | grep --quiet "${cid}"; then
+if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
   docker stop "${cid}"
   docker kill "${cid}"
 else
