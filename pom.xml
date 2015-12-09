@@ -96,28 +96,28 @@
         <dependency>
             <groupId>org.takes</groupId>
             <artifactId>takes</artifactId>
-            <version>0.27</version>
+            <version>0.28</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
-            <version>1.10.39</version>
+            <version>1.10.40</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.10.39</version>
+            <version>1.10.40</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ec2</artifactId>
-            <version>1.10.39</version>
+            <version>1.10.40</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-dynamodb</artifactId>
-            <version>1.10.39</version>
+            <version>1.10.40</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
@@ -243,12 +243,6 @@
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
             <version>1.14</version>
-        </dependency>
-        <dependency>
-            <groupId>org.cache2k</groupId>
-            <artifactId>cache2k-core</artifactId>
-            <version>0.21.1</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>

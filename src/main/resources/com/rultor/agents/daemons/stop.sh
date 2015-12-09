@@ -13,6 +13,5 @@ if docker ps -qa | grep --quiet "${cid}"; then
   docker kill "${cid}"
 else
   echo "Container ${cid} not found"
-  exit -1
 fi
 
