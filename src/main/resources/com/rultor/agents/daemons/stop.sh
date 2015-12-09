@@ -11,4 +11,8 @@ cid=$(cat cid)
 if docker ps -qa | grep --quiet "${cid}"; then
   docker stop "${cid}"
   docker kill "${cid}"
+else
+  echo "Container ${cid} not found"
+  exit -1
 fi
+
