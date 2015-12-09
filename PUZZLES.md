@@ -1,59 +1,47 @@
 ## Puzzles
 
-There are 11 active puzzles (42 total), updated on 2015-12-09T12:47:18Z:
-
-unknown ?
-&nbsp;444-700e5a1e rultor-drain/src/test/java/com/rultor/drain/StandedTest.java:59-60
-&nbsp;162-79dc5021 rultor-drain/src/main/java/com/rultor/drain/Standed.java:85-86
-&nbsp;285-bf044707 rultor-drain/src/main/java/com/rultor/drain/Standed.java:148-150
-&nbsp;201-bee63d33 rultor-widget/src/main/java/com/rultor/widget/BuildHealth.java:69-72
-&nbsp;34-f8b8e119 rultor-base/src/main/java/com/rultor/shell/Terminal.java:75-77
-&nbsp;307-21366cc2 rultor-base/src/main/java/com/rultor/ext/jira/RxJiraIssue.java:146-146
-&nbsp;238-d7aca987 rultor-web/src/test/java/com/rultor/web/AuthKeysTest.java:82-82
-&nbsp;439-04d567a5 rultor-web/src/test/java/com/rultor/web/ButtonRsTest.java:249-254
-&nbsp;215-ce623916 rultor-users/src/test/java/com/rultor/users/pgsql/ArchiverITCase.java:63-64
-&nbsp;[275](https://github.com/rultor/rultor/issues/275) ?
-&nbsp;&nbsp;275-0d238316 rultor-conveyer/src/main/resources/start.sh:78-83
-
-&nbsp;[536](https://github.com/yegor256/rultor/issues/536) ?
-&nbsp;&nbsp;536-6896859a src/main/java/com/rultor/dynamo/DyTalks.java:285-286
-
-&nbsp;[593](https://github.com/yegor256/rultor/issues/593) ?
-&nbsp;&nbsp;593-2aed2390 src/test/java/com/rultor/agents/req/DockerRunTest.java:115-116
-
-&nbsp;[594](https://github.com/yegor256/rultor/issues/594) ?
-&nbsp;&nbsp;[594-7fd8c4ec](https://github.com/yegor256/rultor/issues/633) src/test/java/com/rultor/agents/req/StartsRequestTest.java:60-61
-&nbsp;&nbsp;&nbsp;633-705a6074 src/main/resources/com/rultor/agents/req/_head.sh:81-83
+There are 11 active puzzles (42 total), updated on 2015-12-09T18:30:28Z:
 
 
-&nbsp;[565](https://github.com/yegor256/rultor/issues/565) ?
-&nbsp;&nbsp;565-b6318cf3 src/test/java/com/rultor/agents/req/StartsRequestTest.java:60-60
-
-&nbsp;[674](https://github.com/yegor256/rultor/issues/674) ?
-&nbsp;&nbsp;674-74d6c10e src/test/java/com/rultor/agents/github/IndexesRequestsTest.java:46-48
-
-&nbsp;[570](https://github.com/yegor256/rultor/issues/570) ?
-&nbsp;&nbsp;**570-b7bcc1c2** src/main/java/com/rultor/profiles/GithubProfile.java:247-250
-
-&nbsp;[561](https://github.com/yegor256/rultor/issues/561) ?
-&nbsp;&nbsp;561-e08f2fc3 src/test/java/com/rultor/profiles/GithubProfileValidationTest.java:48-49
-
-&nbsp;[498](https://github.com/yegor256/rultor/issues/498) ?
-&nbsp;&nbsp;498-a06fa417 src/test/java/com/rultor/agents/github/StarsTest.java:47-48
-
-&nbsp;[629](https://github.com/yegor256/rultor/issues/629) ?
-&nbsp;&nbsp;**629-e67af157** src/main/java/com/rultor/agents/ec2/Amazon.java:42-47
-&nbsp;&nbsp;**629-7845a57e** src/main/java/com/rultor/agents/ec2/StartsEC2.java:48-50
-&nbsp;&nbsp;**629-1e130e87** src/main/java/com/rultor/agents/ec2/StartsEC2.java:51-54
-&nbsp;&nbsp;**629-50db40cf** src/main/java/com/rultor/agents/ec2/StartsEC2.java:55-57
-&nbsp;&nbsp;**629-b8fe2cc2** src/main/java/com/rultor/agents/ec2/StartsEC2.java:58-59
-
-&nbsp;[748](https://github.com/yegor256/rultor/issues/748) ?
-&nbsp;&nbsp;**748-9cbe7474** src/main/java/com/rultor/agents/Mails.java:47-53
-&nbsp;&nbsp;**748-bb1cb5c5** src/main/java/com/rultor/agents/Mails.java:54-56
-&nbsp;&nbsp;**748-a3bd319f** src/test/java/com/rultor/agents/MailsTest.java:95-96
-
-&nbsp;[662](https://github.com/yegor256/rultor/issues/662) ?
-&nbsp;&nbsp;**662-8cc0c29a** src/main/java/com/rultor/agents/github/ReleaseBinaries.java:47-49
-
-&nbsp;**567-359f8c66** src/main/java/com/rultor/agents/daemons/EndsDaemon.java:63-64
+<del>unknown</del> [`?`](../master/?)<br/>
+&nbsp;<del>444-700e5a1e</del> [`StandedTest.java:59-60`](../master/rultor-drain/src/test/java/com/rultor/drain/StandedTest.java#L59-L60)<br/>
+&nbsp;<del>162-79dc5021</del> [`Standed.java:85-86`](../master/rultor-drain/src/main/java/com/rultor/drain/Standed.java#L85-L86)<br/>
+&nbsp;<del>285-bf044707</del> [`Standed.java:148-150`](../master/rultor-drain/src/main/java/com/rultor/drain/Standed.java#L148-L150)<br/>
+&nbsp;<del>201-bee63d33</del> [`BuildHealth.java:69-72`](../master/rultor-widget/src/main/java/com/rultor/widget/BuildHealth.java#L69-L72)<br/>
+&nbsp;<del>34-f8b8e119</del> [`Terminal.java:75-77`](../master/rultor-base/src/main/java/com/rultor/shell/Terminal.java#L75-L77)<br/>
+&nbsp;<del>307-21366cc2</del> [`RxJiraIssue.java:146-146`](../master/rultor-base/src/main/java/com/rultor/ext/jira/RxJiraIssue.java#L146-L146)<br/>
+&nbsp;<del>238-d7aca987</del> [`AuthKeysTest.java:82-82`](../master/rultor-web/src/test/java/com/rultor/web/AuthKeysTest.java#L82-L82)<br/>
+&nbsp;<del>439-04d567a5</del> [`ButtonRsTest.java:249-254`](../master/rultor-web/src/test/java/com/rultor/web/ButtonRsTest.java#L249-L254)<br/>
+&nbsp;<del>215-ce623916</del> [`ArchiverITCase.java:63-64`](../master/rultor-users/src/test/java/com/rultor/users/pgsql/ArchiverITCase.java#L63-L64)<br/>
+&nbsp;[<del>275</del>](https://github.com/rultor/rultor/issues/275) [`?`](../master/?)<br/>
+&nbsp;&nbsp;<del>275-0d238316</del> [`start.sh:78-83`](../master/rultor-conveyer/src/main/resources/start.sh#L78-L83)<br/>
+&nbsp;[<del>536</del>](https://github.com/yegor256/rultor/issues/536) [`?`](../master/?)<br/>
+&nbsp;&nbsp;<del>536-6896859a</del> [`DyTalks.java:285-286`](../master/src/main/java/com/rultor/dynamo/DyTalks.java#L285-L286)<br/>
+&nbsp;[<del>593</del>](https://github.com/yegor256/rultor/issues/593) [`?`](../master/?)<br/>
+&nbsp;&nbsp;<del>593-2aed2390</del> [`DockerRunTest.java:115-116`](../master/src/test/java/com/rultor/agents/req/DockerRunTest.java#L115-L116)<br/>
+&nbsp;[<del>594</del>](https://github.com/yegor256/rultor/issues/594) [`?`](../master/?)<br/>
+&nbsp;&nbsp;[<del>594-7fd8c4ec</del>](https://github.com/yegor256/rultor/issues/633) [`StartsRequestTest.java:60-61`](../master/src/test/java/com/rultor/agents/req/StartsRequestTest.java#L60-L61)<br/>
+&nbsp;&nbsp;&nbsp;<del>633-705a6074</del> [`_head.sh:81-83`](../master/src/main/resources/com/rultor/agents/req/_head.sh#L81-L83)<br/>
+&nbsp;[<del>565</del>](https://github.com/yegor256/rultor/issues/565) [`?`](../master/?)<br/>
+&nbsp;&nbsp;<del>565-b6318cf3</del> [`StartsRequestTest.java:60-60`](../master/src/test/java/com/rultor/agents/req/StartsRequestTest.java#L60-L60)<br/>
+&nbsp;[<del>674</del>](https://github.com/yegor256/rultor/issues/674) [`?`](../master/?)<br/>
+&nbsp;&nbsp;<del>674-74d6c10e</del> [`IndexesRequestsTest.java:46-48`](../master/src/test/java/com/rultor/agents/github/IndexesRequestsTest.java#L46-L48)<br/>
+&nbsp;[<del>570</del>](https://github.com/yegor256/rultor/issues/570) [`?`](../master/?)<br/>
+&nbsp;&nbsp;**570-b7bcc1c2** [`GithubProfile.java:247-250`](../master/src/main/java/com/rultor/profiles/GithubProfile.java#L247-L250)<br/>
+&nbsp;[<del>561</del>](https://github.com/yegor256/rultor/issues/561) [`?`](../master/?)<br/>
+&nbsp;&nbsp;<del>561-e08f2fc3</del> [`GithubProfileValidationTest.java:48-49`](../master/src/test/java/com/rultor/profiles/GithubProfileValidationTest.java#L48-L49)<br/>
+&nbsp;[<del>498</del>](https://github.com/yegor256/rultor/issues/498) [`?`](../master/?)<br/>
+&nbsp;&nbsp;<del>498-a06fa417</del> [`StarsTest.java:47-48`](../master/src/test/java/com/rultor/agents/github/StarsTest.java#L47-L48)<br/>
+&nbsp;[<del>629</del>](https://github.com/yegor256/rultor/issues/629) [`?`](../master/?)<br/>
+&nbsp;&nbsp;**629-e67af157** [`Amazon.java:42-47`](../master/src/main/java/com/rultor/agents/ec2/Amazon.java#L42-L47)<br/>
+&nbsp;&nbsp;**629-7845a57e** [`StartsEC2.java:48-50`](../master/src/main/java/com/rultor/agents/ec2/StartsEC2.java#L48-L50)<br/>
+&nbsp;&nbsp;**629-1e130e87** [`StartsEC2.java:51-54`](../master/src/main/java/com/rultor/agents/ec2/StartsEC2.java#L51-L54)<br/>
+&nbsp;&nbsp;**629-50db40cf** [`StartsEC2.java:55-57`](../master/src/main/java/com/rultor/agents/ec2/StartsEC2.java#L55-L57)<br/>
+&nbsp;&nbsp;**629-b8fe2cc2** [`StartsEC2.java:58-59`](../master/src/main/java/com/rultor/agents/ec2/StartsEC2.java#L58-L59)<br/>
+&nbsp;[<del>748</del>](https://github.com/yegor256/rultor/issues/748) [`?`](../master/?)<br/>
+&nbsp;&nbsp;**748-9cbe7474** [`Mails.java:47-53`](../master/src/main/java/com/rultor/agents/Mails.java#L47-L53)<br/>
+&nbsp;&nbsp;**748-bb1cb5c5** [`Mails.java:54-56`](../master/src/main/java/com/rultor/agents/Mails.java#L54-L56)<br/>
+&nbsp;&nbsp;**748-a3bd319f** [`MailsTest.java:95-96`](../master/src/test/java/com/rultor/agents/MailsTest.java#L95-L96)<br/>
+&nbsp;[<del>662</del>](https://github.com/yegor256/rultor/issues/662) [`?`](../master/?)<br/>
+&nbsp;&nbsp;**662-8cc0c29a** [`ReleaseBinaries.java:47-49`](../master/src/main/java/com/rultor/agents/github/ReleaseBinaries.java#L47-L49)<br/>
+&nbsp;**567-359f8c66** [`EndsDaemon.java:63-64`](../master/src/main/java/com/rultor/agents/daemons/EndsDaemon.java#L63-L64)<br/>
