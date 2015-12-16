@@ -14,14 +14,14 @@ if [ ps -p "${pid}" >/dev/null ]; then
 fi
 
 if [ ! -e cid ]; then
-  echo "'cid' file not found"
+  echo "'cid' file not found, most probably Docker container died accidentally"
   exit 1
 fi
 cid=$(cat cid)
 if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
   echo "Container ${cid} is alive"
 else
-  echo "Container ${cid} is dead"
+  echo "Docker container ${cid} is dead"
   exit 1
 fi
 
