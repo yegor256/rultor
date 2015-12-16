@@ -89,14 +89,7 @@ public final class EndsDaemon extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final int exit = new Shell.Empty(shell).exec(
-            Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("cd %s ", SSH.escape(dir)),
-                "if [ ! -e pid ]; then exit 1; fi",
-                "pid=$(cat pid)",
-                "ps -p \"${pid}\" >/dev/null"
-            )
-        );
+        final int exit = new Script().exec(xml, "end.sh");
         final Directives dirs = new Directives();
         if (exit == 0) {
             Logger.info(

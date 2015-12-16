@@ -71,7 +71,7 @@ final class Script {
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
-        return new Shell.Empty(new Shell.Safe(shell)).exec(
+        return new Shell.Empty(shell).exec(
             String.format(
                 "cd %s && /bin/bash %s 2>&1 >>stdout",
                 SSH.escape(dir), SSH.escape(name)
