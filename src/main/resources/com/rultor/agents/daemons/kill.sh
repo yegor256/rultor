@@ -19,7 +19,7 @@ fi
 pid=$(cat pid)
 if [ -n "$(ps -p $pid -opid=)" ]; then
   kill "${pid}"
-  echo "Process #${pid} quit"
+  echo "QUIT signal sent to process #${pid}"
 fi
 sleep 15
 if [ -n "$(ps -p $pid -opid=)" ]; then

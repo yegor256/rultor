@@ -12,7 +12,7 @@ if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
   docker stop "${cid}"
   docker kill "${cid}"
 else
-  echo "Container ${cid} not found"
+  echo "Docker container ${cid} not found"
   exit 1
 fi
 

@@ -3,7 +3,7 @@ set -e
 set -x
 
 if [ ! -e pid ]; then
-  echo "'pid' file not found"
+  echo "'pid' file not found, most likely the process is dead already"
   exit 1
 fi
 
