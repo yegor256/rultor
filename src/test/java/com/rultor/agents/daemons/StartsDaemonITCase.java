@@ -49,6 +49,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -79,6 +80,7 @@ public final class StartsDaemonITCase {
      * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
+    @Ignore
     public void startsDaemon() throws Exception {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
         final SSHD sshd = new SSHD(this.temp.newFolder());
