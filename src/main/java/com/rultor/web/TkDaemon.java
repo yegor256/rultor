@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.takes.Response;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.fork.RqRegex;
@@ -117,11 +118,20 @@ final class TkDaemon implements TkRegex {
         final String head = IOUtils.toString(
             this.getClass().getResourceAsStream("daemon/head.html"),
             CharEncoding.UTF_8
-        ).replace("TALK_NAME", talk.name());
+        );
         return new SequenceInputStream(
             Collections.enumeration(
                 Arrays.asList(
-                    IOUtils.toInputStream(head),
+                    IOUtils.toInputStream(
+                        head.replace("TALK_NAME", talk.name())
+                            .replace(
+                                "TALK_LINK",
+                                StringEscapeUtils.escapeHtml4(
+                                    talk.read()
+                                        .xpath("/talk/wire/href/text()").get(0)
+                                )
+                            )
+                    ),
                     new Tail(talk.read(), hash).read(),
                     this.getClass().getResourceAsStream("daemon/tail.html")
                 )

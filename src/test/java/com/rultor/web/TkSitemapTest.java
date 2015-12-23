@@ -44,6 +44,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.50
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class TkSitemapTest {
 
@@ -58,7 +59,7 @@ public final class TkSitemapTest {
         talks.create("repo1", Talk.TEST_NAME);
         talks.get(Talk.TEST_NAME).modify(
             new Directives()
-                .xpath("/talk")
+                .xpath("/talk").push().xpath("wire").remove().pop()
                 .add("wire").add("href").set("http://example.com").up()
                 .add("github-repo").set("yegor256/rultor").up()
                 .add("github-issue").set("555").up().up()

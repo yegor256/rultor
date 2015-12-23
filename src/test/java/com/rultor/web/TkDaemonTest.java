@@ -75,7 +75,10 @@ public final class TkDaemonTest {
             XhtmlMatchers.xhtml(
                 IOUtils.toString(take.act(new RqFake()).body())
             ),
-            XhtmlMatchers.hasXPath("/xhtml:html/xhtml:body")
+            XhtmlMatchers.hasXPaths(
+                "/xhtml:html/xhtml:body",
+                "//xhtml:a[@href='https://github.com/test']"
+            )
         );
     }
 
