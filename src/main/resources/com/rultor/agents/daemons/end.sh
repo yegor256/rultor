@@ -8,7 +8,7 @@ fi
 
 pid=$(cat pid)
 if ps -p "${pid}" >/dev/null; then
-  exit 1
+  exit 0
 fi
 
 if [ ! -e cid ]; then
