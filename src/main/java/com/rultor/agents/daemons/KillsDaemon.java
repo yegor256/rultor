@@ -79,7 +79,7 @@ public final class KillsDaemon extends AbstractAgent {
         Logger.info(
             this, "daemon of %s killed due to delay, code=%d",
             xml.xpath("/talk/@name").get(0),
-            new Script().exec(xml, "kill.sh")
+            new Script("kill.sh").exec(xml)
         );
         return new Directives();
     }

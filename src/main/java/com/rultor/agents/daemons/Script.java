@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.daemons;
 
+import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
@@ -53,28 +54,44 @@ import lombok.ToString;
 final class Script {
 
     /**
+     * Script name.
+     */
+    private final transient String name;
+
+    /**
+     * Ctor.
+     * @param script Script name
+     */
+    Script(final String script) {
+        this.name = script;
+    }
+
+    /**
      * Execute.
      * @param xml Talk xml
-     * @param name Name of the script resource
      * @return Exit code
      * @throws IOException If fails
      */
-    public int exec(final XML xml, final String name) throws IOException {
+    public int exec(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
             String.format(
                 "cd %s && cat > %s && chmod a+x %1$s",
-                SSH.escape(dir), SSH.escape(name)
+                SSH.escape(dir), SSH.escape(this.name)
             ),
-            this.getClass().getResourceAsStream(name),
+            this.getClass().getResourceAsStream(this.name),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
         return new Shell.Empty(shell).exec(
-            String.format(
-                "cd %s && /bin/bash %s 2>&1 >>stdout",
-                SSH.escape(dir), SSH.escape(name)
+            Joiner.on(" && ").join(
+                "set -o pipefail",
+                String.format("cd %s", SSH.escape(dir)),
+                String.format(
+                    "/bin/bash %s 2>&1 | sed 's/^/%s: /g' >> stdout",
+                    SSH.escape(this.name), this.name
+                )
             )
         );
     }

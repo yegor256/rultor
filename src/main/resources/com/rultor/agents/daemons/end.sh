@@ -9,7 +9,7 @@ fi
 
 pid=$(cat pid)
 if [ ps -p "${pid}" >/dev/null ]; then
-  echo "Process #${pid} doesn't exist any more"
+  echo "process #${pid} doesn't exist any more"
   exit 1
 fi
 
@@ -19,9 +19,9 @@ if [ ! -e cid ]; then
 fi
 cid=$(cat cid)
 if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
-  echo "Container ${cid} is alive"
+  echo "container ${cid} is alive"
 else
-  echo "Docker container ${cid} is dead"
+  echo "container ${cid} is dead"
   exit 1
 fi
 

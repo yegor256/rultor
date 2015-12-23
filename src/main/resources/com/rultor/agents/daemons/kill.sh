@@ -2,13 +2,13 @@
 set -e
 set -x
 
-echo "Trying to kill Docker container due to timeout..."
+echo "trying to kill Docker container due to timeout..."
 
 if [ -e cid ]; then
   cid=$(cat cid)
   if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
     docker rm -f "${cid}"
-    echo "Docker container ${cid} killed"
+    echo "container ${cid} killed"
   fi
   rm -f cid
 fi
@@ -24,6 +24,6 @@ fi
 sleep 15
 if [ -n "$(ps -p $pid -opid=)" ]; then
   kill -9 "${pid}"
-  echo "Process #${pid} killed"
+  echo "process #${pid} killed"
 fi
 rm -f pid

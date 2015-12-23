@@ -67,7 +67,7 @@ public final class StopsDaemon extends AbstractAgent {
         Logger.info(
             this, "docker stop attempt at %s, code=%d",
             xml.xpath("/talk/@name").get(0),
-            new Script().exec(xml, "stop.sh")
+            new Script("stop.sh").exec(xml)
         );
         return new Directives();
     }
