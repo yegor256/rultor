@@ -266,7 +266,7 @@ public final class Tail {
         @Override
         public InputStream read() throws FileNotFoundException {
             return new FileInputStream(
-                new File(this.xml.xpath("/talk/daemon/dir/text()").get(0))
+                new File(this.xml.xpath("/talk/daemon/dir/text() ").get(0))
             );
         }
     }

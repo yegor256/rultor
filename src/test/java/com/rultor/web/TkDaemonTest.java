@@ -52,6 +52,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.50
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class TkDaemonTest {
 
@@ -65,8 +66,11 @@ public final class TkDaemonTest {
         final String name = "test";
         talks.create(name, Talk.TEST_NAME);
         final Talk talk = talks.get(name);
-        final File tail = File.createTempFile("daemon", ".txt");
-        FileUtils.writeStringToFile(tail, "1 < 10");
+        final File tail = File.createTempFile(
+            TkDaemonTest.class.getCanonicalName(), ".txt"
+        );
+        final String content = "1 < привет > тебе от меня";
+        FileUtils.writeStringToFile(tail, content);
         talk.modify(
             new Directives().xpath("/talk").add("daemon")
                 .attr("id", "00000000")
@@ -91,7 +95,8 @@ public final class TkDaemonTest {
             ),
             XhtmlMatchers.hasXPaths(
                 "/xhtml:html/xhtml:body",
-                "//xhtml:a[@href='https://github.com/test']"
+                "//xhtml:a[@href='https://github.com/test']",
+                String.format("//xhtml:pre[.='%s']", content)
             )
         );
     }
