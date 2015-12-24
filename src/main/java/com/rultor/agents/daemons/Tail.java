@@ -41,6 +41,9 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.shells.TalkShells;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -109,6 +112,10 @@ public final class Tail {
                         this.hash
                     ),
                     new Tail.SSHConnect(this.xml)
+                ),
+                new AbstractMap.SimpleEntry<String, Tail.Connect>(
+                    "/talk[daemon[@id='00000000'] and daemon/dir]",
+                    new Tail.FakeConnect(this.xml)
                 ),
                 new AbstractMap.SimpleEntry<String, Tail.Connect>(
                     "/talk",
@@ -237,6 +244,30 @@ public final class Tail {
                 Logger.stream(Level.SEVERE, true)
             );
             return new ByteArrayInputStream(baos.toByteArray());
+        }
+    }
+
+    /**
+     * Fake file connect.
+     */
+    @Immutable
+    private static final class FakeConnect implements Tail.Connect {
+        /**
+         * XML of the talk.
+         */
+        private final transient XML xml;
+        /**
+         * Ctor.
+         * @param talk Talk
+         */
+        private FakeConnect(final XML talk) {
+            this.xml = talk;
+        }
+        @Override
+        public InputStream read() throws FileNotFoundException {
+            return new FileInputStream(
+                new File(this.xml.xpath("/talk/daemon/dir/text()").get(0))
+            );
         }
     }
 

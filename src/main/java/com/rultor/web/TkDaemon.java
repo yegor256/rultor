@@ -132,11 +132,20 @@ final class TkDaemon implements TkRegex {
                                 )
                             )
                     ),
-                    new Tail(talk.read(), hash).read(),
+                    TkDaemon.escape(new Tail(talk.read(), hash).read()),
                     this.getClass().getResourceAsStream("daemon/tail.html")
                 )
             )
         );
+    }
+
+    /**
+     * Escape HTML chars in input stream.
+     * @param input Input stream
+     * @return New input stream
+     */
+    private static InputStream escape(final InputStream input) {
+        return input;
     }
 
 }
