@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
@@ -191,9 +192,17 @@ public interface Talks {
                 file,
                 new StrictXML(
                     new XMLDocument(
-                        String.format(
-                            "<talk name='%s' number='1' later='false'/>",
-                            name
+                        Joiner.on(' ').join(
+                            String.format(
+                                "<talk name='%s' number='1' later='false'>",
+                                name
+                            ),
+                            "<wire>",
+                            String.format(
+                                "<href>https://github.com/%s</href>",
+                                name
+                            ),
+                            "</wire></talk>"
                         )
                     ),
                     Talk.SCHEMA

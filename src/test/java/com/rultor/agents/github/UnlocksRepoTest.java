@@ -44,6 +44,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.22.1
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class UnlocksRepoTest {
 
@@ -64,7 +65,9 @@ public final class UnlocksRepoTest {
         talks.create("", name);
         talks.get(name).modify(
             new Directives()
-                .xpath("/talk").add("wire")
+                .xpath("/talk")
+                .push().xpath("wire").remove().pop()
+                .add("wire")
                 .add("github-repo").set(repo.coordinates().toString()).up()
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .add("href").set("#").up()

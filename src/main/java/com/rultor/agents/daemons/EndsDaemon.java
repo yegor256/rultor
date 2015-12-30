@@ -89,7 +89,7 @@ public final class EndsDaemon extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final int exit = new Script().exec(xml, "end.sh");
+        final int exit = new Script("end.sh").exec(xml);
         final Directives dirs = new Directives();
         if (exit == 0) {
             Logger.info(

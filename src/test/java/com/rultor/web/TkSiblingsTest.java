@@ -46,6 +46,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.23.1
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class TkSiblingsTest {
 
@@ -61,6 +62,7 @@ public final class TkSiblingsTest {
         talks.get(Talk.TEST_NAME).modify(
             new Directives()
                 .xpath("/talk")
+                .push().xpath("wire").remove().pop()
                 .add("wire").add("href").set("http://example.com").up()
                 .add("github-repo").set("yegor256/rultor").up()
                 .add("github-issue").set("555").up().up()

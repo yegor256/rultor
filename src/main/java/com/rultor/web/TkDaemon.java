@@ -29,17 +29,24 @@
  */
 package com.rultor.web;
 
+import com.jcabi.aspects.Tv;
 import com.rultor.agents.daemons.Tail;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PushbackReader;
 import java.io.SequenceInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.ProxyReader;
+import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.takes.Response;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.fork.RqRegex;
@@ -53,6 +60,7 @@ import org.takes.rs.RsFluent;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.50
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkDaemon implements TkRegex {
 
@@ -117,15 +125,61 @@ final class TkDaemon implements TkRegex {
         final String head = IOUtils.toString(
             this.getClass().getResourceAsStream("daemon/head.html"),
             CharEncoding.UTF_8
-        ).replace("TALK_NAME", talk.name());
+        ).trim();
         return new SequenceInputStream(
             Collections.enumeration(
                 Arrays.asList(
-                    IOUtils.toInputStream(head),
-                    new Tail(talk.read(), hash).read(),
+                    IOUtils.toInputStream(
+                        head.replace("TALK_NAME", talk.name())
+                            .replace(
+                                "TALK_LINK",
+                                StringEscapeUtils.escapeHtml4(
+                                    talk.read()
+                                        .xpath("/talk/wire/href/text()").get(0)
+                                )
+                            )
+                    ),
+                    TkDaemon.escape(new Tail(talk.read(), hash).read()),
                     this.getClass().getResourceAsStream("daemon/tail.html")
                 )
             )
+        );
+    }
+
+    /**
+     * Escape HTML chars in input stream.
+     * @param input Input stream
+     * @return New input stream
+     * @throws UnsupportedEncodingException If fails
+     */
+    private static InputStream escape(final InputStream input)
+        throws UnsupportedEncodingException {
+        final PushbackReader src = new PushbackReader(
+            new InputStreamReader(input, CharEncoding.UTF_8),
+            Tv.TEN * Tv.THOUSAND
+        );
+        return new ReaderInputStream(
+            new ProxyReader(src) {
+                @Override
+                protected void beforeRead(final int len) throws IOException {
+                    super.beforeRead(len);
+                    final char[] buf = new char[len];
+                    final int found = src.read(buf);
+                    if (found > 0) {
+                        final StringBuilder line = new StringBuilder(found);
+                        for (int idx = 0; idx < found; ++idx) {
+                            line.append(buf[idx]);
+                        }
+                        final String escape = StringEscapeUtils.escapeHtml4(
+                            line.toString()
+                        );
+                        final char[] rpl = new char[escape.length()];
+                        escape.getChars(0, escape.length(), rpl, 0);
+                        src.unread(rpl);
+                    }
+                }
+            },
+            CharEncoding.UTF_8
         );
     }
 

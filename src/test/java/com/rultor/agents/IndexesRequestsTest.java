@@ -56,7 +56,8 @@ public final class IndexesRequestsTest {
         talks.create("", name);
         talks.get(name).modify(
             new Directives()
-                .xpath("/talk").add("wire").add("href").set("#1").up().up()
+                .xpath("/talk").push().xpath("wire").remove().pop()
+                .add("wire").add("href").set("#1").up().up()
                 .add("request").attr("id", "a12345")
                 .add("args").up()
                 .add("type").set("deploy").up()
@@ -79,6 +80,7 @@ public final class IndexesRequestsTest {
         talks.create("", name);
         talks.get(name).modify(
             new Directives().xpath("/talk")
+                .push().xpath("wire").remove().pop()
                 .add("wire").add("href").set("#2").up().up()
                 .add("archive")
                 .add("log").attr("id", "1").attr("title", "title1")
@@ -108,6 +110,7 @@ public final class IndexesRequestsTest {
         talks.create("", first);
         talks.get(first).modify(
             new Directives().xpath("/talk")
+                .push().xpath("wire").remove().pop()
                 .add("wire").add("href").set("#3").up().up()
                 .add("archive")
                 .add("log").attr("id", "3").attr("title", "title3")
@@ -117,6 +120,7 @@ public final class IndexesRequestsTest {
         talks.create("", second);
         talks.get(second).modify(
             new Directives().xpath("/talk")
+                .push().xpath("wire").remove().pop()
                 .add("wire").add("href").set("#4").up().up()
                 .add("archive")
                 .add("log").attr("id", "4").attr("title", "title4")
@@ -126,7 +130,9 @@ public final class IndexesRequestsTest {
         talks.create("", third);
         talks.get(third).modify(
             new Directives()
-                .xpath("/talk").add("wire").add("href").set("#5").up().up()
+                .xpath("/talk")
+                .push().xpath("wire").remove().pop()
+                .add("wire").add("href").set("#5").up().up()
                 .add("request").attr("id", "a67890")
                 .add("args").up()
                 .add("type").set("merge").up()
@@ -149,7 +155,9 @@ public final class IndexesRequestsTest {
         talks.create("", name);
         talks.get(name).modify(
             new Directives()
-                .xpath("/talk").add("wire").add("href").set("#1").up()
+                .xpath("/talk")
+                .push().xpath("wire").remove().pop()
+                .add("wire").add("href").set("#1").up()
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
