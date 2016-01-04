@@ -258,7 +258,7 @@ public final class Agents {
                 ),
                 new CommentsTag(this.github),
                 new ReleaseBinaries(this.github, profile),
-                new Reports(this.github),
+                new SafeAgent(new Reports(this.github)),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
