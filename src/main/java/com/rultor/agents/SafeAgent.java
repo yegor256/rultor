@@ -61,7 +61,7 @@ public final class SafeAgent implements Agent {
             this.origin.execute(talk);
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {
-            Logger.error(this, "hasNext(): %[exception]s", ex);
+            Logger.error(this, "execute(): %[exception]s", ex);
         }
     }
 }
