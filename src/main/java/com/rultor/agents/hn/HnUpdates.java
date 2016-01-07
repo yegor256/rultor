@@ -116,7 +116,10 @@ public final class HnUpdates extends AbstractAgent {
             String.format("https://github.com/%s", repo.coordinates()),
             text.toString()
         );
-        Logger.info(this, "posted to Hacker News: %s", text);
+        Logger.info(
+            this, "posted to Hacker News: \"%s\" (%s)",
+            text, repo.coordinates()
+        );
     }
 
 }
