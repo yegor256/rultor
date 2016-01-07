@@ -244,20 +244,24 @@ public final class Agents {
             new StopsDaemon(),
             new EndsDaemon(),
             new EndsRequest(),
-            new Tweets(
-                this.github,
-                new OAuthTwitter(
-                    Manifests.read("Rultor-TwitterKey"),
-                    Manifests.read("Rultor-TwitterSecret"),
-                    Manifests.read("Rultor-TwitterToken"),
-                    Manifests.read("Rultor-TwitterTokenSecret")
+            new SafeAgent(
+                new Tweets(
+                    this.github,
+                    new OAuthTwitter(
+                        Manifests.read("Rultor-TwitterKey"),
+                        Manifests.read("Rultor-TwitterSecret"),
+                        Manifests.read("Rultor-TwitterToken"),
+                        Manifests.read("Rultor-TwitterTokenSecret")
+                    )
                 )
             ),
-            new HnUpdates(
-                this.github,
-                new HttpHackerNews(
-                    Manifests.read("Rultor-HNUser"),
-                    Manifests.read("Rultor-HNPassword")
+            new SafeAgent(
+                new HnUpdates(
+                    this.github,
+                    new HttpHackerNews(
+                        Manifests.read("Rultor-HNUser"),
+                        Manifests.read("Rultor-HNPassword")
+                    )
                 )
             ),
             new CommentsTag(this.github),
