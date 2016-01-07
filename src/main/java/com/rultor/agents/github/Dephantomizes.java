@@ -75,7 +75,9 @@ public final class Dephantomizes extends AbstractAgent {
         final Directives dirs = new Directives();
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         if (!issue.exists()) {
-            dirs.xpath("/talk/request").remove();
+            dirs.xpath("/talk").push()
+                .xpath("request").remove().pop()
+                .xpath("wire").remove();
             Logger.warn(
                 this, "issue #%d in %s is gone, deleting request",
                 issue.number(), issue.repo().coordinates()

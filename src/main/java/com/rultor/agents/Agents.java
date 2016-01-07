@@ -47,6 +47,7 @@ import com.rultor.agents.daemons.StopsDaemon;
 import com.rultor.agents.daemons.WipesDaemon;
 import com.rultor.agents.docker.DockerExec;
 import com.rultor.agents.github.CommentsTag;
+import com.rultor.agents.github.Dephantomizes;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.ReleaseBinaries;
 import com.rultor.agents.github.Reports;
@@ -258,7 +259,8 @@ public final class Agents {
                 ),
                 new CommentsTag(this.github),
                 new ReleaseBinaries(this.github, profile),
-                new SafeAgent(new Reports(this.github)),
+                new Dephantomizes(this.github),
+                new Reports(this.github),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
