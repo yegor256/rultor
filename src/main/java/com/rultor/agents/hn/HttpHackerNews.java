@@ -34,6 +34,7 @@ import com.jcabi.http.Request;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.JsoupResponse;
 import com.jcabi.http.response.RestResponse;
+import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -88,7 +89,7 @@ public final class HttpHackerNews implements HackerNews {
                 .assertStatus(HttpURLConnection.HTTP_MOVED_TEMP)
                 .cookie("user").getValue()
         );
-        final String fnid = new XMLDocument(
+        final XML submit = new XMLDocument(
             new JdkRequest("https://news.ycombinator.com/submit")
                 .header(HttpHeaders.COOKIE, cookie)
                 .fetch()
@@ -99,11 +100,17 @@ public final class HttpHackerNews implements HackerNews {
                     "<html ",
                     "<html xmlns='http://www.w3.org/1999/xhtml' "
                 )
-        ).xpath("//xhtml:input[@name='fnid']/@value").get(0);
-        new JdkRequest("https://news.ycombinator.com/r")
+        );
+        new JdkRequest("https://news.ycombinator.com/")
+            .uri()
+            .path(submit.xpath("//xhtml:form/@action").get(0))
+            .back()
             .header(HttpHeaders.COOKIE, cookie)
             .body()
-            .formParam("fnid", fnid)
+            .formParam(
+                "fnid",
+                submit.xpath("//xhtml:input[@name='fnid']/@value").get(0)
+            )
             .formParam("fnop", "submit-page")
             .formParam("title", text)
             .formParam("url", url)
