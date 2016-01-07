@@ -27,15 +27,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.twitter;
+package com.rultor.agents.hn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.http.Request;
 import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.JsoupResponse;
 import com.jcabi.http.response.RestResponse;
-import com.rultor.agents.hn.HackerNews;
+import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -48,36 +50,70 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "cookie")
+@EqualsAndHashCode(of = { "login", "password" })
 public final class HttpHackerNews implements HackerNews {
 
     /**
-     * Auth cookie.
+     * Login.
      */
-    private final transient String cookie;
+    private final transient String login;
+
+    /**
+     * Password.
+     */
+    private final transient String password;
 
     /**
      * Ctor.
-     * @param auth Authenticating cookie
+     * @param user Login
+     * @param pwd Password
      */
-    public HttpHackerNews(final String auth) {
-        this.cookie = auth;
+    public HttpHackerNews(final String user, final String pwd) {
+        this.login = user;
+        this.password = pwd;
     }
 
     @Override
     public void post(final String url, final String text) throws IOException {
+        final String cookie = String.format(
+            "user=%s",
+            new JdkRequest("https://news.ycombinator.com/login")
+                .body()
+                .formParam("acct", this.login)
+                .formParam("pw", this.password)
+                .back()
+                .method(Request.POST)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_MOVED_TEMP)
+                .cookie("user").getValue()
+        );
+        final String fnid = new XMLDocument(
+            new JdkRequest("https://news.ycombinator.com/submit")
+                .header(HttpHeaders.COOKIE, cookie)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(JsoupResponse.class).body()
+                .replace(
+                    "<html ",
+                    "<html xmlns='http://www.w3.org/1999/xhtml' "
+                )
+        ).xpath("//xhtml:input[@name='fnid']/@value").get(0);
         new JdkRequest("https://news.ycombinator.com/r")
-            .header("cookie", this.cookie)
+            .header(HttpHeaders.COOKIE, cookie)
             .body()
-            .formParam("fnid", "E6ytkjZ7sp0Ov50dAXcKTe")
+            .formParam("fnid", fnid)
             .formParam("fnop", "submit-page")
             .formParam("title", text)
             .formParam("url", url)
+            .formParam("text", "")
             .back()
             .method(Request.POST)
             .fetch()
             .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_MOVED_TEMP);
+            .assertStatus(HttpURLConnection.HTTP_MOVED_TEMP)
+            .assertHeader(HttpHeaders.LOCATION, "newest");
     }
 
 }

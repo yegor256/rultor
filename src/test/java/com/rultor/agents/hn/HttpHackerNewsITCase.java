@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.hn;
 
-import com.rultor.agents.twitter.HttpHackerNews;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -50,7 +49,7 @@ public final class HttpHackerNewsITCase {
     @Ignore
     public void postsUpdate() throws Exception {
         final HackerNews news = new HttpHackerNews(
-            "--secret--"
+            "rultor", "--secret--"
         );
         news.post(
             "https://github.com/yegor256/takes",
