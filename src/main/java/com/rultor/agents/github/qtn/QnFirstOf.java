@@ -36,6 +36,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -60,8 +61,16 @@ public final class QnFirstOf implements Question {
      * Ctor.
      * @param qtns Original questions
      */
+    public QnFirstOf(final Question... qtns) {
+        this(Arrays.asList(qtns));
+    }
+
+    /**
+     * Ctor.
+     * @param qtns Original questions
+     */
     public QnFirstOf(final Iterable<Question> qtns) {
-        this.questions = new Array<Question>(qtns);
+        this.questions = new Array<>(qtns);
     }
 
     @Override

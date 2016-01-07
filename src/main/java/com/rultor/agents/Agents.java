@@ -60,8 +60,10 @@ import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnByArchitect;
 import com.rultor.agents.github.qtn.QnConfig;
 import com.rultor.agents.github.qtn.QnDeploy;
+import com.rultor.agents.github.qtn.QnFirstOf;
 import com.rultor.agents.github.qtn.QnFollow;
 import com.rultor.agents.github.qtn.QnHello;
+import com.rultor.agents.github.qtn.QnIamLost;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.agents.github.qtn.QnIfPull;
@@ -190,8 +192,8 @@ public final class Agents {
                 new QnReferredTo(
                     this.github.users().self().login(),
                     new QnParametrized(
-                        new Question.FirstOf(
-                            new Array<>(
+                        new QnFollow(
+                            new QnFirstOf(
                                 new QnIfContains(
                                     "config", new QnConfig(profile)
                                 ),
@@ -206,14 +208,13 @@ public final class Agents {
                                         new QnStop()
                                     )
                                 ),
-                                new QnFollow(
-                                    new QnIfCollaborator(
-                                        new QnAlone(
-                                            talk, locks,
-                                            Agents.commands(profile)
-                                        )
+                                new QnIfCollaborator(
+                                    new QnAlone(
+                                        talk, locks,
+                                        Agents.commands(profile)
                                     )
-                                )
+                                ),
+                                new QnIamLost()
                             )
                         )
                     )
@@ -221,61 +222,59 @@ public final class Agents {
             )
         );
         return new Agent.Iterative(
-            new Array<>(
-                new SanitizesDaemon(),
-                new WipesDaemon(),
-                new Understands(
-                    this.github,
-                    new QnSafe(question)
-                ),
-                new StartsRequest(profile),
-                new RegistersShell(
-                    profile,
-                    // @checkstyle MagicNumber (1 line)
-                    "b3.rultor.com", 22,
-                    "rultor",
-                    IOUtils.toString(
-                        this.getClass().getResourceAsStream("rultor.key"),
-                        CharEncoding.UTF_8
+            new SanitizesDaemon(),
+            new WipesDaemon(),
+            new Understands(
+                this.github,
+                new QnSafe(question)
+            ),
+            new StartsRequest(profile),
+            new RegistersShell(
+                profile,
+                // @checkstyle MagicNumber (1 line)
+                "b3.rultor.com", 22,
+                "rultor",
+                IOUtils.toString(
+                    this.getClass().getResourceAsStream("rultor.key"),
+                    CharEncoding.UTF_8
+                )
+            ),
+            new StartsDaemon(profile),
+            new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
+            new StopsDaemon(),
+            new EndsDaemon(),
+            new EndsRequest(),
+            new Tweets(
+                this.github,
+                new OAuthTwitter(
+                    Manifests.read("Rultor-TwitterKey"),
+                    Manifests.read("Rultor-TwitterSecret"),
+                    Manifests.read("Rultor-TwitterToken"),
+                    Manifests.read("Rultor-TwitterTokenSecret")
+                )
+            ),
+            new HnUpdates(
+                this.github,
+                new HttpHackerNews(
+                    Manifests.read("Rultor-HNUser"),
+                    Manifests.read("Rultor-HNPassword")
+                )
+            ),
+            new CommentsTag(this.github),
+            new ReleaseBinaries(this.github, profile),
+            new Dephantomizes(this.github),
+            new Reports(this.github),
+            new RemovesShell(),
+            new ArchivesDaemon(
+                new ReRegion(
+                    new Region.Simple(
+                        Manifests.read("Rultor-S3Key"),
+                        Manifests.read("Rultor-S3Secret")
                     )
-                ),
-                new StartsDaemon(profile),
-                new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
-                new StopsDaemon(),
-                new EndsDaemon(),
-                new EndsRequest(),
-                new Tweets(
-                    this.github,
-                    new OAuthTwitter(
-                        Manifests.read("Rultor-TwitterKey"),
-                        Manifests.read("Rultor-TwitterSecret"),
-                        Manifests.read("Rultor-TwitterToken"),
-                        Manifests.read("Rultor-TwitterTokenSecret")
-                    )
-                ),
-                new HnUpdates(
-                    this.github,
-                    new HttpHackerNews(
-                        Manifests.read("Rultor-HNUser"),
-                        Manifests.read("Rultor-HNPassword")
-                    )
-                ),
-                new CommentsTag(this.github),
-                new ReleaseBinaries(this.github, profile),
-                new Dephantomizes(this.github),
-                new Reports(this.github),
-                new RemovesShell(),
-                new ArchivesDaemon(
-                    new ReRegion(
-                        new Region.Simple(
-                            Manifests.read("Rultor-S3Key"),
-                            Manifests.read("Rultor-S3Secret")
-                        )
-                    ).bucket(Manifests.read("Rultor-S3Bucket"))
-                ),
-                new Publishes(profile),
-                new SafeAgent(new Stars(this.github))
-            )
+                ).bucket(Manifests.read("Rultor-S3Bucket"))
+            ),
+            new Publishes(profile),
+            new SafeAgent(new Stars(this.github))
         );
     }
 
@@ -288,39 +287,37 @@ public final class Agents {
         return new QnByArchitect(
             profile,
             "/p/entry[@key='architect']/item/text()",
-            new Question.FirstOf(
-                new Array<Question>(
-                    new QnIfContains(
-                        "unlock",
-                        new QnUnlock()
-                    ),
-                    new QnIfContains(
-                        "lock",
-                        new QnLock()
-                    ),
-                    new QnIfContains(
-                        "merge",
-                        new QnAskedBy(
-                            profile,
-                            Agents.commanders("merge"),
-                            new QnIfPull(new QnIfUnlocked(new QnMerge()))
-                        )
-                    ),
-                    new QnIfContains(
-                        "deploy",
-                        new QnAskedBy(
-                            profile,
-                            Agents.commanders("deploy"),
-                            new QnDeploy()
-                        )
-                    ),
-                    new QnIfContains(
-                        "release",
-                        new QnAskedBy(
-                            profile,
-                            Agents.commanders("release"),
-                            new QnRelease()
-                        )
+            new QnFirstOf(
+                new QnIfContains(
+                    "unlock",
+                    new QnUnlock()
+                ),
+                new QnIfContains(
+                    "lock",
+                    new QnLock()
+                ),
+                new QnIfContains(
+                    "merge",
+                    new QnAskedBy(
+                        profile,
+                        Agents.commanders("merge"),
+                        new QnIfPull(new QnIfUnlocked(new QnMerge()))
+                    )
+                ),
+                new QnIfContains(
+                    "deploy",
+                    new QnAskedBy(
+                        profile,
+                        Agents.commanders("deploy"),
+                        new QnDeploy()
+                    )
+                ),
+                new QnIfContains(
+                    "release",
+                    new QnAskedBy(
+                        profile,
+                        Agents.commanders("release"),
+                        new QnRelease()
                     )
                 )
             )

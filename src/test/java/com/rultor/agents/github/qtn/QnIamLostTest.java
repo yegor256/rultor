@@ -27,63 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.github.qtn;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.Array;
-import java.io.IOException;
-import java.util.Arrays;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkGithub;
+import com.rultor.agents.github.Req;
+import java.net.URI;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Agent.
+ * Tests for ${@link QnIamLost}.
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @since 1.0
+ * @since 1.60
  */
-@Immutable
-public interface Agent {
+public final class QnIamLostTest {
 
     /**
-     * Execute it.
-     * @param talk Talk to work with
-     * @throws IOException If fails
+     * QnIamLost can build a report.
+     * @throws Exception In case of error.
      */
-    void execute(Talk talk) throws IOException;
-
-    /**
-     * Iterative.
-     */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode(of = "children")
-    final class Iterative implements Agent {
-        /**
-         * Agents to run.
-         */
-        private final transient Array<Agent> children;
-        /**
-         * Ctor.
-         * @param list List of them
-         */
-        public Iterative(final Agent... list) {
-            this(Arrays.asList(list));
-        }
-        /**
-         * Ctor.
-         * @param list List of them
-         */
-        public Iterative(final Iterable<Agent> list) {
-            this.children = new Array<>(list);
-        }
-        @Override
-        public void execute(final Talk talk) throws IOException {
-            for (final Agent agent : this.children) {
-                agent.execute(talk);
-            }
-        }
+    @Test
+    public void saySomethingBack() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("boom");
+        MatcherAssert.assertThat(
+            new QnIamLost().understand(
+                new Comment.Smart(issue.comments().get(1)),
+                new URI("#")
+            ),
+            Matchers.is(Req.DONE)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.containsString("don't understand you")
+        );
     }
 
 }

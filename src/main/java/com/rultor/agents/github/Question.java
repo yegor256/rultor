@@ -31,7 +31,6 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.immutable.Array;
 import java.io.IOException;
 import java.net.URI;
 
@@ -63,35 +62,5 @@ public interface Question {
      * @throws IOException If fails
      */
     Req understand(Comment.Smart comment, URI home) throws IOException;
-
-    /**
-     * The first that matches.
-     */
-    @Immutable
-    final class FirstOf implements Question {
-        /**
-         * Original questions.
-         */
-        private final transient Array<Question> questions;
-        /**
-         * Ctor.
-         * @param qtns Original questions
-         */
-        public FirstOf(final Iterable<Question> qtns) {
-            this.questions = new Array<Question>(qtns);
-        }
-        @Override
-        public Req understand(final Comment.Smart comment,
-            final URI home) throws IOException {
-            Req req = Req.EMPTY;
-            for (final Question qtn : this.questions) {
-                req = qtn.understand(comment, home);
-                if (!req.equals(Req.EMPTY)) {
-                    break;
-                }
-            }
-            return req;
-        }
-    }
 
 }

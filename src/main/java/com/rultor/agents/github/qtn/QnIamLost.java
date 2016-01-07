@@ -27,63 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.Array;
+import com.jcabi.github.Comment;
+import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
 import java.io.IOException;
-import java.util.Arrays;
+import java.net.URI;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Agent.
+ * Say that I'm lost, can't understand you.
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @since 1.0
+ * @since 1.60
  */
 @Immutable
-public interface Agent {
+@ToString
+@EqualsAndHashCode
+public final class QnIamLost implements Question {
 
     /**
-     * Execute it.
-     * @param talk Talk to work with
-     * @throws IOException If fails
+     * Message bundle.
      */
-    void execute(Talk talk) throws IOException;
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
-    /**
-     * Iterative.
-     */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode(of = "children")
-    final class Iterative implements Agent {
-        /**
-         * Agents to run.
-         */
-        private final transient Array<Agent> children;
-        /**
-         * Ctor.
-         * @param list List of them
-         */
-        public Iterative(final Agent... list) {
-            this(Arrays.asList(list));
-        }
-        /**
-         * Ctor.
-         * @param list List of them
-         */
-        public Iterative(final Iterable<Agent> list) {
-            this.children = new Array<>(list);
-        }
-        @Override
-        public void execute(final Talk talk) throws IOException {
-            for (final Agent agent : this.children) {
-                agent.execute(talk);
-            }
-        }
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        new Answer(comment).post(
+            true,
+            QnIamLost.PHRASES.getString("QnIamLost.response")
+        );
+        return Req.DONE;
     }
 
 }
