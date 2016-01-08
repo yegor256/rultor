@@ -87,7 +87,7 @@ public final class QnIfCollaborator implements Question {
                 false,
                 QnIfCollaborator.PHRASES.getString("QnIfCollaborator.denied")
             );
-            req = Req.EMPTY;
+            req = Req.DONE;
         }
         return req;
     }
