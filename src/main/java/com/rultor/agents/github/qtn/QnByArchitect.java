@@ -123,7 +123,7 @@ public final class QnByArchitect implements Question {
                     logins.get(0).toLowerCase(Locale.ENGLISH)
                 )
             );
-            req = Req.EMPTY;
+            req = Req.DONE;
         }
         return req;
     }
