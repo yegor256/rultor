@@ -6,6 +6,7 @@ install: |-
   export LANGUAGE=en_US.UTF-8
   sudo apt-get install bsdmainutils
   sudo gem install --no-rdoc --no-ri pdd
+  sudo gem install --no-rdoc --no-ri est
   cd src/bundle
   sudo bundle install
   cd ../..
