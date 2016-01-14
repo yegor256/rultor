@@ -81,6 +81,7 @@ public final class KillsDaemon extends AbstractAgent {
             xml.xpath("/talk/@name").get(0),
             new Script("kill.sh").exec(xml)
         );
+        new Script("tail.sh").exec(xml);
         return new Directives();
     }
 

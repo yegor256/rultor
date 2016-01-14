@@ -11,7 +11,7 @@ if [ -e cid ]; then
 fi
 
 if [ ! -e pid ]; then
-  exit 0
+  exit
 fi
 pid=$(cat pid)
 

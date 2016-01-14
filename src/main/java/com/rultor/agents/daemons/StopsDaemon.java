@@ -69,6 +69,7 @@ public final class StopsDaemon extends AbstractAgent {
             xml.xpath("/talk/@name").get(0),
             new Script("stop.sh").exec(xml)
         );
+        new Script("tail.sh").exec(xml);
         return new Directives();
     }
 

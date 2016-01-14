@@ -8,11 +8,11 @@ fi
 
 pid=$(cat pid)
 if ps -p "${pid}" >/dev/null; then
-  exit 0
+  exit
 fi
 
 if [ ! -e cid ]; then
-  exit 0
+  exit
 fi
 cid=$(cat cid)
 if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
