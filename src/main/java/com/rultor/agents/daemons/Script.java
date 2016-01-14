@@ -89,7 +89,7 @@ final class Script {
                 "set -o pipefail",
                 String.format("cd %s", SSH.escape(dir)),
                 String.format(
-                    "/bin/bash %s 2>&1 >> stdout",
+                    "/bin/bash %s >> stdout 2>&1",
                     SSH.escape(this.name)
                 )
             )
