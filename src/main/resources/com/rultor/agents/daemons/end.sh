@@ -18,6 +18,7 @@ if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
   echo "container ${cid} is alive"
 else
   echo "container ${cid} is dead"
+  date
   exit 1
 fi
 

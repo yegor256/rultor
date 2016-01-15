@@ -97,7 +97,6 @@ public final class EndsDaemon extends AbstractAgent {
                 dir, xml.xpath("/talk/@name").get(0)
             );
         } else {
-            new Script("tail.sh").exec(xml);
             dirs.append(this.end(shell, dir));
         }
         return dirs;
