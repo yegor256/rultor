@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-set -x
 
 if [ ! -e pid ]; then
   exit 1
