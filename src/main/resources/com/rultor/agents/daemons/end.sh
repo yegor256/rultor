@@ -2,6 +2,7 @@
 set -e
 
 if [ ! -e pid ]; then
+  echo "'pid' file is absent, something was broken"
   exit 1
 fi
 
