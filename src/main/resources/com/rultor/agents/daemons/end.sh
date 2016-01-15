@@ -11,7 +11,7 @@ if ps -p "${pid}" >/dev/null; then
 fi
 
 if [ ! -e cid ]; then
-  echo "cid file is absent, container wasn't started correctly"
+  echo "'cid' file is absent, container wasn't started correctly"
   exit 1
 fi
 
