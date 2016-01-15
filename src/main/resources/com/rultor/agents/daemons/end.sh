@@ -11,8 +11,10 @@ if ps -p "${pid}" >/dev/null; then
 fi
 
 if [ ! -e cid ]; then
-  exit
+  echo "cid file is absent, container wasn't started correctly"
+  exit 1
 fi
+
 cid=$(cat cid)
 if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
   echo "container ${cid} is alive"
