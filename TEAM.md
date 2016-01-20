@@ -6,8 +6,8 @@ Role | Members
 ---|---
 PM | @alex-palevsky
 CR | @darkled, @caarlos0, @carlosmiranda, @dmzaytsev, @pinaf, @ggajos, @krzyk, @mkordas, @longtimeago
-DEV | @rfqu, @kujtimiihoxha, @skirpichenok, @shelan, @xupyprmv
-IMP | @rfqu, @kujtimiihoxha, @skirpichenok, @shelan, @xupyprmv
+DEV | @rfqu, @jimdeanspivey, @kujtimiihoxha, @jhyle, @gumbelmj, @skirpichenok, @shelan, @xupyprmv
+IMP | @rfqu, @jimdeanspivey, @kujtimiihoxha, @jhyle, @gumbelmj, @skirpichenok, @shelan, @xupyprmv
 ARC | 
 DES | @yegor256
 PO | @yegor256
