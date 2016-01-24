@@ -133,14 +133,14 @@ public final class CommentsTag extends AbstractAgent {
                                     "CommentsTag.version-to-low"
                             ),
                             tag,
-                            previous.toString()
+                            Collections.max(previous)
                     )
             );
             Logger.info(
                     this,
                     "tag %s must be greater than previous version %s",
                     tag,
-                    previous
+                    Collections.max(previous)
             );
         } else {
             final Repo repo = issue.repo();
