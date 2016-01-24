@@ -126,7 +126,7 @@ public final class CommentsTag extends AbstractAgent {
             );
             Logger.info(this, "duplicate tag %s commented", tag);
         } else if (this.isVersionValid(tag)
-                && this.isReleaseValid(tag, previous)) {
+                && !this.isReleaseValid(tag, previous)) {
             issue.comments().post(
                     String.format(
                             CommentsTag.PHRASES.getString(
@@ -198,7 +198,7 @@ public final class CommentsTag extends AbstractAgent {
         } else {
             max = Collections.max(previous);
         }
-        return new DefaultArtifactVersion(tag).compareTo(max) == -1;
+        return new DefaultArtifactVersion(tag).compareTo(max) == 1;
     }
 
     /**
