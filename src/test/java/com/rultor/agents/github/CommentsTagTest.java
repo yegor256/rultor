@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github;
 
+import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
@@ -89,6 +90,32 @@ public final class CommentsTagTest {
         MatcherAssert.assertThat(
             new Releases.Smart(repo.releases()).exists(tag),
             Matchers.is(true)
+        );
+    }
+
+    /**
+     * CommentsTag cannot release an older version.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void tooOldRelease() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        final String tag = "1.5";
+        repo.releases().create("1.0");
+        repo.releases().create("2.0");
+        repo.releases().create("3.0-b");
+        final Talk talk = CommentsTagTest.talk(issue, tag);
+        agent.execute(talk);
+        final Comment.Smart response = new Comment.Smart(
+                repo.issues().get(1).comments().get(1)
+        );
+        MatcherAssert.assertThat(
+                response.body(),
+                    Matchers.containsString(
+                            "version tag is too low"
+                    )
         );
     }
 
