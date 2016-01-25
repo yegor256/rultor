@@ -113,9 +113,9 @@ public final class CommentsTagTest {
         );
         MatcherAssert.assertThat(
             response.body(),
-                Matchers.containsString(
-                        "version tag is too low"
-                )
+            Matchers.containsString(
+                    "version tag is too low"
+            )
         );
     }
 
