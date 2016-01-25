@@ -109,13 +109,13 @@ public final class CommentsTagTest {
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         final Comment.Smart response = new Comment.Smart(
-                repo.issues().get(1).comments().get(1)
+            repo.issues().get(1).comments().get(1)
         );
         MatcherAssert.assertThat(
-                response.body(),
-                    Matchers.containsString(
-                            "version tag is too low"
-                    )
+            response.body(),
+                Matchers.containsString(
+                        "version tag is too low"
+                )
         );
     }
 
