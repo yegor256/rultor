@@ -30,21 +30,18 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 /**
- * Various validations regarding version numbers.
+ * Encapsulates a release's version number.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Jimmy Spivey (JimDeanSpivey@gmail.com)
  * @version $Id$
  * @since 1.57
  */
 @Immutable
-public final class VersionValidator {
+public final class Version {
 
     /**
      * Version pattern.
@@ -53,27 +50,20 @@ public final class VersionValidator {
             Pattern.compile("\\.?(?:\\d+\\.)*\\d+");
 
     /**
-     * Singleton instance of Version Validator.
+     * The proposed version tag.
      */
-    private static final VersionValidator VERSION_VALIDATOR =
-            new VersionValidator();
+    private final transient String tag;
 
     /**
-     * Force clients to use factory method.
+     * Constructor with just the tag field.
+     * @param ver The version number of a release.
      */
-    private VersionValidator() {
+    public Version(final String ver) {
+        this.tag = ver;
     }
 
     /**
-     * Factory method to get an instance of VersionValidator. All operations
-     * are already thread safe.
-     * @return A singleton instance of VersionValidator
-     */
-    public static VersionValidator getInstance() {
-        return VERSION_VALIDATOR;
-    }
-
-    /**
+     * Is the version number format valid. For example:
      * Valid version numbers:
      * .1
      * 2.2
@@ -85,28 +75,19 @@ public final class VersionValidator {
      * a.b.c
      * 1.
      * 1.2.
-     * @param version Version number from a release
-     * @return True if the version is valid, false otherwise
+     * @return True if the tag is valid, false otherwise
      */
-    public boolean isVersionValid(final String version) {
-        final Matcher matcher = VERSION_PATTERN.matcher(version);
+    public boolean isValid() {
+        final Matcher matcher = VERSION_PATTERN.matcher(this.tag);
         return matcher.matches();
     }
 
     /**
-     * Is this tagged release valid.
-     * @param tag The release to be tagged
-     * @param previous The previous releases
-     * @return True if the release is valid
+     * Returns the proposed tag originally passed in the constructor.
+     * @return The proposed tag
      */
-    public boolean isReleaseValid(final String tag,
-                                  final List<DefaultArtifactVersion> previous) {
-        final DefaultArtifactVersion max;
-        if (previous.isEmpty()) {
-            max = new DefaultArtifactVersion("0");
-        } else {
-            max = Collections.max(previous);
-        }
-        return new DefaultArtifactVersion(tag).compareTo(max) == 1;
+    @Override
+    public String toString() {
+        return this.tag;
     }
 }

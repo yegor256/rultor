@@ -29,9 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
@@ -46,13 +43,10 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -100,8 +94,10 @@ public final class CommentsTag extends AbstractAgent {
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
-        final List<DefaultArtifactVersion> priors =
-                this.transformVersions(rels);
+        final PreviousReleases priors = new PreviousReleases(
+            new Version(tag),
+            rels
+        );
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
@@ -117,22 +113,21 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
-        } else if (VersionValidator.getInstance().isVersionValid(tag)
-            && !VersionValidator.getInstance().isReleaseValid(tag, priors)) {
+        } else if (new Version(tag).isValid() && !priors.isTagValid()) {
             issue.comments().post(
                     String.format(
                             CommentsTag.PHRASES.getString(
                                     "CommentsTag.version-too-low"
                             ),
                             tag,
-                            Collections.max(priors)
+                            priors.latest()
                     )
             );
             Logger.info(
                     this,
                     "tag %s must be greater than previous version %s",
                     tag,
-                    Collections.max(priors)
+                    priors.latest()
             );
         } else {
             final Repo repo = issue.repo();
@@ -154,46 +149,6 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
-    }
-
-    /**
-     * Transforms versionsFrom Release to DefaultArtificatVersion and filters
-     * invalid version numbers. For example in these versions,
-     * ["1.0", "2.0", "3.0-b"], "3.0-b" is just ignore, therefore version "2.0"
-     * is the max.
-     * @param rels All previous releases as Release objects
-     * @return All prior releases wrapped in a DefaultArtifactVersion
-     */
-    private List<DefaultArtifactVersion> transformVersions(final Releases rels)
-    {
-        final Function<Release, DefaultArtifactVersion> releaseToVersions =
-            new Function<Release, DefaultArtifactVersion>() {
-            @Override
-            public DefaultArtifactVersion apply(final Release release) {
-                final Release.Smart rel = new Release.Smart(release);
-                try {
-                    final String tag = rel.tag();
-                        return new DefaultArtifactVersion(tag);
-                } catch (final IOException exception) {
-                    Logger.error(this, "IOException caused from rel.tag()");
-                    return null;
-                }
-            }
-        };
-        final Predicate<? super DefaultArtifactVersion> predicate =
-                new Predicate<DefaultArtifactVersion>() {
-            @Override
-            public boolean apply(final DefaultArtifactVersion version) {
-                return VersionValidator.getInstance().isVersionValid(
-                        version.toString()
-                );
-            }
-        };
-        return FluentIterable
-                .from(rels.iterate())
-                .transform(releaseToVersions)
-                .filter(predicate)
-                .toList();
     }
 
     /**
