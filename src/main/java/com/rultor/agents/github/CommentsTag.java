@@ -113,7 +113,7 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
-        } else if (new Version(tag).isValid() && !priors.isTagValid()) {
+        } else if (new Version(tag).isValid() && !priors.isValid()) {
             issue.comments().post(
                     String.format(
                             CommentsTag.PHRASES.getString(

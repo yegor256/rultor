@@ -72,10 +72,13 @@ public final class PreviousReleases {
     }
 
     /**
-     * Is this tagged release valid.
+     * Is the proposed tag true, with respect to previous released tags. For
+     * example, if there are previous releases of [0.2,0.5,0.7], and the
+     * proposed tag (version) is .6, this will return false. If the proposed
+     * tag is .8 it will return true.
      * @return True if the release is valid
      */
-    public boolean isTagValid() {
+    public boolean isValid() {
         final DefaultArtifactVersion latest = latest();
         return new DefaultArtifactVersion(this.version.toString())
             .compareTo(latest) == 1;
