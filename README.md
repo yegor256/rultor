@@ -29,12 +29,24 @@ TBD... _product statement_
 TBD... _stakeholders and needs_
 
 ## How Rultor Works?
-
-TBD... _actors and features_
+Once Rultor finds a <a href="http://doc.rultor.com/basics.html">merge command</a> 
+in one of your GitHub pull requests, it does exactly this:
+<ol>
+<li>Reads the <a href="http://doc.rultor.com/reference.html"><code>.rultor.yml</code>
+</a> YAML configuration file from the root directory of your repository.</li>
+<li>Gets automated build execution command from it, for example <code>bundle test</code>.</li>
+<li>Checks out your repository into a temporary directory on one of its servers.</li>
+<li>Merges pull request into <code>master</code> branch.</li>
+<li>Starts a new Docker container and runs <code>bundle test</code> in it.</li>
+<li>If everything is fine, pushes modified <code>master</code> branch to GitHub.</li>
+<li>Reports back to you, in the GitHub pull request.</li>
+</ol>
+You can see it in action, for example, in this pull request: 
+<a href="https://github.com/jcabi/jcabi-github/pull/878">jcabi/jcabi-github#878</a>.
 
 ## What Is Rultor SLA?
 
-TBD... _quality requrirements_
+TBD... _quality requirements_
 
 ## How to Contribute
 
