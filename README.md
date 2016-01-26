@@ -26,23 +26,23 @@ TBD... _product statement_
 
 ## What Problem Does Rultor Solve?
 
-TBD... _stakeholders and needs_
+TBD... _stakeholders and need
 
 ## How Rultor Works?
-Once Rultor finds a <a href="http://doc.rultor.com/basics.html">merge command</a> 
+Once Rultor finds a [merge command](http://doc.rultor.com/basics.html) 
 in one of your GitHub pull requests, it does exactly this:
-<ol>
-<li>Reads the <a href="http://doc.rultor.com/reference.html"><code>.rultor.yml</code>
-</a> YAML configuration file from the root directory of your repository.</li>
-<li>Gets automated build execution command from it, for example <code>bundle test</code>.</li>
-<li>Checks out your repository into a temporary directory on one of its servers.</li>
-<li>Merges pull request into <code>master</code> branch.</li>
-<li>Starts a new Docker container and runs <code>bundle test</code> in it.</li>
-<li>If everything is fine, pushes modified <code>master</code> branch to GitHub.</li>
-<li>Reports back to you, in the GitHub pull request.</li>
-</ol>
+
+1. Reads the [.rultor.yml](http://doc.rultor.com/reference.html) 
+ YAML configuration file from the root directory of your repository.
+2. Gets automated build execution command from it, for example `bundle test`.
+3. Checks out your repository into a temporary directory on one of its servers.
+4. Merges pull request into `master` branch.
+5. Starts a new Docker container and runs `bundle test` in it.
+6. If everything is fine, pushes modified `master` branch to GitHub.
+7. Reports back to you, in the GitHub pull request.
+
 You can see it in action, for example, in this pull request: 
-<a href="https://github.com/jcabi/jcabi-github/pull/878">jcabi/jcabi-github#878</a>.
+[jcabi/jcabi-gjithub#878](https://github.com/jcabi/jcabi-github/pull/878).
 
 ## What Is Rultor SLA?
 
