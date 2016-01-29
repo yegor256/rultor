@@ -26,7 +26,7 @@ TBD... _product statement_
 
 ## What Problem Does Rultor Solve?
 
-TBD... _stakeholders and need_
+TBD... _stakeholders and needs_
 
 ## How Rultor Works?
 Once Rultor finds a [merge command](http://doc.rultor.com/basics.html) 
