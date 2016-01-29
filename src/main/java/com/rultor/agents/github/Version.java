@@ -47,7 +47,7 @@ public final class Version {
      * Version pattern.
      */
     private static final Pattern VERSION_PATTERN =
-            Pattern.compile("\\.?(?:\\d+\\.)*\\d+");
+        Pattern.compile("\\.?(?:\\d+\\.)*\\d+");
 
     /**
      * The proposed version tag.

@@ -115,19 +115,19 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "duplicate tag %s commented", tag);
         } else if (new Version(tag).isValid() && !priors.isValid()) {
             issue.comments().post(
-                    String.format(
-                            CommentsTag.PHRASES.getString(
-                                    "CommentsTag.version-too-low"
-                            ),
-                            tag,
-                            priors.latest()
-                    )
-            );
-            Logger.info(
-                    this,
-                    "tag %s must be greater than previous version %s",
+                String.format(
+                    CommentsTag.PHRASES.getString(
+                        "CommentsTag.version-too-low"
+                    ),
                     tag,
                     priors.latest()
+                )
+            );
+            Logger.info(
+                this,
+                "tag %s must be greater than previous version %s",
+                tag,
+                priors.latest()
             );
         } else {
             final Repo repo = issue.repo();
