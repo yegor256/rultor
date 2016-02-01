@@ -95,7 +95,8 @@ function docker_when_possible {
   docker run --rm -v "$(pwd):/main" "${vars[@]}" \
     --privileged=true \
     --hostname=docker \
-    --memory=6g "--cidfile=$(pwd)/cid" -w=/main \
+    --memory=4g --memory-swap=16g --oom-kill-disable \
+    "--cidfile=$(pwd)/cid" -w=/main \
     --name="${container}" "${image}" /main/entry.sh
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
