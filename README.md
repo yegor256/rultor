@@ -26,17 +26,17 @@ TBD... _product statement_
 
 ## What Problems Does Rultor Solve?
 
-Automated build scripts have been around for some time. Rultor attempts to
+Automated deployment scripts have been around for some time. Rultor attempts to
 tackle the problems those scripts do not.
 
 The first benefit of Rultor is that it gives you isolation of your deployment
-script in its own virtual environment by using Docker containers.  This
+script in its own virtual environment by using Docker containers. This
 substantially reduces the amount of external state that could affect your build
 and makes errors more easily reproducible.
 
 Additionally, because of the way Rultor integrates with modern issue trackers,
-all the logs are stored in the meaningful ticket. Making vital information
-easily accessible to all developers.
+all the logs are stored and published to the ticket on which Rultor was
+mentioned. Making vital information easily accessible to all developers.
 
 Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
 as a human-readable sentence suffices to trigger a merge or a release.
