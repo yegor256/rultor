@@ -140,6 +140,7 @@ public final class StartsRequest extends AbstractAgent {
                             Maps.immutableEntry(
                                 "container",
                                 name.replaceAll("[^a-zA-Z0-9_.-]", "_")
+                                    .toLowerCase(Locale.ENGLISH)
                             )
                         )
                     ),
