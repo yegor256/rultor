@@ -24,9 +24,22 @@ Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yego
 
 TBD... _product statement_
 
-## What Problem Does Rultor Solve?
+## What Problems Does Rultor Solve?
 
-TBD... _stakeholders and needs_
+Automated build scripts have been around for some time. Rultor attempts to
+tackle the problems those scripts do not.
+
+The first benefit of Rultor is that it gives you isolation of your deployment
+script in its own virtual environment by using Docker containers.  This
+substantially reduces the amount of external state that could affect your build
+and makes errors more easily reproducible.
+
+Additionally, because of the way Rultor integrates with modern issue trackers,
+all the logs are stored in the meaningful ticket. Making vital information
+easily accessible to all developers.
+
+Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
+as a human-readable sentence suffices to trigger a merge or a release.
 
 ## How Rultor Works?
 Once Rultor finds a [merge command](http://doc.rultor.com/basics.html) 
