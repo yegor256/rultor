@@ -38,6 +38,15 @@ Additionally, because of the way Rultor integrates with modern issue trackers,
 all the logs are stored and published to the ticket on which Rultor was
 mentioned. Making vital information easily accessible to all developers.
 
+Rultor performs pre-flight builds. Instead of merging into master and then
+seeing if your changes broke the build or not, Rultor checks out the master
+branch, apply your changes to it, then runs everything it was set up to run.
+If, and only if, everything goes well, Rultor merges the changes into master.
+This programmatically prevents the master from being broken by developers. Not
+having to worry about breaking the build for everyone else has a very positive
+impact in the way developers write code, increasing their productivity and
+mitigating their fear of making mistakes.
+
 Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
 as a human-readable sentence suffices to trigger a merge or a release.
 
