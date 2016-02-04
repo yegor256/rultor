@@ -125,7 +125,7 @@ public final class PreviousReleases {
     private final class ReleaseToVersion
         implements Function<Release, DefaultArtifactVersion> {
         @Override
-        @SuppressWarnings("PMD.OnlyOneReturn")
+        @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
         public DefaultArtifactVersion apply(final Release release) {
             final Release.Smart rel = new Release.Smart(release);
             try {
@@ -133,7 +133,7 @@ public final class PreviousReleases {
                 return new DefaultArtifactVersion(tag);
             } catch (final IOException exception) {
                 Logger.error(this, "IOException caused from rel.tag()");
-                return null;
+                throw new RuntimeException(exception);
             }
         }
     }
