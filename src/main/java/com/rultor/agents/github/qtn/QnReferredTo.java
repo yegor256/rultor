@@ -87,7 +87,7 @@ public final class QnReferredTo implements Question {
         final String prefix = String.format("@%s", this.login);
         final Req req;
         final Matcher matcher = Pattern.compile(
-            String.format(".*\\b?(%s\\b).*", prefix)
+            String.format("(?:.*?\\s)?(%s\\b).*", prefix)
         ).matcher(comment.body().trim());
         if (matcher.matches()) {
             if (matcher.start(1) == 0) {
@@ -96,8 +96,9 @@ public final class QnReferredTo implements Question {
                 new Answer(comment).post(
                     true,
                     String.format(
-                        QnReferredTo.PHRASES
-                            .getString("QnReferredTo.mentioned"),
+                        QnReferredTo.PHRASES.getString(
+                                "QnReferredTo.mentioned"
+                        ),
                         prefix
                     )
                 );
