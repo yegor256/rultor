@@ -60,36 +60,50 @@ public final class QnReferredToTest {
      */
     @Test
     public void buildsRequest() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
-        issue.comments().post("  @xx deploy");
         MatcherAssert.assertThat(
-            new Xembler(
-                new Directives().add("request").append(
-                    new QnReferredTo("xx", new QnDeploy()).understand(
-                        new Comment.Smart(issue.comments().get(1)), new URI("#")
-                    ).dirs()
-                )
-            ).xml(),
+            this.xemblerXml("  @xx deploy"),
+            XhtmlMatchers.hasXPath("/request/type")
+        );
+        MatcherAssert.assertThat(
+            this.xemblerXml("  @xx, deploy"),
             XhtmlMatchers.hasXPath("/request/type")
         );
     }
 
     /**
-     * QnReferredTo recognizes mention delimited by comma.
+     * QnReferredTo can recognize mentions delimited by a comma.
      * @throws Exception In case of error.
      */
     @Test
-    public void recognizeCommaAsDelimiter() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
+    public void recognizesCommaAsDelimiter() throws Exception {
         final String login = "xx";
-        issue.comments().post(String.format("hello @%s, deploy", login));
         MatcherAssert.assertThat(
-            new QnReferredTo(login, new QnDeploy()).understand(
-                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            this.reqFromComment(
+                String.format("hello @%s, deploy", login), login
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnReferredTo can recognize mention as invalid when login is
+     * bounded by non-boundary char.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void recognizesInvalidBoundary() throws Exception {
+        final String login = "xx";
+        MatcherAssert.assertThat(
+            this.reqFromComment(
+                String.format("hello @%sx deploy", login), login
+            ),
+            Matchers.is(Req.EMPTY)
+        );
+        MatcherAssert.assertThat(
+            this.reqFromComment(
+                String.format("hello x@%s deploy", login), login
+            ),
+            Matchers.is(Req.EMPTY)
         );
     }
 
@@ -120,5 +134,43 @@ public final class QnReferredToTest {
                 )
             )
         );
+    }
+
+    /**
+     * Return the Req for a comment.
+     *
+     * @param comment String comment to read
+     * @param login String Rultor Github user login
+     * @return Req
+     * @throws Exception In case of error.
+     */
+    private Req reqFromComment(final String comment, final String login)
+        throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post(comment);
+        return new QnReferredTo(login, new QnDeploy()).understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        );
+    }
+
+    /**
+     * Return the Xembler xml output for a comment.
+     *
+     * @param comment String comment to read
+     * @return String
+     * @throws Exception In case of error.
+     */
+    private String xemblerXml(final String comment) throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post(comment);
+        return new Xembler(
+            new Directives().add("request").append(
+                new QnReferredTo("xx", new QnDeploy()).understand(
+                    new Comment.Smart(issue.comments().get(1)), new URI("#")
+                ).dirs()
+            )
+        ).xml();
     }
 }
