@@ -76,6 +76,24 @@ public final class QnReferredToTest {
     }
 
     /**
+     * QnReferredTo recognizes mention delimited by comma.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void recognizeCommaAsDelimiter() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final String login = "xx";
+        issue.comments().post(String.format("hello @%s, deploy", login));
+        MatcherAssert.assertThat(
+            new QnReferredTo(login, new QnDeploy()).understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            ),
+            Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
      * QnReferredTo can answer when mention.
      * @throws Exception In case of error.
      */
