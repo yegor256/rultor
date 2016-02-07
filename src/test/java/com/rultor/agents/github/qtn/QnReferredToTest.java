@@ -83,6 +83,12 @@ public final class QnReferredToTest {
             ),
             Matchers.is(Req.DONE)
         );
+        MatcherAssert.assertThat(
+            this.reqFromComment(
+                String.format("hello ,@%s deploy", login), login
+            ),
+            Matchers.is(Req.DONE)
+        );
     }
 
     /**
