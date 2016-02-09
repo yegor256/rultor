@@ -5,10 +5,11 @@ install: |-
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
   sudo apt-get install bsdmainutils
-  sudo gem update --system
   sudo gem install --no-rdoc --no-ri pdd
   sudo gem install --no-rdoc --no-ri est
   sudo bundle install
+  sudo bundle update
+  jekyll --version
 architect:
 - yegor256
 - alex-palevsky
