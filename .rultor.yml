@@ -8,9 +8,7 @@ install: |-
   sudo gem update --system
   sudo gem install --no-rdoc --no-ri pdd
   sudo gem install --no-rdoc --no-ri est
-  cd src/bundle
   sudo bundle install
-  cd ../..
 architect:
 - yegor256
 - alex-palevsky
