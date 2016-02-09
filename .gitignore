@@ -7,3 +7,4 @@ _site
 /.classpath
 /.project
 .settings
+Gemfile.lock
