@@ -917,14 +917,29 @@
                         <inherited>false</inherited>
                         <executions>
                             <execution>
+                                <id>bundle install</id>
+                                <phase>pre-site</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>bundle</executable>
+                                    <arguments>
+                                        <argument>install</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
                                 <id>jekyll-build</id>
                                 <phase>pre-site</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>jekyll</executable>
+                                    <executable>bundle</executable>
                                     <arguments>
+                                        <argument>exec</argument>
+                                        <argument>jekyll</argument>
                                         <argument>build</argument>
                                         <argument>--source</argument>
                                         <argument>${basedir}/src/jekyll</argument>
