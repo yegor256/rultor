@@ -38,7 +38,6 @@ import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
-import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
@@ -59,9 +58,6 @@ import org.xembly.Xembler;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @todo #567:30min/DEV Refactor this class to use less objects
- *  and remove checkstyle exception above.
  */
 @Immutable
 @ToString
@@ -72,11 +68,6 @@ public final class EndsDaemon extends AbstractAgent {
      * Prefix for log highlights.
      */
     public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
-
-    /**
-     * Join shell commands with this string.
-     */
-    private static final String SHELL_JOINER = " && ";
 
     /**
      * Ctor.
@@ -112,12 +103,11 @@ public final class EndsDaemon extends AbstractAgent {
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
-        final String stdout = new Shell.Plain(new Shell.Safe(shell)).exec(
-            Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("cd %s", SSH.escape(dir)),
-                "cat stdout"
-            )
-        );
+        final String stdout = new ShellCommand(
+            shell,
+            dir,
+            "cat stdout"
+        ).exec();
         final Collection<String> lines = Lists.newArrayList(
             Splitter.on(System.lineSeparator()).split(stdout)
         );
@@ -176,13 +166,11 @@ public final class EndsDaemon extends AbstractAgent {
      */
     private static int exit(final Shell shell, final String dir)
         throws IOException {
-        final String status = new Shell.Plain(new Shell.Safe(shell)).exec(
-            Joiner.on(EndsDaemon.SHELL_JOINER).join(
-                String.format("cd   %s", SSH.escape(dir)),
-                "if [ ! -e status ]; then echo 127; exit; fi",
-                "cat status"
-            )
-        ).trim().replaceAll("[^0-9]", "");
+        final String status = new ShellCommand(
+            shell,
+            dir,
+            "if [ ! -e status ]; then echo 127; exit; fi; cat status"
+        ).exec().trim().replaceAll("[^0-9]", "");
         final int exit;
         if (status.isEmpty()) {
             exit = 1;
