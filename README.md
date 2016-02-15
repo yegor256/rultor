@@ -81,7 +81,7 @@ sending us your pull request please run full Maven build:
 $ mvn clean install -Pqulice
 ```
 
-To avoid build errors use maven 3.2+
+To avoid build errors use maven 3.2.5+
 
 ## Got questions?
 
