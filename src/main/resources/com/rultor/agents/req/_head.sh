@@ -93,7 +93,6 @@ function docker_when_possible {
     docker rm -f "${container}"
   fi
   docker run --rm -v "$(pwd):/main" "${vars[@]}" \
-    --privileged=true \
     --hostname=docker \
     --memory=6g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
