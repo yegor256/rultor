@@ -115,9 +115,9 @@ RUN sudo npm install -g npm
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # Maven
-ENV MAVEN_VERSION 3.3.3
+ENV MAVEN_VERSION 3.3.9
 ENV M2_HOME "/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}"
-RUN wget --quiet "http://ftp.wayne.edu/apache/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" && \
+RUN wget --quiet "http://mirror.dkd.de/apache/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" && \
   mkdir -p /usr/local/apache-maven && \
   mv "apache-maven-${MAVEN_VERSION}-bin.tar.gz" /usr/local/apache-maven && \
   tar xzvf "/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C /usr/local/apache-maven/ && \
