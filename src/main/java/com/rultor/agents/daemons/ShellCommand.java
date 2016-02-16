@@ -40,7 +40,7 @@ import java.io.IOException;
  *
  * @author Armin Braun (me@obrown.io)
  * @version $Id$
- * @since 2.0
+ * @since 1.62
  */
 @Immutable
 final class ShellCommand {
