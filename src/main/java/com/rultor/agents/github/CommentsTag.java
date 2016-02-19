@@ -94,6 +94,10 @@ public final class CommentsTag extends AbstractAgent {
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
+        final PreviousReleases priors = new PreviousReleases(
+            new Version(tag),
+            rels
+        );
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
@@ -109,6 +113,22 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
+        } else if (new Version(tag).isValid() && !priors.isValid()) {
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString(
+                        "CommentsTag.version-too-low"
+                    ),
+                    tag,
+                    priors.latest()
+                )
+            );
+            Logger.info(
+                this,
+                "tag %s must be greater than previous version %s",
+                tag,
+                priors.latest()
+            );
         } else {
             final Repo repo = issue.repo();
             final Date prev = CommentsTag.previous(repo);
