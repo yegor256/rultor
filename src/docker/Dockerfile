@@ -93,20 +93,8 @@ RUN mkdir jsl && \
   rm -rf jsl
 # RUN pecl install xdebug-beta && \
 #   echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
-
 # Java
 RUN apt-get install -y default-jdk
-RUN apt-get install -y gdebi && \
-  wget --quiet http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb && \
-  gdebi --non-interactive maven3_3.2.1-0~ppa1_all.deb && \
-  ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn && \
-  rm -rf maven3_3.2.1-0~ppa1_all.deb
-RUN git clone https://github.com/yegor256/rultor.git && \
-  cd rultor && \
-  gem install jekyll && \
-  mvn clean install -Pqulice --quiet && \
-  cd .. && \
-  rm -rf rultor
 
 # LaTeX
 RUN apt-get install -y texlive-latex-extra
@@ -125,6 +113,27 @@ RUN apt-get install -y s3cmd
 RUN apt-get install -y nodejs npm
 RUN sudo npm install -g npm
 RUN ln -s /usr/bin/nodejs /usr/bin/node
+
+# Maven
+ENV MAVEN_VERSION 3.3.9
+ENV M2_HOME "/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}"
+RUN wget --quiet "http://mirror.dkd.de/apache/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" && \
+  mkdir -p /usr/local/apache-maven && \
+  mv "apache-maven-${MAVEN_VERSION}-bin.tar.gz" /usr/local/apache-maven && \
+  tar xzvf "/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C /usr/local/apache-maven/ && \
+  update-alternatives --install /usr/bin/mvn mvn "${M2_HOME}/bin/mvn" 1 && \
+  update-alternatives --config mvn
+
+RUN gem install jekyll
+
+ENV MAVEN_OPTS "-Xms512m -Xmx2g"
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+COPY settings.xml /root/.m2/settings.xml
+RUN git clone https://github.com/yegor256/rultor.git --depth=1
+RUN cd rultor && \
+  mvn clean install -Pqulice && \
+  cd .. && \
+  rm -rf rultor
 
 # One more time, right before the end
 RUN apt-get update -y
