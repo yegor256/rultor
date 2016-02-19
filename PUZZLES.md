@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 11 active puzzles (42 total):
+There are 10 active puzzles (42 total):
 
 
 <del>unknown</del> [`?`](../master/?)<br/>
@@ -44,4 +44,4 @@ There are 11 active puzzles (42 total):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#829](https://github.com/yegor256/rultor/issues/829):[**748-a3bd319f**](https://github.com/yegor256/rultor/issues/829) [`MailsTest.java:95-96`](../master/src/test/java/com/rultor/agents/MailsTest.java#L95-L96)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[<del>662</del>](https://github.com/yegor256/rultor/issues/662) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#832](https://github.com/yegor256/rultor/issues/832):[**662-8cc0c29a**](https://github.com/yegor256/rultor/issues/832) [`ReleaseBinaries.java:47-49`](../master/src/main/java/com/rultor/agents/github/ReleaseBinaries.java#L47-L49)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;[#934](https://github.com/yegor256/rultor/issues/934):[**567-359f8c66**](https://github.com/yegor256/rultor/issues/934) [`EndsDaemon.java:63-64`](../master/src/main/java/com/rultor/agents/daemons/EndsDaemon.java#L63-L64)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[#934](https://github.com/yegor256/rultor/issues/934):[<del>567-359f8c66</del>](https://github.com/yegor256/rultor/issues/934) [`EndsDaemon.java:63-64`](../master/src/main/java/com/rultor/agents/daemons/EndsDaemon.java#L63-L64)<br/>
