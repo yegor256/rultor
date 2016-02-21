@@ -77,4 +77,5 @@ release:
     curl -f --connect-timeout 30 --retry 8 --retry-delay 60 http://www.rultor.com
     mvn clean site-deploy -Prultor -Psite --errors --settings ../settings.xml --batch-mode || echo 'site-deploy failed'
   commanders:
+  - original-brownbear
   - yegor256
