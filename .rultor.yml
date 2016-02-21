@@ -12,6 +12,7 @@ install: |-
   bundle show jekyll
   jekyll --version
 architect:
+- original-brownbear
 - yegor256
 - alex-palevsky
 assets:
