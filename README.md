@@ -51,20 +51,8 @@ Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
 as a human-readable sentence suffices to trigger a merge or a release.
 
 ## How Rultor Works?
-Once Rultor finds a [merge command](http://doc.rultor.com/basics.html) 
-in one of your GitHub pull requests, it does exactly this:
 
-1. Reads the [.rultor.yml](http://doc.rultor.com/reference.html) 
- YAML configuration file from the root directory of your repository.
-2. Gets automated build execution command from it, for example `bundle test`.
-3. Checks out your repository into a temporary directory on one of its servers.
-4. Merges pull request into `master` branch.
-5. Starts a new Docker container and runs the build execution command in it, for example `bundle test`.
-6. If everything is fine, pushes modified `master` branch to GitHub.
-7. Reports back to you, in the GitHub pull request.
-
-You can see it in action, for example, in this pull request: 
-[jcabi/jcabi-gjithub#878](https://github.com/jcabi/jcabi-github/pull/878).
+TBD... _actors and features_
 
 ## What Is Rultor SLA?
 
