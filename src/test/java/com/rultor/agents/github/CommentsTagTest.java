@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github;
 
+import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
@@ -37,8 +38,12 @@ import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -90,6 +95,81 @@ public final class CommentsTagTest {
             new Releases.Smart(repo.releases()).exists(tag),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * CommentsTag cannot release an older version.
+     * @throws IOException In case of error.
+     */
+    @Test
+    public void tooOldRelease() throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        repo.releases().create("1.0");
+        repo.releases().create("2.0");
+        repo.releases().create("3.0-b");
+        final Talk talk = CommentsTagTest.talk(issue, "1.5");
+        agent.execute(talk);
+        final Comment.Smart response = new Comment.Smart(
+            repo.issues().get(1).comments().get(1)
+        );
+        MatcherAssert.assertThat(
+            response.body(),
+            Matchers.containsString("version tag is too low")
+        );
+    }
+
+    /**
+     * Tests the method isVersionValid.
+     */
+    @Test
+    public void testIsVersionValid() {
+        Assert.assertTrue(
+            "Version 5.0 should be valid",
+            CommentsTag.isVersionValid("5.0")
+        );
+        Assert.assertTrue(
+            "Version 0.1 should be valid",
+            CommentsTag.isVersionValid("0.1")
+        );
+        Assert.assertTrue(
+            "Version .1.2.3.4 should be valid",
+            CommentsTag.isVersionValid(".1.2.3.4")
+        );
+        Assert.assertFalse(
+            "Version beta should be invalid",
+            CommentsTag.isVersionValid("beta")
+        );
+        Assert.assertFalse(
+            "Version 1.0-alpha should be invalid",
+            CommentsTag.isVersionValid("1.0-alpha")
+        );
+        Assert.assertFalse(
+            "Version 1. should be invalid",
+            CommentsTag.isVersionValid("1.")
+        );
+        Assert.assertFalse(
+            "Version a.b.c should be invalid",
+            CommentsTag.isVersionValid("a.b.c")
+        );
+    }
+
+    /**
+     * Tests the method isReleaseValid.
+     */
+    @Test
+    public void testIsReleaseValid() {
+        final Collection<DefaultArtifactVersion> previous = new ArrayList<>(3);
+        previous.add(new DefaultArtifactVersion("1.0"));
+        previous.add(new DefaultArtifactVersion("2.0"));
+        previous.add(new DefaultArtifactVersion("3.0"));
+        final boolean valida = CommentsTag.isReleaseValid("1.0", previous);
+        Assert.assertFalse("Release should be invalid", valida);
+        final boolean validb = CommentsTag.isReleaseValid("3.0", previous);
+        Assert.assertFalse("Release should be invalid", validb);
+        final boolean validc = CommentsTag.isReleaseValid("4.0", previous);
+        Assert.assertTrue("Release should be valid", validc);
     }
 
     /**

@@ -43,10 +43,16 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -69,6 +75,12 @@ public final class CommentsTag extends AbstractAgent {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Version pattern.
+     */
+    private static final Pattern VERSION_PATTERN =
+        Pattern.compile("\\.?(?:\\d+\\.)*\\d+");
 
     /**
      * Github.
@@ -94,6 +106,7 @@ public final class CommentsTag extends AbstractAgent {
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
+        final List<DefaultArtifactVersion> previous = this.transformVers(rels);
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
@@ -109,6 +122,21 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
+        } else if (CommentsTag.isVersionValid(tag)
+            && !CommentsTag.isReleaseValid(tag, previous)) {
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.version-to-low"),
+                    tag,
+                    previous.toString()
+                )
+            );
+            Logger.info(
+                this,
+                "tag %s must be greater than previous version %s",
+                tag,
+                previous
+            );
         } else {
             final Repo repo = issue.repo();
             final Date prev = CommentsTag.previous(repo);
@@ -129,6 +157,78 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
+    }
+
+    /**
+     * Valid version numbers:
+     * .1
+     * 2.2
+     * .1.2
+     * 1.2.3.4.5.6.7
+     *
+     * Invalid version numbers:
+     * abc
+     * a.b.c
+     * 1.
+     * 1.2.
+     * @param version Version number from a release
+     * @return True if the version is valid, false otherwise
+     */
+    public static boolean isVersionValid(final CharSequence version) {
+        return CommentsTag.VERSION_PATTERN.matcher(version).matches();
+    }
+
+    /**
+     * Is this tagged release valid?  A tagged release is valid if it's greater
+     * than any previous release.
+     * @param tag The release to be tagged
+     * @param previous The previous releases
+     * @return True if the release is valid
+     */
+    public static boolean isReleaseValid(final String tag,
+        final Collection<DefaultArtifactVersion> previous) {
+        final DefaultArtifactVersion max;
+        if (previous.isEmpty()) {
+            max = new DefaultArtifactVersion("0");
+        } else {
+            max = Collections.max(previous);
+        }
+        return new DefaultArtifactVersion(tag).compareTo(max) == 1;
+    }
+
+    /**
+     * Transforms the Release into a DefaultArtifactVersion.
+     * @param release The Release to transform
+     * @return A DefaultArtifactVersion
+     */
+    private DefaultArtifactVersion transform(final Release release) {
+        final Release.Smart rel = new Release.Smart(release);
+        DefaultArtifactVersion ver = null;
+        try {
+            ver = new DefaultArtifactVersion(rel.tag());
+        } catch (final IOException exc) {
+            Logger.error(this, "Error transforming release", exc);
+        }
+        return ver;
+    }
+
+    /**
+     * Transforms versions from Release to DefaultArtifactVersion and filters
+     * invalid version numbers. For example in these versions,
+     * ["1.0", "2.0", "3.0-b"], "3.0-b" is just ignore, therefore version "2.0"
+     * is the max.
+     * @param rels All previous releases as Release objects
+     * @return All prior releases wrapped in a DefaultArtifactVersion
+     */
+    private List<DefaultArtifactVersion> transformVers(final Releases rels) {
+        final List<DefaultArtifactVersion> versions = new ArrayList<>(1);
+        for (final Release release : rels.iterate()) {
+            final DefaultArtifactVersion ver = this.transform(release);
+            if (ver != null && CommentsTag.isVersionValid(ver.toString())) {
+                versions.add(ver);
+            }
+        }
+        return versions;
     }
 
     /**
