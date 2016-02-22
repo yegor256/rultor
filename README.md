@@ -96,9 +96,6 @@ for fun :) Here is our [selection criteria](http://www.yegor256.com/2014/10/05/t
 [travis-ci.org](http://www.travis-ci.org)<br/>
 [![Build Status](https://travis-ci.org/yegor256/rultor.svg?branch=master)](https://travis-ci.org/yegor256/rultor)
 
-[appveyor.com](http://www.appveyor.com)<br/>
-[![Build status](https://ci.appveyor.com/api/projects/status/sulqrjerl27qqtl7/branch/master?svg=true)](https://ci.appveyor.com/project/yegor256/rultor/branch/master)
-
 [codeship.io](http://www.codeship.io)<br/>
 [![Codeship Status for yegor256/rultor](https://codeship.io/projects/d00b5ff0-2641-0132-d783-12f2cec1461b/status?branch=master)](https://codeship.io/projects/37414)
 
