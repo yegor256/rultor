@@ -235,10 +235,17 @@ public final class Tail {
             final Shell shell = new TalkShells(this.xml).get();
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "dir=%s; (cat \"${dir}/stdout\" 2>/dev/null || echo \"file $file is gone\") | col -b",
-                    SSH.escape(this.xml.xpath("/talk/daemon/dir/text()").get(0))
+                StringUtils.join(
+                    String.format(
+                        "dir=%s;",
+                        SSH.escape(
+                            this.xml.xpath("/talk/daemon/dir/text()").get(0)
+                        )
+                    ),
+                    " (cat \"${dir}/stdout\" 2>/dev/null",
+                    " || echo \"file $file is gone\")",
+                    " | iconv -f utf-8 -t utf-8 -c",
+                    " | LANG=en_US.UTF-8 col -b"
                 ),
                 new NullInputStream(0L), baos,
                 Logger.stream(Level.SEVERE, true)
