@@ -33,6 +33,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
@@ -77,5 +78,41 @@ public final class QnAskedByTest {
                 Matchers.containsString("@rultor")
             )
         );
+    }
+
+    /**
+     * QnAskedBy can include all architects in the list of commanders.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void includesArchitectsInListOfCommanders() throws Exception {
+        final MkGithub github = new MkGithub();
+        final Repo repo = github.randomRepo();
+        repo.collaborators().add("testuser2");
+        final Issue issue = repo.issues().create("needs", "deployment");
+        final String action = "deploy";
+        issue.comments().post(action);
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().get(1)
+        );
+        final Question question = Mockito.mock(Question.class);
+        final QnAskedBy qab = new QnAskedBy(
+            new Profile.Fixed(
+                new XMLDocument(
+                    String.format(
+                        "<p><entry key='architect'>%s</entry></p>",
+                        repo.github().users().self().login()
+                    )
+                )
+            ),
+            String.format(
+                "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
+                action
+            ),
+            question
+        );
+        final URI home = new URI("#1");
+        qab.understand(comment, home);
+        Mockito.verify(question).understand(comment, home);
     }
 }
