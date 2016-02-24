@@ -152,9 +152,10 @@ public final class StartsRequestTest {
                     .with(Matchers.containsString("docker_when_possible\n"))
                     .with(Matchers.containsString("load average is "))
                     .with(Matchers.containsString("low enough to run a"))
+                    .with(Matchers.containsString("DOCKER-2: -t"))
                     .with(
                         Matchers.containsString(
-                            "DOCKER-5: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
+                            "DOCKER-6: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
                         )
                     )
                     .with(Matchers.containsString("useradd"))

@@ -92,7 +92,7 @@ function docker_when_possible {
   if docker ps --filter=status=exited | grep --quiet "\s${container}\s*\$"; then
     docker rm -f "${container}"
   fi
-  docker run --rm -v "$(pwd):/main" "${vars[@]}" \
+  docker run -t --rm -v "$(pwd):/main" "${vars[@]}" \
     --hostname=docker \
     --memory=6g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
