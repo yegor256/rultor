@@ -106,7 +106,7 @@ public final class CommentsTag extends AbstractAgent {
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
-        final List<DefaultArtifactVersion> previous = this.transformVers(rels);
+        final List<DefaultArtifactVersion> previous = this.versions(rels);
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
@@ -122,20 +122,19 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
-        } else if (CommentsTag.isVersionValid(tag)
-            && !CommentsTag.isReleaseValid(tag, previous)) {
+        } else if (CommentsTag.valid(tag)
+            && !CommentsTag.valid(tag, previous)) {
             issue.comments().post(
                 String.format(
-                    CommentsTag.PHRASES.getString("CommentsTag.version-to-low"),
-                    tag,
-                    previous.toString()
+                    // @checkstyle LineLength (1 line)
+                    CommentsTag.PHRASES.getString("CommentsTag.version-too-low"),
+                    tag, previous.toString()
                 )
             );
             Logger.info(
                 this,
                 "tag %s must be greater than previous version %s",
-                tag,
-                previous
+                tag, previous
             );
         } else {
             final Repo repo = issue.repo();
@@ -174,7 +173,7 @@ public final class CommentsTag extends AbstractAgent {
      * @param version Version number from a release
      * @return True if the version is valid, false otherwise
      */
-    public static boolean isVersionValid(final CharSequence version) {
+    private static boolean valid(final CharSequence version) {
         return CommentsTag.VERSION_PATTERN.matcher(version).matches();
     }
 
@@ -185,7 +184,7 @@ public final class CommentsTag extends AbstractAgent {
      * @param previous The previous releases
      * @return True if the release is valid
      */
-    public static boolean isReleaseValid(final String tag,
+    private static boolean valid(final String tag,
         final Collection<DefaultArtifactVersion> previous) {
         final DefaultArtifactVersion max;
         if (previous.isEmpty()) {
@@ -200,16 +199,11 @@ public final class CommentsTag extends AbstractAgent {
      * Transforms the Release into a DefaultArtifactVersion.
      * @param release The Release to transform
      * @return A DefaultArtifactVersion
+     * @throws IOException if there's a problem getting the release tag.
      */
-    private DefaultArtifactVersion transform(final Release release) {
-        final Release.Smart rel = new Release.Smart(release);
-        DefaultArtifactVersion ver = null;
-        try {
-            ver = new DefaultArtifactVersion(rel.tag());
-        } catch (final IOException exc) {
-            Logger.error(this, "Error transforming release", exc);
-        }
-        return ver;
+    private static DefaultArtifactVersion version(final Release release)
+        throws IOException {
+        return new DefaultArtifactVersion(new Release.Smart(release).tag());
     }
 
     /**
@@ -220,12 +214,16 @@ public final class CommentsTag extends AbstractAgent {
      * @param rels All previous releases as Release objects
      * @return All prior releases wrapped in a DefaultArtifactVersion
      */
-    private List<DefaultArtifactVersion> transformVers(final Releases rels) {
+    private List<DefaultArtifactVersion> versions(final Releases rels) {
         final List<DefaultArtifactVersion> versions = new ArrayList<>(1);
         for (final Release release : rels.iterate()) {
-            final DefaultArtifactVersion ver = this.transform(release);
-            if (ver != null && CommentsTag.isVersionValid(ver.toString())) {
-                versions.add(ver);
+            try {
+                final DefaultArtifactVersion ver = CommentsTag.version(release);
+                if (CommentsTag.valid(ver.toString())) {
+                    versions.add(ver);
+                }
+            } catch (final IOException exc) {
+                Logger.error(this, "Error transforming release", exc);
             }
         }
         return versions;

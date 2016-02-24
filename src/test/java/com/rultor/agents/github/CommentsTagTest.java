@@ -45,6 +45,7 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
 import org.xembly.Directives;
 
 /**
@@ -102,7 +103,7 @@ public final class CommentsTagTest {
      * @throws IOException In case of error.
      */
     @Test
-    public void tooOldRelease() throws IOException {
+    public void rejectsOldRelease() throws IOException {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
@@ -121,55 +122,60 @@ public final class CommentsTagTest {
     }
 
     /**
-     * Tests the method isVersionValid.
+     * CommentsTag can validate or reject a version.
+     * @throws Exception In case of error.
      */
     @Test
-    public void testIsVersionValid() {
+    public void canValidateVersion() throws Exception {
         Assert.assertTrue(
-            "Version 5.0 should be valid",
-            CommentsTag.isVersionValid("5.0")
+            "Version 5.0 should be valid", CommentsTagTest.invokeValid("5.0")
         );
         Assert.assertTrue(
-            "Version 0.1 should be valid",
-            CommentsTag.isVersionValid("0.1")
+            "Version 0.1 should be valid", CommentsTagTest.invokeValid("0.1")
         );
         Assert.assertTrue(
             "Version .1.2.3.4 should be valid",
-            CommentsTag.isVersionValid(".1.2.3.4")
+            CommentsTagTest.invokeValid(".1.2.3.4")
         );
         Assert.assertFalse(
             "Version beta should be invalid",
-            CommentsTag.isVersionValid("beta")
+            CommentsTagTest.invokeValid("beta")
         );
         Assert.assertFalse(
             "Version 1.0-alpha should be invalid",
-            CommentsTag.isVersionValid("1.0-alpha")
+            CommentsTagTest.invokeValid("1.0-alpha")
         );
         Assert.assertFalse(
-            "Version 1. should be invalid",
-            CommentsTag.isVersionValid("1.")
+            "Version 1. should be invalid", CommentsTagTest.invokeValid("1.")
         );
         Assert.assertFalse(
             "Version a.b.c should be invalid",
-            CommentsTag.isVersionValid("a.b.c")
+            CommentsTagTest.invokeValid("a.b.c")
         );
     }
 
     /**
-     * Tests the method isReleaseValid.
+     * CommentsTag can validate a release.
+     * @throws Exception In case of error.
      */
     @Test
-    public void testIsReleaseValid() {
+    public void canValidateRelease() throws Exception {
         final Collection<DefaultArtifactVersion> previous = new ArrayList<>(3);
         previous.add(new DefaultArtifactVersion("1.0"));
         previous.add(new DefaultArtifactVersion("2.0"));
         previous.add(new DefaultArtifactVersion("3.0"));
-        final boolean valida = CommentsTag.isReleaseValid("1.0", previous);
-        Assert.assertFalse("Release should be invalid", valida);
-        final boolean validb = CommentsTag.isReleaseValid("3.0", previous);
-        Assert.assertFalse("Release should be invalid", validb);
-        final boolean validc = CommentsTag.isReleaseValid("4.0", previous);
-        Assert.assertTrue("Release should be valid", validc);
+        Assert.assertFalse(
+            "Release should be invalid",
+            CommentsTagTest.invokeValid("1.0", previous)
+        );
+        Assert.assertFalse(
+            "Release should be invalid",
+            CommentsTagTest.invokeValid("3.0", previous)
+        );
+        Assert.assertTrue(
+            "Release should be valid",
+            CommentsTagTest.invokeValid("4.0", previous)
+        );
     }
 
     /**
@@ -222,6 +228,20 @@ public final class CommentsTagTest {
                 .add("args").add("arg").attr("name", "tag").set(tag)
         );
         return talk;
+    }
+
+    /**
+     * Helper method to invoke the private 'valid' methods in the CommentsTag
+     * class.
+     * @param parameters The parameters to pass to the method.
+     * @return The result of the invocation.
+     * @throws Exception If there is an error.
+     */
+    private static boolean invokeValid(final Object... parameters)
+        throws Exception {
+        return (boolean) Whitebox.invokeMethod(
+            CommentsTag.class, "valid", parameters
+        );
     }
 
 }
