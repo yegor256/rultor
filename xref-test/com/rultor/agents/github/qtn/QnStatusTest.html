@@ -37,72 +37,65 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.agents.github.qtn;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.base.Joiner;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.Comment;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.Issue;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.Repo;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.mock.MkGithub;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XMLDocument;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.github.Req;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Talk;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * Tests for ${@link QnStatus}.</em>
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * @version $Id: 9ffc31c32bde4da2d175ce623d598559188d04f8 $</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> * @since 1.5</em>
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * @checkstyle MultipleStringLiteralsCheck (500 lines)</em>
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)</em>
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/rultor/agents/github/qtn/QnStatusTest.html">QnStatusTest</a> {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment">     * QnStatus can build a report.</em>
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">     * @throws Exception In case of error.</em>
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      @Test
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> buildsReport() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>          <strong class="jxr_keyword">final</strong> Repo repo = <strong class="jxr_keyword">new</strong> MkGithub().randomRepo();
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>          <strong class="jxr_keyword">final</strong> Issue issue = repo.issues().create(<span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>          issue.comments().post(<span class="jxr_string">"status"</span>);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">final</strong> Talk talk = <strong class="jxr_keyword">new</strong> Talk.InFile(
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>              <strong class="jxr_keyword">new</strong> XMLDocument(
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  Joiner.on(' ').join(
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>                      <span class="jxr_string">"&lt;talk name='test' number='45' later='false'&gt;"</span>,
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>                      <span class="jxr_string">"&lt;request id='454'&gt;&lt;type&gt;merge&lt;/type&gt;&lt;args/&gt;&lt;/request&gt;"</span>,
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>                      <span class="jxr_string">"&lt;daemon id='454'&gt;&lt;started&gt;2014-07-08T12:09:09Z&lt;/started&gt;"</span>,
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>                      <span class="jxr_string">"&lt;script&gt;test&lt;/script&gt;&lt;title&gt;something&lt;/title&gt;"</span>,
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>                      <span class="jxr_string">"&lt;code&gt;3&lt;/code&gt;&lt;dir&gt;/tmp/abc&lt;/dir&gt;"</span>,
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>                      <span class="jxr_string">"&lt;/daemon&gt;"</span>,
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>                      <span class="jxr_string">"&lt;/talk&gt;"</span>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>                  )
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>              )
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>          );
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>              <strong class="jxr_keyword">new</strong> QnStatus(talk).understand(
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  <strong class="jxr_keyword">new</strong> Comment.Smart(issue.comments().get(1)), <strong class="jxr_keyword">new</strong> URI(<span class="jxr_string">"#"</span>)
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>              ),
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>              Matchers.is(Req.DONE)
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>          );
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>              <strong class="jxr_keyword">new</strong> Comment.Smart(issue.comments().get(2)).body(),
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>              Matchers.allOf(
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>                  Matchers.containsString(<span class="jxr_string">"request `454` is in processing"</span>),
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  Matchers.containsString(<span class="jxr_string">"request has no parameters"</span>),
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  Matchers.containsString(<span class="jxr_string">"build started"</span>),
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>                  Matchers.containsString(<span class="jxr_string">"build exit code is `3`"</span>)
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>              )
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>          );
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>  }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.Comment;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.Issue;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.Repo;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.github.mock.MkGithub;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.github.Req;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Talk;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * Tests for ${@link QnStatus}.</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @version $Id: 3f2ff79f949447f9eb29d580ce8c306dcdbce220 $</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @since 1.5</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/rultor/agents/github/qtn/QnStatusTest.html">QnStatusTest</a> {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">     * QnStatus can build a report.</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">     * @throws Exception In case of error.</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      @Test
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> buildsReport() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">final</strong> Repo repo = <strong class="jxr_keyword">new</strong> MkGithub().randomRepo();
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">final</strong> Issue issue = repo.issues().create(<span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          issue.comments().post(<span class="jxr_string">"status"</span>);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          <strong class="jxr_keyword">final</strong> Talk talk = <strong class="jxr_keyword">new</strong> Talk.InFile(
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>              <span class="jxr_string">"&lt;talk name='test' number='45' later='false'&gt;"</span>,
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>              <span class="jxr_string">"&lt;request id='454'&gt;&lt;type&gt;merge&lt;/type&gt;&lt;args/&gt;&lt;/request&gt;"</span>,
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>              <span class="jxr_string">"&lt;daemon id='454'&gt;&lt;started&gt;2014-07-08T12:09:09Z&lt;/started&gt;"</span>,
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>              <span class="jxr_string">"&lt;script&gt;test&lt;/script&gt;&lt;title&gt;something&lt;/title&gt;"</span>,
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>              <span class="jxr_string">"&lt;code&gt;3&lt;/code&gt;&lt;dir&gt;/tmp/abc&lt;/dir&gt;"</span>,
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>              <span class="jxr_string">"&lt;/daemon&gt;"</span>,
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>              <span class="jxr_string">"&lt;/talk&gt;"</span>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          );
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>              <strong class="jxr_keyword">new</strong> QnStatus(talk).understand(
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  <strong class="jxr_keyword">new</strong> Comment.Smart(issue.comments().get(1)),
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  <strong class="jxr_keyword">new</strong> URI(<span class="jxr_string">"#"</span>)
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>              ),
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>              Matchers.is(Req.DONE)
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          );
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>              <strong class="jxr_keyword">new</strong> Comment.Smart(issue.comments().get(2)).body(),
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>              Matchers.allOf(
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  Matchers.containsString(<span class="jxr_string">"request `454` is in processing"</span>),
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>                  Matchers.containsString(<span class="jxr_string">"request has no parameters"</span>),
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                  Matchers.containsString(<span class="jxr_string">"build started"</span>),
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>                  Matchers.containsString(<span class="jxr_string">"build exit code is `3`"</span>)
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>              )
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          );
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>

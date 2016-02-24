@@ -51,7 +51,7 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * Tests for ${@link Reports}.</em>
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @version $Id: 9b9e5b735abb3e33d1fbc77ab335fd46f09e76d3 $</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @version $Id: 3700614dea0fae5f3e97d543f608d4c52d85ed34 $</em>
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @since 1.3</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/agents/github/ReportsTest.html">ReportsTest</a> {
@@ -64,31 +64,30 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> reportsRequestResult() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>          <strong class="jxr_keyword">final</strong> Repo repo = <strong class="jxr_keyword">new</strong> MkGithub().randomRepo();
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">final</strong> Issue issue = repo.issues().create(<span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>          issue.comments().post(<span class="jxr_string">"hey, do it"</span>);
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <strong class="jxr_keyword">final</strong> Agent agent = <strong class="jxr_keyword">new</strong> Reports(repo.github());
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>          <strong class="jxr_keyword">final</strong> Talk talk = <strong class="jxr_keyword">new</strong> Talk.InFile();
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>          talk.modify(
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>              <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/talk"</span>).add(<span class="jxr_string">"wire"</span>)
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>                  .add(<span class="jxr_string">"href"</span>).set(<span class="jxr_string">"http://test"</span>).up()
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>                  .add(<span class="jxr_string">"github-repo"</span>).set(repo.coordinates().toString()).up()
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>                  .add(<span class="jxr_string">"github-issue"</span>).set(Integer.toString(issue.number())).up()
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  .up()
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>                  .add(<span class="jxr_string">"request"</span>).attr(<span class="jxr_string">"id"</span>, <span class="jxr_string">"1"</span>)
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>                  .add(<span class="jxr_string">"msec"</span>).set(<span class="jxr_string">"1234567"</span>).up()
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>                  .add(<span class="jxr_string">"success"</span>).set(<span class="jxr_string">"true"</span>).up()
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>                  .add(<span class="jxr_string">"type"</span>).set(<span class="jxr_string">"something"</span>).up()
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  .add(<span class="jxr_string">"args"</span>)
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>          );
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>          agent.execute(talk);
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>              talk.read(),
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/talk[not(request)]"</span>)
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>          );
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      }
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  }
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">final</strong> Agent agent = <strong class="jxr_keyword">new</strong> Reports(repo.github());
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <strong class="jxr_keyword">final</strong> Talk talk = <strong class="jxr_keyword">new</strong> Talk.InFile();
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          talk.modify(
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>              <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/talk"</span>).add(<span class="jxr_string">"wire"</span>)
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>                  .add(<span class="jxr_string">"href"</span>).set(<span class="jxr_string">"http://test"</span>).up()
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>                  .add(<span class="jxr_string">"github-repo"</span>).set(repo.coordinates().toString()).up()
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>                  .add(<span class="jxr_string">"github-issue"</span>).set(Integer.toString(issue.number())).up()
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>                  .up()
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  .add(<span class="jxr_string">"request"</span>).attr(<span class="jxr_string">"id"</span>, <span class="jxr_string">"1"</span>)
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>                  .add(<span class="jxr_string">"msec"</span>).set(<span class="jxr_string">"1234567"</span>).up()
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>                  .add(<span class="jxr_string">"success"</span>).set(<span class="jxr_string">"true"</span>).up()
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>                  .add(<span class="jxr_string">"type"</span>).set(<span class="jxr_string">"something"</span>).up()
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>                  .add(<span class="jxr_string">"args"</span>)
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          );
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          agent.execute(talk);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>              talk.read(),
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/talk[not(request)]"</span>)
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          );
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>

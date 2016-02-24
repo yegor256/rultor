@@ -51,7 +51,7 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * Stops daemon if STOP request is present.</em>
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @version $Id: dd581e1c5f3fc0867ad7e9fcedfb4c69b4a6dae6 $</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @version $Id: eb47dc2a819d7f06a44ab906b76e6b395163854b $</em>
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @since 1.50</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  @Immutable
@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          Logger.info(
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>              <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"docker stop attempt at %s, code=%d"</span>,
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>              xml.xpath(<span class="jxr_string">"/talk/@name"</span>).get(0),
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>              <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/daemons/Script.html">Script</a>().exec(xml, <span class="jxr_string">"stop.sh"</span>)
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>              <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/daemons/Script.html">Script</a>(<span class="jxr_string">"stop.sh"</span>).exec(xml)
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          );
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      }
@@ -83,6 +83,6 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>

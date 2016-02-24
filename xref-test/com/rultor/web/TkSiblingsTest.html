@@ -52,59 +52,61 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * Test case for {@link TkSiblings}.</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @version $Id: 312b6ef617199a690d3bca5aa8301006a36afc47 $</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @version $Id: acdda678d1d890256b4a6ff21c34b1559cfb8bc8 $</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @since 1.23.1</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/web/TkSiblingsTest.html">TkSiblingsTest</a> {
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">     * TkSiblings can render a list.</em>
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      @Test
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rendersListOfTalks() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">final</strong> Talks talks = <strong class="jxr_keyword">new</strong> Talks.InDir();
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">final</strong> TkRegex take = <strong class="jxr_keyword">new</strong> TkSiblings(talks);
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>          talks.create(<span class="jxr_string">"repo1"</span>, Talk.TEST_NAME);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>          talks.get(Talk.TEST_NAME).modify(
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>              <strong class="jxr_keyword">new</strong> Directives()
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>                  .xpath(<span class="jxr_string">"/talk"</span>)
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>                  .add(<span class="jxr_string">"wire"</span>).add(<span class="jxr_string">"href"</span>).set(<span class="jxr_string">"http://example.com"</span>).up()
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>                  .add(<span class="jxr_string">"github-repo"</span>).set(<span class="jxr_string">"yegor256/rultor"</span>).up()
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>                  .add(<span class="jxr_string">"github-issue"</span>).set(<span class="jxr_string">"555"</span>).up().up()
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  .add(<span class="jxr_string">"archive"</span>).add(<span class="jxr_string">"log"</span>).attr(<span class="jxr_string">"title"</span>, <span class="jxr_string">"hello, world"</span>)
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>                  .attr(<span class="jxr_string">"id"</span>, <span class="jxr_string">"a1b2c3"</span>).set(<span class="jxr_string">"s3://test"</span>)
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>          );
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>              XhtmlMatchers.xhtml(
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  <strong class="jxr_keyword">new</strong> RsPrint(
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>                      take.act(
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>                          <strong class="jxr_keyword">new</strong> RqRegex.Fake(
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>                              <strong class="jxr_keyword">new</strong> RqWithHeader(
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>                                  <strong class="jxr_keyword">new</strong> RqFake(<span class="jxr_string">"GET"</span>, <span class="jxr_string">"/aa?s=123"</span>),
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>                                  <span class="jxr_string">"Accept"</span>, <span class="jxr_string">"text/xml"</span>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>                              ),
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>                              <span class="jxr_string">"(.*)"</span>,
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>                              <span class="jxr_string">"x"</span>
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>                          )
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>                      )
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>                  ).printBody()
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>              ),
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>              XhtmlMatchers.hasXPaths(
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>                  <span class="jxr_string">"/page[repo='x']"</span>,
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>                  <span class="jxr_string">"/page[since='123']"</span>,
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  <span class="jxr_string">"/page/siblings[count(talk)=1]"</span>,
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  <span class="jxr_string">"/page/siblings/talk[timeago]"</span>,
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>                  <span class="jxr_string">"/page/siblings/talk/archive/log[id and href and title]"</span>,
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>                  <span class="jxr_string">"/page/siblings/talk/archive[count(log)=1]"</span>,
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>                  <span class="jxr_string">"//log[starts-with(href,'http://')]"</span>
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>              )
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>          );
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      }
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  }
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * @checkstyle MultipleStringLiteralsCheck (500 lines)</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/web/TkSiblingsTest.html">TkSiblingsTest</a> {
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">     * TkSiblings can render a list.</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      @Test
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rendersListOfTalks() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">final</strong> Talks talks = <strong class="jxr_keyword">new</strong> Talks.InDir();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <strong class="jxr_keyword">final</strong> TkRegex take = <strong class="jxr_keyword">new</strong> TkSiblings(talks);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          talks.create(<span class="jxr_string">"repo1"</span>, Talk.TEST_NAME);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          talks.get(Talk.TEST_NAME).modify(
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>              <strong class="jxr_keyword">new</strong> Directives()
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>                  .xpath(<span class="jxr_string">"/talk"</span>)
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>                  .push().xpath(<span class="jxr_string">"wire"</span>).remove().pop()
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>                  .add(<span class="jxr_string">"wire"</span>).add(<span class="jxr_string">"href"</span>).set(<span class="jxr_string">"http://example.com"</span>).up()
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  .add(<span class="jxr_string">"github-repo"</span>).set(<span class="jxr_string">"yegor256/rultor"</span>).up()
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>                  .add(<span class="jxr_string">"github-issue"</span>).set(<span class="jxr_string">"555"</span>).up().up()
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>                  .add(<span class="jxr_string">"archive"</span>).add(<span class="jxr_string">"log"</span>).attr(<span class="jxr_string">"title"</span>, <span class="jxr_string">"hello, world"</span>)
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>                  .attr(<span class="jxr_string">"id"</span>, <span class="jxr_string">"a1b2c3"</span>).set(<span class="jxr_string">"s3://test"</span>)
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          );
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>              XhtmlMatchers.xhtml(
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  <strong class="jxr_keyword">new</strong> RsPrint(
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>                      take.act(
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>                          <strong class="jxr_keyword">new</strong> RqRegex.Fake(
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                              <strong class="jxr_keyword">new</strong> RqWithHeader(
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                                  <strong class="jxr_keyword">new</strong> RqFake(<span class="jxr_string">"GET"</span>, <span class="jxr_string">"/aa?s=123"</span>),
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>                                  <span class="jxr_string">"Accept"</span>, <span class="jxr_string">"text/xml"</span>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                              ),
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>                              <span class="jxr_string">"(.*)"</span>,
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                              <span class="jxr_string">"x"</span>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>                          )
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                      )
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>                  ).printBody()
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>              ),
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>              XhtmlMatchers.hasXPaths(
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  <span class="jxr_string">"/page[repo='x']"</span>,
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  <span class="jxr_string">"/page[since='123']"</span>,
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>                  <span class="jxr_string">"/page/siblings[count(talk)=1]"</span>,
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>                  <span class="jxr_string">"/page/siblings/talk[timeago]"</span>,
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>                  <span class="jxr_string">"/page/siblings/talk/archive/log[id and href and title]"</span>,
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>                  <span class="jxr_string">"/page/siblings/talk/archive[count(log)=1]"</span>,
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>                  <span class="jxr_string">"//log[starts-with(href,'http://')]"</span>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>              )
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          );
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2015 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>
