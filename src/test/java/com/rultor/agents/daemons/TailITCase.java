@@ -53,11 +53,6 @@ import org.xembly.Directives;
 public final class TailITCase {
 
     /**
-     * Attribute key for the id of a talk directive.
-     */
-    private static final String DIRECTIVE_ID_KEY = "id";
-
-    /**
      * Temp directory.
      * @checkstyle VisibilityModifierCheck (5 lines)
      */
@@ -80,26 +75,29 @@ public final class TailITCase {
         );
         final Talk talk = new Talk.InFile();
         final String hash = "a1b5c3e3";
+        final String key = "id";
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon")
-                .attr(TailITCase.DIRECTIVE_ID_KEY, hash)
+                .attr(key, hash)
                 .add("title").set("tail").up()
                 .add("script").set("empty").up()
                 .add("dir").set(home.getAbsolutePath()).up()
                 .add("code").set("-7").up()
                 .add("started").set(new Time().iso()).up()
                 .add("ended").set(new Time().iso()).up().up()
-                .add("shell").attr(TailITCase.DIRECTIVE_ID_KEY, hash)
+                .add("shell").attr(key, hash)
                 .add("host").set("localhost").up()
                 .add("port").set(Integer.toString(sshd.port())).up()
                 .add("login").set(sshd.login()).up()
                 .add("key").set(sshd.key()).up().up()
         );
-        final Tail agent = new Tail(talk.read(), hash);
         MatcherAssert.assertThat(
-            IOUtils.toString(agent.read(), Charsets.UTF_8),
-            Matchers.equalTo(String.format("%sê\n", clean))
+            IOUtils.toString(
+                new Tail(talk.read(), hash).read(),
+                Charsets.UTF_8
+            ),
+            Matchers.is(String.format("%sê\n", clean))
         );
     }
 
