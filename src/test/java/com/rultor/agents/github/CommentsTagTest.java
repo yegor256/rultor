@@ -117,7 +117,7 @@ public final class CommentsTagTest {
     }
 
     /**
-     * CommentsTag cannot release given an invalid tag
+     * CommentsTag cannot release given an invalid tag.
      * @throws IOException In case of error.
      */
     @Test

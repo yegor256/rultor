@@ -107,62 +107,116 @@ public final class CommentsTag extends AbstractAgent {
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
         final List<DefaultArtifactVersion> previous = this.versions(rels);
+        boolean release = true;
         if (rels.exists(tag)) {
-            final Release.Smart rel = new Release.Smart(rels.find(tag));
-            rel.body(
-                String.format(
-                    "%s\n\nSee also #%d and [build log](%s)",
-                    rel.body(), issue.number(), home
-                )
-            );
-            issue.comments().post(
-                String.format(
-                    CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
-                    tag
-                )
-            );
-            Logger.info(this, "duplicate tag %s commented", tag);
-        } else if (!CommentsTag.valid(tag)) {
-            issue.comments().post(
-                String.format(
-                    CommentsTag.PHRASES.getString("CommentsTag.invalid-tag"),
-                    tag
-                )
-            );
-            Logger.info(this, "tag %s is invalid", tag);
-        } else if (!CommentsTag.valid(tag, previous)) {
-            issue.comments().post(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    CommentsTag.PHRASES.getString("CommentsTag.version-too-low"),
-                    tag, previous.toString()
-                )
-            );
-            Logger.info(
-                this,
-                "tag %s must be greater than previous version %s",
-                tag, previous
-            );
-        } else {
-            final Repo repo = issue.repo();
-            final Date prev = CommentsTag.previous(repo);
-            final Release.Smart rel = new Release.Smart(
-                rels.create(tag.trim())
-            );
-            rel.name(issue.title());
-            rel.prerelease(true);
-            rel.body(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
-                    issue.number(),
-                    new CommitsLog(repo).build(prev, rel.publishedAt()),
-                    Manifests.read("Rultor-Version"), home
-                )
-            );
-            Logger.info(this, "tag %s created and commented", tag);
+            this.logDuplicateTag(issue, tag, rels, home);
+            release = false;
+        }
+        if (release && !CommentsTag.valid(tag)) {
+            this.logInvalidTag(issue, tag);
+            release = false;
+        }
+        if (release && !CommentsTag.valid(tag, previous)) {
+            this.logTagTooOld(issue, tag, previous);
+            release = false;
+        }
+        if (release) {
+            this.release(issue, tag, rels, home);
         }
         return new Directives();
+    }
+
+    /**
+     * Create the release and add a comment.
+     * @param issue The issue to add a comment to.
+     * @param tag The tag for the release.
+     * @param rels The existing releases.
+     * @param home The URI of home.
+     * @throws IOException If there is a problem.
+     * @checkstyle ParameterNumberCheck (15 lines)
+     */
+    private void release(final Issue.Smart issue, final String tag,
+        final Releases rels, final URI home) throws IOException {
+        final Repo repo = issue.repo();
+        final Date prev = CommentsTag.previous(repo);
+        final Release.Smart rel = new Release.Smart(rels.create(tag.trim()));
+        rel.name(issue.title());
+        rel.prerelease(true);
+        rel.body(
+            String.format(
+                // @checkstyle LineLength (1 line)
+                "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
+                issue.number(),
+                new CommitsLog(repo).build(prev, rel.publishedAt()),
+                Manifests.read("Rultor-Version"), home
+            )
+        );
+        Logger.info(this, "tag %s created and commented", tag);
+    }
+
+    /**
+     * Logs an issue because the new tag is too old.
+     * @param issue The Issue to add the comment to.
+     * @param tag The tag that for the new release.
+     * @param previous The previous releases.
+     * @throws IOException If there is a problem.
+     */
+    private void logTagTooOld(final Issue issue, final String tag,
+        final List<DefaultArtifactVersion> previous) throws IOException {
+        issue.comments().post(
+            String.format(
+                // @checkstyle LineLength (1 line)
+                CommentsTag.PHRASES.getString("CommentsTag.version-too-low"),
+                tag, previous.toString()
+            )
+        );
+        Logger.info(
+            this, "tag %s must be greater than previous version %s",
+            tag, previous
+        );
+    }
+
+    /**
+     * Logs a comment because the tag is invalid.
+     * @param issue The Issue to add the comment to.
+     * @param tag The tag which is invalid.
+     * @throws IOException If there is a problem.
+     */
+    private void logInvalidTag(final Issue issue, final String tag)
+        throws IOException {
+        issue.comments().post(
+            String.format(
+                CommentsTag.PHRASES.getString("CommentsTag.invalid-tag"), tag
+            )
+        );
+        Logger.info(this, "tag %s is invalid", tag);
+    }
+
+    /**
+     * Logs a comment because the tag has already been released.
+     * @param issue The Issue to add the comment to.
+     * @param tag The tag that has already been released.
+     * @param rels The other releases.
+     * @param home The URI of home.
+     * @throws IOException If there is a problem.
+     * @checkstyle ParameterNumberCheck (15 lines)
+     */
+    private void logDuplicateTag(final Issue.Smart issue, final String tag,
+        final Releases.Smart rels, final URI home) throws IOException {
+        final Release.Smart rel = new Release.Smart(rels.find(tag));
+        rel.body(
+            String.format(
+                "%s\n\nSee also #%d and [build log](%s)",
+                rel.body(), issue.number(), home
+            )
+        );
+        issue.comments().post(
+            String.format(
+                CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
+                tag
+            )
+        );
+        Logger.info(this, "duplicate tag %s commented", tag);
     }
 
     /**
