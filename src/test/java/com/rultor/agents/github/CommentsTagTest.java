@@ -38,14 +38,9 @@ import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Test;
-import org.powermock.reflect.Whitebox;
 import org.xembly.Directives;
 
 /**
@@ -70,7 +65,7 @@ public final class CommentsTagTest {
         final Agent agent = new CommentsTag(
             repo.github()
         );
-        final String tag = "v1.0";
+        final String tag = "1.0";
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -122,59 +117,25 @@ public final class CommentsTagTest {
     }
 
     /**
-     * CommentsTag can validate or reject a version.
-     * @throws Exception In case of error.
+     * CommentsTag cannot release given an invalid tag
+     * @throws IOException In case of error.
      */
     @Test
-    public void canValidateVersion() throws Exception {
-        Assert.assertTrue(
-            "Version 5.0 should be valid", CommentsTagTest.invokeValid("5.0")
+    public void rejectsInvalidRelease() throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        repo.releases().create("1.0");
+        repo.releases().create("2.0");
+        repo.releases().create("3.0-b");
+        final Talk talk = CommentsTagTest.talk(issue, "4.0-alpha");
+        agent.execute(talk);
+        final Comment.Smart response = new Comment.Smart(
+            repo.issues().get(1).comments().get(1)
         );
-        Assert.assertTrue(
-            "Version 0.1 should be valid", CommentsTagTest.invokeValid("0.1")
-        );
-        Assert.assertTrue(
-            "Version .1.2.3.4 should be valid",
-            CommentsTagTest.invokeValid(".1.2.3.4")
-        );
-        Assert.assertFalse(
-            "Version beta should be invalid",
-            CommentsTagTest.invokeValid("beta")
-        );
-        Assert.assertFalse(
-            "Version 1.0-alpha should be invalid",
-            CommentsTagTest.invokeValid("1.0-alpha")
-        );
-        Assert.assertFalse(
-            "Version 1. should be invalid", CommentsTagTest.invokeValid("1.")
-        );
-        Assert.assertFalse(
-            "Version a.b.c should be invalid",
-            CommentsTagTest.invokeValid("a.b.c")
-        );
-    }
-
-    /**
-     * CommentsTag can validate a release.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void canValidateRelease() throws Exception {
-        final Collection<DefaultArtifactVersion> previous = new ArrayList<>(3);
-        previous.add(new DefaultArtifactVersion("1.0"));
-        previous.add(new DefaultArtifactVersion("2.0"));
-        previous.add(new DefaultArtifactVersion("3.0"));
-        Assert.assertFalse(
-            "Release should be invalid",
-            CommentsTagTest.invokeValid("1.0", previous)
-        );
-        Assert.assertFalse(
-            "Release should be invalid",
-            CommentsTagTest.invokeValid("3.0", previous)
-        );
-        Assert.assertTrue(
-            "Release should be valid",
-            CommentsTagTest.invokeValid("4.0", previous)
+        MatcherAssert.assertThat(
+            response.body(),
+            Matchers.containsString("version tag is invalid")
         );
     }
 
@@ -187,7 +148,7 @@ public final class CommentsTagTest {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
-        final String tag = "v1.5";
+        final String tag = "1.5";
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -229,19 +190,4 @@ public final class CommentsTagTest {
         );
         return talk;
     }
-
-    /**
-     * Helper method to invoke the private 'valid' methods in the CommentsTag
-     * class.
-     * @param parameters The parameters to pass to the method.
-     * @return The result of the invocation.
-     * @throws Exception If there is an error.
-     */
-    private static boolean invokeValid(final Object... parameters)
-        throws Exception {
-        return (boolean) Whitebox.invokeMethod(
-            CommentsTag.class, "valid", parameters
-        );
-    }
-
 }

@@ -122,8 +122,15 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
-        } else if (CommentsTag.valid(tag)
-            && !CommentsTag.valid(tag, previous)) {
+        } else if (!CommentsTag.valid(tag)) {
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.invalid-tag"),
+                    tag
+                )
+            );
+            Logger.info(this, "tag %s is invalid", tag);
+        } else if (!CommentsTag.valid(tag, previous)) {
             issue.comments().post(
                 String.format(
                     // @checkstyle LineLength (1 line)
