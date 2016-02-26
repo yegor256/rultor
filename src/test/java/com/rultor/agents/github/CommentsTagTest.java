@@ -105,8 +105,7 @@ public final class CommentsTagTest {
         repo.releases().create("1.0");
         repo.releases().create("2.0");
         repo.releases().create("3.0-b");
-        final Talk talk = CommentsTagTest.talk(issue, "1.5");
-        agent.execute(talk);
+        agent.execute(CommentsTagTest.talk(issue, "1.5"));
         final Comment.Smart response = new Comment.Smart(
             repo.issues().get(1).comments().get(1)
         );
@@ -122,21 +121,9 @@ public final class CommentsTagTest {
      */
     @Test
     public void rejectsInvalidRelease() throws IOException {
-        final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
-        final Agent agent = new CommentsTag(repo.github());
-        repo.releases().create("1.0");
-        repo.releases().create("2.0");
-        repo.releases().create("3.0-b");
-        final Talk talk = CommentsTagTest.talk(issue, "4.0-alpha");
-        agent.execute(talk);
-        final Comment.Smart response = new Comment.Smart(
-            repo.issues().get(1).comments().get(1)
-        );
-        MatcherAssert.assertThat(
-            response.body(),
-            Matchers.containsString("version tag is invalid")
-        );
+        CommentsTagTest.assertInvalidRelease("4.0-alpha");
+        CommentsTagTest.assertInvalidRelease(".1");
+        CommentsTagTest.assertInvalidRelease("a.b.c");
     }
 
     /**
@@ -189,5 +176,25 @@ public final class CommentsTagTest {
                 .add("args").add("arg").attr("name", "tag").set(tag)
         );
         return talk;
+    }
+
+    /**
+     * This is a helper method used to check that a given tag is invalid.
+     * @param tag The tag that is asserted to be invalid.
+     * @throws IOException In case of error.
+     */
+    private static void assertInvalidRelease(final String tag)
+        throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        agent.execute(CommentsTagTest.talk(issue, tag));
+        final Comment.Smart response = new Comment.Smart(
+            repo.issues().get(1).comments().get(1)
+        );
+        MatcherAssert.assertThat(
+            response.body(),
+            Matchers.containsString("version tag is invalid")
+        );
     }
 }

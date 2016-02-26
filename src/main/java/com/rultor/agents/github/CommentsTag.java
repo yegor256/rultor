@@ -80,7 +80,7 @@ public final class CommentsTag extends AbstractAgent {
      * Version pattern.
      */
     private static final Pattern VERSION_PATTERN =
-        Pattern.compile("\\.?(?:\\d+\\.)*\\d+");
+        Pattern.compile("(?:\\d+\\.)*\\d+");
 
     /**
      * Github.
@@ -107,145 +107,102 @@ public final class CommentsTag extends AbstractAgent {
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
         final List<DefaultArtifactVersion> previous = this.versions(rels);
-        boolean release = true;
         if (rels.exists(tag)) {
-            this.logDuplicateTag(issue, tag, rels, home);
-            release = false;
-        }
-        if (release && !CommentsTag.valid(tag)) {
-            this.logInvalidTag(issue, tag);
-            release = false;
-        }
-        if (release && !CommentsTag.valid(tag, previous)) {
-            this.logTagTooOld(issue, tag, previous);
-            release = false;
-        }
-        if (release) {
-            this.release(issue, tag, rels, home);
+            final Release.Smart rel = new Release.Smart(rels.find(tag));
+            rel.body(
+                String.format(
+                    "%s\n\nSee also #%d and [build log](%s)",
+                    rel.body(), issue.number(), home
+                )
+            );
+            this.comment(
+                issue,
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
+                    tag
+                )
+            );
+        } else if (CommentsTag.invalid(tag)) {
+            this.comment(
+                issue,
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.invalid-tag"),
+                    tag
+                )
+            );
+        } else if (CommentsTag.tooOld(tag, previous)) {
+            this.comment(
+                issue,
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    CommentsTag.PHRASES.getString("CommentsTag.version-too-low"),
+                    tag, previous.toString()
+                )
+            );
+        } else {
+            final Repo repo = issue.repo();
+            final Date prev = CommentsTag.previous(repo);
+            final Release.Smart rel = new Release.Smart(
+                rels.create(tag.trim())
+            );
+            rel.name(issue.title());
+            rel.prerelease(true);
+            rel.body(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
+                    issue.number(),
+                    new CommitsLog(repo).build(prev, rel.publishedAt()),
+                    Manifests.read("Rultor-Version"), home
+                )
+            );
+            Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
     }
 
     /**
-     * Create the release and add a comment.
-     * @param issue The issue to add a comment to.
-     * @param tag The tag for the release.
-     * @param rels The existing releases.
-     * @param home The URI of home.
-     * @throws IOException If there is a problem.
-     * @checkstyle ParameterNumberCheck (15 lines)
-     */
-    private void release(final Issue.Smart issue, final String tag,
-        final Releases rels, final URI home) throws IOException {
-        final Repo repo = issue.repo();
-        final Date prev = CommentsTag.previous(repo);
-        final Release.Smart rel = new Release.Smart(rels.create(tag.trim()));
-        rel.name(issue.title());
-        rel.prerelease(true);
-        rel.body(
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
-                issue.number(),
-                new CommitsLog(repo).build(prev, rel.publishedAt()),
-                Manifests.read("Rultor-Version"), home
-            )
-        );
-        Logger.info(this, "tag %s created and commented", tag);
-    }
-
-    /**
-     * Logs an issue because the new tag is too old.
+     * Adds a comment to the given issue.  Also logs the comment in the Logger.
      * @param issue The Issue to add the comment to.
-     * @param tag The tag that for the new release.
-     * @param previous The previous releases.
+     * @param comment The comment to add to the Issue and Logger.
      * @throws IOException If there is a problem.
      */
-    private void logTagTooOld(final Issue issue, final String tag,
-        final List<DefaultArtifactVersion> previous) throws IOException {
-        issue.comments().post(
-            String.format(
-                // @checkstyle LineLength (1 line)
-                CommentsTag.PHRASES.getString("CommentsTag.version-too-low"),
-                tag, previous.toString()
-            )
-        );
-        Logger.info(
-            this, "tag %s must be greater than previous version %s",
-            tag, previous
-        );
-    }
-
-    /**
-     * Logs a comment because the tag is invalid.
-     * @param issue The Issue to add the comment to.
-     * @param tag The tag which is invalid.
-     * @throws IOException If there is a problem.
-     */
-    private void logInvalidTag(final Issue issue, final String tag)
+    private void comment(final Issue issue, final String comment)
         throws IOException {
-        issue.comments().post(
-            String.format(
-                CommentsTag.PHRASES.getString("CommentsTag.invalid-tag"), tag
-            )
-        );
-        Logger.info(this, "tag %s is invalid", tag);
+        issue.comments().post(comment);
+        Logger.info(this, comment);
     }
 
     /**
-     * Logs a comment because the tag has already been released.
-     * @param issue The Issue to add the comment to.
-     * @param tag The tag that has already been released.
-     * @param rels The other releases.
-     * @param home The URI of home.
-     * @throws IOException If there is a problem.
-     * @checkstyle ParameterNumberCheck (15 lines)
-     */
-    private void logDuplicateTag(final Issue.Smart issue, final String tag,
-        final Releases.Smart rels, final URI home) throws IOException {
-        final Release.Smart rel = new Release.Smart(rels.find(tag));
-        rel.body(
-            String.format(
-                "%s\n\nSee also #%d and [build log](%s)",
-                rel.body(), issue.number(), home
-            )
-        );
-        issue.comments().post(
-            String.format(
-                CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
-                tag
-            )
-        );
-        Logger.info(this, "duplicate tag %s commented", tag);
-    }
-
-    /**
-     * Valid version numbers:
-     * .1
-     * 2.2
-     * .1.2
-     * 1.2.3.4.5.6.7
+     * Determines if the given version is invalid.
      *
-     * Invalid version numbers:
+     * These are examples of invalid version numbers:
      * abc
      * a.b.c
+     * .1
      * 1.
      * 1.2.
+     * .1.2.3
+     *
+     * Acceptable version numbers are:
+     * 1.2
+     * 1.2.3.4
+     *
      * @param version Version number from a release
-     * @return True if the version is valid, false otherwise
+     * @return True if the version is invalid, false otherwise
      */
-    private static boolean valid(final CharSequence version) {
-        return CommentsTag.VERSION_PATTERN.matcher(version).matches();
+    private static boolean invalid(final CharSequence version) {
+        return !CommentsTag.VERSION_PATTERN.matcher(version).matches();
     }
 
     /**
-     * Is this tagged release valid?  A tagged release is valid if it's greater
-     * than any previous release.
+     * Is this tagged release too old?  A tagged release is too old if it's
+     * less than any previous release.
      * @param tag The release to be tagged
      * @param previous The previous releases
-     * @return True if the release is valid
+     * @return True if the release is too old
      */
-    private static boolean valid(final String tag,
+    private static boolean tooOld(final String tag,
         final Collection<DefaultArtifactVersion> previous) {
         final DefaultArtifactVersion max;
         if (previous.isEmpty()) {
@@ -253,7 +210,7 @@ public final class CommentsTag extends AbstractAgent {
         } else {
             max = Collections.max(previous);
         }
-        return new DefaultArtifactVersion(tag).compareTo(max) == 1;
+        return new DefaultArtifactVersion(tag).compareTo(max) != 1;
     }
 
     /**
@@ -280,7 +237,7 @@ public final class CommentsTag extends AbstractAgent {
         for (final Release release : rels.iterate()) {
             try {
                 final DefaultArtifactVersion ver = CommentsTag.version(release);
-                if (CommentsTag.valid(ver.toString())) {
+                if (!CommentsTag.invalid(ver.toString())) {
                     versions.add(ver);
                 }
             } catch (final IOException exc) {
