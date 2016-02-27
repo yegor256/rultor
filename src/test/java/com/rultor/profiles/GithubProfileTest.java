@@ -65,6 +65,9 @@ public final class GithubProfileTest {
                 "assets:",
                 "  test.xml: jeff/test1#test.xml",
                 "  beta: jeff/test1#test.xml",
+                "architect:",
+                " - jeff",
+                " - donald",
                 "merge:",
                 "  script: hello!"
             )
@@ -88,6 +91,10 @@ public final class GithubProfileTest {
                 "/p/entry[@key='assets']/entry[@key='test.xml']",
                 "/p/entry[@key='assets']/entry[@key='beta']"
             )
+        );
+        MatcherAssert.assertThat(
+            profile.read().xpath("/p/entry[@key='architect']/item/text()"),
+            Matchers.contains("jeff", "donald")
         );
         MatcherAssert.assertThat(
             profile.assets(),
