@@ -161,7 +161,7 @@ public final class QnAskedBy implements Question {
         final XML xml = this.profile.read();
         logins.addAll(new Crew(repo).names());
         logins.addAll(xml.xpath(this.xpath));
-        logins.addAll(xml.xpath("/p/entry[@key='architect']/text()"));
+        logins.addAll(xml.xpath("/p/entry[@key='architect']/item/text()"));
         return logins;
     }
 
