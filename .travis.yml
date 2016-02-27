@@ -7,4 +7,5 @@ env:
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 script:
+  - ./years.sh
   - mvn clean install -Pqulice --errors
