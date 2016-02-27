@@ -70,7 +70,7 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * Tail daemon output.</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * @version $Id: 8dd56e278ce1da0a913207ecf75ead2aa5a99097 $</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * @version $Id: bb98fa443e6de4d5323861ceae88d8f8edf12b41 $</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * @since 1.0</em>
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  @Immutable
@@ -243,43 +243,50 @@
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>             <strong class="jxr_keyword">final</strong> Shell shell = <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/agents/shells/TalkShells.html">TalkShells</a>(<strong class="jxr_keyword">this</strong>.xml).get();
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>             <strong class="jxr_keyword">final</strong> ByteArrayOutputStream baos = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>             shell.exec(
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>                 String.format(
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>                     <span class="jxr_string">"dir=%s; (cat \&quot;${dir}/stdout\&quot; 2&gt;/dev/null || echo \&quot;file $file is gone\&quot;) | col -b"</span>,
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>                     SSH.escape(<strong class="jxr_keyword">this</strong>.xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0))
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>                 ),
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>                 <strong class="jxr_keyword">new</strong> NullInputStream(0L), baos,
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>                 Logger.stream(Level.SEVERE, <strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>             );
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ByteArrayInputStream(baos.toByteArray());
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>         }
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>     }
-<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     * Fake file connect.</em>
-<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>     @Immutable
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/agents/daemons/Tail.html">FakeConnect</a> <strong class="jxr_keyword">implements</strong> Tail.Connect {
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">         * XML of the talk.</em>
-<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> XML xml;
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">         * Ctor.</em>
-<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">         * @param talk Talk</em>
-<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../com/rultor/agents/daemons/Tail.html">FakeConnect</a>(<strong class="jxr_keyword">final</strong> XML talk) {
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>             <strong class="jxr_keyword">this</strong>.xml = talk;
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>         }
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>         @Override
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>         <strong class="jxr_keyword">public</strong> InputStream read() <strong class="jxr_keyword">throws</strong> FileNotFoundException {
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> FileInputStream(
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>                 <strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">this</strong>.xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text() "</span>).get(0))
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>             );
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>         }
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>     }
-<a class="jxr_linenumber" name="L273" href="#L273">273</a> 
-<a class="jxr_linenumber" name="L274" href="#L274">274</a> }
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>                 StringUtils.join(
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>                     String.format(
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>                         <span class="jxr_string">"dir=%s;"</span>,
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>                         SSH.escape(
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>                             <strong class="jxr_keyword">this</strong>.xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text()"</span>).get(0)
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>                         )
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>                     ),
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>                     <span class="jxr_string">" (cat \&quot;${dir}/stdout\&quot; 2&gt;/dev/null"</span>,
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>                     <span class="jxr_string">" || echo \&quot;file $file is gone\&quot;)"</span>,
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>                     <span class="jxr_string">" | iconv -f utf-8 -t utf-8 -c"</span>,
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>                     <span class="jxr_string">" | LANG=en_US.UTF-8 col -b"</span>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>                 ),
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>                 <strong class="jxr_keyword">new</strong> NullInputStream(0L), baos,
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>                 Logger.stream(Level.SEVERE, <strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>             );
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ByteArrayInputStream(baos.toByteArray());
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         }
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     }
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     * Fake file connect.</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     @Immutable
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/agents/daemons/Tail.html">FakeConnect</a> <strong class="jxr_keyword">implements</strong> Tail.Connect {
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">         * XML of the talk.</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> XML xml;
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">         * Ctor.</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">         * @param talk Talk</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../com/rultor/agents/daemons/Tail.html">FakeConnect</a>(<strong class="jxr_keyword">final</strong> XML talk) {
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>             <strong class="jxr_keyword">this</strong>.xml = talk;
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>         }
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         @Override
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <strong class="jxr_keyword">public</strong> InputStream read() <strong class="jxr_keyword">throws</strong> FileNotFoundException {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> FileInputStream(
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>                 <strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">this</strong>.xml.xpath(<span class="jxr_string">"/talk/daemon/dir/text() "</span>).get(0))
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>             );
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         }
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     }
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

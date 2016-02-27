@@ -61,7 +61,7 @@
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * Question asked by one of them.</em>
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * @version $Id: 3c50e6d84dda189563a2314f08c64c6cd9be45c1 $</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * @version $Id: 9dbbf0f8334b157a4b10a6593206ff3fba48a8d5 $</em>
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * @since 1.3</em>
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  @Immutable
@@ -165,14 +165,15 @@
 <a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
 <a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>     <strong class="jxr_keyword">private</strong> Collection&lt;String&gt; commanders(<strong class="jxr_keyword">final</strong> Repo repo) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; logins = <strong class="jxr_keyword">new</strong> LinkedList&lt;String&gt;();
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>         <strong class="jxr_keyword">final</strong> Collection&lt;String&gt; logins = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;();
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">final</strong> XML xml = <strong class="jxr_keyword">this</strong>.profile.read();
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>         logins.addAll(<strong class="jxr_keyword">new</strong> <a href="../../../../../com/rultor/agents/github/qtn/Crew.html">Crew</a>(repo).names());
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>         logins.addAll(xml.xpath(<strong class="jxr_keyword">this</strong>.xpath));
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>         <strong class="jxr_keyword">return</strong> logins;
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>     }
-<a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> }
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         logins.addAll(xml.xpath(<span class="jxr_string">"/p/entry[@key='architect']/text()"</span>));
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>         <strong class="jxr_keyword">return</strong> logins;
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
