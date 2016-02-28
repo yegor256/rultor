@@ -11,12 +11,12 @@ scope:
   7: Performance testing
   8: Achieve 80% test coverage
 champions:
-  2:
-    worst-case: 60
-    best-case: 25
-    most-likely: 35
   8:
     worst-case: 80
     best-case: 35
     most-likely: 45
+  2:
+    worst-case: 60
+    best-case: 25
+    most-likely: 35
     
