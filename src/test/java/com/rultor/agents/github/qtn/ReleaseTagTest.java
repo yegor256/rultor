@@ -53,19 +53,19 @@ public final class ReleaseTagTest {
         final Repo repo = new MkGithub().randomRepo();
         repo.releases().create("1.74");
         MatcherAssert.assertThat(
-            new ReleaseTag(repo, "1.87.15").release(),
+            new ReleaseTag(repo, "1.87.15").allowed(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            new ReleaseTag(repo, "1.5-bar").release(),
+            new ReleaseTag(repo, "1.5-bar").allowed(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            new ReleaseTag(repo, "1.9-beta").release(),
+            new ReleaseTag(repo, "1.9-beta").allowed(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            new ReleaseTag(repo, "1.62").release(),
+            new ReleaseTag(repo, "1.62").allowed(),
             Matchers.is(false)
         );
     }

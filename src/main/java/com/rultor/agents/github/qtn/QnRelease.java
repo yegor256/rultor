@@ -77,7 +77,7 @@ public final class QnRelease implements Question {
         if (matcher.matches()) {
             final String name = matcher.group(1);
             final ReleaseTag release = new ReleaseTag(issue.repo(), name);
-            if (release.release()) {
+            if (release.allowed()) {
                 new Answer(comment).post(
                     true,
                     String.format(

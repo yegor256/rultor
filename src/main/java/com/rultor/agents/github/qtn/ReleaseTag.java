@@ -80,7 +80,7 @@ final class ReleaseTag {
      * @return Boolean
      * @throws IOException on error.
      */
-    public boolean release() throws IOException {
+    public boolean allowed() throws IOException {
         return !ReleaseTag.valid(this.name)
             || ReleaseTag.newer(this.reference(), this.name);
     }
