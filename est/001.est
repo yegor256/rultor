@@ -1,0 +1,21 @@
+date: 28-02-2016
+author: Dali Freire
+method: champions.pert
+scope:
+  1: Infrastructure setup
+  2: Design the operation commands
+  3: GitHub/Issue trackers integration
+  4: Project site
+  5: Integrate with continuous integration systems
+  6: Integration testing
+  7: Performance testing
+  8: Achieve 80% test coverage
+champions:
+  2:
+    worst-case: 60
+    best-case: 25
+    most-likely: 35
+  8:
+    worst-case: 80
+    best-case: 35
+    most-likely: 45
