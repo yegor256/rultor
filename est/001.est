@@ -10,7 +10,6 @@ scope:
   6: Integration testing
   7: Performance testing
   8: Achieve 80% test coverage
-  9: User documentation
 champions:
   2:
     worst-case: 60
