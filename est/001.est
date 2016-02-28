@@ -3,7 +3,7 @@ author: Dali Freire
 method: champions.pert
 scope:
   1: Infrastructure setup
-  2: Design the operation commands
+  2: Implement the operation commands
   3: Project site
   4: Integration testing
   5: Performance testing
