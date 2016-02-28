@@ -34,8 +34,10 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.agents.github.Req;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -59,7 +61,7 @@ public final class QnReleaseTest {
     public void buildsRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        issue.comments().post("release");
+        issue.comments().post("release `1.7`");
         MatcherAssert.assertThat(
             new Xembler(
                 new Directives().add("request").append(
@@ -74,6 +76,50 @@ public final class QnReleaseTest {
                 "/request/args/arg[@name='head']",
                 "/request/args/arg[@name='head_branch']"
             )
+        );
+    }
+
+    /**
+     * QnRelease can deny release when tag is outdated.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void denyOutdatedTag() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        repo.releases().create("1.7");
+        issue.comments().post("release `1.6`");
+        MatcherAssert.assertThat(
+            new QnRelease().understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            ),
+            Matchers.is(Req.EMPTY)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.containsString("There is already a release `1.7`")
+        );
+        issue.comments().post("release");
+    }
+
+    /**
+     * QnRelease can deny release when tag name is not given.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void denyMissingTag() throws Exception {
+        final Issue issue = new MkGithub().randomRepo().issues()
+            .create("", "");
+        issue.comments().post("release");
+        MatcherAssert.assertThat(
+            new QnRelease().understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            ),
+            Matchers.is(Req.EMPTY)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.containsString("No release tag specified")
         );
     }
 

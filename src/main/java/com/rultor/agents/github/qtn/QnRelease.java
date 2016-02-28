@@ -40,6 +40,8 @@ import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -49,7 +51,6 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3.6
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -65,31 +66,56 @@ public final class QnRelease implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnRelease.PHRASES.getString("QnRelease.start"),
-                home.toASCIIString()
-            )
-        );
         final Issue issue = comment.issue();
         Logger.info(
             this, "release request found in %s#%d, comment #%d",
             issue.repo().coordinates(), issue.number(), comment.number()
         );
-        return new Req.Simple(
-            "release",
-            new ImmutableMap.Builder<String, String>()
-                .put("head_branch", "master")
-                .put(
-                    "head",
+        final Req req;
+        final Matcher matcher = Pattern.compile(".*release.*`(.+)`.*")
+            .matcher(comment.body());
+        if (matcher.matches()) {
+            final String name = matcher.group(1);
+            final ReleaseTag release = new ReleaseTag(issue.repo(), name);
+            if (release.release()) {
+                new Answer(comment).post(
+                    true,
                     String.format(
-                        "git@github.com:%s.git",
-                        comment.issue().repo().coordinates()
+                        QnRelease.PHRASES.getString("QnRelease.start"),
+                        home.toASCIIString()
                     )
-                )
-                .build()
-        );
+                );
+                req = new Req.Simple(
+                    "release",
+                    new ImmutableMap.Builder<String, String>()
+                        .put("head_branch", "master")
+                        .put(
+                            "head",
+                            String.format(
+                                "git@github.com:%s.git",
+                                comment.issue().repo().coordinates()
+                            )
+                        ).build()
+                );
+            } else {
+                new Answer(comment).post(
+                    false,
+                    String.format(
+                        QnRelease.PHRASES.getString("QnRelease.invalid-tag"),
+                        name,
+                        release.reference()
+                    )
+                );
+                req = Req.EMPTY;
+            }
+        } else {
+            new Answer(comment).post(
+                false,
+                QnRelease.PHRASES.getString("QnRelease.missing-tag")
+            );
+            req = Req.EMPTY;
+        }
+        return req;
     }
 
 }
