@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github;
 
+import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
@@ -64,7 +65,7 @@ public final class CommentsTagTest {
         final Agent agent = new CommentsTag(
             repo.github()
         );
-        final String tag = "v1.0";
+        final String tag = "1.0";
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -93,6 +94,39 @@ public final class CommentsTagTest {
     }
 
     /**
+     * CommentsTag cannot release an older version.
+     * @throws IOException In case of error.
+     */
+    @Test
+    public void rejectsOldRelease() throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        repo.releases().create("1.0");
+        repo.releases().create("2.0");
+        repo.releases().create("3.0-b");
+        agent.execute(CommentsTagTest.talk(issue, "1.5"));
+        final Comment.Smart response = new Comment.Smart(
+            repo.issues().get(1).comments().get(1)
+        );
+        MatcherAssert.assertThat(
+            response.body(),
+            Matchers.containsString("version tag is too low")
+        );
+    }
+
+    /**
+     * CommentsTag cannot release given an invalid tag.
+     * @throws IOException In case of error.
+     */
+    @Test
+    public void rejectsInvalidRelease() throws IOException {
+        CommentsTagTest.assertInvalidRelease("4.0-alpha");
+        CommentsTagTest.assertInvalidRelease(".1");
+        CommentsTagTest.assertInvalidRelease("a.b.c");
+    }
+
+    /**
      * CommentsTag can create a proper release message.
      * @throws Exception In case of error.
      */
@@ -101,7 +135,7 @@ public final class CommentsTagTest {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
-        final String tag = "v1.5";
+        final String tag = "1.5";
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -144,4 +178,23 @@ public final class CommentsTagTest {
         return talk;
     }
 
+    /**
+     * This is a helper method used to check that a given tag is invalid.
+     * @param tag The tag that is asserted to be invalid.
+     * @throws IOException In case of error.
+     */
+    private static void assertInvalidRelease(final String tag)
+        throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        agent.execute(CommentsTagTest.talk(issue, tag));
+        final Comment.Smart response = new Comment.Smart(
+            repo.issues().get(1).comments().get(1)
+        );
+        MatcherAssert.assertThat(
+            response.body(),
+            Matchers.containsString("version tag is invalid")
+        );
+    }
 }

@@ -43,10 +43,16 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -69,6 +75,12 @@ public final class CommentsTag extends AbstractAgent {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Version pattern.
+     */
+    private static final Pattern VERSION_PATTERN =
+        Pattern.compile("(?:\\d+\\.)*\\d+");
 
     /**
      * Github.
@@ -94,6 +106,7 @@ public final class CommentsTag extends AbstractAgent {
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
+        final List<DefaultArtifactVersion> previous = this.versions(rels);
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
@@ -102,13 +115,30 @@ public final class CommentsTag extends AbstractAgent {
                     rel.body(), issue.number(), home
                 )
             );
-            issue.comments().post(
+            this.comment(
+                issue,
                 String.format(
                     CommentsTag.PHRASES.getString("CommentsTag.duplicate"),
                     tag
                 )
             );
-            Logger.info(this, "duplicate tag %s commented", tag);
+        } else if (CommentsTag.invalid(tag)) {
+            this.comment(
+                issue,
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.invalid-tag"),
+                    tag
+                )
+            );
+        } else if (CommentsTag.tooOld(tag, previous)) {
+            this.comment(
+                issue,
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    CommentsTag.PHRASES.getString("CommentsTag.version-too-low"),
+                    tag, previous.toString()
+                )
+            );
         } else {
             final Repo repo = issue.repo();
             final Date prev = CommentsTag.previous(repo);
@@ -129,6 +159,92 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
+    }
+
+    /**
+     * Adds a comment to the given issue.  Also logs the comment in the Logger.
+     * @param issue The Issue to add the comment to.
+     * @param comment The comment to add to the Issue and Logger.
+     * @throws IOException If there is a problem.
+     */
+    private void comment(final Issue issue, final String comment)
+        throws IOException {
+        issue.comments().post(comment);
+        Logger.info(this, comment);
+    }
+
+    /**
+     * Determines if the given version is invalid.
+     *
+     * These are examples of invalid version numbers:
+     * abc
+     * a.b.c
+     * .1
+     * 1.
+     * 1.2.
+     * .1.2.3
+     *
+     * Acceptable version numbers are:
+     * 1.2
+     * 1.2.3.4
+     *
+     * @param version Version number from a release
+     * @return True if the version is invalid, false otherwise
+     */
+    private static boolean invalid(final CharSequence version) {
+        return !CommentsTag.VERSION_PATTERN.matcher(version).matches();
+    }
+
+    /**
+     * Is this tagged release too old?  A tagged release is too old if it's
+     * less than any previous release.
+     * @param tag The release to be tagged
+     * @param previous The previous releases
+     * @return True if the release is too old
+     */
+    private static boolean tooOld(final String tag,
+        final Collection<DefaultArtifactVersion> previous) {
+        final DefaultArtifactVersion max;
+        if (previous.isEmpty()) {
+            max = new DefaultArtifactVersion("0");
+        } else {
+            max = Collections.max(previous);
+        }
+        return new DefaultArtifactVersion(tag).compareTo(max) != 1;
+    }
+
+    /**
+     * Transforms the Release into a DefaultArtifactVersion.
+     * @param release The Release to transform
+     * @return A DefaultArtifactVersion
+     * @throws IOException if there's a problem getting the release tag.
+     */
+    private static DefaultArtifactVersion version(final Release release)
+        throws IOException {
+        return new DefaultArtifactVersion(new Release.Smart(release).tag());
+    }
+
+    /**
+     * Transforms versions from Release to DefaultArtifactVersion and filters
+     * invalid version numbers. For example in these versions,
+     * ["1.0", "2.0", "3.0-b"], "3.0-b" is just ignore, therefore version "2.0"
+     * is the max.
+     * @param rels All previous releases as Release objects
+     * @return All prior releases wrapped in a DefaultArtifactVersion
+     */
+    private List<DefaultArtifactVersion> versions(final Releases rels) {
+        final List<DefaultArtifactVersion> versions = new ArrayList<>(1);
+        for (final Release release : rels.iterate()) {
+            try {
+                final DefaultArtifactVersion ver = CommentsTag.version(release);
+                if (!CommentsTag.invalid(ver.toString())) {
+                    versions.add(ver);
+                }
+            } catch (final IOException exc) {
+                Logger.error(this, "Error transforming release", exc);
+            }
+        }
+        return versions;
     }
 
     /**
