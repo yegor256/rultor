@@ -19,9 +19,8 @@ while [ $(git show-branch "${BRANCH}" 2>/dev/null | wc -l) -gt 0 ]; do
   export BRANCH="__rultor-$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 16)"
 done
 
-git checkout "fork/${fork_branch}"
-git checkout -b "${BRANCH}"
-git checkout "${head_branch}"
+git checkout -B "${BRANCH}" "fork/${fork_branch}"
+git checkout -B "${head_branch}" "origin/${head_branch}"
 
 if [ "${rebase}" == "true" ]; then
   git checkout "${BRANCH}"
