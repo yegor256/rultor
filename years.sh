@@ -7,8 +7,9 @@ if (grep -r "Copyright[[:space:]]\+(c)[[:space:]]\+2009-.*rultor.com" \
     exit 1
 fi
 
-if (grep -r -L "Copyright[[:space:]]\+(c)[[:space:]]\+2009-.*rultor.com" . \
- --include=*.{java,xml,vm,groovy,txt,fml,properties}) then
+if (grep -r -L "Copyright[[:space:]]\+(c)[[:space:]]\+2009-.*rultor.com" \
+ --include=*.{java,xml,vm,groovy,txt,fml,properties} . \
+ | grep -v 2009-`date +%Y`) then
     echo "Files above must have copyright block in header"
     exit 1
 fi
