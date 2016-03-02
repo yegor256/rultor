@@ -60,8 +60,7 @@ public final class QnRelease implements Question {
     /**
      * Pattern matching the version tag of the release enclosed by backticks.
      */
-    private static final  Pattern QUESTION_PATTERN =
-        Pattern.compile("`(.+)`");
+    private static final Pattern QUESTION_PATTERN = Pattern.compile("`(.+)`");
 
     /**
      * Message bundle.
@@ -84,25 +83,7 @@ public final class QnRelease implements Question {
             final String name = matcher.group(1);
             final ReleaseTag release = new ReleaseTag(issue.repo(), name);
             if (release.allowed()) {
-                new Answer(comment).post(
-                    true,
-                    String.format(
-                        QnRelease.PHRASES.getString("QnRelease.start"),
-                        home.toASCIIString()
-                    )
-                );
-                req = new Req.Simple(
-                    "release",
-                    new ImmutableMap.Builder<String, String>()
-                        .put("head_branch", "master")
-                        .put(
-                            "head",
-                            String.format(
-                                "git@github.com:%s.git",
-                                comment.issue().repo().coordinates()
-                            )
-                        ).build()
-                );
+                req = QnRelease.affirmative(comment, home);
             } else {
                 new Answer(comment).post(
                     false,
@@ -115,13 +96,39 @@ public final class QnRelease implements Question {
                 req = Req.EMPTY;
             }
         } else {
-            new Answer(comment).post(
-                false,
-                QnRelease.PHRASES.getString("QnRelease.missing-tag")
-            );
-            req = Req.EMPTY;
+            req = QnRelease.affirmative(comment, home);
         }
         return req;
+    }
+
+    /**
+     * Confirms that Rultor is starting the release process.
+     * @param comment Comment that triggered the release
+     * @param home URI of the release tail
+     * @return Req.Simple containing the release parameters
+     * @throws IOException on error
+     */
+    private static Req affirmative(final Comment.Smart comment,
+        final URI home) throws IOException {
+        new Answer(comment).post(
+            true,
+            String.format(
+                QnRelease.PHRASES.getString("QnRelease.start"),
+                home.toASCIIString()
+            )
+        );
+        return new Req.Simple(
+            "release",
+            new ImmutableMap.Builder<String, String>()
+                .put("head_branch", "master")
+                .put(
+                    "head",
+                    String.format(
+                        "git@github.com:%s.git",
+                        comment.issue().repo().coordinates()
+                    )
+                ).build()
+        );
     }
 
 }

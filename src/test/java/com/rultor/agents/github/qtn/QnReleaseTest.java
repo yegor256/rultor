@@ -61,6 +61,34 @@ public final class QnReleaseTest {
     public void buildsRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
+        issue.comments().post("release");
+        MatcherAssert.assertThat(
+            new Xembler(
+                new Directives().add("request").append(
+                    new QnRelease().understand(
+                        new Comment.Smart(issue.comments().get(1)), new URI("#")
+                    ).dirs()
+                )
+            ).xml(),
+            XhtmlMatchers.hasXPaths(
+                "/request[type='release']",
+                "/request/args[count(arg) = 2]",
+                "/request/args/arg[@name='head']",
+                "/request/args/arg[@name='head_branch']"
+            )
+        );
+    }
+
+    /**
+     * QnRelease can build a release request when the requested version is newer
+     * than the last release.
+     * @throws Exception In case of error
+     */
+    @Test
+    public void allowsNewerTag() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        repo.releases().create("1.5");
         issue.comments().post("release `1.7`");
         MatcherAssert.assertThat(
             new Xembler(
@@ -98,27 +126,6 @@ public final class QnReleaseTest {
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("There is already a release `1.7`")
-        );
-    }
-
-    /**
-     * QnRelease can deny release when tag name is not given.
-     * @throws Exception In case of error
-     */
-    @Test
-    public void denyMissingTag() throws Exception {
-        final Issue issue = new MkGithub().randomRepo().issues()
-            .create("", "");
-        issue.comments().post("release");
-        MatcherAssert.assertThat(
-            new QnRelease().understand(
-                new Comment.Smart(issue.comments().get(1)), new URI("#")
-            ),
-            Matchers.is(Req.EMPTY)
-        );
-        MatcherAssert.assertThat(
-            new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("No release tag specified")
         );
     }
 
