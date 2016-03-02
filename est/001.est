@@ -1,0 +1,22 @@
+date: 28-02-2016
+author: Dali Freire
+method: champions.pert
+scope:
+  1: Create the Docker container to run the builds from settings.
+  2: Save the Docker run outputs into Amazon S3.
+  3: Save the historic of the past runs into Amazon DynamoDB.
+  4: Implement the operation commands
+  5: Project site
+  6: Integration testing
+  7: Performance testing
+  8: Achieve 80% test coverage
+champions:
+  8:
+    worst-case: 80
+    best-case: 35
+    most-likely: 45
+  4:
+    worst-case: 60
+    best-case: 25
+    most-likely: 35
+    
