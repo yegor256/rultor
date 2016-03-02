@@ -37,7 +37,6 @@ import org.junit.Test;
 
 /**
  * Tests for ${@link ReleaseTag}.
- *
  * @author Armin Braun (me@obrown.io)
  * @version $Id$
  * @since 1.62
@@ -46,7 +45,9 @@ public final class ReleaseTagTest {
 
     /**
      * ReleaseTag can deny release for outdated, semantically correct versions.
-     * @throws Exception In case of error.
+     * It does however allow any version number, if it contains anything
+     * other than digits and dots.
+     * @throws Exception In case of error
      */
     @Test
     public void validatesReleaseVersion() throws Exception {
@@ -72,7 +73,7 @@ public final class ReleaseTagTest {
 
     /**
      * ReleaseTag can retrieve the latest release version in the repo.
-     * @throws Exception In case of error.
+     * @throws Exception In case of error
      */
     @Test
     public void getsReferenceVersion() throws Exception {

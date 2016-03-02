@@ -48,7 +48,8 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 final class ReleaseTag {
 
     /**
-     * Pattern matching semantically valid versions.
+     * Pattern matching semantically valid versions, that also only consist in
+     * digits and dots.
      */
     private static final Pattern VERSION_PATTERN =
         Pattern.compile("^(\\d+\\.)*(\\d+)$");
@@ -77,8 +78,8 @@ final class ReleaseTag {
      * Checks if this tag can be released.
      * A tag can be released if it is either not named as a semantically
      * correct version or has a higher version number than all existing tags.
-     * @return Boolean
-     * @throws IOException on error.
+     * @return True if this tag can be released
+     * @throws IOException on error
      */
     public boolean allowed() throws IOException {
         return !ReleaseTag.valid(this.name)
@@ -87,8 +88,8 @@ final class ReleaseTag {
 
     /**
      * Returns the tag name of the highest version from the repo.
-     * @return String name of the highest released version.
-     * @throws IOException on error.
+     * @return String name of the highest released version
+     * @throws IOException on error
      */
     public String reference() throws IOException {
         String tag = "0";
@@ -107,7 +108,7 @@ final class ReleaseTag {
      * Checks that a tag is newer than a given reference.
      * @param reference String
      * @param tag String
-     * @return Boolean true if tag is new than reference.
+     * @return True if tag is newer than reference
      */
     private static boolean newer(final String reference, final String tag) {
         return new DefaultArtifactVersion(reference).compareTo(
@@ -116,9 +117,10 @@ final class ReleaseTag {
     }
 
     /**
-     * Checks tag string format being a valid release version.
-     * @param identifier String tag name.
-     * @return Boolean
+     * Checks that tag is a valid release version, consisting only in digits
+     * and dots.
+     * @param identifier String tag name
+     * @return True if identifier is a valid release version
      */
     private static boolean valid(final String identifier) {
         return ReleaseTag.VERSION_PATTERN.matcher(identifier).matches();

@@ -55,7 +55,7 @@ public final class QnReleaseTest {
 
     /**
      * QnRelease can build a request.
-     * @throws Exception In case of error.
+     * @throws Exception In case of error
      */
     @Test
     public void buildsRequest() throws Exception {
@@ -81,7 +81,7 @@ public final class QnReleaseTest {
 
     /**
      * QnRelease can deny release when tag is outdated.
-     * @throws Exception In case of error.
+     * @throws Exception In case of error
      */
     @Test
     public void denyOutdatedTag() throws Exception {
@@ -99,12 +99,11 @@ public final class QnReleaseTest {
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("There is already a release `1.7`")
         );
-        issue.comments().post("release");
     }
 
     /**
      * QnRelease can deny release when tag name is not given.
-     * @throws Exception In case of error.
+     * @throws Exception In case of error
      */
     @Test
     public void denyMissingTag() throws Exception {

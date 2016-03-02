@@ -58,6 +58,12 @@ import lombok.ToString;
 public final class QnRelease implements Question {
 
     /**
+     * Pattern matching the version tag of the release enclosed by backticks.
+     */
+    private static final  Pattern QUESTION_PATTERN =
+        Pattern.compile("`(.+)`");
+
+    /**
      * Message bundle.
      */
     private static final ResourceBundle PHRASES =
@@ -72,9 +78,9 @@ public final class QnRelease implements Question {
             issue.repo().coordinates(), issue.number(), comment.number()
         );
         final Req req;
-        final Matcher matcher = Pattern.compile(".*release.*`(.+)`.*")
+        final Matcher matcher = QnRelease.QUESTION_PATTERN
             .matcher(comment.body());
-        if (matcher.matches()) {
+        if (matcher.find()) {
             final String name = matcher.group(1);
             final ReleaseTag release = new ReleaseTag(issue.repo(), name);
             if (release.allowed()) {
