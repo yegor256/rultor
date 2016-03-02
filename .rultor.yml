@@ -27,7 +27,6 @@ merge:
   rebase: true
   script: |-
     pdd --source=$(pwd) --verbose --file=/dev/null
-    ./years.sh
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml
     mvn clean
