@@ -48,7 +48,7 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 final class ReleaseTag {
 
     /**
-     * Pattern matching semantically valid versions, that also only consist in
+     * Pattern to match semantically valid versions, that consist only of
      * digits and dots.
      */
     private static final Pattern VERSION_PATTERN =
