@@ -63,21 +63,12 @@ RUN apt-get install -y ssh && \
   chmod 0755 /var/run/sshd
 
 # Ruby
-RUN apt-get install -y libmagic-dev zlib1g-dev
+RUN apt-get update && apt-get install -y libmagic-dev=1:5.14-2ubuntu3.3 \
+    zlib1g-dev=1:1.2.8.dfsg-1ubuntu1
 RUN apt-add-repository ppa:brightbox/ruby-ng
-RUN apt-get update
-RUN apt-get install -y ruby2.2 ruby2.2-dev
-RUN gem update && gem install nokogiri && gem install bundler
-
-# Ruby via RVM
-#RUN apt-add-repository -y ppa:rael-gc/rvm
-#RUN apt-get update
-#RUN sudo apt-get install -y rvm
-#RUN /bin/bash -l -c "rvm install ruby"
-#RUN /bin/bash -l -c "gem update"
-#RUN /bin/bash -l -c "gem install nokogiri"
-#RUN /bin/bash -l -c "gem install bundler"
-#RUN echo 'source /usr/share/rvm/scripts/rvm' >> /etc/bash.bashrc
+RUN apt-get update && apt-get install -y ruby2.2=2.2.4-1bbox1~trusty1 \
+    ruby2.2-dev=2.2.4-1bbox1~trusty1
+RUN gem update && gem install nokogiri:1.6.7.2 && gem install bundler:1.11.2
 
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
@@ -124,7 +115,7 @@ RUN wget --quiet "http://mirror.dkd.de/apache/maven/maven-3/${MAVEN_VERSION}/bin
   update-alternatives --install /usr/bin/mvn mvn "${M2_HOME}/bin/mvn" 1 && \
   update-alternatives --config mvn
 
-RUN gem install jekyll
+RUN gem install jekyll:2.4.0
 
 ENV MAVEN_OPTS "-Xms512m -Xmx2g"
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
@@ -134,10 +125,6 @@ RUN cd rultor && \
   mvn clean install -Pqulice && \
   cd .. && \
   rm -rf rultor
-
-# One more time, right before the end
-RUN apt-get update -y
-RUN apt-get upgrade -qq -y
 
 # Clean up
 RUN rm -rf /tmp/*
