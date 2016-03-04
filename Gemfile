@@ -1,15 +1,13 @@
-#
-# Just run "bundle"
-#
 source 'https://rubygems.org'
+ruby '2.2.4'
 gem 'jekyll', '2.4.0'
-gem 'sass'
-gem 'jekyll-sass'
+gem 'sass', '3.4.21'
+gem 'jekyll-sass', '1.2.2'
 gem 'jekyll-plantuml', '1.0.2'
 gem 'jekyll-press'
 gem 'jgd', '1.3'
-gem 'nokogiri'
-gem 'mail'
-gem 'uuidtools'
-gem 'liquid'
-gem 'redcarpet'
+gem 'nokogiri', '1.6.7.2'
+gem 'mail', '2.6.3'
+gem 'uuidtools', '2.1.5'
+gem 'liquid', '2.6.3'
+gem 'redcarpet', '3.3.4'

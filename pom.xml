@@ -941,7 +941,7 @@
                                 <configuration>
                                     <executable>bundle</executable>
                                     <arguments>
-                                        <argument>install</argument>
+                                        <argument>update</argument>
                                     </arguments>
                                 </configuration>
                             </execution>

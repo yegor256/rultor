@@ -7,10 +7,6 @@ install: |-
   sudo apt-get install bsdmainutils
   sudo gem install --no-rdoc --no-ri pdd
   sudo gem install --no-rdoc --no-ri est
-  bundle install
-  bundle update
-  bundle show jekyll
-  jekyll --version
 architect:
 - original-brownbear
 - yegor256
