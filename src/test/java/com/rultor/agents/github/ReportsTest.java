@@ -35,6 +35,8 @@ import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
+import java.io.IOException;
+import java.util.ResourceBundle;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.xembly.Directives;
@@ -47,6 +49,16 @@ import org.xembly.Directives;
  * @since 1.3
  */
 public final class ReportsTest {
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
+
+    /**
+     * Xpath to check that talk was executed correctly.
+     */
+    private static final String XPATH = "/talk[not(request)]";
 
     /**
      * Reports can report a result of a request.
@@ -56,9 +68,52 @@ public final class ReportsTest {
     public void reportsRequestResult() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
+        final Talk talk = ReportsTest.example(repo, issue);
         final Agent agent = new Reports(repo.github());
-        final Talk talk = new Talk.InFile();
-        talk.modify(
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath(XPATH)
+        );
+    }
+
+    /**
+     * Reports can report a result of a request, when stop command fails.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void reportsRequestResultWhenStopFails() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("Bug", "stop it please");
+        final Talk talk = ReportsTest.example(repo, issue);
+        final Agent agent = new Reports(repo.github());
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath(XPATH)
+        );
+        MatcherAssert.assertThat(
+            "Comment contains warning about stop request",
+            repo.issues().get(1).comments().get(1).toString().contains(
+                ReportsTest.PHRASES.getString("Reports.stop-fails").replace(
+                    "%s",
+                    ""
+                )
+            )
+        );
+    }
+
+    /**
+     * Create Talk, that will be used to test Reports.
+     * @param repo Repository
+     * @param issue Issue
+     * @return Example of Talk
+     * @throws IOException In case of error.
+     */
+    private static Talk example(final Repo repo, final Issue issue)
+            throws IOException {
+        final Talk result = new Talk.InFile();
+        result.modify(
             new Directives().xpath("/talk").add("wire")
                 .add("href").set("http://test").up()
                 .add("github-repo").set(repo.coordinates().toString()).up()
@@ -70,11 +125,6 @@ public final class ReportsTest {
                 .add("type").set("something").up()
                 .add("args")
         );
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPath("/talk[not(request)]")
-        );
+        return result;
     }
-
 }
