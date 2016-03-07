@@ -1,5 +1,14 @@
 #!/bin/sh
 
+#@todo #754:30min Remove the deprecation code from the shell.
+# Move the code to Java. May be
+# \main\java\com\rultor\agents\daemons\StartsDaemon.java is
+# the place to implement this.
+
+if $image = "yegor256/rultor"; then
+  deprecation
+fi
+
 mkdir -p ~/.ssh
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 chmod 600 ~/.ssh/config
@@ -102,4 +111,20 @@ function docker_when_possible {
   fi
   sudo chown -R $(whoami) repo
   cd repo
+}
+
+function deprecation(){
+  read -d '' text << EOF
+  #### Deprecation Notice #### \n
+  You are using the Rultor default Docker image in your build.
+  The Rultor has to:\n
+  1. Provide the sudo package/command and not stop doing so whenever
+  a change to the Dockerfile is made, even if Rultor itself does not
+  need the sudo command.\n
+  2. Not install any gems to the global scope that interfere with
+  pdd or est\n
+  #####################################\n
+  EOF
+
+  echo $text
 }
