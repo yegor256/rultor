@@ -95,7 +95,14 @@ public final class Reports extends AbstractAgent {
         } else {
             pattern = "Reports.failure";
         }
-        final StringBuilder msg = new StringBuilder(
+        final int number = Integer.parseInt(req.xpath("@id").get(0));
+        final Comment.Smart comment = Reports.origin(issue, number);
+        final StringBuilder message = new StringBuilder();
+        if (comment.body().contains("stop")) {
+            message.append(Reports.PHRASES.getString("Reports.stop-fails"))
+                .append(' ');
+        }
+        message.append(
             Logger.format(
                 Reports.PHRASES.getString(pattern),
                 home.toASCIIString(),
@@ -103,20 +110,9 @@ public final class Reports extends AbstractAgent {
             )
         ).append(Reports.highlights(req));
         if (!success) {
-            msg.append(Reports.tail(req));
+            message.append(Reports.tail(req));
         }
-        final int number = Integer.parseInt(req.xpath("@id").get(0));
-        final Comment.Smart comment = Reports.origin(issue, number);
-        final String message;
-        if (comment.body().contains("stop")) {
-            message = String.format(
-                Reports.PHRASES.getString("Reports.stop-fails"),
-                msg.toString()
-            );
-        } else {
-            message = msg.toString();
-        }
-        new Answer(comment).post(success, message);
+        new Answer(comment).post(success, message.toString());
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")

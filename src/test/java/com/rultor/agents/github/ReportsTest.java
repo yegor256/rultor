@@ -62,7 +62,7 @@ public final class ReportsTest {
 
     /**
      * Reports can report a result of a request.
-     * @throws Exception In case of error.
+     * @throws Exception In case of error
      */
     @Test
     public void reportsRequestResult() throws Exception {
@@ -79,7 +79,7 @@ public final class ReportsTest {
 
     /**
      * Reports can report a result of a request, when stop command fails.
-     * @throws Exception In case of error.
+     * @throws Exception In case of error
      */
     @Test
     public void reportsRequestResultWhenStopFails() throws Exception {
@@ -95,10 +95,7 @@ public final class ReportsTest {
         MatcherAssert.assertThat(
             "Comment contains warning about stop request",
             repo.issues().get(1).comments().get(1).toString().contains(
-                ReportsTest.PHRASES.getString("Reports.stop-fails").replace(
-                    "%s",
-                    ""
-                )
+                ReportsTest.PHRASES.getString("Reports.stop-fails")
             )
         );
     }
@@ -111,7 +108,7 @@ public final class ReportsTest {
      * @throws IOException In case of error.
      */
     private static Talk example(final Repo repo, final Issue issue)
-            throws IOException {
+        throws IOException {
         final Talk result = new Talk.InFile();
         result.modify(
             new Directives().xpath("/talk").add("wire")
