@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-#@todo #754:30min Remove the deprecation code from the shell.
-# Move the code to Java. May be
-# \main\java\com\rultor\agents\daemons\EndsDaemon.java is
-# the place to implement this.
-
 set -e
 
 if [ ! -e pid ]; then
@@ -27,8 +22,6 @@ if docker ps -qa --no-trunc | grep --quiet "${cid}"; then
 else
   echo "container ${cid} is dead"
   date
-  if $image = "yegor256/rultor"; then
-    deprecation
-  fi
   exit 1
 fi
+
