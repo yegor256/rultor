@@ -105,7 +105,7 @@ public final class ReportsTest {
      * @param repo Repository
      * @param issue Issue
      * @return Example of Talk
-     * @throws IOException In case of error.
+     * @throws IOException In case of error
      */
     private static Talk example(final Repo repo, final Issue issue)
         throws IOException {
