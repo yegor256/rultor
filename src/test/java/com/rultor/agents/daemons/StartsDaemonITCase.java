@@ -116,11 +116,12 @@ public final class StartsDaemonITCase {
     }
 
     /**
-     * StartsDaemon can deprecateDefaultImage.
+     * StartsDaemon can deprecate default image.
      * @throws IOException In case of error
-     * @todo @todo #754:30min Implement a deprecation message at the start
+     * @todo#754:30min Implement a deprecation message at the start
      *  of the process if the project is using the default image
-     *  'yegor256/rultor'.
+     *  'yegor256/rultor'.  Fix the issue using the xpath available in
+     *  com.rultor.agents.daemons.StartsDaemon
      */
     @Test
     @Ignore

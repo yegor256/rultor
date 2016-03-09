@@ -31,7 +31,6 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.ssh.SSHD;
-import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
@@ -106,24 +105,25 @@ public final class EndsDaemonITCase {
     }
 
     /**
-     * EndsDaemon can deprecateDefaultImage.
-     * @throws IOException In case of error.
-     * @todo @todo #754:30min Implement a deprecation message at the start
+     * EndsDaemon can deprecate default image.
+     * @throws IOException In case of error
+     * @todo #754:30min Implement a deprecation message at the start
      *  of the process if the project is using the default image
-     *  'yegor256/rultor'.
+     *  'yegor256/rultor'. Fix the issue using the xpath available in
+     *  com.rultor.agents.daemons.EndsDaemon
      */
     @Test
     @Ignore
     public void deprecateDefaultImage() throws IOException {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
         final Talk talk = new Talk.InFile();
-        final File home = this.start(talk, "");
-        FileUtils.write(new File(home.getAbsolutePath(), "testing"), "12");
+        FileUtils.write(
+            new File(this.start(talk, "").getAbsolutePath(), "testing"), "12"
+        );
         final Agent agent = new EndsDaemon();
         agent.execute(talk);
-        final XML xml = talk.read();
         for (final String path
-            : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
+            : talk.read().xpath("/p/entry[@key='merge']/entry[@key='script']")
         ) {
             if ("yegor256/rultor".equals(path)) {
                 final String dir = talk.read()
