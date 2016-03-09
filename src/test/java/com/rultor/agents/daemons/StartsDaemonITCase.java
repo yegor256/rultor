@@ -117,7 +117,7 @@ public final class StartsDaemonITCase {
 
     /**
      * StartsDaemon can deprecateDefaultImage.
-     * @throws IOException In case of error.
+     * @throws IOException In case of error
      * @todo @todo #754:30min Implement a deprecation message at the start
      *  of the process if the project is using the default image
      *  'yegor256/rultor'.
@@ -128,24 +128,24 @@ public final class StartsDaemonITCase {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
         final Talk talk = this.talk();
         final XML xml = talk.read();
-        for (final String path:
-            xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
+        for (final String path
+            : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
              ) {
-            if("yegor256/rultor".equals(path)){
+            if ("yegor256/rultor".equals(path)) {
                 final String dir = talk.read()
                     .xpath("/talk/daemon/dir/text()").get(0);
-                MatcherAssert.assertThat(dir,
+                MatcherAssert.assertThat(
+                    dir,
                     StringStartsWith.startsWith("#### Deprecation Notice ####")
                 );
             }
         }
-
     }
 
     /**
      * Creates a Talk object with basic parameters.
      * @return The basic Talk object for testing
-     * @throws IOException
+     * @throws IOException In case of error
      */
     private Talk talk() throws IOException {
         final SSHD sshd = new SSHD(this.temp.newFolder());
@@ -185,6 +185,4 @@ public final class StartsDaemonITCase {
         agent.execute(talk);
         return talk;
     }
-
-
 }
