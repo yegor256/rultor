@@ -69,10 +69,6 @@ import org.xembly.Directives;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public final class StartsDaemon extends AbstractAgent {
-    /**
-     * The default image for the project.
-     */
-    private static final String IMAGE = "yegor256/rultor";
 
     /**
      * Profile to get assets from.
@@ -93,14 +89,9 @@ public final class StartsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) {
-        final Directives directives = new Directives()
+        final Directives dirs = new Directives()
             .xpath("/talk/daemon[not(started)]")
-            .strict(1);
-        final XML node = xml.node("/p/entry[@key='assets']/entry");
-        if(StartsDaemon.IMAGE.equals(node.xpath("//p/entry/@key").get(0))){
-            StartsDaemon.deprecate(directives);
-        }
-        final Directives dirs = directives
+            .strict(1)
             .add("started").set(new Time().iso()).up();
         try {
             final String dir = this.run(xml);
@@ -256,23 +247,5 @@ public final class StartsDaemon extends AbstractAgent {
             )
         );
     }
-
-    /**
-     * Adds the deprecated message to the directive.
-     * @param directives the directives which being deprecated
-     */
-    private static void deprecate(final Directives directives) {
-        directives.add("deprecate").set(
-            "#### Deprecation Notice ####\n" +
-                "You are using the Rultor default Docker image " +
-                "in your build.The Rultor has to:\n" +
-                "1. Provide the sudo package/command and not stop " +
-                "doing so whenever " +
-                "a change to the Dockerfile is made, even if Rultor " +
-                "itself does not  need the sudo command.\n" +
-                "2. Not install any gems to the global scope " +
-                "that interfere with  pdd or est\n" +
-                "#####################################\n");
-}
 
 }

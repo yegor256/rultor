@@ -70,11 +70,6 @@ public final class EndsDaemon extends AbstractAgent {
     public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
 
     /**
-     * The default image for the project.
-     */
-    private static final String IMAGE = "yegor256/rultor";
-
-    /**
      * Ctor.
      */
     public EndsDaemon() {
@@ -93,14 +88,7 @@ public final class EndsDaemon extends AbstractAgent {
                 dir, xml.xpath("/talk/@name").get(0)
             );
         } else {
-            final XML node = xml.node("/p/entry[@key='assets']/entry");
-            boolean deprecate = false;
-            if(EndsDaemon.IMAGE.equals(node.xpath("//p/entry/@key").get(0))){
-                deprecate=true;
-            }
-
-
-            dirs.append(this.end(shell, dir,deprecate));
+            dirs.append(this.end(shell, dir));
         }
         return dirs;
     }
@@ -109,12 +97,11 @@ public final class EndsDaemon extends AbstractAgent {
      * End this daemon.
      * @param shell Shell
      * @param dir The dir
-     * @param deprecate true if it is deprecated.
      * @return Directives
      * @throws IOException If fails
      */
     private Iterable<Directive> end(final Shell shell,
-        final String dir, final boolean deprecate) throws IOException {
+        final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
         final String stdout = new ShellCommand(
             shell,
@@ -148,7 +135,7 @@ public final class EndsDaemon extends AbstractAgent {
             )
         );
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
-        final Directives directives = new Directives()
+        return new Directives()
             .xpath("/talk/daemon")
             .strict(1)
             .add("ended").set(new Time().iso()).up()
@@ -168,30 +155,6 @@ public final class EndsDaemon extends AbstractAgent {
                     )
                 )
             );
-        EndsDaemon.deprecate(directives, deprecate);
-        return directives;
-    }
-
-    /**
-     * Adds the deprecated message to the directive.
-     * @param directives the directives which being deprecated
-     * @param deprecate true if it is deprecated.
-     */
-    private static void deprecate(final Directives directives,
-        final boolean deprecate) {
-        if (deprecate) {
-            directives.add("deprecate").set(
-                "#### Deprecation Notice ####\n" +
-                    "You are using the Rultor default Docker image " +
-                    "in your build.The Rultor has to:\n" +
-                    "1. Provide the sudo package/command and not stop " +
-                    "doing so whenever " +
-                    "a change to the Dockerfile is made, even if Rultor " +
-                    "itself does not  need the sudo command.\n" +
-                    "2. Not install any gems to the global scope " +
-                    "that interfere with  pdd or est\n" +
-                    "#####################################\n");
-        }
     }
 
     /**

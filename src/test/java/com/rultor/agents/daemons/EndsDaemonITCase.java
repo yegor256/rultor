@@ -31,6 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.ssh.SSHD;
+import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
@@ -39,7 +40,9 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.StringEndsWith;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -100,6 +103,37 @@ public final class EndsDaemonITCase {
             talk.read(),
             XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
         );
+    }
+
+    /**
+     * EndsDaemon can deprecateDefaultImage.
+     * @throws IOException In case of error.
+     * @todo @todo #754:30min Implement a deprecation message at the start
+     *  of the process if the project is using the default image
+     *  'yegor256/rultor'.
+     */
+    @Test
+    @Ignore
+    public void deprecateDefaultImage() throws IOException {
+        Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
+        final Talk talk = new Talk.InFile();
+        final File home = this.start(talk, "");
+        FileUtils.write(new File(home.getAbsolutePath(), "status"), "123");
+        final Agent agent = new EndsDaemon();
+        agent.execute(talk);
+        final XML xml = talk.read();
+        for (final String path:
+            xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
+            ) {
+            if("yegor256/rultor".equals(path)){
+                final String dir = talk.read()
+                    .xpath("/talk/daemon/dir/text()").get(0);
+                MatcherAssert.assertThat(dir,
+                    StringEndsWith.endsWith("#### Deprecation Notice ####")
+                );
+            }
+        }
+
     }
 
     /**

@@ -33,6 +33,7 @@ import com.jcabi.immutable.ArrayMap;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.ssh.SSHD;
 import com.jcabi.ssh.Shell;
+import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Agent;
@@ -41,6 +42,7 @@ import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
@@ -48,7 +50,9 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.hamcrest.core.StringStartsWith;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -81,6 +85,69 @@ public final class StartsDaemonITCase {
     @Test
     public void startsDaemon() throws Exception {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
+        final Talk talk = this.talk();
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPaths(
+                "/talk/daemon[started and dir]",
+                "/talk/daemon[ends-with(started,'Z')]"
+            )
+        );
+        final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        TimeUnit.SECONDS.sleep(2L);
+        new Shell.Safe(new TalkShells(talk.read()).get()).exec(
+            String.format("cat %s/stdout", dir),
+            new NullInputStream(0L),
+            baos, baos
+        );
+        MatcherAssert.assertThat(
+            baos.toString(CharEncoding.UTF_8),
+            Matchers.allOf(
+                Matchers.containsString("+ set -o pipefail"),
+                Matchers.containsString("+ date"),
+                Matchers.containsString("+ ls -al"),
+                Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
+            )
+        );
+        MatcherAssert.assertThat(
+            new File(dir, "status").exists(), Matchers.is(false)
+        );
+    }
+
+    /**
+     * StartsDaemon can deprecateDefaultImage.
+     * @throws IOException In case of error.
+     * @todo @todo #754:30min Implement a deprecation message at the start
+     *  of the process if the project is using the default image
+     *  'yegor256/rultor'.
+     */
+    @Test
+    @Ignore
+    public void deprecateDefaultImage() throws IOException {
+        Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
+        final Talk talk = this.talk();
+        final XML xml = talk.read();
+        for (final String path:
+            xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
+             ) {
+            if("yegor256/rultor".equals(path)){
+                final String dir = talk.read()
+                    .xpath("/talk/daemon/dir/text()").get(0);
+                MatcherAssert.assertThat(dir,
+                    StringStartsWith.startsWith("#### Deprecation Notice ####")
+                );
+            }
+        }
+
+    }
+
+    /**
+     * Creates a Talk object with basic parameters.
+     * @return The basic Talk object for testing
+     * @throws IOException
+     */
+    private Talk talk() throws IOException {
         final SSHD sshd = new SSHD(this.temp.newFolder());
         final int port = sshd.port();
         final Talk talk = new Talk.InFile();
@@ -116,33 +183,8 @@ public final class StartsDaemonITCase {
         ).when(profile).assets();
         final Agent agent = new StartsDaemon(profile);
         agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPaths(
-                "/talk/daemon[started and dir]",
-                "/talk/daemon[ends-with(started,'Z')]"
-            )
-        );
-        final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        TimeUnit.SECONDS.sleep(2L);
-        new Shell.Safe(new TalkShells(talk.read()).get()).exec(
-            String.format("cat %s/stdout", dir),
-            new NullInputStream(0L),
-            baos, baos
-        );
-        MatcherAssert.assertThat(
-            baos.toString(CharEncoding.UTF_8),
-            Matchers.allOf(
-                Matchers.containsString("+ set -o pipefail"),
-                Matchers.containsString("+ date"),
-                Matchers.containsString("+ ls -al"),
-                Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
-            )
-        );
-        MatcherAssert.assertThat(
-            new File(dir, "status").exists(), Matchers.is(false)
-        );
+        return talk;
     }
+
 
 }
