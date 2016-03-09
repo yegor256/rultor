@@ -52,8 +52,9 @@ public final class ReportsTest {
     /**
      * Message bundle.
      */
-    private static final ResourceBundle PHRASES =
-        ResourceBundle.getBundle("phrases");
+    private static final ResourceBundle PHRASES = ResourceBundle.getBundle(
+        "phrases"
+    );
 
     /**
      * Xpath to check that talk was executed correctly.
@@ -67,8 +68,9 @@ public final class ReportsTest {
     @Test
     public void reportsRequestResult() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
-        final Talk talk = ReportsTest.example(repo, issue);
+        final Talk talk = ReportsTest.example(
+            repo, repo.issues().create("", "")
+        );
         final Agent agent = new Reports(repo.github());
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -84,8 +86,9 @@ public final class ReportsTest {
     @Test
     public void reportsRequestResultWhenStopFails() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("Bug", "stop it please");
-        final Talk talk = ReportsTest.example(repo, issue);
+        final Talk talk = ReportsTest.example(
+            repo, repo.issues().create("Bug", "stop it please")
+        );
         final Agent agent = new Reports(repo.github());
         agent.execute(talk);
         MatcherAssert.assertThat(
