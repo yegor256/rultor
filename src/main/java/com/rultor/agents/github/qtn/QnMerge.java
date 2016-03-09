@@ -68,31 +68,21 @@ public final class QnMerge implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Issue.Smart issue = new Issue.Smart(comment.issue());
-        final Req req;
-        if (issue.isPull() && issue.isOpen()) {
-            new Answer(comment).post(
-                true,
-                String.format(
-                    QnMerge.PHRASES.getString("QnMerge.start"),
-                    home.toASCIIString()
-                )
-            );
-            Logger.info(
-                this, "merge request found in %s#%d, comment #%d",
-                issue.repo().coordinates(), issue.number(), comment.number()
-            );
-            req = QnMerge.pack(
-                comment,
-                issue.repo().pulls().get(issue.number())
-            );
-        } else {
-            new Answer(comment).post(
-                false,
-                QnMerge.PHRASES.getString("QnMerge.already-closed")
-            );
-            req = Req.EMPTY;
-        }
-        return req;
+        new Answer(comment).post(
+            true,
+            String.format(
+                QnMerge.PHRASES.getString("QnMerge.start"),
+                home.toASCIIString()
+            )
+        );
+        Logger.info(
+            this, "merge request found in %s#%d, comment #%d",
+            issue.repo().coordinates(), issue.number(), comment.number()
+        );
+        return QnMerge.pack(
+            comment,
+            issue.repo().pulls().get(issue.number())
+        );
     }
 
     /**

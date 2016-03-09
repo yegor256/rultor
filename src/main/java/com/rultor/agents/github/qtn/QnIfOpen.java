@@ -29,53 +29,63 @@
  */
 package com.rultor.agents.github.qtn;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
-import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkBranches;
-import com.jcabi.github.mock.MkGithub;
-import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
+import java.io.IOException;
 import java.net.URI;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.xembly.Directives;
-import org.xembly.Xembler;
+import java.util.ResourceBundle;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Tests for ${@link QnMerge}.
+ * If pull request is open.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Denys Skalenko (d.skalenko@gmail.com)
  * @version $Id$
- * @since 1.6
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @since 2.0
  */
-public final class QnMergeTest {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "origin")
+public final class QnIfOpen implements Question {
 
     /**
-     * QnMerge can build a request.
-     * @throws Exception In case of error.
+     * Message bundle.
      */
-    @Test
-    public void buildsRequest() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().get(
-            repo.pulls().create("", "head", "base").number()
-        );
-        final MkBranches branches = (MkBranches) repo.branches();
-        branches.create("head", "sha");
-        branches.create("base", "sha");
-        issue.comments().post("merge");
-        MatcherAssert.assertThat(
-            new Xembler(
-                new Directives().add("request").append(
-                    new QnMerge().understand(
-                        new Comment.Smart(issue.comments().get(1)), new URI("#")
-                    ).dirs()
-                )
-            ).xml(),
-            XhtmlMatchers.hasXPath("/request[type='merge']")
-        );
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
+
+    /**
+     * Original question.
+     */
+    private final transient Question origin;
+
+    /**
+     * Ctor.
+     * @param qtn Original question
+     */
+    public QnIfOpen(final Question qtn) {
+        this.origin = qtn;
     }
 
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        final Issue.Smart issue = new Issue.Smart(comment.issue());
+        final Req req;
+        if (issue.isOpen()) {
+            req = this.origin.understand(comment, home);
+        } else {
+            new Answer(comment).post(
+                false,
+                QnIfOpen.PHRASES.getString("QnIfOpen.already-closed")
+            );
+            req = Req.EMPTY;
+        }
+        return req;
+    }
 }

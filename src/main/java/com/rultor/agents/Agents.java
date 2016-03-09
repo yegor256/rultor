@@ -66,6 +66,7 @@ import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIamLost;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnIfOpen;
 import com.rultor.agents.github.qtn.QnIfPull;
 import com.rultor.agents.github.qtn.QnIfUnlocked;
 import com.rultor.agents.github.qtn.QnLock;
@@ -111,7 +112,7 @@ import org.apache.commons.lang3.CharEncoding;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "github", "sttc" })
+@EqualsAndHashCode(of = {"github", "sttc"})
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
 
@@ -288,40 +289,52 @@ public final class Agents {
      * @return Array of questions.
      */
     private static Question commands(final Profile profile) {
-        return new QnByArchitect(
-            profile,
-            "/p/entry[@key='architect']/item/text()",
-            new QnFirstOf(
-                new QnIfContains(
-                    "unlock",
-                    new QnUnlock()
-                ),
-                new QnIfContains(
-                    "lock",
-                    new QnLock()
-                ),
-                new QnIfContains(
-                    "merge",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("merge"),
-                        new QnIfPull(new QnIfUnlocked(new QnMerge()))
+        return new QnFirstOf(
+            new QnIfContains(
+                "merge",
+                new QnIfPull(
+                    new QnIfUnlocked(
+                        new QnIfOpen(
+                            new QnByArchitect(
+                                profile,
+                                "/p/entry[@key='architect']/item/text()",
+                                new QnAskedBy(
+                                    profile,
+                                    Agents.commanders("merge"),
+                                    new QnMerge()
+                                )
+                            )
+                        )
                     )
-                ),
-                new QnIfContains(
-                    "deploy",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("deploy"),
-                        new QnDeploy()
-                    )
-                ),
-                new QnIfContains(
-                    "release",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("release"),
-                        new QnRelease()
+                )
+            ),
+            new QnByArchitect(
+                profile,
+                "/p/entry[@key='architect']/item/text()",
+                new QnFirstOf(
+                    new QnIfContains(
+                        "unlock",
+                        new QnUnlock()
+                    ),
+                    new QnIfContains(
+                        "lock",
+                        new QnLock()
+                    ),
+                    new QnIfContains(
+                        "deploy",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("deploy"),
+                            new QnDeploy()
+                        )
+                    ),
+                    new QnIfContains(
+                        "release",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("release"),
+                            new QnRelease()
+                        )
                     )
                 )
             )
