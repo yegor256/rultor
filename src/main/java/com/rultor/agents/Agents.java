@@ -112,7 +112,7 @@ import org.apache.commons.lang3.CharEncoding;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = {"github", "sttc"})
+@EqualsAndHashCode(of = { "github", "sttc" })
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
 
