@@ -118,22 +118,22 @@ public final class EndsDaemonITCase {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
         final Talk talk = new Talk.InFile();
         final File home = this.start(talk, "");
-        FileUtils.write(new File(home.getAbsolutePath(), "status"), "123");
+        FileUtils.write(new File(home.getAbsolutePath(), "testing"), "12");
         final Agent agent = new EndsDaemon();
         agent.execute(talk);
         final XML xml = talk.read();
-        for (final String path:
-            xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
+        for (final String path
+            : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
             ) {
-            if("yegor256/rultor".equals(path)){
+            if ("yegor256/rultor".equals(path)) {
                 final String dir = talk.read()
                     .xpath("/talk/daemon/dir/text()").get(0);
-                MatcherAssert.assertThat(dir,
+                MatcherAssert.assertThat(
+                    dir,
                     StringEndsWith.endsWith("#### Deprecation Notice ####")
                 );
             }
         }
-
     }
 
     /**
