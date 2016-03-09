@@ -124,7 +124,7 @@ public final class EndsDaemonITCase {
         final XML xml = talk.read();
         for (final String path
             : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
-            ) {
+        ) {
             if ("yegor256/rultor".equals(path)) {
                 final String dir = talk.read()
                     .xpath("/talk/daemon/dir/text()").get(0);
