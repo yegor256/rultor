@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.github;
 
+import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
@@ -49,6 +50,7 @@ import org.xembly.Directives;
  * @author Viktor Kuchyn (kuchin.victor@gmail.com)
  * @version $Id$
  * @since 2.0
+ * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 public final class ClosePullRequestTest {
 
@@ -99,6 +101,36 @@ public final class ClosePullRequestTest {
         agent.execute(talk);
         MatcherAssert.assertThat(
             new Issue.Smart(issue).state(), Matchers.is("open")
+        );
+    }
+
+    /**
+     * ClosePullRequest can comment issue with explanation.
+     * @throws Exception If error
+     */
+    @Test
+    public void commentsToIssueWithExplanation() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                StringUtils.join(
+                    "<p><entry key='merge' >",
+                    "<entry key='rebase' >true</entry>",
+                    " </entry> </p>"
+                )
+            )
+        );
+        final Agent agent = new ClosePullRequest(profile, repo.github());
+        final Talk talk = ClosePullRequestTest.createTalk(repo, issue);
+        agent.execute(talk);
+        final Comment.Smart comment = new Comment.Smart(
+            new Issue.Smart(issue).comments().get(1)
+        );
+        MatcherAssert.assertThat(
+            comment.body(), Matchers.containsString(
+                "Closed manually because of rebase mode"
+            )
         );
     }
 
