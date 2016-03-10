@@ -39,6 +39,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.StringContains;
 import org.hamcrest.core.StringEndsWith;
 import org.junit.Assume;
 import org.junit.Ignore;
@@ -124,7 +125,12 @@ public final class EndsDaemonITCase {
                     .xpath("/talk/daemon/dir/text()").get(0);
                 MatcherAssert.assertThat(
                     dir,
-                    StringEndsWith.endsWith("#### Deprecation Notice ####")
+                    StringContains.containsString(
+                        "#### Deprecation Notice ####")
+                );
+                MatcherAssert.assertThat(
+                    dir,
+                    StringEndsWith.endsWith("##############")
                 );
             }
         }
