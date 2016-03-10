@@ -106,7 +106,7 @@ public final class EndsDaemonITCase {
     }
 
     /**
-     * EndsDaemon can deprecates default image.
+     * EndsDaemon can deprecate default image.
      * @throws IOException In case of error
      */
     @Test
