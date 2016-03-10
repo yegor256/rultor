@@ -116,7 +116,7 @@ public final class StartsDaemonITCase {
     }
 
     /**
-     * StartsDaemon can deprecates default image.
+     * StartsDaemon can deprecate default image.
      * @throws IOException In case of error
      * @todo #1018:30min Implement a deprecation message at the start and end
      *  of the process if the project is using the default image
