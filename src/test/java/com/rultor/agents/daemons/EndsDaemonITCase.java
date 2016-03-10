@@ -126,7 +126,8 @@ public final class EndsDaemonITCase {
                 MatcherAssert.assertThat(
                     dir,
                     StringContains.containsString(
-                        "#### Deprecation Notice ####")
+                        "#### Deprecation Notice ####"
+                    )
                 );
                 MatcherAssert.assertThat(
                     dir,
