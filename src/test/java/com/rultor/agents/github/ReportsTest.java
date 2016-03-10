@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
+import com.jcabi.log.Logger;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
@@ -55,6 +56,11 @@ public final class ReportsTest {
     private static final ResourceBundle PHRASES = ResourceBundle.getBundle(
         "phrases"
     );
+
+    /**
+     * Duration of command execution.
+     */
+    private static final long DURATION = 1234567;
 
     /**
      * Xpath to check that talk was executed correctly.
@@ -85,9 +91,11 @@ public final class ReportsTest {
      */
     @Test
     public void reportsRequestResultWhenStopFails() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final String user = "john";
+        final String stop = "stop it please";
+        final Repo repo = new MkGithub(user).randomRepo();
         final Talk talk = ReportsTest.example(
-            repo, repo.issues().create("Bug", "stop it please")
+            repo, repo.issues().create("Bug", stop)
         );
         final Agent agent = new Reports(repo.github());
         agent.execute(talk);
@@ -97,8 +105,20 @@ public final class ReportsTest {
         );
         MatcherAssert.assertThat(
             "Comment contains warning about stop request",
-            repo.issues().get(1).comments().get(1).toString().contains(
-                ReportsTest.PHRASES.getString("Reports.stop-fails")
+            repo.issues().get(1).comments().get(1).json().getString(
+                "body"
+            ).equals(
+                String.format(
+                    "> %s\n\n@%s %s %s",
+                    stop,
+                    user,
+                    ReportsTest.PHRASES.getString("Reports.stop-fails"),
+                    Logger.format(
+                        ReportsTest.PHRASES.getString("Reports.success"),
+                        "http://www.rultor.com/t/1-1",
+                        DURATION
+                    )
+                )
             )
         );
     }
@@ -120,7 +140,7 @@ public final class ReportsTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .up()
                 .add("request").attr("id", "1")
-                .add("msec").set("1234567").up()
+                .add("msec").set(DURATION).up()
                 .add("success").set("true").up()
                 .add("type").set("something").up()
                 .add("args")
