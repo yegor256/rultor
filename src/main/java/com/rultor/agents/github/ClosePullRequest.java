@@ -57,6 +57,7 @@ public final class ClosePullRequest extends AbstractAgent {
      * Profile.
      */
     private final transient Profile.Defaults profile;
+
     /**
      * Github.
      */
@@ -80,6 +81,7 @@ public final class ClosePullRequest extends AbstractAgent {
         if (ClosePullRequest.isRebaseMode(this.profile)) {
             final Issue.Smart issue = new TalkIssues(this.github, xml).get();
             issue.close();
+            issue.comments().post("Closed manually because of rebase mode");
         }
         return new Directives();
     }
