@@ -105,23 +105,17 @@ public final class EndsDaemonITCase {
     }
 
     /**
-     * EndsDaemon can deprecate default image.
+     * EndsDaemon can deprecates default image.
      * @throws IOException In case of error
-     * @todo #754:30min Implement a deprecation message at the start
-     *  of the process if the project is using the default image
-     *  'yegor256/rultor'. Fix the issue using the xpath available in
-     *  com.rultor.agents.daemons.EndsDaemon
      */
     @Test
     @Ignore
-    public void deprecateDefaultImage() throws IOException {
-        Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
+    public void deprecatesDefaultImage() throws IOException {
         final Talk talk = new Talk.InFile();
         FileUtils.write(
             new File(this.start(talk, "").getAbsolutePath(), "testing"), "12"
         );
-        final Agent agent = new EndsDaemon();
-        agent.execute(talk);
+        new EndsDaemon().execute(talk);
         for (final String path
             : talk.read().xpath("/p/entry[@key='merge']/entry[@key='script']")
         ) {
