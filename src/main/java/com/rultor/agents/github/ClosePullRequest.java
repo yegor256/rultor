@@ -69,35 +69,22 @@ public final class ClosePullRequest extends AbstractAgent {
      * @param ghub Github
      */
     public ClosePullRequest(final Profile prof, final Github ghub) {
-        super(
-            "/talk/wire[github-repo and github-issue]"
-        );
+        super("/talk/wire[github-repo and github-issue]");
         this.profile = new Profile.Defaults(prof);
         this.github = ghub;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        if (ClosePullRequest.isRebaseMode(this.profile)) {
+        final String rebase = this.profile.text(
+            "/p/entry[@key='merge']/entry[@key='rebase']",
+            "false"
+        );
+        if ("true".equals(rebase)) {
             final Issue.Smart issue = new TalkIssues(this.github, xml).get();
             issue.close();
             issue.comments().post("Closed manually because of rebase mode");
         }
         return new Directives();
-    }
-
-    /**
-     * Check rebase mode.
-     * @param prof Profile
-     * @return True if rebase mode, false - otherwise
-     * @throws IOException If errors
-     */
-    private static boolean isRebaseMode(final Profile.Defaults prof)
-        throws IOException {
-        final String rebase = prof.text(
-            "/p/entry[@key='merge']/entry[@key='rebase']",
-            "false"
-        );
-        return "true".equals(rebase);
     }
 }

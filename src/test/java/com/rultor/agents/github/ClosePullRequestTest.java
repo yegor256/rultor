@@ -34,7 +34,6 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.xml.XMLDocument;
-import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
@@ -55,7 +54,7 @@ import org.xembly.Directives;
 public final class ClosePullRequestTest {
 
     /**
-     * ClosePullRequest closes pull request if rebase mode.
+     * ClosePullRequest can close pull request if rebase mode.
      * @throws Exception If error
      */
     @Test
@@ -71,16 +70,22 @@ public final class ClosePullRequestTest {
                 )
             )
         );
-        final Agent agent = new ClosePullRequest(profile, repo.github());
-        final Talk talk = ClosePullRequestTest.createTalk(repo, issue);
-        agent.execute(talk);
+        final Talk talk = ClosePullRequestTest.talk(repo, issue);
+        new ClosePullRequest(profile, repo.github()).execute(talk);
+        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
-            new Issue.Smart(issue).state(), Matchers.is("closed")
+            smart.state(), Matchers.is("closed")
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(smart.comments().get(1)).body(),
+            Matchers.containsString(
+                "Closed manually because of rebase mode"
+            )
         );
     }
 
     /**
-     * ClosePullRequest leaves issue open if no rebase mode.
+     * ClosePullRequest can leave issue open if no rebase mode.
      * @throws Exception If error
      */
     @Test
@@ -96,41 +101,15 @@ public final class ClosePullRequestTest {
                 )
             )
         );
-        final Agent agent = new ClosePullRequest(profile, repo.github());
-        final Talk talk = ClosePullRequestTest.createTalk(repo, issue);
-        agent.execute(talk);
+        final Talk talk = ClosePullRequestTest.talk(repo, issue);
+        new ClosePullRequest(profile, repo.github()).execute(talk);
+        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
-            new Issue.Smart(issue).state(), Matchers.is("open")
-        );
-    }
-
-    /**
-     * ClosePullRequest can comment issue with explanation.
-     * @throws Exception If error
-     */
-    @Test
-    public void commentsToIssueWithExplanation() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                StringUtils.join(
-                    "<p><entry key='merge' >",
-                    "<entry key='rebase' >true</entry>",
-                    " </entry> </p>"
-                )
-            )
-        );
-        final Agent agent = new ClosePullRequest(profile, repo.github());
-        final Talk talk = ClosePullRequestTest.createTalk(repo, issue);
-        agent.execute(talk);
-        final Comment.Smart comment = new Comment.Smart(
-            new Issue.Smart(issue).comments().get(1)
+            smart.state(), Matchers.is("open")
         );
         MatcherAssert.assertThat(
-            comment.body(), Matchers.containsString(
-                "Closed manually because of rebase mode"
-            )
+            smart.comments().iterate(),
+            Matchers.is(Matchers.<Comment>emptyIterable())
         );
     }
 
@@ -141,7 +120,7 @@ public final class ClosePullRequestTest {
      * @return Talk
      * @throws IOException if errors
      */
-    private static Talk createTalk(final Repo repo, final Issue issue)
+    private static Talk talk(final Repo repo, final Issue issue)
         throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -152,5 +131,4 @@ public final class ClosePullRequestTest {
         );
         return talk;
     }
-
 }
