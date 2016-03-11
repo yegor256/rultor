@@ -123,7 +123,7 @@ public final class StartsDaemonITCase {
      *  'yegor256/rultor'. Fix the issue using the xpath available in
      *  com.rultor.agents.daemons.StartsDaemon and
      *  com.rultor.agents.daemons.EndsDaemon.
-     *@todo #1018:30min This test should not check for start and end
+     * @todo #1018:30min This test should not check for start and end
      *  deprecation messages if when the repo is the actual Rultor repo:
      *  https://github.com/yegor256/rultor
      */
