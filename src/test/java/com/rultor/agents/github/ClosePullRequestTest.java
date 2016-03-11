@@ -56,10 +56,11 @@ public final class ClosePullRequestTest {
     /**
      * ClosePullRequest can close pull request if rebase mode.
      * @throws Exception If error
-     * @todo #918:30min Close pull requests only for success merges, skip for
-     *  unsuccessful. Add new instance of ClosePullRequest to agents list in
-     *  Agents class after EndRequests agent instantiating (there you can find
-     *  status in talk object).
+     * @todo #918:30min This class should only close pull requests for
+     *  successful merges, that have not resulted in GitHub itself closing the
+     *  PR, do nothing for any other kind of request. Once this is implemented
+     *  here, implement this class acting on all pull requests by adding it to
+     *  the active Agents.
      */
     @Test
     public void closesPullRequestForRebaseMode() throws Exception {
