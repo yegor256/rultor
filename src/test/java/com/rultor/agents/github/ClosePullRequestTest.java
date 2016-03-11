@@ -56,6 +56,9 @@ public final class ClosePullRequestTest {
     /**
      * ClosePullRequest can close pull request if rebase mode.
      * @throws Exception If error
+     * @todo #918:30min Close pull requests only for success merges, skip for
+     *  unsuccessful. Add new instance of ClosePullRequest to agents list in
+     *  Agents after EndRequests agent instance.
      */
     @Test
     public void closesPullRequestForRebaseMode() throws Exception {

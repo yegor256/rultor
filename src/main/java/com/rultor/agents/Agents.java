@@ -46,7 +46,6 @@ import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.daemons.StopsDaemon;
 import com.rultor.agents.daemons.WipesDaemon;
 import com.rultor.agents.docker.DockerExec;
-import com.rultor.agents.github.ClosePullRequest;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Dephantomizes;
 import com.rultor.agents.github.Question;
@@ -244,7 +243,6 @@ public final class Agents {
             new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
             new StopsDaemon(),
             new EndsDaemon(),
-            new ClosePullRequest(profile, this.github),
             new EndsRequest(),
             new SafeAgent(
                 new Tweets(
