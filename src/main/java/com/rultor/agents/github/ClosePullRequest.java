@@ -36,6 +36,7 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -46,12 +47,18 @@ import org.xembly.Directives;
  *
  * @author Viktor Kuchyn (kuchin.victor@gmail.com)
  * @version $Id$
- * @since 2.0
+ * @since 1.63
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = {"github", "profile"})
 public final class ClosePullRequest extends AbstractAgent {
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * Profile.
@@ -83,7 +90,11 @@ public final class ClosePullRequest extends AbstractAgent {
         if ("true".equals(rebase)) {
             final Issue.Smart issue = new TalkIssues(this.github, xml).get();
             issue.close();
-            issue.comments().post("Closed manually because of rebase mode");
+            issue.comments().post(
+                ClosePullRequest.PHRASES.getString(
+                    "ClosePullRequest.explanation"
+                )
+            );
         }
         return new Directives();
     }
