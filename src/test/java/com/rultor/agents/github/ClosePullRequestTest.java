@@ -48,7 +48,7 @@ import org.xembly.Directives;
  *
  * @author Viktor Kuchyn (kuchin.victor@gmail.com)
  * @version $Id$
- * @since 2.0
+ * @since 1.63
  * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 public final class ClosePullRequestTest {
@@ -79,7 +79,15 @@ public final class ClosePullRequestTest {
         MatcherAssert.assertThat(
             new Comment.Smart(smart.comments().get(1)).body(),
             Matchers.containsString(
-                "Closed manually because of rebase mode"
+                StringUtils.join(
+                    "Rultor closed this pull request for you because your ",
+                    ".rultor.yml specified the use of rebasing before ",
+                    "merging. GitHub does not mark rebased pull requests as ",
+                    "merged, because rebasing entails a change in commit ",
+                    "hashes. Nevertheless all your files have been merged ",
+                    "exactly as they would have been merged without the ",
+                    "rebase option set."
+                )
             )
         );
     }
