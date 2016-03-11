@@ -58,7 +58,8 @@ public final class ClosePullRequestTest {
      * @throws Exception If error
      * @todo #918:30min Close pull requests only for success merges, skip for
      *  unsuccessful. Add new instance of ClosePullRequest to agents list in
-     *  Agents after EndRequests agent instance.
+     *  Agents class after EndRequests agent instantiating (there you can find
+     *  status in talk object).
      */
     @Test
     public void closesPullRequestForRebaseMode() throws Exception {
