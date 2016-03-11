@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 10 active puzzles (42 total):
+There are 13 active puzzles (47 total):
 
 
 <del>unknown</del> [`?`](../master/?)<br/>
@@ -45,3 +45,8 @@ There are 10 active puzzles (42 total):
 &nbsp;&nbsp;&nbsp;&nbsp;[<del>662</del>](https://github.com/yegor256/rultor/issues/662) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#832](https://github.com/yegor256/rultor/issues/832):[**662-8cc0c29a**](https://github.com/yegor256/rultor/issues/832) [`ReleaseBinaries.java:47-49`](../master/src/main/java/com/rultor/agents/github/ReleaseBinaries.java#L47-L49)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#934](https://github.com/yegor256/rultor/issues/934):[<del>567-359f8c66</del>](https://github.com/yegor256/rultor/issues/934) [`EndsDaemon.java:63-64`](../master/src/main/java/com/rultor/agents/daemons/EndsDaemon.java#L63-L64)<br/>
+[#1018](https://github.com/yegor256/rultor/issues/1018):[<del>1018</del>](https://github.com/yegor256/rultor/issues/1018) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[**1018-15a5404e**]() [`StartsDaemonITCase.java:121-125`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L121-L125)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[**1018-b83a728c**]() [`StartsDaemonITCase.java:126-128`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L126-L128)<br/>
+[#918](https://github.com/yegor256/rultor/issues/918):[<del>918</del>](https://github.com/yegor256/rultor/issues/918) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[**918-89660440**]() [`ClosePullRequestTest.java:59-63`](../master/src/test/java/com/rultor/agents/github/ClosePullRequestTest.java#L59-L63)<br/>
