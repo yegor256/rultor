@@ -45,9 +45,9 @@ import org.apache.commons.io.input.NullInputStream;
  * @version $Id$
  * @since 1.63
  * @todo #1041:30min Add DockerHealthCheck to the running SuperAgents.
- *   In doing so make sure that Rultor crashes throwing a meaningful exception
- *   as soon as DockerHealthCheck#execute throws and exception.
- *   #1041 has the details on the motivation behind this agent.
+ *  In doing so make sure that Rultor crashes throwing a meaningful exception
+ *  as soon as DockerHealthCheck#execute throws and exception.
+ *  #1041 has the details on the motivation behind this agent.
  */
 public final class DockerHealthCheck implements SuperAgent {
 
