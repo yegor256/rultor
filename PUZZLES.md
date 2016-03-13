@@ -49,6 +49,6 @@ There are 14 active puzzles (49 total):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1053](https://github.com/yegor256/rultor/issues/1053):[**1018-15a5404e**](https://github.com/yegor256/rultor/issues/1053) [`StartsDaemonITCase.java:121-125`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L121-L125)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1052](https://github.com/yegor256/rultor/issues/1052):[**1018-b83a728c**](https://github.com/yegor256/rultor/issues/1052) [`StartsDaemonITCase.java:126-128`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L126-L128)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#918](https://github.com/yegor256/rultor/issues/918):[<del>918</del>](https://github.com/yegor256/rultor/issues/918) [`?`](../master/?)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[**918-89660440**]() [`ClosePullRequestTest.java:59-63`](../master/src/test/java/com/rultor/agents/github/ClosePullRequestTest.java#L59-L63)<br/>
-[#1041](https://github.com/yegor256/rultor/issues/1041):[<del>1041</del>](https://github.com/yegor256/rultor/issues/1041) [`?`](../master/?)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;[**1041-7f83dd26**]() [`DockerHealthCheck.java:47-50`](../master/src/main/java/com/rultor/agents/docker/DockerHealthCheck.java#L47-L50)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1056](https://github.com/yegor256/rultor/issues/1056):[**918-89660440**](https://github.com/yegor256/rultor/issues/1056) [`ClosePullRequestTest.java:59-63`](../master/src/test/java/com/rultor/agents/github/ClosePullRequestTest.java#L59-L63)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[#1041](https://github.com/yegor256/rultor/issues/1041):[<del>1041</del>](https://github.com/yegor256/rultor/issues/1041) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[**1041-7f83dd26**]() [`DockerHealthCheck.java:47-50`](../master/src/main/java/com/rultor/agents/docker/DockerHealthCheck.java#L47-L50)<br/>
