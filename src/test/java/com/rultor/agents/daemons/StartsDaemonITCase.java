@@ -33,7 +33,6 @@ import com.jcabi.immutable.ArrayMap;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.ssh.SSHD;
 import com.jcabi.ssh.Shell;
-import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Agent;
@@ -47,12 +46,11 @@ import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.hamcrest.core.StringStartsWith;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -85,7 +83,7 @@ public final class StartsDaemonITCase {
     @Test
     public void startsDaemon() throws Exception {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
-        final Talk talk = this.talk();
+        final Talk talk = this.talk(this.profile(new XMLDocument("<p/>")));
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPaths(
@@ -118,40 +116,38 @@ public final class StartsDaemonITCase {
     /**
      * StartsDaemon can deprecate default image.
      * @throws IOException In case of error
-     * @todo #1018:30min Implement a deprecation message at the start and end
-     *  of the process if the project is using the default image
-     *  'yegor256/rultor'. Fix the issue using the xpath available in
-     *  com.rultor.agents.daemons.StartsDaemon and
-     *  com.rultor.agents.daemons.EndsDaemon.
      * @todo #1018:30min This test should not check for start and end
      *  deprecation messages if when the repo is the actual Rultor repo:
      *  https://github.com/yegor256/rultor
      */
     @Test
-    @Ignore
     public void deprecatesDefaultImage() throws IOException {
-        final Talk talk = this.talk();
-        final XML xml = talk.read();
-        for (final String path
-            : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
-             ) {
-            if ("yegor256/rultor".equals(path)) {
-                final String dir = talk.read()
-                    .xpath("/talk/daemon/dir/text()").get(0);
-                MatcherAssert.assertThat(
-                    dir,
-                    StringStartsWith.startsWith("#### Deprecation Notice ####")
-                );
-            }
-        }
+        final Profile profile = this.profile(
+            new XMLDocument(
+                StringUtils.join(
+                    "<p>",
+                    "<entry key='docker'>",
+                    "<entry key='image'>yegor256/rultor</entry>",
+                    "</entry>",
+                    "</p>"
+                )
+            )
+        );
+        final Talk talk = this.talk(profile);
+        final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
+        MatcherAssert.assertThat(
+            dir,
+            Matchers.notNullValue()
+        );
     }
 
     /**
      * Creates a Talk object with basic parameters.
+     * @param profile The profile to use for the test.
      * @return The basic Talk object for testing
      * @throws IOException In case of error
      */
-    private Talk talk() throws IOException {
+    private Talk talk(final Profile profile) throws IOException {
         final SSHD sshd = new SSHD(this.temp.newFolder());
         final int port = sshd.port();
         final Talk talk = new Talk.InFile();
@@ -171,11 +167,24 @@ public final class StartsDaemonITCase {
                 .add("daemon").attr("id", "fedcba")
                 .add("title").set("some operation").up()
                 .add("script").set(
-                    String.format("ls -al; %s file.bin; sleep 50000", executor)
-                )
+                String.format("ls -al; %s file.bin; sleep 50000", executor)
+            )
         );
+        final Agent agent = new StartsDaemon(profile);
+        agent.execute(talk);
+        return talk;
+    }
+
+    /**
+     * Creates a mock Profile with the specified {@link XMLDocument} as
+     * profile content in XML format.
+     * @param xml The content of the profile.
+     * @return A Mock profile for testing purpose.
+     * @throws IOException If an error occurs.
+     */
+    private Profile profile(final XMLDocument xml) throws IOException {
         final Profile profile = Mockito.mock(Profile.class);
-        Mockito.doReturn(new XMLDocument("<p/>")).when(profile).read();
+        Mockito.doReturn(xml).when(profile).read();
         Mockito.doReturn(
             new ArrayMap<String, InputStream>().with(
                 "file.bin",
@@ -185,8 +194,6 @@ public final class StartsDaemonITCase {
                 )
             )
         ).when(profile).assets();
-        final Agent agent = new StartsDaemon(profile);
-        agent.execute(talk);
-        return talk;
+        return profile;
     }
 }
