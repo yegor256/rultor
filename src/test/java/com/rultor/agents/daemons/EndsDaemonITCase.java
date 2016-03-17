@@ -39,10 +39,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.core.StringContains;
-import org.hamcrest.core.StringEndsWith;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -103,38 +100,6 @@ public final class EndsDaemonITCase {
             talk.read(),
             XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
         );
-    }
-
-    /**
-     * EndsDaemon can deprecate default image.
-     * @throws IOException In case of error
-     */
-    @Test
-    @Ignore
-    public void deprecatesDefaultImage() throws IOException {
-        final Talk talk = new Talk.InFile();
-        FileUtils.write(
-            new File(this.start(talk, "").getAbsolutePath(), "testing"), "12"
-        );
-        new EndsDaemon().execute(talk);
-        for (final String path
-            : talk.read().xpath("/p/entry[@key='merge']/entry[@key='script']")
-        ) {
-            if ("yegor256/rultor".equals(path)) {
-                final String dir = talk.read()
-                    .xpath("/talk/daemon/dir/text()").get(0);
-                MatcherAssert.assertThat(
-                    dir,
-                    StringContains.containsString(
-                        "#### Deprecation Notice ####"
-                    )
-                );
-                MatcherAssert.assertThat(
-                    dir,
-                    StringEndsWith.endsWith("##############")
-                );
-            }
-        }
     }
 
     /**

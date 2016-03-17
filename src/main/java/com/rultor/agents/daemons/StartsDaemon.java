@@ -40,6 +40,7 @@ import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
+import com.rultor.profiles.ProfileDeprecationAware;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -84,7 +85,7 @@ public final class StartsDaemon extends AbstractAgent {
             "/talk/shell[host and port and login and key]",
             "/talk/daemon[script and not(started) and not(ended)]"
         );
-        this.profile = prof;
+        this.profile = new ProfileDeprecationAware(prof);
     }
 
     @Override
