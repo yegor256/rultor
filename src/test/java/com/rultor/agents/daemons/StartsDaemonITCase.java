@@ -59,7 +59,6 @@ import org.xembly.Directives;
 
 /**
  * Integration test for ${@link StartsDaemon}.
- *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3.8
@@ -77,7 +76,7 @@ public final class StartsDaemonITCase {
 
     /**
      * StartsDaemon can start a daemon.
-     * @throws Exception In case of error.
+     * @throws Exception In case of error
      * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
@@ -143,7 +142,7 @@ public final class StartsDaemonITCase {
 
     /**
      * Creates a Talk object with basic parameters.
-     * @param profile The profile to use for the test.
+     * @param profile The profile to use for the test
      * @return The basic Talk object for testing
      * @throws IOException In case of error
      */
@@ -167,8 +166,8 @@ public final class StartsDaemonITCase {
                 .add("daemon").attr("id", "fedcba")
                 .add("title").set("some operation").up()
                 .add("script").set(
-                String.format("ls -al; %s file.bin; sleep 50000", executor)
-            )
+                    String.format("ls -al; %s file.bin; sleep 50000", executor)
+                )
         );
         final Agent agent = new StartsDaemon(profile);
         agent.execute(talk);
@@ -178,9 +177,9 @@ public final class StartsDaemonITCase {
     /**
      * Creates a mock Profile with the specified {@link XMLDocument} as
      * profile content in XML format.
-     * @param xml The content of the profile.
-     * @return A Mock profile for testing purpose.
-     * @throws IOException If an error occurs.
+     * @param xml The content of the profile
+     * @return A Mock profile for testing purpose
+     * @throws IOException If an error occurs
      */
     private Profile profile(final XMLDocument xml) throws IOException {
         final Profile profile = Mockito.mock(Profile.class);
