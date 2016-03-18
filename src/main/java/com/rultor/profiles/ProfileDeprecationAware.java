@@ -40,10 +40,9 @@ import java.util.Map;
 /**
  * Decorator allowing to add a deprecation message if and only if the
  * {@link Profile} is deprecated.
- *
  * @author Nicolas Filotto (nicolas.filotto@gmail.com)
  * @version $Id$
- * @since 1.59
+ * @since 1.62
  */
 public final class ProfileDeprecationAware implements Profile {
 
@@ -116,10 +115,17 @@ public final class ProfileDeprecationAware implements Profile {
      */
     private void check(final XML prof) {
         if (ProfileDeprecationAware.deprecated(prof)) {
+            Logger.warn(this, "#### Deprecation Notice ####");
             Logger.warn(
                 this,
-                "#### Deprecation Notice #### Don't use the default image"
+                "You are using the Rultor default Docker image in your build."
             );
+            Logger.warn(
+                this,
+                // @checkstyle LineLength (1 line)
+                ".... some short version of above explanation as to why this is bad ...."
+            );
+            Logger.warn(this, "########################");
         }
     }
 }

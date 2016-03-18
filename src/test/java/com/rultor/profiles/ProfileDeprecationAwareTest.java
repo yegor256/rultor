@@ -38,38 +38,59 @@ import org.junit.Test;
 
 /**
  * Tests for ${@link ProfileDeprecationAware}.
- *
  * @author Nicolas Filotto (nicolas.filotto@gmail.com)
  * @version $Id$
- * @since 1.59
+ * @since 1.62
  */
 public final class ProfileDeprecationAwareTest {
 
     /**
-     * ProfileDeprecationAware can identify deprecation.
-     * @throws Exception In case of error.
+     * The format of an profile that defines the docker image to use.
+     */
+    private static final String PROFILE_WITH_IMAGE_FORMAT = StringUtils.join(
+        "<p><entry key='docker'>",
+        "<entry key='image'>%s</entry>",
+        "</entry></p>"
+    );
+
+    /**
+     * ProfileDeprecationAware can identify a deprecated profile.
+     * @throws Exception In case of error
      */
     @Test
-    public void identifyDeprecation() throws Exception {
+    public void identifiesDeprecation() throws Exception {
         Profile profile = new Profile.Fixed();
         MatcherAssert.assertThat(
             ProfileDeprecationAware.deprecated(profile.read()),
             Matchers.is(true)
         );
-        final String format = StringUtils.join(
-            "<p><entry key='docker'>",
-            "<entry key='image'>%s</entry>",
-            "</entry></p>"
-        );
         profile = new Profile.Fixed(
-            new XMLDocument(String.format(format, "yegor256/rultor"))
+            new XMLDocument(
+                String.format(
+                    ProfileDeprecationAwareTest.PROFILE_WITH_IMAGE_FORMAT,
+                    "yegor256/rultor"
+                )
+            )
         );
         MatcherAssert.assertThat(
             ProfileDeprecationAware.deprecated(profile.read()),
             Matchers.is(true)
         );
-        profile = new Profile.Fixed(
-            new XMLDocument(String.format(format, "foo"))
+    }
+
+    /**
+     * ProfileDeprecationAware can identify a valid profile.
+     * @throws Exception In case of error
+     */
+    @Test
+    public void identifiesValid() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                String.format(
+                    ProfileDeprecationAwareTest.PROFILE_WITH_IMAGE_FORMAT,
+                    "foo"
+                )
+            )
         );
         MatcherAssert.assertThat(
             ProfileDeprecationAware.deprecated(profile.read()),
