@@ -54,7 +54,7 @@ public final class ProfileDeprecationAware implements Profile {
     /**
      * Constructs a {@code ProfileDeprecationAware} with the specified
      * underlying {@code Profile}.
-     * @param prof The underlying profile.
+     * @param prof The underlying profile
      */
     public ProfileDeprecationAware(final Profile prof) {
         this.profile = prof;
@@ -88,8 +88,8 @@ public final class ProfileDeprecationAware implements Profile {
 
     /**
      * Indicates whether the profile is deprecated or not.
-     * @param prof The XML representation of the profile to test.
-     * @return True if the profile is deprecated, false otherwise.
+     * @param prof The XML representation of the profile to test
+     * @return True if the profile is deprecated, false otherwise
      */
     public static boolean deprecated(final XML prof) {
         final List<XML> images = prof.nodes(
@@ -111,7 +111,7 @@ public final class ProfileDeprecationAware implements Profile {
 
     /**
      * Checks if the profile is deprecated and if so log the deprecation notice.
-     * @param prof The XML representation of the profile to check.
+     * @param prof The XML representation of the profile to check
      */
     private void check(final XML prof) {
         if (ProfileDeprecationAware.deprecated(prof)) {
