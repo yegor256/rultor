@@ -47,7 +47,7 @@ public final class ProfileDeprecationAwareTest {
     /**
      * The format of an profile that defines the docker image to use.
      */
-    private static final String PROFILE_WITH_IMAGE_FORMAT = StringUtils.join(
+    private static final String PROFILE_FORMAT = StringUtils.join(
         "<p><entry key='docker'>",
         "<entry key='image'>%s</entry>",
         "</entry></p>"
@@ -67,7 +67,7 @@ public final class ProfileDeprecationAwareTest {
         profile = new Profile.Fixed(
             new XMLDocument(
                 String.format(
-                    ProfileDeprecationAwareTest.PROFILE_WITH_IMAGE_FORMAT,
+                    ProfileDeprecationAwareTest.PROFILE_FORMAT,
                     "yegor256/rultor"
                 )
             )
@@ -87,7 +87,7 @@ public final class ProfileDeprecationAwareTest {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 String.format(
-                    ProfileDeprecationAwareTest.PROFILE_WITH_IMAGE_FORMAT,
+                    ProfileDeprecationAwareTest.PROFILE_FORMAT,
                     "foo"
                 )
             )
