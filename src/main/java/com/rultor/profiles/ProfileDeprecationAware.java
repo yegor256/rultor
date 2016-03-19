@@ -88,10 +88,50 @@ public final class ProfileDeprecationAware implements Profile {
 
     /**
      * Indicates whether the profile is deprecated or not.
+     * @return True if the profile is deprecated, false otherwise
+     * @throws IOException if it fails while getting the XML format of the
+     *  profile
+     */
+    public boolean deprecated() throws IOException {
+        return ProfileDeprecationAware.deprecated(this.profile.read());
+    }
+
+    /**
+     * Checks if the profile is deprecated and if so log the deprecation notice.
+     * @param prof The XML representation of the profile to check
+     */
+    private void check(final XML prof) {
+        if (ProfileDeprecationAware.deprecated(prof)) {
+            Logger.warn(this, "#### Deprecation Notice ####");
+            Logger.warn(
+                this,
+                "You are using the Rultor default Docker image in your build."
+            );
+            Logger.warn(this, "The Rultor has to:");
+            Logger.warn(
+                this,
+                "1. Provide the sudo package/command and not stop doing so "
+            );
+            Logger.warn(
+                this,
+                "whenever a change to the Dockerfile is made, even if Rultor "
+            );
+            Logger.warn(this, "itself does not need the sudo command.");
+            Logger.warn(
+                this,
+                "2. Not install any gems to the global scope that interfere "
+            );
+            Logger.warn(this, "with pdd or est");
+            Logger.warn(this, "########################");
+        }
+    }
+
+    /**
+     * Indicates whether the profile is deprecated or not.
      * @param prof The XML representation of the profile to test
      * @return True if the profile is deprecated, false otherwise
      */
-    public static boolean deprecated(final XML prof) {
+    private static boolean deprecated(final XML prof) {
         final List<XML> images = prof.nodes(
             "/p/entry[@key='docker']/entry[@key='image']"
         );
@@ -107,25 +147,5 @@ public final class ProfileDeprecationAware implements Profile {
             }
         }
         return deprecated;
-    }
-
-    /**
-     * Checks if the profile is deprecated and if so log the deprecation notice.
-     * @param prof The XML representation of the profile to check
-     */
-    private void check(final XML prof) {
-        if (ProfileDeprecationAware.deprecated(prof)) {
-            Logger.warn(this, "#### Deprecation Notice ####");
-            Logger.warn(
-                this,
-                "You are using the Rultor default Docker image in your build."
-            );
-            Logger.warn(
-                this,
-                // @checkstyle LineLength (1 line)
-                ".... some short version of above explanation as to why this is bad ...."
-            );
-            Logger.warn(this, "########################");
-        }
     }
 }

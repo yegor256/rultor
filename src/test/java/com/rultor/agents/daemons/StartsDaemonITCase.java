@@ -134,10 +134,7 @@ public final class StartsDaemonITCase {
         );
         final Talk talk = this.talk(profile);
         final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
-        MatcherAssert.assertThat(
-            dir,
-            Matchers.notNullValue()
-        );
+        MatcherAssert.assertThat(dir, Matchers.notNullValue());
     }
 
     /**
