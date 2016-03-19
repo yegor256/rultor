@@ -59,23 +59,21 @@ public final class ProfileDeprecationAwareTest {
      */
     @Test
     public void identifiesDeprecation() throws Exception {
-        Profile profile = new Profile.Fixed();
-        MatcherAssert.assertThat(
-            ProfileDeprecationAware.deprecated(profile.read()),
-            Matchers.is(true)
+        ProfileDeprecationAware profile = new ProfileDeprecationAware(
+            new Profile.Fixed()
         );
-        profile = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfileDeprecationAwareTest.PROFILE_FORMAT,
-                    "yegor256/rultor"
+        MatcherAssert.assertThat(profile.deprecated(), Matchers.is(true));
+        profile = new ProfileDeprecationAware(
+            new Profile.Fixed(
+                new XMLDocument(
+                    String.format(
+                        ProfileDeprecationAwareTest.PROFILE_FORMAT,
+                        "yegor256/rultor"
+                    )
                 )
             )
         );
-        MatcherAssert.assertThat(
-            ProfileDeprecationAware.deprecated(profile.read()),
-            Matchers.is(true)
-        );
+        MatcherAssert.assertThat(profile.deprecated(), Matchers.is(true));
     }
 
     /**
@@ -84,17 +82,16 @@ public final class ProfileDeprecationAwareTest {
      */
     @Test
     public void identifiesValid() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfileDeprecationAwareTest.PROFILE_FORMAT,
-                    "foo"
+        final ProfileDeprecationAware profile = new ProfileDeprecationAware(
+            new Profile.Fixed(
+                new XMLDocument(
+                    String.format(
+                        ProfileDeprecationAwareTest.PROFILE_FORMAT,
+                        "foo"
+                    )
                 )
             )
         );
-        MatcherAssert.assertThat(
-            ProfileDeprecationAware.deprecated(profile.read()),
-            Matchers.is(false)
-        );
+        MatcherAssert.assertThat(profile.deprecated(), Matchers.is(false));
     }
 }
