@@ -66,7 +66,6 @@ import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIamLost;
 import com.rultor.agents.github.qtn.QnIfCollaborator;
 import com.rultor.agents.github.qtn.QnIfContains;
-import com.rultor.agents.github.qtn.QnIfOpen;
 import com.rultor.agents.github.qtn.QnIfPull;
 import com.rultor.agents.github.qtn.QnIfUnlocked;
 import com.rultor.agents.github.qtn.QnLock;
@@ -294,15 +293,13 @@ public final class Agents {
                 "merge",
                 new QnIfPull(
                     new QnIfUnlocked(
-                        new QnIfOpen(
-                            new QnByArchitect(
+                        new QnByArchitect(
+                            profile,
+                            "/p/entry[@key='architect']/item/text()",
+                            new QnAskedBy(
                                 profile,
-                                "/p/entry[@key='architect']/item/text()",
-                                new QnAskedBy(
-                                    profile,
-                                    Agents.commanders("merge"),
-                                    new QnMerge()
-                                )
+                                Agents.commanders("merge"),
+                                new QnMerge()
                             )
                         )
                     )

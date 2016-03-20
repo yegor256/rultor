@@ -77,16 +77,43 @@ public final class QnIfPull implements Question {
         final URI home) throws IOException {
         final Issue.Smart issue = new Issue.Smart(comment.issue());
         final Req req;
-        if (issue.isPull()) {
-            req = this.origin.understand(comment, home);
-        } else {
+        if (QnIfPull.isNotPull(issue)) {
             new Answer(comment).post(
                 false,
                 QnIfPull.PHRASES.getString("QnIfPull.not-pull-request")
             );
-            req = Req.EMPTY;
+            req = Req.DONE;
+        } else if (QnIfPull.isClosed(issue)) {
+            new Answer(comment).post(
+                false,
+                QnIfPull.PHRASES.getString("QnIfPull.already-closed")
+            );
+            req = Req.DONE;
+        } else {
+            req = this.origin.understand(comment, home);
         }
         return req;
     }
 
+    /**
+     * Is issue not pull request.
+     * @param issue The issue
+     * @return TRUE if issue not pull request
+     * @throws IOException If there is any I/O problem
+     */
+    private static boolean isNotPull(final Issue.Smart issue)
+        throws IOException {
+        return !issue.isPull();
+    }
+
+    /**
+     * Is issue closed.
+     * @param issue The issue
+     * @return TRUE if issue closed
+     * @throws IOException If there is any I/O problem
+     */
+    private static boolean isClosed(final Issue.Smart issue)
+        throws IOException {
+        return !issue.isOpen();
+    }
 }
