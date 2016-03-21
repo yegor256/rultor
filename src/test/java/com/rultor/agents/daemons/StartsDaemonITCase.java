@@ -61,7 +61,6 @@ import org.xembly.Directives;
 
 /**
  * Integration test for ${@link StartsDaemon}.
- *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.3.8
