@@ -61,6 +61,9 @@ import org.xembly.Xembler;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @todo 1053:30 min Reduce the data abstraction coupling of this class in order
+ *  to get rid of the checkstyle suppression of
+ *  ClassDataAbstractionCouplingCheck
  */
 @Immutable
 @ToString

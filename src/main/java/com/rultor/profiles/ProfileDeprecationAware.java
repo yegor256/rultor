@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.input.NullInputStream;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Decorator allowing to add a deprecation message if and only if the
@@ -79,26 +80,26 @@ public final class ProfileDeprecationAware implements Profile {
 
     /**
      * Checks if the profile is deprecated and if so log the deprecation notice.
-     * @param shell The shell to use to log the deprecation notice if needed.
+     * @param shell The shell to use to log the deprecation notice if needed
      * @throws IOException if it fails while getting the XML format of the
      *  profile
      */
-    @SuppressWarnings("PMD.ConsecutiveLiteralAppends")
     public void check(final Shell shell) throws IOException {
         if (ProfileDeprecationAware.deprecated(this.profile.read())) {
-            final StringBuilder buffer = new StringBuilder(512);
-            buffer.append("#### Deprecation Notice #### \n")
-                .append("You are using the Rultor default Docker image in")
-                .append(" your build. The Rultor has to:\n")
-                .append("1. Provide the sudo package/command and not stop")
-                .append(" doing so whenever a change to the Dockerfile is")
-                .append(" made, even if Rultor itself does not need the")
-                .append(" sudo command.\n2. Not install any gems to the")
-                .append(" global scope that interfere with pdd or est\n")
-                .append("#####################################\n");
+            final String notice = StringUtils.join(
+                "#### Deprecation Notice #### \n",
+                "You are using the Rultor default Docker image in your build.",
+                "The Rultor has to:\n",
+                "1. Provide the sudo package/command and not stop doing so ",
+                "whenever a change to the Dockerfile is made, even if Rultor ",
+                "itself does not need the sudo command.\n",
+                "2. Not install any gems to the global scope that interfere ",
+                "with pdd or est\n",
+                "#####################################\n"
+            );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             new Shell.Safe(shell).exec(
-                String.format("echo -e \"%s\"", buffer.toString()),
+                String.format("echo -e \"%s\"", notice),
                 new NullInputStream(0L),
                 baos, baos
             );
