@@ -79,13 +79,6 @@ public final class EndsDaemon extends AbstractAgent {
 
     /**
      * Ctor.
-     */
-    public EndsDaemon() {
-        this(new Profile.Fixed());
-    }
-
-    /**
-     * Ctor.
      * @param prof Profile
      */
     public EndsDaemon(final Profile prof) {
@@ -95,8 +88,8 @@ public final class EndsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        this.profile.check();
         final Shell shell = new TalkShells(xml).get();
+        this.profile.check(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Script("end.sh").exec(xml);
         final Directives dirs = new Directives();

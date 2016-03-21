@@ -74,7 +74,7 @@ public final class StartsDaemon extends AbstractAgent {
     /**
      * Profile to get assets from.
      */
-    private final transient Profile profile;
+    private final transient ProfileDeprecationAware profile;
 
     /**
      * Ctor.
@@ -116,6 +116,7 @@ public final class StartsDaemon extends AbstractAgent {
     public String run(final XML xml) throws IOException {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final Shell shell = new TalkShells(xml).get();
+        this.profile.check(shell);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new Shell.Safe(shell).exec(
             "mktemp -d -t rultor-XXXX",
