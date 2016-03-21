@@ -33,13 +33,17 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.ssh.SSHD;
 import com.rultor.Time;
 import com.rultor.spi.Agent;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.StringContains;
+import org.hamcrest.core.StringEndsWith;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -50,6 +54,7 @@ import org.xembly.Directives;
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class EndsDaemonITCase {
     /**
@@ -74,7 +79,7 @@ public final class EndsDaemonITCase {
                 "text output"
             )
         );
-        final Agent agent = new EndsDaemon();
+        final Agent agent = new EndsDaemon(new Profile.Fixed());
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
@@ -94,12 +99,44 @@ public final class EndsDaemonITCase {
         final Talk talk = new Talk.InFile();
         final File home = this.start(talk, "");
         FileUtils.write(new File(home.getAbsolutePath(), "status"), "123");
-        final Agent agent = new EndsDaemon();
+        final Agent agent = new EndsDaemon(new Profile.Fixed());
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
         );
+    }
+
+    /**
+     * EndsDaemon can deprecate default image.
+     * @throws IOException In case of error
+     */
+    @Test
+    @Ignore
+    public void deprecatesDefaultImage() throws IOException {
+        final Talk talk = new Talk.InFile();
+        FileUtils.write(
+            new File(this.start(talk, "").getAbsolutePath(), "testing"), "12"
+        );
+        new EndsDaemon(new Profile.Fixed()).execute(talk);
+        for (final String path
+            : talk.read().xpath("/p/entry[@key='merge']/entry[@key='script']")
+        ) {
+            if ("yegor256/rultor".equals(path)) {
+                final String dir = talk.read()
+                    .xpath("/talk/daemon/dir/text()").get(0);
+                MatcherAssert.assertThat(
+                    dir,
+                    StringContains.containsString(
+                        "#### Deprecation Notice ####"
+                    )
+                );
+                MatcherAssert.assertThat(
+                    dir,
+                    StringEndsWith.endsWith("##############")
+                );
+            }
+        }
     }
 
     /**

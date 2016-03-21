@@ -29,13 +29,15 @@
  */
 package com.rultor.profiles;
 
-import com.jcabi.log.Logger;
+import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.input.NullInputStream;
 
 /**
  * Decorator allowing to add a deprecation message if and only if the
@@ -67,9 +69,7 @@ public final class ProfileDeprecationAware implements Profile {
 
     @Override
     public XML read() throws IOException {
-        final XML xml = this.profile.read();
-        this.check(xml);
-        return xml;
+        return this.profile.read();
     }
 
     @Override
@@ -79,11 +79,30 @@ public final class ProfileDeprecationAware implements Profile {
 
     /**
      * Checks if the profile is deprecated and if so log the deprecation notice.
+     * @param shell The shell to use to log the deprecation notice if needed.
      * @throws IOException if it fails while getting the XML format of the
      *  profile
      */
-    public void check() throws IOException {
-        this.check(this.profile.read());
+    @SuppressWarnings("PMD.ConsecutiveLiteralAppends")
+    public void check(final Shell shell) throws IOException {
+        if (ProfileDeprecationAware.deprecated(this.profile.read())) {
+            final StringBuilder buffer = new StringBuilder(512);
+            buffer.append("#### Deprecation Notice #### \n")
+                .append("You are using the Rultor default Docker image in")
+                .append(" your build. The Rultor has to:\n")
+                .append("1. Provide the sudo package/command and not stop")
+                .append(" doing so whenever a change to the Dockerfile is")
+                .append(" made, even if Rultor itself does not need the")
+                .append(" sudo command.\n2. Not install any gems to the")
+                .append(" global scope that interfere with pdd or est\n")
+                .append("#####################################\n");
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            new Shell.Safe(shell).exec(
+                String.format("echo -e \"%s\"", buffer.toString()),
+                new NullInputStream(0L),
+                baos, baos
+            );
+        }
     }
 
     /**
@@ -94,36 +113,6 @@ public final class ProfileDeprecationAware implements Profile {
      */
     public boolean deprecated() throws IOException {
         return ProfileDeprecationAware.deprecated(this.profile.read());
-    }
-
-    /**
-     * Checks if the profile is deprecated and if so log the deprecation notice.
-     * @param prof The XML representation of the profile to check
-     */
-    private void check(final XML prof) {
-        if (ProfileDeprecationAware.deprecated(prof)) {
-            Logger.warn(this, "#### Deprecation Notice ####");
-            Logger.warn(
-                this,
-                "You are using the Rultor default Docker image in your build."
-            );
-            Logger.warn(this, "The Rultor has to:");
-            Logger.warn(
-                this,
-                "1. Provide the sudo package/command and not stop doing so "
-            );
-            Logger.warn(
-                this,
-                "whenever a change to the Dockerfile is made, even if Rultor "
-            );
-            Logger.warn(this, "itself does not need the sudo command.");
-            Logger.warn(
-                this,
-                "2. Not install any gems to the global scope that interfere "
-            );
-            Logger.warn(this, "with pdd or est");
-            Logger.warn(this, "########################");
-        }
     }
 
     /**
