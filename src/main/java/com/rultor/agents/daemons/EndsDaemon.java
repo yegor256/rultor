@@ -61,8 +61,8 @@ import org.xembly.Xembler;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @todo #1053:30 min Reduce the data abstraction coupling of EndsDaemon in
- *  order to get rid of the checkstyle suppression of
+ * @todo #1053:30min Reduce the data abstraction coupling of EndsDaemon in order
+ *  to get rid of the checkstyle suppression of
  *  ClassDataAbstractionCouplingCheck
  */
 @Immutable
