@@ -40,7 +40,6 @@ import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
-import com.rultor.profiles.ProfileDeprecationAware;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -74,7 +73,7 @@ public final class StartsDaemon extends AbstractAgent {
     /**
      * Profile to get assets from.
      */
-    private final transient ProfileDeprecationAware profile;
+    private final transient Profile profile;
 
     /**
      * Ctor.
@@ -85,7 +84,7 @@ public final class StartsDaemon extends AbstractAgent {
             "/talk/shell[host and port and login and key]",
             "/talk/daemon[script and not(started) and not(ended)]"
         );
-        this.profile = new ProfileDeprecationAware(prof);
+        this.profile = prof;
     }
 
     @Override
@@ -116,7 +115,7 @@ public final class StartsDaemon extends AbstractAgent {
     public String run(final XML xml) throws IOException {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final Shell shell = new TalkShells(xml).get();
-        this.profile.check(shell);
+        new DeprecationNotice(this.profile).print(shell);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new Shell.Safe(shell).exec(
             "mktemp -d -t rultor-XXXX",

@@ -43,7 +43,6 @@ import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
-import com.rultor.profiles.ProfileDeprecationAware;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collection;
@@ -76,9 +75,9 @@ public final class EndsDaemon extends AbstractAgent {
     public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
 
     /**
-     * The profile to check.
+     * The profile of the run.
      */
-    private final transient ProfileDeprecationAware profile;
+    private final transient Profile profile;
 
     /**
      * Ctor.
@@ -86,13 +85,13 @@ public final class EndsDaemon extends AbstractAgent {
      */
     public EndsDaemon(final Profile prof) {
         super("/talk/daemon[started and not(code) and not(ended)]");
-        this.profile = new ProfileDeprecationAware(prof);
+        this.profile = prof;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
-        this.profile.check(shell);
+        new DeprecationNotice(this.profile).print(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Script("end.sh").exec(xml);
         final Directives dirs = new Directives();
