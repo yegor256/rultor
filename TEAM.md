@@ -6,8 +6,8 @@ Role | Members
 ---|---
 PM | @alex-palevsky
 CR | @darkled, @caarlos0, @carlosmiranda, @dmzaytsev, @pinaf, @ggajos, @hdouss, @krzyk, @mkordas, @longtimeago
-DEV | @rfqu, @ail-man, @dalifreire, @dskalenko, @triberraar, @guiandmag, @jhyle, @gumbelmj, @essobedo, @raphaelln, @sebing, @shelan, @vkuchyn, @xupyprmv
-IMP | @rfqu, @ail-man, @dalifreire, @dskalenko, @triberraar, @guiandmag, @jhyle, @gumbelmj, @essobedo, @raphaelln, @sebing, @shelan, @vkuchyn, @xupyprmv
+DEV | @rfqu, @ail-man, @dalifreire, @dskalenko, @triberraar, @jhyle, @gumbelmj, @essobedo, @raphaelln, @sebing, @shelan, @vkuchyn, @xupyprmv
+IMP | @rfqu, @ail-man, @dalifreire, @dskalenko, @triberraar, @jhyle, @gumbelmj, @essobedo, @raphaelln, @sebing, @shelan, @vkuchyn, @xupyprmv
 ARC | @original-brownbear
 DES | @yegor256
 PO | @yegor256
