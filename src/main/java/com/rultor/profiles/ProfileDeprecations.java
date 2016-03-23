@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
+package com.rultor.profiles;
 
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
@@ -45,7 +45,7 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @since 1.62
  */
-public final class DeprecationNotice {
+public final class ProfileDeprecations {
 
     /**
      * The content of the notice.
@@ -68,25 +68,25 @@ public final class DeprecationNotice {
     private final transient Profile profile;
 
     /**
-     * Constructs a {@code DeprecationNotice} with the specified underlying
+     * Constructs a {@code ProfileDeprecations} with the specified underlying
      * {@code Profile}.
      * @param prof The underlying profile
      */
-    public DeprecationNotice(final Profile prof) {
+    public ProfileDeprecations(final Profile prof) {
         this.profile = prof;
     }
 
     /**
-     * Prints the notice if the profile is deprecated.
-     * @param shell The shell to use to print the notice if needed
+     * Prints the deprecation notice if the profile is deprecated.
+     * @param shell The shell to use to print the deprecation notice if needed
      * @throws IOException if it fails while getting the XML format of the
      *  profile
      */
     public void print(final Shell shell) throws IOException {
-        if (!DeprecationNotice.empty(this.profile.read())) {
+        if (!ProfileDeprecations.empty(this.profile.read())) {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             new Shell.Safe(shell).exec(
-                String.format("echo -e \"%s\"", DeprecationNotice.CONTENT),
+                String.format("echo -e \"%s\"", ProfileDeprecations.CONTENT),
                 new NullInputStream(0L),
                 baos, baos
             );
@@ -94,19 +94,19 @@ public final class DeprecationNotice {
     }
 
     /**
-     * Indicates whether the notice is empty or not.
-     * @return True if the notice is empty, false otherwise
+     * Indicates whether there is a deprecation notice or not.
+     * @return True if there is no deprecation notice, false otherwise
      * @throws IOException if it fails while getting the XML format of the
      *  profile
      */
     public boolean empty() throws IOException {
-        return DeprecationNotice.empty(this.profile.read());
+        return ProfileDeprecations.empty(this.profile.read());
     }
 
     /**
-     * Indicates whether the notice is empty or not.
+     * Indicates whether there is a deprecation notice or not.
      * @param prof The XML representation of the profile to test
-     * @return True if the notice is empty, false otherwise
+     * @return True if there is no deprecation notice, false otherwise
      */
     private static boolean empty(final XML prof) {
         final List<XML> images = prof.nodes(

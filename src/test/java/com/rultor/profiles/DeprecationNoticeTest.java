@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
+package com.rultor.profiles;
 
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
@@ -37,7 +37,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Tests for ${@link DeprecationNotice}.
+ * Tests for ${@link ProfileDeprecations}.
  * @author Nicolas Filotto (nicolas.filotto@gmail.com)
  * @version $Id$
  * @since 1.62
@@ -54,16 +54,16 @@ public final class DeprecationNoticeTest {
     );
 
     /**
-     * DeprecationNotice can identify a deprecated profile.
+     * ProfileDeprecations can identify a deprecated profile.
      * @throws Exception In case of error
      */
     @Test
     public void identifiesDeprecatedProfile() throws Exception {
-        DeprecationNotice notice = new DeprecationNotice(
+        ProfileDeprecations deprecations = new ProfileDeprecations(
             new Profile.Fixed()
         );
-        MatcherAssert.assertThat(notice.empty(), Matchers.is(false));
-        notice = new DeprecationNotice(
+        MatcherAssert.assertThat(deprecations.empty(), Matchers.is(false));
+        deprecations = new ProfileDeprecations(
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
@@ -73,16 +73,16 @@ public final class DeprecationNoticeTest {
                 )
             )
         );
-        MatcherAssert.assertThat(notice.empty(), Matchers.is(false));
+        MatcherAssert.assertThat(deprecations.empty(), Matchers.is(false));
     }
 
     /**
-     * DeprecationNotice can identify a valid profile.
+     * ProfileDeprecations can identify a valid profile.
      * @throws Exception In case of error
      */
     @Test
     public void identifiesValidProfile() throws Exception {
-        final DeprecationNotice notice = new DeprecationNotice(
+        final ProfileDeprecations deprecations = new ProfileDeprecations(
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
@@ -92,6 +92,6 @@ public final class DeprecationNoticeTest {
                 )
             )
         );
-        MatcherAssert.assertThat(notice.empty(), Matchers.is(true));
+        MatcherAssert.assertThat(deprecations.empty(), Matchers.is(true));
     }
 }
