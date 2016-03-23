@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.profiles;
+package com.rultor.agents.daemons;
 
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
@@ -37,12 +37,12 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Tests for ${@link ProfileDeprecationAware}.
+ * Tests for ${@link DeprecationNotice}.
  * @author Nicolas Filotto (nicolas.filotto@gmail.com)
  * @version $Id$
  * @since 1.62
  */
-public final class ProfileDeprecationAwareTest {
+public final class DeprecationNoticeTest {
 
     /**
      * The format of an profile that defines the docker image to use.
@@ -54,44 +54,44 @@ public final class ProfileDeprecationAwareTest {
     );
 
     /**
-     * ProfileDeprecationAware can identify a deprecated profile.
+     * DeprecationNotice can identify a deprecated profile.
      * @throws Exception In case of error
      */
     @Test
-    public void identifiesDeprecation() throws Exception {
-        ProfileDeprecationAware profile = new ProfileDeprecationAware(
+    public void identifiesDeprecatedProfile() throws Exception {
+        DeprecationNotice notice = new DeprecationNotice(
             new Profile.Fixed()
         );
-        MatcherAssert.assertThat(profile.deprecated(), Matchers.is(true));
-        profile = new ProfileDeprecationAware(
+        MatcherAssert.assertThat(notice.empty(), Matchers.is(false));
+        notice = new DeprecationNotice(
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
-                        ProfileDeprecationAwareTest.PROFILE_FORMAT,
+                        DeprecationNoticeTest.PROFILE_FORMAT,
                         "yegor256/rultor"
                     )
                 )
             )
         );
-        MatcherAssert.assertThat(profile.deprecated(), Matchers.is(true));
+        MatcherAssert.assertThat(notice.empty(), Matchers.is(false));
     }
 
     /**
-     * ProfileDeprecationAware can identify a valid profile.
+     * DeprecationNotice can identify a valid profile.
      * @throws Exception In case of error
      */
     @Test
-    public void identifiesValid() throws Exception {
-        final ProfileDeprecationAware profile = new ProfileDeprecationAware(
+    public void identifiesValidProfile() throws Exception {
+        final DeprecationNotice notice = new DeprecationNotice(
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
-                        ProfileDeprecationAwareTest.PROFILE_FORMAT,
+                        DeprecationNoticeTest.PROFILE_FORMAT,
                         "foo"
                     )
                 )
             )
         );
-        MatcherAssert.assertThat(profile.deprecated(), Matchers.is(false));
+        MatcherAssert.assertThat(notice.empty(), Matchers.is(true));
     }
 }
