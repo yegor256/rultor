@@ -42,7 +42,7 @@ import org.junit.Test;
  * @version $Id$
  * @since 1.62
  */
-public final class DeprecationNoticeTest {
+public final class ProfileDeprecationsTest {
 
     /**
      * The format of an profile that defines the docker image to use.
@@ -67,7 +67,7 @@ public final class DeprecationNoticeTest {
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
-                        DeprecationNoticeTest.PROFILE_FORMAT,
+                        ProfileDeprecationsTest.PROFILE_FORMAT,
                         "yegor256/rultor"
                     )
                 )
@@ -86,7 +86,7 @@ public final class DeprecationNoticeTest {
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
-                        DeprecationNoticeTest.PROFILE_FORMAT,
+                        ProfileDeprecationsTest.PROFILE_FORMAT,
                         "foo"
                     )
                 )
