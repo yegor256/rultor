@@ -1,0 +1,155 @@
+/**
+ * Copyright (c) 2009-2016, rultor.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the rultor.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+@import url(//fonts.googleapis.com/css?family=Source+Code+Pro:400,500);
+
+$main-font: 'Arial', sans-serif;
+$code-font: 'Source Code Pro', monospace;
+$width: 700px;
+$em: 16px;
+$black: black;
+$blue: blue;
+$white: white;
+
+* {
+  box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+body {
+  padding: $em;
+  margin: 0;
+  font-family: $main-font;
+  font-weight: 400;
+  color: $black;
+  font-size: $em;
+  position: relative;
+  overflow-x: hidden;
+  background-color: $white;
+}
+a, a:visited {
+  color: $black;
+  text-decoration: underline;
+  &:hover {
+    color: lighten($black, 60);
+  }
+}
+.wrapper {
+  width: $width;
+  margin-right: auto;
+  margin-left: auto;
+  line-height: 1.4 * $em;
+  padding: 1 * $em;
+  @media all and (max-width: $width) {
+    padding: $em;
+    width: 100%;
+  }
+}
+.main {
+  margin-top: 2 * $em;
+  @media all and (min-width: $width) {
+    border: 1px solid lighten($black, 80);
+    padding: 2 * $em;
+  }
+}
+.header, .footer {
+  text-align: center;
+}
+.header {
+  .logo {
+    width: 64px;
+    height: 64px;
+  }
+}
+.footer {
+  margin-top: 2 * $em;
+  color: lighten($black, 60);
+  a {
+    color: inherit;
+    &:hover {
+      color: $black;
+    }
+  }
+  p {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+.badges {
+  margin-top: 0.8 * $em;
+  margin-bottom: 0.8 * $em;
+  div {
+    font-size: 0.8 * $em;
+    display: inline-block;
+    width: 7 * $em;
+    vertical-align: top;
+    img {
+      max-width: 100%;
+    }
+  }
+}
+h1 {
+  margin-bottom: 2 * $em;
+  font-size: 2 * $em;
+  line-height: 2 * $em;
+}
+h2 {
+  line-height: 1.6 * $em;
+  margin-top: 3 * $em;
+  font-size: 1.6 * $em;
+}
+code {
+  background-color: lighten($black, 90);
+  border-radius: 0.2 * $em;
+  padding-left: 0.3 * $em;
+  padding-right: 0.3 * $em;
+}
+pre {
+  overflow-x: auto;
+  color: lighten($black, 15);
+  border-left: 2px solid lighten($black, 40);
+  padding: $em;
+  width: auto;
+  @media all and (max-width: $width) {
+    padding: 0.5 * $em;
+  }
+  code {
+    background-color: inherit;
+    padding: 0;
+  }
+}
+.fork-me {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100px;
+  height: 100px;
+}

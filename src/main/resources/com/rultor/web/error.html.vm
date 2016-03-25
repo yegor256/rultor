@@ -1,0 +1,72 @@
+~~ Copyright (c) 2009-2016, rultor.com
+~~ All rights reserved.
+~~
+~~ Redistribution and use in source and binary forms, with or without
+~~ modification, are permitted provided that the following conditions
+~~ are met: 1) Redistributions of source code must retain the above
+~~ copyright notice, this list of conditions and the following
+~~ disclaimer. 2) Redistributions in binary form must reproduce the above
+~~ copyright notice, this list of conditions and the following
+~~ disclaimer in the documentation and/or other materials provided
+~~ with the distribution. 3) Neither the name of the Qulice.com nor
+~~ the names of its contributors may be used to endorse or promote
+~~ products derived from this software without specific prior written
+~~ permission.
+~~
+~~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+~~ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+~~ NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+~~ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+~~ THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+~~ INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+~~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+~~ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+~~ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+~~ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+~~ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+~~ OF THE POSSIBILITY OF SUCH DAMAGE.
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Internal application error</title>
+        <link href="//doc.rultor.com/css/layout.css?${rev}" rel="stylesheet" type="text/css"/>
+        <link href="/css/style.css?${rev}" rel="stylesheet" type="text/css"/>
+        <link rel="icon" type="image/gif" href="//doc.rultor.com/favicon.ico"/>
+    </head>
+    <body>
+        <ul class="list-inline">
+            <li>
+                <a class="logo" href="//www.rultor.com">R</a>
+            </li>
+            <li>
+                <code>${rev}</code>
+            </li>
+            <li class="text-danger">
+                Internal Application Error
+            </li>
+        </ul>
+        <article>
+            <p>
+                Something went terribly wrong. The system can't
+                serve your request at the moment. We've been already
+                notified about this situation and will start working
+                on it really soon. In the meantime, please get back
+                to the site and try to do the same operation again.
+                Maybe it will work, you know :)
+            </p>
+            <p>
+                The text below is a detailed description of your
+                <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP request</a>
+                and a
+                <a href="http://en.wikipedia.org/wiki/Stack_trace">stacktrace</a>
+                of the <a href="http://en.wikipedia.org/wiki/Exception_handling">runtime exception</a>
+                thrown by
+                <a href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>.
+                If you want to help us, please post this text as a new issue to
+                <a href="https://github.com/rultor/rultor/issues/new">Github</a>.
+            </p>
+            <pre>${err}</pre>
+        </article>
+    </body>
+</html>

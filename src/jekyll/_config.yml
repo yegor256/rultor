@@ -1,0 +1,31 @@
+name: doc.rultor.com
+markdown: redcarpet
+highlighter: pygments
+redcarpet:
+  extensions:
+    # see https://github.com/vmg/redcarpet
+    - no_intra_emphasis
+    - fenced_code_blocks
+    - autolink
+    - tables
+    - space_after_headers
+    - disable_indented_code_blocks
+    - with_toc_data
+permalink: :title.html
+
+# see https://github.com/noct/jekyll-sass
+gems: ['jekyll-sass']
+sass:
+  style: compressed
+  deploy_style: compressed
+  compile_in_place: false
+
+# see https://github.com/kinnetica/jekyll-plugins
+sitemap:
+  file: "/sitemap.xml"
+  exclude:
+    - "/rss.xml"
+  include_posts:
+    - "/index.html"
+  change_frequency_name: "change_frequence"
+  priority_name: "priority"

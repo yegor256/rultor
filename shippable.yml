@@ -1,0 +1,19 @@
+language: java
+cache:
+  directories:
+    - $HOME/.m2
+env:
+  global:
+    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+    - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+before_install:
+  - MAVEN_VERSION=3.2.5
+  - MAVEN_OPTS="-XX:MaxPermSize=256m -Xmx1g"
+  - wget http://mirror.cogentco.com/pub/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
+  - tar -xzf apache-maven-$MAVEN_VERSION-bin.tar.gz
+  - MAVEN_HOME=apache-maven-$MAVEN_VERSION
+  - rm apache-maven-$MAVEN_VERSION-bin.tar.gz
+  - PATH=$MAVEN_HOME/bin:$PATH
+  - unset GEM_PATH
+script:
+  - mvn clean install -Pqulice --batch-mode --errors

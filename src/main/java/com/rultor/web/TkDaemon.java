@@ -1,0 +1,186 @@
+/**
+ * Copyright (c) 2009-2016, rultor.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the rultor.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.rultor.web;
+
+import com.jcabi.aspects.Tv;
+import com.rultor.agents.daemons.Tail;
+import com.rultor.spi.Talk;
+import com.rultor.spi.Talks;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PushbackReader;
+import java.io.SequenceInputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.logging.Level;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.ProxyReader;
+import org.apache.commons.io.input.ReaderInputStream;
+import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.takes.Response;
+import org.takes.facets.flash.RsFlash;
+import org.takes.facets.fork.RqRegex;
+import org.takes.facets.fork.TkRegex;
+import org.takes.facets.forward.RsForward;
+import org.takes.rs.RsFluent;
+
+/**
+ * Single daemon.
+ *
+ * @author Yegor Bugayenko (yegor@teamed.io)
+ * @version $Id$
+ * @since 1.50
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ */
+final class TkDaemon implements TkRegex {
+
+    /**
+     * Talks.
+     */
+    private final transient Talks talks;
+
+    /**
+     * Ctor.
+     * @param tlks Talks
+     */
+    TkDaemon(final Talks tlks) {
+        this.talks = tlks;
+    }
+
+    @Override
+    public Response act(final RqRegex req) throws IOException {
+        final long number = Long.parseLong(req.matcher().group(1));
+        if (!this.talks.exists(number)) {
+            throw new RsForward(
+                new RsFlash(
+                    "there is no such page here",
+                    Level.WARNING
+                )
+            );
+        }
+        final RqUser user = new RqUser(req);
+        if (!user.anonymous()
+            && !user.canSee(this.talks.get(number))) {
+            throw new RsForward(
+                new RsFlash(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "according to .rultor.yml, you (%s) are not allowed to see this",
+                        user
+                    ),
+                    Level.WARNING
+                )
+            );
+        }
+        final String hash = req.matcher().group(2);
+        return new RsFluent()
+            .withBody(this.html(number, hash))
+            .withType("text/html; charset=utf-8")
+            .withHeader(
+                "X-Rultor-Daemon",
+                String.format("%s-%s", number, hash)
+            );
+    }
+
+    /**
+     * Get HTML.
+     * @param number Number
+     * @param hash Hash
+     * @return HTML
+     * @throws IOException If fails
+     */
+    private InputStream html(final long number, final String hash)
+        throws IOException {
+        final Talk talk = this.talks.get(number);
+        final String head = IOUtils.toString(
+            this.getClass().getResourceAsStream("daemon/head.html"),
+            CharEncoding.UTF_8
+        ).trim();
+        return new SequenceInputStream(
+            Collections.enumeration(
+                Arrays.asList(
+                    IOUtils.toInputStream(
+                        head.replace("TALK_NAME", talk.name())
+                            .replace(
+                                "TALK_LINK",
+                                StringEscapeUtils.escapeHtml4(
+                                    talk.read()
+                                        .xpath("/talk/wire/href/text()").get(0)
+                                )
+                            )
+                    ),
+                    TkDaemon.escape(new Tail(talk.read(), hash).read()),
+                    this.getClass().getResourceAsStream("daemon/tail.html")
+                )
+            )
+        );
+    }
+
+    /**
+     * Escape HTML chars in input stream.
+     * @param input Input stream
+     * @return New input stream
+     * @throws UnsupportedEncodingException If fails
+     */
+    private static InputStream escape(final InputStream input)
+        throws UnsupportedEncodingException {
+        final PushbackReader src = new PushbackReader(
+            new InputStreamReader(input, CharEncoding.UTF_8),
+            Tv.TEN * Tv.THOUSAND
+        );
+        return new ReaderInputStream(
+            new ProxyReader(src) {
+                @Override
+                protected void beforeRead(final int len) throws IOException {
+                    super.beforeRead(len);
+                    final char[] buf = new char[len];
+                    final int found = src.read(buf);
+                    if (found > 0) {
+                        final StringBuilder line = new StringBuilder(found);
+                        for (int idx = 0; idx < found; ++idx) {
+                            line.append(buf[idx]);
+                        }
+                        final String escape = StringEscapeUtils.escapeHtml4(
+                            line.toString()
+                        );
+                        final char[] rpl = new char[escape.length()];
+                        escape.getChars(0, escape.length(), rpl, 0);
+                        src.unread(rpl);
+                    }
+                }
+            },
+            CharEncoding.UTF_8
+        );
+    }
+
+}

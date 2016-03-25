@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="description" content="{{ page.description }}" />
+    <meta name="keywords" content="{{ page.keywords | join:', ' | escape }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
+    <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
+    <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
+    <link rel="stylesheet" href="/css/layout.css?{{ site.data['hash'] }}"/>
+    <link rel="canonical" href="//doc.rultor.com{{ page.url }}" />
+    <title>{{ page.title }}</title>
+    <script>//<![CDATA[
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-1963507-28', 'auto');
+      ga('send', 'pageview');
+    //]]></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <a href="/">
+          <img src="//doc.rultor.com/images/logo.svg" class="logo" alt="logo"/>
+        </a>
+      </header>
+      <section class="main" itemscope itemtype="http://schema.org/Article">
+        <a href="https://github.com/yegor256/rultor">
+          <img src="//doc.rultor.com/images/fork-me.svg" class="fork-me" alt="fork me in github"/>
+        </a>
+        <h1 itemprop="headline">{{ page.title }}</h1>
+        <article itemprop="articleBody">{{ content }}</article>
+      </section>
+      <footer class="footer">
+        <p>
+          &copy; <a href="http://www.rultor.com"><span itemprop="author">rultor.com</span></a>, 2013-2016
+          &nbsp;&nbsp;&nbsp;
+          <a href="/contents.html">contents</a>
+          &middot;
+          <a href="/reference.html">.rultor.yml</a>
+          &middot;
+          <a href="/terms.html">terms</a>
+          &middot;
+          <a href="/privacy.html">privacy</a>
+        </p>
+        <div class="badges">
+          <div>
+            <span>provisioned by</span>
+            <br/>
+            <a href="http://aws.amazon.com/">
+              <img src="/images/aws-logo.png" style="width:96px" alt="aws logo"/>
+            </a>
+          </div>
+          <div>
+            <span>powered by</span>
+            <br/>
+            <a href="http://www.docker.io">
+              <img src="/images/docker-logo.png" style="width:96px" alt="docker logo"/>
+            </a>
+          </div>
+          <div>
+            <span>operates at</span>
+            <br/>
+            <a href="http://www.github.com">
+              <img src="/images/github-logo.png" style="width:96px" alt="github logo"/>
+            </a>
+          </div>
+          <div>
+            <span>hosted by</span>
+            <br/>
+            <a href="http://www.heroku.com">
+              <img src="/images/heroku-logo.png" style="width:96px" alt="heroku logo"/>
+            </a>
+          </div>
+        </div>
+        <div class="badges">
+          <a href="http://www.teamed.io">
+            <img src="//img.teamed.io/btn.svg" style="width:125px;"
+              alt="teamed.io made-by badge"/>
+          </a>
+        </div>
+        <p>
+          <a href="https://github.com/yegor256/rultor/commit/{{ site.data['hash'] }}">{{ site.data['hash'] }}</a>
+        </p>
+      </footer>
+    </div>
+    <script type="text/javascript">//<![CDATA[
+      (function (d, w, c) {
+      (w[c] = w[c] || []).push(function() {
+      try {
+      w.yaCounter25979713 = new Ya.Metrika({id:25979713,
+      webvisor:true,
+      clickmap:true,
+      trackLinks:true,
+      accurateTrackBounce:true});
+      } catch(e) { }
+      });
+      var n = d.getElementsByTagName("script")[0],
+      s = d.createElement("script"),
+      f = function () { n.parentNode.insertBefore(s, n); };
+      s.type = "text/javascript";
+      s.async = true;
+      s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+      if (w.opera == "[object Opera]") {
+      d.addEventListener("DOMContentLoaded", f, false);
+      } else { f(); }
+      })(document, window, "yandex_metrika_callbacks");
+    //]]></script>
+  </body>
+</html>

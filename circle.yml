@@ -1,0 +1,16 @@
+machine:
+  java:
+    version: openjdk7
+  ruby:
+    version: 1.9.3-p0-falcon
+dependencies:
+  cache_directories:
+    - ~/.m2
+general:
+  branches:
+    ignore:
+      - gh-pages
+test:
+  override:
+    - unset GEM_PATH; mvn clean install -Pqulice
+
