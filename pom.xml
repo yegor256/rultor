@@ -772,6 +772,14 @@
             </build>
         </profile>
         <profile>
+            <id>docker-tests</id>
+            <!--@todo #1055:30min build docker image and run sshd container (see src/docker-it/run_docker_sshd.sh),
+                 run integration tests (host and port information located at target/sshd.host, target/sshd.port)
+                 and than tear down container (see src/docker-it/clear_docker_sshd.sh)
+                 * Adjust com.rultor.agents.daemons.StartsDaemonITCase#talk to use ssh into the dockerized SSH daemon when the profile docker-tests is active.
+                 * Add a quick explaination of this test feature to the readme containing what it does and how to run the tests with this profile active.-->
+        </profile>
+        <profile>
             <id>heroku</id>
             <activation>
                 <file><exists>pom.xml</exists></file>
