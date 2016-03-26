@@ -173,11 +173,10 @@ public final class Profiles {
                 new TalkIssues(Profiles.github(), xml).get().repo()
             );
         } else {
-            final Profile master = new GithubProfile(
-                    new TalkIssues(Profiles.github(), xml).get().repo()
-            );
             profile = this.merged(
-                master,
+                new GithubProfile(
+                        new TalkIssues(Profiles.github(), xml).get().repo()
+                ),
                 xml.xpath("//request/args/arg[@name='fork']/text()").get(0),
                 xml.xpath(
                     "//request/args/arg[@name='fork_branch']/text()"
