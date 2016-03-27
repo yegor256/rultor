@@ -75,6 +75,3 @@ release:
   commanders:
   - original-brownbear
   - yegor256
-docker:
-  directory: yegor256/rultor-git
-  as_root: true
