@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 14 active puzzles (50 total):
+There are 15 active puzzles (52 total):
 
 
 <del>unknown</del> [`?`](../master/?)<br/>
@@ -53,3 +53,5 @@ There are 14 active puzzles (50 total):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1056](https://github.com/yegor256/rultor/issues/1056):[**918-89660440**](https://github.com/yegor256/rultor/issues/1056) [`ClosePullRequestTest.java:59-63`](../master/src/test/java/com/rultor/agents/github/ClosePullRequestTest.java#L59-L63)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1041](https://github.com/yegor256/rultor/issues/1041):[<del>1041</del>](https://github.com/yegor256/rultor/issues/1041) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1057](https://github.com/yegor256/rultor/issues/1057):[**1041-7f83dd26**](https://github.com/yegor256/rultor/issues/1057) [`DockerHealthCheck.java:47-50`](../master/src/main/java/com/rultor/agents/docker/DockerHealthCheck.java#L47-L50)<br/>
+[#1039](https://github.com/yegor256/rultor/issues/1039):[<del>1039</del>](https://github.com/yegor256/rultor/issues/1039) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[**1039-d8a49c64**]() [`Profiles.java:108-115`](../master/src/main/java/com/rultor/profiles/Profiles.java#L108-L115)<br/>
