@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run -t --rm -v "${PWD}":"${PWD}" ~/.ssh:"/root/.ssh":ro yegor256/rultor-git git "$@"
