@@ -115,27 +115,31 @@ public final class StartsDaemonITCase {
     }
 
     /**
-     * StartsDaemon can deprecate default image.
+     * StartsDaemon can deprecate default image (except one case, when
+     * repo is is the actual Rultor repo: https://github.com/yegor256/rultor).
      * @throws IOException In case of error
-     * @todo #1018:30min This test should not check for start and end
-     *  deprecation messages if when the repo is the actual Rultor repo:
-     *  https://github.com/yegor256/rultor
      */
     @Test
     @Ignore
     public void deprecatesDefaultImage() throws IOException {
         final Talk talk = this.talk();
         final XML xml = talk.read();
-        for (final String path
-            : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
-             ) {
-            if ("yegor256/rultor".equals(path)) {
-                final String dir = talk.read()
-                    .xpath("/talk/daemon/dir/text()").get(0);
-                MatcherAssert.assertThat(
-                    dir,
-                    StringStartsWith.startsWith("#### Deprecation Notice ####")
-                );
+        if (!"yegor256/rultor".equals(
+            xml.xpath("/wire/github-repo/text()").get(0)
+        )) {
+            for (final String path
+                : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
+                 ) {
+                if ("yegor256/rultor".equals(path)) {
+                    final String dir = talk.read()
+                        .xpath("/talk/daemon/dir/text()").get(0);
+                    MatcherAssert.assertThat(
+                        dir,
+                        StringStartsWith.startsWith(
+                            "#### Deprecation Notice ####"
+                        )
+                    );
+                }
             }
         }
     }
