@@ -128,8 +128,10 @@ public final class StartsDaemonITCase {
     public void deprecatesDefaultImage() throws IOException {
         final Talk talk = this.talk();
         final XML xml = talk.read();
-        final List<String> repo = xml.xpath("/wire/github-repo/text()");
-        if (repo.isEmpty() || !StartsDaemonITCase.RULTOR.equals(repo.get(0))) {
+        final List<String> repos = xml.xpath("/wire/github-repo/text()");
+        if (
+            repos.isEmpty() || !StartsDaemonITCase.RULTOR.equals(repos.get(0))
+        ) {
             for (
                 final String path : xml.xpath(
                     "/p/entry[@key='merge']/entry[@key='script']"
