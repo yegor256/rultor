@@ -70,6 +70,11 @@ import org.xembly.Directives;
 public final class StartsDaemonITCase {
 
     /**
+     * Rultor repo.
+     */
+    private static final String RULTOR = "yegor256/rultor";
+
+    /**
      * Temp directory.
      * @checkstyle VisibilityModifierCheck (5 lines)
      */
@@ -124,13 +129,17 @@ public final class StartsDaemonITCase {
     public void deprecatesDefaultImage() throws IOException {
         final Talk talk = this.talk();
         final XML xml = talk.read();
-        if (!"yegor256/rultor".equals(
-            xml.xpath("/wire/github-repo/text()").get(0)
-        )) {
-            for (final String path
-                : xml.xpath("/p/entry[@key='merge']/entry[@key='script']")
-                 ) {
-                if ("yegor256/rultor".equals(path)) {
+        if (
+            !StartsDaemonITCase.RULTOR.equals(
+                xml.xpath("/wire/github-repo/text()").get(0)
+            )
+        ) {
+            for (
+                final String path : xml.xpath(
+                    "/p/entry[@key='merge']/entry[@key='script']"
+                )
+            ) {
+                if (StartsDaemonITCase.RULTOR.equals(path)) {
                     final String dir = talk.read()
                         .xpath("/talk/daemon/dir/text()").get(0);
                     MatcherAssert.assertThat(
