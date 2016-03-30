@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-RUN apt-get install -y ssh && apt-get update && mkdir /var/run/sshd && \
+RUN apt-get update && apt-get install -y ssh && mkdir /var/run/sshd && \
     chmod 0755 /var/run/sshd
 RUN mkdir /root/.ssh
 COPY /id_rsa.pub /tmp
