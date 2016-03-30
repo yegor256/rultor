@@ -773,14 +773,16 @@
         </profile>
         <profile>
             <id>docker-tests</id>
-            <!--@todo #1055:30min build docker image and run sshd container (see src/docker-it/run_docker_sshd.sh),
+            <!--
+                @todo #1055:30min build docker image and run sshd container (see src/docker-it/run_docker_sshd.sh),
                  run integration tests (port information located at target/sshd.port, host is predefined)
                  and than tear down container (see src/docker-it/clear_docker_sshd.sh).
                  Need to be configured to run in Travis.
-                 * Adjust com.rultor.agents.daemons.StartsDaemonITCase#talk to use ssh into the dockerized
-                   SSH daemon when the profile docker-tests is active.
-                 * Add a quick explaination of this test feature to the readme containing what it does
-                   and how to run the tests with this profile active.-->
+                 Adjust com.rultor.agents.daemons.StartsDaemonITCase#talk to use ssh into the dockerized
+                 SSH daemon when the profile docker-tests is active.
+                 Add a quick explaination of this test feature to the readme containing what it does
+                 and how to run the tests with this profile active.
+               -->
         </profile>
         <profile>
             <id>heroku</id>
