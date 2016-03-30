@@ -44,6 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
@@ -52,7 +53,6 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.StringStartsWith;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -125,15 +125,11 @@ public final class StartsDaemonITCase {
      * @throws IOException In case of error
      */
     @Test
-    @Ignore
     public void deprecatesDefaultImage() throws IOException {
         final Talk talk = this.talk();
         final XML xml = talk.read();
-        if (
-            !StartsDaemonITCase.RULTOR.equals(
-                xml.xpath("/wire/github-repo/text()").get(0)
-            )
-        ) {
+        final List<String> repo = xml.xpath("/wire/github-repo/text()");
+        if (repo.isEmpty() || !StartsDaemonITCase.RULTOR.equals(repo.get(0))) {
             for (
                 final String path : xml.xpath(
                     "/p/entry[@key='merge']/entry[@key='script']"
