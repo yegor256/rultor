@@ -70,11 +70,6 @@ import org.xembly.Directives;
 public final class StartsDaemonITCase {
 
     /**
-     * Rultor repo.
-     */
-    private static final String RULTOR = "yegor256/rultor";
-
-    /**
      * Temp directory.
      * @checkstyle VisibilityModifierCheck (5 lines)
      */
@@ -126,28 +121,20 @@ public final class StartsDaemonITCase {
      */
     @Test
     public void deprecatesDefaultImage() throws IOException {
+        final String rultor = "yegor256/rultor";
         final Talk talk = this.talk();
         final XML xml = talk.read();
+        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final List<String> repos = xml.xpath("/wire/github-repo/text()");
-        if (
-            repos.isEmpty() || !StartsDaemonITCase.RULTOR.equals(repos.get(0))
+        if ((repos.isEmpty() || !rultor.equals(repos.get(0)))
+            && xml.xpath(
+                "/p/entry[@key='merge']/entry[@key='script']"
+            ).contains(rultor)
         ) {
-            for (
-                final String path : xml.xpath(
-                    "/p/entry[@key='merge']/entry[@key='script']"
-                )
-            ) {
-                if (StartsDaemonITCase.RULTOR.equals(path)) {
-                    final String dir = talk.read()
-                        .xpath("/talk/daemon/dir/text()").get(0);
-                    MatcherAssert.assertThat(
-                        dir,
-                        StringStartsWith.startsWith(
-                            "#### Deprecation Notice ####"
-                        )
-                    );
-                }
-            }
+            MatcherAssert.assertThat(
+                dir,
+                StringStartsWith.startsWith("#### Deprecation Notice ####")
+            );
         }
     }
 
