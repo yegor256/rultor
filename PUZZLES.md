@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 15 active puzzles (52 total):
+There are 16 active puzzles (54 total):
 
 
 <del>unknown</del> [`?`](../master/?)<br/>
@@ -55,3 +55,5 @@ There are 15 active puzzles (52 total):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1057](https://github.com/yegor256/rultor/issues/1057):[**1041-7f83dd26**](https://github.com/yegor256/rultor/issues/1057) [`DockerHealthCheck.java:47-50`](../master/src/main/java/com/rultor/agents/docker/DockerHealthCheck.java#L47-L50)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1039](https://github.com/yegor256/rultor/issues/1039):[<del>1039</del>](https://github.com/yegor256/rultor/issues/1039) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1072](https://github.com/yegor256/rultor/issues/1072):[**1039-d8a49c64**](https://github.com/yegor256/rultor/issues/1072) [`Profiles.java:108-115`](../master/src/main/java/com/rultor/profiles/Profiles.java#L108-L115)<br/>
+[#1055](https://github.com/yegor256/rultor/issues/1055):[<del>1055</del>](https://github.com/yegor256/rultor/issues/1055) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[**1055-4f9e2bff**]() [`pom.xml:777-784`](../master/pom.xml#L777-L784)<br/>
