@@ -49,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.SystemUtils;
+import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.StringStartsWith;
@@ -67,6 +68,7 @@ import org.xembly.Directives;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class StartsDaemonITCase {
 
     /**
@@ -126,16 +128,18 @@ public final class StartsDaemonITCase {
         final XML xml = talk.read();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final List<String> repos = xml.xpath("/wire/github-repo/text()");
+        final String notice = "#### Deprecation Notice ####";
+        final Matcher<String> matcher;
         if ((repos.isEmpty() || !rultor.equals(repos.get(0)))
             && xml.xpath(
                 "/p/entry[@key='merge']/entry[@key='script']"
             ).contains(rultor)
         ) {
-            MatcherAssert.assertThat(
-                dir,
-                StringStartsWith.startsWith("#### Deprecation Notice ####")
-            );
+            matcher = StringStartsWith.startsWith(notice);
+        } else {
+            matcher = Matchers.not(StringStartsWith.startsWith(notice));
         }
+        MatcherAssert.assertThat(dir, matcher);
     }
 
     /**
