@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 16 active puzzles (54 total):
+There are 15 active puzzles (54 total):
 
 
 <del>unknown</del> [`?`](../master/?)<br/>
@@ -48,12 +48,12 @@ There are 16 active puzzles (54 total):
 &nbsp;&nbsp;&nbsp;&nbsp;[#1018](https://github.com/yegor256/rultor/issues/1018):[<del>1018</del>](https://github.com/yegor256/rultor/issues/1018) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1053](https://github.com/yegor256/rultor/issues/1053):[<del>1018-15a5404e</del>](https://github.com/yegor256/rultor/issues/1053) [`StartsDaemonITCase.java:121-125`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L121-L125)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1069](https://github.com/yegor256/rultor/issues/1069):[**1053-dc86a5cc**](https://github.com/yegor256/rultor/issues/1069) [`EndsDaemon.java:64-66`](../master/src/main/java/com/rultor/agents/daemons/EndsDaemon.java#L64-L66)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1052](https://github.com/yegor256/rultor/issues/1052):[**1018-b83a728c**](https://github.com/yegor256/rultor/issues/1052) [`StartsDaemonITCase.java:126-128`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L126-L128)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1052](https://github.com/yegor256/rultor/issues/1052):[<del>1018-b83a728c</del>](https://github.com/yegor256/rultor/issues/1052) [`StartsDaemonITCase.java:126-128`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L126-L128)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#918](https://github.com/yegor256/rultor/issues/918):[<del>918</del>](https://github.com/yegor256/rultor/issues/918) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1056](https://github.com/yegor256/rultor/issues/1056):[**918-89660440**](https://github.com/yegor256/rultor/issues/1056) [`ClosePullRequestTest.java:59-63`](../master/src/test/java/com/rultor/agents/github/ClosePullRequestTest.java#L59-L63)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1041](https://github.com/yegor256/rultor/issues/1041):[<del>1041</del>](https://github.com/yegor256/rultor/issues/1041) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1057](https://github.com/yegor256/rultor/issues/1057):[**1041-7f83dd26**](https://github.com/yegor256/rultor/issues/1057) [`DockerHealthCheck.java:47-50`](../master/src/main/java/com/rultor/agents/docker/DockerHealthCheck.java#L47-L50)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1039](https://github.com/yegor256/rultor/issues/1039):[<del>1039</del>](https://github.com/yegor256/rultor/issues/1039) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1072](https://github.com/yegor256/rultor/issues/1072):[**1039-d8a49c64**](https://github.com/yegor256/rultor/issues/1072) [`Profiles.java:108-115`](../master/src/main/java/com/rultor/profiles/Profiles.java#L108-L115)<br/>
-[#1055](https://github.com/yegor256/rultor/issues/1055):[<del>1055</del>](https://github.com/yegor256/rultor/issues/1055) [`?`](../master/?)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;[**1055-4f9e2bff**]() [`pom.xml:777-784`](../master/pom.xml#L777-L784)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[#1055](https://github.com/yegor256/rultor/issues/1055):[<del>1055</del>](https://github.com/yegor256/rultor/issues/1055) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1082]():[**1055-4f9e2bff**]() [`pom.xml:777-784`](../master/pom.xml#L777-L784)<br/>
