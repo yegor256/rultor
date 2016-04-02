@@ -27,33 +27,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.ec2;
+package com.rultor.agents.ecs;
 
-import com.amazonaws.services.ec2.model.Instance;
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
+import com.amazonaws.services.ecs.model.ContainerInstance;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Agent;
+import com.rultor.spi.Talk;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.xembly.Directives;
 
 /**
- * Amazon EC2 abstraction.
- *
+ * Tests for ${@link com.rultor.agents.ecs.StartsECS}.
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
- * @since 2.0
- * @todo #629 Add implementation for com.rultor.agents.ec2.Amazon.
- *  It must create com.amazonaws.services.ec2.AmazonEC2 client
- *  with config params "credentials", "zone", "type", "key". Use
- *  client.runInstances(com.amazonaws.services.ec2.model.RunInstancesRequest)
- *  to run on-demand instance. Method runOnDemand must finally
- *  wait for started instance and check if start was successful.
+ * @since 1.0
  */
-@Immutable
-public interface Amazon {
+public final class StartsECSTest {
 
     /**
-     * Run EC2 OnDemand instance.
-     * @return EC2 Instance
-     * @throws IOException if fails
+     * StartsECS can start On-Demand Instance.
+     * @throws Exception In case of error.
      */
-    Instance runOnDemand() throws IOException;
-
+    @Test
+    public void startsOnDemandInstance() throws Exception {
+        final ContainerInstance instance = Mockito.mock(
+            ContainerInstance.class
+        );
+        Mockito.doReturn("1").when(instance).getEc2InstanceId();
+        final Amazon amazon = Mockito.mock(Amazon.class);
+        Mockito.doReturn(instance).when(amazon).runOnDemand();
+        final Agent agent = new StartsECS(amazon);
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("daemon").attr("id", "abcd")
+                .add("title").set("something").up()
+                .add("script").set("test")
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPaths(
+                "/talk/ecs[@id='1']"
+            )
+        );
+    }
 }
