@@ -27,9 +27,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.ec2;
+package com.rultor.agents.ecs;
 
-import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ecs.model.ContainerInstance;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -41,29 +41,32 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Starts Amazon EC2 instance.
+ * Starts Amazon ECS instance, that running Docker + SSHd on ECS. Instance
+ * to be configured in privileged mode. Configuration needs to be stored in S3.
+ * See details here:
+ * @link http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
  * @since 2.0
- * @todo #629 Implement com.rultor.agents.ec2.StopsEC2 agent. It must
- *  stopped EC2 on-demand instance if it was started at StartsEC2 agent.
- *  StopsEC2 must use instance id from /talk/ec2/[@id] to stop it.
+ * @todo #629 Implement com.rultor.agents.ecs.StopsECS agent. It must
+ *  stopped ECS on-demand instance if it was started at StartsECS agent.
+ *  StopsECS must use instance id from /talk/ecs/[@id] to stop it.
  * @todo #629 RegistersShell must register SSH params "host", "port",
- *  "login", "key" for ec2 on-demand instance, if this one was successfully
+ *  "login", "key" for ecs on-demand instance, if this one was successfully
  *  started. Successfully start means that these parameters exist in
- *  /talk/ec2
- * @todo #629 Add new instance creation classes for StartsEC2 and StopsEC2
- *  to com.rultor.agents.Agents. StartsEC2 must be invoked before
- *  RegistersShell agent. StopsEC2 must be invoked after RemovesShell agent.
- * @todo #629 Write documentation for configuring ec2 via .rultor.yml at
+ *  /talk/ecs
+ * @todo #629 Add new instance creation classes for StartsECS and StopsECS
+ *  to com.rultor.agents.Agents. StartsECS must be invoked before
+ *  RegistersShell agent. StopsECS must be invoked after RemovesShell agent.
+ * @todo #629 Write documentation for configuring ecs via .rultor.yml at
  *  2014-07-13-reference.md
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "amazon" })
-public final class StartsEC2 extends AbstractAgent {
+public final class StartsECS extends AbstractAgent {
     /**
-     * AmazonEC2 client provider.
+     * AmazonECS client provider.
      */
     private final transient Amazon amazon;
 
@@ -71,7 +74,7 @@ public final class StartsEC2 extends AbstractAgent {
      * Ctor.
      * @param amaz Amazon
      */
-    public StartsEC2(final Amazon amaz) {
+    public StartsECS(final Amazon amaz) {
         super("/talk[daemon and not(shell)]");
         this.amazon = amaz;
     }
@@ -79,14 +82,14 @@ public final class StartsEC2 extends AbstractAgent {
     @Override
     //@todo #629 Add Instance params to Directive, for example publicIpAddress
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final Instance instance = this.amazon.runOnDemand();
+        final ContainerInstance instance = this.amazon.runOnDemand();
         Logger.info(
             this,
-            "EC2 instance %s created",
+            "ECS instance %s created",
             instance
         );
         return new Directives().xpath("/talk")
-            .add("ec2")
-            .attr("id", instance.getInstanceId());
+            .add("ecs")
+            .attr("id", instance.getEc2InstanceId());
     }
 }

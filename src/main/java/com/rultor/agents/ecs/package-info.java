@@ -29,10 +29,10 @@
  */
 
 /**
- * Amazon interaction tests.
+ * Amazon ECS.
  *
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
- * @since 2.0
+ * @since 1.0
  */
-package com.rultor.agents.ec2;
+package com.rultor.agents.ecs;
