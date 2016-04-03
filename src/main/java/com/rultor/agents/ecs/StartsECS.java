@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.ecs;
 
-import com.amazonaws.services.ecs.model.ContainerInstance;
+import com.amazonaws.services.ecs.model.Container;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -42,7 +42,7 @@ import org.xembly.Directives;
 
 /**
  * Starts Amazon ECS instance, that running Docker + SSHD on ECS. Instance
- * to be configured in privileged mode. Configuration needs to be stored in S3.
+ * is configured in privileged mode. Configuration is stored in S3.
  * See details here:
  * @link http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3
  * @author Yuriy Alevohin (alevohin@mail.ru)
@@ -82,14 +82,14 @@ public final class StartsECS extends AbstractAgent {
     @Override
     //@todo #629 Add Instance params to Directive, for example publicIpAddress
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final ContainerInstance instance = this.amazon.runOnDemand();
+        final Container instance = this.amazon.runOnDemand();
         Logger.info(
             this,
             "ECS instance %s created",
             instance
         );
         return new Directives().xpath("/talk")
-            .add("ecs")
-            .attr("id", instance.getEc2InstanceId());
+            .add("ec2")
+            .attr("id", instance.getContainerArn());
     }
 }

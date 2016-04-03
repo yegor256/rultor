@@ -70,7 +70,7 @@ public final class StartsECSTest {
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPaths(
-                "/talk/ecs[@id='1']"
+                "/talk/ec2[@id='1']"
             )
         );
     }

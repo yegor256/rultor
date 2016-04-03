@@ -309,10 +309,10 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="ecs">
+    <xs:complexType name="ec2">
         <xs:annotation>
             <xs:documentation source="description">
-                This type describes the specification about the ECS.
+                This type describes the specification about the EC2.
             </xs:documentation>
         </xs:annotation>
         <xs:attribute name="id" type="xs:string" use="required"/>
@@ -360,10 +360,10 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
-                <xs:element name="ecs" type="ecs" minOccurs="0">
+                <xs:element name="ec2" type="ec2" minOccurs="0">
                     <xs:annotation>
                         <xs:documentation source="description">
-                            This element has the ECS definition.
+                            This element has the EC2 definition.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>

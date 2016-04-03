@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.ecs;
 
-import com.amazonaws.services.ecs.model.ContainerInstance;
+import com.amazonaws.services.ecs.model.Container;
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
 
@@ -55,6 +55,6 @@ public interface Amazon {
      * @return ECS Instance
      * @throws IOException if fails
      */
-    ContainerInstance runOnDemand() throws IOException;
+    Container runOnDemand() throws IOException;
 
 }
