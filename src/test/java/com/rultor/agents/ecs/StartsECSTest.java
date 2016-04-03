@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.ecs;
 
-import com.amazonaws.services.ecs.model.ContainerInstance;
+import com.amazonaws.services.ecs.model.Container;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
@@ -52,10 +52,10 @@ public final class StartsECSTest {
      */
     @Test
     public void startsOnDemandInstance() throws Exception {
-        final ContainerInstance instance = Mockito.mock(
-            ContainerInstance.class
+        final Container instance = Mockito.mock(
+            Container.class
         );
-        Mockito.doReturn("1").when(instance).getEc2InstanceId();
+        Mockito.doReturn("1").when(instance).getContainerArn();
         final Amazon amazon = Mockito.mock(Amazon.class);
         Mockito.doReturn(instance).when(amazon).runOnDemand();
         final Agent agent = new StartsECS(amazon);
