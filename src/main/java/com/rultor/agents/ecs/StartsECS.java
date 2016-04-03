@@ -41,7 +41,7 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Starts Amazon ECS instance, that running Docker + SSHd on ECS. Instance
+ * Starts Amazon ECS instance, that running Docker + SSHD on ECS. Instance
  * to be configured in privileged mode. Configuration needs to be stored in S3.
  * See details here:
  * @link http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3

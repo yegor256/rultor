@@ -43,7 +43,7 @@ import java.io.IOException;
  *  It must create com.amazonaws.services.ecs.AmazonECS client
  *  with config params "credentials", "zone", "type", "key". Use
  *  client.runInstances
- *  (com.amazonaws.services.ecs.model.RegisterContainerInstancesRequest)
+ *  (com.amazonaws.services.ecs.model.RegisterContainerInstanceRequest)
  *  to run on-demand instance. Method runOnDemand must finally
  *  wait for started instance and check if start was successful.
  */
