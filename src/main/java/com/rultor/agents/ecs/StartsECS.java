@@ -41,7 +41,7 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Starts Amazon ECS instance, that running Docker + SSHD on ECS. Instance
+ * Starts Amazon ECS instance, that runs Docker + SSHD on ECS. Instance
  * is configured in privileged mode. Configuration is stored in S3.
  * See details here:
  * @link http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3
@@ -82,14 +82,14 @@ public final class StartsECS extends AbstractAgent {
     @Override
     //@todo #629 Add Instance params to Directive, for example publicIpAddress
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final Container instance = this.amazon.runOnDemand();
+        final Container container = this.amazon.runOnDemand();
         Logger.info(
             this,
             "ECS instance %s created",
-            instance
+            container
         );
         return new Directives().xpath("/talk")
             .add("ec2")
-            .attr("id", instance.getContainerArn());
+            .attr("id", container.getContainerArn());
     }
 }
