@@ -52,12 +52,12 @@ public final class StartsECSTest {
      */
     @Test
     public void startsOnDemandInstance() throws Exception {
-        final Container instance = Mockito.mock(
+        final Container container = Mockito.mock(
             Container.class
         );
-        Mockito.doReturn("1").when(instance).getContainerArn();
+        Mockito.doReturn("1").when(container).getContainerArn();
         final Amazon amazon = Mockito.mock(Amazon.class);
-        Mockito.doReturn(instance).when(amazon).runOnDemand();
+        Mockito.doReturn(container).when(amazon).runOnDemand();
         final Agent agent = new StartsECS(amazon);
         final Talk talk = new Talk.InFile();
         talk.modify(
