@@ -47,11 +47,11 @@ import org.xembly.Directives;
 public final class StartsECSTest {
 
     /**
-     * StartsECS can start On-Demand Instance.
+     * StartsECS can start On-Demand Container.
      * @throws Exception In case of error.
      */
     @Test
-    public void startsOnDemandInstance() throws Exception {
+    public void startsOnDemandContainer() throws Exception {
         final Container container = Mockito.mock(
             Container.class
         );

@@ -40,19 +40,19 @@ import java.io.IOException;
  * @version $Id$
  * @since 2.0
  * @todo #629 Add implementation for com.rultor.agents.ecs.Amazon.
- *  It must create com.amazonaws.services.ecs.AmazonECS client
+ *  It must create com.amazonaws.services.ecs.AmazonECSClient
  *  with config params "credentials", "zone", "type", "key". Use
  *  client.runInstances
  *  (com.amazonaws.services.ecs.model.RegisterContainerInstanceRequest)
- *  to run on-demand instance. Method runOnDemand must finally
+ *  to run on-demand container. Method runOnDemand must finally
  *  wait for started instance and check if start was successful.
  */
 @Immutable
 public interface Amazon {
 
     /**
-     * Run ECS OnDemand instance.
-     * @return ECS Instance
+     * Run ECS OnDemand container.
+     * @return ECS Container
      * @throws IOException if fails
      */
     Container runOnDemand() throws IOException;

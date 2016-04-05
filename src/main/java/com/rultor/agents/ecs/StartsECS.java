@@ -41,7 +41,7 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Starts Amazon ECS instance, that runs Docker + SSHD on ECS. Instance
+ * Starts Amazon ECS container, that runs Docker + SSHD on ECS. Container
  * is configured in privileged mode. Configuration is stored in S3.
  * See details here:
  * @link http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3
@@ -49,13 +49,13 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 2.0
  * @todo #629 Implement com.rultor.agents.ecs.StopsECS agent. It must
- *  stopped ECS on-demand instance if it was started at StartsECS agent.
- *  StopsECS must use instance id from /talk/ecs/[@id] to stop it.
+ *  stopped ECS on-demand container if it was started at StartsECS agent.
+ *  StopsECS must use container ARN from /talk/ecs/[@id] to stop it.
  * @todo #629 RegistersShell must register SSH params "host", "port",
- *  "login", "key" for ecs on-demand instance, if this one was successfully
+ *  "login", "key" for ecs on-demand container, if this one was successfully
  *  started. Successfully start means that these parameters exist in
  *  /talk/ecs
- * @todo #629 Add new instance creation classes for StartsECS and StopsECS
+ * @todo #629 Add new container creation classes for StartsECS and StopsECS
  *  to com.rultor.agents.Agents. StartsECS must be invoked before
  *  RegistersShell agent. StopsECS must be invoked after RemovesShell agent.
  * @todo #629 Write documentation for configuring ecs via .rultor.yml at
@@ -80,12 +80,12 @@ public final class StartsECS extends AbstractAgent {
     }
 
     @Override
-    //@todo #629 Add Instance params to Directive, for example publicIpAddress
+    //@todo #629 Add Container params to Directive, for example publicIpAddress
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Container container = this.amazon.runOnDemand();
         Logger.info(
             this,
-            "ECS instance %s created",
+            "ECS container %s created",
             container
         );
         return new Directives().xpath("/talk")
