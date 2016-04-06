@@ -49,7 +49,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 2.0
  * @todo #629 Implement com.rultor.agents.ecs.StopsECS agent. It must
- *  stopped ECS on-demand container if it was started at StartsECS agent.
+ *  stop ECS on-demand container if it was started at StartsECS agent.
  *  StopsECS must use container ARN from /talk/ecs/[@id] to stop it.
  * @todo #629 RegistersShell must register SSH params "host", "port",
  *  "login", "key" for ecs on-demand container, if this one was successfully

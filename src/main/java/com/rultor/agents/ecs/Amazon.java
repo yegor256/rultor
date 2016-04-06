@@ -47,7 +47,7 @@ import java.io.IOException;
 @Immutable
 public interface Amazon {
 
-    /**
+   /**
     * Run ECS OnDemand container with running SSH- and Docker- Daemon.
     * @return ECS Container with running SSH- and Docker- Daemon
     * @throws IOException if fails
