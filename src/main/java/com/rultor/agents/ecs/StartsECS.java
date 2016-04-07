@@ -50,16 +50,18 @@ import org.xembly.Directives;
  * @since 2.0
  * @todo #629 Implement com.rultor.agents.ecs.StopsECS agent. It must
  *  stop ECS on-demand container if it was started at StartsECS agent.
- *  StopsECS must use container ARN from /talk/ecs/[@id] to stop it.
+ *  StopsECS must use container ARN from /talk/ec2/[@id] to stop it.
  * @todo #629 RegistersShell must register SSH params "host", "port",
  *  "login", "key" for ecs on-demand container, if this one was successfully
  *  started. Successfully start means that these parameters exist in
- *  /talk/ecs
+ *  /talk/ec2
  * @todo #629 Add new container creation classes for StartsECS and StopsECS
  *  to com.rultor.agents.Agents. StartsECS must be invoked before
  *  RegistersShell agent. StopsECS must be invoked after RemovesShell agent.
- * @todo #629 Write documentation for configuring ecs via .rultor.yml at
- *  2014-07-13-reference.md
+ * @todo #629 Implement the ability to use Rultor with any AWS account,
+ *  by providing the credentials to it via the encrypted assets and a
+ *  respective configuration setting in the .rultor.yml. Document the
+ *  implementation properly in the Rultor documentation.
  */
 @Immutable
 @ToString
