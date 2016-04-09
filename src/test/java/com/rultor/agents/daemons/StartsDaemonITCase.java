@@ -31,10 +31,11 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.jcabi.ssh.SSHD;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.agents.docker.StartsDockerDaemon;
+import com.rultor.agents.shells.PfShell;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
@@ -48,15 +49,11 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.StringStartsWith;
-import org.junit.Assume;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 import org.xembly.Directives;
 
@@ -72,48 +69,46 @@ import org.xembly.Directives;
 public final class StartsDaemonITCase {
 
     /**
-     * Temp directory.
-     * @checkstyle VisibilityModifierCheck (5 lines)
-     */
-    @Rule
-    public final transient TemporaryFolder temp = new TemporaryFolder();
-
-    /**
      * StartsDaemon can start a daemon.
      * @throws Exception In case of error.
      * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
     public void startsDaemon() throws Exception {
-        Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
-        final Talk talk = this.talk();
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPaths(
-                "/talk/daemon[started and dir]",
-                "/talk/daemon[ends-with(started,'Z')]"
-            )
-        );
-        final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        TimeUnit.SECONDS.sleep(2L);
-        new Shell.Safe(new TalkShells(talk.read()).get()).exec(
-            String.format("cat %s/stdout", dir),
-            new NullInputStream(0L),
-            baos, baos
-        );
-        MatcherAssert.assertThat(
-            baos.toString(CharEncoding.UTF_8),
-            Matchers.allOf(
-                Matchers.containsString("+ set -o pipefail"),
-                Matchers.containsString("+ date"),
-                Matchers.containsString("+ ls -al"),
-                Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
-            )
-        );
-        MatcherAssert.assertThat(
-            new File(dir, "status").exists(), Matchers.is(false)
-        );
+        try (
+            final StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = StartsDaemonITCase.talk(start);
+            MatcherAssert.assertThat(
+                talk.read(),
+                XhtmlMatchers.hasXPaths(
+                    "/talk/daemon[started and dir]",
+                    "/talk/daemon[ends-with(started,'Z')]"
+                )
+            );
+            final String dir = talk.read().xpath("/talk/daemon/dir/text()")
+                .get(0);
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            TimeUnit.SECONDS.sleep(2L);
+            new Shell.Safe(new TalkShells(talk.read()).get()).exec(
+                String.format("cat %s/stdout", dir),
+                new NullInputStream(0L),
+                baos, baos
+            );
+            MatcherAssert.assertThat(
+                baos.toString(CharEncoding.UTF_8),
+                Matchers.allOf(
+                    Matchers.containsString("+ set -o pipefail"),
+                    Matchers.containsString("+ date"),
+                    Matchers.containsString("+ ls -al"),
+                    Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
+                )
+            );
+            MatcherAssert.assertThat(
+                new File(dir, "status").exists(), Matchers.is(false)
+            );
+        }
     }
 
     /**
@@ -123,52 +118,50 @@ public final class StartsDaemonITCase {
      */
     @Test
     public void deprecatesDefaultImage() throws IOException {
-        final String rultor = "yegor256/rultor";
-        final Talk talk = this.talk();
-        final XML xml = talk.read();
-        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final List<String> repos = xml.xpath("/wire/github-repo/text()");
-        final String notice = "#### Deprecation Notice ####";
-        final Matcher<String> matcher;
-        if ((repos.isEmpty() || !rultor.equals(repos.get(0)))
-            && xml.xpath(
+        try (
+            final StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = StartsDaemonITCase.talk(start);
+            final XML xml = talk.read();
+            final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
+            final List<String> repos = xml.xpath("/wire/github-repo/text()");
+            final String notice = "#### Deprecation Notice ####";
+            final Matcher<String> matcher;
+            final String rultor = "yegor256/rultor";
+            if ((repos.isEmpty() || !rultor.equals(repos.get(0)))
+                && xml.xpath(
                 "/p/entry[@key='merge']/entry[@key='script']"
             ).contains(rultor)
-        ) {
-            matcher = StringStartsWith.startsWith(notice);
-        } else {
-            matcher = Matchers.not(StringStartsWith.startsWith(notice));
+                ) {
+                matcher = StringStartsWith.startsWith(notice);
+            } else {
+                matcher = Matchers.not(StringStartsWith.startsWith(notice));
+            }
+            MatcherAssert.assertThat(dir, matcher);
         }
-        MatcherAssert.assertThat(dir, matcher);
     }
 
     /**
      * Creates a Talk object with basic parameters.
+     * @param start Docker daemon starter
      * @return The basic Talk object for testing
      * @throws IOException In case of error
      */
-    private Talk talk() throws IOException {
-        final SSHD sshd = new SSHD(this.temp.newFolder());
-        final int port = sshd.port();
+    private static Talk talk(final StartsDockerDaemon start)
+        throws IOException {
+        final PfShell shell = start.shell();
         final Talk talk = new Talk.InFile();
-        final String executor;
-        if (SystemUtils.IS_OS_LINUX) {
-            executor = "md5sum";
-        } else {
-            executor = "md5";
-        }
         talk.modify(
             new Directives().xpath("/talk")
                 .add("shell").attr("id", "abcdef")
                 .add("host").set("localhost").up()
-                .add("port").set(Integer.toString(port)).up()
-                .add("login").set(sshd.login()).up()
-                .add("key").set(sshd.key()).up().up()
+                .add("port").set(Integer.toString(shell.port())).up()
+                .add("login").set(shell.login()).up()
+                .add("key").set(shell.key()).up().up()
                 .add("daemon").attr("id", "fedcba")
                 .add("title").set("some operation").up()
-                .add("script").set(
-                    String.format("ls -al; %s file.bin; sleep 50000", executor)
-                )
+                .add("script").set("ls -al; md5sum file.bin; sleep 50000")
         );
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doReturn(new XMLDocument("<p/>")).when(profile).read();

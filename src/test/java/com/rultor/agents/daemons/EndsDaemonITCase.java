@@ -30,23 +30,22 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
-import com.jcabi.ssh.SSHD;
+import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Shell;
 import com.rultor.Time;
+import com.rultor.agents.docker.StartsDockerDaemon;
+import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import java.io.File;
 import java.io.IOException;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.StringContains;
 import org.hamcrest.core.StringEndsWith;
 import org.junit.Assume;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.xembly.Directives;
 
 /**
@@ -57,12 +56,6 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class EndsDaemonITCase {
-    /**
-     * Temp directory.
-     * @checkstyle VisibilityModifierCheck (5 lines)
-     */
-    @Rule
-    public final transient TemporaryFolder temp = new TemporaryFolder();
 
     /**
      * EndsDaemon should store highlighted stdout entry.
@@ -70,24 +63,30 @@ public final class EndsDaemonITCase {
      */
     @Test
     public void parsesHighlightedStdout() throws IOException {
-        final Talk talk = new Talk.InFile();
-        this.start(
-            talk,
-            String.format(
-                "some random\n%s%s\nother",
-                EndsDaemon.HIGHLIGHTS_PREFIX,
-                "text output"
-            )
-        );
-        final Agent agent = new EndsDaemon(new Profile.Fixed());
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPaths(
-                "/talk/daemon/highlights",
-                "/talk/daemon/highlights[.='text output']"
-            )
-        );
+        try (
+            final StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = new Talk.InFile();
+            this.start(
+                start,
+                talk,
+                String.format(
+                    "some random\n%s%s\nother",
+                    EndsDaemon.HIGHLIGHTS_PREFIX,
+                    "text output"
+                )
+            );
+            final Agent agent = new EndsDaemon(new Profile.Fixed());
+            agent.execute(talk);
+            MatcherAssert.assertThat(
+                talk.read(),
+                XhtmlMatchers.hasXPaths(
+                    "/talk/daemon/highlights",
+                    "/talk/daemon/highlights[.='text output']"
+                )
+            );
+        }
     }
 
     /**
@@ -96,15 +95,22 @@ public final class EndsDaemonITCase {
      */
     @Test
     public void readsExitCodeCorrectly() throws IOException {
-        final Talk talk = new Talk.InFile();
-        final File home = this.start(talk, "");
-        FileUtils.write(new File(home.getAbsolutePath(), "status"), "123");
-        final Agent agent = new EndsDaemon(new Profile.Fixed());
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
-        );
+        try (
+            final StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = new Talk.InFile();
+            final PfShell sshd = this.start(start, talk, "");
+            new Shell.Plain(
+                new SSH(sshd.host(), sshd.port(), sshd.login(), sshd.key())
+            ).exec("echo '123' > /tmp/status");
+            final Agent agent = new EndsDaemon(new Profile.Fixed());
+            agent.execute(talk);
+            MatcherAssert.assertThat(
+                talk.read(),
+                XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
+            );
+        }
     }
 
     /**
@@ -114,46 +120,52 @@ public final class EndsDaemonITCase {
     @Test
     @Ignore
     public void deprecatesDefaultImage() throws IOException {
-        final Talk talk = new Talk.InFile();
-        FileUtils.write(
-            new File(this.start(talk, "").getAbsolutePath(), "testing"), "12"
-        );
-        new EndsDaemon(new Profile.Fixed()).execute(talk);
-        for (final String path
-            : talk.read().xpath("/p/entry[@key='merge']/entry[@key='script']")
+        try (
+            final StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            if ("yegor256/rultor".equals(path)) {
-                final String dir = talk.read()
-                    .xpath("/talk/daemon/dir/text()").get(0);
-                MatcherAssert.assertThat(
-                    dir,
-                    StringContains.containsString(
-                        "#### Deprecation Notice ####"
+            final Talk talk = new Talk.InFile();
+            this.start(start, talk, "");
+            new EndsDaemon(new Profile.Fixed()).execute(talk);
+            for (final String path
+                : talk.read().xpath(
+                "/p/entry[@key='merge']/entry[@key='script']"
                     )
-                );
-                MatcherAssert.assertThat(
-                    dir,
-                    StringEndsWith.endsWith("##############")
-                );
+            ) {
+                if ("yegor256/rultor".equals(path)) {
+                    final String dir = talk.read()
+                        .xpath("/talk/daemon/dir/text()").get(0);
+                    MatcherAssert.assertThat(
+                        dir,
+                        StringContains.containsString(
+                            "#### Deprecation Notice ####"
+                        )
+                    );
+                    MatcherAssert.assertThat(
+                        dir,
+                        StringEndsWith.endsWith("##############")
+                    );
+                }
             }
         }
     }
 
     /**
      * Start a talk.
+     * @param start Docker daemon starter
      * @param talk Talk to start
      * @param stdout Std out
      * @return Home
      * @throws IOException In case of error.
      */
-    private File start(final Talk talk, final String stdout)
-        throws IOException {
+    private PfShell start(final StartsDockerDaemon start, final Talk talk,
+        final String stdout) throws IOException {
         Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
-        final SSHD sshd = new SSHD(this.temp.newFolder());
+        final PfShell sshd = start.shell();
         final int port = sshd.port();
-        final File home = new File(sshd.home(), "test-home");
-        FileUtils.forceMkdir(home);
-        FileUtils.write(new File(home.getAbsolutePath(), "stdout"), stdout);
+        new Shell.Plain(
+            new SSH(sshd.host(), port, sshd.login(), sshd.key())
+        ).exec(String.format("echo '%s' > /tmp/stdout", stdout));
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon")
@@ -162,7 +174,7 @@ public final class EndsDaemonITCase {
                 .add("title").set("merge").up()
                 .add("script").set("ls").up()
                 .add("started").set(new Time().iso()).up()
-                .add("dir").set(home.getAbsolutePath()).up()
+                .add("dir").set("/tmp").up()
                 .up()
                 .add("shell").attr("id", "a1b2c3e3")
                 .add("host").set("localhost").up()
@@ -170,6 +182,6 @@ public final class EndsDaemonITCase {
                 .add("login").set(sshd.login()).up()
                 .add("key").set(sshd.key()).up().up()
         );
-        return home;
+        return sshd;
     }
 }
