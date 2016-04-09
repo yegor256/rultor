@@ -27,71 +27,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
+package com.rultor.agents.docker;
 
-import com.google.common.base.Charsets;
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
-import com.rultor.Time;
-import com.rultor.agents.docker.StartsDockerDaemon;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
-import com.rultor.spi.Talk;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.xembly.Directives;
 
 /**
- * Tests for ${@link Tail}.
+ * Tests for ${@link StartsDockerDaemon}.
  *
  * @author Armin Braun (me@obrown.io)
  * @version $Id$
- * @since 1.62
+ * @since 1.63
  */
-public final class TailITCase {
+public final class StartsDockerDaemonTest {
 
     /**
-     * Tail can convert non UTF-8 chars in StdOut to UTF-8.
-     * @throws Exception In case of error.
+     * StartsDockerDaemon can provide a working PfShell.
+     * @throws Exception In case of failure
      */
     @Test
-    public void tailsNonUtf() throws Exception {
+    public void providesPfShell() throws Exception {
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            final PfShell sshd = start.shell();
-            final String clean = "some output";
-            new Shell.Plain(
-                new SSH(sshd.host(), sshd.port(), sshd.login(), sshd.key())
-            ).exec(String.format("echo '%s\u00ea' > /tmp/stdout", clean));
-            final Talk talk = new Talk.InFile();
-            final String hash = "a1b5c3e3";
-            final String key = "id";
-            talk.modify(
-                new Directives().xpath("/talk")
-                    .add("daemon")
-                    .attr(key, hash)
-                    .add("title").set("tail").up()
-                    .add("script").set("empty").up()
-                    .add("dir").set("/tmp").up()
-                    .add("code").set("-7").up()
-                    .add("started").set(new Time().iso()).up()
-                    .add("ended").set(new Time().iso()).up().up()
-                    .add("shell").attr(key, hash)
-                    .add("host").set(sshd.host()).up()
-                    .add("port").set(Integer.toString(sshd.port())).up()
-                    .add("login").set(sshd.login()).up()
-                    .add("key").set(sshd.key()).up().up()
+            final PfShell shell = start.shell();
+            MatcherAssert.assertThat(
+                shell.login(),
+                Matchers.is("root")
+            );
+            final String key = shell.key();
+            MatcherAssert.assertThat(
+                key,
+                Matchers.startsWith("-----BEGIN RSA PRIVATE KEY-----")
             );
             MatcherAssert.assertThat(
-                IOUtils.toString(
-                    new Tail(talk.read(), hash).read(),
-                    Charsets.UTF_8
-                ),
-                Matchers.is(String.format("%sê\n", clean))
+                key,
+                Matchers.endsWith("-----END RSA PRIVATE KEY-----")
+            );
+            final Shell.Plain ssh = new Shell.Plain(
+                new SSH(shell.host(), shell.port(), shell.login(), shell.key())
+            );
+            MatcherAssert.assertThat(
+                ssh.exec("cat /root/.ssh/id_rsa"),
+                Matchers.containsString(key)
             );
         }
     }

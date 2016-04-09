@@ -47,7 +47,7 @@ import org.apache.commons.io.IOUtils;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "profile", "addr", "prt", "user", "pvt" })
-final class PfShell {
+public final class PfShell {
 
     /**
      * Profile.
@@ -83,7 +83,7 @@ final class PfShell {
      * @param key Default Private SSH key
      * @checkstyle ParameterNumberCheck (6 lines)
      */
-    PfShell(final Profile prof, final String host,
+    public PfShell(final Profile prof, final String host,
         final int port, final String login, final String key) {
         this.profile = prof;
         this.addr = host;
