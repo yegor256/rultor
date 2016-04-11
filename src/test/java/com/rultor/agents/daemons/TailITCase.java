@@ -40,6 +40,7 @@ import com.rultor.spi.Talk;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -62,6 +63,9 @@ public final class TailITCase {
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
+            Assume.assumeTrue(
+                "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+            );
             final PfShell sshd = start.shell();
             final String clean = "some output";
             new Shell.Plain(

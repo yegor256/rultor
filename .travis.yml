@@ -18,4 +18,4 @@ env:
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 script:
-  - mvn clean install -Pqulice --errors
+  - mvn clean install -Pqulice -PDockerIT --errors

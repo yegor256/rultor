@@ -39,7 +39,6 @@ import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import org.apache.commons.lang3.SystemUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.StringContains;
 import org.hamcrest.core.StringEndsWith;
@@ -160,7 +159,9 @@ public final class EndsDaemonITCase {
      */
     private PfShell start(final StartsDockerDaemon start, final Talk talk,
         final String stdout) throws IOException {
-        Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
+        Assume.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
         final PfShell sshd = start.shell();
         final int port = sshd.port();
         new Shell.Plain(
