@@ -78,10 +78,18 @@ they don't violate our quality standards. To avoid frustration, before
 sending us your pull request please run full Maven build:
 
 ```
-$ mvn clean install -Pqulice
+$ mvn clean install -Pqulice -PDockerIT
 ```
 
-To avoid build errors use maven 3.2.5+
+To avoid build errors use maven 3.3.x and have a Docker environment properly
+loaded into the shell from which you run the build.
+If your environment does not have the ability to run a working Docker client
+and daemon, you can run the build without the Docker based integration tests
+via:
+
+```
+$ mvn clean install -Pqulice
+```
 
 ## Got questions?
 

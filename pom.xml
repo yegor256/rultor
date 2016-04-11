@@ -895,6 +895,12 @@
             </build>
         </profile>
         <profile>
+            <id>DockerIT</id>
+            <properties>
+                <run-docker-tests>true</run-docker-tests>
+            </properties>
+        </profile>
+        <profile>
             <id>coveralls</id>
             <activation>
                 <file><exists>pom.xml</exists></file>

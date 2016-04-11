@@ -35,6 +35,7 @@ import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -52,6 +53,9 @@ public final class StartsDockerDaemonTest {
      */
     @Test
     public void providesPfShell() throws Exception {
+        Assume.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
