@@ -14,6 +14,7 @@ before_install:
   - export PATH=$M2_HOME/bin:$PATH
 env:
   global:
+    - DOCKER_HOST="tcp://127.0.0.1:2375"
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 script:
