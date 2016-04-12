@@ -76,6 +76,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
         this.profile = prof;
         this.client = DockerClientBuilder.getInstance().build();
         this.containers = Collections.newSetFromMap(
+            // @checkstyle MagicNumber (1 line)
             new ConcurrentHashMap<CreateContainerResponse, Boolean>(1, 0.9f, 1)
         );
     }
