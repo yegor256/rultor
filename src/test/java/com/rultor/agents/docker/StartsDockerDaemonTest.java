@@ -40,7 +40,6 @@ import org.junit.Test;
 
 /**
  * Tests for ${@link StartsDockerDaemon}.
- *
  * @author Armin Braun (me@obrown.io)
  * @version $Id$
  * @since 1.63
