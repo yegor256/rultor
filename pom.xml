@@ -895,7 +895,7 @@
             </build>
         </profile>
         <profile>
-            <id>DockerITs</id>
+            <id>dockerITs</id>
             <properties>
                 <run-docker-tests>true</run-docker-tests>
             </properties>
