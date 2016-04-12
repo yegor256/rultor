@@ -43,7 +43,7 @@ import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Starts a Docker Container containing a Docker daemon and SSHD.
@@ -125,7 +125,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
     private String key(final CreateContainerResponse container)
         throws IOException {
         final StringWriter writer = new StringWriter();
-        IOUtil.copy(
+        IOUtils.copy(
             this.client.copyFileFromContainerCmd(
                 container.getId(), "/root/.ssh/id_rsa"
             ).exec(),
