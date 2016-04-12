@@ -83,7 +83,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
     /**
      * Sets up a PfShell in which Rultor can function.
      * @return PfShell loaded with credentials for new Rultor runner container
-     * @throws IOException on failure.
+     * @throws IOException on failure
      */
     public PfShell shell() throws IOException {
         final ExposedPort ssh = ExposedPort.tcp(22);
@@ -119,7 +119,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
      * Retrieves SSH private key needed to connect to a given container.
      * @param container Container from which to get the SSH key
      * @return SSH private key
-     * @throws IOException on failure.
+     * @throws IOException on failure
      */
     private String key(final CreateContainerResponse container)
         throws IOException {
