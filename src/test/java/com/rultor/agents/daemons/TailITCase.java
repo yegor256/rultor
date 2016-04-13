@@ -59,13 +59,13 @@ public final class TailITCase {
      */
     @Test
     public void tailsNonUtf() throws Exception {
+        Assume.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            Assume.assumeTrue(
-                "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
-            );
             final PfShell sshd = start.shell();
             final String clean = "some output";
             new Shell.Plain(

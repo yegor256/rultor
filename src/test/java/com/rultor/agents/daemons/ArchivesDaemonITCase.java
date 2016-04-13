@@ -40,6 +40,7 @@ import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import org.hamcrest.MatcherAssert;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -69,6 +70,9 @@ public final class ArchivesDaemonITCase {
      */
     @Test
     public void archivesDaemon() throws Exception {
+        Assume.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
