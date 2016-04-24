@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 14 active puzzles (59 total):
+There are 13 active puzzles (59 total):
 
 
 <del>unknown</del> [`?`](../master/?)<br/>
@@ -59,6 +59,6 @@ There are 14 active puzzles (59 total):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1082](https://github.com/yegor256/rultor/issues/1082):[<del>1055-4f9e2bff</del>](https://github.com/yegor256/rultor/issues/1082) [`pom.xml:777-784`](../master/pom.xml#L777-L784)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1091](https://github.com/yegor256/rultor/issues/1091):[**629-3b4a7478**](https://github.com/yegor256/rultor/issues/1091) [`Amazon.java:42-45`](../master/src/main/java/com/rultor/agents/ecs/Amazon.java#L42-L45)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1090](https://github.com/yegor256/rultor/issues/1090):[**629-97e18362**](https://github.com/yegor256/rultor/issues/1090) [`StartsECS.java:51-53`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L51-L53)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;[#1088](https://github.com/yegor256/rultor/issues/1088):[**629-bf520350**](https://github.com/yegor256/rultor/issues/1088) [`StartsECS.java:54-57`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L54-L57)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[#1088](https://github.com/yegor256/rultor/issues/1088):[<del>629-bf520350</del>](https://github.com/yegor256/rultor/issues/1088) [`StartsECS.java:54-57`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L54-L57)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1087](https://github.com/yegor256/rultor/issues/1087):[**629-efc8aa9c**](https://github.com/yegor256/rultor/issues/1087) [`StartsECS.java:58-60`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L58-L60)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1089](https://github.com/yegor256/rultor/issues/1089):[**629-bb1a14ed**](https://github.com/yegor256/rultor/issues/1089) [`StartsECS.java:61-64`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L61-L64)<br/>
