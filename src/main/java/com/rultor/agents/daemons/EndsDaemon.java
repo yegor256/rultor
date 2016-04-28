@@ -209,7 +209,7 @@ public final class EndsDaemon extends AbstractAgent {
                 String.format("if [ $size -gt %d ]", max),
                 "then echo \"Output is too big ($size bytes)\"",
                 String.format("echo \"You see only the last %d bytes\"", max),
-                String.format("then tail -c %d stdout", max),
+                String.format("tail -c %d stdout", max),
                 "else cat stdout",
                 "fi"
             )
