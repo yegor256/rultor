@@ -117,13 +117,10 @@ public final class EndsDaemon extends AbstractAgent {
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
-        final String stdout = new ShellCommand(
-            shell,
-            dir,
-            "cat stdout"
-        ).exec();
         final Collection<String> lines = Lists.newArrayList(
-            Splitter.on(System.lineSeparator()).split(stdout)
+            Splitter.on(System.lineSeparator()).split(
+                EndsDaemon.stdout(shell, dir)
+            )
         );
         final String highlights = Joiner.on("\n").join(
             Iterables.transform(
@@ -192,6 +189,31 @@ public final class EndsDaemon extends AbstractAgent {
             exit = Integer.parseInt(status);
         }
         return exit;
+    }
+
+    /**
+     * Get stdout.
+     * @param shell Shell
+     * @param dir The dir
+     * @return Stdout
+     * @throws IOException If fails
+     */
+    private static CharSequence stdout(final Shell shell, final String dir)
+        throws IOException {
+        final int max = Tv.FOUR * Tv.MILLION;
+        return new ShellCommand(
+            shell,
+            dir,
+            Joiner.on(';').join(
+                "size=$(stat -c%s stdout)",
+                String.format("if [ $size -gt %d ]", max),
+                "then echo \"Output is too big ($size bytes)\"",
+                String.format("echo \"You see only the last %d bytes\"", max),
+                String.format("then tail -c %d stdout", max),
+                "else cat stdout",
+                "fi"
+            )
+        ).exec();
     }
 
 }
