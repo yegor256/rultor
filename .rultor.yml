@@ -27,7 +27,6 @@ merge:
     mvn clean site -Psite --errors --settings ../settings.xml
     mvn clean
   commanders:
-  - caarlos0
   - carlosmiranda
   - darkled
   - dmzaytsev
