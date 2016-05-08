@@ -53,7 +53,7 @@ There are 13 active puzzles (59 total):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1056](https://github.com/yegor256/rultor/issues/1056):[**918-89660440**](https://github.com/yegor256/rultor/issues/1056) [`ClosePullRequestTest.java:59-63`](../master/src/test/java/com/rultor/agents/github/ClosePullRequestTest.java#L59-L63)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[<del>1041</del>](https://github.com/yegor256/rultor/issues/1041) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1057](https://github.com/yegor256/rultor/issues/1057):[**1041-7f83dd26**](https://github.com/yegor256/rultor/issues/1057) [`DockerHealthCheck.java:47-50`](../master/src/main/java/com/rultor/agents/docker/DockerHealthCheck.java#L47-L50)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;[#1039](https://github.com/yegor256/rultor/issues/1039):[<del>1039</del>](https://github.com/yegor256/rultor/issues/1039) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[<del>1039</del>](https://github.com/yegor256/rultor/issues/1039) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1072](https://github.com/yegor256/rultor/issues/1072):[**1039-d8a49c64**](https://github.com/yegor256/rultor/issues/1072) [`Profiles.java:108-115`](../master/src/main/java/com/rultor/profiles/Profiles.java#L108-L115)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1055](https://github.com/yegor256/rultor/issues/1055):[<del>1055</del>](https://github.com/yegor256/rultor/issues/1055) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1082](https://github.com/yegor256/rultor/issues/1082):[<del>1055-4f9e2bff</del>](https://github.com/yegor256/rultor/issues/1082) [`pom.xml:777-784`](../master/pom.xml#L777-L784)<br/>
