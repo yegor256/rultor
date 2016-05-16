@@ -48,7 +48,7 @@ There are 13 active puzzles (59 total):
 &nbsp;&nbsp;&nbsp;&nbsp;[<del>1018</del>](https://github.com/yegor256/rultor/issues/1018) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<del>1018-15a5404e</del>](https://github.com/yegor256/rultor/issues/1053) [`StartsDaemonITCase.java:121-125`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L121-L125)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1069](https://github.com/yegor256/rultor/issues/1069):[**1053-dc86a5cc**](https://github.com/yegor256/rultor/issues/1069) [`EndsDaemon.java:64-66`](../master/src/main/java/com/rultor/agents/daemons/EndsDaemon.java#L64-L66)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1052](https://github.com/yegor256/rultor/issues/1052):[<del>1018-b83a728c</del>](https://github.com/yegor256/rultor/issues/1052) [`StartsDaemonITCase.java:126-128`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L126-L128)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<del>1018-b83a728c</del> [`StartsDaemonITCase.java:126-128`](../master/src/test/java/com/rultor/agents/daemons/StartsDaemonITCase.java#L126-L128)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[<del>918</del>](https://github.com/yegor256/rultor/issues/918) [`?`](../master/?)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[#1056](https://github.com/yegor256/rultor/issues/1056):[**918-89660440**](https://github.com/yegor256/rultor/issues/1056) [`ClosePullRequestTest.java:59-63`](../master/src/test/java/com/rultor/agents/github/ClosePullRequestTest.java#L59-L63)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[<del>1041</del>](https://github.com/yegor256/rultor/issues/1041) [`?`](../master/?)<br/>
