@@ -43,7 +43,6 @@ import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
-import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collection;
 import lombok.EqualsAndHashCode;
@@ -75,17 +74,10 @@ public final class EndsDaemon extends AbstractAgent {
     public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
 
     /**
-     * The profile of the run.
-     */
-    private final transient Profile profile;
-
-    /**
      * Ctor.
-     * @param prof Profile
      */
-    public EndsDaemon(final Profile prof) {
+    public EndsDaemon() {
         super("/talk/daemon[started and not(code) and not(ended)]");
-        this.profile = prof;
     }
 
     @Override

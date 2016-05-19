@@ -242,7 +242,7 @@ public final class Agents {
             new StartsDaemon(profile),
             new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
             new StopsDaemon(),
-            new EndsDaemon(profile),
+            new EndsDaemon(),
             new EndsRequest(),
             new SafeAgent(
                 new Tweets(
