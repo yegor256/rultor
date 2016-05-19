@@ -138,7 +138,7 @@ public final class EndsDaemonITCase {
                 talk.read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk/daemon[code='154']",
-                    "/talk/daemon/tail//*[contains(., 'something was broken')]"
+                    "/talk/daemon/tail//text()[contains(., 'broken')]"
                 )
             );
         }
