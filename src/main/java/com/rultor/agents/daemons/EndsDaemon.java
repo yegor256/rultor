@@ -43,7 +43,6 @@ import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
-import com.rultor.profiles.ProfileDeprecations;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collection;
@@ -92,7 +91,6 @@ public final class EndsDaemon extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
-        new ProfileDeprecations(this.profile).print(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Script("end.sh").exec(xml);
         final Directives dirs = new Directives();
