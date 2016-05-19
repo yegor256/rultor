@@ -83,13 +83,12 @@ public final class ProfileDeprecations {
      *  profile
      */
     public void print(final Shell shell) throws IOException {
-        if (!ProfileDeprecations.empty(this.profile.read())) {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            new Shell.Safe(shell).exec(
-                String.format("echo -e \"%s\"", ProfileDeprecations.CONTENT),
-                new NullInputStream(0L),
-                baos, baos
-            );
+        try {
+            if (!ProfileDeprecations.empty(this.profile.read())) {
+                ProfileDeprecations.output(ProfileDeprecations.CONTENT, shell);
+            }
+        } catch (final Profile.ConfigException ex) {
+            ProfileDeprecations.output(ex.getMessage(), shell);
         }
     }
 
@@ -101,6 +100,22 @@ public final class ProfileDeprecations {
      */
     public boolean empty() throws IOException {
         return ProfileDeprecations.empty(this.profile.read());
+    }
+
+    /**
+     * Prints given message to a shell.
+     * @param message Message to print to shell
+     * @param shell Shell to print to
+     * @throws IOException On failure to print to shell
+     */
+    private static void output(final String message, final Shell shell)
+        throws IOException {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new Shell.Safe(shell).exec(
+            String.format("echo -e \"%s\"", message),
+            new NullInputStream(0L),
+            baos, baos
+        );
     }
 
     /**

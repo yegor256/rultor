@@ -45,6 +45,7 @@ import org.hamcrest.core.StringEndsWith;
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
@@ -108,6 +109,37 @@ public final class EndsDaemonITCase {
             MatcherAssert.assertThat(
                 talk.read(),
                 XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
+            );
+        }
+    }
+
+    /**
+     * EndsDaemon can end the build in case of a broken profile.
+     * @throws Exception On failure
+     */
+    @Test
+    public void exitsWhenProfileBroken() throws Exception {
+        try (
+            final StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = new Talk.InFile();
+            final PfShell sshd = this.start(start, talk, "");
+            new Shell.Plain(
+                new SSH(sshd.host(), sshd.port(), sshd.login(), sshd.key())
+            ).exec("echo '154' > /tmp/status");
+            final Profile prof = Mockito.mock(Profile.class);
+            final String exception = "This profile was broken!";
+            Mockito.when(prof.read())
+                .thenThrow(new Profile.ConfigException(exception));
+            final Agent agent = new EndsDaemon(prof);
+            agent.execute(talk);
+            MatcherAssert.assertThat(
+                talk.read(),
+                XhtmlMatchers.hasXPaths(
+                    "/talk/daemon[code='154']",
+                    "/talk/daemon/tail//*[contains(., 'something was broken')]"
+                )
             );
         }
     }
