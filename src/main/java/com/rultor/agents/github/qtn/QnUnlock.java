@@ -33,16 +33,17 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Content;
 import com.jcabi.github.Contents;
+import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToCommentAuthor;
-import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javax.json.Json;
 import lombok.EqualsAndHashCode;
@@ -109,21 +110,26 @@ public final class QnUnlock implements Question {
                     .build()
             );
             new Answer(
-                new MessageToCommentAuthor(
+                new AddressedMessage(
                     comment,
                     String.format(
                         QnUnlock.PHRASES.getString("QnUnlock.response"),
                         branch
-                    )
+                    ),
+                    Arrays.asList(comment.author().login())
                 )
             ).post();
         } else {
             new Answer(
-                new MessageToIssueAuthor(
+                new AddressedMessage(
                     comment,
                     String.format(
                         QnUnlock.PHRASES.getString("QnUnlock.does-not-exist"),
                         branch
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
                     )
                 )
             ).post();

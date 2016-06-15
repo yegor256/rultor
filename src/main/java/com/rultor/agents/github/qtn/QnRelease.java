@@ -34,13 +34,13 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToCommentAuthor;
-import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,12 +88,18 @@ public final class QnRelease implements Question {
                 req = QnRelease.affirmative(comment, home);
             } else {
                 new Answer(
-                    new MessageToIssueAuthor(
+                    new AddressedMessage(
                         comment,
                         String.format(
-                            QnRelease.PHRASES.getString("QnRelease.invalid-tag"),
+                            QnRelease.PHRASES.getString(
+                                "QnRelease.invalid-tag"
+                            ),
                             name,
                             release.reference()
+                        ),
+                        Arrays.asList(
+                            new Issue.Smart(comment.issue()).author().login(),
+                            comment.author().login()
                         )
                     )
                 ).post();
@@ -115,12 +121,13 @@ public final class QnRelease implements Question {
     private static Req affirmative(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(
-            new MessageToCommentAuthor(
+            new AddressedMessage(
                 comment,
                 String.format(
                     QnRelease.PHRASES.getString("QnRelease.start"),
                     home.toASCIIString()
-                )
+                ),
+                Arrays.asList(comment.author().login())
             )
         ).post();
         return new Req.Simple(

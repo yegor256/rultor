@@ -37,8 +37,8 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Contents;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -102,7 +102,7 @@ public final class QnIfUnlocked implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(
-                new MessageToIssueAuthor(
+                new AddressedMessage(
                     comment,
                     String.format(
                         QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied"),
@@ -118,8 +118,12 @@ public final class QnIfUnlocked implements Question {
                                 }
                             )
                         )
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
                     )
-                )		
+                )
             ).post();
             req = Req.EMPTY;
         }

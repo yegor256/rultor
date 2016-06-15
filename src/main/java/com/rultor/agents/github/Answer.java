@@ -29,17 +29,17 @@
  */
 package com.rultor.agents.github;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Answer to post.
@@ -61,25 +61,22 @@ public final class Answer {
     /**
      * The message that rultor sends.
      */
-    private Message msg;
+    private final transient Message msg;
 
     /**
      * Ctor.
-     * @param cmt Comment
+     * @param message Message
      */
-    public Answer(Message msg) {
-        this.msg = msg;
+    public Answer(final Message message) {
+        this.msg = message;
     }
 
     /**
      * Post it..
-     * @param success Is it a report about success?
-     * @param msg Message
-     * @param args Arguments
      * @throws IOException If fails
      */
     public void post() throws IOException {
-        final Issue issue = this.msg.issue();
+        final Issue issue = this.msg.comment().issue();
         final List<Comment.Smart> comments = Lists.newArrayList(
             new Smarts<Comment.Smart>(issue.comments().iterate())
         );
@@ -93,7 +90,7 @@ public final class Answer {
             ++mine;
         }
         if (mine < Answer.MAX) {
-            issue.comments().post(msg.body());
+            issue.comments().post(this.msg.body());
         } else {
             Logger.error(
                 this, "too many (%d) comments from %s already in %s#%d",

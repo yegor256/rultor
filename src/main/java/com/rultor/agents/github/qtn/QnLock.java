@@ -36,12 +36,12 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Contents;
+import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToCommentAuthor;
-import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -72,6 +72,7 @@ import org.xembly.Xembler;
 @Immutable
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class QnLock implements Question {
 
     /**
@@ -120,13 +121,17 @@ public final class QnLock implements Question {
         final Contents contents = comment.issue().repo().contents();
         if (contents.exists(QnLock.PATH, branch)) {
             new Answer(
-                new MessageToIssueAuthor(
+                new AddressedMessage(
                     comment,
                     String.format(
                         QnLock.PHRASES.getString("QnLock.already-exists"),
                         branch
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
                     )
-                )		
+                )
             ).post();
         } else {
             contents.create(
@@ -153,7 +158,7 @@ public final class QnLock implements Question {
                     .build()
             );
             new Answer(
-                new MessageToCommentAuthor(
+                new AddressedMessage(
                     comment,
                     String.format(
                         QnLock.PHRASES.getString("QnLock.response"),
@@ -169,7 +174,8 @@ public final class QnLock implements Question {
                                 }
                             )
                         )
-                    )
+                    ),
+                    Arrays.asList(comment.author().login())
                 )
            ).post();
         }

@@ -34,15 +34,17 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -107,7 +109,7 @@ public final class QnAskedBy implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(
-                new MessageToIssueAuthor(
+                new AddressedMessage(
                     comment,
                     String.format(
                         QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
@@ -116,6 +118,10 @@ public final class QnAskedBy implements Question {
                             comment.issue().repo().github().users().self()
                                 .login()
                         )
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
                     )
                 )
             ).post();

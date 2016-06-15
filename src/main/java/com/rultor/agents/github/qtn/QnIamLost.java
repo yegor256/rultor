@@ -31,12 +31,13 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
-import com.rultor.agents.github.MessageToCommentAuthor;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -63,9 +64,10 @@ public final class QnIamLost implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(
-            new MessageToCommentAuthor(
+            new AddressedMessage(
                 comment,
-                QnIamLost.PHRASES.getString("QnIamLost.response")
+                QnIamLost.PHRASES.getString("QnIamLost.response"),
+                Arrays.asList(comment.author().login())
             )
         ).post();
         return Req.DONE;

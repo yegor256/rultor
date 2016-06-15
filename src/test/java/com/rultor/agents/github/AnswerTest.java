@@ -36,6 +36,7 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import java.io.IOException;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -47,6 +48,7 @@ import org.junit.Test;
  * @version $Id$
  * @since 1.8.16
  */
+@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 public final class AnswerTest {
 
     /**
@@ -57,9 +59,10 @@ public final class AnswerTest {
     public void postsGithubComment() throws Exception {
         final Issue issue = AnswerTest.issue();
         issue.comments().post("hey, do it");
+        final Comment.Smart com  = new Comment.Smart(issue.comments().get(1));
         new Answer(
-            new MessageToCommentAuthor(
-                new Comment.Smart(issue.comments().get(1)), "hey you\u0000"
+            new AddressedMessage(
+                com, "hey you\u0000", Arrays.asList(com.author().login())
             )
         ).post();
         MatcherAssert.assertThat(
@@ -82,7 +85,13 @@ public final class AnswerTest {
             issue.comments().get(1)
         );
         for (int idx = 0; idx < Tv.TEN; ++idx) {
-        	new Answer(new MessageToCommentAuthor(comment, "oops")).post();
+            new Answer(
+                new AddressedMessage(
+                    comment,
+                    "oops",
+                    Arrays.asList(comment.author().login())
+                )
+            ).post();
         }
         MatcherAssert.assertThat(
             Iterables.size(issue.comments().iterate()),

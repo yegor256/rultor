@@ -31,13 +31,15 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
@@ -85,8 +87,15 @@ public final class QnIfCollaborator implements Question {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(
-                new MessageToIssueAuthor(
-                    comment, QnIfCollaborator.PHRASES.getString("QnIfCollaborator.denied")
+                new AddressedMessage(
+                    comment,
+                    QnIfCollaborator.PHRASES.getString(
+                        "QnIfCollaborator.denied"
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
+                    )
                 )
             ).post();
             req = Req.DONE;

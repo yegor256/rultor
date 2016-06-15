@@ -27,55 +27,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.rultor.agents.github;
 
-import java.io.IOException;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
-import org.apache.commons.lang3.StringUtils;
+import java.io.IOException;
 
 /**
- * Message that Rultor gives as a reply to a comment.
- * @author Mihai Andronache (amihaiemil@gmail.com)
+ * Interface to be implemented by a comment that Rultor
+ * posts on a Github issue.
+ * @author Mihai Andronache (amihaimeil@gmail.com)
  * @version $Id$
  *
  */
-abstract class Message {
-    /**
-     * Comment that needs this 
-     */
-    final Comment.Smart com;
-    final String text;
-    Message(Comment.Smart com, String text) {
-        this.com = com;
-        this.text = text;
-    }
+public interface Message {
 
     /**
-     * The issue where this message is should be posted.
-     * @return Github issue.
+     * The comment to which this message replies.
+     * @return Github comment.
      */
-    Issue issue() {
-	    return this.com.issue();
-    }
+    Comment.Smart comment();
 
     /**
      * The body of this message.
-     * @return
+     * @return Addressed text content of this Message
+     * @throws IOException If something goes wrong
      */
-    String body() throws IOException {
-        final StringBuilder msg = new StringBuilder(Tv.HUNDRED);
-        msg.append(
-            String.format(
-                "> %s\n\n",
-                StringUtils.abbreviate(
-                    this.com.body().replaceAll("\\p{Space}", " "),
-                    Tv.HUNDRED
-                )
-            )
-        ).append("%s ").append(text);
-        return msg.toString();
-    }
+    String body() throws IOException;
 }

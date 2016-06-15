@@ -33,12 +33,13 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
@@ -65,12 +66,13 @@ public final class QnStop implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(
-            new MessageToCommentAuthor(
+            new AddressedMessage(
                 comment,
                 String.format(
                     QnStop.PHRASES.getString("QnStop.stop"),
                     home.toASCIIString()
-                )
+                ),
+                Arrays.asList(comment.author().login())
             )
         ).post();
         final Issue issue = comment.issue();

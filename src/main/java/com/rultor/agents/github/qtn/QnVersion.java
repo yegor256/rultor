@@ -33,12 +33,13 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -65,13 +66,14 @@ public final class QnVersion implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(
-            new MessageToCommentAuthor(
+            new AddressedMessage(
                 comment,
                 String.format(
                     QnVersion.PHRASES.getString("QnVersion.intro"),
                     Manifests.read("Rultor-Version"),
                     Manifests.read("Rultor-Revision")
-                )
+                ),
+                Arrays.asList(comment.author().login())
             )
         ).post();
         Logger.info(this, "version request in #%d", comment.issue().number());
