@@ -73,7 +73,7 @@ public class AddressedMessage implements Message {
         this.com = comt;
         this.text = txt;
         if (users.isEmpty()) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "This message needs to be addressed to at least 1 person!"
             );
         }
