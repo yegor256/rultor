@@ -50,7 +50,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "comment")
+@EqualsAndHashCode(of = "msg")
 public final class Answer {
 
     /**
