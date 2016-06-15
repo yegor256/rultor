@@ -37,6 +37,7 @@ import com.jcabi.github.Issue;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
@@ -116,13 +117,17 @@ public final class QnByArchitect implements Question {
         if (legal) {
             req = this.origin.understand(comment, home);
         } else {
-            new Answer(comment).post(
-                true,
-                String.format(
-                    QnByArchitect.PHRASES.getString("QnByArchitect.denied"),
-                    logins.get(0).toLowerCase(Locale.ENGLISH)
+            new Answer(
+                new MessageToCommentAuthor(
+                    comment,
+                    String.format(
+                        QnByArchitect.PHRASES.getString(
+                            "QnByArchitect.denied"
+                        ),
+                        logins.get(0).toLowerCase(Locale.ENGLISH)
+                    )
                 )
-            );
+            ).post();
             req = Req.DONE;
         }
         return req;

@@ -37,6 +37,8 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToCommentAuthor;
+import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -106,21 +108,25 @@ public final class QnUnlock implements Question {
                     .add("branch", branch)
                     .build()
             );
-            new Answer(comment).post(
-                true,
-                String.format(
-                    QnUnlock.PHRASES.getString("QnUnlock.response"),
-                    branch
+            new Answer(
+                new MessageToCommentAuthor(
+                    comment,
+                    String.format(
+                        QnUnlock.PHRASES.getString("QnUnlock.response"),
+                        branch
+                    )
                 )
-            );
+            ).post();
         } else {
-            new Answer(comment).post(
-                false,
-                String.format(
-                    QnUnlock.PHRASES.getString("QnUnlock.does-not-exist"),
-                    branch
+            new Answer(
+                new MessageToIssueAuthor(
+                    comment,
+                    String.format(
+                        QnUnlock.PHRASES.getString("QnUnlock.does-not-exist"),
+                        branch
+                    )
                 )
-            );
+            ).post();
         }
         Logger.info(this, "unlock request in #%d", comment.issue().number());
         return Req.DONE;

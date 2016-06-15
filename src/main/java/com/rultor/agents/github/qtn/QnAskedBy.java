@@ -37,6 +37,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
@@ -105,16 +106,19 @@ public final class QnAskedBy implements Question {
         if (logins.isEmpty() || logins.contains(comment.author().login())) {
             req = this.origin.understand(comment, home);
         } else {
-            new Answer(comment).post(
-                false,
-                String.format(
-                    QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
-                    this.commandersAsDelimitedList(
-                        logins,
-                        comment.issue().repo().github().users().self().login()
+            new Answer(
+                new MessageToIssueAuthor(
+                    comment,
+                    String.format(
+                        QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
+                        this.commandersAsDelimitedList(
+                            logins,
+                            comment.issue().repo().github().users().self()
+                                .login()
+                        )
                     )
                 )
-            );
+            ).post();
             req = Req.EMPTY;
         }
         return req;

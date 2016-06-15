@@ -41,6 +41,7 @@ import com.jcabi.xml.XML;
 import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.agents.shells.TalkShells;
@@ -135,20 +136,22 @@ public final class QnStatus implements Question {
                 )
             );
         }
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnStatus.PHRASES.getString("QnStatus.response"),
-                Joiner.on('\n').join(
-                    Iterables.concat(
-                        Collections.singleton(
-                            QnStatus.REPORT.applyTo(xml).trim()
-                        ),
-                        lines
+        new Answer(
+        	new MessageToCommentAuthor(
+        	    comment,
+        	    String.format(
+                    QnStatus.PHRASES.getString("QnStatus.response"),
+                    Joiner.on('\n').join(
+                        Iterables.concat(
+                            Collections.singleton(
+                                QnStatus.REPORT.applyTo(xml).trim()
+                            ),
+                            lines
+                        )
                     )
                 )
-            )
-        );
+        	)
+        ).post();
         Logger.info(this, "status request in #%d", comment.issue().number());
         return Req.DONE;
     }

@@ -27,48 +27,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github.qtn;
 
-import com.jcabi.aspects.Immutable;
+package com.rultor.agents.github;
+
 import com.jcabi.github.Comment;
-import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.Question;
-import com.rultor.agents.github.Req;
-import com.rultor.agents.github.MessageToCommentAuthor;
 import java.io.IOException;
-import java.net.URI;
-import java.util.ResourceBundle;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.xembly.Xembler;
 
 /**
- * Say that I'm lost, can't understand you.
- *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * Message addressed to the comment author.
+ * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.60
+ *
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class QnIamLost implements Question {
+public final class MessageToCommentAuthor extends Message {
 
-    /**
-     * Message bundle.
-     */
-    private static final ResourceBundle PHRASES =
-        ResourceBundle.getBundle("phrases");
+    public MessageToCommentAuthor(final Comment.Smart com, final String text) {
+        super(com, text);
+	}
 
     @Override
-    public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
-        new Answer(
-            new MessageToCommentAuthor(
-                comment,
-                QnIamLost.PHRASES.getString("QnIamLost.response")
-            )
-        ).post();
-        return Req.DONE;
+    public String body() throws IOException {
+        final String message = super.body();
+        return Xembler.escape(
+            String.format(message, this.com.author().login())
+        );
     }
 
 }

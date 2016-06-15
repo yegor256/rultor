@@ -34,6 +34,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -63,13 +64,15 @@ public final class QnStop implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnStop.PHRASES.getString("QnStop.stop"),
-                home.toASCIIString()
+        new Answer(
+            new MessageToCommentAuthor(
+                comment,
+                String.format(
+                    QnStop.PHRASES.getString("QnStop.stop"),
+                    home.toASCIIString()
+                )
             )
-        );
+        ).post();
         final Issue issue = comment.issue();
         Logger.info(
             this, "stop request found in %s#%d comment #%d",

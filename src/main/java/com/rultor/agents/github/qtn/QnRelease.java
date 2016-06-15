@@ -35,6 +35,8 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToCommentAuthor;
+import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -85,14 +87,16 @@ public final class QnRelease implements Question {
             if (release.allowed()) {
                 req = QnRelease.affirmative(comment, home);
             } else {
-                new Answer(comment).post(
-                    false,
-                    String.format(
-                        QnRelease.PHRASES.getString("QnRelease.invalid-tag"),
-                        name,
-                        release.reference()
+                new Answer(
+                    new MessageToIssueAuthor(
+                        comment,
+                        String.format(
+                            QnRelease.PHRASES.getString("QnRelease.invalid-tag"),
+                            name,
+                            release.reference()
+                        )
                     )
-                );
+                ).post();
                 req = Req.EMPTY;
             }
         } else {
@@ -110,13 +114,15 @@ public final class QnRelease implements Question {
      */
     private static Req affirmative(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnRelease.PHRASES.getString("QnRelease.start"),
-                home.toASCIIString()
+        new Answer(
+            new MessageToCommentAuthor(
+                comment,
+                String.format(
+                    QnRelease.PHRASES.getString("QnRelease.start"),
+                    home.toASCIIString()
+                )
             )
-        );
+        ).post();
         return new Req.Simple(
             "release",
             new ImmutableMap.Builder<String, String>()

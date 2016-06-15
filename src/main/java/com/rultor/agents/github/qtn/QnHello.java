@@ -35,6 +35,7 @@ import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.agents.github.MessageToCommentAuthor;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
@@ -62,9 +63,11 @@ public final class QnHello implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true, QnHello.PHRASES.getString("QnHello.intro")
-        );
+        new Answer(
+            new MessageToCommentAuthor(
+                comment, QnHello.PHRASES.getString("QnHello.intro")
+            )
+        ).post();
         Logger.info(this, "hello found in #%d", comment.issue().number());
         return Req.DONE;
     }

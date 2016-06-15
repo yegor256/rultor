@@ -34,6 +34,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -63,14 +64,16 @@ public final class QnVersion implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnVersion.PHRASES.getString("QnVersion.intro"),
-                Manifests.read("Rultor-Version"),
-                Manifests.read("Rultor-Revision")
+        new Answer(
+            new MessageToCommentAuthor(
+                comment,
+                String.format(
+                    QnVersion.PHRASES.getString("QnVersion.intro"),
+                    Manifests.read("Rultor-Version"),
+                    Manifests.read("Rultor-Revision")
+                )
             )
-        );
+        ).post();
         Logger.info(this, "version request in #%d", comment.issue().number());
         return Req.DONE;
     }

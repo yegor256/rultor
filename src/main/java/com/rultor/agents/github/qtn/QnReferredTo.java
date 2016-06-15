@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -103,15 +104,17 @@ public final class QnReferredTo implements Question {
             if (matcher.start(1) == 0) {
                 req = this.origin.understand(comment, home);
             } else {
-                new Answer(comment).post(
-                    true,
-                    String.format(
-                        QnReferredTo.PHRASES.getString(
-                            "QnReferredTo.mentioned"
-                        ),
-                        prefix
+                new Answer(
+                    new MessageToCommentAuthor(
+                        comment,
+                        String.format(
+                            QnReferredTo.PHRASES.getString(
+                                "QnReferredTo.mentioned"
+                            ),
+                            prefix
+                        )
                     )
-                );
+                ).post();
                 Logger.info(
                     this, "mention found in #%d", comment.issue().number()
                 );

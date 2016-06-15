@@ -37,6 +37,8 @@ import com.jcabi.github.Pull;
 import com.jcabi.github.PullRef;
 import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToCommentAuthor;
+import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -70,13 +72,15 @@ public final class QnMerge implements Question {
         final Issue.Smart issue = new Issue.Smart(comment.issue());
         final Req req;
         if (issue.isPull() && issue.isOpen()) {
-            new Answer(comment).post(
-                true,
-                String.format(
-                    QnMerge.PHRASES.getString("QnMerge.start"),
-                    home.toASCIIString()
+            new Answer(
+                new MessageToCommentAuthor(
+                    comment,
+                    String.format(
+                        QnMerge.PHRASES.getString("QnMerge.start"),
+                        home.toASCIIString()
+                    )
                 )
-            );
+           ).post();
             Logger.info(
                 this, "merge request found in %s#%d, comment #%d",
                 issue.repo().coordinates(), issue.number(), comment.number()
@@ -86,10 +90,12 @@ public final class QnMerge implements Question {
                 issue.repo().pulls().get(issue.number())
             );
         } else {
-            new Answer(comment).post(
-                false,
-                QnMerge.PHRASES.getString("QnMerge.already-closed")
-            );
+            new Answer(
+                new MessageToIssueAuthor(
+                    comment,
+                    QnMerge.PHRASES.getString("QnMerge.already-closed")
+                )
+            ).post();
             req = Req.EMPTY;
         }
         return req;
@@ -109,16 +115,20 @@ public final class QnMerge implements Question {
         final Req req;
         final String repo = "repo";
         if (head.json().isNull(repo)) {
-            new Answer(comment).post(
-                false,
-                QnMerge.PHRASES.getString("QnMerge.head-is-gone")
-            );
+        	new Answer(
+                new MessageToIssueAuthor(
+                    comment,
+                    QnMerge.PHRASES.getString("QnMerge.head-is-gone")
+                )
+            ).post();
             req = Req.EMPTY;
         } else if (base.json().isNull(repo)) {
-            new Answer(comment).post(
-                false,
-                QnMerge.PHRASES.getString("QnMerge.base-is-gone")
-            );
+            new Answer(
+                new MessageToIssueAuthor(
+                    comment,
+                    QnMerge.PHRASES.getString("QnMerge.base-is-gone")
+                )
+            ).post();
             req = Req.EMPTY;
         } else {
             req = new Req.Simple(

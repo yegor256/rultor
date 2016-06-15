@@ -8,3 +8,4 @@ _site
 /.project
 .settings
 Gemfile.lock
+/bin/

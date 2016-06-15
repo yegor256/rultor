@@ -35,6 +35,7 @@ import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.agents.github.MessageToCommentAuthor;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
@@ -76,13 +77,15 @@ public final class QnConfig implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnConfig.PHRASES.getString("QnConfig.response"),
-                this.profile.read().toString()
+        new Answer(
+            new MessageToCommentAuthor(
+                comment,
+                String.format(
+                    QnConfig.PHRASES.getString("QnConfig.response"),
+                    this.profile.read().toString()
+                )
             )
-        );
+        ).post();
         Logger.info(this, "config request in #%d", comment.issue().number());
         return Req.DONE;
     }

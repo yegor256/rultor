@@ -90,6 +90,7 @@ public final class Reports extends AbstractAgent {
         );
         final URI home = new Home(xml).uri();
         final String pattern;
+        final Message msg;
         if (success) {
             pattern = "Reports.success";
         } else {
@@ -111,8 +112,12 @@ public final class Reports extends AbstractAgent {
         ).append(Reports.highlights(req));
         if (!success) {
             message.append(Reports.tail(req));
+            msg = new MessageToIssueAuthor(comment, message.toString());
+        } else {
+            msg = new MessageToCommentAuthor(comment, message.toString());
         }
-        new Answer(comment).post(success, message.toString());
+        
+        new Answer(msg).post();
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")

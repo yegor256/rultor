@@ -27,48 +27,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github.qtn;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Comment;
-import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.Question;
-import com.rultor.agents.github.Req;
-import com.rultor.agents.github.MessageToCommentAuthor;
+package com.rultor.agents.github;
+
 import java.io.IOException;
-import java.net.URI;
-import java.util.ResourceBundle;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import org.xembly.Xembler;
+
+import com.jcabi.github.Issue;
+import com.jcabi.github.Comment.Smart;
 
 /**
- * Say that I'm lost, can't understand you.
- *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * Message addressed to the issue author and to the comment author.
+ * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.60
+ *
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class QnIamLost implements Question {
+public final class MessageToIssueAuthor extends Message {
 
     /**
-     * Message bundle.
+     * Constructor.
+     * @param com Comment for which this to which this Message replies
+     * @param text Text of this Message
      */
-    private static final ResourceBundle PHRASES =
-        ResourceBundle.getBundle("phrases");
-
+    public MessageToIssueAuthor(final Smart com, final String text) {
+        super(com, text);
+    }
+    
     @Override
-    public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
-        new Answer(
-            new MessageToCommentAuthor(
-                comment,
-                QnIamLost.PHRASES.getString("QnIamLost.response")
+    public String body() throws IOException {
+        final String message = super.body();
+        return Xembler.escape(
+            String.format(
+                message,
+                new Issue.Smart(this.com.issue()).author().login() +
+                " " + this.com.author().login()
             )
-        ).post();
-        return Req.DONE;
+        );
     }
 
 }

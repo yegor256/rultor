@@ -57,9 +57,11 @@ public final class AnswerTest {
     public void postsGithubComment() throws Exception {
         final Issue issue = AnswerTest.issue();
         issue.comments().post("hey, do it");
-        new Answer(new Comment.Smart(issue.comments().get(1))).post(
-            true, "hey you\u0000"
-        );
+        new Answer(
+            new MessageToCommentAuthor(
+                new Comment.Smart(issue.comments().get(1)), "hey you\u0000"
+            )
+        ).post();
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("> hey, do it\n\n")
@@ -79,9 +81,8 @@ public final class AnswerTest {
         final Comment.Smart comment = new Comment.Smart(
             issue.comments().get(1)
         );
-        final Answer answer = new Answer(comment);
         for (int idx = 0; idx < Tv.TEN; ++idx) {
-            answer.post(true, "oops");
+        	new Answer(new MessageToCommentAuthor(comment, "oops")).post();
         }
         MatcherAssert.assertThat(
             Iterables.size(issue.comments().iterate()),

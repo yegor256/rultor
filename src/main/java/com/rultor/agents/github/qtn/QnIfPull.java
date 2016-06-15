@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -80,10 +81,12 @@ public final class QnIfPull implements Question {
         if (issue.isPull()) {
             req = this.origin.understand(comment, home);
         } else {
-            new Answer(comment).post(
-                false,
-                QnIfPull.PHRASES.getString("QnIfPull.not-pull-request")
-            );
+            new Answer(
+                new MessageToIssueAuthor(
+                    comment,
+                    QnIfPull.PHRASES.getString("QnIfPull.not-pull-request")
+                )
+            ).post();
             req = Req.EMPTY;
         }
         return req;

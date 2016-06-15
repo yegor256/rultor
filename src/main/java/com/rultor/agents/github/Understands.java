@@ -189,13 +189,17 @@ public final class Understands extends AbstractAgent {
                 comment, new Home(xml, Integer.toString(comment.number())).uri()
             );
         } catch (final Profile.ConfigException ex) {
-            new Answer(comment).post(
-                false,
-                String.format(
-                    Understands.PHRASES.getString("Understands.broken-profile"),
-                    ExceptionUtils.getRootCauseMessage(ex)
+            new Answer(
+                new MessageToIssueAuthor(
+                    comment,
+                    String.format(
+                        Understands.PHRASES.getString(
+                            "Understands.broken-profile"
+                        ),
+                        ExceptionUtils.getRootCauseMessage(ex)
+                    )
                 )
-            );
+            ).post();
             req = Req.EMPTY;
         }
         return req;

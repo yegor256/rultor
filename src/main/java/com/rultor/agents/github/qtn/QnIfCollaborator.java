@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Repo;
 import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.MessageToIssueAuthor;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -83,10 +84,11 @@ public final class QnIfCollaborator implements Question {
         if (crew.isEmpty() || crew.contains(self)) {
             req = this.origin.understand(comment, home);
         } else {
-            new Answer(comment).post(
-                false,
-                QnIfCollaborator.PHRASES.getString("QnIfCollaborator.denied")
-            );
+            new Answer(
+                new MessageToIssueAuthor(
+                    comment, QnIfCollaborator.PHRASES.getString("QnIfCollaborator.denied")
+                )
+            ).post();
             req = Req.DONE;
         }
         return req;
