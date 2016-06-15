@@ -57,11 +57,12 @@ public final class MessageToIssueAuthor extends Message {
     @Override
     public String body() throws IOException {
         final String message = super.body();
+        final String at = "@";
         return Xembler.escape(
             String.format(
                 message,
-                new Issue.Smart(this.com.issue()).author().login() +
-                " " + this.com.author().login()
+                at + new Issue.Smart(this.com.issue()).author().login() +
+                " " + at + this.com.author().login()
             )
         );
     }

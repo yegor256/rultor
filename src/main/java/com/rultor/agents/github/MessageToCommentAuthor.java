@@ -50,7 +50,7 @@ public final class MessageToCommentAuthor extends Message {
     public String body() throws IOException {
         final String message = super.body();
         return Xembler.escape(
-            String.format(message, this.com.author().login())
+            String.format(message, "@" + this.com.author().login())
         );
     }
 

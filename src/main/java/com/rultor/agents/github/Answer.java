@@ -101,54 +101,5 @@ public final class Answer {
             );
         }
     }
-//
-//    /**
-//     * Make a message to post.
-//     * @param success Is it a report about success?
-//     * @param text The text
-//     * @return Text to post
-//     */
-//    @SuppressWarnings("PMD.AvoidCatchingThrowable")
-//    private String msg(final boolean success, final String text) {
-//        final StringBuilder msg = new StringBuilder(Tv.HUNDRED);
-//        try {
-//            msg.append(
-//                String.format(
-//                    "> %s\n\n",
-//                    StringUtils.abbreviate(
-//                        this.comment.body().replaceAll("\\p{Space}", " "),
-//                        Tv.HUNDRED
-//                    )
-//                )
-//            );
-//            final Collection<String> logins = new TreeSet<>();
-//            logins.add(this.comment.author().login());
-//            if (!success) {
-//                logins.add(
-//                    new Issue.Smart(this.comment.issue()).author().login()
-//                );
-//            }
-//            msg.append(
-//                Joiner.on(' ').join(
-//                    Iterables.transform(
-//                        logins,
-//                        new Function<String, String>() {
-//                            @Override
-//                            public String apply(final String login) {
-//                                return String.format(
-//                                    "@%s", login.toLowerCase(Locale.ENGLISH)
-//                                );
-//                            }
-//                        }
-//                    )
-//                )
-//            );
-//            msg.append(' ').append(text);
-//            // @checkstyle IllegalCatchCheck (1 line)
-//        } catch (final Throwable ex) {
-//            msg.append(text);
-//        }
-//        return Xembler.escape(msg.toString());
-//    }
 
 }
