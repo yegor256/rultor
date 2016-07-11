@@ -102,7 +102,7 @@ RUN apt-get install -y s3cmd
 
 # NodeJS
 RUN apt-get install -y nodejs npm
-RUN sudo npm install -g npm
+RUN npm install -g npm
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # Maven
