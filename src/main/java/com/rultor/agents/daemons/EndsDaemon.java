@@ -77,7 +77,10 @@ public final class EndsDaemon extends AbstractAgent {
      * Ctor.
      */
     public EndsDaemon() {
-        super("/talk/daemon[started and not(code) and not(ended)]");
+        super(
+            "/talk/daemon[started and not(code) and not(ended)]",
+            "/talk/daemon/dir"
+        );
     }
 
     @Override
