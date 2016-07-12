@@ -100,6 +100,6 @@ function docker_when_possible {
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
   fi
-  chown -R $(whoami) repo
+  sudo chown -R $(whoami) repo
   cd repo
 }
