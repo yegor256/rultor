@@ -94,7 +94,7 @@ function docker_when_possible {
   fi
   ls -al .
   docker run -t --rm -v "$(pwd):/main" "${vars[@]}" \
-    --hostname=docker \
+    --hostname=docker --privileged \
     --memory=6g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
     --name="${container}" "${image}" /main/entry.sh
