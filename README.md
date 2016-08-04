@@ -51,6 +51,7 @@ Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
 as a human-readable sentence suffices to trigger a merge or a release.
 
 ## How Rultor Works?
+
 Once Rultor finds a [merge command](http://doc.rultor.com/basics.html) 
 in one of your GitHub pull requests, it does exactly this:
 
