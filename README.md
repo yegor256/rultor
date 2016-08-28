@@ -51,10 +51,10 @@ Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
 as a human-readable sentence suffices to trigger a merge or a release.
 
 ## How Rultor Works?
-Once Rultor finds a [merge command](http://doc.rultor.com/basics.html) 
+Once Rultor finds a [merge command](http://doc.rultor.com/basics.html)
 in one of your GitHub pull requests, it does exactly this:
 
-1. Reads the [.rultor.yml](http://doc.rultor.com/reference.html) 
+1. Reads the [.rultor.yml](http://doc.rultor.com/reference.html)
  YAML configuration file from the root directory of your repository.
 2. Gets automated build execution command from it, for example `bundle test`.
 3. Checks out your repository into a temporary directory on one of its servers.
@@ -63,7 +63,7 @@ in one of your GitHub pull requests, it does exactly this:
 6. If everything is fine, pushes modified `master` branch to GitHub.
 7. Reports back to you, in the GitHub pull request.
 
-You can see it in action, for example, in this pull request: 
+You can see it in action, for example, in this pull request:
 [jcabi/jcabi-gjithub#878](https://github.com/jcabi/jcabi-github/pull/878).
 
 ## What Is Rultor SLA?
@@ -104,6 +104,9 @@ for fun :) Here is our [selection criteria](http://www.yegor256.com/2014/10/05/t
 [travis-ci.org](http://www.travis-ci.org)<br/>
 [![Build Status](https://travis-ci.org/yegor256/rultor.svg?branch=master)](https://travis-ci.org/yegor256/rultor)
 
+[shippable.com](http://www.shippable.com)<br/>
+[![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
+
 [appveyor.com](http://www.appveyor.com)<br/>
 [![Build status](https://ci.appveyor.com/api/projects/status/sulqrjerl27qqtl7/branch/master?svg=true)](https://ci.appveyor.com/project/yegor256/rultor/branch/master)
 
@@ -118,9 +121,6 @@ for fun :) Here is our [selection criteria](http://www.yegor256.com/2014/10/05/t
 
 [magnum-ci.com](http://www.magnum-ci.com)<br/>
 [![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
-
-[shippable.com](http://www.shippable.com)<br/>
-[![Build Status](https://api.shippable.com/projects/542e8fb980088cee586d3806/badge?branchName=master)](https://app.shippable.com/projects/542e8fb980088cee586d3806/builds/latest)
 
 Less interesting and/or stable stuff:
 
