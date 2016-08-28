@@ -110,19 +110,19 @@ for fun :) Here is our [selection criteria](http://www.yegor256.com/2014/10/05/t
 [appveyor.com](http://www.appveyor.com)<br/>
 [![Build status](https://ci.appveyor.com/api/projects/status/sulqrjerl27qqtl7/branch/master?svg=true)](https://ci.appveyor.com/project/yegor256/rultor/branch/master)
 
-[codeship.io](http://www.codeship.io)<br/>
-[![Codeship Status for yegor256/rultor](https://codeship.io/projects/d00b5ff0-2641-0132-d783-12f2cec1461b/status?branch=master)](https://codeship.io/projects/37414)
-
 [wercker.com](http://www.wercker.com)<br/>
 [![wercker status](https://app.wercker.com/status/0e6506c69e078b7692e50b240c034524/s "wercker status")](https://app.wercker.com/project/bykey/0e6506c69e078b7692e50b240c034524)
+
+Less interesting and/or stable stuff:
+
+[codeship.io](http://www.codeship.io)<br/>
+[![Codeship Status for yegor256/rultor](https://codeship.io/projects/d00b5ff0-2641-0132-d783-12f2cec1461b/status?branch=master)](https://codeship.io/projects/37414)
 
 [circleci.io](http://www.circleci.io)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
 
 [magnum-ci.com](http://www.magnum-ci.com)<br/>
 [![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
-
-Less interesting and/or stable stuff:
 
 [snap-ci.com](http://www.snap-ci.com)<br/>
 [![Build Status](https://snap-ci.com/yegor256/rultor/branch/master/build_image)](https://snap-ci.com/yegor256/rultor/branch/master)
