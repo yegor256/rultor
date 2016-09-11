@@ -82,6 +82,7 @@ public final class Reports extends AbstractAgent {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
@@ -98,21 +99,26 @@ public final class Reports extends AbstractAgent {
         final int number = Integer.parseInt(req.xpath("@id").get(0));
         final Comment.Smart comment = Reports.origin(issue, number);
         final StringBuilder message = new StringBuilder();
-        if (comment.body().contains("stop")) {
-            message.append(Reports.PHRASES.getString("Reports.stop-fails"))
-                .append(' ');
+        try {
+            if (comment.body().contains("stop")) {
+                message.append(Reports.PHRASES.getString("Reports.stop-fails"))
+                    .append(' ');
+            }
+            message.append(
+                Logger.format(
+                    Reports.PHRASES.getString(pattern),
+                    home.toASCIIString(),
+                    Long.parseLong(req.xpath("msec/text()").get(0))
+                )
+            ).append(Reports.highlights(req));
+            if (!success) {
+                message.append(Reports.tail(req));
+            }
+            new Answer(comment).post(success, message.toString());
+            // @checkstyle IllegalCatchCheck (1 line)
+        } catch (final Exception ex) {
+            Logger.error(this, "Failed to report build result: %s", ex);
         }
-        message.append(
-            Logger.format(
-                Reports.PHRASES.getString(pattern),
-                home.toASCIIString(),
-                Long.parseLong(req.xpath("msec/text()").get(0))
-            )
-        ).append(Reports.highlights(req));
-        if (!success) {
-            message.append(Reports.tail(req));
-        }
-        new Answer(comment).post(success, message.toString());
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")
