@@ -56,6 +56,16 @@ import javax.validation.constraints.NotNull;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.50
+ * @todo #1125:30min Routine should be delegate execution to separate threads.
+ *  Currently com.rultor.Routine#process() is sequentially processing all Talks
+ *  and breaking out of this sequential processing to log occurring exceptions.
+ *  This leads to issues in one build breaking all builds globally.
+ *  This should be reworked to run the chain of Agents for each talk in a
+ *  separate thread, not interfering with the main Routine in error cases.
+ *  Once this is done the swallowing of generic exceptions, added to
+ *  circumvent this issue, in
+ *  com.rultor.agents.github.Reports#process(com.jcabi.xml.XML) should be
+ *  removed.
  */
 @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES, threads = 1)
 @SuppressWarnings("PMD.DoNotUseThreads")
