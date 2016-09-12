@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 13 active puzzles (59 total):
+There are 14 active puzzles (61 total):
 
 
 <del>unknown</del> [`?`](../master/?)<br/>
@@ -62,3 +62,5 @@ There are 13 active puzzles (59 total):
 &nbsp;&nbsp;&nbsp;&nbsp;<del>629-bf520350</del> [`StartsECS.java:54-57`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L54-L57)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1087](https://github.com/yegor256/rultor/issues/1087):[**629-efc8aa9c**](https://github.com/yegor256/rultor/issues/1087) [`StartsECS.java:58-60`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L58-L60)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[#1089](https://github.com/yegor256/rultor/issues/1089):[**629-bb1a14ed**](https://github.com/yegor256/rultor/issues/1089) [`StartsECS.java:61-64`](../master/src/main/java/com/rultor/agents/ecs/StartsECS.java#L61-L64)<br/>
+[#1125](https://github.com/yegor256/rultor/issues/1125):[<del>1125</del>](https://github.com/yegor256/rultor/issues/1125) [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[**1125-c2e86b18**]() [`Routine.java:59-68`](../master/src/main/java/com/rultor/Routine.java#L59-L68)<br/>
