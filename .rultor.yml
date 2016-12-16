@@ -12,12 +12,12 @@ architect:
 - yegor256
 - alex-palevsky
 assets:
-  secring.gpg: yegor256/home#assets/secring.gpg
-  id_rsa: yegor256/home#assets/heroku-key
-  settings.xml: yegor256/home#assets/rultor/settings.xml
-  pubring.gpg: yegor256/home#assets/pubring.gpg
-  id_rsa.pub: yegor256/home#assets/heroku-key.pub
-  s3cfg: yegor256/home#assets/s3cfg
+  secring.gpg: teamed/home#assets/secring.gpg
+  id_rsa: teamed/home#assets/heroku-key
+  settings.xml: teamed/home#assets/rultor/settings.xml
+  pubring.gpg: teamed/home#assets/pubring.gpg
+  id_rsa.pub: teamed/home#assets/heroku-key.pub
+  s3cfg: teamed/home#assets/s3cfg
 merge:
   fast-forward: only
   rebase: true
@@ -42,8 +42,6 @@ deploy:
   script: |-
     mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode
     mvn clean
-    pdd --source=$(pwd) --verbose --file=rultor.xml
-    s3cmd --no-progress put rultor.xml --config=../s3cfg s3://pdd.teamed.io/rultor.xml
     est --dir=./est --verbose --file=rultor.xml --format=xml
     s3cmd --no-progress put rultor.xml --config=../s3cfg s3://est.teamed.io/rultor.xml
 env:
