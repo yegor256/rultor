@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.2.4'
+# ruby '2.2.4'
 gem 'jekyll', '2.4.0'
 gem 'sass', '3.4.21'
 gem 'jekyll-sass', '1.2.2'

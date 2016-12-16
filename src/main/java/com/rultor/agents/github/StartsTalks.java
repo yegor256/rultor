@@ -29,8 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Coordinates;
@@ -88,24 +86,21 @@ public final class StartsTalks implements SuperAgent {
         ).iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();
-        final Iterable<JsonObject> events = Iterables.filter(
-            new RtPagination<JsonObject>(
-                req.uri().queryParam("participating", "true")
-                    .queryParam("since", since)
-                    .queryParam("all", Boolean.toString(true))
-                    .back(),
-                RtPagination.COPYING
-            ),
-            new Predicate<JsonObject>() {
-                @Override
-                public boolean apply(final JsonObject json) {
-                    return "mention".equals(json.getString("reason"));
-                }
-            }
+        final Iterable<JsonObject> events = new RtPagination<>(
+            req.uri().queryParam("participating", "true")
+                .queryParam("since", since)
+                .queryParam("all", Boolean.toString(true))
+                .back(),
+            RtPagination.COPYING
         );
         final Collection<String> names = new LinkedList<String>();
         for (final JsonObject event : events) {
-            names.add(this.activate(talks, event));
+            final String reason = event.getString("reason");
+            if ("mention".equals(reason)) {
+                names.add(this.activate(talks, event));
+            } else if ("invitation".equals(reason)) {
+                this.accept(event);
+            }
         }
         req.uri()
             .queryParam("last_read_at", since).back()
@@ -118,6 +113,21 @@ public final class StartsTalks implements SuperAgent {
             this, "%d new notification(s): %[list]s",
             names.size(), names
         );
+    }
+
+    /**
+     * Accept invitation to the repo.
+     * @param json The event
+     * @throws IOException If fails
+     */
+    private void accept(final JsonObject json) throws IOException {
+        this.github.entry()
+            .uri().path("/user/repository_invitations/")
+            .path(json.getString("id")).back()
+            .method(Request.PATCH)
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
     }
 
     /**
