@@ -93,7 +93,7 @@ public final class StartsTalks implements SuperAgent {
                 .back(),
             RtPagination.COPYING
         );
-        final Collection<String> names = new LinkedList<String>();
+        final Collection<String> names = new LinkedList<>();
         for (final JsonObject event : events) {
             final String reason = event.getString("reason");
             if ("mention".equals(reason)) {
@@ -129,6 +129,7 @@ public final class StartsTalks implements SuperAgent {
             .fetch()
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
+        Logger.info(this, "invitation accepted to %s", this.coords(json));
     }
 
     /**
@@ -140,9 +141,7 @@ public final class StartsTalks implements SuperAgent {
      */
     private String activate(final Talks talks, final JsonObject event)
         throws IOException {
-        final Coordinates coords = new Coordinates.Simple(
-            event.getJsonObject("repository").getString("full_name")
-        );
+        final Coordinates coords = this.coords(event);
         final Issue issue = this.github.repos().get(coords).issues().get(
             Integer.parseInt(
                 StringUtils.substringAfterLast(
@@ -174,6 +173,17 @@ public final class StartsTalks implements SuperAgent {
             coords, issue.number(), name
         );
         return talk.name();
+    }
+
+    /**
+     * Get coordinates from JSON.
+     * @param event Event
+     * @return Coords
+     */
+    private Coordinates coords(final JsonObject event) {
+        return new Coordinates.Simple(
+            event.getJsonObject("repository").getString("full_name")
+        );
     }
 
 }
