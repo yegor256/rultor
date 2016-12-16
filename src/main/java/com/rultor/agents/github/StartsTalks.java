@@ -125,6 +125,7 @@ public final class StartsTalks implements SuperAgent {
             .uri().path("/user/repository_invitations/")
             .path(json.getString("id")).back()
             .method(Request.PATCH)
+            .header("Accept", "application/vnd.github.swamp-thing-preview+json")
             .fetch()
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
