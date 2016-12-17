@@ -80,6 +80,7 @@ public final class StartsTalks implements SuperAgent {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
             DateUtils.addMinutes(new Date(), -Tv.THREE)
@@ -99,7 +100,7 @@ public final class StartsTalks implements SuperAgent {
             if ("mention".equals(reason)) {
                 names.add(this.activate(talks, event));
             } else if ("invitation".equals(reason)) {
-                this.accept(event);
+                new Invitations(this.github).accept();
             }
         }
         req.uri()
@@ -113,23 +114,6 @@ public final class StartsTalks implements SuperAgent {
             this, "%d new notification(s): %[list]s",
             names.size(), names
         );
-    }
-
-    /**
-     * Accept invitation to the repo.
-     * @param json The event
-     * @throws IOException If fails
-     */
-    private void accept(final JsonObject json) throws IOException {
-        this.github.entry()
-            .uri().path("/user/repository_invitations/")
-            .path(json.getString("id")).back()
-            .method(Request.PATCH)
-            .header("Accept", "application/vnd.github.swamp-thing-preview+json")
-            .fetch()
-            .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
-        Logger.info(this, "invitation accepted to %s", this.coords(json));
     }
 
     /**
