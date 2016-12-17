@@ -1,0 +1,16 @@
+com.rultor
+com.rultor.agents
+com.rultor.agents.daemons
+com.rultor.agents.docker
+com.rultor.agents.ecs
+com.rultor.agents.github
+com.rultor.agents.github.qtn
+com.rultor.agents.hn
+com.rultor.agents.req
+com.rultor.agents.shells
+com.rultor.agents.twitter
+com.rultor.cached
+com.rultor.dynamo
+com.rultor.profiles
+com.rultor.spi
+com.rultor.web
