@@ -1,0 +1,8 @@
+--source=.
+--verbose
+--exclude=target/**/*
+--exclude=src/jekyll/images/**/*
+--exclude=src/site/resources/**/*
+--exclude=src/jekyll/guard-article.pdf
+--rule min-words:16
+--rule max-estimate:90
