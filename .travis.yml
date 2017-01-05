@@ -19,3 +19,5 @@ env:
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 script:
   - mvn clean install -Pqulice -PdockerITs --errors
+  - travis_wait docker build -q -t rultor -f src/docker/Dockerfile src/docker
+  - docker images
