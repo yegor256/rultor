@@ -87,11 +87,11 @@ RUN mkdir jsl && \
 RUN apt-get install -y default-jdk
 
 # LaTeX
+RUN apt-get install -y texlive-latex-base
+RUN apt-get install -y texlive-fonts-recommended
 RUN apt-get install -y texlive-latex-extra
 RUN apt-get install -y xzdec
 RUN tlmgr init-usertree
-RUN tlmgr install helvetic
-RUN tlmgr install psnfss
 
 # PhantomJS
 RUN apt-get install -y phantomjs
