@@ -66,8 +66,7 @@ RUN apt-get install -y ssh && \
 RUN apt-get update && apt-get install -y libmagic-dev=1:5.14-2ubuntu3.3 \
     zlib1g-dev=1:1.2.8.dfsg-1ubuntu1
 RUN apt-add-repository ppa:brightbox/ruby-ng
-RUN apt-get update && apt-get install -y ruby2.2=2.2.4-1bbox1~trusty1 \
-    ruby2.2-dev=2.2.4-1bbox1~trusty1
+RUN apt-get update && apt-get install -y ruby2.2 ruby2.2-dev
 RUN gem update && gem install nokogiri:1.6.7.2 && gem install bundler:1.11.2
 
 # PHP
