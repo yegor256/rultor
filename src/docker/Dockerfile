@@ -26,83 +26,93 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FROM ubuntu:14.04
+FROM frolvlad/alpine-glibc
 MAINTAINER Yegor Bugayenko <yegor@teamed.io>
 LABEL Description="This is the default image for Rultor.com" Vendor="Rultor.com" Version="1.0"
 WORKDIR /tmp
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-# UTF-8 locale
-RUN locale-gen en_US en_US.UTF-8
-RUN dpkg-reconfigure locales
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Basic Linux tools
-RUN apt-get update
-RUN apt-get install -y wget bcrypt curl
-RUN apt-get install -y unzip zip
-RUN apt-get install -y gnupg gnupg2
-RUN apt-get install -y jq
-RUN apt-get install -y bsdmainutils
-RUN apt-get install -y libxml2-utils
-RUN apt-get install -y build-essential
-RUN apt-get install -y automake autoconf
-
+RUN  echo "http://dl-2.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+     echo "http://dl-3.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+     echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+     echo "http://dl-5.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+     echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories; \
+     echo "http://nl.alpinelinux.org/alpine/v3.3/main" >> /etc/apk/repositories
+RUN apk update --no-cache && apk upgrade && \
+apk add wget cryptsetup gcc g++ make curl ca-certificates unzip zip gnupg jq libxml2-utils libxml2-dev libxslt-dev postgresql-dev build-base automake autoconf openssh py-pip maven \
 # Git 2.0
-RUN apt-get install -y software-properties-common python-software-properties
-RUN add-apt-repository ppa:git-core/ppa
-RUN apt-get update
-RUN apt-get install -y git git-core
-
+ py-setuptools git
 # SSH Daemon
-RUN apt-get install -y ssh && \
-  mkdir /var/run/sshd && \
+RUN mkdir /var/run/sshd && \
   chmod 0755 /var/run/sshd
 
 # Ruby
-RUN apt-get update && apt-get install -y libmagic-dev=1:5.14-2ubuntu3.3 \
-    zlib1g-dev=1:1.2.8.dfsg-1ubuntu1
-RUN apt-add-repository ppa:brightbox/ruby-ng
-RUN apt-get update && apt-get install -y ruby2.2 ruby2.2-dev
-RUN gem update && gem install nokogiri:1.6.7.2 && gem install bundler:1.11.2
+RUN apk update --no-cache && apk --update add libatomic readline readline-dev libxml2  libxslt zlib-dev zlib yaml yaml-dev ncurses-terminfo-base ncurses-terminfo sudo bash libmagic zlib-dev gdbm libffi-dev fontconfig fontconfig-dev libstdc++ tzdata ruby-bigdecimal libgcrypt-dev ruby ruby-dev ruby-rake ruby-bundler libc-dev linux-headers openjdk7 ruby-nokogiri ruby-bundler perl findutils
 
 # PHP
-RUN apt-get install -y php5 php5-dev php-pear
-RUN curl --silent --show-error https://getcomposer.org/installer | php
-RUN mv composer.phar /usr/local/bin/composer
-RUN mkdir jsl && \
-  wget --quiet http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
-  tar xzf jsl-0.3.0-src.tar.gz && \
-  cd jsl-0.3.0/src && \
-  make -f Makefile.ref && \
-  mv Linux_All_DBG.OBJ/jsl /usr/local/bin && \
-  cd .. && \
-  rm -rf jsl
-# RUN pecl install xdebug-beta && \
-#   echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
-# Java
-RUN apt-get install -y default-jdk
-
-# LaTeX
-RUN apt-get install -y texlive-latex-base
-RUN apt-get install -y texlive-fonts-recommended
-RUN apt-get install -y texlive-latex-extra
-RUN apt-get install -y xzdec
-RUN tlmgr init-usertree
-
-# PhantomJS
-RUN apt-get install -y phantomjs
+RUN sudo apk --update add php5 php5-dev php5-pear php5-curl php5-cli php5-json php5-phar php5-openssl php5-xml php5-xdebug php5-dom && rm /var/cache/apk/*
+RUN mkdir /usr/local/bin/composer && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/composer --filename=composer
 
 # S3cmd for AWS S3 integration
-RUN apt-get install -y s3cmd
+RUN pip install s3cmd
 
 # NodeJS
-RUN apt-get install -y nodejs npm
+RUN apk add --update nodejs
 RUN npm install -g npm
-RUN ln -s /usr/bin/nodejs /usr/bin/node
+
+# PhantomJS
+RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
+tar xjf phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
+mv phantomjs-2.1.1-linux-x86_64/ /usr/local/bin/phantomjs/
+
+#Javascriptlint
+RUN sudo pip install jslint
+
+#Latex
+ENV PATH /usr/local/texlive/2016/bin/x86_64-linux:$PATH
+RUN apk --no-cache add perl wget xz tar fontconfig-dev && \
+    mkdir /tmp/install-tl-unx && \
+    wget -qO- http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz | \
+    tar -xz -C /tmp/install-tl-unx --strip-components=1 && \
+    printf "%s\n" \
+      "selected_scheme scheme-basic" \
+      "option_doc 0" \
+      "option_src 0" \
+      > /tmp/install-tl-unx/texlive.profile && \
+    /tmp/install-tl-unx/install-tl \
+      --profile=/tmp/install-tl-unx/texlive.profile && \
+    tlmgr install \
+      babel babel-english collection-basic latex latex-bin latex-fonts latexconfig && \
+    ( tlmgr install xetex || exit 0 ) && \
+    rm -fr /tmp/install-tl-unx && \
+    apk --no-cache del xz tar fontconfig-dev
+RUN apk --no-cache add bash
+RUN mkdir /workdir
+WORKDIR /workdir
+VOLUME ["/workdir"]
+CMD ["bash"]
+RUN tlmgr init-usertree
+
+#JDK
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
+ENV JAVA_HOME /usr/lib/jvm/java-1.7-openjdk
+ENV PATH $PATH:/usr/lib/jvm/java-1.7-openjdk/jre/bin:/usr/lib/jvm/java-1.7-openjdk/bin
+
+ENV JAVA_VERSION 7u121
+ENV JAVA_ALPINE_VERSION 7.121.2.6.8-r0
+
+RUN set -x \
+	&& apk add --no-cache \
+		openjdk7="$JAVA_ALPINE_VERSION" \
+&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
 
 # Maven
 ENV MAVEN_VERSION 3.3.9
@@ -111,16 +121,13 @@ RUN wget --quiet "http://mirror.dkd.de/apache/maven/maven-3/${MAVEN_VERSION}/bin
   mkdir -p /usr/local/apache-maven && \
   mv "apache-maven-${MAVEN_VERSION}-bin.tar.gz" /usr/local/apache-maven && \
   tar xzvf "/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C /usr/local/apache-maven/ && \
-  update-alternatives --install /usr/bin/mvn mvn "${M2_HOME}/bin/mvn" 1 && \
-  update-alternatives --config mvn
+  ln -sfn /usr/bin/mvn mvn ${M2_HOME}/bin/mvn
 
-RUN gem install jekyll:2.4.0
+RUN gem install jekyll:2.4.0 --no-document
 
 ENV MAVEN_OPTS "-Xms512m -Xmx2g"
-ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 COPY settings.xml /root/.m2/settings.xml
-RUN git clone https://github.com/yegor256/rultor.git --depth=1
-RUN cd rultor && \
+RUN git clone https://github.com/yegor256/rultor.git && cd rultor && \
   mvn clean install -Pqulice && \
   cd .. && \
   rm -rf rultor
