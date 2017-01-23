@@ -33,7 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -96,7 +95,6 @@ public final class QnByArchitect implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        final Issue.Smart issue = new Issue.Smart(comment.issue());
         final List<String> logins = Lists.transform(
             this.profile.read().xpath(this.xpath),
             new Function<String, String>() {
@@ -109,9 +107,6 @@ public final class QnByArchitect implements Question {
         final boolean legal = logins.isEmpty()
             || logins.contains(
                 comment.author().login().toLowerCase(Locale.ENGLISH)
-            )
-            || logins.contains(
-                issue.author().login().toLowerCase(Locale.ENGLISH)
             );
         if (legal) {
             req = this.origin.understand(comment, home);

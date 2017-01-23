@@ -33,6 +33,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkStorage;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
@@ -49,6 +50,7 @@ import org.mockito.Mockito;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.45
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class QnByArchitectTest {
 
@@ -79,6 +81,36 @@ public final class QnByArchitectTest {
     }
 
     /**
+     * QnByArchitect can reject command if comment author not an architect,
+     * but issue author is.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void rejectsIfNotArchitectWithArchitectAuthor() throws Exception {
+        final MkStorage storage = new MkStorage.Synced(new MkStorage.InFile());
+        final Repo repoJeff = new MkGithub(storage, "jeff").randomRepo();
+        final Issue issue = repoJeff.issues().create("", "");
+        final Comment.Smart mihaiComm = new Comment.Smart(
+            new MkGithub(storage, "amihaiemil").repos()
+                .get(repoJeff.coordinates()).issues().get(issue.number())
+                .comments().post("command")
+        );
+        final Question question = Mockito.mock(Question.class);
+        final URI home = new URI("#1");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument("<p><entry key='b'>jeff</entry></p>")
+            ),
+            "/p/entry[@key='b']/text()", question
+        ).understand(mihaiComm, home);
+        Mockito.verify(question, Mockito.never()).understand(mihaiComm, home);
+        MatcherAssert.assertThat(
+            issue.comments().iterate(),
+            Matchers.<Comment>iterableWithSize(2)
+        );
+    }
+
+    /**
      * QnByArchitect can accept if an architect.
      * @throws Exception In case of error.
      */
@@ -90,19 +122,19 @@ public final class QnByArchitectTest {
             issue.comments().post("release")
         );
         final Question question = Mockito.mock(Question.class);
-        final URI home = new URI("#1");
+        final URI home = new URI("#2");
         new QnByArchitect(
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
-                        "<p><entry key='b'>%s</entry></p>",
+                        "<p><entry key='c'>%s</entry></p>",
                         repo.github().users().self().login().toUpperCase(
                             Locale.ENGLISH
                         )
                     )
                 )
             ),
-            "/p/entry[@key='b']/text()", question
+            "/p/entry[@key='c']/text()", question
         ).understand(comment, home);
         Mockito.verify(question).understand(comment, home);
     }
