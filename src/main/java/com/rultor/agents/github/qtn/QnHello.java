@@ -32,11 +32,13 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -62,9 +64,13 @@ public final class QnHello implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true, QnHello.PHRASES.getString("QnHello.intro")
-        );
+        new Answer(
+            new AddressedMessage(
+                comment,
+                QnHello.PHRASES.getString("QnHello.intro"),
+                Arrays.asList(comment.author().login())
+            )
+        ).post();
         Logger.info(this, "hello found in #%d", comment.issue().number());
         return Req.DONE;
     }

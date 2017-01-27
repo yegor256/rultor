@@ -35,11 +35,13 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -66,13 +68,16 @@ public final class QnDeploy implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnDeploy.PHRASES.getString("QnDeploy.start"),
-                home.toASCIIString()
+        new Answer(
+            new AddressedMessage(
+                comment,
+                String.format(
+                    QnDeploy.PHRASES.getString("QnDeploy.start"),
+                    home.toASCIIString()
+                ),
+                Arrays.asList(comment.author().login())
             )
-        );
+        ).post();
         final Issue issue = comment.issue();
         final Repo repo = issue.repo();
         Logger.info(

@@ -39,6 +39,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
@@ -52,6 +53,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -91,6 +93,7 @@ public final class Reports extends AbstractAgent {
         );
         final URI home = new Home(xml).uri();
         final String pattern;
+        final Message msg;
         if (success) {
             pattern = "Reports.success";
         } else {
@@ -114,10 +117,24 @@ public final class Reports extends AbstractAgent {
                 Long.parseLong(req.xpath("msec/text()").get(0))
             )
         ).append(Reports.highlights(req));
-        if (!success) {
+        if (success) {
+            msg = new AddressedMessage(
+                comment,
+                message.toString(),
+                Arrays.asList(comment.author().login())
+            );
+        } else {
             message.append(Reports.tail(req));
+            msg = new AddressedMessage(
+                comment,
+                message.toString(),
+                Arrays.asList(
+                    new Issue.Smart(comment.issue()).author().login(),
+                    comment.author().login()
+                )
+            );
         }
-        new Answer(comment).post(success, message.toString());
+        new Answer(msg).post();
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
         return new Directives()
             .xpath("/talk/request[success]")

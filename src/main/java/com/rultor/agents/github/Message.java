@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2017, rultor.com
+ * Copyright (c) 2009-2016, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,62 +27,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github.qtn;
+package com.rultor.agents.github;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
-import com.jcabi.log.Logger;
-import com.rultor.agents.github.AddressedMessage;
-import com.rultor.agents.github.Answer;
-import com.rultor.agents.github.Question;
-import com.rultor.agents.github.Req;
 import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ResourceBundle;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Stop a task.
- *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * Interface to be implemented by a comment that Rultor
+ * posts on a Github issue.
+ * @author Mihai Andronache (amihaimeil@gmail.com)
  * @version $Id$
+ *
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class QnStop implements Question {
+public interface Message {
 
     /**
-     * Message bundle.
+     * The comment to which this message replies.
+     * @return Github comment.
      */
-    private static final ResourceBundle PHRASES =
-        ResourceBundle.getBundle("phrases");
+    Comment.Smart comment();
 
-    @Override
-    public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
-        new Answer(
-            new AddressedMessage(
-                comment,
-                String.format(
-                    QnStop.PHRASES.getString("QnStop.stop"),
-                    home.toASCIIString()
-                ),
-                Arrays.asList(comment.author().login())
-            )
-        ).post();
-        final Issue issue = comment.issue();
-        Logger.info(
-            this, "stop request found in %s#%d comment #%d",
-            issue.repo().coordinates(), issue.number(), comment.number()
-        );
-        return new Req.Simple(
-            "stop", Collections.<String, String>emptyMap()
-        );
-    }
-
+    /**
+     * The body of this message.
+     * @return Addressed text content of this Message
+     * @throws IOException If something goes wrong
+     */
+    String body() throws IOException;
 }

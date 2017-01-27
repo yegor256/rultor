@@ -34,14 +34,17 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -105,16 +108,23 @@ public final class QnAskedBy implements Question {
         if (logins.isEmpty() || logins.contains(comment.author().login())) {
             req = this.origin.understand(comment, home);
         } else {
-            new Answer(comment).post(
-                false,
-                String.format(
-                    QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
-                    this.commandersAsDelimitedList(
-                        logins,
-                        comment.issue().repo().github().users().self().login()
+            new Answer(
+                new AddressedMessage(
+                    comment,
+                    String.format(
+                        QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
+                        this.commandersAsDelimitedList(
+                            logins,
+                            comment.issue().repo().github().users().self()
+                                .login()
+                        )
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
                     )
                 )
-            );
+            ).post();
             req = Req.EMPTY;
         }
         return req;

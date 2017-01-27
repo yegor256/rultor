@@ -37,6 +37,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Contents;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -100,22 +101,30 @@ public final class QnIfUnlocked implements Question {
         if (guards.isEmpty() || guards.contains(comment.author().login())) {
             req = this.origin.understand(comment, home);
         } else {
-            new Answer(comment).post(
-                false,
-                QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied"),
-                branch,
-                Joiner.on(", ").join(
-                    Iterables.transform(
-                        guards,
-                        new Function<String, String>() {
-                            @Override
-                            public String apply(final String input) {
-                                return String.format("@%s", input);
-                            }
-                        }
+            new Answer(
+                new AddressedMessage(
+                    comment,
+                    String.format(
+                        QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied"),
+                        branch,
+                        Joiner.on(", ").join(
+                            Iterables.transform(
+                                guards,
+                                new Function<String, String>() {
+                                    @Override
+                                    public String apply(final String input) {
+                                        return String.format("@%s", input);
+                                    }
+                                }
+                            )
+                        )
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
                     )
                 )
-            );
+            ).post();
             req = Req.EMPTY;
         }
         return req;

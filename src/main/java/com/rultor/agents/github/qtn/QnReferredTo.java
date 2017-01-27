@@ -32,11 +32,13 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -103,15 +105,18 @@ public final class QnReferredTo implements Question {
             if (matcher.start(1) == 0) {
                 req = this.origin.understand(comment, home);
             } else {
-                new Answer(comment).post(
-                    true,
-                    String.format(
-                        QnReferredTo.PHRASES.getString(
-                            "QnReferredTo.mentioned"
+                new Answer(
+                    new AddressedMessage(
+                        comment,
+                        String.format(
+                            QnReferredTo.PHRASES.getString(
+                                "QnReferredTo.mentioned"
+                            ),
+                            prefix
                         ),
-                        prefix
+                        Arrays.asList(comment.author().login())
                     )
-                );
+                ).post();
                 Logger.info(
                     this, "mention found in #%d", comment.issue().number()
                 );

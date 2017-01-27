@@ -32,12 +32,14 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -76,13 +78,16 @@ public final class QnConfig implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        new Answer(comment).post(
-            true,
-            String.format(
-                QnConfig.PHRASES.getString("QnConfig.response"),
-                this.profile.read().toString()
+        new Answer(
+            new AddressedMessage(
+                comment,
+                String.format(
+                    QnConfig.PHRASES.getString("QnConfig.response"),
+                    this.profile.read().toString()
+                ),
+                Arrays.asList(comment.author().login())
             )
-        );
+        ).post();
         Logger.info(this, "config request in #%d", comment.issue().number());
         return Req.DONE;
     }

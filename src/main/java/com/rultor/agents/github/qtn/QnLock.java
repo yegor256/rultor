@@ -36,9 +36,11 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Contents;
+import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -70,6 +72,7 @@ import org.xembly.Xembler;
 @Immutable
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class QnLock implements Question {
 
     /**
@@ -117,13 +120,19 @@ public final class QnLock implements Question {
         }
         final Contents contents = comment.issue().repo().contents();
         if (contents.exists(QnLock.PATH, branch)) {
-            new Answer(comment).post(
-                false,
-                String.format(
-                    QnLock.PHRASES.getString("QnLock.already-exists"),
-                    branch
+            new Answer(
+                new AddressedMessage(
+                    comment,
+                    String.format(
+                        QnLock.PHRASES.getString("QnLock.already-exists"),
+                        branch
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
+                    )
                 )
-            );
+            ).post();
         } else {
             contents.create(
                 Json.createObjectBuilder()
@@ -148,24 +157,27 @@ public final class QnLock implements Question {
                     .add("branch", branch)
                     .build()
             );
-            new Answer(comment).post(
-                true,
-                String.format(
-                    QnLock.PHRASES.getString("QnLock.response"),
-                    branch,
-                    Joiner.on(", ").join(
-                        Iterables.transform(
-                            users,
-                            new Function<String, String>() {
-                                @Override
-                                public String apply(final String input) {
-                                    return String.format("@%s", input);
+            new Answer(
+                new AddressedMessage(
+                    comment,
+                    String.format(
+                        QnLock.PHRASES.getString("QnLock.response"),
+                        branch,
+                        Joiner.on(", ").join(
+                            Iterables.transform(
+                                users,
+                                new Function<String, String>() {
+                                    @Override
+                                    public String apply(final String input) {
+                                        return String.format("@%s", input);
+                                    }
                                 }
-                            }
+                            )
                         )
-                    )
+                    ),
+                    Arrays.asList(comment.author().login())
                 )
-            );
+           ).post();
         }
         Logger.info(this, "lock request in #%d", comment.issue().number());
         return Req.DONE;

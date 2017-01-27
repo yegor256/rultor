@@ -42,6 +42,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -189,13 +190,21 @@ public final class Understands extends AbstractAgent {
                 comment, new Home(xml, Integer.toString(comment.number())).uri()
             );
         } catch (final Profile.ConfigException ex) {
-            new Answer(comment).post(
-                false,
-                String.format(
-                    Understands.PHRASES.getString("Understands.broken-profile"),
-                    ExceptionUtils.getRootCauseMessage(ex)
+            new Answer(
+                new AddressedMessage(
+                    comment,
+                    String.format(
+                        Understands.PHRASES.getString(
+                            "Understands.broken-profile"
+                        ),
+                        ExceptionUtils.getRootCauseMessage(ex)
+                    ),
+                    Arrays.asList(
+                        new Issue.Smart(comment.issue()).author().login(),
+                        comment.author().login()
+                    )
                 )
-            );
+            ).post();
             req = Req.EMPTY;
         }
         return req;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2017, rultor.com
+ * Copyright (c) 2009-2016, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,73 +29,74 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.collect.Iterables;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Tests for ${@link Answer}.
- *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * Unit tests for {@link AddressedMessage}.
+ * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.8.16
+ *
  */
-@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-public final class AnswerTest {
+public final class AddressedMessageTestCase {
 
     /**
-     * Answer can post a message.
-     * @throws Exception In case of error.
+     * AddressedMessage can address a message to one user.
+     * @throws Exception If something goes wrong.
      */
     @Test
-    public void postsGithubComment() throws Exception {
-        final Issue issue = AnswerTest.issue();
-        issue.comments().post("hey, do it");
+    public void addressesMessageToOneUser() throws Exception {
+        final Issue issue = AddressedMessageTestCase.issue();
+        issue.comments().post("hi there");
         final Comment.Smart com  = new Comment.Smart(issue.comments().get(1));
-        new Answer(
-            new AddressedMessage(
-                com, "hey you\u0000", Arrays.asList(com.author().login())
-            )
-        ).post();
+        final AddressedMessage adm = new AddressedMessage(
+            com, "test", Arrays.asList("john")
+        );
+        final String message = adm.body();
         MatcherAssert.assertThat(
-            new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("> hey, do it\n\n")
+            message,
+            Matchers.containsString("@john test")
         );
     }
 
     /**
-     * Answer can reject a message if it's a spam from us.
-     * @throws Exception In case of error.
+     * AddressedMessage can address a message to more users.
+     * @throws Exception If something goes wrong.
      */
     @Test
-    public void preventsSpam() throws Exception {
-        final Issue issue = AnswerTest.issue();
-        MkGithub.class.cast(issue.repo().github()).relogin("walter")
-            .repos().get(issue.repo().coordinates())
-            .issues().get(1).comments().post("hello, how are you?");
-        final Comment.Smart comment = new Comment.Smart(
-            issue.comments().get(1)
+    public void addressesMessageMoreUsers() throws Exception {
+        final Issue issue = AddressedMessageTestCase.issue();
+        issue.comments().post("hello");
+        final Comment.Smart com  = new Comment.Smart(issue.comments().get(1));
+        final AddressedMessage adm = new AddressedMessage(
+            com, "this is a test", Arrays.asList("amihaiemil", "vlad", "marius")
         );
-        for (int idx = 0; idx < Tv.TEN; ++idx) {
-            new Answer(
-                new AddressedMessage(
-                    comment,
-                    "oops",
-                    Arrays.asList(comment.author().login())
-                )
-            ).post();
-        }
+        final String message = adm.body();
         MatcherAssert.assertThat(
-            Iterables.size(issue.comments().iterate()),
-            Matchers.is(Tv.SIX)
+            message,
+            Matchers.containsString("@amihaiemil @vlad @marius this is a test")
+        );
+    }
+
+    /**
+     * AddressedMessage throws IllegalArgumentException if no logins are given.
+     * @throws Exception If something goes wrong
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsExceptionOnEmptyLogins() throws Exception {
+        final Issue issue = AddressedMessageTestCase.issue();
+        issue.comments().post("hey");
+        final Comment.Smart com  = new Comment.Smart(issue.comments().get(1));
+        new AddressedMessage(
+            com, "this is just a test", new ArrayList<String>(1)
         );
     }
 
@@ -108,5 +109,4 @@ public final class AnswerTest {
         final Repo repo = new MkGithub().randomRepo();
         return repo.issues().create("", "");
     }
-
 }

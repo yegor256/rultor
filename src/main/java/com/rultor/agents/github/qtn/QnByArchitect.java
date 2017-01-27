@@ -34,12 +34,14 @@ import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
+import com.rultor.agents.github.AddressedMessage;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -116,13 +118,18 @@ public final class QnByArchitect implements Question {
         if (legal) {
             req = this.origin.understand(comment, home);
         } else {
-            new Answer(comment).post(
-                true,
-                String.format(
-                    QnByArchitect.PHRASES.getString("QnByArchitect.denied"),
-                    logins.get(0).toLowerCase(Locale.ENGLISH)
+            new Answer(
+                new AddressedMessage(
+                    comment,
+                    String.format(
+                        QnByArchitect.PHRASES.getString(
+                            "QnByArchitect.denied"
+                        ),
+                        logins.get(0).toLowerCase(Locale.ENGLISH)
+                    ),
+                    Arrays.asList(comment.author().login())
                 )
-            );
+            ).post();
             req = Req.DONE;
         }
         return req;
