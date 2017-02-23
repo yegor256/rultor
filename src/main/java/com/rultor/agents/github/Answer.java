@@ -41,7 +41,6 @@ import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
@@ -93,11 +92,10 @@ public final class Answer {
         final List<Comment.Smart> comments = Lists.newArrayList(
             new Smarts<Comment.Smart>(issue.comments().iterate())
         );
-        Collections.reverse(comments);
         final String self = issue.repo().github().users().self().login();
         int mine = 0;
-        for (final Comment.Smart cmt : comments) {
-            if (!cmt.author().login().equals(self)) {
+        for (int idx = comments.size() - 1; idx >= 0; --idx) {
+            if (!comments.get(idx).author().login().equals(self)) {
                 break;
             }
             ++mine;
