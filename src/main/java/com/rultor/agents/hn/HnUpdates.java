@@ -101,15 +101,15 @@ public final class HnUpdates extends AbstractAgent {
     private void post(final Repo.Smart repo, final String tag)
         throws IOException {
         final StringBuilder text = new StringBuilder(2 * Tv.HUNDRED);
-        if (repo.description().isEmpty()) {
-            text.append(repo.coordinates().repo());
-        } else {
+        if (repo.hasDescription() && !repo.description().isEmpty()) {
             text.append(
                 StringUtils.substring(
                     repo.description(),
                     0, Tv.HUNDRED
                 )
             );
+        } else {
+            text.append(repo.coordinates().repo());
         }
         text.append(", ").append(tag).append(" released");
         this.hnews.post(
