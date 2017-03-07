@@ -37,6 +37,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -121,7 +122,7 @@ public final class ClosePullRequestTest {
             smart.state(), Matchers.is("open")
         );
         MatcherAssert.assertThat(
-            smart.comments().iterate(),
+            smart.comments().iterate(new Date(0L)),
             Matchers.is(Matchers.<Comment>emptyIterable())
         );
     }

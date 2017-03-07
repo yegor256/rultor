@@ -34,6 +34,7 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import java.net.URI;
+import java.util.Date;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -60,7 +61,7 @@ public final class QnIfContainsTest {
             new Comment.Smart(issue.comments().get(1)), new URI("#")
         ).dirs();
         MatcherAssert.assertThat(
-            issue.comments().iterate(),
+            issue.comments().iterate(new Date(0L)),
             Matchers.<Comment>iterableWithSize(1)
         );
     }
@@ -78,7 +79,7 @@ public final class QnIfContainsTest {
             new Comment.Smart(issue.comments().get(1)), new URI("#test")
         ).dirs();
         MatcherAssert.assertThat(
-            issue.comments().iterate(),
+            issue.comments().iterate(new Date(0L)),
             Matchers.<Comment>iterableWithSize(2)
         );
     }

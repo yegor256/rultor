@@ -37,6 +37,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
+import java.util.Date;
 import java.util.Locale;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -73,7 +74,7 @@ public final class QnByArchitectTest {
         ).understand(comment, home);
         Mockito.verify(question, Mockito.never()).understand(comment, home);
         MatcherAssert.assertThat(
-            issue.comments().iterate(),
+            issue.comments().iterate(new Date(0L)),
             Matchers.<Comment>iterableWithSize(2)
         );
     }

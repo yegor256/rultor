@@ -43,6 +43,7 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Date;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -133,7 +134,7 @@ public final class UnderstandsTest {
         final Talk talk = UnderstandsTest.talk(issue);
         agent.execute(talk);
         MatcherAssert.assertThat(
-            issue.comments().iterate(),
+            issue.comments().iterate(new Date(0L)),
             Matchers.<Comment>iterableWithSize(1)
         );
     }

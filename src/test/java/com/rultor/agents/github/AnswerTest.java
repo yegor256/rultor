@@ -36,6 +36,7 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import java.io.IOException;
+import java.util.Date;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -84,7 +85,7 @@ public final class AnswerTest {
             answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
-            Iterables.size(issue.comments().iterate()),
+            Iterables.size(issue.comments().iterate(new Date(0L))),
             Matchers.is(Tv.SIX)
         );
     }
