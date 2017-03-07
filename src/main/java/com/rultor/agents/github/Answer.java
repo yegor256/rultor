@@ -42,6 +42,7 @@ import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
@@ -91,7 +92,7 @@ public final class Answer {
         final Object... args) throws IOException {
         final Issue issue = this.comment.issue();
         final List<Comment.Smart> comments = Lists.newArrayList(
-            new Smarts<Comment.Smart>(issue.comments().iterate())
+            new Smarts<Comment.Smart>(issue.comments().iterate(new Date(0L)))
         );
         Collections.reverse(comments);
         final String self = issue.repo().github().users().self().login();

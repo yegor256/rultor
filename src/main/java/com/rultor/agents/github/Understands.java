@@ -43,6 +43,7 @@ import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
@@ -110,7 +111,7 @@ public final class Understands extends AbstractAgent {
             new Smarts<Comment.Smart>(
                 Iterables.concat(
                     Collections.singleton(new FirstComment(issue)),
-                    new Bulk<>(issue.comments().iterate())
+                    new Bulk<>(issue.comments().iterate(new Date(0L)))
                 )
             ).iterator()
         );
