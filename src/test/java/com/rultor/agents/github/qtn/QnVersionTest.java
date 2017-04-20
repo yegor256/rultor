@@ -33,6 +33,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
+import com.jcabi.manifests.Manifests;
 import com.rultor.agents.github.Req;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
@@ -68,6 +69,27 @@ public final class QnVersionTest {
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("My current version is")
+        );
+    }
+
+    /**
+     * QnVersion reply contains link to revision.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void repliesWithLinkToRevision() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("version");
+        MatcherAssert.assertThat(
+            new QnVersion().understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#")
+            ),
+            Matchers.is(Req.DONE)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.containsString("/commit/" + Manifests.read("Rultor-Revision"))
         );
     }
 
