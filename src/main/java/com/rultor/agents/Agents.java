@@ -48,6 +48,7 @@ import com.rultor.agents.daemons.WipesDaemon;
 import com.rultor.agents.docker.DockerExec;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Dephantomizes;
+import com.rultor.agents.github.Invitations;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.ReleaseBinaries;
 import com.rultor.agents.github.Reports;
@@ -144,6 +145,7 @@ public final class Agents {
         return new SuperAgent.Iterative(
             new Array<>(
                 new StartsTalks(this.github),
+                new Invitations(this.github),
                 new IndexesRequests(),
                 new DockerExec(
                     new SSH(

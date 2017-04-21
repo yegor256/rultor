@@ -99,8 +99,6 @@ public final class StartsTalks implements SuperAgent {
             final String reason = event.getString("reason");
             if ("mention".equals(reason)) {
                 names.add(this.activate(talks, event));
-            } else if ("invitation".equals(reason)) {
-                new Invitations(this.github).accept();
             }
         }
         req.uri()

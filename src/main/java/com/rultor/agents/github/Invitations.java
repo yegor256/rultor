@@ -34,6 +34,8 @@ import com.jcabi.github.RtPagination;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.Logger;
+import com.rultor.spi.SuperAgent;
+import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import javax.json.JsonObject;
@@ -45,7 +47,7 @@ import javax.json.JsonObject;
  * @version $Id$
  * @since 1.62
  */
-final class Invitations {
+public final class Invitations implements SuperAgent {
 
     /**
      * Github client.
@@ -56,15 +58,12 @@ final class Invitations {
      * Ctor.
      * @param ghb Github client
      */
-    Invitations(final Github ghb) {
+    public Invitations(final Github ghb) {
         this.github = ghb;
     }
 
-    /**
-     * Accept them all.
-     * @throws IOException If fails
-     */
-    public void accept() throws IOException {
+    @Override
+    public void execute(final Talks talks) throws IOException {
         // @checkstyle MultipleStringLiteralsCheck (2 lines)
         final Request entry = this.github.entry().reset("Accept").header(
             "Accept", "application/vnd.github.swamp-thing-preview+json"
@@ -86,5 +85,4 @@ final class Invitations {
             );
         }
     }
-
 }
