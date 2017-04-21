@@ -89,7 +89,12 @@ public final class QnVersionTest {
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("/commit/" + Manifests.read("Rultor-Revision"))
+            Matchers.containsString(
+                String.format(
+                    "/commit/%s",
+                    Manifests.read("Rultor-Revision")
+                )
+            )
         );
     }
 
