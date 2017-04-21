@@ -126,6 +126,11 @@
                         alt="teamed.io made-by badge"/>
                 </a>
             </p>
+            <p>
+                <a href="http://www.sixnines.io/h/efd7">
+                    <img src="http://www.sixnines.io/b/efd7?style=flat" alt="sixnines"/>
+                </a>
+            </p>
         </div>
     </xsl:template>
     <xsl:template match="recent/talk">
