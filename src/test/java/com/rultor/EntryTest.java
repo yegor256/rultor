@@ -32,7 +32,9 @@ package com.rultor;
 import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Agent;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link Entry}.
@@ -70,8 +72,10 @@ public final class EntryTest {
      *
      * @throws Exception If some problem inside
      */
-    @Test(expected = AssertionError.class)
+    @Test
     public void githubConnects() throws Exception {
+        final Agent a = Mockito.mock(Agent.class);
+        Mockito.doReturn(null).when(a).execute();
         new RtGithub("intentionally-invalid-token").users().self().login();
     }
 
