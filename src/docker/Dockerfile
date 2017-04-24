@@ -68,7 +68,7 @@ RUN apt-get update && apt-get install -y libmagic-dev=1:5.14-2ubuntu3.3 \
 RUN apt-add-repository -y ppa:rael-gc/rvm
 RUN apt-get update
 RUN apt-get install -y rvm
-RUN source /etc/profile.d/rvm.sh
+RUN source /usr/share/rvm/scripts/rvm
 RUN rvm install 2.3.3
 RUN gem update && gem install nokogiri:1.6.7.2 && gem install bundler:1.11.2
 
