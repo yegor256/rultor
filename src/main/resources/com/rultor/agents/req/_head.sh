@@ -53,7 +53,7 @@ else
   rm -rf repo
   chown -R r:r /home/r
   chmod a+x /home/r/script.sh
-  su -m r -c /home/r/script.sh
+  su --login r --command /home/r/script.sh
   mv /home/r/repo .
   chown -R \$(whoami) repo
 EOT
