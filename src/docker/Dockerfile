@@ -67,9 +67,9 @@ RUN apt-get update && apt-get install -y libmagic-dev=1:5.14-2ubuntu3.3 \
   zlib1g-dev=1:1.2.8.dfsg-1ubuntu1
 RUN gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 RUN curl -L https://get.rvm.io | bash -s stable
-RUN /bin/bash -l -c "rvm requirements"
-RUN /bin/bash -l -c "rvm install 2.3.3"
-RUN /bin/bash -l -c "gem update && gem install --no-ri --no-rdoc nokogiri:1.6.7.2 bundler:1.11.2"
+RUN /usr/local/rvm/bin/rvm requirements
+RUN /usr/local/rvm/bin/rvm install 2.3.3
+RUN gem update && gem install --no-ri --no-rdoc nokogiri:1.6.7.2 bundler:1.11.2
 
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
@@ -130,3 +130,5 @@ RUN cd rultor && \
 # Clean up
 RUN rm -rf /tmp/*
 RUN rm -rf /root/.ssh
+
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
