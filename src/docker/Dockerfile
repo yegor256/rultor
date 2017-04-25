@@ -123,7 +123,7 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 COPY settings.xml /root/.m2/settings.xml
 RUN git clone https://github.com/yegor256/rultor.git --depth=1
 RUN cd rultor && \
-  mvn clean install -Pqulice && \
+  mvn clean install -DskipTests -Pqulice && \
   cd .. && \
   rm -rf rultor
 
