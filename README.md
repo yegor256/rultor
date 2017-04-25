@@ -136,3 +136,4 @@ Less interesting and/or stable stuff:
 
 [solanolabs.com](http://ci.solanolabs.com)<br/>
 [![sonolabs status](https://ci.solanolabs.com:443/yegor256/rultor/badges/120059.png?badge_token=6c00577e47c05198703fe752d6d26cd4e4a4d011)](https://ci.solanolabs.com:443/yegor256/rultor/suites/120059)
+
