@@ -116,8 +116,8 @@ RUN wget --quiet "http://mirror.dkd.de/apache/maven/maven-3/${MAVEN_VERSION}/bin
   update-alternatives --install /usr/bin/mvn mvn "${M2_HOME}/bin/mvn" 1 && \
   update-alternatives --config mvn
 
-RUN gem install jekyll:2.4.0
-
+# Warming it up a bit
+RUN /bin/bash -l -c "gem install jekyll:3.4.3"
 ENV MAVEN_OPTS "-Xms512m -Xmx2g"
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 COPY settings.xml /root/.m2/settings.xml
