@@ -64,7 +64,7 @@ cat <<EOT > script.sh
 set -x
 set -e
 set -o pipefail
-env
+shopt -s expand_aliases
 alias 'sudo=sudo -i'
 export HOME=/home/r
 cd /home/r/repo
