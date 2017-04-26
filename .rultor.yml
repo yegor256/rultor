@@ -6,7 +6,7 @@ install: |-
   export LANGUAGE=en_US.UTF-8
   sudo apt-get install bsdmainutils
   ruby --version
-  sudo -E gem install --no-rdoc --no-ri pdd est
+  sudo gem install --no-rdoc --no-ri pdd est
 architect:
 - original-brownbear
 - yegor256
