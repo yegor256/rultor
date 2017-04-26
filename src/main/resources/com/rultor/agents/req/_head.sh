@@ -65,7 +65,7 @@ set -x
 set -e
 set -o pipefail
 env
-alias sudo="sudo env PATH=\$PATH"
+alias sudo="sudo PATH=\$PATH"
 export HOME=/home/r
 cd /home/r/repo
 EOT
