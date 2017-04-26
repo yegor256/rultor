@@ -5,8 +5,11 @@ install: |-
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
   sudo apt-get install bsdmainutils
+  env
+  alias
   ruby --version
   sudo ruby --version
+  sudo env
   sudo gem install --no-rdoc --no-ri pdd est
 architect:
 - original-brownbear
