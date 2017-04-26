@@ -53,7 +53,7 @@ else
   rm -rf repo
   chown -R r:r /home/r
   chmod a+x /home/r/script.sh
-  su -m r --command /home/r/script.sh
+  su --login r --command /home/r/script.sh
   mv /home/r/repo .
   chown -R \$(whoami) repo
 EOT
@@ -67,7 +67,7 @@ set -o pipefail
 shopt -s expand_aliases
 alias 'sudo=sudo -i'
 export HOME=/home/r
-cd /home/r/repo
+cd \$HOME/repo
 EOT
 echo "${scripts[@]}" >> script.sh
 

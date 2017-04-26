@@ -30,12 +30,10 @@
 package com.rultor.agents.req;
 
 import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.SSH;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
@@ -89,11 +87,11 @@ final class DockerRun {
      * @throws IOException If fails
      */
     public String script() throws IOException {
-        final Iterable<String> uninstall;
+        final Iterable<String> trap;
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
-            uninstall = Collections.emptyList();
+            trap = Collections.emptyList();
         } else {
-            uninstall = Iterables.concat(
+            trap = Iterables.concat(
                 Lists.newArrayList("function", "clean_up()", "{"),
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='uninstall']"
@@ -102,15 +100,15 @@ final class DockerRun {
                 Lists.newArrayList("trap", "clean_up", "EXIT", ";")
             );
         }
-        return DockerRun.enlist(
+        return new Brackets(
             Iterables.concat(
-                uninstall,
+                trap,
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='install']"
                 ),
                 DockerRun.scripts(this.node(), "entry[@key='script']")
             )
-        );
+        ).toString();
     }
 
     /**
@@ -119,8 +117,8 @@ final class DockerRun {
      * @return Envs
      * @throws IOException If fails
      */
-    public String envs(final Map<String, String> extra) throws IOException {
-        return DockerRun.enlist(
+    String envs(final Map<String, String> extra) throws IOException {
+        return new Brackets(
             Iterables.concat(
                 DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
                 DockerRun.envs(this.node(), "entry[@key='env']"),
@@ -137,7 +135,7 @@ final class DockerRun {
                     }
                 )
             )
-        );
+        ).toString();
     }
 
     /**
@@ -154,28 +152,6 @@ final class DockerRun {
             node = nodes.iterator().next();
         }
         return node;
-    }
-
-    /**
-     * Make a list for bash.
-     * @param items Items
-     * @return Text for bash
-     */
-    private static String enlist(final Iterable<String> items) {
-        return String.format(
-            "( %s )",
-            Joiner.on(' ').join(
-                Iterables.transform(
-                    items,
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(final String input) {
-                            return SSH.escape(input);
-                        }
-                    }
-                )
-            )
-        );
     }
 
     /**

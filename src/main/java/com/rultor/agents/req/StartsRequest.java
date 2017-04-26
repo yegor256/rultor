@@ -223,6 +223,7 @@ public final class StartsRequest extends AbstractAgent {
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
         vars.put("vars", docker.envs(vars.build()));
+        vars.put("scripts", docker.script());
         final Profile.Defaults def = new Profile.Defaults(this.profile);
         vars.put(
             "image",
@@ -235,7 +236,6 @@ public final class StartsRequest extends AbstractAgent {
             "directory",
             def.text("/p/entry[@key='docker']/entry[@key='directory']")
         );
-        vars.put("scripts", docker.script());
         if (!this.profile.read().nodes("/p/entry[@key='merge']").isEmpty()) {
             vars.put(
                 "squash",
