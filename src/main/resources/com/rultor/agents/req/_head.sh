@@ -48,6 +48,7 @@ else
   shopt -s dotglob
   useradd -m -G sudo r
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+  alias sudo='sudo env PATH=$PATH'
   cp -R /root/* /home/r
   cp -R ./* /home/r
   rm -rf repo
