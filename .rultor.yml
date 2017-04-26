@@ -9,6 +9,7 @@ install: |-
   alias
   ruby --version
   sudo ruby --version
+  sudo -i ruby --version
   sudo env
   sudo gem install --no-rdoc --no-ri pdd est
 architect:
