@@ -63,7 +63,7 @@ RUN apt-get install -y ssh && \
   chmod 0755 /var/run/sshd
 
 # Ruby
-RUN apt-get update && apt-get install -y libmagic-dev=1:5.14-2ubuntu3.3 \
+RUN apt-get update && apt-get install -y ruby-dev libmagic-dev=1:5.14-2ubuntu3.3 \
   zlib1g-dev=1:1.2.8.dfsg-1ubuntu1
 RUN gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 RUN curl -L https://get.rvm.io | bash -s stable
