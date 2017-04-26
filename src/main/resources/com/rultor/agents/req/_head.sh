@@ -48,7 +48,6 @@ else
   shopt -s dotglob
   useradd -m -G sudo r
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-  alias sudo='sudo env PATH=$PATH'
   cp -R /root/* /home/r
   cp -R ./* /home/r
   rm -rf repo
@@ -65,6 +64,8 @@ cat <<EOT > script.sh
 set -x
 set -e
 set -o pipefail
+env
+alias sudo='sudo env PATH=$PATH'
 export HOME=/home/r
 cd /home/r/repo
 EOT
