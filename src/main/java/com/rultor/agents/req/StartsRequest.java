@@ -42,7 +42,9 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -223,6 +225,15 @@ public final class StartsRequest extends AbstractAgent {
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
         vars.put(
+            "scripts",
+            new Brackets(
+                Iterables.concat(
+                    StartsRequest.export(docker.envs(vars.build())),
+                    docker.script()
+                )
+            ).toString()
+        );
+        vars.put(
             "vars",
             new Brackets(
                 Iterables.transform(
@@ -233,23 +244,6 @@ public final class StartsRequest extends AbstractAgent {
                             return String.format("--env=%s", input);
                         }
                     }
-                )
-            ).toString()
-        );
-        vars.put(
-            "scripts",
-            new Brackets(
-                Iterables.concat(
-                    Iterables.transform(
-                        docker.envs(vars.build()),
-                        new Function<String, String>() {
-                            @Override
-                            public String apply(final String input) {
-                                return String.format("export %s", input);
-                            }
-                        }
-                    ),
-                    docker.script()
                 )
             ).toString()
         );
@@ -304,5 +298,19 @@ public final class StartsRequest extends AbstractAgent {
             esc = SSH.escape(raw);
         }
         return esc;
+    }
+
+    /**
+     * Export env vars.
+     * @param envs List of them
+     * @return Formatted lines
+     */
+    private static Iterable<String> export(final Iterable<String> envs) {
+        final Collection<String> lines = new LinkedList<>();
+        for (final String env : envs) {
+            lines.add(String.format("export %s", env));
+            lines.add(";");
+        }
+        return lines;
     }
 }
