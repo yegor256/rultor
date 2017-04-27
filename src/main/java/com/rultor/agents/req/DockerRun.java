@@ -86,7 +86,7 @@ final class DockerRun {
      * @return Script
      * @throws IOException If fails
      */
-    Iterable<String> script() throws IOException {
+    public Iterable<String> script() throws IOException {
         final Iterable<String> trap;
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
             trap = Collections.emptyList();
@@ -115,7 +115,8 @@ final class DockerRun {
      * @return Envs
      * @throws IOException If fails
      */
-    Iterable<String> envs(final Map<String, String> extra) throws IOException {
+    public Iterable<String> envs(final Map<String, String> extra)
+        throws IOException {
         return Iterables.concat(
             DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
             DockerRun.envs(this.node(), "entry[@key='env']"),
