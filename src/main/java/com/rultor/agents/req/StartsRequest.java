@@ -308,7 +308,7 @@ public final class StartsRequest extends AbstractAgent {
     private static Iterable<String> export(final Iterable<String> envs) {
         final Collection<String> lines = new LinkedList<>();
         for (final String env : envs) {
-            lines.add(env);
+            lines.add(String.format("export '%s'", SSH.escape(env)));
             lines.add(";");
         }
         return lines;
