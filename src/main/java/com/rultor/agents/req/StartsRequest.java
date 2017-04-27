@@ -308,7 +308,7 @@ public final class StartsRequest extends AbstractAgent {
     private static Iterable<String> export(final Iterable<String> envs) {
         final Collection<String> lines = new LinkedList<>();
         for (final String env : envs) {
-            lines.add(String.format("export %s", env));
+            lines.add(env);
             lines.add(";");
         }
         return lines;
