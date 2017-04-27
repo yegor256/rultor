@@ -33,7 +33,6 @@ import com.google.common.base.Joiner;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -68,19 +67,19 @@ public final class DockerRunTest {
             new DockerRun(profile, "/p/entry[@key='a']").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.equalTo("( '--env=A=5' '--env=B=f e' )")
+            Matchers.hasItems("--env=A=5", "--env=B=f e")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='b']").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.equalTo("( '--env=HELLO='\\''1'\\''' )")
+            Matchers.hasItems("--env=HELLO='1'")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='c']").envs(
                 new ArrayMap<String, String>().with("X", "a\"'b")
             ),
-            Matchers.equalTo("( '--env=MVN=works' '--env=X=a\"'\\''b' )")
+            Matchers.hasItems("--env=MVN=works", "--env=X=a\"'b")
         );
     }
 
@@ -102,11 +101,11 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='x']").script(),
-            Matchers.equalTo("( 'mvn clean' ';' )")
+            Matchers.hasItems("mvn clean", ";")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='y']").script(),
-            Matchers.equalTo("( 'pw' ';' 'ls' ';' )")
+            Matchers.hasItems("pw", ";", "ls", ";")
         );
     }
 
@@ -135,18 +134,21 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='z']").script(),
-            Matchers.equalTo(
-                StringUtils.join(
-                    "( ",
-                    "'echo \"first\"' ';' ",
-                    "'`# some comment`' ';' " ,
-                    "'echo \"# some comment\" more' ';' " ,
-                    "'echo '\\''# some comment'\\'' more' ';' " ,
-                    "'echo \"second\" `# some comment`' ';' " ,
-                    "'echo \"third\" \\# some comment' ';' " ,
-                    "'echo \"last\"' ';' ",
-                    ")"
-                )
+            Matchers.hasItems(
+                "echo \"first\"",
+                ";",
+                "`# some comment`" ,
+                ";",
+                "echo \"# some comment\" more" ,
+                ";",
+                "echo '# some comment' more" ,
+                ";",
+                "echo \"second\" `# some comment`" ,
+                ";",
+                "echo \"third\" \\# some comment",
+                ";",
+                "echo \"last\"",
+                ";"
             )
         );
     }
@@ -158,16 +160,15 @@ public final class DockerRunTest {
     @Test
     public void fetchesFromEmptyProfile() throws Exception {
         final Profile profile = new Profile.Fixed(new XMLDocument("<p/>"));
-        final String empty = "(  )";
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/absent").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.equalTo(empty)
+            Matchers.<String>emptyIterable()
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/doesnt-exist").script(),
-            Matchers.equalTo(empty)
+            Matchers.<String>emptyIterable()
         );
     }
 
@@ -190,7 +191,7 @@ public final class DockerRunTest {
         MatcherAssert.assertThat(
             // @checkstyle MultipleStringLiterals (1 line)
             new DockerRun(profile, "/p/entry[@key='f']").script(),
-            Matchers.equalTo("( 'one' ';' 'two' ';' 'hi' ';' )")
+            Matchers.hasItems("one", ";", "two", ";", "hi", ";")
         );
     }
 
@@ -215,7 +216,9 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             // @checkstyle MultipleStringLiterals (1 line)
-            new DockerRun(profile, "/p/entry[@key='f']").script(),
+            new Brackets(
+                new DockerRun(profile, "/p/entry[@key='f']").script()
+            ).toString(),
             // @checkstyle LineLength (1 line)
             Matchers.equalTo("( 'function' 'clean_up()' '{' 'one' ';' 'two' ';' '}' ';' 'trap' 'clean_up' 'EXIT' ';' 'hi' ';' )")
         );
@@ -240,7 +243,7 @@ public final class DockerRunTest {
             new DockerRun(profile, "/p/entry[@key='o']").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.equalTo("( '--env=ALPHA=909' '--env=A=123' )")
+            Matchers.hasItems("--env=ALPHA=909", "--env=A=123")
         );
     }
 
@@ -257,7 +260,9 @@ public final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p").script(),
+            new Brackets(
+                new DockerRun(profile, "/p").script()
+            ).toString(),
             Matchers.equalTo("( 'How are you,' ';' 'dude' ';' )")
         );
     }
@@ -274,9 +279,11 @@ public final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/entry[@key='ooo']").envs(
-                new ArrayMap<String, String>()
-            ),
+            new Brackets(
+                new DockerRun(profile, "/p/entry[@key='ooo']").envs(
+                    new ArrayMap<String, String>()
+                )
+            ).toString(),
             Matchers.startsWith("(  ")
         );
     }

@@ -86,7 +86,7 @@ final class DockerRun {
      * @return Script
      * @throws IOException If fails
      */
-    public String script() throws IOException {
+    Iterable<String> script() throws IOException {
         final Iterable<String> trap;
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
             trap = Collections.emptyList();
@@ -100,15 +100,13 @@ final class DockerRun {
                 Lists.newArrayList("trap", "clean_up", "EXIT", ";")
             );
         }
-        return new Brackets(
-            Iterables.concat(
-                trap,
-                DockerRun.scripts(
-                    this.profile.read(), "/p/entry[@key='install']"
-                ),
-                DockerRun.scripts(this.node(), "entry[@key='script']")
-            )
-        ).toString();
+        return Iterables.concat(
+            trap,
+            DockerRun.scripts(
+                this.profile.read(), "/p/entry[@key='install']"
+            ),
+            DockerRun.scripts(this.node(), "entry[@key='script']")
+        );
     }
 
     /**
@@ -117,25 +115,23 @@ final class DockerRun {
      * @return Envs
      * @throws IOException If fails
      */
-    String envs(final Map<String, String> extra) throws IOException {
-        return new Brackets(
-            Iterables.concat(
-                DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
-                DockerRun.envs(this.node(), "entry[@key='env']"),
-                Collections2.transform(
-                    extra.entrySet(),
-                    new Function<Map.Entry<String, String>, String>() {
-                        @Override
-                        public String apply(
-                            final Map.Entry<String, String> ent) {
-                            return String.format(
-                                "--env=%s=%s", ent.getKey(), ent.getValue()
-                            );
-                        }
+    Iterable<String> envs(final Map<String, String> extra) throws IOException {
+        return Iterables.concat(
+            DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
+            DockerRun.envs(this.node(), "entry[@key='env']"),
+            Collections2.transform(
+                extra.entrySet(),
+                new Function<Map.Entry<String, String>, String>() {
+                    @Override
+                    public String apply(
+                        final Map.Entry<String, String> ent) {
+                        return String.format(
+                            "--env=%s=%s", ent.getKey(), ent.getValue()
+                        );
                     }
-                )
+                }
             )
-        ).toString();
+        );
     }
 
     /**
