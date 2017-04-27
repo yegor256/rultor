@@ -126,7 +126,7 @@ final class DockerRun {
                     public String apply(
                         final Map.Entry<String, String> ent) {
                         return String.format(
-                            "--env=%s=%s", ent.getKey(), ent.getValue()
+                            "%s=%s", ent.getKey(), ent.getValue()
                         );
                     }
                 }
@@ -240,7 +240,7 @@ final class DockerRun {
                     new Function<String, String>() {
                         @Override
                         public String apply(final String input) {
-                            return String.format("--env=%s", input);
+                            return String.format("%s", input);
                         }
                     }
                 )

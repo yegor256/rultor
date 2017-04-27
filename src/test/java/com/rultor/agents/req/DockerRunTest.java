@@ -67,19 +67,19 @@ public final class DockerRunTest {
             new DockerRun(profile, "/p/entry[@key='a']").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.hasItems("--env=A=5", "--env=B=f e")
+            Matchers.hasItems("A=5", "B=f e")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='b']").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.hasItems("--env=HELLO='1'")
+            Matchers.hasItems("HELLO='1'")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='c']").envs(
                 new ArrayMap<String, String>().with("X", "a\"'b")
             ),
-            Matchers.hasItems("--env=MVN=works", "--env=X=a\"'b")
+            Matchers.hasItems("MVN=works", "X=a\"'b")
         );
     }
 
@@ -243,7 +243,7 @@ public final class DockerRunTest {
             new DockerRun(profile, "/p/entry[@key='o']").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.hasItems("--env=ALPHA=909", "--env=A=123")
+            Matchers.hasItems("ALPHA=909", "A=123")
         );
     }
 

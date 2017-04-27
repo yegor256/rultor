@@ -222,8 +222,37 @@ public final class StartsRequest extends AbstractAgent {
         final DockerRun docker = new DockerRun(
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
-        vars.put("vars", new Brackets(docker.envs(vars.build())).toString());
-        vars.put("scripts", new Brackets(docker.script()).toString());
+        vars.put(
+            "vars",
+            new Brackets(
+                Iterables.transform(
+                    docker.envs(vars.build()),
+                    new Function<String, String>() {
+                        @Override
+                        public String apply(final String input) {
+                            return String.format("--env=%s", input);
+                        }
+                    }
+                )
+            ).toString()
+        );
+        vars.put(
+            "scripts",
+            new Brackets(
+                Iterables.concat(
+                    Iterables.transform(
+                        docker.envs(vars.build()),
+                        new Function<String, String>() {
+                            @Override
+                            public String apply(final String input) {
+                                return String.format("export %s", input);
+                            }
+                        }
+                    ),
+                    docker.script()
+                )
+            ).toString()
+        );
         final Profile.Defaults def = new Profile.Defaults(this.profile);
         vars.put(
             "image",
