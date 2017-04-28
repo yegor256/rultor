@@ -65,7 +65,7 @@ in one of your GitHub pull requests, it does exactly this:
 7. Reports back to you, in the GitHub pull request.
 
 You can see it in action, for example, in this pull request:
-[jcabi/jcabi-gjithub#878](https://github.com/jcabi/jcabi-github/pull/878).
+[jcabi/jcabi-github#878](https://github.com/jcabi/jcabi-github/pull/878).
 
 ## What Is Rultor SLA?
 
