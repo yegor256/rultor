@@ -45,7 +45,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -235,7 +234,6 @@ public final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void runsReleaseWithDockerfile() throws Exception {
         final File repo = this.repo();
         final File dir = this.temp.newFolder();
