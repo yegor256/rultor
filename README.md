@@ -23,7 +23,54 @@ Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yego
 
 ## What Is Rultor?
 
-TBD... _product statement_
+User performs three main operations via Rultor:
+
+- Merge
+- Deploy
+- Releas
+
+All commands start with `@rultor` followed by command text.
+
+Example:
+If pull request is ready to be merged user types the following:
+```
+@rultor please check and merge this pull request
+```
+or
+```
+@rultor merge
+```
+
+- User should create [rultor.yml](http://doc.rultor.com/reference.html) in the root directory of his/her repository and configure the build automation script there.
+- User should configure all scripts in [rultor.yml](http://doc.rultor.com/reference.html).
+
+See the link for [Basic Commands](http://doc.rultor.com/basics.html).
+
+#####Rultor Commands
+Rultor has the following commands:
+- Config
+- Deploy
+- Hello
+- Lock and Unlock
+- Merge
+- Release
+- Status
+- Stop
+- Version
+
+Example:
+```
+@rultor what is the current status?
+```
+or
+```
+@rultor status
+```
+
+See the link for [Rultor Commands](http://doc.rultor.com/commands.html).
+
+
+
 
 ## What Problems Does Rultor Solve?
 
