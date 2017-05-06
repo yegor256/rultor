@@ -21,6 +21,9 @@ if [ -z "${scripts}" ]; then
   elif [[ -e "build.sbt" || -e "project/Build.scala" ]]; then
     scripts=( 'sbt' )
     echo "build.sbt or project/Build.scala is here, I guess it is Scala SBT"
+  elif [ -x "gradlew" ]; then
+    scripts=( './gradlew clean check' )
+    echo "gradlew is here, I guess it is Gradle wrapper"
   else
     echo "I can't guess your build automation tool, see http://doc.rultor.com/basics.html"
     exit -1
