@@ -13,7 +13,6 @@ install: |-
   sudo env
   sudo gem install --no-rdoc --no-ri pdd est
 architect:
-- original-brownbear
 - yegor256
 - alex-palevsky
 assets:
