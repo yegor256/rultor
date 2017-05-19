@@ -93,11 +93,15 @@ public final class ArchivesDaemon extends AbstractAgent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
             Joiner.on("; ").join(
-                String.format("cd %s", SSH.escape(dir)),
+                String.format("if [ -d %s ]", SSH.escape(dir)),
+                String.format("then cd %s", SSH.escape(dir)),
+                "else echo 'Build directory is absent, internal error'",
+                "exit",
+                "fi",
                 "if [ -r stdout ]",
                 // @checkstyle LineLength (1 line)
                 "then cat stdout | iconv -f utf-8 -t utf-8 -c | LANG=en_US.UTF-8 col -bx",
-                "else echo 'stdout not found, internal error'",
+                "else echo 'Stdout not found, internal error'",
                 "fi"
             ),
             new NullInputStream(0L),
