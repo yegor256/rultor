@@ -10,6 +10,8 @@
 [![codebeat badge](https://codebeat.co/badges/56116205-91d3-4966-8f15-d5c505fc3905)](https://codebeat.co/projects/github-com-yegor256-rultor)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3d1858b2edfc4dcdae9363c09a75dfbc)](https://www.codacy.com/app/github_90/rultor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=yegor256/rultor&amp;utm_campaign=Badge_Grade)
 [![Dependencies](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3)
+[![Conference recommends](https://devternity.com/shields/recommends.svg)](https://devternity.com)
+
 
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
 
@@ -65,7 +67,7 @@ in one of your GitHub pull requests, it does exactly this:
 7. Reports back to you, in the GitHub pull request.
 
 You can see it in action, for example, in this pull request:
-[jcabi/jcabi-gjithub#878](https://github.com/jcabi/jcabi-github/pull/878).
+[jcabi/jcabi-github#878](https://github.com/jcabi/jcabi-github/pull/878).
 
 ## What Is Rultor SLA?
 
