@@ -72,7 +72,7 @@ final class TkStatus implements Take {
         final StringBuilder msg = new StringBuilder(Tv.THOUSAND);
         final Response response;
         if (Iterables.isEmpty(ticks)) {
-            response = new RsWithStatus(HttpURLConnection.HTTP_INTERNAL_ERROR);
+            response = new RsWithStatus(HttpURLConnection.HTTP_NO_CONTENT);
             msg.append("There is no activity yet, refresh in a few seconds");
         } else {
             final long age = System.currentTimeMillis()
