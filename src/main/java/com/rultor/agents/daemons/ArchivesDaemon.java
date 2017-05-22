@@ -97,6 +97,7 @@ public final class ArchivesDaemon extends AbstractAgent {
                 String.format("then cd %s", SSH.escape(dir)),
                 "else echo 'Build directory is absent, internal error'",
                 "exit",
+                // @checkstyle MultipleStringLiteralsCheck (1 line)
                 "fi",
                 "if [ -r stdout ]",
                 // @checkstyle LineLength (1 line)
