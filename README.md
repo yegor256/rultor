@@ -94,6 +94,22 @@ via:
 $ mvn clean install -Pqulice
 ```
 
+## Docker server
+
+The server where Docker works must be Ubuntu 16.04.
+
+[Install](https://docs.docker.com/engine/installation/linux/ubuntu/) Docker.
+
+Create `rultor` user and add it to `docker` group.
+
+Add `rultor` to sudoers.
+
+```
+apt-get update -y
+apt-get install -y mailx
+apt-get install -y gnupg2
+```
+
 ## Got questions?
 
 If you have questions or general suggestions, don't hesitate to submit
