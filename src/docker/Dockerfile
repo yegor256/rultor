@@ -102,7 +102,8 @@ RUN apt-get install -y phantomjs
 RUN apt-get install -y s3cmd
 
 # NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get update -y
 RUN apt-get install -y nodejs
 RUN npm install npm@latest -g
 
