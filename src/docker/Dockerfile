@@ -104,8 +104,7 @@ RUN apt-get install -y s3cmd
 # NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 RUN apt-get install -y nodejs
-RUN apt-get install -y npm
-RUN npm install -g npm
+RUN npm install npm@latest -g
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # Maven
