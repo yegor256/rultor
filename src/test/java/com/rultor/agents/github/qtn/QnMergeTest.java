@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import java.net.URI;
@@ -61,6 +62,9 @@ public final class QnMergeTest {
         final Issue issue = repo.issues().get(
             repo.pulls().create("", "head", "base").number()
         );
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "sha");
+        branches.create("base", "sha");
         issue.comments().post("merge");
         MatcherAssert.assertThat(
             new Xembler(
@@ -70,7 +74,7 @@ public final class QnMergeTest {
                     ).dirs()
                 )
             ).xml(),
-            XhtmlMatchers.hasXPath("/request[not(type)]")
+            XhtmlMatchers.hasXPath("/request[type='merge']")
         );
     }
 

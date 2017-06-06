@@ -290,40 +290,50 @@ public final class Agents {
      * @return Array of questions.
      */
     private static Question commands(final Profile profile) {
-        return new QnByArchitect(
-            profile,
-            "/p/entry[@key='architect']/item/text()",
-            new QnFirstOf(
-                new QnIfContains(
-                    "unlock",
-                    new QnUnlock()
-                ),
-                new QnIfContains(
-                    "lock",
-                    new QnLock()
-                ),
-                new QnIfContains(
-                    "merge",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("merge"),
-                        new QnIfPull(new QnIfUnlocked(new QnMerge()))
+        return new QnFirstOf(
+            new QnIfContains(
+                "merge",
+                new QnIfPull(
+                    new QnIfUnlocked(
+                        new QnByArchitect(
+                            profile,
+                            "/p/entry[@key='architect']/item/text()",
+                            new QnAskedBy(
+                                profile,
+                                Agents.commanders("merge"),
+                                new QnMerge()
+                            )
+                        )
                     )
-                ),
-                new QnIfContains(
-                    "deploy",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("deploy"),
-                        new QnDeploy()
-                    )
-                ),
-                new QnIfContains(
-                    "release",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("release"),
-                        new QnRelease()
+                )
+            ),
+            new QnByArchitect(
+                profile,
+                "/p/entry[@key='architect']/item/text()",
+                new QnFirstOf(
+                    new QnIfContains(
+                        "unlock",
+                        new QnUnlock()
+                    ),
+                    new QnIfContains(
+                        "lock",
+                        new QnLock()
+                    ),
+                    new QnIfContains(
+                        "deploy",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("deploy"),
+                            new QnDeploy()
+                        )
+                    ),
+                    new QnIfContains(
+                        "release",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("release"),
+                            new QnRelease()
+                        )
                     )
                 )
             )
