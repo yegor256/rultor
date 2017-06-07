@@ -27,7 +27,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FROM ubuntu:14.04
-MAINTAINER Yegor Bugayenko <yegor@teamed.io>
+MAINTAINER Yegor Bugayenko <yegor256@gmail.com>
 LABEL Description="This is the default image for Rultor.com" Vendor="Rultor.com" Version="1.0"
 WORKDIR /tmp
 

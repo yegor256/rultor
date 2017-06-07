@@ -39,7 +39,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 /**
  * Date and time in ISO 8601.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.8.12
  */

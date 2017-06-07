@@ -41,7 +41,7 @@ import twitter4j.auth.AccessToken;
 /**
  * Twitter via OAuth2.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.30
  */

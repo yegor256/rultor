@@ -43,7 +43,7 @@ import lombok.ToString;
 /**
  * Say that I'm lost, can't understand you.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.60
  */

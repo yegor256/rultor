@@ -3,7 +3,7 @@
 # Place this file in the _plugins directory and
 # use {{ site.data['hash'] }} in your Liquid templates
 #
-# Author: Yegor Bugayenko <yegor@teamed.io>
+# Author: Yegor Bugayenko <yegor256@gmail.com>
 # Source: http://github.com/yegor256/jekyll-git-hash
 #
 # Distributed under the MIT license

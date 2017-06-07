@@ -61,7 +61,7 @@ import org.apache.commons.lang3.CharEncoding;
  * it is obvious that the configuration of the repository is stored
  * in Github.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

@@ -43,7 +43,7 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link TkSiblings}.
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.23.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

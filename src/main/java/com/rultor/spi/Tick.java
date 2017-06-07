@@ -34,7 +34,7 @@ import com.jcabi.aspects.Immutable;
 /**
  * Tick.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.52
  */

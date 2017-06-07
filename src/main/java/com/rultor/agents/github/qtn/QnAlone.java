@@ -46,7 +46,7 @@ import lombok.ToString;
 /**
  * Passes through only if it is alone in this repo.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.3
  */

@@ -53,7 +53,7 @@ import org.takes.tk.TkWrap;
 /**
  * Authenticated app.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.53
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

@@ -37,7 +37,7 @@ import com.jcabi.ssh.SSH;
 /**
  * List of texts for the script, in brackets.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.64
  */

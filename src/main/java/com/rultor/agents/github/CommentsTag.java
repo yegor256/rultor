@@ -53,7 +53,7 @@ import org.xembly.Directives;
 /**
  * Comments a new tag in Github.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.31
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

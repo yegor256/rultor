@@ -48,7 +48,7 @@ import lombok.ToString;
 /**
  * Merge request.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)

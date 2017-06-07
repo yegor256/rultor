@@ -54,7 +54,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link StartsRequest}.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.3
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

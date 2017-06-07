@@ -53,7 +53,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Routine.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.50
  * @todo #1125:30min Routine should be delegate execution to separate threads.

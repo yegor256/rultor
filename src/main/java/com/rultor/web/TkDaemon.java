@@ -57,7 +57,7 @@ import org.takes.rs.RsFluent;
 /**
  * Single daemon.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

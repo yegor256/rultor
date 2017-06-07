@@ -41,7 +41,7 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link TkSitemap}.
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.50
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
