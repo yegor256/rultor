@@ -25,6 +25,8 @@ Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yego
 
 ## What Is Rultor?
 
+[![Join the chat at https://gitter.im/yegor256/rultor](https://badges.gitter.im/yegor256/rultor.svg)](https://gitter.im/yegor256/rultor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 TBD... _product statement_
 
 ## What Problems Does Rultor Solve?
