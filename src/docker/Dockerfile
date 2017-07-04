@@ -26,6 +26,11 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# The software packages configured here (PHP, Node, Ruby, Java etc.) are for
+# the convenience of the users going to use this default container. 
+# If you are going to use your own container, you may remove them. 
+# Rultor has no dependency on these packages.
+
 FROM ubuntu:14.04
 MAINTAINER Yegor Bugayenko <yegor256@gmail.com>
 LABEL Description="This is the default image for Rultor.com" Vendor="Rultor.com" Version="1.0"
