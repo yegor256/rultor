@@ -276,7 +276,7 @@ to `true`, your fork branch will be "rebased" from origin before the merge.
 
 When you need some script to be executed at the end of
 every command (no matter what the result of that command is),
-you can configure it via `unistall`:
+you can configure it via `uninstall`:
 
 {% highlight yaml %}
 install: |
