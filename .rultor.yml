@@ -52,6 +52,7 @@ env:
 release:
   pre: false
   script: |-
+    echo "Author of the request: ${author}"
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
