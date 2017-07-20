@@ -100,7 +100,10 @@ public final class Entry {
      * @throws IOException If fails
      */
     public void exec() throws IOException {
-        Sentry.init(Manifests.read("Rultor-SentryDsn"));
+        final String dsn = Manifests.read("Rultor-SentryDsn");
+        if (!dsn.startsWith("test")) {
+            Sentry.init(dsn);
+        }
         final Talks talks = new CdTalks(
             new DyTalks(
                 this.dynamo(), this.sttc().counters().get("rt-talk")

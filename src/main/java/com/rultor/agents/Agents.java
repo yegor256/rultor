@@ -82,8 +82,6 @@ import com.rultor.agents.github.qtn.QnStop;
 import com.rultor.agents.github.qtn.QnUnlock;
 import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.github.qtn.QnWithAuthor;
-import com.rultor.agents.hn.HnUpdates;
-import com.rultor.agents.hn.HttpHackerNews;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.RegistersShell;
@@ -264,15 +262,6 @@ public final class Agents {
                         Manifests.read("Rultor-TwitterSecret"),
                         Manifests.read("Rultor-TwitterToken"),
                         Manifests.read("Rultor-TwitterTokenSecret")
-                    )
-                )
-            ),
-            new SafeAgent(
-                new HnUpdates(
-                    this.github,
-                    new HttpHackerNews(
-                        Manifests.read("Rultor-HNUser"),
-                        Manifests.read("Rultor-HNPassword")
                     )
                 )
             ),
