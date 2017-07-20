@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
+import io.sentry.Sentry;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -86,6 +87,13 @@ final class TkAppFallback extends TkWrap {
                         HttpURLConnection.HTTP_NOT_FOUND
                     )
                 ),
+                new Fallback() {
+                    @Override
+                    public Opt<Response> route(final RqFallback req) {
+                        Sentry.capture(req.throwable());
+                        return new Opt.Empty<>();
+                    }
+                },
                 new Fallback() {
                     @Override
                     public Opt<Response> route(final RqFallback req)

@@ -42,6 +42,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import com.rultor.spi.Tick;
+import io.sentry.Sentry;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
@@ -136,6 +137,7 @@ final class Routine implements Runnable, Closeable {
                     Logger.info(this, "%[exception]s", iex);
                 }
             }
+            Sentry.capture(ex);
             this.pulse.error(Collections.singleton(ex));
         }
     }

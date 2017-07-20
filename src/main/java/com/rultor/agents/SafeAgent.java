@@ -32,6 +32,7 @@ package com.rultor.agents;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
+import io.sentry.Sentry;
 
 /**
  * Safe agent.
@@ -65,6 +66,7 @@ public final class SafeAgent implements Agent {
                 this, "execute(): %s throws %[exception]s",
                 this.origin.getClass().getCanonicalName(), ex
             );
+            Sentry.capture(ex);
         }
     }
 }

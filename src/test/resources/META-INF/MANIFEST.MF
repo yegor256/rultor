@@ -12,3 +12,4 @@ Rultor-GithubToken: ${failsafe.github.oauth}
 Rultor-S3Key: ${failsafe.s3.key}
 Rultor-S3Secret: ${failsafe.s3.secret}
 Rultor-S3Bucket: ${failsafe.s3.bucket}
+Rultor-SentryDsn: test

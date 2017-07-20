@@ -18,3 +18,4 @@ Rultor-TwitterToken: ${twitter.token}
 Rultor-TwitterTokenSecret: ${twitter.tsecret}
 Rultor-HNUser: ${hn.user}
 Rultor-HNPassword: ${hn.password}
+Rultor-SentryDsn: ${sentry.dsn}

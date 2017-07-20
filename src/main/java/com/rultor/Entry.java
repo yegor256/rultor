@@ -52,6 +52,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import com.rultor.spi.Tick;
 import com.rultor.web.TkApp;
+import io.sentry.Sentry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +100,7 @@ public final class Entry {
      * @throws IOException If fails
      */
     public void exec() throws IOException {
+        Sentry.init(Manifests.read("Rultor-SentryDsn"));
         final Talks talks = new CdTalks(
             new DyTalks(
                 this.dynamo(), this.sttc().counters().get("rt-talk")
