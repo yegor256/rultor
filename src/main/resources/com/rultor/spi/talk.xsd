@@ -155,6 +155,14 @@
             </xs:documentation>
         </xs:annotation>
         <xs:all>
+            <xs:element name="author" type="xs:string" minOccurs="1">
+                <xs:annotation>
+                    <xs:documentation source="description">
+                        The unique name (e.g. GitHub login)
+                        of the author of the request.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="success" type="xs:boolean" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="description">

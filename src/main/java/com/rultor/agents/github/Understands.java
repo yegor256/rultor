@@ -162,7 +162,8 @@ public final class Understands extends AbstractAgent {
             );
         } else {
             dirs.xpath("/talk/request").remove()
-                .xpath("/talk[not(request)]").strict(1).add("request")
+                .xpath("/talk[not(request)]").strict(1)
+                .add("request")
                 .attr("id", Integer.toString(next))
                 .append(req.dirs());
         }
@@ -187,7 +188,8 @@ public final class Understands extends AbstractAgent {
         Req req;
         try {
             req = this.question.understand(
-                comment, new Home(xml, Integer.toString(comment.number())).uri()
+                comment,
+                new Home(xml, Integer.toString(comment.number())).uri()
             );
         } catch (final Profile.ConfigException ex) {
             new Answer(comment).post(

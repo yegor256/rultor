@@ -137,6 +137,7 @@ public final class CommentsTagTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .up()
                 .add("request").attr("id", "abcdef")
+                .add("author").set("yegor256").up()
                 .add("type").set("release").up()
                 .add("success").set("true").up()
                 .add("args").add("arg").attr("name", "tag").set(tag)

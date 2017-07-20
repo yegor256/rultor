@@ -102,7 +102,7 @@ public interface Req {
          */
         public Simple(final String tpe, final Map<String, String> args) {
             this.type = tpe;
-            this.map = new ArrayMap<String, String>(args);
+            this.map = new ArrayMap<>(args);
         }
         @Override
         public Iterable<Directive> dirs() {

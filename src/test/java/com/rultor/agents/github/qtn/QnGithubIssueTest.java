@@ -86,6 +86,7 @@ public final class QnGithubIssueTest {
                             .attr("number", "123")
                             .add("request")
                             .attr("id", "a1b2c3")
+                            .add("author").set("yegor256").up()
                             .append(
                                 new QnGithubIssue(origin).understand(
                                     new Comment.Smart(

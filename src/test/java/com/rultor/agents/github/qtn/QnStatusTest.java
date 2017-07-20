@@ -60,7 +60,8 @@ public final class QnStatusTest {
         issue.comments().post("status");
         final Talk talk = new Talk.InFile(
             "<talk name='test' number='45' later='false'>",
-            "<request id='454'><type>merge</type><args/></request>",
+            "<request id='454'><type>merge</type><args/>",
+            "<author>yegor256</author></request>",
             "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
             "<script>test</script><title>something</title>",
             "<code>3</code><dir>/tmp/abc</dir>",
@@ -68,7 +69,7 @@ public final class QnStatusTest {
             "</talk>"
         );
         MatcherAssert.assertThat(
-            new QnStatus(talk).understand(
+            new QnWithAuthor(new QnStatus(talk)).understand(
                 new Comment.Smart(issue.comments().get(1)),
                 new URI("#")
             ),

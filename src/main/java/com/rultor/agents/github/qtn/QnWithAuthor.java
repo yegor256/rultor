@@ -27,51 +27,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.req;
+package com.rultor.agents.github.qtn;
 
-import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.spi.Agent;
-import com.rultor.spi.Talk;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Comment;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Locale;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Tests for ${@link EndsRequest}.
+ * Question that identifies an author.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.65
  */
-public final class EndsRequestTest {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "origin")
+public final class QnWithAuthor implements Question {
 
     /**
-     * EndsRequest can end a request.
-     * @throws Exception In case of error.
+     * Original question.
      */
-    @Test
-    public void endsRequest() throws Exception {
-        final Agent agent = new EndsRequest();
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk")
-                // @checkstyle MultipleStringLiteralsCheck (1 line)
-                .add("daemon").attr("id", "abcd")
-                .add("title").set("some operation").up()
-                .add("script").set("test").up()
-                .add("code").set("13").up()
-                .add("started").set("2013-01-01T11:35:09Z").up()
-                .add("ended").set("2013-01-01T12:35:09Z").up().up()
-                .add("request").attr("id", "1")
-                .add("author").set("yegor256").up()
-                .add("type").set("something").up()
-                .add("args")
-        );
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPath("/talk/request[success='false']")
-        );
+    private final transient Question origin;
+
+    /**
+     * Ctor.
+     * @param qtn Original question
+     */
+    public QnWithAuthor(final Question qtn) {
+        this.origin = qtn;
+    }
+
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        final Req req = this.origin.understand(comment, home);
+        final String author = comment.author()
+            .login()
+            .toLowerCase(Locale.ENGLISH);
+        final Req out;
+        if (req.dirs().iterator().hasNext()) {
+            out = new Req() {
+                @Override
+                public Iterable<Directive> dirs() {
+                    return new Directives()
+                        .add("author").set(author).up()
+                        .append(req.dirs());
+                }
+            };
+        } else {
+            out = req;
+        }
+        return out;
     }
 
 }

@@ -38,6 +38,7 @@ import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnFirstOf;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
@@ -72,10 +73,12 @@ public final class UnderstandsTest {
         issue.comments().post("@jeff deploy");
         final Agent agent = new Understands(
             repo.github(),
-            new QnFirstOf(
-                Arrays.<Question>asList(
-                    new QnIfContains("hello", new QnHello()),
-                    new QnIfContains("deploy", new QnDeploy())
+            new QnWithAuthor(
+                new QnFirstOf(
+                    Arrays.<Question>asList(
+                        new QnIfContains("hello", new QnHello()),
+                        new QnIfContains("deploy", new QnDeploy())
+                    )
                 )
             )
         );

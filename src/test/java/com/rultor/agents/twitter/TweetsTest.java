@@ -112,6 +112,7 @@ public final class TweetsTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .up()
                 .add("request").attr("id", "1")
+                .add("author").set("yegor256").up()
                 .add("msec").set("1234567").up()
                 .add("success").set("true").up()
                 .add("type").set("release").up()

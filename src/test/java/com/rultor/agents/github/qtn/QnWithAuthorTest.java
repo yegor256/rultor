@@ -27,80 +27,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
+import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.spi.Talk;
-import java.io.IOException;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
+import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
- * Tests for {@link Dephantomizes}.
+ * Tests for {@link QnWithAuthor}.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
- * @since 1.59.7
+ * @since 1.65
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class DephantomizesTest {
+public final class QnWithAuthorTest {
 
     /**
-     * Dephantomizes can remove request and wire.
-     * @throws IOException In case of error
+     * QnWithAuthor can add author.
+     * @throws Exception In case of error.
      */
     @Test
-    public void removesRequestAndWire() throws IOException {
+    public void addsAuthor() throws Exception {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
-        final Talk talk = DephantomizesTest.talk(repo, 0);
-        new Dephantomizes(github).execute(talk);
+        final Issue issue = repo.issues().create("title", "body");
+        issue.comments().post("comment");
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().get(1)
+        );
+        final Question question = new QnWithAuthor(
+            new QnStop()
+        );
+        final Req req = question.understand(comment, new URI("#"));
         MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPath("/talk[not(request) and not(wire)]")
+            new Xembler(
+                new Directives().add("request").append(req.dirs())
+            ).xml(),
+            XhtmlMatchers.hasXPaths(
+                "/request[type='stop']",
+                "/request/args[not(arg)]",
+                "/request/author"
+            )
         );
     }
 
     /**
-     * Dephantomizes can remove request and wire.
-     * @throws IOException In case of error
+     * QnWithAuthor can ignore if Req is empty.
+     * @throws Exception In case of error.
      */
     @Test
-    public void doesntTouchRequestAndWire() throws IOException {
+    public void doesntAddAuthorToEmptyReq() throws Exception {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
-        repo.issues().create("title", "desc");
-        final Talk talk = DephantomizesTest.talk(repo, 1);
-        new Dephantomizes(github).execute(talk);
+        final Issue issue = repo.issues().create("the title", "the body");
+        issue.comments().post("the comment");
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().get(1)
+        );
+        final Question question = new QnWithAuthor(new QnHello());
+        final Req req = question.understand(comment, new URI("#url"));
         MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPath("/talk[request and wire]")
+            new Xembler(
+                new Directives().add("r").append(req.dirs())
+            ).xml(),
+            XhtmlMatchers.hasXPaths("/r[not(author)]")
         );
-    }
-
-    /**
-     * Make a fake talk.
-     * @param repo Repo
-     * @param issue The issue
-     * @return Talk
-     * @throws IOException If fails
-     */
-    private static Talk talk(final Repo repo, final int issue)
-        throws IOException {
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk")
-                .add("wire").add("href").set("#").up()
-                .add("github-repo").set(repo.coordinates().toString()).up()
-                .add("github-issue").set(Integer.toString(issue)).up().up()
-                .add("request").attr("id", "a1b2c3d4")
-                .add("author").set("yegor256").up()
-                .add("type").set("deploy").up()
-                .add("args")
-        );
-        return talk;
     }
 
 }

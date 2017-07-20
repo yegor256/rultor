@@ -140,6 +140,7 @@ public final class ReportsTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .up()
                 .add("request").attr("id", "1")
+                .add("author").set("yegor256").up()
                 .add("msec").set(DURATION).up()
                 .add("success").set("true").up()
                 .add("type").set("something").up()

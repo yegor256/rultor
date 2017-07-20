@@ -81,6 +81,7 @@ public final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("request").attr("id", "abcd")
+                .add("author").set("yegor256").up()
                 .add("type").set("merge").up()
                 .add("args")
                 .add("arg").attr("name", "hey").set("hello dude!")
@@ -92,6 +93,7 @@ public final class StartsRequestTest {
                 "/talk/daemon[@id='abcd' and script]",
                 "/talk/daemon/title",
                 "//script[contains(.,\"hey='hello dude!'\")]",
+                "//script[contains(.,'--env=author=yegor256')]",
                 "//script[contains(.,'--env=hey=hello dude!')]"
             )
         );
@@ -121,6 +123,7 @@ public final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("request").attr("id", "abcd")
+                .add("author").set("yegor256").up()
                 .add("type").set("deploy").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
@@ -186,6 +189,7 @@ public final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("request").attr("id", "a8b9c0")
+                .add("author").set("yegor256").up()
                 .add("type").set("release").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
@@ -217,6 +221,7 @@ public final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("request").attr("id", "a1b2c3")
+                .add("author").set("yegor256").up()
                 .add("type").set("merge").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
@@ -256,6 +261,7 @@ public final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("request").attr("id", "a8b9c0")
+                .add("author").set("yegor256").up()
                 .add("type").set("release").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
@@ -305,6 +311,7 @@ public final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("request").attr("id", "ff89")
+                .add("author").set("yegor256").up()
                 .add("type").set("deploy").up().add("args")
         );
         agent.execute(talk);
@@ -340,6 +347,7 @@ public final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("request").attr("id", "abcd")
+                .add("author").set("yegor256").up()
                 .add("type").set("deploy").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()

@@ -59,6 +59,7 @@ public final class IndexesRequestsTest {
                 .xpath("/talk").push().xpath("wire").remove().pop()
                 .add("wire").add("href").set("#1").up().up()
                 .add("request").attr("id", "a12345")
+                .add("author").set("yegor256").up()
                 .add("args").up()
                 .add("type").set("deploy").up()
         );
@@ -88,6 +89,7 @@ public final class IndexesRequestsTest {
                 .add("log").attr("id", "2").attr("title", "title2")
                 .attr("index", "2").up().up()
                 .add("request").attr("id", "a12345")
+                .add("author").set("yegor256").up()
                 .add("args").up()
                 .add("type").set("deploy").up()
         );
@@ -134,6 +136,7 @@ public final class IndexesRequestsTest {
                 .push().xpath("wire").remove().pop()
                 .add("wire").add("href").set("#5").up().up()
                 .add("request").attr("id", "a67890")
+                .add("author").set("yegor256").up()
                 .add("args").up()
                 .add("type").set("merge").up()
         );

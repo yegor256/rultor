@@ -81,6 +81,7 @@ import com.rultor.agents.github.qtn.QnStatus;
 import com.rultor.agents.github.qtn.QnStop;
 import com.rultor.agents.github.qtn.QnUnlock;
 import com.rultor.agents.github.qtn.QnVersion;
+import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.agents.hn.HnUpdates;
 import com.rultor.agents.hn.HttpHackerNews;
 import com.rultor.agents.req.EndsRequest;
@@ -184,6 +185,7 @@ public final class Agents {
      * @return The agent
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.ExcessiveMethodLength")
     public Agent agent(final Talk talk, final Profile profile)
         throws IOException {
         final Locks locks = this.sttc.locks();
@@ -193,30 +195,38 @@ public final class Agents {
             new QnNotSelf(
                 new QnReferredTo(
                     this.github.users().self().login(),
-                    new QnParametrized(
-                        new QnFollow(
-                            new QnFirstOf(
-                                new QnIfContains(
-                                    "config", new QnConfig(profile)
-                                ),
-                                new QnIfContains("status", new QnStatus(talk)),
-                                new QnIfContains("version", new QnVersion()),
-                                new QnIfContains("hello", new QnHello()),
-                                new QnIfContains(
-                                    "stop",
-                                    new QnAskedBy(
-                                        profile,
-                                        Agents.commanders("stop"),
-                                        new QnStop()
-                                    )
-                                ),
-                                new QnIfCollaborator(
-                                    new QnAlone(
-                                        talk, locks,
-                                        Agents.commands(profile)
-                                    )
-                                ),
-                                new QnIamLost()
+                    new QnWithAuthor(
+                        new QnParametrized(
+                            new QnFollow(
+                                new QnFirstOf(
+                                    new QnIfContains(
+                                        "config", new QnConfig(profile)
+                                    ),
+                                    new QnIfContains(
+                                        "status", new QnStatus(talk)
+                                    ),
+                                    new QnIfContains(
+                                        "version", new QnVersion()
+                                    ),
+                                    new QnIfContains(
+                                        "hello", new QnHello()
+                                    ),
+                                    new QnIfContains(
+                                        "stop",
+                                        new QnAskedBy(
+                                            profile,
+                                            Agents.commanders("stop"),
+                                            new QnStop()
+                                        )
+                                    ),
+                                    new QnIfCollaborator(
+                                        new QnAlone(
+                                            talk, locks,
+                                            Agents.commands(profile)
+                                        )
+                                    ),
+                                    new QnIamLost()
+                                )
                             )
                         )
                     )

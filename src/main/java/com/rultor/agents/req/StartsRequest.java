@@ -233,6 +233,7 @@ public final class StartsRequest extends AbstractAgent {
                 )
             ).toString()
         );
+        vars.put("author", req.xpath("author/text()").get(0));
         vars.put(
             "vars",
             new Brackets(
