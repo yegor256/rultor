@@ -195,8 +195,8 @@ public final class Agents {
             new QnNotSelf(
                 new QnReferredTo(
                     this.github.users().self().login(),
-                    new QnWithAuthor(
-                        new QnParametrized(
+                    new QnParametrized(
+                        new QnWithAuthor(
                             new QnFollow(
                                 new QnFirstOf(
                                     new QnIfContains(
