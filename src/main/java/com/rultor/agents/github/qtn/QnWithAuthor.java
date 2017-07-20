@@ -73,14 +73,15 @@ public final class QnWithAuthor implements Question {
         final String author = comment.author()
             .login()
             .toLowerCase(Locale.ENGLISH);
+        final Iterable<Directive> dirs = req.dirs();
         final Req out;
-        if (req.dirs().iterator().hasNext()) {
+        if (dirs.iterator().hasNext()) {
             out = new Req() {
                 @Override
                 public Iterable<Directive> dirs() {
                     return new Directives()
                         .add("author").set(author).up()
-                        .append(req.dirs());
+                        .append(dirs);
                 }
             };
         } else {
