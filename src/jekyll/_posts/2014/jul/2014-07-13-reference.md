@@ -154,6 +154,10 @@ deploy:
 In this example, `MAVEN_OPTS` environment variable will be set
 for merging and deploying commands.
 
+These environment variables will be available for you by default:
+
+  * `author`: GitHub login of the user who sent the request to Rultor
+
 ## Install Script
 
 You can specify script instructions common for all
