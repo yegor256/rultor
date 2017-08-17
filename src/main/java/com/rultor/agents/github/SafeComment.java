@@ -93,9 +93,12 @@ public final class SafeComment implements Comment {
         try {
             json = this.origin.json();
         } catch (final AssertionError ex) {
-            json = new MkGithub().randomRepo()
+            final String author = new Issue.Smart(
+                this.origin.issue()
+            ).author().login();
+            json = new MkGithub(author).randomRepo()
                 .issues().create("", "")
-                .comments().post("").json();
+                .comments().post("deleted comment").json();
             Logger.warn(this, "failed to fetch comment: %[exception]s", ex);
         }
         return json;
