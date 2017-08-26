@@ -106,6 +106,7 @@ public final class StartsRequestITCase {
             new Profile.Fixed(
                 new XMLDocument(
                     Joiner.on('\n').join(
+                        "<author>yegor256</author>",
                         "<p><entry key='deploy'><entry key='script'>",
                         "echo 'Hello, world!'",
                         "echo 'I am' $(id -u -n)",
