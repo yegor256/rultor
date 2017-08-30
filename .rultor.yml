@@ -13,6 +13,7 @@ install: |-
   sudo env
   sudo gem install --no-rdoc --no-ri pdd est
   sudo apt-get install -y phantomjs
+  phantomjs --version
 architect:
 - yegor256
 - alex-palevsky
