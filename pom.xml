@@ -227,11 +227,6 @@
             <version>0.17.2</version>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
             <version>1.19</version>
@@ -554,21 +549,6 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>com.github.klieber</groupId>
-                        <artifactId>phantomjs-maven-plugin</artifactId>
-                        <version>0.7</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>install</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <version>1.9.2</version>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <executions>
@@ -629,9 +609,6 @@
                                         <argument>--engine=phantomjs</argument>
                                         <argument>${basedir}/src/test/casperjs</argument>
                                     </arguments>
-                                    <environmentVariables>
-                                        <PHANTOMJS_EXECUTABLE>${phantomjs.binary}</PHANTOMJS_EXECUTABLE>
-                                    </environmentVariables>
                                 </configuration>
                             </execution>
                         </executions>
