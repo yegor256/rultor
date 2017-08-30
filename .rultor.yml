@@ -38,7 +38,7 @@ merge:
   fast-forward: only
   rebase: true
   script: |-
-    pdd --source=$(pwd) --verbose --file=/dev/null
+    pdd --file=/dev/null
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml
     mvn clean

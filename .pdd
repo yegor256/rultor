@@ -1,6 +1,8 @@
 --source=.
 --verbose
 --exclude=target/**/*
+--exclude=.m2/**/*
+--exclude=.git/**/*
 --exclude=src/jekyll/images/**/*
 --exclude=src/site/resources/**/*
 --exclude=src/jekyll/guard-article.pdf
