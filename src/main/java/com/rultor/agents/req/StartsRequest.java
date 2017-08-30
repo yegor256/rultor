@@ -224,7 +224,7 @@ public final class StartsRequest extends AbstractAgent {
         final DockerRun docker = new DockerRun(
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
-        vars.put("author", req.xpath("author/text()").get(0));
+        vars.put("author", req.xpath("//author/text()").get(0));
         vars.put(
             "scripts",
             new Brackets(
