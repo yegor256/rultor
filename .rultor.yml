@@ -12,6 +12,7 @@ install: |-
   sudo -i ruby --version
   sudo env
   sudo gem install --no-rdoc --no-ri pdd est
+  sudo apt-get install -y phantomjs
 architect:
 - yegor256
 - alex-palevsky
