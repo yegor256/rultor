@@ -119,6 +119,7 @@ public final class StartsRequestITCase {
             new Directives().xpath("/talk")
                 .add("request").attr("id", "abcd")
                 .add("type").set("deploy").up()
+                .add("author").set("yegor256").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo).up()
                 .add("arg").attr("name", "head_branch").set("master").up()
