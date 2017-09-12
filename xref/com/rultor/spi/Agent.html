@@ -47,8 +47,8 @@
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * Agent.</em>
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@teamed.io)</em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * @version $Id: 03a29e85c1e5c90f03dec76a34daca2a9a8bf4f7 $</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor256@gmail.com)</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * @version $Id: 7fb815e28fb6ddafd0e12a5666e0554c7d8dd053 $</em>
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * @since 1.0</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  @Immutable
@@ -67,7 +67,7 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      @Immutable
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      @ToString
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      @EqualsAndHashCode(of = <span class="jxr_string">"children"</span>)
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/spi/SuperAgent.html">Iterative</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/spi/Agent.html">Agent</a> {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/spi/Agent.html">Iterative</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/spi/Agent.html">Agent</a> {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>          <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">         * Agents to run.</em>
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">         */</em>
@@ -76,14 +76,14 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">         * Ctor.</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">         * @param list List of them</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/SuperAgent.html">Iterative</a>(<strong class="jxr_keyword">final</strong> Agent... list) {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Agent.html">Iterative</a>(<strong class="jxr_keyword">final</strong> Agent... list) {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>              <strong class="jxr_keyword">this</strong>(Arrays.asList(list));
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          }
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>          <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">         * Ctor.</em>
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">         * @param list List of them</em>
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>          <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/SuperAgent.html">Iterative</a>(<strong class="jxr_keyword">final</strong> Iterable&lt;Agent&gt; list) {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Agent.html">Iterative</a>(<strong class="jxr_keyword">final</strong> Iterable&lt;Agent&gt; list) {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>              <strong class="jxr_keyword">this</strong>.children = <strong class="jxr_keyword">new</strong> Array&lt;&gt;(list);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>          }
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>          @Override

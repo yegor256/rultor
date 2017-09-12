@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?8323aa92f"/>
+    <link rel="stylesheet" href="/css/layout.css?dafaf4bcc"/>
     <link rel="canonical" href="//doc.rultor.com/docker.html" />
     <title>Docker Containers</title>
     <script>//<![CDATA[
@@ -43,27 +43,27 @@
 own <a href="http://www.docker.io">Docker</a> container.
 This approach has <a href="http://www.yegor256.com/2014/07/29/docker-in-rultor.html">multiple benefits</a>.</p>
 
-<p>First of all, you can easily reproduce errors that Rultor
-reports in your own machine. Just install Docker, start
+<p>First of all, you can easily reproduce Rultor errors
+on your own machine. Just install Docker, start
 a container from <code>yegor256/rultor</code> image, and run your build inside it.
 You will get exactly the same output as you see in Rultor logs.</p>
 
-<p>This is how you start a container, BTW:</p>
+<p>This is how you start a container locally:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo docker run -i -t yegor256/rultor /bin/bash</code></pre></div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo docker run -it --rm yegor256/rultor /bin/bash</code></pre></div>
 
-<p>Second, usage of Docker containers make possible to create
+<p>Second, the usage of Docker containers makes it possible to create
 complex builds much faster. When your build requires a lot
 of heavyweight prerequisites (for example apt-get packages
 or Maven dependencies), you don&#39;t have to wait for them on every
 build. Instead, create your own Docker image, install everything
-in it and publish it to <a href="https://hub.docker.com/">Docker Hub</a>.</p>
+in it and publish it to the <a href="https://hub.docker.com/">Docker Hub</a>.</p>
 
 <p>Then, configure your <a href="/reference.html"><code>.rultor.yml</code></a>
 to use your own Docker image and enjoy fast builds.</p>
 
-<p>Inside Docker container your scripts are executed
-by user <code>r</code>, with its home in <code>/home/r</code>.</p>
+<p>Inside the Docker container your scripts are executed
+by the user <code>r</code>, with its home in <code>/home/r</code>.</p>
 
 <p>This blog post gives more details about
 <a href="http://www.yegor256.com/2014/07/29/docker-in-rultor.html">Docker&#39;s usage in every build</a>.</p>
@@ -118,7 +118,7 @@ by user <code>r</code>, with its home in <code>/home/r</code>.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/8323aa92f">8323aa92f</a>
+          <a href="https://github.com/yegor256/rultor/commit/dafaf4bcc">dafaf4bcc</a>
         </p>
       </footer>
     </div>

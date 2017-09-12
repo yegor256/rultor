@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
-    <link rel="stylesheet" href="/css/layout.css?8323aa92f"/>
+    <link rel="stylesheet" href="/css/layout.css?dafaf4bcc"/>
     <link rel="canonical" href="//doc.rultor.com/reference.html" />
     <title>.rultor.yml Reference</title>
     <script>//<![CDATA[
@@ -162,6 +162,12 @@ commands, for example:</p>
 <p>In this example, <code>MAVEN_OPTS</code> environment variable will be set
 for merging and deploying commands.</p>
 
+<p>These environment variables will be available for you by default:</p>
+
+<ul>
+<li><code>author</code>: GitHub login of the user who sent the request to Rultor</li>
+</ul>
+
 <h2 id="install-script">Install Script</h2>
 
 <p>You can specify script instructions common for all
@@ -272,7 +278,7 @@ to <code>true</code>, your fork branch will be &quot;rebased&quot; from origin b
 
 <p>When you need some script to be executed at the end of
 every command (no matter what the result of that command is),
-you can configure it via <code>unistall</code>:</p>
+you can configure it via <code>uninstall</code>:</p>
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
   <span class="no"># create a new EC2 instance</span>
@@ -335,7 +341,7 @@ resources, created during installation.</p>
           </a>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/8323aa92f">8323aa92f</a>
+          <a href="https://github.com/yegor256/rultor/commit/dafaf4bcc">dafaf4bcc</a>
         </p>
       </footer>
     </div>
