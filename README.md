@@ -1,6 +1,6 @@
 <img src="http://doc.rultor.com/images/logo.svg" width="64px" height="64px"/>
 
-[![Managed by Zerocracy](http://www.zerocracy.com/badge.svg)](http://www.zerocracy.com)
+[![Managed by Zerocracy](http://www.0crat.com/badge/C3SAYRPH9.svg)](http://www.0crat.com/p/C3SAYRPH9)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/rultor)](http://www.rultor.com/p/yegor256/rultor)
 [![We recommend IntelliJ IDEA](http://img.teamed.io/intellij-idea-recommend.svg)](https://www.jetbrains.com/idea/)
 
