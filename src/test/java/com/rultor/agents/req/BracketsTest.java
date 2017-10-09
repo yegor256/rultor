@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2018, rultor.com
+ * Copyright (c) 2009-2017, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,49 +29,34 @@
  */
 package com.rultor.agents.req;
 
-import com.jcabi.ssh.SSH;
-import java.io.IOException;
-import org.cactoos.iterable.Mapped;
-import org.cactoos.text.JoinedText;
+import org.cactoos.list.ListOf;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * List of texts for the script, in brackets.
+ * Tests for {@link Brackets}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
+ * @author Filipe Freire (livrofubia@gmail.com)
  * @version $Id$
- * @since 1.64
+ * @since ?
  */
-final class Brackets {
-
+public final class BracketsTest {
     /**
-     * Items.
+     * Brackets can fetch environment vars.
+     * @throws Exception In case of error.
      */
-    private final transient Iterable<String> items;
-
-    /**
-     * Ctor.
-     * @param list List of them
-     */
-    Brackets(final Iterable<String> list) {
-        this.items = list;
+    @Test
+    public void escapesInput() throws Exception {
+        final Brackets brackets = new Brackets(
+            new ListOf<>(
+                "Elegant",
+                "Objects"
+            )
+        );
+        MatcherAssert.assertThat(
+            brackets.toString(),
+            Matchers.equalTo("( 'Elegant' 'Objects' )")
+        );
     }
-
-    @Override
-    public String toString() {
-        try {
-            return String.format(
-                "( %s )",
-                new JoinedText(
-                    " ",
-                    new Mapped<>(
-                        this.items,
-                        input -> SSH.escape(input)
-                    )
-                ).asString()
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
 }

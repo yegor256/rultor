@@ -29,13 +29,12 @@
  */
 package com.rultor.agents;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import org.cactoos.iterable.Mapped;
 import org.xembly.Directives;
 
 /**
@@ -84,15 +83,10 @@ public final class IndexesRequests implements SuperAgent {
      *  read
      */
     private int index(final Talk talk) throws IOException {
-        final Iterable<Integer> indexes = Iterables.transform(
-                talk.read()
+        final Iterable<Integer> indexes = new Mapped<>(
+            talk.read()
                 .xpath("/talk/archive/log/@index|/talk/request/@index"),
-            new Function<String, Integer>() {
-                @Override
-                public Integer apply(final String input) {
-                    return Integer.parseInt(input);
-                }
-            }
+            input -> Integer.parseInt(input)
         );
         final int index;
         if (indexes.iterator().hasNext()) {

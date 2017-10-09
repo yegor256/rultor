@@ -29,8 +29,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.rultor.agents.github.Answer;
@@ -44,6 +42,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.list.ListOf;
 
 /**
  * Question by architect only (if configured).
@@ -95,14 +95,11 @@ public final class QnByArchitect implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        final List<String> logins = Lists.transform(
-            this.profile.read().xpath(this.xpath),
-            new Function<String, String>() {
-                @Override
-                public String apply(final String input) {
-                    return input.toLowerCase(Locale.ENGLISH);
-                }
-            }
+        final List<String> logins = new ListOf<>(
+            new Mapped<>(
+                this.profile.read().xpath(this.xpath),
+                input -> input.toLowerCase(Locale.ENGLISH)
+            )
         );
         final boolean legal = logins.isEmpty() || logins.contains(
             comment.author().login().toLowerCase(Locale.ENGLISH)

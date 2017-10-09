@@ -29,8 +29,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
@@ -48,12 +46,12 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.JoinedText;
+import org.cactoos.text.SubText;
 
 /**
  * Show current status.
@@ -106,7 +104,7 @@ public final class QnStatus implements Question {
             lines.add(
                 String.format(
                     " * Docker container ID: `%s...`",
-                    StringUtils.substring(
+                    new SubText(
                         shell.exec(
                             String.format(
                                 // @checkstyle LineLength (1 line)
@@ -115,7 +113,7 @@ public final class QnStatus implements Question {
                             )
                         ),
                         0, Tv.TWENTY
-                    )
+                    ).asString()
                 )
             );
             lines.add(
@@ -139,14 +137,11 @@ public final class QnStatus implements Question {
             true,
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
-                Joiner.on('\n').join(
-                    Iterables.concat(
-                        Collections.singleton(
-                            QnStatus.REPORT.applyTo(xml).trim()
-                        ),
-                        lines
-                    )
-                )
+                new JoinedText(
+                    "\n",
+                    QnStatus.REPORT.applyTo(xml).trim(),
+                    lines.toString()
+                ).asString()
             )
         );
         Logger.info(this, "status request in #%d", comment.issue().number());
