@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
@@ -47,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import javax.json.JsonObject;
+import org.cactoos.text.JoinedText;
 
 /**
  * Log of commits.
@@ -115,7 +115,10 @@ final class CommitsLog {
             lines.add(CommitsLog.asText(commit));
             ++count;
         }
-        return Joiner.on('\n').join(lines);
+        return new JoinedText(
+            "\n",
+            lines
+        ).asString();
     }
 
     /**

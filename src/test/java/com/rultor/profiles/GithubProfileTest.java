@@ -29,7 +29,6 @@
  */
 package com.rultor.profiles;
 
-import com.google.common.base.Joiner;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
@@ -38,8 +37,9 @@ import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Base64;
 import javax.json.Json;
-import org.apache.commons.codec.binary.Base64;
+import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -61,7 +61,8 @@ public final class GithubProfileTest {
     @Test
     public void fetchesYamlConfig() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 "assets:",
                 "  test.xml: jeff/test1#test.xml",
                 "  beta: jeff/test1#test.xml",
@@ -70,7 +71,7 @@ public final class GithubProfileTest {
                 " - donald",
                 "merge:",
                 "  script: hello!"
-            )
+            ).asString()
         );
         final String yaml = "friends:\n  - jeff/test2";
         repo.github()
@@ -80,7 +81,10 @@ public final class GithubProfileTest {
                 Json.createObjectBuilder()
                     .add("path", ".rultor.yml")
                     .add("message", "rultor config")
-                    .add("content", Base64.encodeBase64String(yaml.getBytes()))
+                    .add(
+                        "content",
+                        Base64.getEncoder().encodeToString(yaml.getBytes())
+                    )
                     .build()
             );
         final Profile profile = new GithubProfile(repo);
@@ -122,10 +126,11 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenAssetIsMisconfigured() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 "assets: ",
                 "  something.xml: -invalid.user.name/test1#test.xml"
-            )
+            ).asString()
         );
         new GithubProfile(repo).assets();
     }
@@ -137,10 +142,11 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 "assets: ",
                 "  something.xml: invalid_username/test1#test.xml"
-            )
+            ).asString()
         );
         new GithubProfile(repo).assets();
     }
@@ -154,10 +160,11 @@ public final class GithubProfileTest {
     public void throwsWhenAssetsUsernameStartsWithUnderscore()
         throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 "assets: ",
                 "  something.xml: _invalidusername/test1#test.xml"
-            )
+            ).asString()
         );
         new GithubProfile(repo).assets();
     }
@@ -179,14 +186,15 @@ public final class GithubProfileTest {
                 .add("message", "just test")
                 .add(
                     "content",
-                    Base64.encodeBase64String(
-                        Joiner.on('\n').join(
+                    Base64.getEncoder().encodeToString(
+                        new JoinedText(
+                            "\n",
                             "assets: ",
                             String.format(
                                 "  something.xml: jeff/%s#.rultor.yml", name
                             ),
                             "friends:", String.format("  - jeff/%s", name)
-                        ).getBytes()
+                        ).asString().getBytes()
                     )
                 ).build()
         );
@@ -203,10 +211,11 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenRultorConfigIsAbsent() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 "assets:   ",
                 "  something.xml: jeff/test2#.rultor.yml"
-            )
+            ).asString()
         );
         new GithubProfile(repo).assets();
     }
@@ -218,10 +227,11 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenFriendNotDefined() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 "assets:    ",
                 "  a.xml: jeff/test1#test.xml"
-            )
+            ).asString()
         );
         new GithubProfile(repo).assets();
     }
@@ -234,12 +244,13 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void testAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 "assets:",
                 "  test.xml: jeff/test1#test.xmls",
                 "merge:",
                 "  script: hello!"
-            )
+            ).asString()
         );
         final String yaml = "friends:\n  - jeff/test2";
         repo.github()
@@ -249,7 +260,10 @@ public final class GithubProfileTest {
                 Json.createObjectBuilder()
                     .add("path", ".rultor.yml")
                     .add("message", "rultor config")
-                    .add("content", Base64.encodeBase64String(yaml.getBytes()))
+                    .add(
+                        "content",
+                        Base64.getEncoder().encodeToString(yaml.getBytes())
+                    )
                     .build()
             );
         final Profile profile = new GithubProfile(repo);
@@ -271,7 +285,10 @@ public final class GithubProfileTest {
                 Json.createObjectBuilder()
                     .add("path", "test.xml")
                     .add("message", "just test msg")
-                    .add("content", Base64.encodeBase64String("hey".getBytes()))
+                    .add(
+                        "content",
+                        Base64.getEncoder().encodeToString("hey".getBytes())
+                    )
                     .build()
             );
         final Repo repo = github.repos().create(
@@ -281,7 +298,10 @@ public final class GithubProfileTest {
             Json.createObjectBuilder()
                 .add("path", ".rultor.yml")
                 .add("message", "just test")
-                .add("content", Base64.encodeBase64String(yaml.getBytes()))
+                .add(
+                    "content",
+                    Base64.getEncoder().encodeToString(yaml.getBytes())
+                )
                 .build()
         );
         return repo;

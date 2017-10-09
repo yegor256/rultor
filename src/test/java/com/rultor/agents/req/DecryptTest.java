@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Joiner;
 import com.jcabi.log.VerboseProcess;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
@@ -39,6 +38,7 @@ import java.util.logging.Level;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -52,28 +52,14 @@ import org.junit.rules.TemporaryFolder;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.37.4
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class DecryptTest {
 
     /**
-     * Encoded test file.
+     * Newline.
      */
-    private static final String ASC = Joiner.on('\n').join(
-        "-----BEGIN PGP MESSAGE-----",
-        "Version: GnuPG v1\n",
-        "hQEMA5qETcGag5w6AQgAvm/P0JUlQAdOtGng5zHLx5cV+BrbpFt1m2ja4BjacYMU",
-        "wcubtJSh+n0XNLk6zMMCsrDnTfzvi/FEFaRsPVb/ZJHiJGvwhNGyenQWgd6bczIL",
-        "1UxBZ1BpHTPv5hVK43fb6cYq+e/gniBMvIKlKV+Qh/NVtiQACQJ5xL1M16S9SQuY",
-        "hjnVEL3JNHiLEAfPS/8xS05DY/w1k/JyPXMZlrR7YGMxUsG6aDaFPAdjcdSbzGCT",
-        "j4yZPdZtyqePFGXn0VJE7GRywWcmk3Nj+oZzgx6DLV3PH40HSYNuyA9a2xFpghTr",
-        "7uiYRf+rRzXlx7qnBLsvETlhc77zpf0FW4pLq/08ttLADQFsIU2BNHJGPw+96GKJ",
-        "AVNAm0OxfaMz+U+gy2kIgteuMQmfkYDF0u9HE7NwZ1PlXO5Oszhfdim2LPSyxYMi",
-        "sKlVilWhPwdumSjmY0IG1B6yc8ZLG4BjBucu3dMjj98iKRjlKvEmqqdUmoZY+l/N",
-        "Ye9gRf0UY44jJ0f4H81osGtmXg1dRc47OE/pUGGbIare4GNvBB/oiksvoCDOOEKy",
-        "cj6IAjR/BnSZ1mYvSShSPatu7QRFdd/HFRt76pGj2G6ibnnDNpfjDwgNaWbiGUU=",
-        "=d2bb",
-        "-----END PGP MESSAGE-----"
-    );
+    private static final String NEWLINE = "\n";
 
     /**
      * Test port for proxy settings test.
@@ -101,14 +87,18 @@ public final class DecryptTest {
                 "test/test"
             )
         ).commands();
-        final String script = Joiner.on('\n').join(
+        final String script = new JoinedText(
+            NEWLINE,
             "set -x",
             "set -e",
             "set -o pipefail",
-            Joiner.on('\n').join(commands)
-        );
+            new JoinedText(
+                NEWLINE,
+                commands
+            ).asString()
+        ).asString();
         final File dir = this.temp.newFolder();
-        FileUtils.write(new File(dir, "a.txt.asc"), DecryptTest.ASC);
+        FileUtils.write(new File(dir, "a.txt.asc"), new FakePGP().asString());
         final String[] keys = {"pubring", "secring"};
         for (final String key : keys) {
             final String gpg = IOUtils.toString(
@@ -164,14 +154,19 @@ public final class DecryptTest {
      * @return XML document
      */
     private XMLDocument createTestProfileXML() {
-        return new XMLDocument(
-            Joiner.on("").join(
-                "<p>",
-                "<entry key='decrypt'>",
-                "<entry key='a.txt'>a.txt.asc</entry>",
-                "</entry>",
-                "</p>"
-            )
-        );
+        try {
+            return new XMLDocument(
+                new JoinedText(
+                    "",
+                    "<p>",
+                    "<entry key='decrypt'>",
+                    "<entry key='a.txt'>a.txt.asc</entry>",
+                    "</entry>",
+                    "</p>"
+                ).asString()
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 }

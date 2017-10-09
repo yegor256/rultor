@@ -27,69 +27,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
+package com.rultor.agents.req;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.SSH;
-import com.jcabi.ssh.Shell;
-import java.io.IOException;
-import org.cactoos.text.JoinedText;
+import org.cactoos.list.ListOf;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Command to run in a given shell and working directory.
+ * Tests for {@link Brackets}.
  *
- * @author Armin Braun (me@obrown.io)
+ * @author Filipe Freire (livrofubia@gmail.com)
  * @version $Id$
- * @since 1.62
+ * @since ?
  */
-@Immutable
-final class ShellCommand {
-
+public final class BracketsTest {
     /**
-     * Join shell commands with this string.
+     * Brackets can fetch environment vars.
+     * @throws Exception In case of error.
      */
-    private static final String SHELL_JOINER = " && ";
-
-    /**
-     * Shell to use.
-     */
-    private final transient Shell shell;
-
-    /**
-     * Shell command to run.
-     */
-    private final transient String command;
-
-    /**
-     * Shell command to run.
-     */
-    private final transient String directory;
-
-    /**
-     * Ctor.
-     * @param shll Shell
-     * @param dir String working directory
-     * @param cmd String command to run
-     */
-    ShellCommand(final Shell shll, final String dir, final String cmd) {
-        this.shell = shll;
-        this.directory = dir;
-        this.command = cmd;
-    }
-
-    /**
-     * Executes the command.
-     * @return Stdout
-     * @throws IOException If fails
-     */
-    public String exec() throws IOException {
-        return new Shell.Plain(new Shell.Safe(this.shell)).exec(
-            new JoinedText(
-                ShellCommand.SHELL_JOINER,
-                String.format("cd %s", SSH.escape(this.directory)),
-                this.command
-            ).asString()
+    @Test
+    public void escapesInput() throws Exception {
+        final Brackets brackets = new Brackets(
+            new ListOf<>(
+                "Elegant",
+                "Objects"
+            )
+        );
+        MatcherAssert.assertThat(
+            brackets.toString(),
+            Matchers.equalTo("( 'Elegant' 'Objects' )")
         );
     }
-
 }

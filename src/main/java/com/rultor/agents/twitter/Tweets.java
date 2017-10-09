@@ -42,7 +42,7 @@ import com.rultor.agents.github.TalkIssues;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.SubText;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -114,10 +114,11 @@ public final class Tweets extends AbstractAgent {
         final StringBuilder text = new StringBuilder(2 * Tv.HUNDRED);
         if (repo.hasDescription() && !repo.description().isEmpty()) {
             text.append(
-                StringUtils.substring(
+                new SubText(
                     repo.description(),
-                    0, Tv.HUNDRED
-                )
+                    0,
+                    Tv.HUNDRED
+                ).asString()
             );
         } else {
             text.append(repo.coordinates().repo());

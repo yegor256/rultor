@@ -27,69 +27,57 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
+package com.rultor.agents.req;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.SSH;
-import com.jcabi.ssh.Shell;
 import java.io.IOException;
+import org.cactoos.list.ListOf;
 import org.cactoos.text.JoinedText;
 
 /**
- * Command to run in a given shell and working directory.
+ * Fake PGP Signature.
  *
- * @author Armin Braun (me@obrown.io)
+ * @author Filipe Freire (livrofubia@gmail.com)
  * @version $Id$
- * @since 1.62
+ * @since ?
  */
-@Immutable
-final class ShellCommand {
+final class FakePGP {
 
     /**
-     * Join shell commands with this string.
+     * Returns FakePGP string.
+     *
+     * @return String
+     * @throws IOException ex
      */
-    private static final String SHELL_JOINER = " && ";
-
-    /**
-     * Shell to use.
-     */
-    private final transient Shell shell;
-
-    /**
-     * Shell command to run.
-     */
-    private final transient String command;
-
-    /**
-     * Shell command to run.
-     */
-    private final transient String directory;
-
-    /**
-     * Ctor.
-     * @param shll Shell
-     * @param dir String working directory
-     * @param cmd String command to run
-     */
-    ShellCommand(final Shell shll, final String dir, final String cmd) {
-        this.shell = shll;
-        this.directory = dir;
-        this.command = cmd;
-    }
-
-    /**
-     * Executes the command.
-     * @return Stdout
-     * @throws IOException If fails
-     */
-    public String exec() throws IOException {
-        return new Shell.Plain(new Shell.Safe(this.shell)).exec(
-            new JoinedText(
-                ShellCommand.SHELL_JOINER,
-                String.format("cd %s", SSH.escape(this.directory)),
-                this.command
-            ).asString()
-        );
+    public String asString() throws IOException {
+        return new JoinedText(
+            "\n",
+            new ListOf<>(
+                "-----BEGIN PGP MESSAGE-----",
+                "Version: GnuPG v1\n",
+                "hQEMA5qETcGag5w6AQgAvm/P0JUlQAd",
+                "OtGng5zHLx5cV+BrbpFt1m2ja4BjacYMU",
+                "wcubtJSh+n0XNLk6zMMCsrDnTfzvi/F",
+                "EFaRsPVb/ZJHiJGvwhNGyenQWgd6bczIL",
+                "1UxBZ1BpHTPv5hVK43fb6cYq+e/gniB",
+                "MvIKlKV+Qh/NVtiQACQJ5xL1M16S9SQuY",
+                "hjnVEL3JNHiLEAfPS/8xS05DY/w1k/J",
+                "yPXMZlrR7YGMxUsG6aDaFPAdjcdSbzGCT",
+                "j4yZPdZtyqePFGXn0VJE7GRywWcmk3N",
+                "j+oZzgx6DLV3PH40HSYNuyA9a2xFpghTr",
+                "7uiYRf+rRzXlx7qnBLsvETlhc77zpf0",
+                "FW4pLq/08ttLADQFsIU2BNHJGPw+96GKJ",
+                "AVNAm0OxfaMz+U+gy2kIgteuMQmfkYD",
+                "F0u9HE7NwZ1PlXO5Oszhfdim2LPSyxYMi",
+                "sKlVilWhPwdumSjmY0IG1B6yc8ZLG4B",
+                "jBucu3dMjj98iKRjlKvEmqqdUmoZY+l/N",
+                "Ye9gRf0UY44jJ0f4H81osGtmXg1dRc4",
+                "7OE/pUGGbIare4GNvBB/oiksvoCDOOEKy",
+                "cj6IAjR/BnSZ1mYvSShSPatu7QRFdd/",
+                "HFRt76pGj2G6ibnnDNpfjDwgNaWbiGUU=",
+                "=d2bb",
+                "-----END PGP MESSAGE-----"
+            )
+        ).asString();
     }
 
 }

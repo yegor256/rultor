@@ -29,12 +29,7 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
@@ -51,6 +46,11 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.cactoos.iterable.Joined;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.MapOf;
+import org.cactoos.text.JoinedText;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -60,6 +60,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -133,29 +134,24 @@ public final class StartsRequest extends AbstractAgent {
     @SuppressWarnings("unchecked")
     private String script(final XML req, final String type, final String name)
         throws IOException {
-        return Joiner.on('\n').join(
-            Iterables.concat(
-                Iterables.transform(
-                    Sets.union(
+        return new JoinedText(
+            "\n",
+            new Joined<String>(
+                new Mapped<Map.Entry<String, String>, String>(
+                    new Joined<Map.Entry<String, String>>(
                         this.vars(req, type).entrySet(),
-                        Sets.newHashSet(
-                            Maps.immutableEntry(
+                        new MapOf<String, String>(
+                            new MapEntry<String, String>(
                                 "container",
                                 name.replaceAll("[^a-zA-Z0-9_.-]", "_")
                                     .toLowerCase(Locale.ENGLISH)
                             )
-                        )
+                        ).entrySet()
                     ),
-                    new Function<Map.Entry<String, String>, String>() {
-                        @Override
-                        public String apply(
-                            final Map.Entry<String, String> input) {
-                            return String.format(
-                                "%s=%s", input.getKey(),
-                                StartsRequest.escape(input.getValue())
-                            );
-                        }
-                    }
+                    input -> String.format(
+                        "%s=%s", input.getKey(),
+                        StartsRequest.escape(input.getValue())
+                    )
                 ),
                 Collections.singleton(this.asRoot()),
                 Collections.singleton(
@@ -174,7 +170,7 @@ public final class StartsRequest extends AbstractAgent {
                     )
                 )
             )
-        );
+        ).asString();
     }
 
     /**
@@ -228,7 +224,7 @@ public final class StartsRequest extends AbstractAgent {
         vars.put(
             "scripts",
             new Brackets(
-                Iterables.concat(
+                new Joined<String>(
                     StartsRequest.export(docker.envs(vars.build())),
                     docker.script()
                 )
@@ -237,14 +233,9 @@ public final class StartsRequest extends AbstractAgent {
         vars.put(
             "vars",
             new Brackets(
-                Iterables.transform(
+                new Mapped<>(
                     docker.envs(vars.build()),
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(final String input) {
-                            return String.format("--env=%s", input);
-                        }
-                    }
+                    input -> String.format("--env=%s", input)
                 )
             ).toString()
         );

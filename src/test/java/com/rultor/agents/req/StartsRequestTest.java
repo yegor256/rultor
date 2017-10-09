@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Joiner;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.VerboseProcess;
 import com.jcabi.matchers.XhtmlMatchers;
@@ -41,7 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.JoinedText;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -109,13 +108,14 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    Joiner.on(' ').join(
+                    new JoinedText(
+                        " ",
                         "<p><entry key='deploy'>",
                         "<entry key='script'>echo HEY</entry>",
                         "<entry key='env'>",
                         "<entry key='MAVEN_OPTS'>-Xmx2g -Xms1g</entry>",
                         "</entry></entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
@@ -132,10 +132,11 @@ public final class StartsRequestTest {
         agent.execute(talk);
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
-                Joiner.on('\n').join(
+                new JoinedText(
+                    "\n",
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh; cat script.sh"
-                )
+                ).asString()
             )
         );
         MatcherAssert.assertThat(
@@ -176,12 +177,13 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new JoinedText(
+                        "",
                         "<p><entry key='release'><entry key='script'>",
                         "echo HEY</entry></entry>",
                         "<entry key='docker'><entry key='image'>a/b</entry>",
                         "</entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
@@ -210,10 +212,11 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new JoinedText(
+                        "",
                         "<p><entry key='merge'><entry key='script'>",
                         "echo HEY</entry></entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
@@ -248,12 +251,13 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new JoinedText(
+                       "",
                         "<p><entry key='release'><entry key='script'>",
                         "echo HEY</entry></entry><entry key='docker'>",
                         String.format("<entry key='directory'>%s</entry>", dir),
                         "</entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
@@ -300,10 +304,11 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new JoinedText(
+                        "",
                         "<p><entry key='decrypt'><entry key='a.txt'>",
                         "a.txt.asc</entry></entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
@@ -334,12 +339,13 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new JoinedText(
+                        "",
                         "<p><entry key='docker'>",
                         "<entry key='as_root'>true</entry></entry>",
                         "<entry key='deploy'>",
                         "<entry key='script'>echo BOOM</entry></entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
@@ -356,10 +362,11 @@ public final class StartsRequestTest {
         agent.execute(talk);
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
-                Joiner.on('\n').join(
+                new JoinedText(
+                    "\n",
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh"
-                )
+                ).asString()
             )
         );
         MatcherAssert.assertThat(
@@ -375,7 +382,8 @@ public final class StartsRequestTest {
      * @throws java.io.IOException If fails
      */
     private String exec(final Talk talk) throws IOException {
-        final String script = Joiner.on('\n').join(
+        final String script = new JoinedText(
+            "\n",
             "set -x",
             "set -e",
             "set -o pipefail",
@@ -390,7 +398,7 @@ public final class StartsRequestTest {
             "  done",
             "} ",
             talk.read().xpath("//script/text()").get(0)
-        );
+        ).asString();
         return new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash", "-c", script
@@ -410,7 +418,8 @@ public final class StartsRequestTest {
             new ProcessBuilder().command(
                 "/bin/bash",
                 "-c",
-                Joiner.on(';').join(
+                new JoinedText(
+                    ";",
                     "set -x",
                     "set -e",
                     "set -o pipefail",
@@ -425,7 +434,7 @@ public final class StartsRequestTest {
                     "git commit -am 'modified file'",
                     "git checkout master",
                     "git config receive.denyCurrentBranch ignore"
-                )
+                ).asString()
             ).directory(repo)
         ).stdout();
         return repo;

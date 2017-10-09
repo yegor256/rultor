@@ -29,10 +29,10 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import com.jcabi.ssh.SSH;
+import java.io.IOException;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.text.JoinedText;
 
 /**
  * List of texts for the script, in brackets.
@@ -58,20 +58,20 @@ final class Brackets {
 
     @Override
     public String toString() {
-        return String.format(
-            "( %s )",
-            Joiner.on(' ').join(
-                Iterables.transform(
-                    this.items,
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(final String input) {
-                            return SSH.escape(input);
-                        }
-                    }
-                )
-            )
-        );
+        try {
+            return String.format(
+                "( %s )",
+                new JoinedText(
+                    " ",
+                    new Mapped<>(
+                        this.items,
+                        input -> SSH.escape(input)
+                    )
+                ).asString()
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

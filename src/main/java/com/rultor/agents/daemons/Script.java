@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.daemons;
 
-import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
@@ -40,6 +39,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.text.JoinedText;
 
 /**
  * Script to run.
@@ -85,14 +85,15 @@ final class Script {
             Logger.stream(Level.WARNING, this)
         );
         return new Shell.Empty(shell).exec(
-            Joiner.on(" && ").join(
+            new JoinedText(
+                " && ",
                 "set -o pipefail",
                 String.format("cd %s", SSH.escape(dir)),
                 String.format(
                     "/bin/bash %s >> stdout 2>&1",
                     SSH.escape(this.name)
                 )
-            )
+            ).asString()
         );
     }
 

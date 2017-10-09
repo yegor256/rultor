@@ -29,12 +29,12 @@
  */
 package com.rultor.agents.shells;
 
-import com.google.common.base.Joiner;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -62,14 +62,15 @@ public final class RegistersShellTest {
         final Agent agent = new RegistersShell(
             new Profile.Fixed(
                 new XMLDocument(
-                    Joiner.on(' ').join(
+                    new JoinedText(
+                        " ",
                         "<p><entry key='ssh'>",
                         String.format("<entry key='host'>%s</entry>", host),
                         String.format("<entry key='port'>%d</entry>", port),
                         String.format("<entry key='key'>%s</entry>", key),
                         String.format("<entry key='login'>%s</entry>", login),
                         "</entry></p>"
-                    )
+                    ).asString()
                 )
             ),
             "localhost", 22, "rultor", "def-key"
