@@ -29,12 +29,15 @@
  */
 package com.rultor.agents;
 
-import com.google.common.collect.Ordering;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import org.cactoos.Scalar;
 import org.cactoos.iterable.Mapped;
+import org.cactoos.scalar.IntOf;
+import org.cactoos.scalar.Max;
+import org.cactoos.scalar.UncheckedScalar;
 import org.xembly.Directives;
 
 /**
@@ -82,15 +85,21 @@ public final class IndexesRequests implements SuperAgent {
      * @throws IOException if the content of the {@link Talk} object can't be
      *  read
      */
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private int index(final Talk talk) throws IOException {
-        final Iterable<Integer> indexes = new Mapped<>(
+        final Iterable<Scalar<Integer>> indexes = new Mapped<>(
             talk.read()
                 .xpath("/talk/archive/log/@index|/talk/request/@index"),
-            input -> Integer.parseInt(input)
+            input -> new UncheckedScalar<>(new IntOf(input))
         );
         final int index;
         if (indexes.iterator().hasNext()) {
-            index = Ordering.natural().max(indexes);
+            try {
+                index = new Max<>(indexes).value();
+                // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final Throwable ex) {
+                throw new IOException(ex);
+            }
         } else {
             index = 0;
         }
