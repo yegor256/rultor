@@ -32,7 +32,6 @@ package com.rultor.dynamo;
 import com.amazonaws.services.dynamodbv2.model.AttributeAction;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.AttributeUpdates;
 import com.jcabi.dynamo.Item;
@@ -53,6 +52,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.cactoos.list.ListOf;
 import org.w3c.dom.Node;
 import org.xembly.Directive;
 import org.xembly.ImpossibleModificationException;
@@ -127,7 +127,7 @@ public final class DyTalk implements Talk {
 
     @Override
     public void modify(final Iterable<Directive> dirs) throws IOException {
-        if (!Iterables.isEmpty(dirs)) {
+        if (!new ListOf<>(dirs).isEmpty()) {
             final XML xml = this.read();
             final Node node = xml.node();
             try {
