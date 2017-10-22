@@ -73,15 +73,37 @@ public final class Invitations implements SuperAgent {
             RtPagination.COPYING
         );
         for (final JsonObject json : all) {
+            this.accept(
+                entry, json.getInt("id"),
+                json.getJsonObject("repository").getString("full_name")
+            );
+        }
+    }
+
+    /**
+     * Accept one invitation.
+     * @param entry Entry to use
+     * @param invitation The invitation number
+     * @param repo The repo name
+     * @throws IOException If fails
+     */
+    private void accept(final Request entry, final int invitation,
+        final String repo) throws IOException {
+        try {
             entry.uri().path("/user/repository_invitations/")
-                .path(Integer.toString(json.getInt("id"))).back()
+                .path(Integer.toString(invitation)).back()
                 .method(Request.PATCH)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
             Logger.info(
-                this, "invitation to %s accepted",
-                json.getJsonObject("repository").getString("full_name")
+                this, "Invitation #%d to %s accepted",
+                invitation, repo
+            );
+        } catch (final AssertionError ex) {
+            Logger.info(
+                this, "Failed to accept invitation #%d in %s: %s",
+                invitation, repo, ex.getLocalizedMessage()
             );
         }
     }

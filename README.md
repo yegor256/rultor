@@ -1,6 +1,6 @@
 <img src="http://doc.rultor.com/images/logo.svg" width="64px" height="64px"/>
 
-[![Managed by Zerocracy](http://www.zerocracy.com/badge.svg)](http://www.zerocracy.com)
+[![Managed by Zerocracy](http://www.0crat.com/badge/C3SAYRPH9.svg)](http://www.0crat.com/p/C3SAYRPH9)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/rultor)](http://www.rultor.com/p/yegor256/rultor)
 [![We recommend IntelliJ IDEA](http://img.teamed.io/intellij-idea-recommend.svg)](https://www.jetbrains.com/idea/)
 
@@ -11,7 +11,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3d1858b2edfc4dcdae9363c09a75dfbc)](https://www.codacy.com/app/github_90/rultor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=yegor256/rultor&amp;utm_campaign=Badge_Grade)
 [![Dependencies](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3)
 [![Conference recommends](https://devternity.com/shields/recommends.svg)](https://devternity.com)
-
 
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
 
@@ -77,24 +76,8 @@ TBD... _quality requirements_
 
 ## How to Contribute
 
-Fork repository, make changes, send us a pull request. We will review
-your changes and apply them to the `master` branch shortly, provided
-they don't violate our quality standards. To avoid frustration, before
-sending us your pull request please run full Maven build:
+If you are interested in contributing please refer to [CONTRIBUTING.md](CONTRIBUTING.md)
 
-```
-$ mvn clean install -Pqulice -PdockerITs
-```
-
-To avoid build errors use maven 3.3.x and have a Docker environment properly
-loaded into the shell from which you run the build.
-If your environment does not have the ability to run a working Docker client
-and daemon, you can run the build without the Docker based integration tests
-via:
-
-```
-$ mvn clean install -Pqulice
-```
 
 ## Docker server
 
@@ -143,18 +126,8 @@ Less interesting and/or stable stuff:
 [circleci.io](http://www.circleci.io)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
 
-[magnum-ci.com](http://www.magnum-ci.com)<br/>
-[![Build Status](https://magnum-ci.com/status/ebf25febbbf66f3c3cd411c94a4ed3d4.png)](https://magnum-ci.com/public/0ab38d64b0ab19293711/builds)
-
-[snap-ci.com](http://www.snap-ci.com)<br/>
-[![Build Status](https://snap-ci.com/yegor256/rultor/branch/master/build_image)](https://snap-ci.com/yegor256/rultor/branch/master)
-
 [semaphoreapp.com](http://www.semaphoreapp.com)<br/>
 [![Build Status](https://semaphoreapp.com/api/v1/projects/115d317a-9f15-4c71-9301-5dae64f0a76d/260906/badge.png)](https://semaphoreapp.com/yegor256/rultor)
 
-[drone.io](http://www.drone.io)<br/>
-[![Build Status](https://drone.io/github.com/yegor256/rultor/status.png)](https://drone.io/github.com/yegor256/rultor/latest)
-
 [solanolabs.com](http://ci.solanolabs.com)<br/>
 [![sonolabs status](https://ci.solanolabs.com:443/yegor256/rultor/badges/120059.png?badge_token=6c00577e47c05198703fe752d6d26cd4e4a4d011)](https://ci.solanolabs.com:443/yegor256/rultor/suites/120059)
-
