@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Bulk;
 import com.jcabi.github.Comment;
@@ -49,6 +48,7 @@ import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.cactoos.iterable.Joined;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -109,7 +109,7 @@ public final class Understands extends AbstractAgent {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Iterator<Comment.Smart> comments = new SafeIterator<>(
             new Smarts<Comment.Smart>(
-                Iterables.concat(
+                new Joined<Comment>(
                     Collections.singleton(new FirstComment(issue)),
                     new Bulk<>(issue.comments().iterate(new Date(0L)))
                 )
