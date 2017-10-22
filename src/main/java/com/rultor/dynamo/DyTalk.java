@@ -45,12 +45,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.cactoos.list.ListOf;
 import org.w3c.dom.Node;
@@ -77,6 +77,11 @@ public final class DyTalk implements Talk {
      * @checkstyle MagicNumber (3 lines)
      */
     private static final int LIMIT = 399 << 10;
+
+    /**
+     * UTF-8.
+     */
+    private static final String UTF_8 = "UTF-8";
 
     /**
      * Item.
@@ -187,7 +192,7 @@ public final class DyTalk implements Talk {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final OutputStream output = new GZIPOutputStream(baos);
         IOUtils.copy(
-            IOUtils.toInputStream(xml, Charsets.UTF_8),
+            IOUtils.toInputStream(xml, Charset.forName(UTF_8)),
             output
         );
         output.close();
@@ -206,7 +211,7 @@ public final class DyTalk implements Talk {
             new GZIPInputStream(new ByteArrayInputStream(bytes)),
             baos
         );
-        return new String(baos.toByteArray(), Charsets.UTF_8);
+        return new String(baos.toByteArray(), Charset.forName(UTF_8));
     }
 
 }
