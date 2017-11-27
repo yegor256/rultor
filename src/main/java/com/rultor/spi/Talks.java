@@ -29,13 +29,13 @@
  */
 package com.rultor.spi;
 
-import com.google.common.io.Files;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -134,9 +134,12 @@ public interface Talks {
         private final transient String path;
         /**
          * Ctor.
+         * @throws IOException ex
          */
-        public InDir() {
-            this.path = Files.createTempDir().getAbsolutePath();
+        public InDir() throws IOException {
+            this.path = Files.createTempDirectory("")
+                .toAbsolutePath()
+                .toString();
         }
         @Override
         public boolean exists(final long number) {

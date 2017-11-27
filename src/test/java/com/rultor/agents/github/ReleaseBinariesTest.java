@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.io.Files;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Releases;
@@ -44,6 +43,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cactoos.io.LengthOf;
+import org.cactoos.io.TeeInput;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
@@ -82,9 +83,9 @@ public final class ReleaseBinariesTest {
         final File bin = FileUtils.getFile(
             dir.getAbsolutePath(), "repo", target, name.replace("${tag}", tag)
         );
-        Files.createParentDirs(bin);
+        bin.mkdirs();
         final byte[] content = RandomUtils.nextBytes(Tv.HUNDRED);
-        Files.write(content, bin);
+        new LengthOf(new TeeInput(content, bin)).value();
         final Talk talk = ReleaseBinariesTest
             .talk(repo.issues().create("", ""), tag, dir);
         new CommentsTag(repo.github()).execute(talk);
