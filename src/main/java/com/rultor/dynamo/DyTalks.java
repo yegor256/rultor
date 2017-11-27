@@ -233,6 +233,7 @@ public final class DyTalks implements Talks {
     @Override
     public Iterable<Talk> active() {
         return new Mapped<>(
+            input -> new DyTalk(input),
             this.region.table(DyTalks.TBL)
                 .frame()
                 .through(
@@ -242,16 +243,26 @@ public final class DyTalks implements Talks {
                         .withSelect(Select.SPECIFIC_ATTRIBUTES)
                         .withAttributesToGet(DyTalks.HASH, DyTalks.ATTR_NUMBER)
                 )
-                .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true)),
-            input -> new DyTalk(input)
+                .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
         );
     }
 
     @Override
     public Iterable<Talk> recent() {
         return new Limited<>(
+            Tv.FIVE,
             new Filtered<>(
+                input -> {
+                    try {
+                        return !input.read().nodes(
+                            "/talk[@public='true']"
+                        ).isEmpty();
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                },
                 new Mapped<>(
+                    input -> new DyTalk(input),
                     this.region.table(DyTalks.TBL)
                         .frame()
                         .through(
@@ -264,26 +275,16 @@ public final class DyTalks implements Talks {
                         )
                         .where(
                             DyTalks.ATTR_ACTIVE, Boolean.toString(false)
-                        ),
-                    input -> new DyTalk(input)
-                ),
-                input -> {
-                    try {
-                        return !input.read().nodes(
-                            "/talk[@public='true']"
-                        ).isEmpty();
-                    } catch (final IOException ex) {
-                        throw new IllegalStateException(ex);
-                    }
-                }
-            ),
-            Tv.FIVE
+                        )
+                )
+            )
         );
     }
 
     @Override
     public Iterable<Talk> siblings(final String repo, final Date since) {
         return new Mapped<>(
+            input -> new DyTalk(input),
             this.region.table(DyTalks.TBL)
                 .frame()
                 .through(
@@ -304,8 +305,7 @@ public final class DyTalks implements Talks {
                                 Long.toString(since.getTime())
                             )
                         )
-                ),
-            input -> new DyTalk(input)
+                )
         );
     }
 }

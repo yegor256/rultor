@@ -41,6 +41,7 @@ import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.cactoos.Text;
 import org.cactoos.collection.Mapped;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Skipped;
@@ -110,7 +111,7 @@ public final class EndsDaemon extends AbstractAgent {
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
-        final ListOf<String> lines = new ListOf<>(
+        final ListOf<Text> lines = new ListOf<>(
             new SplitText(
                 System.lineSeparator(),
                 new TextOf(
@@ -118,14 +119,25 @@ public final class EndsDaemon extends AbstractAgent {
                 )
             )
         );
+        final ListOf<String> linesAsString = new ListOf<>(
+            new Mapped<>(
+                line -> line.asString(),
+                lines
+            )
+        );
         final String highlights = new JoinedText(
             "\n",
             new Mapped<>(
-                new Filtered<>(
-                    lines,
-                    input -> input.startsWith(EndsDaemon.HIGHLIGHTS_PREFIX)
+                s -> StringUtils.removeStart(
+                    s.asString(),
+                    EndsDaemon.HIGHLIGHTS_PREFIX
                 ),
-                s -> StringUtils.removeStart(s, EndsDaemon.HIGHLIGHTS_PREFIX)
+                new Filtered<>(
+                    input -> input.asString().startsWith(
+                        EndsDaemon.HIGHLIGHTS_PREFIX
+                    ),
+                    lines
+                )
             )
         ).asString();
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
@@ -142,8 +154,8 @@ public final class EndsDaemon extends AbstractAgent {
                         new JoinedText(
                             System.lineSeparator(),
                             new Skipped<>(
-                                lines,
-                                Math.max(lines.size() - Tv.SIXTY, 0)
+                                Math.max(lines.size() - Tv.SIXTY, 0),
+                                linesAsString
                             )
                         ).asString(),
                         -Tv.HUNDRED * Tv.THOUSAND

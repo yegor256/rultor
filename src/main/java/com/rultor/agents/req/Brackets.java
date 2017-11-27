@@ -64,8 +64,8 @@ final class Brackets {
                 new JoinedText(
                     " ",
                     new Mapped<>(
-                        this.items,
-                        input -> SSH.escape(input)
+                        input -> SSH.escape(input),
+                        this.items
                     )
                 ).asString()
             );

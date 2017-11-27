@@ -89,8 +89,8 @@ final class TkSiblings implements TkRegex {
         final String repo = req.matcher().group(1);
         final ListOf<Talk> siblings = new ListOf<>(
             new Limited<>(
-                this.talks.siblings(repo, since),
-                Tv.TWENTY
+                Tv.TWENTY,
+                this.talks.siblings(repo, since)
             )
         );
         if (!siblings.isEmpty()

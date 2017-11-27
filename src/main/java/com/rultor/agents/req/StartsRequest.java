@@ -139,6 +139,10 @@ public final class StartsRequest extends AbstractAgent {
             "\n",
             new Joined<String>(
                 new Mapped<Map.Entry<String, String>, String>(
+                    input -> String.format(
+                        "%s=%s", input.getKey(),
+                        StartsRequest.escape(input.getValue())
+                    ),
                     new Joined<Map.Entry<String, String>>(
                         this.vars(req, type).entrySet(),
                         new MapOf<String, String>(
@@ -148,10 +152,6 @@ public final class StartsRequest extends AbstractAgent {
                                     .toLowerCase(Locale.ENGLISH)
                             )
                         ).entrySet()
-                    ),
-                    input -> String.format(
-                        "%s=%s", input.getKey(),
-                        StartsRequest.escape(input.getValue())
                     )
                 ),
                 Collections.singleton(this.asRoot()),
@@ -250,12 +250,12 @@ public final class StartsRequest extends AbstractAgent {
                 "vars",
                 new Brackets(
                     new Mapped<>(
+                        input -> String.format("--env=%s", input),
                         docker.envs(
                             new MapOf<String, String>(
                                 entries
                             )
-                        ),
-                        input -> String.format("--env=%s", input)
+                        )
                     )
                 ).toString()
             )

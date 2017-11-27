@@ -236,8 +236,8 @@ final class DockerRun {
             envs.addAll(
                 new ListOf<String>(
                     new org.cactoos.collection.Mapped<>(
-                        parts,
-                        input -> String.format("%s", input)
+                        input -> String.format("%s", input),
+                        parts
                     )
                 )
             );
@@ -256,10 +256,10 @@ final class DockerRun {
             lines.addAll(
                 new ListOf<String>(
                     new org.cactoos.collection.Mapped<>(
+                        input -> input.trim(),
                         Arrays.asList(
                             StringUtils.split(node.xpath("text()").get(0), '\n')
-                        ),
-                        input -> input.trim()
+                        )
                     )
                 )
             );

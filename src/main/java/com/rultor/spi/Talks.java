@@ -145,7 +145,6 @@ public interface Talks {
         @Override
         public Talk get(final long number) {
             return new Filtered<>(
-                this.active(),
                 talk -> {
                     try {
                         return talk.read().xpath("/talk/@number").get(0)
@@ -153,7 +152,8 @@ public interface Talks {
                     } catch (final IOException ex) {
                         throw new IllegalStateException(ex);
                     }
-                }
+                },
+                this.active()
             ).iterator().next();
         }
         @Override
@@ -163,7 +163,6 @@ public interface Talks {
         @Override
         public Talk get(final String name) {
             return new Filtered<>(
-                this.active(),
                 talk -> {
                     try {
                         return talk.read().xpath("/talk/@name").get(0)
@@ -171,7 +170,8 @@ public interface Talks {
                     } catch (final IOException ex) {
                         throw new IllegalStateException(ex);
                     }
-                }
+                },
+                this.active()
             ).iterator().next();
         }
         @Override
@@ -218,8 +218,8 @@ public interface Talks {
             );
             Logger.info(this, "%d files in %s", files.size(), this.path);
             return new Mapped<>(
-                list,
-                file -> new Talk.InFile(file)
+                file -> new Talk.InFile(file),
+                list
             );
         }
         @Override
