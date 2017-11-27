@@ -150,10 +150,10 @@ public final class Answer {
                 new JoinedText(
                     SPACE,
                     new Mapped<>(
-                        logins,
                         login -> String.format(
                             "@%s", login.toLowerCase(Locale.ENGLISH)
-                        )
+                        ),
+                        logins
                     )
                 ).asString()
             );

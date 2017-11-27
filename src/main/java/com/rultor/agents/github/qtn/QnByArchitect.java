@@ -97,8 +97,8 @@ public final class QnByArchitect implements Question {
         final Req req;
         final List<String> logins = new ListOf<>(
             new Mapped<>(
-                this.profile.read().xpath(this.xpath),
-                input -> input.toLowerCase(Locale.ENGLISH)
+                input -> input.toLowerCase(Locale.ENGLISH),
+                this.profile.read().xpath(this.xpath)
             )
         );
         final boolean legal = logins.isEmpty() || logins.contains(

@@ -129,11 +129,11 @@ public final class QnAskedBy implements Question {
             final String excluded) {
         return StringUtils.join(
             new Mapped<>(
+                input -> String.format("@%s", input),
                 new Filtered<>(
-                    logins,
-                    login -> !excluded.equals(login)
-                ),
-                input -> String.format("@%s", input)
+                    login -> !excluded.equals(login),
+                    logins
+                )
             ),
             ", "
         );

@@ -106,8 +106,8 @@ public final class QnIfUnlocked implements Question {
                 new JoinedText(
                     ", ",
                     new Mapped<>(
-                        guards,
-                        input -> String.format("@%s", input)
+                        input -> String.format("@%s", input),
+                        guards
                     )
                 ).asString()
             );

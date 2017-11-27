@@ -33,11 +33,11 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import org.cactoos.Scalar;
-import org.cactoos.iterable.Mapped;
-import org.cactoos.scalar.IntOf;
-import org.cactoos.scalar.Max;
-import org.cactoos.scalar.UncheckedScalar;
+import java.util.List;
+import org.cactoos.collection.Mapped;
+import org.cactoos.list.ListOf;
+import org.cactoos.scalar.MaxOf;
+import org.cactoos.scalar.NumberOf;
 import org.xembly.Directives;
 
 /**
@@ -87,15 +87,19 @@ public final class IndexesRequests implements SuperAgent {
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private int index(final Talk talk) throws IOException {
-        final Iterable<Scalar<Integer>> indexes = new Mapped<>(
-            talk.read()
-                .xpath("/talk/archive/log/@index|/talk/request/@index"),
-            input -> new UncheckedScalar<>(new IntOf(input))
+        final List<Integer> indexes = new ListOf<>(
+            new Mapped<>(
+                input -> new NumberOf(input).intValue(),
+                talk.read()
+                    .xpath("/talk/archive/log/@index|/talk/request/@index")
+            )
         );
         final int index;
         if (indexes.iterator().hasNext()) {
             try {
-                index = new Max<>(indexes).value();
+                index = new MaxOf(
+                    indexes.toArray(new Integer[indexes.size()])
+                ).intValue();
                 // @checkstyle IllegalCatchCheck (1 line)
             } catch (final Throwable ex) {
                 throw new IOException(ex);

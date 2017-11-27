@@ -109,8 +109,8 @@ public final class CdTalks implements Talks {
     @Cacheable
     public Iterable<Talk> active() {
         return new Mapped<>(
-            this.origin.active(),
-            input -> new CdTalk(input)
+            input -> new CdTalk(input),
+            this.origin.active()
         );
     }
 
@@ -118,8 +118,8 @@ public final class CdTalks implements Talks {
     @Cacheable(lifetime = Tv.TWENTY, unit = TimeUnit.MINUTES)
     public Iterable<Talk> recent() {
         return new Mapped<>(
-            this.origin.recent(),
-            input -> new CdTalk(input)
+            input -> new CdTalk(input),
+            this.origin.recent()
         );
     }
 
@@ -127,8 +127,8 @@ public final class CdTalks implements Talks {
     @Cacheable
     public Iterable<Talk> siblings(final String repo, final Date since) {
         return new Mapped<>(
-            this.origin.siblings(repo, since),
-            input -> new CdTalk(input)
+            input -> new CdTalk(input),
+            this.origin.siblings(repo, since)
         );
     }
 }

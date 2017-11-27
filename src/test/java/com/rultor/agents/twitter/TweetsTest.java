@@ -81,8 +81,8 @@ public final class TweetsTest {
                 new JoinedText(
                     " ",
                     new Mapped<>(
-                        repo.languages(),
-                        lang -> String.format("#%s", lang.name())
+                        lang -> String.format("#%s", lang.name()),
+                        repo.languages()
                     )
                 ).asString()
             )

@@ -105,7 +105,7 @@ final class TkHome implements Take {
     private Directives recent() throws IOException {
         final Directives dirs = new Directives().add("recent");
         final PrettyTime pretty = new PrettyTime();
-        for (final Talk talk : new Limited<>(this.talks.recent(), Tv.FIVE)) {
+        for (final Talk talk : new Limited<>(Tv.FIVE, this.talks.recent())) {
             dirs.add("talk").set(talk.name())
                 .attr("timeago", pretty.format(talk.updated()));
             final XML xml = talk.read();

@@ -96,14 +96,14 @@ public final class QnLock implements Question {
         if (!args.nodes("//arg[@name='users']").isEmpty()) {
             users.addAll(
                 new org.cactoos.list.Mapped<>(
+                    input -> StringUtils.stripStart(
+                        input.trim().toLowerCase(Locale.ENGLISH),
+                        "@"
+                    ),
                     Arrays.asList(
                         args.xpath(
                             "//arg[@name='users']/text()"
                         ).get(0).split(",")
-                    ),
-                    input -> StringUtils.stripStart(
-                        input.trim().toLowerCase(Locale.ENGLISH),
-                        "@"
                     )
                 )
             );
@@ -150,8 +150,8 @@ public final class QnLock implements Question {
                     new JoinedText(
                         ", ",
                         new Mapped<>(
-                            users,
-                            input -> String.format("@%s", input)
+                            input -> String.format("@%s", input),
+                            users
                         )
                     ).asString()
                 )

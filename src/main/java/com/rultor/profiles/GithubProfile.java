@@ -171,6 +171,7 @@ final class GithubProfile implements Profile {
         final Collection<String> friends =
             new ListOf<>(
                 new Mapped<>(
+                    input -> input.toLowerCase(Locale.ENGLISH),
                     new YamlXML(
                         new String(
                             new Content.Smart(
@@ -178,8 +179,7 @@ final class GithubProfile implements Profile {
                             ).decoded(),
                             CharEncoding.UTF_8
                         )
-                    ).get().xpath("/p/entry[@key='friends']/item/text()"),
-                    input -> input.toLowerCase(Locale.ENGLISH)
+                    ).get().xpath("/p/entry[@key='friends']/item/text()")
                 )
             );
         final String coords = this.repo.coordinates()
