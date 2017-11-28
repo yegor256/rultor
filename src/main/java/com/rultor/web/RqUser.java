@@ -29,14 +29,13 @@
  */
 package com.rultor.web;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.jcabi.xml.XML;
 import com.rultor.profiles.Profiles;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Collection;
+import org.cactoos.scalar.Or;
 import org.takes.Request;
 import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.RqAuth;
@@ -76,6 +75,7 @@ final class RqUser extends RqWrap {
      * @return TRUE if I can see it
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public boolean canSee(final Talk talk) throws IOException {
         final XML xml;
         try {
@@ -91,16 +91,16 @@ final class RqUser extends RqWrap {
             granted = true;
         } else {
             final Identity identity = this.identity();
-            granted = Iterables.any(
-                readers,
-                new Predicate<String>() {
-                    @Override
-                    public boolean apply(final String input) {
-                        return !identity.equals(Identity.ANONYMOUS)
-                            && input.trim().equals(identity.urn());
-                    }
-                }
-            );
+            try {
+                granted = new Or(
+                    r -> !identity.equals(Identity.ANONYMOUS)
+                        && r.trim().equals(identity.urn()),
+                    readers
+                ).value();
+                // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final Throwable ex) {
+                throw new IOException(ex);
+            }
         }
         return granted;
     }
