@@ -43,7 +43,7 @@ import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.MapOf;
+import org.cactoos.map.SolidMap;
 
 /**
  * Deploy request.
@@ -82,7 +82,7 @@ public final class QnDeploy implements Question {
         );
         return new Req.Simple(
             "deploy",
-            new MapOf<String, String>(
+            new SolidMap<String, String>(
                 new MapEntry<String, String>(
                     "head_branch", "master"
                 ),

@@ -43,9 +43,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.MapOf;
+import org.cactoos.map.SolidMap;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -87,7 +87,7 @@ public final class QnParametrized implements Question {
         throws IOException {
         final Map<String, String> map = QnParametrized.params(comment);
         Req req = this.origin.understand(comment, home);
-        final List<Directive> directives = new ListOf<>(req.dirs());
+        final List<Directive> directives = new SolidList<>(req.dirs());
         if (!directives.isEmpty()) {
             final Directives dirs = new Directives().append(req.dirs());
             req = new Req() {
@@ -129,7 +129,7 @@ public final class QnParametrized implements Question {
                 )
             );
         }
-        return new MapOf<String, String>(
+        return new SolidMap<String, String>(
             entries
         );
     }

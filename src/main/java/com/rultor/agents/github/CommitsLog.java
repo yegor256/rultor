@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
+import com.jcabi.github.RepoCommit.Smart;
 import com.jcabi.github.Smarts;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -40,14 +41,13 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import javax.json.JsonObject;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.MapOf;
+import org.cactoos.map.SolidMap;
 import org.cactoos.text.JoinedText;
 
 /**
@@ -94,11 +94,11 @@ final class CommitsLog {
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         final Collection<String> lines = new LinkedList<>();
-        final Map<String, String> params = new MapOf<String, String>(
+        final Map<String, String> params = new SolidMap<String, String>(
             new MapEntry<String, String>("since", format.format(prev)),
             new MapEntry<String, String>("until", format.format(current))
         );
-        final List<RepoCommit.Smart> commits = new ListOf<>(
+        final SolidList<Smart> commits = new SolidList<>(
             new Smarts<RepoCommit.Smart>(
                 this.repo.commits().iterate(params)
             )

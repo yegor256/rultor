@@ -52,9 +52,9 @@ import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
 import org.cactoos.collection.Mapped;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.MapOf;
+import org.cactoos.map.SolidMap;
 import org.cactoos.text.JoinedText;
 
 /**
@@ -140,7 +140,7 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        return new MapOf<>(entries);
+        return new SolidMap<String, InputStream>(entries);
     }
 
     /**
@@ -169,7 +169,7 @@ final class GithubProfile implements Profile {
             );
         }
         final Collection<String> friends =
-            new ListOf<>(
+            new SolidList<>(
                 new Mapped<>(
                     input -> input.toLowerCase(Locale.ENGLISH),
                     new YamlXML(

@@ -50,7 +50,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.cactoos.iterable.Joined;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.MapOf;
+import org.cactoos.map.SolidMap;
 import org.cactoos.text.JoinedText;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -145,7 +145,7 @@ public final class StartsRequest extends AbstractAgent {
                     ),
                     new Joined<Map.Entry<String, String>>(
                         this.vars(req, type).entrySet(),
-                        new MapOf<String, String>(
+                        new SolidMap<String, String>(
                             new MapEntry<String, String>(
                                 "container",
                                 name.replaceAll("[^a-zA-Z0-9_.-]", "_")
@@ -235,7 +235,7 @@ public final class StartsRequest extends AbstractAgent {
                     new Joined<String>(
                         StartsRequest.export(
                             docker.envs(
-                                new MapOf<String, String>(
+                                new SolidMap<String, String>(
                                     entries
                                 )
                             )
@@ -252,7 +252,7 @@ public final class StartsRequest extends AbstractAgent {
                     new Mapped<>(
                         input -> String.format("--env=%s", input),
                         docker.envs(
-                            new MapOf<String, String>(
+                            new SolidMap<String, String>(
                                 entries
                             )
                         )
@@ -305,7 +305,7 @@ public final class StartsRequest extends AbstractAgent {
                 )
             );
         }
-        return new MapOf<String, String>(
+        return new SolidMap<String, String>(
             entries
         );
     }

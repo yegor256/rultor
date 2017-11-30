@@ -36,7 +36,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import java.io.IOException;
 import java.util.Date;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -85,7 +85,7 @@ public final class AnswerTest {
             answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
-            new ListOf<>(issue.comments().iterate(new Date(0L))).size(),
+            new SolidList<>(issue.comments().iterate(new Date(0L))).size(),
             Matchers.is(Tv.SIX)
         );
     }

@@ -38,13 +38,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Sorted;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.cactoos.text.JoinedText;
 
 /**
@@ -214,7 +213,7 @@ public interface Talks {
             final Collection<File> files = FileUtils.listFiles(
                 new File(this.path), null, false
             );
-            final List<File> list = new ListOf<>(
+            final SolidList<File> list = new SolidList<>(
                 new Sorted<>(
                     files
                 )

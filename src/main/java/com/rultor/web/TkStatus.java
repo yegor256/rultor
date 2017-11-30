@@ -35,7 +35,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
 import java.net.HttpURLConnection;
 import java.util.concurrent.TimeUnit;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
@@ -68,7 +68,7 @@ final class TkStatus implements Take {
 
     @Override
     public Response act(final Request req) {
-        final ListOf<Tick> ticks = new ListOf<>(this.pulse.ticks());
+        final SolidList<Tick> ticks = new SolidList<>(this.pulse.ticks());
         final StringBuilder msg = new StringBuilder(Tv.THOUSAND);
         final Response response;
         if (ticks.isEmpty()) {
