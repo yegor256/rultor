@@ -45,7 +45,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Joined;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 
 /**
  * Docker run command.
@@ -93,12 +93,12 @@ final class DockerRun {
             trap = Collections.emptyList();
         } else {
             trap = new Joined<String>(
-                new ListOf<String>("function", "clean_up()", "{"),
+                new SolidList<String>("function", "clean_up()", "{"),
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='uninstall']"
                 ),
-                new ListOf<String>("}", ";"),
-                new ListOf<String>("trap", "clean_up", "EXIT", ";")
+                new SolidList<String>("}", ";"),
+                new SolidList<String>("trap", "clean_up", "EXIT", ";")
             );
         }
         return new Joined<String>(
@@ -129,7 +129,7 @@ final class DockerRun {
         return new Joined<String>(
             DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
             DockerRun.envs(this.node(), "entry[@key='env']"),
-            new ListOf<String>(entries)
+            new SolidList<String>(entries)
         );
     }
 
@@ -234,7 +234,7 @@ final class DockerRun {
                 parts = DockerRun.lines(node);
             }
             envs.addAll(
-                new ListOf<String>(
+                new SolidList<String>(
                     new org.cactoos.collection.Mapped<>(
                         input -> String.format("%s", input),
                         parts
@@ -254,7 +254,7 @@ final class DockerRun {
         final Collection<String> lines = new LinkedList<String>();
         if (node.node().hasChildNodes()) {
             lines.addAll(
-                new ListOf<String>(
+                new SolidList<String>(
                     new org.cactoos.collection.Mapped<>(
                         input -> input.trim(),
                         Arrays.asList(

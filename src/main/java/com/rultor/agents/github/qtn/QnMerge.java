@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.MapOf;
+import org.cactoos.map.SolidMap;
 
 /**
  * Merge request.
@@ -124,7 +124,7 @@ public final class QnMerge implements Question {
         } else {
             req = new Req.Simple(
                 "merge",
-                new MapOf<String, String>(
+                new SolidMap<String, String>(
                     new MapEntry<String, String>(
                         "pull_id",
                         Integer.toString(pull.number())

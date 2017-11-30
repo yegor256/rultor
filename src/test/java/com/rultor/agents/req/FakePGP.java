@@ -30,7 +30,7 @@
 package com.rultor.agents.req;
 
 import java.io.IOException;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.cactoos.text.JoinedText;
 
 /**
@@ -51,7 +51,7 @@ final class FakePGP {
     public String asString() throws IOException {
         return new JoinedText(
             "\n",
-            new ListOf<>(
+            new SolidList<>(
                 "-----BEGIN PGP MESSAGE-----",
                 "Version: GnuPG v1\n",
                 "hQEMA5qETcGag5w6AQgAvm/P0JUlQAd",

@@ -34,7 +34,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -64,7 +64,7 @@ public final class QnGithubIssue implements Question {
     public Req understand(final Comment.Smart comment, final URI home)
         throws IOException {
         Req req = this.origin.understand(comment, home);
-        final ListOf<Directive> reqDirs = new ListOf<>(req.dirs());
+        final SolidList<Directive> reqDirs = new SolidList<>(req.dirs());
         if (!reqDirs.isEmpty()) {
             final Directives dirs = new Directives().append(reqDirs);
             req = new Req() {

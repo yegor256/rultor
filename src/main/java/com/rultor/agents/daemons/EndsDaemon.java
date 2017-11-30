@@ -45,7 +45,7 @@ import org.cactoos.Text;
 import org.cactoos.collection.Mapped;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Skipped;
-import org.cactoos.list.ListOf;
+import org.cactoos.list.SolidList;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.SplitText;
 import org.cactoos.text.TextOf;
@@ -111,7 +111,7 @@ public final class EndsDaemon extends AbstractAgent {
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
-        final ListOf<Text> lines = new ListOf<>(
+        final SolidList<Text> lines = new SolidList<>(
             new SplitText(
                 System.lineSeparator(),
                 new TextOf(
@@ -119,7 +119,7 @@ public final class EndsDaemon extends AbstractAgent {
                 )
             )
         );
-        final ListOf<String> linesAsString = new ListOf<>(
+        final SolidList<String> linesAsString = new SolidList<>(
             new Mapped<>(
                 line -> line.asString(),
                 lines
