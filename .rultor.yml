@@ -1,3 +1,5 @@
+docker:
+  image: yegor256/java8
 install: |-
   sudo locale-gen en_US en_US.UTF-8
   sudo dpkg-reconfigure locales
