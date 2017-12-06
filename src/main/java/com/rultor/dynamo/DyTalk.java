@@ -73,7 +73,7 @@ public final class DyTalk implements Talk {
 
     /**
      * Maximum amount of bytes per item in DynamoDB (400Kb).
-     * @link http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html
+     * @see <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html">DinamoDb limits</a>
      * @checkstyle MagicNumber (3 lines)
      */
     private static final int LIMIT = 399 << 10;
