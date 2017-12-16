@@ -78,7 +78,7 @@ public final class StartsECS extends AbstractAgent {
     }
 
     @Override
-    //@todo #629 Add Container params to Directive, for example publicIpAddress
+    // @todo #629 Add Container params to Directive, for example publicIpAddress
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Container container = this.amazon.runOnDemand();
         Logger.info(
