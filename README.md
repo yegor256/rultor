@@ -10,6 +10,7 @@
 [![codebeat badge](https://codebeat.co/badges/56116205-91d3-4966-8f15-d5c505fc3905)](https://codebeat.co/projects/github-com-yegor256-rultor)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3d1858b2edfc4dcdae9363c09a75dfbc)](https://www.codacy.com/app/github_90/rultor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=yegor256/rultor&amp;utm_campaign=Badge_Grade)
 [![Dependencies](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3)
+[![Join the chat at https://gitter.im/yegor256/rultor](https://badges.gitter.im/yegor256/rultor.svg)](https://gitter.im/yegor256/rultor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Conference recommends](https://devternity.com/shields/recommends.svg)](https://devternity.com)
 
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
@@ -24,9 +25,7 @@ Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yego
 
 ## What Is Rultor?
 
-[![Join the chat at https://gitter.im/yegor256/rultor](https://badges.gitter.im/yegor256/rultor.svg)](https://gitter.im/yegor256/rultor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-TBD... _product statement_
+Rultor is a DevOps team assistant. It helps your programmers and release managers automate routine operations (merge, deploy and release), with an easy-to-use intuitive interface.
 
 ## What Problems Does Rultor Solve?
 
