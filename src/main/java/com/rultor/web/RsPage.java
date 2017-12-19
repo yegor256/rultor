@@ -42,7 +42,7 @@ import org.takes.facets.fork.FkTypes;
 import org.takes.facets.fork.RsFork;
 import org.takes.rs.RsWithType;
 import org.takes.rs.RsWrap;
-import org.takes.rs.RsXSLT;
+import org.takes.rs.RsXslt;
 import org.takes.rs.xe.RsXembly;
 import org.takes.rs.xe.XeAppend;
 import org.takes.rs.xe.XeChain;
@@ -51,7 +51,7 @@ import org.takes.rs.xe.XeLinkHome;
 import org.takes.rs.xe.XeLinkSelf;
 import org.takes.rs.xe.XeLocalhost;
 import org.takes.rs.xe.XeMillis;
-import org.takes.rs.xe.XeSLA;
+import org.takes.rs.xe.XeSla;
 import org.takes.rs.xe.XeSource;
 import org.takes.rs.xe.XeStylesheet;
 
@@ -98,7 +98,7 @@ final class RsPage extends RsWrap {
                 new XeLinkSelf(req),
                 new XeMillis(true),
                 new XeDate(),
-                new XeSLA(),
+                new XeSla(),
                 new XeLocalhost(),
                 new XeIdentity(req),
                 new XeFlash(req),
@@ -120,7 +120,7 @@ final class RsPage extends RsWrap {
             ),
             new FkTypes(
                 "*/*",
-                new RsXSLT(new RsWithType(raw, "text/html"))
+                new RsXslt(new RsWithType(raw, "text/html"))
             )
         );
     }
