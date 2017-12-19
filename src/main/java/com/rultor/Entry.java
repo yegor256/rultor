@@ -60,7 +60,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.takes.http.Exit;
-import org.takes.http.FtCLI;
+import org.takes.http.FtCli;
 
 /**
  * Command line entry.
@@ -113,7 +113,7 @@ public final class Entry {
             talks, Entry.pulse(), this.github(), this.sttc()
         );
         try {
-            new FtCLI(
+            new FtCli(
                 new TkApp(talks, Entry.pulse(), new Toggles.InFile()),
                 this.arguments
             ).start(Exit.NEVER);
