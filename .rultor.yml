@@ -46,7 +46,6 @@ merge:
     mvn clean
   commanders:
   - carlosmiranda
-  - darkled
   - dmzaytsev
   - essobedo
   - ggajos
@@ -55,6 +54,7 @@ merge:
   - longtimeago
   - mkordas
   - pinaf
+  - filfreire
 deploy:
   script: |-
     mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode
