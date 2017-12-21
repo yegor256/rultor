@@ -7,17 +7,13 @@ services:
 cache:
   directories:
     - $HOME/.m2
-# before_install:
-#   - wget https://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-#   - unzip -qq apache-maven-3.3.9-bin.zip
-#   - export M2_HOME=$PWD/apache-maven-3.3.9
-#   - export PATH=$M2_HOME/bin:$PATH
 env:
   global:
     - DOCKER_HOST="tcp://127.0.0.1:2375"
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 script:
+  - java -version
   - mvn clean install -Pqulice -PdockerITs --errors
   - travis_wait docker build -q -t rultor -f src/docker/Dockerfile src/docker
   - docker images
