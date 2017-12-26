@@ -27,8 +27,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # The software packages configured here (PHP, Node, Ruby, Java etc.) are for
-# the convenience of the users going to use this default container. 
-# If you are going to use your own container, you may remove them. 
+# the convenience of the users going to use this default container.
+# If you are going to use your own container, you may remove them.
 # Rultor has no dependency on these packages.
 
 FROM ubuntu:14.04
@@ -140,7 +140,7 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 COPY settings.xml /root/.m2/settings.xml
 RUN git clone https://github.com/yegor256/rultor.git --depth=1
 RUN cd rultor && \
-  mvn clean install -DskipTests -Pqulice && \
+  mvn clean install -DskipTests -Pqulice --quiet && \
   cd .. && \
   rm -rf rultor
 
