@@ -42,7 +42,7 @@ merge:
   script: |-
     pdd --file=/dev/null
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
-    mvn clean site -Psite --errors --settings ../settings.xml
+    mvn clean site -Psite --errors --settings ../settings.xml --quiet
     mvn clean
   commanders:
   - carlosmiranda
@@ -57,7 +57,7 @@ merge:
   - pinaf
 deploy:
   script: |-
-    mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode
+    mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode --quiet
     mvn clean
     est --dir=./est --verbose --file=rultor.xml --format=xml
     s3cmd --no-progress put rultor.xml --config=../s3cfg s3://est.teamed.io/rultor.xml
@@ -67,10 +67,10 @@ release:
   pre: false
   script: |-
     echo "Author of the request: ${author}"
-    mvn versions:set "-DnewVersion=${tag}"
+    mvn versions:set "-DnewVersion=${tag}" --quiet
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
-    mvn clean package -Pqulice -Prultor --errors --batch-mode
+    mvn clean package -Pqulice -Prultor --errors --batch-mode --quiet
     git remote add heroku git@heroku.com:rultor.git
     mkdir -p ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
