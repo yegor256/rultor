@@ -90,8 +90,16 @@ RUN mkdir jsl && \
   rm -rf jsl
 # RUN pecl install xdebug-beta && \
 #   echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
+
 # Java
-RUN apt-get install -y default-jdk
+RUN echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu trusty main" | tee -a /etc/apt/sources.list
+RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list
+RUN echo "deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main" | tee -a /etc/apt/sources.list
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 E1DF1F24 3DD9F856
+RUN apt-get update
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+RUN apt-get install -y oracle-java8-installer ca-certificates
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # LaTeX
 RUN apt-get install -y texlive-latex-base
