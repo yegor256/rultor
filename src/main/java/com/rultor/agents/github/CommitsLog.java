@@ -123,7 +123,7 @@ final class CommitsLog {
      * @param commit The commit
      * @return Text
      * @throws IOException If fails
-     * @link https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository
+     * see <a href="https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository">link</a>
      * @checkstyle MultipleStringLiteralsCheck (50 lines)
      */
     private static String asText(final RepoCommit.Smart commit)
