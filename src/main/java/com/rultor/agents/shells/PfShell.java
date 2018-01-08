@@ -79,7 +79,7 @@ public final class PfShell {
      * @param prof Profile
      * @param host Default IP address
      * @param port Default Port of server
-     * @param login Defaul Login
+     * @param login Default Login
      * @param key Default Private SSH key
      * @checkstyle ParameterNumberCheck (6 lines)
      */
