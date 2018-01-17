@@ -27,8 +27,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # The software packages configured here (PHP, Node, Ruby, Java etc.) are for
-# the convenience of the users going to use this default container. 
-# If you are going to use your own container, you may remove them. 
+# the convenience of the users going to use this default container.
+# If you are going to use your own container, you may remove them.
 # Rultor has no dependency on these packages.
 
 FROM ubuntu:14.04
@@ -90,8 +90,16 @@ RUN mkdir jsl && \
   rm -rf jsl
 # RUN pecl install xdebug-beta && \
 #   echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
+
 # Java
-RUN apt-get install -y default-jdk
+RUN echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu trusty main" | tee -a /etc/apt/sources.list
+RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list
+RUN echo "deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main" | tee -a /etc/apt/sources.list
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 E1DF1F24 3DD9F856
+RUN apt-get update
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+RUN apt-get install -y oracle-java8-installer ca-certificates
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # LaTeX
 RUN apt-get install -y texlive-latex-base
@@ -136,11 +144,10 @@ RUN wget --quiet "http://mirror.dkd.de/apache/maven/maven-3/${MAVEN_VERSION}/bin
 # Warming it up a bit
 RUN /bin/bash -l -c "gem install jekyll:3.4.3"
 ENV MAVEN_OPTS "-Xms512m -Xmx2g"
-ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 COPY settings.xml /root/.m2/settings.xml
 RUN git clone https://github.com/yegor256/rultor.git --depth=1
 RUN cd rultor && \
-  mvn clean install -DskipTests -Pqulice && \
+  mvn clean install -DskipTests -Pqulice --quiet && \
   cd .. && \
   rm -rf rultor
 
