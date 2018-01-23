@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2017, rultor.com
+ * Copyright (c) 2009-2018, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -125,10 +125,11 @@ final class CommitsLog {
 
     /**
      * Convert commit to text.
+     * @checkstyle LineLengthCheck (1 line)
+     *  see <a href="https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository">link</a>
      * @param commit The commit
      * @return Text
      * @throws IOException If fails
-     * @see <a href="https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository">List of commits</a>
      * @checkstyle MultipleStringLiteralsCheck (50 lines)
      */
     private static String asText(final RepoCommit.Smart commit)
