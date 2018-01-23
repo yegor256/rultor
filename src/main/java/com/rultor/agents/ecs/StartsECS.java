@@ -44,6 +44,7 @@ import org.xembly.Directives;
  * Starts Amazon ECS container, that runs Docker + SSHD on ECS. Container
  * is configured in privileged mode. Configuration is stored in S3.
  * See details here:
+ * @checkstyle LineLengthCheck (1 line)
  * see <a href="http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3">link</a>
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
