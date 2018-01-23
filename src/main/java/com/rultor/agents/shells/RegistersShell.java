@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2017, rultor.com
+ * Copyright (c) 2009-2018, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ public final class RegistersShell extends AbstractAgent {
      * @param profile Profile
      * @param host Default IP address
      * @param port Default Port of server
-     * @param user Defaul Login
+     * @param user Default Login
      * @param key Default Private SSH key
      * @checkstyle ParameterNumberCheck (6 lines)
      */

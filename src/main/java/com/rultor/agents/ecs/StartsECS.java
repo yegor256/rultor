@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2017, rultor.com
+ * Copyright (c) 2009-2018, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,8 @@ import org.xembly.Directives;
  * Starts Amazon ECS container, that runs Docker + SSHD on ECS. Container
  * is configured in privileged mode. Configuration is stored in S3.
  * See details here:
- * @link http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3
+ * @checkstyle LineLengthCheck (1 line)
+ * see <a href="http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html#ecs-config-s3">link</a>
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
  * @since 2.0

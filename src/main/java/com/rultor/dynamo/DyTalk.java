@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2017, rultor.com
+ * Copyright (c) 2009-2018, rultor.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +73,8 @@ public final class DyTalk implements Talk {
 
     /**
      * Maximum amount of bytes per item in DynamoDB (400Kb).
-     * @link http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html
+     * @checkstyle LineLengthCheck (1 line)
+     * see <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html">link</a>
      * @checkstyle MagicNumber (3 lines)
      */
     private static final int LIMIT = 399 << 10;
