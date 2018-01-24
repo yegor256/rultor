@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.takes.Take;
 import org.takes.http.FtRemote;
@@ -54,6 +55,7 @@ import org.takes.rs.RsPrint;
  * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class TkAppTest {
 
@@ -73,7 +75,6 @@ public final class TkAppTest {
                     take.act(
                         new RqWithHeader(
                             new RqFake("GET", "/"),
-                            // @checkstyle MultipleStringLiteralsCheck (1 line)
                             "Accept",
                             "text/xml"
                         )
@@ -121,4 +122,31 @@ public final class TkAppTest {
         );
     }
 
+    /**
+     * App can serve home js.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersHomeJs() throws Exception {
+        final Take take = new TkApp(
+            new Talks.InDir(), Pulse.EMPTY,
+            new Toggles.InFile()
+        );
+        Assert.assertEquals(
+            new RsPrint(
+                take.act(
+                    new RqWithHeader(
+                        new RqFake("GET", "/js/home.js?{version/revision}"),
+                        "Accept",
+                        "text/javascript"
+                    )
+                )
+            ).printBody(),
+            new StringBuilder()
+                .append("$(document).ready(function(){var a=$(\"#pulse\");")
+                .append("window.setInterval(function(){a.find(\"img\")")
+                .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
+                .append("+Date.now())},1E3)});").toString()
+        );
+    }
 }
