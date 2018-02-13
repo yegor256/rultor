@@ -29,12 +29,6 @@
  */
 package com.rultor.agents.daemons;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
@@ -44,10 +38,17 @@ import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
-import java.util.Collection;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.cactoos.Text;
+import org.cactoos.collection.Mapped;
+import org.cactoos.iterable.Filtered;
+import org.cactoos.iterable.Skipped;
+import org.cactoos.list.SolidList;
+import org.cactoos.text.JoinedText;
+import org.cactoos.text.SplitText;
+import org.cactoos.text.TextOf;
 import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -110,34 +111,35 @@ public final class EndsDaemon extends AbstractAgent {
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
-        final Collection<String> lines = Lists.newArrayList(
-            Splitter.on(System.lineSeparator()).split(
-                EndsDaemon.stdout(shell, dir)
+        final SolidList<Text> lines = new SolidList<>(
+            new SplitText(
+                System.lineSeparator(),
+                new TextOf(
+                    EndsDaemon.stdout(shell, dir)
+                )
             )
         );
-        final String highlights = Joiner.on("\n").join(
-            Iterables.transform(
-                Iterables.filter(
-                    lines,
-                    new Predicate<String>() {
-                        @Override
-                        public boolean apply(final String input) {
-                            return input.startsWith(
-                                EndsDaemon.HIGHLIGHTS_PREFIX
-                            );
-                        }
-                    }
+        final SolidList<String> linesAsString = new SolidList<>(
+            new Mapped<>(
+                line -> line.asString(),
+                lines
+            )
+        );
+        final String highlights = new JoinedText(
+            "\n",
+            new Mapped<>(
+                s -> StringUtils.removeStart(
+                    s.asString(),
+                    EndsDaemon.HIGHLIGHTS_PREFIX
                 ),
-                new Function<String, String>() {
-                    @Override
-                    public String apply(final String str) {
-                        return StringUtils.removeStart(
-                            str, EndsDaemon.HIGHLIGHTS_PREFIX
-                        );
-                    }
-                }
+                new Filtered<>(
+                    input -> input.asString().startsWith(
+                        EndsDaemon.HIGHLIGHTS_PREFIX
+                    ),
+                    lines
+                )
             )
-        );
+        ).asString();
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives()
             .xpath("/talk/daemon")
@@ -149,12 +151,13 @@ public final class EndsDaemon extends AbstractAgent {
             .set(
                 Xembler.escape(
                     StringUtils.substring(
-                        Joiner.on(System.lineSeparator()).join(
-                            Iterables.skip(
-                                lines,
-                                Math.max(lines.size() - Tv.SIXTY, 0)
+                        new JoinedText(
+                            System.lineSeparator(),
+                            new Skipped<>(
+                                Math.max(lines.size() - Tv.SIXTY, 0),
+                                linesAsString
                             )
-                        ),
+                        ).asString(),
                         -Tv.HUNDRED * Tv.THOUSAND
                     )
                 )
@@ -197,7 +200,8 @@ public final class EndsDaemon extends AbstractAgent {
         return new ShellCommand(
             shell,
             dir,
-            Joiner.on(';').join(
+            new JoinedText(
+                ";",
                 "size=$(stat -c%s stdout)",
                 String.format("if [ $size -gt %d ]", max),
                 "then echo \"Output is too big ($size bytes)\"",
@@ -205,7 +209,7 @@ public final class EndsDaemon extends AbstractAgent {
                 String.format("tail -c %d stdout", max),
                 "else cat stdout",
                 "fi"
-            )
+            ).asString()
         ).exec();
     }
 

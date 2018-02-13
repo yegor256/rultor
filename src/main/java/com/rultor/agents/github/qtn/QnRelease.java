@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
@@ -44,6 +43,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.SolidMap;
 
 /**
  * Release request.
@@ -119,15 +120,16 @@ public final class QnRelease implements Question {
         );
         return new Req.Simple(
             "release",
-            new ImmutableMap.Builder<String, String>()
-                .put("head_branch", "master")
-                .put(
+            new SolidMap<String, String>(
+                new MapEntry<String, String>("head_branch", "master"),
+                new MapEntry<String, String>(
                     "head",
                     String.format(
                         "git@github.com:%s.git",
                         comment.issue().repo().coordinates()
                     )
-                ).build()
+                )
+            )
         );
     }
 

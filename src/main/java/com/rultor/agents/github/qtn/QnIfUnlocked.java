@@ -29,9 +29,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Contents;
@@ -51,6 +48,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.text.JoinedText;
 
 /**
  * If target branch is unlocked.
@@ -104,17 +103,13 @@ public final class QnIfUnlocked implements Question {
                 false,
                 QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied"),
                 branch,
-                Joiner.on(", ").join(
-                    Iterables.transform(
-                        guards,
-                        new Function<String, String>() {
-                            @Override
-                            public String apply(final String input) {
-                                return String.format("@%s", input);
-                            }
-                        }
+                new JoinedText(
+                    ", ",
+                    new Mapped<>(
+                        input -> String.format("@%s", input),
+                        guards
                     )
-                )
+                ).asString()
             );
             req = Req.EMPTY;
         }

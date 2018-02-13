@@ -29,12 +29,6 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
@@ -45,12 +39,19 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.cactoos.iterable.Joined;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.SolidMap;
+import org.cactoos.text.JoinedText;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -60,6 +61,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -133,29 +135,24 @@ public final class StartsRequest extends AbstractAgent {
     @SuppressWarnings("unchecked")
     private String script(final XML req, final String type, final String name)
         throws IOException {
-        return Joiner.on('\n').join(
-            Iterables.concat(
-                Iterables.transform(
-                    Sets.union(
+        return new JoinedText(
+            "\n",
+            new Joined<String>(
+                new Mapped<Map.Entry<String, String>, String>(
+                    input -> String.format(
+                        "%s=%s", input.getKey(),
+                        StartsRequest.escape(input.getValue())
+                    ),
+                    new Joined<Map.Entry<String, String>>(
                         this.vars(req, type).entrySet(),
-                        Sets.newHashSet(
-                            Maps.immutableEntry(
+                        new SolidMap<String, String>(
+                            new MapEntry<String, String>(
                                 "container",
                                 name.replaceAll("[^a-zA-Z0-9_.-]", "_")
                                     .toLowerCase(Locale.ENGLISH)
                             )
-                        )
-                    ),
-                    new Function<Map.Entry<String, String>, String>() {
-                        @Override
-                        public String apply(
-                            final Map.Entry<String, String> input) {
-                            return String.format(
-                                "%s=%s", input.getKey(),
-                                StartsRequest.escape(input.getValue())
-                            );
-                        }
-                    }
+                        ).entrySet()
+                    )
                 ),
                 Collections.singleton(this.asRoot()),
                 Collections.singleton(
@@ -174,7 +171,7 @@ public final class StartsRequest extends AbstractAgent {
                     )
                 )
             )
-        );
+        ).asString();
     }
 
     /**
@@ -211,79 +208,106 @@ public final class StartsRequest extends AbstractAgent {
      * @return Vars
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
-        final ImmutableMap.Builder<String, String> vars =
-            new ImmutableMap.Builder<>();
+        final List<Entry<String, String>> entries = new LinkedList<>();
         for (final XML arg : req.nodes("args/arg")) {
-            vars.put(
-                arg.xpath("@name").get(0),
-                arg.xpath("text()").get(0)
+            entries.add(
+                new MapEntry<String, String>(
+                    arg.xpath("@name").get(0),
+                    arg.xpath("text()").get(0)
+                )
             );
         }
         final DockerRun docker = new DockerRun(
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
-        vars.put("author", req.xpath("author/text()").get(0));
-        vars.put(
-            "scripts",
-            new Brackets(
-                Iterables.concat(
-                    StartsRequest.export(docker.envs(vars.build())),
-                    docker.script()
-                )
-            ).toString()
-        );
-        vars.put(
-            "vars",
-            new Brackets(
-                Iterables.transform(
-                    docker.envs(vars.build()),
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(final String input) {
-                            return String.format("--env=%s", input);
-                        }
-                    }
-                )
-            ).toString()
-        );
-        final Profile.Defaults def = new Profile.Defaults(this.profile);
-        vars.put(
-            "image",
-            def.text(
-                "/p/entry[@key='docker']/entry[@key='image']",
-                "yegor256/rultor"
+        entries.add(
+            new MapEntry<String, String>(
+                "author", req.xpath("author/text()").get(0)
             )
         );
-        vars.put(
-            "directory",
-            def.text("/p/entry[@key='docker']/entry[@key='directory']")
+        entries.add(
+            new MapEntry<String, String>(
+                "scripts",
+                new Brackets(
+                    new Joined<String>(
+                        StartsRequest.export(
+                            docker.envs(
+                                new SolidMap<String, String>(
+                                    entries
+                                )
+                            )
+                        ),
+                        docker.script()
+                    )
+                ).toString()
+            )
+        );
+        entries.add(
+            new MapEntry<String, String>(
+                "vars",
+                new Brackets(
+                    new Mapped<>(
+                        input -> String.format("--env=%s", input),
+                        docker.envs(
+                            new SolidMap<String, String>(
+                                entries
+                            )
+                        )
+                    )
+                ).toString()
+            )
+        );
+        final Profile.Defaults def = new Profile.Defaults(this.profile);
+        entries.add(
+            new MapEntry<String, String>(
+                "image",
+                def.text(
+                    "/p/entry[@key='docker']/entry[@key='image']",
+                    "yegor256/rultor"
+                )
+            )
+        );
+        entries.add(
+            new MapEntry<String, String>(
+                "directory",
+                def.text("/p/entry[@key='docker']/entry[@key='directory']")
+            )
         );
         if (!this.profile.read().nodes("/p/entry[@key='merge']").isEmpty()) {
-            vars.put(
-                "squash",
-                def.text(
-                    "/p/entry[@key='merge']/entry[@key='squash']",
-                    Boolean.FALSE.toString()
-                ).toLowerCase(Locale.ENGLISH)
+            entries.add(
+                new MapEntry<String, String>(
+                    "squash",
+                    def.text(
+                        "/p/entry[@key='merge']/entry[@key='squash']",
+                        Boolean.FALSE.toString()
+                    ).toLowerCase(Locale.ENGLISH)
+                )
             );
-            vars.put(
-                "ff",
-                def.text(
-                    "/p/entry[@key='merge']/entry[@key='fast-forward']",
-                    "default"
-                ).toLowerCase(Locale.ENGLISH)
+            entries.add(
+                new MapEntry<String, String>(
+                    "ff",
+                    def.text(
+                        "/p/entry[@key='merge']/entry[@key='fast-forward']",
+                        "default"
+                    ).toLowerCase(Locale.ENGLISH)
+                )
             );
-            vars.put(
-                "rebase",
-                def.text(
-                    "/p/entry[@key='merge']/entry[@key='rebase']",
-                    Boolean.FALSE.toString()
-                ).toLowerCase(Locale.ENGLISH)
+            entries.add(
+                new MapEntry<String, String>(
+                    "rebase",
+                    def.text(
+                        "/p/entry[@key='merge']/entry[@key='rebase']",
+                        Boolean.FALSE.toString()
+                    ).toLowerCase(Locale.ENGLISH)
+                )
             );
         }
-        return vars.build();
+        return new SolidMap<String, String>(
+            entries
+        );
     }
 
     /**

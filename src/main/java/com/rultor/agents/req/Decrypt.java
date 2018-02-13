@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.ssh.SSH;
 import com.jcabi.xml.XML;
@@ -39,6 +38,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.text.JoinedText;
 
 /**
  * Decrypt.
@@ -50,14 +50,12 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "profile")
-/**
- * Tests for {@link Decrypt}.
- *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
- * @since 1.37.4
- */
 final class Decrypt {
+
+    /**
+     * Space delimiter.
+     */
+    private static final String SPACE = " ";
 
     /**
      * Profile.
@@ -97,6 +95,7 @@ final class Decrypt {
      * @return Instructions
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<String> commands() throws IOException {
         final Collection<XML> assets =
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
@@ -104,11 +103,12 @@ final class Decrypt {
         if (!assets.isEmpty()) {
             commands.add("gpgconf --reload gpg-agent");
             commands.add(
-                Joiner.on(' ').join(
+                new JoinedText(
+                    SPACE,
                     "gpg --keyserver hkp://pool.sks-keyservers.net",
                     this.proxy,
                     "--verbose --recv-keys 9AF0FA4C"
-                )
+                ).asString()
             );
             commands.add("gpg --version");
         }
@@ -116,7 +116,8 @@ final class Decrypt {
             final String key = asset.xpath("@key").get(0);
             final String enc = String.format("%s.enc", key);
             commands.add(
-                Joiner.on(' ').join(
+                new JoinedText(
+                    SPACE,
                     "gpg --verbose \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
                     "\"--secret-keyring=$(pwd)/.gpg/secring.gpg\"",
                     String.format(
@@ -124,14 +125,15 @@ final class Decrypt {
                         SSH.escape(asset.xpath("./text()").get(0)),
                         SSH.escape(enc)
                     )
-                )
+                ).asString()
             );
             commands.add(
                 String.format(
-                    Joiner.on(' ').join(
+                    new JoinedText(
+                        SPACE,
                         "gpg --no-tty --batch --verbose --decrypt",
                         "--passphrase %s %s > %s"
-                    ),
+                    ).asString(),
                     SSH.escape(
                         String.format("rultor-key:%s", this.profile.name())
                     ),

@@ -29,13 +29,13 @@
  */
 package com.rultor.web;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rultor.Toggles;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import org.cactoos.iterable.Limited;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Request;
 import org.takes.Response;
@@ -105,7 +105,7 @@ final class TkHome implements Take {
     private Directives recent() throws IOException {
         final Directives dirs = new Directives().add("recent");
         final PrettyTime pretty = new PrettyTime();
-        for (final Talk talk : Iterables.limit(this.talks.recent(), Tv.FIVE)) {
+        for (final Talk talk : new Limited<>(Tv.FIVE, this.talks.recent())) {
             dirs.add("talk").set(talk.name())
                 .attr("timeago", pretty.format(talk.updated()));
             final XML xml = talk.read();

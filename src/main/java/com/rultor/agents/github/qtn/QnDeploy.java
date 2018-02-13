@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
@@ -43,6 +42,8 @@ import java.net.URI;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.SolidMap;
 
 /**
  * Deploy request.
@@ -81,16 +82,18 @@ public final class QnDeploy implements Question {
         );
         return new Req.Simple(
             "deploy",
-            new ImmutableMap.Builder<String, String>()
-                .put("head_branch", "master")
-                .put(
+            new SolidMap<String, String>(
+                new MapEntry<String, String>(
+                    "head_branch", "master"
+                ),
+                new MapEntry<>(
                     "head",
                     String.format(
                         "git@github.com:%s.git",
                         repo.coordinates()
                     )
                 )
-                .build()
+            )
         );
     }
 

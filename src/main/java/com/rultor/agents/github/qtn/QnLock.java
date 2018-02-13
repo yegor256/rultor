@@ -29,10 +29,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Contents;
@@ -55,6 +51,8 @@ import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.text.JoinedText;
 import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -97,21 +95,16 @@ public final class QnLock implements Question {
         users.add(comment.author().login().toLowerCase(Locale.ENGLISH));
         if (!args.nodes("//arg[@name='users']").isEmpty()) {
             users.addAll(
-                Collections2.transform(
+                new org.cactoos.list.Mapped<>(
+                    input -> StringUtils.stripStart(
+                        input.trim().toLowerCase(Locale.ENGLISH),
+                        "@"
+                    ),
                     Arrays.asList(
                         args.xpath(
                             "//arg[@name='users']/text()"
                         ).get(0).split(",")
-                    ),
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(final String input) {
-                            return StringUtils.stripStart(
-                                input.trim().toLowerCase(Locale.ENGLISH),
-                                "@"
-                            );
-                        }
-                    }
+                    )
                 )
             );
         }
@@ -140,9 +133,10 @@ public final class QnLock implements Question {
                     .add(
                         "content",
                         Base64.encodeBase64String(
-                            Joiner.on("\n").join(users).getBytes(
-                                CharEncoding.UTF_8
-                            )
+                            new JoinedText(
+                                "\n",
+                                users
+                            ).asString().getBytes(CharEncoding.UTF_8)
                         )
                     )
                     .add("branch", branch)
@@ -153,17 +147,13 @@ public final class QnLock implements Question {
                 String.format(
                     QnLock.PHRASES.getString("QnLock.response"),
                     branch,
-                    Joiner.on(", ").join(
-                        Iterables.transform(
-                            users,
-                            new Function<String, String>() {
-                                @Override
-                                public String apply(final String input) {
-                                    return String.format("@%s", input);
-                                }
-                            }
+                    new JoinedText(
+                        ", ",
+                        new Mapped<>(
+                            input -> String.format("@%s", input),
+                            users
                         )
-                    )
+                    ).asString()
                 )
             );
         }

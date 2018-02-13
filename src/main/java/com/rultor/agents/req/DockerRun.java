@@ -29,10 +29,6 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
@@ -42,10 +38,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.cactoos.iterable.Joined;
+import org.cactoos.list.SolidList;
 
 /**
  * Docker run command.
@@ -54,6 +54,7 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -91,16 +92,16 @@ final class DockerRun {
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
             trap = Collections.emptyList();
         } else {
-            trap = Iterables.concat(
-                Lists.newArrayList("function", "clean_up()", "{"),
+            trap = new Joined<String>(
+                new SolidList<String>("function", "clean_up()", "{"),
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='uninstall']"
                 ),
-                Lists.newArrayList("}", ";"),
-                Lists.newArrayList("trap", "clean_up", "EXIT", ";")
+                new SolidList<String>("}", ";"),
+                new SolidList<String>("trap", "clean_up", "EXIT", ";")
             );
         }
-        return Iterables.concat(
+        return new Joined<String>(
             trap,
             DockerRun.scripts(
                 this.profile.read(), "/p/entry[@key='install']"
@@ -117,21 +118,18 @@ final class DockerRun {
      */
     public Iterable<String> envs(final Map<String, String> extra)
         throws IOException {
-        return Iterables.concat(
+        final List<String> entries = new LinkedList<>();
+        for (final Entry<String, String> ent : extra.entrySet()) {
+            entries.add(
+                String.format(
+                    "%s=%s", ent.getKey(), ent.getValue()
+                )
+            );
+        }
+        return new Joined<String>(
             DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
             DockerRun.envs(this.node(), "entry[@key='env']"),
-            Collections2.transform(
-                extra.entrySet(),
-                new Function<Map.Entry<String, String>, String>() {
-                    @Override
-                    public String apply(
-                        final Map.Entry<String, String> ent) {
-                        return String.format(
-                            "%s=%s", ent.getKey(), ent.getValue()
-                        );
-                    }
-                }
-            )
+            new SolidList<String>(entries)
         );
     }
 
@@ -236,14 +234,11 @@ final class DockerRun {
                 parts = DockerRun.lines(node);
             }
             envs.addAll(
-                Collections2.transform(
-                    parts,
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(final String input) {
-                            return String.format("%s", input);
-                        }
-                    }
+                new SolidList<String>(
+                    new org.cactoos.collection.Mapped<>(
+                        input -> String.format("%s", input),
+                        parts
+                    )
                 )
             );
         }
@@ -259,16 +254,13 @@ final class DockerRun {
         final Collection<String> lines = new LinkedList<String>();
         if (node.node().hasChildNodes()) {
             lines.addAll(
-                Collections2.transform(
-                    Arrays.asList(
-                        StringUtils.split(node.xpath("text()").get(0), '\n')
-                    ),
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(final String line) {
-                            return line.trim();
-                        }
-                    }
+                new SolidList<String>(
+                    new org.cactoos.collection.Mapped<>(
+                        input -> input.trim(),
+                        Arrays.asList(
+                            StringUtils.split(node.xpath("text()").get(0), '\n')
+                        )
+                    )
                 )
             );
         }

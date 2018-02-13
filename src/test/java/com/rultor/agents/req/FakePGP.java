@@ -29,49 +29,55 @@
  */
 package com.rultor.agents.req;
 
-import com.jcabi.ssh.SSH;
 import java.io.IOException;
-import org.cactoos.iterable.Mapped;
+import org.cactoos.list.SolidList;
 import org.cactoos.text.JoinedText;
 
 /**
- * List of texts for the script, in brackets.
+ * Fake PGP Signature.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
+ * @author Filipe Freire (livrofubia@gmail.com)
  * @version $Id$
- * @since 1.64
+ * @since ?
  */
-final class Brackets {
+final class FakePGP {
 
     /**
-     * Items.
+     * Returns FakePGP string.
+     *
+     * @return String
+     * @throws IOException ex
      */
-    private final transient Iterable<String> items;
-
-    /**
-     * Ctor.
-     * @param list List of them
-     */
-    Brackets(final Iterable<String> list) {
-        this.items = list;
-    }
-
-    @Override
-    public String toString() {
-        try {
-            return String.format(
-                "( %s )",
-                new JoinedText(
-                    " ",
-                    new Mapped<>(
-                        input -> SSH.escape(input),
-                        this.items
-                    )
-                ).asString()
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public String asString() throws IOException {
+        return new JoinedText(
+            "\n",
+            new SolidList<>(
+                "-----BEGIN PGP MESSAGE-----",
+                "Version: GnuPG v1\n",
+                "hQEMA5qETcGag5w6AQgAvm/P0JUlQAd",
+                "OtGng5zHLx5cV+BrbpFt1m2ja4BjacYMU",
+                "wcubtJSh+n0XNLk6zMMCsrDnTfzvi/F",
+                "EFaRsPVb/ZJHiJGvwhNGyenQWgd6bczIL",
+                "1UxBZ1BpHTPv5hVK43fb6cYq+e/gniB",
+                "MvIKlKV+Qh/NVtiQACQJ5xL1M16S9SQuY",
+                "hjnVEL3JNHiLEAfPS/8xS05DY/w1k/J",
+                "yPXMZlrR7YGMxUsG6aDaFPAdjcdSbzGCT",
+                "j4yZPdZtyqePFGXn0VJE7GRywWcmk3N",
+                "j+oZzgx6DLV3PH40HSYNuyA9a2xFpghTr",
+                "7uiYRf+rRzXlx7qnBLsvETlhc77zpf0",
+                "FW4pLq/08ttLADQFsIU2BNHJGPw+96GKJ",
+                "AVNAm0OxfaMz+U+gy2kIgteuMQmfkYD",
+                "F0u9HE7NwZ1PlXO5Oszhfdim2LPSyxYMi",
+                "sKlVilWhPwdumSjmY0IG1B6yc8ZLG4B",
+                "jBucu3dMjj98iKRjlKvEmqqdUmoZY+l/N",
+                "Ye9gRf0UY44jJ0f4H81osGtmXg1dRc4",
+                "7OE/pUGGbIare4GNvBB/oiksvoCDOOEKy",
+                "cj6IAjR/BnSZ1mYvSShSPatu7QRFdd/",
+                "HFRt76pGj2G6ibnnDNpfjDwgNaWbiGUU=",
+                "=d2bb",
+                "-----END PGP MESSAGE-----"
+            )
+        ).asString();
     }
 
 }

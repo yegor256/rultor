@@ -29,26 +29,25 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Comment.Smart;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.iterable.Reversed;
+import org.cactoos.list.SolidList;
+import org.cactoos.text.JoinedText;
 import org.xembly.Xembler;
 
 /**
@@ -67,6 +66,11 @@ public final class Answer {
      * Maximum messages from me.
      */
     private static final int MAX = 5;
+
+    /**
+     * Space char.
+     */
+    private static final String SPACE = " ";
 
     /**
      * Original comment.
@@ -91,10 +95,13 @@ public final class Answer {
     public void post(final boolean success, final String msg,
         final Object... args) throws IOException {
         final Issue issue = this.comment.issue();
-        final List<Comment.Smart> comments = Lists.newArrayList(
-            new Smarts<Comment.Smart>(issue.comments().iterate(new Date(0L)))
+        final SolidList<Smart> comments = new SolidList<>(
+            new Reversed<>(
+                new Smarts<Comment.Smart>(
+                    issue.comments().iterate(new Date(0L))
+                )
+            )
         );
-        Collections.reverse(comments);
         final String self = issue.repo().github().users().self().login();
         int mine = 0;
         for (final Comment.Smart cmt : comments) {
@@ -127,7 +134,7 @@ public final class Answer {
                 String.format(
                     "> %s\n\n",
                     StringUtils.abbreviate(
-                        this.comment.body().replaceAll("\\p{Space}", " "),
+                        this.comment.body().replaceAll("\\p{Space}", SPACE),
                         Tv.HUNDRED
                     )
                 )
@@ -140,19 +147,15 @@ public final class Answer {
                 );
             }
             msg.append(
-                Joiner.on(' ').join(
-                    Iterables.transform(
-                        logins,
-                        new Function<String, String>() {
-                            @Override
-                            public String apply(final String login) {
-                                return String.format(
-                                    "@%s", login.toLowerCase(Locale.ENGLISH)
-                                );
-                            }
-                        }
+                new JoinedText(
+                    SPACE,
+                    new Mapped<>(
+                        login -> String.format(
+                            "@%s", login.toLowerCase(Locale.ENGLISH)
+                        ),
+                        logins
                     )
-                )
+                ).asString()
             );
             msg.append(' ').append(text);
             // @checkstyle IllegalCatchCheck (1 line)
