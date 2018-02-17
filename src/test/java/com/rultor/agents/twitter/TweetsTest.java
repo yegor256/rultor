@@ -29,15 +29,13 @@
  */
 package com.rultor.agents.twitter;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import com.jcabi.github.Issue;
-import com.jcabi.github.Language;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.text.JoinedText;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -80,17 +78,13 @@ public final class TweetsTest {
         );
         Mockito.verify(twitter).post(
             Matchers.contains(
-                Joiner.on(' ').join(
-                    Iterables.transform(
-                        repo.languages(),
-                        new Function<Language, String>() {
-                            @Override
-                            public String apply(final Language lang) {
-                                return String.format("#%s", lang.name());
-                            }
-                        }
+                new JoinedText(
+                    " ",
+                    new Mapped<>(
+                        lang -> String.format("#%s", lang.name()),
+                        repo.languages()
                     )
-                )
+                ).asString()
             )
         );
     }

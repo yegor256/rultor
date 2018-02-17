@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.daemons;
 
-import com.google.common.base.Joiner;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
@@ -55,6 +54,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
+import org.cactoos.text.JoinedText;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -127,7 +127,8 @@ public final class StartsDaemon extends AbstractAgent {
         new Shell.Safe(shell).exec(
             String.format("cd %s; cat > run.sh", SSH.escape(dir)),
             IOUtils.toInputStream(
-                Joiner.on('\n').join(
+                new JoinedText(
+                    "\n",
                     "#!/bin/bash",
                     "set -x",
                     "set -e",
@@ -148,20 +149,21 @@ public final class StartsDaemon extends AbstractAgent {
                     "uptime",
                     this.upload(shell, dir),
                     daemon.xpath("script/text()").get(0)
-                ),
+                ).asString(),
                 CharEncoding.UTF_8
             ),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            Joiner.on(" && ").join(
+            new JoinedText(
+                " && ",
                 String.format("cd %s", SSH.escape(dir)),
                 "chmod a+x run.sh",
                 "echo 'run.sh failed to start' > stdout",
                 // @checkstyle LineLength (1 line)
                 "( ( nohup ./run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null & )"
-            )
+            ).asString()
         );
         Logger.info(this, "daemon started at %s", dir);
         return dir;
@@ -210,6 +212,7 @@ public final class StartsDaemon extends AbstractAgent {
      * @param dir Dir
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private void gpg(final Shell shell, final String dir) throws IOException {
         final Collection<XML> entries = this.profile.read().nodes(
             "/p/entry[@key='decrypt']/entry"
@@ -218,11 +221,12 @@ public final class StartsDaemon extends AbstractAgent {
             final String[] names = {"pubring.gpg", "secring.gpg"};
             for (final String name : names) {
                 shell.exec(
-                    Joiner.on(" &&  ").join(
+                    new JoinedText(
+                        " &&  ",
                         String.format("cd %s  ", SSH.escape(dir)),
                         "mkdir -p .gpg",
                         String.format("cat > \".gpg/%s\"", name)
-                    ),
+                    ).asString(),
                     this.ring(name),
                     Logger.stream(Level.INFO, true),
                     Logger.stream(Level.WARNING, true)

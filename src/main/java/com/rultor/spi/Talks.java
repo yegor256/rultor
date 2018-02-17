@@ -29,24 +29,22 @@
  */
 package com.rultor.spi;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.io.Files;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.cactoos.iterable.Filtered;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.iterable.Sorted;
+import org.cactoos.list.SolidList;
+import org.cactoos.text.JoinedText;
 
 /**
  * Talks in a repo.
@@ -54,6 +52,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")
@@ -134,9 +133,12 @@ public interface Talks {
         private final transient String path;
         /**
          * Ctor.
+         * @throws IOException ex
          */
-        public InDir() {
-            this.path = Files.createTempDir().getAbsolutePath();
+        public InDir() throws IOException {
+            this.path = Files.createTempDirectory("")
+                .toAbsolutePath()
+                .toString();
         }
         @Override
         public boolean exists(final long number) {
@@ -144,20 +146,17 @@ public interface Talks {
         }
         @Override
         public Talk get(final long number) {
-            return Iterables.find(
-                this.active(),
-                new Predicate<Talk>() {
-                    @Override
-                    public boolean apply(final Talk talk) {
-                        try {
-                            return talk.read().xpath("/talk/@number").get(0)
-                                .equals(Long.toString(number));
-                        } catch (final IOException ex) {
-                            throw new IllegalStateException(ex);
-                        }
+            return new Filtered<>(
+                talk -> {
+                    try {
+                        return talk.read().xpath("/talk/@number").get(0)
+                            .equals(Long.toString(number));
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
                     }
-                }
-            );
+                },
+                this.active()
+            ).iterator().next();
         }
         @Override
         public boolean exists(final String name) {
@@ -165,20 +164,17 @@ public interface Talks {
         }
         @Override
         public Talk get(final String name) {
-            return Iterables.find(
-                this.active(),
-                new Predicate<Talk>() {
-                    @Override
-                    public boolean apply(final Talk talk) {
-                        try {
-                            return talk.read().xpath("/talk/@name").get(0)
-                                .equals(name);
-                        } catch (final IOException ex) {
-                            throw new IllegalStateException(ex);
-                        }
+            return new Filtered<>(
+                talk -> {
+                    try {
+                        return talk.read().xpath("/talk/@name").get(0)
+                            .equals(name);
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
                     }
-                }
-            );
+                },
+                this.active()
+            ).iterator().next();
         }
         @Override
         public void delete(final String name) {
@@ -192,7 +188,8 @@ public interface Talks {
                 file,
                 new StrictXML(
                     new XMLDocument(
-                        Joiner.on(' ').join(
+                        new JoinedText(
+                            " ",
                             String.format(
                                 "<talk name='%s' number='1' later='false'>",
                                 name
@@ -203,7 +200,7 @@ public interface Talks {
                                 name
                             ),
                             "</wire></talk>"
-                        )
+                        ).asString()
                     ),
                     Talk.SCHEMA
                 ).toString(),
@@ -216,17 +213,15 @@ public interface Talks {
             final Collection<File> files = FileUtils.listFiles(
                 new File(this.path), null, false
             );
-            final List<File> list = new ArrayList<File>(files);
-            Collections.sort(list);
+            final SolidList<File> list = new SolidList<>(
+                new Sorted<>(
+                    files
+                )
+            );
             Logger.info(this, "%d files in %s", files.size(), this.path);
-            return Iterables.transform(
-                list,
-                new Function<File, Talk>() {
-                    @Override
-                    public Talk apply(final File file) {
-                        return new Talk.InFile(file);
-                    }
-                }
+            return new Mapped<>(
+                file -> new Talk.InFile(file),
+                list
             );
         }
         @Override

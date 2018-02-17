@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
@@ -44,6 +43,8 @@ import java.net.URI;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.SolidMap;
 
 /**
  * Merge request.
@@ -123,26 +124,38 @@ public final class QnMerge implements Question {
         } else {
             req = new Req.Simple(
                 "merge",
-                new ImmutableMap.Builder<String, String>()
-                    .put("pull_id", Integer.toString(pull.number()))
-                    .put("pull_title", new Issue.Smart(comment.issue()).title())
-                    .put("fork_branch", head.ref())
-                    .put("head_branch", base.ref())
-                    .put(
+                new SolidMap<String, String>(
+                    new MapEntry<String, String>(
+                        "pull_id",
+                        Integer.toString(pull.number())
+                    ),
+                    new MapEntry<String, String>(
+                        "pull_title",
+                        new Issue.Smart(comment.issue()).title()
+                    ),
+                    new MapEntry<String, String>(
+                        "fork_branch",
+                        head.ref()
+                    ),
+                    new MapEntry<String, String>(
+                        "head_branch",
+                        base.ref()
+                    ),
+                    new MapEntry<String, String>(
                         "head",
                         String.format(
                             "git@github.com:%s.git",
                             base.repo().coordinates().toString()
                         )
-                    )
-                    .put(
+                    ),
+                    new MapEntry<String, String>(
                         "fork",
                         String.format(
                             "git@github.com:%s.git",
                             head.repo().coordinates().toString()
                         )
                     )
-                    .build()
+                )
             );
         }
         return req;

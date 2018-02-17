@@ -29,19 +29,23 @@
  */
 package com.rultor.agents.github.qtn;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.list.SolidList;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.SolidMap;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -83,7 +87,8 @@ public final class QnParametrized implements Question {
         throws IOException {
         final Map<String, String> map = QnParametrized.params(comment);
         Req req = this.origin.understand(comment, home);
-        if (!Iterables.isEmpty(req.dirs())) {
+        final List<Directive> directives = new SolidList<>(req.dirs());
+        if (!directives.isEmpty()) {
             final Directives dirs = new Directives().append(req.dirs());
             req = new Req() {
                 @Override
@@ -112,15 +117,21 @@ public final class QnParametrized implements Question {
      * @return Map of params
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private static Map<String, String> params(final Comment.Smart comment)
         throws IOException {
-        final ImmutableMap.Builder<String, String> map =
-            new ImmutableMap.Builder<>();
+        final List<Entry<String, String>> entries = new LinkedList<>();
         final Matcher matcher = QnParametrized.PTN.matcher(comment.body());
         while (matcher.find()) {
-            map.put(matcher.group(1), matcher.group(2));
+            entries.add(
+                new MapEntry<String, String>(
+                    matcher.group(1), matcher.group(2)
+                )
+            );
         }
-        return map.build();
+        return new SolidMap<String, String>(
+            entries
+        );
     }
 
 }

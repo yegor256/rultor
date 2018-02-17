@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.daemons;
 
-import com.google.common.base.Charsets;
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
 import com.rultor.Time;
@@ -37,6 +36,7 @@ import com.rultor.agents.docker.StartsDockerDaemon;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -93,7 +93,7 @@ public final class TailITCase {
             MatcherAssert.assertThat(
                 IOUtils.toString(
                     new Tail(talk.read(), hash).read(),
-                    Charsets.UTF_8
+                    Charset.forName("UTF-8")
                 ),
                 Matchers.is(String.format("%sê\n", clean))
             );

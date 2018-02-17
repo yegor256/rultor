@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
@@ -37,6 +36,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import java.io.IOException;
 import java.util.Date;
+import org.cactoos.list.SolidList;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -85,7 +85,7 @@ public final class AnswerTest {
             answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
-            Iterables.size(issue.comments().iterate(new Date(0L))),
+            new SolidList<>(issue.comments().iterate(new Date(0L))).size(),
             Matchers.is(Tv.SIX)
         );
     }

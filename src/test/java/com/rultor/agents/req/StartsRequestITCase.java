@@ -29,13 +29,13 @@
  */
 package com.rultor.agents.req;
 
-import com.google.common.base.Joiner;
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -86,7 +86,8 @@ public final class StartsRequestITCase {
         );
         final String repo = String.format("/tmp/%d.git", System.nanoTime());
         new Shell.Plain(new Shell.Safe(shell)).exec(
-            Joiner.on(';').join(
+            new JoinedText(
+                ";",
                 "cd /tmp",
                 String.format("git init %s", repo),
                 String.format("cd %s", repo),
@@ -100,17 +101,18 @@ public final class StartsRequestITCase {
                 "git commit -am 'modified file'",
                 "git checkout master",
                 "git config receive.denyCurrentBranch ignore"
-            )
+            ).asString()
         );
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    Joiner.on('\n').join(
+                    new JoinedText(
+                        "\n",
                         "<p><entry key='deploy'><entry key='script'>",
                         "echo 'Hello, world!'",
                         "echo 'I am' $(id -u -n)",
                         "</entry></entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
@@ -127,17 +129,19 @@ public final class StartsRequestITCase {
         agent.execute(talk);
         final String dir = String.format("/tmp/test-%d", System.nanoTime());
         final String stdout = new Shell.Plain(shell).exec(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 String.format("mkdir %s", dir),
                 String.format("cd %s", dir),
                 talk.read().xpath("//script/text()").get(0)
-            )
+            ).asString()
         );
         new Shell.Plain(new Shell.Safe(shell)).exec(
-            Joiner.on('\n').join(
+            new JoinedText(
+                "\n",
                 String.format("rm -rf %s", repo),
                 String.format("sudo rm -rf %s", dir)
-            )
+            ).asString()
         );
         MatcherAssert.assertThat(
             stdout,

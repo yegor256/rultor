@@ -29,13 +29,11 @@
  */
 package com.rultor.agents.github;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
+import com.jcabi.github.RepoCommit.Smart;
 import com.jcabi.github.Smarts;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -43,10 +41,14 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import javax.json.JsonObject;
+import org.cactoos.list.SolidList;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.SolidMap;
+import org.cactoos.text.JoinedText;
 
 /**
  * Log of commits.
@@ -84,6 +86,7 @@ final class CommitsLog {
      * @return Release body text.
      * @throws IOException In case of problem communicating with git.
      */
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     public String build(final Date prev, final Date current)
         throws IOException {
         final DateFormat format = new SimpleDateFormat(
@@ -91,12 +94,11 @@ final class CommitsLog {
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         final Collection<String> lines = new LinkedList<>();
-        final ImmutableMap<String, String> params =
-            new ImmutableMap.Builder<String, String>()
-                .put("since", format.format(prev))
-                .put("until", format.format(current))
-                .build();
-        final List<RepoCommit.Smart> commits = Lists.newArrayList(
+        final Map<String, String> params = new SolidMap<String, String>(
+            new MapEntry<String, String>("since", format.format(prev)),
+            new MapEntry<String, String>("until", format.format(current))
+        );
+        final SolidList<Smart> commits = new SolidList<>(
             new Smarts<RepoCommit.Smart>(
                 this.repo.commits().iterate(params)
             )
@@ -115,7 +117,10 @@ final class CommitsLog {
             lines.add(CommitsLog.asText(commit));
             ++count;
         }
-        return Joiner.on('\n').join(lines);
+        return new JoinedText(
+            "\n",
+            lines
+        ).asString();
     }
 
     /**

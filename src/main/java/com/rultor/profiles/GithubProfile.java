@@ -29,10 +29,6 @@
  */
 package com.rultor.profiles;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
@@ -44,15 +40,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
+import org.cactoos.collection.Mapped;
+import org.cactoos.list.SolidList;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.SolidMap;
+import org.cactoos.text.JoinedText;
 
 /**
  * Github Profile.
@@ -65,6 +68,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle AvoidInstantiatingObjectsInLoops
  */
 @Immutable
 @ToString
@@ -122,18 +126,21 @@ final class GithubProfile implements Profile {
         return new YamlXML(this.yml()).get();
     }
 
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Override
     public Map<String, InputStream> assets() throws IOException {
-        final ImmutableMap.Builder<String, InputStream> assets =
-            new ImmutableMap.Builder<>();
         final XML xml = this.read();
-        for (final XML asset : xml.nodes("/p/entry[@key='assets']/entry")) {
-            assets.put(
-                asset.xpath("@key").get(0),
-                this.asset(asset.xpath("text()").get(0))
+        final List<XML> nodes = xml.nodes("/p/entry[@key='assets']/entry");
+        final List<Entry<String, InputStream>> entries = new LinkedList<>();
+        for (final XML node : nodes) {
+            entries.add(
+                new MapEntry<>(
+                    node.xpath("@key").get(0),
+                    this.asset(node.xpath("text()").get(0))
+                )
             );
         }
-        return assets.build();
+        return new SolidMap<String, InputStream>(entries);
     }
 
     /**
@@ -161,22 +168,20 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        final Collection<String> friends = Collections2.transform(
-            new YamlXML(
-                new String(
-                    new Content.Smart(
-                        rpo.contents().get(GithubProfile.FILE)
-                    ).decoded(),
-                    CharEncoding.UTF_8
+        final Collection<String> friends =
+            new SolidList<>(
+                new Mapped<>(
+                    input -> input.toLowerCase(Locale.ENGLISH),
+                    new YamlXML(
+                        new String(
+                            new Content.Smart(
+                                rpo.contents().get(GithubProfile.FILE)
+                            ).decoded(),
+                            CharEncoding.UTF_8
+                        )
+                    ).get().xpath("/p/entry[@key='friends']/item/text()")
                 )
-            ).get().xpath("/p/entry[@key='friends']/item/text()"),
-            new Function<String, String>() {
-                @Override
-                public String apply(final String input) {
-                    return input.toLowerCase(Locale.ENGLISH);
-                }
-            }
-        );
+            );
         final String coords = this.repo.coordinates()
             .toString().toLowerCase(Locale.ENGLISH);
         if (!friends.contains(coords)) {
@@ -243,7 +248,10 @@ final class GithubProfile implements Profile {
                 String.format(
                     "`%s` is not valid according to schema:\n``%s``",
                     GithubProfile.FILE,
-                    Joiner.on('\n').join(msg)
+                    new JoinedText(
+                        "\n",
+                        msg
+                    ).asString()
                 )
             );
         }

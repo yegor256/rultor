@@ -29,8 +29,6 @@
  */
 package com.rultor.web;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rultor.agents.daemons.Home;
@@ -40,6 +38,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
+import org.cactoos.iterable.Limited;
+import org.cactoos.list.SolidList;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Response;
 import org.takes.facets.flash.RsFlash;
@@ -87,9 +87,10 @@ final class TkSiblings implements TkRegex {
             )
         );
         final String repo = req.matcher().group(1);
-        final List<Talk> siblings = Lists.newArrayList(
-            Iterables.limit(
-                this.talks.siblings(repo, since), Tv.TWENTY
+        final SolidList<Talk> siblings = new SolidList<>(
+            new Limited<>(
+                Tv.TWENTY,
+                this.talks.siblings(repo, since)
             )
         );
         if (!siblings.isEmpty()

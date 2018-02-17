@@ -29,9 +29,6 @@
  */
 package com.rultor.cached;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
@@ -42,6 +39,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.cactoos.iterable.Mapped;
 
 /**
  * Cached talks.
@@ -110,48 +108,27 @@ public final class CdTalks implements Talks {
     @Override
     @Cacheable
     public Iterable<Talk> active() {
-        return Lists.newArrayList(
-            Iterables.transform(
-                this.origin.active(),
-                new Function<Talk, Talk>() {
-                    @Override
-                    public Talk apply(final Talk input) {
-                        return new CdTalk(input);
-                    }
-                }
-            )
+        return new Mapped<>(
+            input -> new CdTalk(input),
+            this.origin.active()
         );
     }
 
     @Override
     @Cacheable(lifetime = Tv.TWENTY, unit = TimeUnit.MINUTES)
     public Iterable<Talk> recent() {
-        return Lists.newArrayList(
-            Iterables.transform(
-                this.origin.recent(),
-                new Function<Talk, Talk>() {
-                    @Override
-                    public Talk apply(final Talk input) {
-                        return new CdTalk(input);
-                    }
-                }
-            )
+        return new Mapped<>(
+            input -> new CdTalk(input),
+            this.origin.recent()
         );
     }
 
     @Override
     @Cacheable
     public Iterable<Talk> siblings(final String repo, final Date since) {
-        return Lists.newArrayList(
-            Iterables.transform(
-                this.origin.siblings(repo, since),
-                new Function<Talk, Talk>() {
-                    @Override
-                    public Talk apply(final Talk input) {
-                        return new CdTalk(input);
-                    }
-                }
-            )
+        return new Mapped<>(
+            input -> new CdTalk(input),
+            this.origin.siblings(repo, since)
         );
     }
 }
