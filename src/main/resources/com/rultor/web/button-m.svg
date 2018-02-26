@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="88px" height="25px" viewBox="0 0 88 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
-    <title>Group</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group">
-            <rect id="Rectangle-path" fill="#348C62" fill-rule="nonzero" x="0.143" y="0" width="62.857" height="25"></rect>
-            <rect id="Rectangle-path" fill="#010101" fill-rule="nonzero" x="63" y="0" width="25" height="25"></rect>
-            <path d="M75.853,3.651 C80.935,3.651 85.054,7.77 85.054,12.852 C85.054,17.933 80.935,22.054 75.853,22.054 C70.772,22.054 66.653,17.933 66.653,12.852 C66.652,7.77 70.771,3.651 75.853,3.651 L75.853,3.651 Z M75.853,2 C74.389,2 72.967,2.287 71.628,2.854 C70.335,3.4 69.175,4.183 68.179,5.179 C67.183,6.175 66.401,7.335 65.854,8.628 C65.288,9.967 65,11.388 65,12.853 C65,14.318 65.287,15.738 65.854,17.078 C66.401,18.371 67.183,19.531 68.179,20.527 C69.175,21.523 70.335,22.304 71.628,22.851 C72.967,23.417 74.389,23.705 75.853,23.705 C77.318,23.705 78.739,23.418 80.079,22.851 C81.371,22.304 82.531,21.523 83.528,20.527 C84.524,19.531 85.306,18.371 85.853,17.078 C86.419,15.738 86.707,14.318 86.707,12.853 C86.707,11.388 86.42,9.967 85.853,8.628 C85.306,7.335 84.524,6.175 83.528,5.179 C82.531,4.183 81.371,3.4 80.079,2.854 C78.738,2.287 77.317,2 75.853,2 L75.853,2 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
-            <path d="M74.559,18.291 L72,18.291 L72,7 L75.854,7 C77.358,7 78.172,7.384 78.525,8.232 C78.701,8.663 78.781,9.287 78.781,10.182 C78.781,11.941 78.461,12.597 77.358,13.124 L79.26,18.29 L74.559,18.29 L74.559,18.291 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
-            <text id="DevOps-with-Rultor" font-family="Verdana-Bold, Verdana" font-size="9" font-weight="bold" fill="#000000">
-                <tspan x="4.10000038" y="11.0999999">DevOps</tspan>
-                <tspan x="4.10000038" y="22.0999999">with Rultor</tspan>
-            </text>
-            <text id="DevOps-with-Rultor" font-family="Verdana-Bold, Verdana" font-size="9" font-weight="bold" fill="#FFFFFF">
-                <tspan x="4" y="11">DevOps</tspan>
-                <tspan x="4" y="22">with Rultor</tspan>
-            </text>
-        </g>
-    </g>
+    <rect id="Rectangle-path" fill="#348C62" fill-rule="nonzero" x="0.143" y="0" width="62.857" height="25"></rect>
+    <rect id="Rectangle-path" fill="#010101" fill-rule="nonzero" x="63" y="0" width="25" height="25"></rect>
+    <path d="M75.853,3.651 C80.935,3.651 85.054,7.77 85.054,12.852 C85.054,17.933 80.935,22.054 75.853,22.054 C70.772,22.054 66.653,17.933 66.653,12.852 C66.652,7.77 70.771,3.651 75.853,3.651 L75.853,3.651 Z M75.853,2 C74.389,2 72.967,2.287 71.628,2.854 C70.335,3.4 69.175,4.183 68.179,5.179 C67.183,6.175 66.401,7.335 65.854,8.628 C65.288,9.967 65,11.388 65,12.853 C65,14.318 65.287,15.738 65.854,17.078 C66.401,18.371 67.183,19.531 68.179,20.527 C69.175,21.523 70.335,22.304 71.628,22.851 C72.967,23.417 74.389,23.705 75.853,23.705 C77.318,23.705 78.739,23.418 80.079,22.851 C81.371,22.304 82.531,21.523 83.528,20.527 C84.524,19.531 85.306,18.371 85.853,17.078 C86.419,15.738 86.707,14.318 86.707,12.853 C86.707,11.388 86.42,9.967 85.853,8.628 C85.306,7.335 84.524,6.175 83.528,5.179 C82.531,4.183 81.371,3.4 80.079,2.854 C78.738,2.287 77.317,2 75.853,2 L75.853,2 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+    <path d="M74.559,18.291 L72,18.291 L72,7 L75.854,7 C77.358,7 78.172,7.384 78.525,8.232 C78.701,8.663 78.781,9.287 78.781,10.182 C78.781,11.941 78.461,12.597 77.358,13.124 L79.26,18.29 L74.559,18.29 L74.559,18.291 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+    <text id="DevOps-with-Rultor" font-family="Verdana-Bold, Verdana" font-size="9" font-weight="bold" fill="#000000">
+        <tspan x="4.10000038" y="11.0999999">DevOps</tspan>
+        <tspan x="4.10000038" y="22.0999999">with Rultor</tspan>
+    </text>
+    <text id="DevOps-with-Rultor" font-family="Verdana-Bold, Verdana" font-size="9" font-weight="bold" fill="#FFFFFF">
+        <tspan x="4" y="11">DevOps</tspan>
+        <tspan x="4" y="22">with Rultor</tspan>
+    </text>
 </svg>
