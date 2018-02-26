@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../apidocs/com/rultor/web/TkSiblings.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * Copyright (c) 2009-2017, rultor.com</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * Copyright (c) 2009-2018, rultor.com</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> * All rights reserved.</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> * Redistribution and use in source and binary forms, with or without</em>
@@ -37,17 +37,17 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.web;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.Iterables;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.Lists;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XML;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.daemons.Home;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Talk;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Talks;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> java.util.Date;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> java.util.List;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> java.util.logging.Level;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XML;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.agents.daemons.Home;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Talk;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Talks;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> java.util.Date;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> java.util.logging.Level;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.cactoos.iterable.Limited;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.cactoos.list.SolidList;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.ocpsoft.prettytime.PrettyTime;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.takes.Response;
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.takes.facets.flash.RsFlash;
@@ -66,7 +66,7 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * Siblings.</em>
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor256@gmail.com)</em>
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * @version $Id: f4d3d3ded8c299d20ce3d20f1f21279b32255109 $</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * @version $Id: 396d7f63c397b891e459529196dda3792989480d $</em>
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * @since 1.50</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> */</em>
@@ -95,108 +95,109 @@
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>              )
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          );
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">final</strong> String repo = req.matcher().group(1);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>          <strong class="jxr_keyword">final</strong> List&lt;Talk&gt; siblings = Lists.newArrayList(
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>              Iterables.limit(
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>                  <strong class="jxr_keyword">this</strong>.talks.siblings(repo, since), Tv.TWENTY
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>              )
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>          );
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">if</strong> (!siblings.isEmpty()
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>              &amp;&amp; !<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/RqUser.html">RqUser</a>(req).canSee(siblings.get(0))) {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RsForward(
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>                  <strong class="jxr_keyword">new</strong> RsFlash(
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>                      <span class="jxr_string">"according to .rultor.yml, you're not allowed to see this"</span>,
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>                     Level.WARNING
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>                 )
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>             );
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>         }
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/RsPage.html">RsPage</a>(
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>             <span class="jxr_string">"/xsl/siblings.xsl"</span>,
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>             req,
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>             <strong class="jxr_keyword">new</strong> XeAppend(<span class="jxr_string">"repo"</span>, repo),
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>             <strong class="jxr_keyword">new</strong> XeAppend(<span class="jxr_string">"since"</span>, Long.toString(since.getTime())),
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>             <strong class="jxr_keyword">this</strong>.more(repo, siblings),
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>             <strong class="jxr_keyword">new</strong> XeDirectives(<strong class="jxr_keyword">this</strong>.list(siblings))
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>         );
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>     }
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * Link to more, if necessary.</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     * @param repo Repo name</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * @param siblings Siblings</em>
-<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     * @return Link or empty</em>
-<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">private</strong> XeSource more(<strong class="jxr_keyword">final</strong> String repo, <strong class="jxr_keyword">final</strong> List&lt;Talk&gt; siblings)
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>         <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>         <strong class="jxr_keyword">final</strong> XeSource src;
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">if</strong> (siblings.size() == Tv.TWENTY) {
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>             <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> last = siblings.get(siblings.size() - 1);
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>             src = <strong class="jxr_keyword">new</strong> XeLink(
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>                 <span class="jxr_string">"more"</span>,
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 String.format(
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>                     <span class="jxr_string">"/p/%s?s=%s"</span>,
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>                     repo, last.updated().getTime()
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>                 )
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>             );
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>             src = XeSource.EMPTY;
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>         }
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>         <strong class="jxr_keyword">return</strong> src;
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     }
-<a class="jxr_linenumber" name="L138" href="#L138">138</a> 
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     * List of directives.</em>
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     * @param siblings List of them</em>
-<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">     * @return The directives</em>
-<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">private</strong> Iterable&lt;Directive&gt; list(<strong class="jxr_keyword">final</strong> Iterable&lt;Talk&gt; siblings)
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>         <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>         <strong class="jxr_keyword">final</strong> Directives dirs = <strong class="jxr_keyword">new</strong> Directives().add(<span class="jxr_string">"siblings"</span>);
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Talk talk : siblings) {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>             dirs.append(<strong class="jxr_keyword">this</strong>.dirs(talk));
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>         }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>         <strong class="jxr_keyword">return</strong> dirs;
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>     }
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * Convert talk to directives.</em>
-<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * @param talk The talk to convert</em>
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * @return Directives</em>
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">private</strong> Iterable&lt;Directive&gt; dirs(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> talk) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">final</strong> XML xml = talk.read();
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>         <strong class="jxr_keyword">final</strong> Directives dirs = <strong class="jxr_keyword">new</strong> Directives().add(<span class="jxr_string">"talk"</span>).add(<span class="jxr_string">"archive"</span>);
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML log : xml.nodes(<span class="jxr_string">"/talk/archive/log"</span>)) {
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>             dirs.append(TkSiblings.log(xml, log));
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>         }
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>         <strong class="jxr_keyword">return</strong> dirs.up().add(<span class="jxr_string">"name"</span>).set(talk.name()).up()
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>             <em class="jxr_comment">// @checkstyle MultipleStringLiteralsCheck (1 line)</em>
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>             .add(<span class="jxr_string">"href"</span>).set(xml.xpath(<span class="jxr_string">"/talk/wire/href/text()"</span>).get(0)).up()
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>             .add(<span class="jxr_string">"updated"</span>).set(Long.toString(talk.updated().getTime())).up()
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>             .add(<span class="jxr_string">"timeago"</span>).set(<strong class="jxr_keyword">new</strong> PrettyTime().format(talk.updated())).up()
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>             .up();
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>     }
-<a class="jxr_linenumber" name="L173" href="#L173">173</a> 
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">     * Convert log to JAXB.</em>
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * @param talk Talk</em>
-<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * @param log The log to convert</em>
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * @return JAXB</em>
-<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Iterable&lt;Directive&gt; log(<strong class="jxr_keyword">final</strong> XML talk, <strong class="jxr_keyword">final</strong> XML log) {
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>         <strong class="jxr_keyword">final</strong> String hash = log.xpath(<span class="jxr_string">"@id"</span>).get(0);
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives().add(<span class="jxr_string">"log"</span>)
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>             .add(<span class="jxr_string">"id"</span>).set(hash).up()
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>             .add(<span class="jxr_string">"href"</span>).set(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/Home.html">Home</a>(talk, hash).uri().toString()).up()
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>             .add(<span class="jxr_string">"title"</span>).set(log.xpath(<span class="jxr_string">"@title"</span>).get(0)).up()
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>             .up();
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>     }
-<a class="jxr_linenumber" name="L188" href="#L188">188</a> 
-<a class="jxr_linenumber" name="L189" href="#L189">189</a> }
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          <strong class="jxr_keyword">final</strong> SolidList&lt;Talk&gt; siblings = <strong class="jxr_keyword">new</strong> SolidList&lt;&gt;(
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>              <strong class="jxr_keyword">new</strong> Limited&lt;&gt;(
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>                  Tv.TWENTY,
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>                  <strong class="jxr_keyword">this</strong>.talks.siblings(repo, since)
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>              )
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          );
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">if</strong> (!siblings.isEmpty()
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>              &amp;&amp; !<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/RqUser.html">RqUser</a>(req).canSee(siblings.get(0))) {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RsForward(
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <strong class="jxr_keyword">new</strong> RsFlash(
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>                     <span class="jxr_string">"according to .rultor.yml, you're not allowed to see this"</span>,
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>                     Level.WARNING
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>                 )
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>             );
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>         }
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/RsPage.html">RsPage</a>(
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>             <span class="jxr_string">"/xsl/siblings.xsl"</span>,
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>             req,
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>             <strong class="jxr_keyword">new</strong> XeAppend(<span class="jxr_string">"repo"</span>, repo),
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>             <strong class="jxr_keyword">new</strong> XeAppend(<span class="jxr_string">"since"</span>, Long.toString(since.getTime())),
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>             <strong class="jxr_keyword">this</strong>.more(repo, siblings),
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>             <strong class="jxr_keyword">new</strong> XeDirectives(<strong class="jxr_keyword">this</strong>.list(siblings))
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         );
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     }
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     * Link to more, if necessary.</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * @param repo Repo name</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     * @param siblings Siblings</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * @return Link or empty</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">private</strong> XeSource more(<strong class="jxr_keyword">final</strong> String repo, <strong class="jxr_keyword">final</strong> List&lt;Talk&gt; siblings)
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>         <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">final</strong> XeSource src;
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <strong class="jxr_keyword">if</strong> (siblings.size() == Tv.TWENTY) {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>             <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> last = siblings.get(siblings.size() - 1);
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>             src = <strong class="jxr_keyword">new</strong> XeLink(
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 <span class="jxr_string">"more"</span>,
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>                 String.format(
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>                     <span class="jxr_string">"/p/%s?s=%s"</span>,
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>                     repo, last.updated().getTime()
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>                 )
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>             );
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>             src = XeSource.EMPTY;
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         }
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">return</strong> src;
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     }
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     * List of directives.</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">     * @param siblings List of them</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     * @return The directives</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     <strong class="jxr_keyword">private</strong> Iterable&lt;Directive&gt; list(<strong class="jxr_keyword">final</strong> Iterable&lt;Talk&gt; siblings)
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>         <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <strong class="jxr_keyword">final</strong> Directives dirs = <strong class="jxr_keyword">new</strong> Directives().add(<span class="jxr_string">"siblings"</span>);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Talk talk : siblings) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>             dirs.append(<strong class="jxr_keyword">this</strong>.dirs(talk));
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">return</strong> dirs;
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     }
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * Convert talk to directives.</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * @param talk The talk to convert</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * @return Directives</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">private</strong> Iterable&lt;Directive&gt; dirs(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Talk.html">Talk</a> talk) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>         <strong class="jxr_keyword">final</strong> XML xml = talk.read();
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>         <strong class="jxr_keyword">final</strong> Directives dirs = <strong class="jxr_keyword">new</strong> Directives().add(<span class="jxr_string">"talk"</span>).add(<span class="jxr_string">"archive"</span>);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML log : xml.nodes(<span class="jxr_string">"/talk/archive/log"</span>)) {
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             dirs.append(TkSiblings.log(xml, log));
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>         }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         <strong class="jxr_keyword">return</strong> dirs.up().add(<span class="jxr_string">"name"</span>).set(talk.name()).up()
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>             <em class="jxr_comment">// @checkstyle MultipleStringLiteralsCheck (1 line)</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>             .add(<span class="jxr_string">"href"</span>).set(xml.xpath(<span class="jxr_string">"/talk/wire/href/text()"</span>).get(0)).up()
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>             .add(<span class="jxr_string">"updated"</span>).set(Long.toString(talk.updated().getTime())).up()
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>             .add(<span class="jxr_string">"timeago"</span>).set(<strong class="jxr_keyword">new</strong> PrettyTime().format(talk.updated())).up()
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>             .up();
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     }
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * Convert log to JAXB.</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * @param talk Talk</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * @param log The log to convert</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     * @return JAXB</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Iterable&lt;Directive&gt; log(<strong class="jxr_keyword">final</strong> XML talk, <strong class="jxr_keyword">final</strong> XML log) {
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         <strong class="jxr_keyword">final</strong> String hash = log.xpath(<span class="jxr_string">"@id"</span>).get(0);
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Directives().add(<span class="jxr_string">"log"</span>)
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>             .add(<span class="jxr_string">"id"</span>).set(hash).up()
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>             .add(<span class="jxr_string">"href"</span>).set(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/agents/daemons/Home.html">Home</a>(talk, hash).uri().toString()).up()
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>             .add(<span class="jxr_string">"title"</span>).set(log.xpath(<span class="jxr_string">"@title"</span>).get(0)).up()
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>             .up();
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     }
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/com/rultor/agents/daemons/ShellCommand.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * Copyright (c) 2009-2017, rultor.com</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * Copyright (c) 2009-2018, rultor.com</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> * All rights reserved.</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> * Redistribution and use in source and binary forms, with or without</em>
@@ -37,17 +37,17 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.agents.daemons;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.base.Joiner;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Immutable;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.SSH;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.Shell;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Immutable;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.SSH;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.ssh.Shell;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.cactoos.text.JoinedText;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * Command to run in a given shell and working directory.</em>
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * @author Armin Braun (me@obrown.io)</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * @version $Id: 8d8cebfa790c0a18f704ac84825cd78a3bc6130c $</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * @version $Id: 5f41b52e65d27d70c8a0c21f8d5ecda89feb2acd $</em>
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * @since 1.62</em>
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  @Immutable
@@ -92,16 +92,17 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">public</strong> String exec() <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Shell.Plain(<strong class="jxr_keyword">new</strong> Shell.Safe(<strong class="jxr_keyword">this</strong>.shell)).exec(
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>              Joiner.on(ShellCommand.SHELL_JOINER).join(
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  String.format(<span class="jxr_string">"cd %s"</span>, SSH.escape(<strong class="jxr_keyword">this</strong>.directory)),
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  <strong class="jxr_keyword">this</strong>.command
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>              )
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>          );
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      }
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>              <strong class="jxr_keyword">new</strong> JoinedText(
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  ShellCommand.SHELL_JOINER,
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  String.format(<span class="jxr_string">"cd %s"</span>, SSH.escape(<strong class="jxr_keyword">this</strong>.directory)),
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>                  <strong class="jxr_keyword">this</strong>.command
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>              ).asString()
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          );
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>

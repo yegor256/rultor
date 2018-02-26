@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../apidocs/com/rultor/web/RsPage.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * Copyright (c) 2009-2017, rultor.com</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * Copyright (c) 2009-2018, rultor.com</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> * All rights reserved.</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> * Redistribution and use in source and binary forms, with or without</em>
@@ -50,7 +50,7 @@
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.takes.facets.fork.RsFork;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.RsWithType;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.RsWrap;
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.RsXSLT;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.RsXslt;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.RsXembly;
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeAppend;
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeChain;
@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeLinkSelf;
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeLocalhost;
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeMillis;
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeSLA;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeSla;
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeSource;
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> org.takes.rs.xe.XeStylesheet;
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
@@ -67,7 +67,7 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * Index resource, front page of the website.</em>
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor256@gmail.com)</em>
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * @version $Id: 8a85a632d808dec13dba1f5897f8892e716d6b13 $</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * @version $Id: 0f7cc2e2f499ffb5d4c844b47229d9c3533c1338 $</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * @since 1.50</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)</em>
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> */</em>
@@ -106,7 +106,7 @@
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>                  <strong class="jxr_keyword">new</strong> XeLinkSelf(req),
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <strong class="jxr_keyword">new</strong> XeMillis(<strong class="jxr_keyword">true</strong>),
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>                 <strong class="jxr_keyword">new</strong> XeDate(),
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>                 <strong class="jxr_keyword">new</strong> XeSLA(),
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>                 <strong class="jxr_keyword">new</strong> XeSla(),
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>                 <strong class="jxr_keyword">new</strong> XeLocalhost(),
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>                 <strong class="jxr_keyword">new</strong> XeIdentity(req),
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>                 <strong class="jxr_keyword">new</strong> XeFlash(req),
@@ -128,7 +128,7 @@
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>             ),
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>             <strong class="jxr_keyword">new</strong> FkTypes(
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>                 <span class="jxr_string">"*/*"</span>,
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>                 <strong class="jxr_keyword">new</strong> RsXSLT(<strong class="jxr_keyword">new</strong> RsWithType(raw, <span class="jxr_string">"text/html"</span>))
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                 <strong class="jxr_keyword">new</strong> RsXslt(<strong class="jxr_keyword">new</strong> RsWithType(raw, <span class="jxr_string">"text/html"</span>))
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>             )
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>         );
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     }
@@ -136,6 +136,6 @@
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>
 </body>
 </html>
