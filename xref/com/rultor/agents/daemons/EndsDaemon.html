@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * Marks the daemon as done.</em>
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor256@gmail.com)</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * @version $Id: e9e96846ced6ec57fa814e5ff3d955dcab95a3d5 $</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * @version $Id: 72eb588215815e26b0d553ba1a403dc82a2f3c64 $</em>
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * @since 1.0</em>
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * @todo #1053:30min Reduce the data abstraction coupling of EndsDaemon in order</em>
@@ -121,10 +121,10 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> exit = EndsDaemon.exit(shell, dir);
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">final</strong> SolidList&lt;Text&gt; lines = <strong class="jxr_keyword">new</strong> SolidList&lt;&gt;(
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>             <strong class="jxr_keyword">new</strong> SplitText(
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>                 System.lineSeparator(),
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>                 <strong class="jxr_keyword">new</strong> TextOf(
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>                     EndsDaemon.stdout(shell, dir)
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>                 )
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>                 <strong class="jxr_keyword">new</strong> TextOf(
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>                     EndsDaemon.stdout(shell, dir)
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>                 ),
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>                 System.lineSeparator()
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>             )
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>         );
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>         <strong class="jxr_keyword">final</strong> SolidList&lt;String&gt; linesAsString = <strong class="jxr_keyword">new</strong> SolidList&lt;&gt;(
