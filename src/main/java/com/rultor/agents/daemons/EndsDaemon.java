@@ -113,10 +113,10 @@ public final class EndsDaemon extends AbstractAgent {
         final int exit = EndsDaemon.exit(shell, dir);
         final SolidList<Text> lines = new SolidList<>(
             new SplitText(
-                System.lineSeparator(),
                 new TextOf(
                     EndsDaemon.stdout(shell, dir)
-                )
+                ),
+                System.lineSeparator()
             )
         );
         final SolidList<String> linesAsString = new SolidList<>(
