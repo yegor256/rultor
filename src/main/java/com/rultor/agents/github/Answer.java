@@ -56,6 +56,7 @@ import org.xembly.Xembler;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -111,7 +112,9 @@ public final class Answer {
             ++mine;
         }
         if (mine < Answer.MAX) {
-            issue.comments().post(this.msg(success, Logger.format(msg, args)));
+            new SafeComments(
+                issue.comments()
+            ).post(this.msg(success, Logger.format(msg, args)));
         } else {
             Logger.error(
                 this, "too many (%d) comments from %s already in %s#%d",
