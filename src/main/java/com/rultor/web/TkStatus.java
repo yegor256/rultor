@@ -54,6 +54,11 @@ import org.takes.rs.RsWithStatus;
 final class TkStatus implements Take {
 
     /**
+     * When we started.
+     */
+    private final transient long start;
+
+    /**
      * Pulse.
      */
     private final transient Pulse pulse;
@@ -64,15 +69,22 @@ final class TkStatus implements Take {
      */
     TkStatus(final Pulse pls) {
         this.pulse = pls;
+        this.start = System.currentTimeMillis();
     }
 
     @Override
     public Response act(final Request req) {
         final SolidList<Tick> ticks = new SolidList<>(this.pulse.ticks());
         final StringBuilder msg = new StringBuilder(Tv.THOUSAND);
+        msg.append(
+            Logger.format(
+                "Up for %[ms]s already\n",
+                System.currentTimeMillis() - this.start
+            )
+        );
         final Response response;
         if (ticks.isEmpty()) {
-            response = new RsWithStatus(HttpURLConnection.HTTP_NO_CONTENT);
+            response = new RsWithStatus(HttpURLConnection.HTTP_OK);
             msg.append("There is no activity yet, refresh in a few seconds");
         } else {
             final long age = System.currentTimeMillis()

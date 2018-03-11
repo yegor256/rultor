@@ -121,9 +121,8 @@
                 </div>
             </div>
             <p itemprop="creator">
-                <a href="http://www.teamed.io">
-                    <img src="//img.teamed.io/btn.svg" style="width:150px;"
-                        alt="teamed.io made-by badge"/>
+                <a href="https://www.0crat.com/p/C3SAYRPH9">
+                    <img src="https://www.0crat.com/badge/C3SAYRPH9.svg" alt="Managed by Zerocracy"/>
                 </a>
             </p>
             <p>

@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.takes</groupId>
             <artifactId>takes</artifactId>
-            <version>1.7.1</version>
+            <version>1.9.2</version>
         </dependency>
         <dependency>
             <groupId>io.sentry</groupId>
