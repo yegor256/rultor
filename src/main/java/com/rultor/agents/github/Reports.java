@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
+import com.jcabi.github.safe.SfComment;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
@@ -98,7 +99,7 @@ public final class Reports extends AbstractAgent {
         }
         final int number = Integer.parseInt(req.xpath("@id").get(0));
         final Comment.Smart comment = new Comment.Smart(
-            new SafeComment(
+            new SfComment(
                 Reports.origin(issue, number)
             )
         );

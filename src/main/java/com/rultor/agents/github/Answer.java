@@ -35,6 +35,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Comment.Smart;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
+import com.jcabi.github.safe.SfComments;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collection;
@@ -112,7 +113,7 @@ public final class Answer {
             ++mine;
         }
         if (mine < Answer.MAX) {
-            new SafeComments(
+            new SfComments(
                 issue.comments()
             ).post(this.msg(success, Logger.format(msg, args)));
         } else {
