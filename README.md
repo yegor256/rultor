@@ -1,5 +1,7 @@
 <img src="http://doc.rultor.com/images/logo.svg" width="64px" height="64px"/>
 
+[![Donate via Zerocracy](https://www.0crat.com/contrib-badge/C3SAYRPH9.svg)](https://www.0crat.com/contrib/C3SAYRPH9)
+
 [![EO principles respected here](http://www.elegantobjects.org/badge.svg)](http://www.elegantobjects.org)
 [![Managed by Zerocracy](https://www.0crat.com/badge/C3SAYRPH9.svg)](https://www.0crat.com/p/C3SAYRPH9)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/rultor)](http://www.rultor.com/p/yegor256/rultor)
