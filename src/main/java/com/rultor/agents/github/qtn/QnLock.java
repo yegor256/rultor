@@ -53,7 +53,6 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.text.JoinedText;
-import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -174,18 +173,7 @@ public final class QnLock implements Question {
             new Xembler(
                 new Directives().add("args").up().append(
                     new QnParametrized(
-                        new Question() {
-                            @Override
-                            public Req understand(final Comment.Smart cmt,
-                                final URI hme) {
-                                return new Req() {
-                                    @Override
-                                    public Iterable<Directive> dirs() {
-                                        return new Directives().xpath("/");
-                                    }
-                                };
-                            }
-                        }
+                        (cmt, hme) -> () -> new Directives().xpath("/")
                     ).understand(comment, home).dirs()
                 )
             ).xmlQuietly()
