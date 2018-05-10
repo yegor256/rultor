@@ -95,10 +95,12 @@ function docker_when_possible {
     docker rm -f "${container}"
   fi
   ls -al .
-  docker run -t --rm -v "$(pwd):/main" "${vars[@]}" \
+  docker run -t --rm \
+    -v "$(pwd):/main" "${vars[@]}" \
     --hostname=docker --privileged \
     --memory=6g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
+    -v /var/run/docker.sock:/var/run/docker.sock \
     --name="${container}" "${image}" /main/entry.sh
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
