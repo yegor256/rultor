@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * in Github.</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor256@gmail.com)</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * @version $Id: 4f602fd513bd2e0e5a323f7cb2c002e1eff87af8 $</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * @version $Id: e4d6154d42f5d34c3bd3bf8f32ccae90b0d3c133 $</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * @since 1.0</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * @checkstyle AvoidInstantiatingObjectsInLoops</em>
@@ -161,7 +161,7 @@
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">final</strong> Matcher matcher = GithubProfile.PATH.matcher(path);
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>         <strong class="jxr_keyword">if</strong> (!matcher.matches()) {
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> Profile.ConfigException(
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>                 String.format(<span class="jxr_string">"invalid path of asset: %s"</span>, path)
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>                 String.format(<span class="jxr_string">"Invalid path of asset: %s"</span>, path)
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>             );
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>         }
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>         <strong class="jxr_keyword">final</strong> Repo rpo = <strong class="jxr_keyword">this</strong>.repo.github().repos().get(
@@ -171,7 +171,7 @@
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> Profile.ConfigException(
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>                 String.format(
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>                     <span class="jxr_string">"`%s` file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets"</span>,
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                     <span class="jxr_string">"%s file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets"</span>,
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>                     GithubProfile.FILE, rpo.coordinates()
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>                 )
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>             );
@@ -196,7 +196,7 @@
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> Profile.ConfigException(
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>                 String.format(
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>                     <span class="jxr_string">"`%s` in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets"</span>,
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>                     <span class="jxr_string">"%s in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets"</span>,
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>                     GithubProfile.FILE, rpo.coordinates(),
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>                     <strong class="jxr_keyword">this</strong>.repo.coordinates(), friends.size()
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>                 )
@@ -218,7 +218,7 @@
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>         <strong class="jxr_keyword">if</strong> (!rpo.contents().exists(filename, <strong class="jxr_keyword">this</strong>.branch)) {
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> Profile.ConfigException(
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>                 String.format(
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>                     <span class="jxr_string">"`%s` on `%s` does not exist."</span>,
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>                     <span class="jxr_string">"%s on %s does not exist."</span>,
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>                     filename, <strong class="jxr_keyword">this</strong>.branch
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>                 )
 <a class="jxr_linenumber" name="L216" href="#L216">216</a>             );
@@ -254,7 +254,7 @@
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>         <strong class="jxr_keyword">if</strong> (!msg.isEmpty()) {
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> Profile.ConfigException(
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>                 String.format(
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>                     <span class="jxr_string">"`%s` is not valid according to schema:\n``%s``"</span>,
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>                     <span class="jxr_string">"%s is not valid according to schema:\n``%s``"</span>,
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>                     GithubProfile.FILE,
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>                     <strong class="jxr_keyword">new</strong> JoinedText(
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>                         <span class="jxr_string">"\n"</span>,
