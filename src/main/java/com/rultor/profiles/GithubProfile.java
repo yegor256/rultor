@@ -153,7 +153,7 @@ final class GithubProfile implements Profile {
         final Matcher matcher = GithubProfile.PATH.matcher(path);
         if (!matcher.matches()) {
             throw new Profile.ConfigException(
-                String.format("invalid path of asset: %s", path)
+                String.format("Invalid path of asset: %s", path)
             );
         }
         final Repo rpo = this.repo.github().repos().get(
@@ -163,7 +163,7 @@ final class GithubProfile implements Profile {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "`%s` file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets",
+                    "%s file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets",
                     GithubProfile.FILE, rpo.coordinates()
                 )
             );
@@ -188,7 +188,7 @@ final class GithubProfile implements Profile {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "`%s` in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets",
+                    "%s in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets",
                     GithubProfile.FILE, rpo.coordinates(),
                     this.repo.coordinates(), friends.size()
                 )
@@ -210,7 +210,7 @@ final class GithubProfile implements Profile {
         if (!rpo.contents().exists(filename, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(
-                    "`%s` on `%s` does not exist.",
+                    "%s on %s does not exist.",
                     filename, this.branch
                 )
             );
@@ -246,7 +246,7 @@ final class GithubProfile implements Profile {
         if (!msg.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
-                    "`%s` is not valid according to schema:\n``%s``",
+                    "%s is not valid according to schema:\n``%s``",
                     GithubProfile.FILE,
                     new JoinedText(
                         "\n",
