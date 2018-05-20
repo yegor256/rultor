@@ -94,13 +94,35 @@ function docker_when_possible {
   if docker ps --filter=status=exited | grep --quiet "\s${container}\s*\$"; then
     docker rm -f "${container}"
   fi
+  if [[ -z "$(docker ps --filter=name=dockerproxy | grep dockerproxy)" ]]; then
+      # to change access to docker daemon API use environment variables
+      # from this list: https://github.com/Tecnativa/docker-socket-proxy/blob/master/haproxy.cfg
+      # 1 - to grant access
+      # 0 - to revoke access
+      docker container run -d --privileged \
+        --name dockerproxy \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -e AUTH=1 \
+        -e BUILD=1 \
+        -e COMMIT=1 \
+        -e IMAGES=1 \
+        -e INFO=1 \
+        -e PING=1 \
+        -e POST=1 \
+        -e SECRETS=1 \
+        -e VERSION=1 \
+        -e VOLUMES=1 \
+        -p 127.0.0.1:2375:2375 \
+        tecnativa/docker-socket-proxy
+  fi
   ls -al .
   docker run -t --rm \
     -v "$(pwd):/main" "${vars[@]}" \
     --hostname=docker --privileged \
     --memory=6g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
-    -v /var/run/docker.sock:/var/run/docker.sock \
+    --network=host \
+    -e DOCKER_HOST=tcp://localhost
     --name="${container}" "${image}" /main/entry.sh
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
