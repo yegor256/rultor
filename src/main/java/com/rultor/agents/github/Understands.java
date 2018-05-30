@@ -104,6 +104,7 @@ public final class Understands extends AbstractAgent {
     }
 
     // @checkstyle ExecutableStatementCountCheck (50 lines)
+    // @checkstyle CyclomaticComplexityCheck (100 lines)
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
@@ -160,12 +161,18 @@ public final class Understands extends AbstractAgent {
                 this, "temporary pause in %s#%d, at message #%d",
                 issue.repo().coordinates(), issue.number(), next
             );
-        } else {
+        } else if (xml.xpath(String.format("//archive/log[@id='%d']", next))
+            .isEmpty()) {
             dirs.xpath("/talk/request").remove()
                 .xpath("/talk[not(request)]").strict(1)
                 .add("request")
                 .attr("id", Integer.toString(next))
                 .append(req.dirs());
+        } else {
+            Logger.error(
+                this, "We have seen this conversation already: %d",
+                next
+            );
         }
         if (next > seen) {
             dirs.xpath("/talk/wire")
