@@ -26,6 +26,13 @@ git checkout -b "${BRANCH_NAME}"
 
 docker_when_possible
 
+for f in "${sensitive[@]}"; do
+  if [ -e "${f}" ]; then
+    echo "File ${f} is present, can't release"
+    exit - 1
+  fi
+done
+
 git checkout "${BRANCH_NAME}"
 git tag "${tag}" -m "${tag}: tagged by rultor.com"
 git reset --hard

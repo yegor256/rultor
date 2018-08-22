@@ -65,6 +65,8 @@ env:
   MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 release:
   pre: false
+  sensitive:
+    - settings.xml
   script: |-
     echo "Author of the request: ${author}"
     mvn versions:set "-DnewVersion=${tag}" --quiet
@@ -83,7 +85,10 @@ release:
     git add src/main/resources/log4j.properties
     git commit -m 'build number set'
     git add settings.xml
-    git commit -m 'settings.xml' && git push -f heroku $(git symbolic-ref --short HEAD):master && git reset HEAD~1
+    git commit -m 'settings.xml'
+    git push -f heroku $(git symbolic-ref --short HEAD):master
+    git reset HEAD~1
+    rm -rf settings.xml
     curl -f --connect-timeout 30 --retry 8 --retry-delay 60 http://www.rultor.com
     mvn clean site-deploy -Prultor -Psite --errors --settings ../settings.xml --batch-mode || echo 'site-deploy failed'
   commanders:

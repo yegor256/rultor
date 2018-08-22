@@ -161,6 +161,7 @@ public final class StartsRequest extends AbstractAgent {
                         CharEncoding.UTF_8
                     )
                 ),
+                Collections.singleton(this.sensitive()),
                 this.decryptor().commands(),
                 Collections.singleton(
                     IOUtils.toString(
@@ -184,6 +185,31 @@ public final class StartsRequest extends AbstractAgent {
             System.getProperty(HOST_KEY, ""),
             Integer.parseInt(System.getProperty(PORT_KEY, DEFAULT_PORT))
         );
+    }
+
+    /**
+     * List sensitive files in a BASH variable "sensitive".
+     * @return Bash script
+     * @throws IOException If fails
+     */
+    private String sensitive() throws IOException {
+        String script = "";
+        if (!this.profile.read().nodes("/p/entry[@key='release']").isEmpty()) {
+            script = String.format(
+                "sensitive=(%s)\n",
+                String.join(
+                    " ",
+                    new Mapped<>(
+                        SSH::escape,
+                        this.profile.read().xpath(
+                            // @checkstyle LineLength (1 line)
+                            "/p/entry[@key='release']/entry[@key='sensitive']/item/text()"
+                        )
+                    )
+                )
+            );
+        }
+        return script;
     }
 
     /**
