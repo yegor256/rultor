@@ -31,7 +31,7 @@
 # If you are going to use your own container, you may remove them.
 # Rultor has no dependency on these packages.
 
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Yegor Bugayenko <yegor256@gmail.com>
 LABEL Description="This is the default image for Rultor.com" Vendor="Rultor.com" Version="1.0"
 WORKDIR /tmp
@@ -68,13 +68,10 @@ RUN apt-get install -y ssh && \
   chmod 0755 /var/run/sshd
 
 # Ruby
-RUN apt-get update && apt-get install -y ruby-dev libmagic-dev=1:5.14-2ubuntu3.3 \
-  zlib1g-dev=1:1.2.8.dfsg-1ubuntu1
+RUN apt-get update && apt-get install -y ruby-dev libmagic-dev zlib1g-dev
 RUN gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 RUN curl -L https://get.rvm.io | bash -s stable
-RUN /bin/bash -l -c "rvm requirements"
-RUN /bin/bash -l -c "rvm install 2.3.3"
-RUN /bin/bash -l -c "gem update && gem install --no-ri --no-rdoc nokogiri:1.6.7.2 bundler:1.11.2"
+RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.3.3 && gem update && gem install --no-ri --no-rdoc nokogiri bundler"
 
 # PHP
 RUN apt-get install -y php5 php5-dev php-pear
@@ -120,10 +117,13 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
 # Postgres
-RUN apt-get install -y postgresql postgresql-contrib libpq-dev
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" > /etc/apt/sources.list.d/pgdg_bionic.list
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/pgdg_xenial.list
+RUN apt-get install -y postgresq-10 postgresql-contrib libpq-dev
 USER postgres
-RUN    /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER rultor WITH SUPERUSER PASSWORD 'rultor';" &&\
+RUN /etc/init.d/postgresql start && \
+    psql --command "CREATE USER rultor WITH SUPERUSER PASSWORD 'rultor';" && \
     createdb -O rultor rultor
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
