@@ -117,7 +117,7 @@ RUN rm -rf /usr/lib/node_modules && \
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" > /etc/apt/sources.list.d/pgdg_bionic.list
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/pgdg_xenial.list
-RUN apt-get install -y postgresq-10 postgresql-contrib libpq-dev
+RUN apt-get install -y postgresql-10 postgresql-contrib libpq-dev
 USER postgres
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER rultor WITH SUPERUSER PASSWORD 'rultor';" && \
