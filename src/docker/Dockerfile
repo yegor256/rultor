@@ -45,6 +45,7 @@ ENV LANGUAGE C.UTF-8
 
 # Basic Linux tools
 RUN apt-get update && apt-get install -y wget bcrypt curl \
+  sudo \
   unzip zip \
   gnupg gnupg2 \
   jq \
