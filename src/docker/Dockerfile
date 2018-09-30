@@ -44,21 +44,20 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
 # Basic Linux tools
-RUN apt-get update
-RUN apt-get install -y wget bcrypt curl
-RUN apt-get install -y unzip zip
-RUN apt-get install -y gnupg gnupg2
-RUN apt-get install -y jq
-RUN apt-get install -y bsdmainutils
-RUN apt-get install -y libxml2-utils
-RUN apt-get install -y build-essential
-RUN apt-get install -y automake autoconf
+RUN apt-get update && apt-get install -y wget bcrypt curl \
+  unzip zip \
+  gnupg gnupg2 \
+  jq \
+  bsdmainutils \
+  libxml2-utils \
+  build-essential \
+  automake autoconf
 
 # Git 2.0
-RUN apt-get install -y software-properties-common python-software-properties
-RUN add-apt-repository ppa:git-core/ppa
-RUN apt-get update
-RUN apt-get install -y git git-core
+RUN apt-get install -y software-properties-common python-software-properties && \
+  add-apt-repository ppa:git-core/ppa && \
+  apt-get update && \
+  apt-get install -y git git-core
 
 # SSH Daemon
 RUN apt-get install -y ssh && \
@@ -66,15 +65,18 @@ RUN apt-get install -y ssh && \
   chmod 0755 /var/run/sshd
 
 # Ruby
-RUN apt-get update && apt-get install -y ruby-dev libmagic-dev zlib1g-dev
-RUN gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
-RUN curl -L https://get.rvm.io | bash -s stable
-RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.3.3 && gem update && gem install --no-ri --no-rdoc nokogiri bundler"
+RUN apt-get update && \
+  apt-get install -y ruby-dev libmagic-dev zlib1g-dev && \
+  gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 && \
+  curl -L https://get.rvm.io | bash -s stable && \
+  /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.3.3 && gem update && gem install --no-ri --no-rdoc nokogiri bundler"
 
 # PHP
-RUN apt-get install -y php5 php5-dev php-pear
-RUN curl --silent --show-error https://getcomposer.org/installer | php
-RUN mv composer.phar /usr/local/bin/composer
+RUN add-apt-repository ppa:ondrej/php && \
+  apt-get update && \
+  apt-get install -y php7.2 php-pear php7.2-curl php7.2-dev php7.2-gd php7.2-mbstring php7.2-zip php7.2-mysql php7.2-xml
+RUN curl --silent --show-error https://getcomposer.org/installer | php && \
+  mv composer.phar /usr/local/bin/composer
 RUN mkdir jsl && \
   wget --quiet http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz && \
   tar xzf jsl-0.3.0-src.tar.gz && \
@@ -97,11 +99,8 @@ RUN apt-get install -y oracle-java8-installer ca-certificates
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # LaTeX
-RUN apt-get install -y texlive-latex-base
-RUN apt-get install -y texlive-fonts-recommended
-RUN apt-get install -y texlive-latex-extra
-RUN apt-get install -y xzdec
-RUN tlmgr init-usertree
+RUN apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra xzdec && \
+  tlmgr init-usertree
 
 # PhantomJS
 RUN apt-get install -y phantomjs
@@ -110,9 +109,9 @@ RUN apt-get install -y phantomjs
 RUN apt-get install -y s3cmd
 
 # NodeJS
-RUN rm -rf /usr/lib/node_modules
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get install -y nodejs
+RUN rm -rf /usr/lib/node_modules && \
+  curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+  apt-get install -y nodejs
 
 # Postgres
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
@@ -150,7 +149,6 @@ RUN cd rultor && \
   rm -rf rultor
 
 # Clean up
-RUN rm -rf /tmp/*
-RUN rm -rf /root/.ssh
+RUN rm -rf /tmp/* && rm -rf /root/.ssh
 
 ENTRYPOINT ["/bin/bash", "-l", "-c"]
