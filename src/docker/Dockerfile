@@ -99,8 +99,8 @@ RUN apt-get install -y oracle-java8-installer ca-certificates
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # LaTeX
-RUN apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra xzdec && \
-  tlmgr init-usertree
+RUN apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra xzdec
+RUN tlmgr init-usertree || echo 'Warning ignored'
 
 # PhantomJS
 RUN apt-get install -y phantomjs
