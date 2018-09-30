@@ -72,7 +72,7 @@ RUN apt-get update && \
   /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.3.3 && gem update && gem install --no-ri --no-rdoc nokogiri bundler"
 
 # PHP
-RUN add-apt-repository ppa:ondrej/php && \
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php && \
   apt-get update && \
   apt-get install -y php7.2 php-pear php7.2-curl php7.2-dev php7.2-gd php7.2-mbstring php7.2-zip php7.2-mysql php7.2-xml
 RUN curl --silent --show-error https://getcomposer.org/installer | php && \
