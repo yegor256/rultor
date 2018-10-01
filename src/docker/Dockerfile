@@ -70,8 +70,7 @@ RUN apt-get update && \
   apt-get install -y ruby-dev libmagic-dev zlib1g-dev && \
   gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 && \
   curl -L https://get.rvm.io | bash -s stable && \
-  /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.3.3 && gem update && gem install --no-ri --no-rdoc nokogiri bundler" && \
-  chmod -R a+w /usr/local/rvm/gems
+  /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.3.3"
 
 # PHP
 RUN add-apt-repository ppa:ondrej/php && \
