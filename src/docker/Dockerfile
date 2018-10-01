@@ -124,6 +124,7 @@ RUN /etc/init.d/postgresql start && \
     createdb -O rultor rultor
 EXPOSE 5432
 USER root
+ENV PATH="${PATH}:/usr/lib/postgresql/10/bin"
 # Postgresql service has to be started using `sudo /etc/init.d/postgresql start` in .rultor.yml
 
 # Maven
