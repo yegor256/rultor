@@ -38,9 +38,6 @@ WORKDIR /tmp
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-v8vjlgjmg7mouz
-VtCow8WmL8
-
 # UTF-8 locale
 RUN apt-get clean && apt-get update && apt-get install -y locales && locale-gen en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
