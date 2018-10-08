@@ -72,7 +72,7 @@ RUN apt-get update && \
   apt-get install -y ruby-dev libmagic-dev zlib1g-dev && \
   gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 && \
   curl -L https://get.rvm.io | bash -s stable && \
-  /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.3.3"
+  /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.5.1 && rvm use 2.5.1"
 
 # PHP
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php && \
