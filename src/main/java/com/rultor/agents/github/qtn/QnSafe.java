@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -40,7 +41,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * If contains text.
+ * It never fails.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
@@ -49,6 +50,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
+@SuppressWarnings("PMD.AvoidCatchingThrowable")
 public final class QnSafe implements Question {
 
     /**
@@ -67,9 +69,20 @@ public final class QnSafe implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        final Req req;
+        Req req;
         if (QnSafe.valid(comment)) {
-            req = this.origin.understand(comment, home);
+            try {
+                req = this.origin.understand(comment, home);
+                // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final Throwable ex) {
+                new Answer(comment).post(
+                    false, Logger.format(
+                        "We failed, sorry, try again:\n\n```%[exception]s```",
+                        ex
+                    )
+                );
+                req = Req.DONE;
+            }
         } else {
             req = Req.EMPTY;
         }
@@ -81,7 +94,6 @@ public final class QnSafe implements Question {
      * @param comment The comment
      * @return TRUE if valid
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private static boolean valid(final Comment.Smart comment) {
         boolean valid = true;
         try {
