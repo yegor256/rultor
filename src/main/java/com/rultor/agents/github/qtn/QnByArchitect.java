@@ -100,9 +100,12 @@ public final class QnByArchitect implements Question {
                 this.profile.read().xpath(this.xpath)
             )
         );
-        final boolean legal = logins.isEmpty() || logins.contains(
-            comment.author().login().toLowerCase(Locale.ENGLISH)
-        );
+        final String author = comment.author()
+            .login()
+            .toLowerCase(Locale.ENGLISH);
+        final boolean legal = logins.isEmpty()
+            || logins.contains(author)
+            || logins.contains(author);
         if (legal) {
             req = this.origin.understand(comment, home);
         } else {
