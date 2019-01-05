@@ -32,7 +32,10 @@ package com.rultor.profiles;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.IsNot;
+import org.hamcrest.core.StringContains;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -96,6 +99,25 @@ public final class YamlXMLTest {
                 continue;
             }
         }
+    }
+
+    /**
+     * YamlXML can parse with special character.
+     * @throws Exception In case of error.
+     * @todo #1193:30min Fix YamlXML so it can accept special characters.
+     *  YamlXML is escaping & character, and this characters are
+     *  not being unescaped when used. YamlXML should not escape this character.
+     *  After fixing that, remove ignore annotation from test.
+     */
+    @Test
+    @Ignore
+    public void parsesYamlConfigSpecialCharacter() throws Exception {
+        MatcherAssert.assertThat(
+            new YamlXML("command: Xvfb :99 &").get().toString(),
+            new IsNot(
+                new StringContains("&amp;")
+            )
+        );
     }
 
 }
