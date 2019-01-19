@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.jcabi.github.User;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.Locale;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -104,6 +106,40 @@ public final class QnByArchitectTest {
                 )
             ),
             "/p/entry[@key='b']/text()", question
+        ).understand(comment, home);
+        Mockito.verify(question).understand(comment, home);
+    }
+
+    /**
+     * QnByArchitect can accept if is a merge request made by anyone in a
+     * pull request made by an architect.
+     * @throws Exception In case of error.
+     */
+    @Ignore
+    @Test
+    public void acceptsIfMergeArchitectPull() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final User author = Mockito.mock(User.class);
+        Mockito.when(author.login()).thenReturn(
+            repo.github().users().self().login().toUpperCase(
+                Locale.ENGLISH
+            )
+        );
+        final Issue.Smart issue = Mockito.mock(Issue.Smart.class);
+        Mockito.when(issue.author()).thenReturn(author);
+        Mockito.when(issue.isPull()).thenReturn(true);
+        final User reviewer = Mockito.mock(User.class);
+        Mockito.when(reviewer.login()).thenReturn("alfred");
+        final Comment.Smart comment = Mockito.mock(Comment.Smart.class);
+        Mockito.when(comment.body()).thenReturn("merge");
+        Mockito.when(comment.author()).thenReturn(reviewer);
+        final Question question = Mockito.mock(Question.class);
+        final URI home = new URI("#2");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument("<p><entry key='c'>alfred</entry></p>")
+            ),
+            "/p/entry[@key='c']/text()", question
         ).understand(comment, home);
         Mockito.verify(question).understand(comment, home);
     }
