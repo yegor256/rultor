@@ -50,6 +50,10 @@ import org.cactoos.list.SolidList;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.45
+ * @todo #1246:30min PR by ARC merge shouldn't require confirmation by ARC.
+ *  Implement the asked in #1246. The tests have already benn implemented in
+ *  QnByArchitectTest.acceptsIfMergeArchitectPull. After resolving this
+ *  issue, uncomment the test.
  */
 @Immutable
 @ToString
