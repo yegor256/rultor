@@ -62,10 +62,12 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "profile")
+@SuppressWarnings("PMD.ExcessiveMethodLength")
 public final class StartsRequest extends AbstractAgent {
 
     /**
@@ -276,7 +278,10 @@ public final class StartsRequest extends AbstractAgent {
                 "vars",
                 new Brackets(
                     new Mapped<>(
-                        input -> String.format("--env=%s", input),
+                        input -> String.format(
+                            "--env=%s",
+                            input.replace("\n", " ")
+                        ),
                         docker.envs(
                             new SolidMap<String, String>(
                                 entries
