@@ -57,6 +57,7 @@ Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
 as a human-readable sentence suffices to trigger a merge or a release.
 
 ## How Rultor Works?
+
 Once Rultor finds a [merge command](http://doc.rultor.com/basics.html)
 in one of your GitHub pull requests, it does exactly this:
 
@@ -76,11 +77,6 @@ You can see it in action, for example, in this pull request:
 
 TBD... _quality requirements_
 
-## How to Contribute
-
-If you are interested in contributing please refer to [CONTRIBUTING.md](CONTRIBUTING.md)
-
-
 ## Docker server
 
 The server where Docker works must be Ubuntu 16.04.
@@ -97,11 +93,6 @@ apt-get install -y mailx
 apt-get install -y gnupg2
 apt-get install -y bc
 ```
-
-## Got questions?
-
-If you have questions or general suggestions, don't hesitate to submit
-a new [Github issue](https://github.com/yegor256/rultor/issues/new).
 
 ## Continuous Integration
 
