@@ -116,7 +116,7 @@ Less interesting and/or stable stuff:
 [codeship.io](http://www.codeship.io)<br/>
 [![Codeship Status for yegor256/rultor](https://codeship.io/projects/d00b5ff0-2641-0132-d783-12f2cec1461b/status?branch=master)](https://codeship.io/projects/37414)
 
-[circleci.io](http://www.circleci.io)<br/>
+[circleci.io](https://circleci.com)<br/>
 [![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
 
 [semaphoreapp.com](http://www.semaphoreapp.com)<br/>
