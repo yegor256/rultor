@@ -1,3 +1,5 @@
+readers:
+  - "urn:github:526301"
 docker:
   image: yegor256/java8
 install: |-
