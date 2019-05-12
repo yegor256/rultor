@@ -60,6 +60,15 @@ final class RqUser extends RqWrap {
         super(req);
     }
 
+    @Override
+    public String toString() {
+        try {
+            return this.identity().urn();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     /**
      * Is it an anonymous user?
      * @return TRUE if I'm anonymous
