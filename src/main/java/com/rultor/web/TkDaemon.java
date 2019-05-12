@@ -89,13 +89,12 @@ final class TkDaemon implements TkRegex {
             );
         }
         final RqUser user = new RqUser(req);
-        if (!user.anonymous()
-            && !user.canSee(this.talks.get(number))) {
+        if (!user.canSee(this.talks.get(number))) {
             throw new RsForward(
                 new RsFlash(
                     String.format(
                         // @checkstyle LineLength (1 line)
-                        "according to .rultor.yml, you (%s) are not allowed to see this",
+                        "According to .rultor.yml, you (%s) are not allowed to see this",
                         user
                     ),
                     Level.WARNING
