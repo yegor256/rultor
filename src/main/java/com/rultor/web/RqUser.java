@@ -62,11 +62,15 @@ final class RqUser extends RqWrap {
 
     @Override
     public String toString() {
+        String str = "ANONYMOUS";
         try {
-            return this.identity().urn();
+            if (!anonymous()) {
+                str = this.identity().urn();
+            }
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
+        return str;
     }
 
     /**
