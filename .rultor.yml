@@ -32,12 +32,12 @@ architect:
 - yegor256
 - alex-palevsky
 assets:
-  secring.gpg: zerocracy/home#assets/secring.gpg
-  id_rsa: zerocracy/home#assets/heroku-key
-  settings.xml: zerocracy/home#assets/rultor/settings.xml
-  pubring.gpg: zerocracy/home#assets/pubring.gpg
-  id_rsa.pub: zerocracy/home#assets/heroku-key.pub
-  s3cfg: zerocracy/home#assets/s3cfg
+  secring.gpg: yegor256/home#assets/secring.gpg
+  id_rsa: yegor256/home#assets/heroku-key
+  settings.xml: yegor256/home#assets/rultor/settings.xml
+  pubring.gpg: yegor256/home#assets/pubring.gpg
+  id_rsa.pub: yegor256/home#assets/heroku-key.pub
+  s3cfg: yegor256/home#assets/s3cfg
 merge:
   fast-forward: only
   rebase: true
