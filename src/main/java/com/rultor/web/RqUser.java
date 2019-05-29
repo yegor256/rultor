@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2019, rultor.com
+ * Copyright (c) 2009-2019, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,10 +64,10 @@ final class RqUser extends RqWrap {
     public String toString() {
         String str = "ANONYMOUS";
         try {
-            if (!anonymous()) {
+            if (!this.anonymous()) {
                 str = this.identity().urn();
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         return str;
