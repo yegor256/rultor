@@ -35,10 +35,10 @@ Watch these videos to understand what Rultor is for:
   * [_Deployment Scripts Are Dead; Meet Rultor_](https://www.youtube.com/watch?v=NflR7DKwxDY)<br/>
     DevOps Pro; Vilnius, Lithuania; 26 May 2016
 
-  * [_A Practical Example of a One-Click Release_](https://www.youtube.com/watch?v=_61CuGhyv-o);
+  * [_A Practical Example of a One-Click Release_](https://www.youtube.com/watch?v=_61CuGhyv-o)<br/>
     DevOpsPro Moscow 2016; Moscow, Russia; 15 November 2016
 
-  * [_Chat Bots Architecture_](https://www.youtube.com/watch?v=7yTIWFZrXpg);
+  * [_Chat Bots Architecture_](https://www.youtube.com/watch?v=7yTIWFZrXpg)<br/>
     GeekOUT 2016; Tallinn, Estonia; 9 June 2016
 
 Default Docker image is [yegor256/rultor](https://hub.docker.com/r/yegor256/rultor/)
