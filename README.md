@@ -32,7 +32,7 @@ These blog posts may be helpful:
 
 Watch these videos to understand what Rultor is for:
 
-  * [_Deployment Scripts Are Dead; Meet Rultor_](https://www.youtube.com/watch?v=NflR7DKwxDY);
+  * [_Deployment Scripts Are Dead; Meet Rultor_](https://www.youtube.com/watch?v=NflR7DKwxDY)<br/>
     DevOps Pro; Vilnius, Lithuania; 26 May 2016
 
   * [_A Practical Example of a One-Click Release_](https://www.youtube.com/watch?v=_61CuGhyv-o);
