@@ -1,30 +1,43 @@
 <img src="http://doc.rultor.com/images/logo.svg" width="64px" height="64px"/>
 
-[![Donate via Zerocracy](https://www.0crat.com/contrib-badge/C3SAYRPH9.svg)](https://www.0crat.com/contrib/C3SAYRPH9)
-
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
 [![Managed by Zerocracy](https://www.0crat.com/badge/C3SAYRPH9.svg)](https://www.0crat.com/p/C3SAYRPH9)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/rultor)](http://www.rultor.com/p/yegor256/rultor)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
-[![Availability at SixNines](https://www.sixnines.io/b/efd7)](https://www.sixnines.io/h/efd7)
 [![Coverage Status](https://coveralls.io/repos/yegor256/rultor/badge.svg?branch=__rultor&service=github)](https://coveralls.io/github/yegor256/rultor?branch=__rultor)
 [![PDD status](http://www.0pdd.com/svg?name=yegor256/rultor)](http://www.0pdd.com/p?name=yegor256/rultor)
 [![codebeat badge](https://codebeat.co/badges/56116205-91d3-4966-8f15-d5c505fc3905)](https://codebeat.co/projects/github-com-yegor256-rultor)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3d1858b2edfc4dcdae9363c09a75dfbc)](https://www.codacy.com/app/github_90/rultor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=yegor256/rultor&amp;utm_campaign=Badge_Grade)
 [![Dependencies](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3)
-[![Join the chat at https://gitter.im/yegor256/rultor](https://badges.gitter.im/yegor256/rultor.svg)](https://gitter.im/yegor256/rultor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Conference recommends](https://devternity.com/shields/recommends.svg)](https://devternity.com)
+[![Hits-of-Code](https://hitsofcode.com/github/yegor256/rultor)](https://hitsofcode.com/view/github/yegor256/rultor)
+
+[![Availability at SixNines](https://www.sixnines.io/b/efd7)](https://www.sixnines.io/h/efd7)
 
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
 
 These blog posts may be helpful:
-[Every Build in Its Own Docker Container](http://www.yegor256.com/2014/07/29/docker-in-rultor.html),
-[Master Branch Must Be Read-Only](http://www.yegor256.com/2014/07/21/read-only-master-branch.html),
-[Rultor + Travis](http://www.yegor256.com/2014/07/31/travis-and-rultor.html), and
-[Rultor, a Merging Bot](http://www.yegor256.com/2014/07/24/rultor-automated-merging.html).
 
-Default Docker image is [yegor256/rultor](https://registry.hub.docker.com/u/yegor256/rultor/)
+  * [_Rultor, a Merging Bot_](http://www.yegor256.com/2014/07/24/rultor-automated-merging.html)
+
+  * [_Every Build in Its Own Docker Container_](http://www.yegor256.com/2014/07/29/docker-in-rultor.html)
+
+  * [_Master Branch Must Be Read-Only_](http://www.yegor256.com/2014/07/21/read-only-master-branch.html)
+
+  * [_Rultor + Travis_](http://www.yegor256.com/2014/07/31/travis-and-rultor.html)
+
+Watch these videos to understand what Rultor is for:
+
+  * [_Deployment Scripts Are Dead; Meet Rultor_](https://www.youtube.com/watch?v=NflR7DKwxDY);
+    DevOps Pro; Vilnius, Lithuania; 26 May 2016
+
+  * [_A Practical Example of a One-Click Release_](https://www.youtube.com/watch?v=_61CuGhyv-o);
+    DevOpsPro Moscow 2016; Moscow, Russia; 15 November 2016
+
+  * [_Chat Bots Architecture_](https://www.youtube.com/watch?v=7yTIWFZrXpg);
+    GeekOUT 2016; Tallinn, Estonia; 9 June 2016
+
+Default Docker image is [yegor256/rultor](https://hub.docker.com/r/yegor256/rultor/)
 
 ## What Is Rultor?
 
@@ -110,17 +123,3 @@ for fun :) Here is our [selection criteria](http://www.yegor256.com/2014/10/05/t
 
 [wercker.com](http://www.wercker.com)<br/>
 [![wercker status](https://app.wercker.com/status/0e6506c69e078b7692e50b240c034524/s "wercker status")](https://app.wercker.com/project/bykey/0e6506c69e078b7692e50b240c034524)
-
-Less interesting and/or stable stuff:
-
-[codeship.io](http://www.codeship.io)<br/>
-[![Codeship Status for yegor256/rultor](https://codeship.io/projects/d00b5ff0-2641-0132-d783-12f2cec1461b/status?branch=master)](https://codeship.io/projects/37414)
-
-[circleci.io](https://circleci.com)<br/>
-[![Circle CI](https://circleci.com/gh/yegor256/rultor.png?style=badge)](https://circleci.com/gh/yegor256/rultor)
-
-[semaphoreapp.com](http://www.semaphoreapp.com)<br/>
-[![Build Status](https://semaphoreapp.com/api/v1/projects/115d317a-9f15-4c71-9301-5dae64f0a76d/260906/badge.png)](https://semaphoreapp.com/yegor256/rultor)
-
-[solanolabs.com](http://ci.solanolabs.com)<br/>
-[![sonolabs status](https://ci.solanolabs.com:443/yegor256/rultor/badges/120059.png?badge_token=6c00577e47c05198703fe752d6d26cd4e4a4d011)](https://ci.solanolabs.com:443/yegor256/rultor/suites/120059)
