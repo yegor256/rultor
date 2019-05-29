@@ -9,7 +9,6 @@
 [![PDD status](http://www.0pdd.com/svg?name=yegor256/rultor)](http://www.0pdd.com/p?name=yegor256/rultor)
 [![codebeat badge](https://codebeat.co/badges/56116205-91d3-4966-8f15-d5c505fc3905)](https://codebeat.co/projects/github-com-yegor256-rultor)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3d1858b2edfc4dcdae9363c09a75dfbc)](https://www.codacy.com/app/github_90/rultor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=yegor256/rultor&amp;utm_campaign=Badge_Grade)
-[![Dependencies](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561a9d87a193340f28000fd3)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/rultor)](https://hitsofcode.com/view/github/yegor256/rultor)
 
 [![Availability at SixNines](https://www.sixnines.io/b/efd7)](https://www.sixnines.io/h/efd7)
