@@ -8,7 +8,7 @@ if (grep -r "Copyright \+(c) \+2009-.*rultor.com" \
     exit 1
 fi
 
-if (grep -r -L "Copyright \+(c) \+2009-.*rultor.com" \
+if (grep -r -L "Copyright \+(c) \+2009-.*Yegor Bugayenko" \
   --include=*.java --include=*.xml --include=*.vm --include=*.groovy \
   --include=*.txt --include=*.fml --include=*.properties} \
   --exclude-dir "target" --exclude-dir "apache-maven-*" . \
