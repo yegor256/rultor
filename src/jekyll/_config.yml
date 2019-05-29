@@ -14,7 +14,9 @@ redcarpet:
 permalink: :title.html
 
 # see https://github.com/noct/jekyll-sass
-gems: ['jekyll-sass']
+plugins:
+  - jekyll-sass
+
 sass:
   style: compressed
   deploy_style: compressed
