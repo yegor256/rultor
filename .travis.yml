@@ -14,6 +14,7 @@ env:
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 script:
   - java -version
+  - rvm use 2.3.0
   - mvn clean install -Pqulice -PdockerITs --errors --quiet
   - travis_wait docker build -q -t rultor -f src/docker/Dockerfile src/docker
   - docker images
