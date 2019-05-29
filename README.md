@@ -13,6 +13,11 @@
 
 [![Availability at SixNines](https://www.sixnines.io/b/efd7)](https://www.sixnines.io/h/efd7)
 
+Rultor is a DevOps team assistant. It helps your programmers and
+release managers automate routine operations (merge, deploy and release),
+with an easy-to-use intuitive chat-bot interface. Just say `@rultor hello` in
+any of your GitHub issue and the converstaion will start.
+
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
 
 These blog posts may be helpful:
@@ -37,10 +42,6 @@ Watch these videos to understand what Rultor is for:
     GeekOUT 2016; Tallinn, Estonia; 9 June 2016
 
 Default Docker image is [yegor256/rultor](https://hub.docker.com/r/yegor256/rultor/)
-
-## What Is Rultor?
-
-Rultor is a DevOps team assistant. It helps your programmers and release managers automate routine operations (merge, deploy and release), with an easy-to-use intuitive interface.
 
 ## What Problems Does Rultor Solve?
 
