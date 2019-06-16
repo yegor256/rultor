@@ -21,6 +21,8 @@ any of your GitHub issue and the converstaion will start.
 
 Full documentation is at [doc.rultor.com](http://doc.rultor.com)
 
+Need help online? Try our [Telegram group](https://t.me/zerocracy).
+
 These blog posts may be helpful:
 
   * [_Rultor, a Merging Bot_](http://www.yegor256.com/2014/07/24/rultor-automated-merging.html)
