@@ -75,7 +75,7 @@ release:
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Prultor --errors --batch-mode --quiet
-    git remote add heroku git@heroku.com:rultor.git
+    git remote add dokku dokku@www.rultor.com:rultor
     mkdir -p ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
     chmod -R 600 ~/.ssh/*
@@ -88,7 +88,7 @@ release:
     git commit -m 'build number set'
     git add settings.xml
     git commit -m 'settings.xml'
-    git push -f heroku $(git symbolic-ref --short HEAD):master
+    git push -f dokku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     rm -rf settings.xml
     curl -f --connect-timeout 30 --retry 8 --retry-delay 60 http://www.rultor.com
