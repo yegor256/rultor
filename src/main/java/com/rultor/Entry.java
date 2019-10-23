@@ -134,7 +134,7 @@ public final class Entry {
      */
     @Cacheable(forever = true)
     private Github github() throws IOException {
-        Logger.info(this, "Connecting Github...");
+        Logger.info(this, "Connecting GitHub...");
         final String token = Manifests.read("Rultor-GithubToken");
         final Github github;
         if (token.startsWith("${")) {
@@ -147,8 +147,9 @@ public final class Entry {
                 )
             );
         }
+        Logger.info(this, "GitHub object instantiated...");
         Logger.info(
-            this, "Github connected as @%s",
+            this, "GitHub connected as @%s",
             github.users().self().login()
         );
         return github;
