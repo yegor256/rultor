@@ -35,6 +35,7 @@ import co.stateful.cached.CdSttc;
 import co.stateful.retry.ReSttc;
 import com.google.common.collect.EvictingQueue;
 import com.jcabi.aspects.Cacheable;
+import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
@@ -91,6 +92,7 @@ public final class Entry {
      * @param args Arguments
      * @throws IOException If fails
      */
+    @LogExceptions
     public static void main(final String... args) throws IOException {
         new Entry(args).exec();
     }
@@ -113,7 +115,7 @@ public final class Entry {
         final Routine routine = new Routine(
             talks, Entry.pulse(), this.github(), this.sttc()
         );
-        Logger.info(this, "Starting the web front...");
+        Logger.info(this, "Starting the web front to run forever...");
         try {
             new FtCli(
                 new TkApp(talks, Entry.pulse(), new Toggles.InFile()),
