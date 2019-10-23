@@ -126,8 +126,8 @@
                 </a>
             </p>
             <p>
-                <a href="http://www.sixnines.io/h/efd7">
-                    <img src="http://www.sixnines.io/b/efd7?style=flat" alt="sixnines"/>
+                <a href="https://www.sixnines.io/h/efd7">
+                    <img src="https://www.sixnines.io/b/efd7?style=flat" alt="sixnines"/>
                 </a>
             </p>
         </div>
