@@ -109,9 +109,11 @@ public final class Entry {
                 this.dynamo(), this.sttc().counters().get("rt-talk")
             )
         );
+        Logger.info(this, "Starting the Routine...");
         final Routine routine = new Routine(
             talks, Entry.pulse(), this.github(), this.sttc()
         );
+        Logger.info(this, "Starting the web front...");
         try {
             new FtCli(
                 new TkApp(talks, Entry.pulse(), new Toggles.InFile()),
@@ -129,6 +131,7 @@ public final class Entry {
      */
     @Cacheable(forever = true)
     private Github github() throws IOException {
+        Logger.info(this, "Connecting Github...");
         final String token = Manifests.read("Rultor-GithubToken");
         final Github github;
         if (token.startsWith("${")) {
@@ -154,6 +157,7 @@ public final class Entry {
      */
     @Cacheable(forever = true)
     private Sttc sttc() {
+        Logger.info(this, "Connecting Sttc...");
         final Sttc sttc = new CdSttc(
             new ReSttc(
                 RtSttc.make(
@@ -172,6 +176,7 @@ public final class Entry {
      */
     @Cacheable(forever = true)
     private Region dynamo() {
+        Logger.info(this, "Connecting DynamoDB...");
         final String key = Manifests.read("Rultor-DynamoKey");
         Credentials creds = new Credentials.Simple(
             key,
