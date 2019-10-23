@@ -94,6 +94,7 @@ public final class Entry {
      */
     @LogExceptions
     public static void main(final String... args) throws IOException {
+        Logger.info(Entry.class, "Starting Rultor on the command line...");
         new Entry(args).exec();
     }
 
