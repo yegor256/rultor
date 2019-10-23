@@ -79,7 +79,7 @@ public final class MailsTest {
                 Matchers.containsString("Released by Rultor"),
                 Matchers.containsString(Manifests.read("Rultor-Version")),
                 Matchers.containsString(
-                    "see [build log](http://www.rultor.com/t/123-abcdef)"
+                    "see [build log](https://www.rultor.com/t/123-abcdef)"
                 )
             )
         );

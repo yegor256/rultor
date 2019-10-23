@@ -49,12 +49,12 @@
             </header>
             <div class="main">
                 <p>
-                    <a href="http://www.rultor.com">Rultor.com</a>
+                    <a href="https://www.rultor.com">Rultor.com</a>
                     <xsl:text> manages basic DevOps operations (merge, release and deploy) for </xsl:text>
                     <strong><xsl:value-of select="repo"/></strong>
                     <xsl:text> project. Want to try Rultor in your own project? </xsl:text>
                     <xsl:text>Read this </xsl:text>
-                    <a href="http://doc.rultor.com/basics.html">quick intro</a>
+                    <a href="https://doc.rultor.com/basics.html">quick intro</a>
                     <xsl:text>.</xsl:text>
                 </p>
                 <div id="talks" data-more="{links/link[@rel='more']/@href}">

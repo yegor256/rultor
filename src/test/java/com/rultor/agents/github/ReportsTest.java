@@ -115,7 +115,7 @@ public final class ReportsTest {
                     ReportsTest.PHRASES.getString("Reports.stop-fails"),
                     Logger.format(
                         ReportsTest.PHRASES.getString("Reports.success"),
-                        "http://www.rultor.com/t/1-1",
+                        "https://www.rultor.com/t/1-1",
                         DURATION
                     )
                 )

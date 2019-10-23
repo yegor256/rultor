@@ -192,7 +192,7 @@ readers:
 
 Every user is specified as a URN, where his Github account number
 stays right after `urn:github:`. You can get your Github account number
-by logging into [www.rultor.com](http://www.rultor.com)
+by logging into [www.rultor.com](https://www.rultor.com)
 and moving mouse over your name, at the
 top of the page.
 

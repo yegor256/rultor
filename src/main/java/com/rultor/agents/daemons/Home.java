@@ -82,7 +82,7 @@ public final class Home {
     public URI uri() {
         return URI.create(
             String.format(
-                "http://www.rultor.com/t/%d-%s",
+                "https://www.rultor.com/t/%d-%s",
                 Long.parseLong(this.xml.xpath("/talk/@number").get(0)),
                 this.hash
             )

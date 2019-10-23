@@ -30,7 +30,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:r="http://www.rultor.com"
+    xmlns:r="https://www.rultor.com"
     version="2.0" exclude-result-prefixes="xs r">
     <xsl:output method="text"/>
     <xsl:template match="/talk">
@@ -64,7 +64,7 @@
             <xsl:value-of select="/talk/@number"/>
             <xsl:text>-</xsl:text>
             <xsl:value-of select="@id"/>
-            <xsl:text>](http://www.rultor.com/t/</xsl:text>
+            <xsl:text>](https://www.rultor.com/t/</xsl:text>
             <xsl:value-of select="/talk/@number"/>
             <xsl:text>-</xsl:text>
             <xsl:value-of select="@id"/>

@@ -43,11 +43,11 @@
     <packaging>jar</packaging>
     <name>rultor</name>
     <description>Rultor.com, Coding Team Assistant</description>
-    <url>http://www.rultor.com</url>
+    <url>https://www.rultor.com</url>
     <inceptionYear>2009</inceptionYear>
     <organization>
         <name>Rultor Inc.</name>
-        <url>http://www.rultor.com</url>
+        <url>https://www.rultor.com</url>
     </organization>
     <licenses>
         <license>

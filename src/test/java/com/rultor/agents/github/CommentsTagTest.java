@@ -111,7 +111,7 @@ public final class CommentsTagTest {
             Matchers.allOf(
                 Matchers.containsString("Released by Rultor"),
                 Matchers.containsString(
-                    "see [build log](http://www.rultor.com/t/1-abcdef)"
+                    "see [build log](https://www.rultor.com/t/1-abcdef)"
                 )
             )
         );
