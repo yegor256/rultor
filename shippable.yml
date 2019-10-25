@@ -4,7 +4,7 @@ cache:
     - $HOME/.m2
 env:
   global:
-    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
 before_install:
   - MAVEN_VERSION=3.2.5
