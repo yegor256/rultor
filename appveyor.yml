@@ -19,6 +19,7 @@ install:
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
       }
   - cmd: SET M2_HOME=C:\maven\apache-maven-3.2.5
+  - cmd: SET MAVEN_OPTS=-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
   - cmd: SET PATH=%M2_HOME%\bin;%JAVA_HOME%\bin;%PATH:C:\Ruby193\bin;=%
   - cmd: SET JAVA_OPTS=-XX:MaxPermSize=2g -Xmx4g
   - cmd: mvn --version
