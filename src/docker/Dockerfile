@@ -110,7 +110,7 @@ RUN apt-get install -y s3cmd
 
 # NodeJS
 RUN rm -rf /usr/lib/node_modules && \
-  curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+  curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
   apt-get install -y nodejs
 
 # Postgresql
