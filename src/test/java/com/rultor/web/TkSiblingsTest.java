@@ -91,7 +91,7 @@ public final class TkSiblingsTest {
                 "/page/siblings/talk[timeago]",
                 "/page/siblings/talk/archive/log[id and href and title]",
                 "/page/siblings/talk/archive[count(log)=1]",
-                "//log[starts-with(href,'http://')]"
+                "//log[starts-with(href,'https://')]"
             )
         );
     }
