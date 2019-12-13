@@ -16,8 +16,6 @@ env:
 script:
   - java -version
   - mvn clean install -Pqulice -PdockerITs --errors --quiet -DskipITs -Dinvoker.skip=true
-  - travis_wait docker build -q -t rultor -f src/docker/Dockerfile src/docker
-  - docker images
 before_install:
   - rvm install 2.6.0
   - rvm use 2.6.0
