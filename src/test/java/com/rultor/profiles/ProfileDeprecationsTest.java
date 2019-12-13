@@ -68,7 +68,7 @@ public final class ProfileDeprecationsTest {
                 new XMLDocument(
                     String.format(
                         ProfileDeprecationsTest.PROFILE_FORMAT,
-                        "yegor256/rultor"
+                        "yegor256/rultor-image"
                     )
                 )
             )

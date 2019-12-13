@@ -143,7 +143,11 @@ public final class StartsRequestTest {
             this.exec(talk),
             Matchers.allOf(
                 new Array<Matcher<? super String>>()
-                    .with(Matchers.containsString("image=yegor256/rultor\n"))
+                    .with(
+                        Matchers.containsString(
+                            "image=yegor256/rultor-image\n"
+                        )
+                    )
                     .with(
                         Matchers.containsString(
                             String.format(

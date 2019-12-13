@@ -128,12 +128,13 @@ public final class ProfileDeprecations {
         final List<XML> images = prof.nodes(
             "/p/entry[@key='docker']/entry[@key='image']"
         );
+        final String def = "yegor256/rultor-image";
         boolean empty = true;
         if (images.isEmpty()) {
             empty = false;
         } else {
             for (final XML image : images) {
-                if ("yegor256/rultor".equals(image.node().getTextContent())) {
+                if (def.equals(image.node().getTextContent())) {
                     empty = false;
                     break;
                 }

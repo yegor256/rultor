@@ -164,7 +164,7 @@ public final class EndsDaemonITCase {
                 "/p/entry[@key='merge']/entry[@key='script']"
                     )
             ) {
-                if ("yegor256/rultor".equals(path)) {
+                if ("yegor256/rultor-image".equals(path)) {
                     final String dir = talk.read()
                         .xpath("/talk/daemon/dir/text()").get(0);
                     MatcherAssert.assertThat(

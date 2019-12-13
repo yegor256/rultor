@@ -297,7 +297,7 @@ public final class StartsRequest extends AbstractAgent {
                 "image",
                 def.text(
                     "/p/entry[@key='docker']/entry[@key='image']",
-                    "yegor256/rultor"
+                    "yegor256/rultor-image"
                 )
             )
         );
