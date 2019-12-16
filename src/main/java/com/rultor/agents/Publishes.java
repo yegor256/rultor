@@ -78,12 +78,18 @@ public final class Publishes extends AbstractAgent {
     }
 
     @Override
+    @SuppressWarnings("PMD.BooleanInversion")
     public Iterable<Directive> process(final XML xml) throws IOException {
-        boolean pub = !new Repo.Smart(
-            this.github.repos().get(
-                new Coordinates.Simple(this.profile.name())
-            )
-        ).isPrivate();
+        boolean pub;
+        try {
+            pub = !new Repo.Smart(
+                this.github.repos().get(
+                    new Coordinates.Simple(this.profile.name())
+                )
+            ).isPrivate();
+        } catch (final AssertionError ex) {
+            pub = false;
+        }
         try {
             pub &= this.profile.read()
                 .nodes("/p/entry[@key='readers']/item")
