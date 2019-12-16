@@ -30,6 +30,9 @@
 package com.rultor.agents;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.IOException;
@@ -56,22 +59,33 @@ public final class Publishes extends AbstractAgent {
     private final transient Profile profile;
 
     /**
+     * Github.
+     */
+    private final transient Github github;
+
+    /**
      * Ctor.
      * @param prf Profile
+     * @param ghub GitHub
      */
-    public Publishes(final Profile prf) {
+    public Publishes(final Profile prf, final Github ghub) {
         super(
             "/talk[@public!='false']",
             "/talk/archive/log"
         );
         this.profile = prf;
+        this.github = ghub;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        boolean pub;
+        boolean pub = !new Repo.Smart(
+            this.github.repos().get(
+                new Coordinates.Simple(this.profile.name())
+            )
+        ).isPrivate();
         try {
-            pub = this.profile.read()
+            pub &= this.profile.read()
                 .nodes("/p/entry[@key='readers']/item")
                 .isEmpty();
         } catch (final Profile.ConfigException ex) {

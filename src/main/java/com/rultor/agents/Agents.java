@@ -278,7 +278,7 @@ public final class Agents {
                     )
                 ).bucket(Manifests.read("Rultor-S3Bucket"))
             ),
-            new Publishes(profile),
+            new Publishes(profile, this.github),
             new SafeAgent(new Stars(this.github))
         );
     }

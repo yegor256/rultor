@@ -29,6 +29,8 @@
  */
 package com.rultor.agents;
 
+import com.jcabi.github.Repos;
+import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
@@ -53,7 +55,9 @@ public final class PublishesTest {
      */
     @Test
     public void addsPublicAttribute() throws Exception {
-        final Agent agent = new Publishes(new Profile.Fixed());
+        final MkGithub github = new MkGithub("test");
+        github.repos().create(new Repos.RepoCreate("test", false));
+        final Agent agent = new Publishes(new Profile.Fixed(), github);
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk").add("archive")
@@ -72,7 +76,7 @@ public final class PublishesTest {
      */
     @Test
     public void ignoresIfPublicAttributeSet() throws Exception {
-        final Agent agent = new Publishes(new Profile.Fixed());
+        final Agent agent = new Publishes(new Profile.Fixed(), new MkGithub());
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
