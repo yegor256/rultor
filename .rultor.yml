@@ -1,19 +1,15 @@
 readers:
   - "urn:github:526301"
+assets:
+  secring.gpg: yegor256/home#assets/secring.gpg
+  id_rsa: yegor256/home#assets/heroku-key
+  settings.xml: yegor256/home#assets/rultor/settings.xml
+  pubring.gpg: yegor256/home#assets/pubring.gpg
+  id_rsa.pub: yegor256/home#assets/heroku-key.pub
+env:
+  MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 install: |-
-  sudo locale-gen en_US en_US.UTF-8
-  sudo dpkg-reconfigure locales
-  export LC_ALL=en_US.UTF-8
-  export LANG=en_US.UTF-8
-  export LANGUAGE=en_US.UTF-8
   sudo apt-get install bsdmainutils
-  env
-  alias
-  ruby --version
-  sudo ruby --version
-  sudo -i ruby --version
-  sudo env
-  sudo gem install --no-rdoc --no-ri pdd est
   # see https://gist.github.com/telbiyski/ec56a92d7114b8631c906c18064ce620
   sudo apt-get update
   sudo apt-get install build-essential chrpath libssl-dev libxft-dev -y
@@ -26,16 +22,6 @@ install: |-
   sudo mv $(pwd)/$PHANTOM_JS /usr/local/share
   sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin
   phantomjs --version
-architect:
-- yegor256
-- alex-palevsky
-assets:
-  secring.gpg: yegor256/home#assets/secring.gpg
-  id_rsa: yegor256/home#assets/heroku-key
-  settings.xml: yegor256/home#assets/rultor/settings.xml
-  pubring.gpg: yegor256/home#assets/pubring.gpg
-  id_rsa.pub: yegor256/home#assets/heroku-key.pub
-  s3cfg: yegor256/home#assets/s3cfg
 merge:
   fast-forward: only
   rebase: true
@@ -44,25 +30,12 @@ merge:
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml --quiet
     mvn clean
-  commanders:
-  - carlosmiranda
-  - dmzaytsev
-  - essobedo
-  - ggajos
-  - hdouss
-  - krzyk
-  - longtimeago
-  - mkordas
-  - pinaf
-  - filfreire
 deploy:
   script: |-
     mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode --quiet
     mvn clean
     est --dir=./est --verbose --file=rultor.xml --format=xml
     s3cmd --no-progress put rultor.xml --config=../s3cfg s3://est.teamed.io/rultor.xml
-env:
-  MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 release:
   pre: false
   sensitive:
@@ -91,5 +64,3 @@ release:
     rm -rf settings.xml
     curl -f --connect-timeout 30 --retry 8 --retry-delay 60 https://www.rultor.com
     mvn clean site-deploy -Prultor -Psite --errors --settings ../settings.xml --batch-mode || echo 'site-deploy failed'
-  commanders:
-  - yegor256
