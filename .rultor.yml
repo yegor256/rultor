@@ -9,7 +9,7 @@ assets:
 env:
   MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 install: |-
-  update-java-alternatives -s java-1.8.0-openjdk-amd64
+  sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
   sudo apt-get install bsdmainutils
   # see https://gist.github.com/telbiyski/ec56a92d7114b8631c906c18064ce620
   sudo apt-get update
