@@ -46,7 +46,7 @@ EOT
 else
   cat <<EOT >> entry.sh
   shopt -s dotglob
-  useradd -m -G sudo r
+  useradd --create-home --groups sudo,rvm r
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
   cp -R /root/* /home/r
   cp -R ./* /home/r
