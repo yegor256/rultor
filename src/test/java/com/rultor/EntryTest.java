@@ -32,6 +32,8 @@ package com.rultor;
 import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -41,6 +43,17 @@ import org.junit.Test;
  * @since 1.58
  */
 public final class EntryTest {
+
+    /**
+     * The encoding is UTF.
+     */
+    @Test
+    public void encodingIsRight() {
+        MatcherAssert.assertThat(
+            System.getProperty("file.encoding"),
+            Matchers.equalTo("UTF-8")
+        );
+    }
 
     /**
      * RtSttc can work in production mode.
