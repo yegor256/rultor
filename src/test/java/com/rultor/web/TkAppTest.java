@@ -37,9 +37,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Test;
@@ -100,24 +98,21 @@ public final class TkAppTest {
             new Toggles.InFile()
         );
         new FtRemote(app).exec(
-            new FtRemote.Script() {
-                @Override
-                public void exec(final URI home) throws IOException {
-                    new JdkRequest(home)
-                        .fetch()
-                        .as(RestResponse.class)
-                        .assertStatus(HttpURLConnection.HTTP_OK)
-                        .as(XmlResponse.class)
-                        .assertXPath("/xhtml:html");
-                    new JdkRequest(home)
-                        .through(VerboseWire.class)
-                        .header("Accept", "application/xml")
-                        .fetch()
-                        .as(RestResponse.class)
-                        .assertStatus(HttpURLConnection.HTTP_OK)
-                        .as(XmlResponse.class)
-                        .assertXPath("/page/version");
-                }
+            home -> {
+                new JdkRequest(home)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .assertXPath("/xhtml:html");
+                new JdkRequest(home)
+                    .through(VerboseWire.class)
+                    .header("Accept", "application/xml")
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .assertXPath("/page/version");
             }
         );
     }

@@ -32,6 +32,7 @@ package com.rultor;
 import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
+import java.nio.charset.Charset;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -51,6 +52,10 @@ public final class EntryTest {
     public void encodingIsRight() {
         MatcherAssert.assertThat(
             System.getProperty("file.encoding"),
+            Matchers.equalTo("UTF-8")
+        );
+        MatcherAssert.assertThat(
+            Charset.defaultCharset().name(),
             Matchers.equalTo("UTF-8")
         );
     }

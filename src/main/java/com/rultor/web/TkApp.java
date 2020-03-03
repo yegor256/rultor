@@ -86,7 +86,7 @@ public final class TkApp extends TkWrap {
         if (!"UTF-8".equals(Charset.defaultCharset().name())) {
             throw new IllegalStateException(
                 String.format(
-                    "default encoding is %s", Charset.defaultCharset()
+                    "The default encoding is %s", Charset.defaultCharset()
                 )
             );
         }
