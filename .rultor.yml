@@ -8,11 +8,11 @@ assets:
   id_rsa.pub: yegor256/home#assets/heroku-key.pub
 install: |-
   sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
+  pdd --file=/dev/null
 merge:
   fast-forward: only
   rebase: true
   script: |-
-    pdd --file=/dev/null
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml --quiet
     mvn clean
@@ -20,8 +20,6 @@ deploy:
   script: |-
     mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode --quiet
     mvn clean
-    est --dir=./est --verbose --file=rultor.xml --format=xml
-    s3cmd --no-progress put rultor.xml --config=../s3cfg s3://est.teamed.io/rultor.xml
 release:
   pre: false
   sensitive:
