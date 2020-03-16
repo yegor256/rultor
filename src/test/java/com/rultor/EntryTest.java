@@ -32,10 +32,6 @@ package com.rultor;
 import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
-import java.nio.charset.Charset;
-import org.apache.commons.compress.utils.Charsets;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -45,21 +41,6 @@ import org.junit.Test;
  * @since 1.58
  */
 public final class EntryTest {
-
-    /**
-     * The encoding is UTF.
-     */
-    @Test
-    public void encodingIsRight() {
-        MatcherAssert.assertThat(
-            System.getProperty("file.encoding"),
-            Matchers.equalTo(Charsets.UTF_8.name())
-        );
-        MatcherAssert.assertThat(
-            Charset.defaultCharset().name(),
-            Matchers.equalTo(Charsets.UTF_8.name())
-        );
-    }
 
     /**
      * RtSttc can work in production mode.
