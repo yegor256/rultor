@@ -40,8 +40,8 @@
     <googleAnalyticsAccountId>UA-1963507-28</googleAnalyticsAccountId>
     <bannerLeft>
         <name>rultor</name>
-        <src>http://doc.rultor.com/images/logo.svg</src>
-        <href>http://doc.rultor.com/</href>
+        <src>https://doc.rultor.com/images/logo.svg</src>
+        <href>https://doc.rultor.com/</href>
         <title>rultor.com</title>
         <width>200</width>
         <height>45</height>
