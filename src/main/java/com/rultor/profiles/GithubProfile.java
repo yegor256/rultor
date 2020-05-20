@@ -224,11 +224,11 @@ final class GithubProfile implements Profile {
                 )
             );
         if (!trustees.isEmpty()) {
-            final Collection<JsonObject> files = new Filtered<JsonObject>(
+            final Collection<JsonObject> files = new Filtered<>(
                 obj -> obj.getString("path").equals(GithubProfile.FILE),
-                this.repo.git().trees().get(
-                    String.format("master/%s", GithubProfile.FILE)
-                ).json().getJsonArray("tree").getValuesAs(JsonObject.class)
+                this.repo.git().trees().get(this.branch)
+                    .json().getJsonArray("tree")
+                    .getValuesAs(JsonObject.class)
             );
             if (files.isEmpty()) {
                 throw new Profile.ConfigException(
