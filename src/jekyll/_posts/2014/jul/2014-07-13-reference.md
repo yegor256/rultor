@@ -83,6 +83,20 @@ friends:
   - jcabi/*
 {% endhighlight %}
 
+You may also add `trustee` list there, in order to specify the list
+of GitHub users who are allowed to modify the `.rultor.yml` file in the
+repository, which is requesting the assets:
+
+{% highlight yaml %}
+trustees:
+  - yegor256
+{% endhighlight %}
+
+This is a very useful and important security measure, which you have to
+use when you have more than one contributor to the repository, in order
+to make sure the instructions inside `.rultor.yml` don't do anything
+illegal with your assets.
+
 ## Decrypt
 
 You may want to keep your secret assets right inside your main
