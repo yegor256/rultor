@@ -49,15 +49,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
-import org.cactoos.collection.Filtered;
 import org.cactoos.collection.Mapped;
 import org.cactoos.list.SolidList;
 import org.cactoos.map.MapEntry;
+import org.cactoos.map.MapOf;
 import org.cactoos.map.SolidMap;
 import org.cactoos.text.JoinedText;
 
@@ -224,13 +223,12 @@ final class GithubProfile implements Profile {
                 )
             );
         if (!trustees.isEmpty()) {
-            final Collection<JsonObject> files = new Filtered<>(
-                obj -> obj.getString("path").equals(GithubProfile.FILE),
-                this.repo.git().trees().get(this.branch)
-                    .json().getJsonArray("tree")
-                    .getValuesAs(JsonObject.class)
+            final Iterable<RepoCommit> commits = this.repo.commits().iterate(
+                new MapOf<String, String>(
+                    new MapEntry<>("path", GithubProfile.FILE)
+                )
             );
-            if (files.isEmpty()) {
+            if (!commits.iterator().hasNext()) {
                 throw new Profile.ConfigException(
                     String.format(
                         "Couldn't find %s in %s",
@@ -238,9 +236,8 @@ final class GithubProfile implements Profile {
                     )
                 );
             }
-            final String sha = files.iterator().next().getString("sha");
             final RepoCommit.Smart commit = new RepoCommit.Smart(
-                this.repo.commits().get(sha)
+                commits.iterator().next()
             );
             if (!commit.isVerified()) {
                 throw new Profile.ConfigException(
