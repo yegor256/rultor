@@ -49,10 +49,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
+import org.cactoos.collection.Filtered;
 import org.cactoos.collection.Mapped;
 import org.cactoos.list.SolidList;
 import org.cactoos.map.MapEntry;
@@ -75,6 +77,7 @@ import org.cactoos.text.JoinedText;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "repo")
+@SuppressWarnings("PMD.ExcessiveImports")
 final class GithubProfile implements Profile {
 
     /**
@@ -196,6 +199,16 @@ final class GithubProfile implements Profile {
                 )
             );
         }
+        this.checkTrustees(rpo);
+        return this.buildAssetStream(rpo, matcher.group(2));
+    }
+
+    /**
+     * Check that everything is OK with trustees.
+     * @param rpo The repo
+     * @throws IOException If fails
+     */
+    private void checkTrustees(final Repo rpo) throws IOException {
         final Collection<String> trustees =
             new SolidList<>(
                 new Mapped<>(
@@ -211,9 +224,21 @@ final class GithubProfile implements Profile {
                 )
             );
         if (!trustees.isEmpty()) {
-            final String sha = new Content.Smart(
-                this.repo.contents().get(GithubProfile.FILE)
-            ).sha();
+            final Collection<JsonObject> files = new Filtered<JsonObject>(
+                obj -> obj.getString("path").equals(GithubProfile.FILE),
+                this.repo.git().trees().get(
+                    String.format("master/%s", GithubProfile.FILE)
+                ).json().getJsonArray("tree").getValuesAs(JsonObject.class)
+            );
+            if (files.isEmpty()) {
+                throw new Profile.ConfigException(
+                    String.format(
+                        "Couldn't find %s in %s",
+                        GithubProfile.FILE, this.repo.coordinates()
+                    )
+                );
+            }
+            final String sha = files.iterator().next().getString("sha");
             final RepoCommit.Smart commit = new RepoCommit.Smart(
                 this.repo.commits().get(sha)
             );
@@ -239,7 +264,6 @@ final class GithubProfile implements Profile {
                 );
             }
         }
-        return this.buildAssetStream(rpo, matcher.group(2));
     }
 
     /**
