@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
+import com.jcabi.github.Reaction;
 import java.io.IOException;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -77,6 +78,16 @@ final class FirstComment implements Comment {
     @Override
     public void remove() {
         throw new UnsupportedOperationException("#remove()");
+    }
+
+    @Override
+    public void react(final Reaction reaction) throws IOException {
+        throw new UnsupportedOperationException("#react()");
+    }
+
+    @Override
+    public Iterable<Reaction> reactions() {
+        throw new UnsupportedOperationException("#reactions()");
     }
 
     @Override

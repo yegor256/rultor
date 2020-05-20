@@ -33,11 +33,13 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Repo;
+import com.jcabi.github.RepoCommit;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -177,7 +179,7 @@ final class GithubProfile implements Profile {
                             new Content.Smart(
                                 rpo.contents().get(GithubProfile.FILE)
                             ).decoded(),
-                            CharEncoding.UTF_8
+                            StandardCharsets.UTF_8
                         )
                     ).get().xpath("/p/entry[@key='friends']/item/text()")
                 )
@@ -193,6 +195,49 @@ final class GithubProfile implements Profile {
                     this.repo.coordinates(), friends.size()
                 )
             );
+        }
+        final Collection<String> trustees =
+            new SolidList<>(
+                new Mapped<>(
+                    input -> input.toLowerCase(Locale.ENGLISH),
+                    new YamlXML(
+                        new String(
+                            new Content.Smart(
+                                rpo.contents().get(GithubProfile.FILE)
+                            ).decoded(),
+                            StandardCharsets.UTF_8
+                        )
+                    ).get().xpath("/p/entry[@key='trustees']/item/text()")
+                )
+            );
+        if (!trustees.isEmpty()) {
+            final String sha = new Content.Smart(
+                this.repo.contents().get(GithubProfile.FILE)
+            ).sha();
+            final RepoCommit.Smart commit = new RepoCommit.Smart(
+                this.repo.commits().get(sha)
+            );
+            if (!commit.isVerified()) {
+                throw new Profile.ConfigException(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "The last commit at %s in %s is not verified, that's why assets are not permitted to use in %s",
+                        GithubProfile.FILE, this.repo.coordinates(),
+                        rpo.coordinates()
+                    )
+                );
+            }
+            final String author = commit.author();
+            if (!trustees.contains(author)) {
+                throw new Profile.ConfigException(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "Since @%s is the modifier of %s in %s, that's why assets are not permitted to use in %s",
+                        author, GithubProfile.FILE, this.repo.coordinates(),
+                        rpo.coordinates()
+                    )
+                );
+            }
         }
         return this.buildAssetStream(rpo, matcher.group(2));
     }

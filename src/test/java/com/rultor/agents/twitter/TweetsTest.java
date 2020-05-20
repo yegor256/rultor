@@ -31,9 +31,11 @@ package com.rultor.agents.twitter;
 
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.jcabi.github.Repos;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.text.JoinedText;
 import org.junit.Test;
@@ -56,7 +58,11 @@ public final class TweetsTest {
      */
     @Test
     public void postsTweet() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGithub().repos().create(
+            new Repos.RepoCreate(
+                RandomStringUtils.randomAlphanumeric(20), false
+            )
+        );
         final Twitter twitter = Mockito.mock(Twitter.class);
         final Talk talk = TweetsTest.talk(repo, repo.issues().create("", ""));
         new Tweets(repo.github(), twitter).execute(talk);
@@ -71,7 +77,11 @@ public final class TweetsTest {
      */
     @Test
     public void postsTweetWithLanguages() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGithub().repos().create(
+            new Repos.RepoCreate(
+                RandomStringUtils.randomAlphanumeric(20), false
+            )
+        );
         final Twitter twitter = Mockito.mock(Twitter.class);
         new Tweets(repo.github(), twitter).execute(
             TweetsTest.talk(repo, repo.issues().create("", ""))
