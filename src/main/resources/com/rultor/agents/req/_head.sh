@@ -1,6 +1,7 @@
 #!/bin/sh
 
 git --version
+docker --version
 
 mkdir -p ~/.ssh
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
