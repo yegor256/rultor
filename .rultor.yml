@@ -46,5 +46,5 @@ release:
     git push -f heroku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     rm -rf settings.xml
-    curl -f --connect-timeout 30 --retry 8 --retry-delay 60 https://www.rultor.com
+    curl --insecure -f --connect-timeout 30 --retry 8 --retry-delay 60 https://www.rultor.com
     mvn clean site-deploy -Prultor -Psite --errors --settings ../settings.xml --batch-mode || echo 'site-deploy failed'
