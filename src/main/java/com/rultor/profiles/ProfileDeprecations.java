@@ -29,7 +29,7 @@
  */
 package com.rultor.profiles;
 
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
@@ -113,7 +113,7 @@ public final class ProfileDeprecations {
         throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new Shell.Safe(shell).exec(
-            String.format("echo -e \"%s\"", SSH.escape(message)),
+            String.format("echo -e \"%s\"", Ssh.escape(message)),
             new NullInputStream(0L),
             baos, baos
         );

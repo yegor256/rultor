@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.req;
 
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;

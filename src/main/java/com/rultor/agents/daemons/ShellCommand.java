@@ -30,7 +30,7 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import java.io.IOException;
 import org.cactoos.text.JoinedText;
@@ -86,7 +86,7 @@ final class ShellCommand {
         return new Shell.Plain(new Shell.Safe(this.shell)).exec(
             new JoinedText(
                 ShellCommand.SHELL_JOINER,
-                String.format("cd %s", SSH.escape(this.directory)),
+                String.format("cd %s", Ssh.escape(this.directory)),
                 this.command
             ).asString()
         );

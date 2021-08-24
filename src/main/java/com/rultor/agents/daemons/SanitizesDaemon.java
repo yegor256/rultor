@@ -31,7 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
@@ -66,7 +66,7 @@ public final class SanitizesDaemon extends AbstractAgent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final Shell shell = new TalkShells(xml).get();
         final int exit = new Shell.Empty(shell).exec(
-            String.format("ls %s", SSH.escape(dir))
+            String.format("ls %s", Ssh.escape(dir))
         );
         final Directives dirs = new Directives();
         if (exit != 0) {

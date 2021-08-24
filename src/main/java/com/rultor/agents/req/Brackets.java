@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.req;
 
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import java.io.IOException;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.text.JoinedText;
@@ -64,7 +64,7 @@ final class Brackets {
                 new JoinedText(
                     " ",
                     new Mapped<>(
-                        input -> SSH.escape(input),
+                        input -> Ssh.escape(input),
                         this.items
                     )
                 ).asString()

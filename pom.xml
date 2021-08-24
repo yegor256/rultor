@@ -35,7 +35,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.37.1</version>
+        <version>0.52.1</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
@@ -52,7 +52,7 @@
     <licenses>
         <license>
             <name>BSD</name>
-            <url>http://doc.rultor.com/LICENSE.txt</url>
+            <url>https://doc.rultor.com/LICENSE.txt</url>
             <distribution>site</distribution>
         </license>
     </licenses>
@@ -86,7 +86,7 @@
     <distributionManagement>
         <site>
             <id>github-pages</id>
-            <url>http://doc.rultor.com</url>
+            <url>https://doc.rultor.com</url>
         </site>
     </distributionManagement>
     <properties>
@@ -135,11 +135,6 @@
             <version>4.0.4</version>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -161,11 +156,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>javax.json</groupId>
@@ -215,11 +205,6 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -898,22 +883,6 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>pre-site</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                                <configuration>
-                                    <format>xml</format>
-                                    <maxmem>256m</maxmem>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>org.eluder.coveralls</groupId>
                         <artifactId>coveralls-maven-plugin</artifactId>

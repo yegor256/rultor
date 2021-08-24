@@ -33,7 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
@@ -125,7 +125,7 @@ public final class StartsDaemon extends AbstractAgent {
         );
         final String dir = baos.toString(CharEncoding.UTF_8).trim();
         new Shell.Safe(shell).exec(
-            String.format("cd %s; cat > run.sh", SSH.escape(dir)),
+            String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
             IOUtils.toInputStream(
                 new JoinedText(
                     "\n",
@@ -137,7 +137,7 @@ public final class StartsDaemon extends AbstractAgent {
                     "echo $$ > pid",
                     String.format(
                         "echo %s",
-                        SSH.escape(
+                        Ssh.escape(
                             String.format(
                                 "%s %s",
                                 Manifests.read("Rultor-Version"),
@@ -158,7 +158,7 @@ public final class StartsDaemon extends AbstractAgent {
         new Shell.Empty(new Shell.Safe(shell)).exec(
             new JoinedText(
                 " && ",
-                String.format("cd %s", SSH.escape(dir)),
+                String.format("cd %s", Ssh.escape(dir)),
                 "chmod a+x run.sh",
                 "echo 'run.sh failed to start' > stdout",
                 // @checkstyle LineLength (1 line)
@@ -185,7 +185,7 @@ public final class StartsDaemon extends AbstractAgent {
                 shell.exec(
                     String.format(
                         "cat > %s",
-                        SSH.escape(String.format("%s/%s", dir, asset.getKey()))
+                        Ssh.escape(String.format("%s/%s", dir, asset.getKey()))
                     ),
                     asset.getValue(),
                     Logger.stream(Level.INFO, true),
@@ -223,7 +223,7 @@ public final class StartsDaemon extends AbstractAgent {
                 shell.exec(
                     new JoinedText(
                         " &&  ",
-                        String.format("cd %s  ", SSH.escape(dir)),
+                        String.format("cd %s  ", Ssh.escape(dir)),
                         "mkdir -p .gpg",
                         String.format("cat > \".gpg/%s\"", name)
                     ).asString(),

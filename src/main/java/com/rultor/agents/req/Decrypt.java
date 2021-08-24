@@ -30,7 +30,7 @@
 package com.rultor.agents.req;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.IOException;
@@ -122,8 +122,8 @@ final class Decrypt {
                     "\"--secret-keyring=$(pwd)/.gpg/secring.gpg\"",
                     String.format(
                         "--decrypt %s > %s",
-                        SSH.escape(asset.xpath("./text()").get(0)),
-                        SSH.escape(enc)
+                        Ssh.escape(asset.xpath("./text()").get(0)),
+                        Ssh.escape(enc)
                     )
                 ).asString()
             );
@@ -134,14 +134,14 @@ final class Decrypt {
                         "gpg --no-tty --batch --verbose --decrypt",
                         "--passphrase %s %s > %s"
                     ).asString(),
-                    SSH.escape(
+                    Ssh.escape(
                         String.format("rultor-key:%s", this.profile.name())
                     ),
-                    SSH.escape(enc),
-                    SSH.escape(key)
+                    Ssh.escape(enc),
+                    Ssh.escape(key)
                 )
             );
-            commands.add(String.format("rm -rf %s", SSH.escape(enc)));
+            commands.add(String.format("rm -rf %s", Ssh.escape(enc)));
         }
         commands.add("rm -rf .gpg");
         return commands;

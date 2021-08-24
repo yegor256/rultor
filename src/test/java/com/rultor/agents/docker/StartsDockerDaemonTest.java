@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.docker;
 
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;

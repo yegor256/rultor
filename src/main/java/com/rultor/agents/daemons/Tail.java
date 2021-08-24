@@ -35,7 +35,7 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Bucket;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.agents.shells.TalkShells;
@@ -238,7 +238,7 @@ public final class Tail {
                 StringUtils.join(
                     String.format(
                         "dir=%s;",
-                        SSH.escape(
+                        Ssh.escape(
                             this.xml.xpath("/talk/daemon/dir/text()").get(0)
                         )
                     ),

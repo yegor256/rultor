@@ -31,7 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.agents.shells.TalkShells;
@@ -78,7 +78,7 @@ final class Script {
         new Shell.Safe(shell).exec(
             String.format(
                 "cd %s && cat > %s && chmod a+x %1$s",
-                SSH.escape(dir), SSH.escape(this.name)
+                Ssh.escape(dir), Ssh.escape(this.name)
             ),
             this.getClass().getResourceAsStream(this.name),
             Logger.stream(Level.INFO, this),
@@ -88,10 +88,10 @@ final class Script {
             new JoinedText(
                 " && ",
                 "set -o pipefail",
-                String.format("cd %s", SSH.escape(dir)),
+                String.format("cd %s", Ssh.escape(dir)),
                 String.format(
                     "/bin/bash %s >> stdout 2>&1",
-                    SSH.escape(this.name)
+                    Ssh.escape(this.name)
                 )
             ).asString()
         );

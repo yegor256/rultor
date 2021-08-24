@@ -37,7 +37,7 @@ import com.jcabi.immutable.Array;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;

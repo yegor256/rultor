@@ -33,7 +33,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.s3.Bucket;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
@@ -94,8 +94,8 @@ public final class ArchivesDaemon extends AbstractAgent {
         new Shell.Safe(shell).exec(
             new JoinedText(
                 "; ",
-                String.format("if [ -d %s ]", SSH.escape(dir)),
-                String.format("then cd %s", SSH.escape(dir)),
+                String.format("if [ -d %s ]", Ssh.escape(dir)),
+                String.format("then cd %s", Ssh.escape(dir)),
                 "else echo 'Build directory is absent, internal error'",
                 "exit",
                 // @checkstyle MultipleStringLiteralsCheck (1 line)
@@ -111,7 +111,7 @@ public final class ArchivesDaemon extends AbstractAgent {
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            String.format("sudo rm -rf %1$s || rm -rf %s", SSH.escape(dir))
+            String.format("sudo rm -rf %1$s || rm -rf %s", Ssh.escape(dir))
         );
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final URI uri = this.upload(file, hash);

@@ -32,6 +32,7 @@ package com.rultor.agents.req;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
@@ -351,7 +352,7 @@ public final class StartsRequest extends AbstractAgent {
         if (raw.matches("\\(.*\\)")) {
             esc = raw;
         } else {
-            esc = SSH.escape(raw);
+            esc = Ssh.escape(raw);
         }
         return esc;
     }
@@ -364,7 +365,7 @@ public final class StartsRequest extends AbstractAgent {
     private static Iterable<String> export(final Iterable<String> envs) {
         final Collection<String> lines = new LinkedList<>();
         for (final String env : envs) {
-            lines.add(String.format("export %s", SSH.escape(env)));
+            lines.add(String.format("export %s", Ssh.escape(env)));
             lines.add(";");
         }
         return lines;
