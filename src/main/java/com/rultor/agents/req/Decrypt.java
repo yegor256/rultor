@@ -107,7 +107,7 @@ final class Decrypt {
                     SPACE,
                     "gpg",
                     this.proxy,
-                    "--verbose --recv-keys 9AF0FA4C"
+                    "--verbose --recv-keys 3FD3FA7E9AF0FA4C"
                 ).asString()
             );
             commands.add("gpg --version");
