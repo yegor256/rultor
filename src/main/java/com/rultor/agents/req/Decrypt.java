@@ -105,7 +105,7 @@ final class Decrypt {
             commands.add(
                 new JoinedText(
                     SPACE,
-                    "gpg --keyserver keys.opengpg.org",
+                    "gpg --keyserver keys.openpgp.org",
                     this.proxy,
                     "--verbose --recv-keys 3FD3FA7E9AF0FA4C"
                 ).asString()
