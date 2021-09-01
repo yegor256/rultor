@@ -1,4 +1,4 @@
-Rultor-Revision: BUILD
+Rultor-Revision: e3510d350
 Rultor-Version: ${project.version}
 Rultor-Date: ${timestamp}
 Rultor-DynamoKey: ${dynamo.key}
