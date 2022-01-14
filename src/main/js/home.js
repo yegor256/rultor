@@ -28,20 +28,12 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*globals $:false, document:false, window:false */
+/* globals $:false, document:false, window:false */
 
-$(document).ready(
-  function () {
-    "use strict";
-    var $div = $('#pulse');
-    window.setInterval(
-      function () {
-        $div.find('img').attr(
-          'src',
-          $div.attr('data-href') + '?' + Date.now()
-        );
-      },
-      1000
-    );
-  }
-);
+document.addEventListener('DOMContentReady', () => {
+  const $div = document.getElementById('pulse');
+  const $img = $div.querySelector('img');
+  window.setInterval(() => {
+    $img.src = `${$div.dataset.href}?${Date.now()}`;
+  }, 1000);
+});
