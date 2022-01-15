@@ -29,8 +29,9 @@
  */
 
 document.addEventListener('DOMContentReady', function () {
-  const $div = document.getElementById('pulse');
-  const $img = $div.querySelector('img');
+  var $div = document.getElementById('pulse');
+  var $img = $div.querySelector('img');
+
   window.setInterval(function () {
     $img.src = $div.dataset.href + '?' + Date.now();
   }, 1000);

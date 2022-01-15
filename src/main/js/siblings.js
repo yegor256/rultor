@@ -29,7 +29,7 @@
  */
 
 document.addEventListener('DOMContentReady', function () {
-  const DELTA = 600;
+  var DELTA = 600;
 
   function needMore () {
     return document.scrollingElement.scrollTop >=
@@ -37,9 +37,9 @@ document.addEventListener('DOMContentReady', function () {
   }
 
   async function changeHandler () {
-    const $box = document.getElementById('talks');
-    const $tail = document.getElementById('tail');
-    const more = $box.dataset.more;
+    var $box = document.getElementById('talks');
+    var $tail = document.getElementById('tail');
+    var more = $box.dataset.more;
 
     if (!more) {
       return true;
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentReady', function () {
       delete $box.dataset.more;
       $tail.style.display = 'block';
 
-      const data = await fetch(more, {
+      var data = await fetch(more, {
         method: 'GET',
         cache: 'no-cache',
         headers: {
@@ -63,11 +63,11 @@ document.addEventListener('DOMContentReady', function () {
         });
 
       if (data) {
-        const parser = new DOMParser();
-        const $fragment = parser.parseFromString(data, 'text/xml');
-        const $newBox = fragment.getElementById('talks');
-        const newEls = [...$newBox.children];
-        for (let idx = 0; idx < newEls.length; idx += 1) {
+        var parser = new DOMParser();
+        var $fragment = parser.parseFromString(data, 'text/xml');
+        var $newBox = fragment.getElementById('talks');
+        var newEls = [...$newBox.children];
+        for (var idx = 0; idx < newEls.length; idx += 1) {
           $box.appendChild(newEls[idx]);
         }
         $box.dataset.more = $newBox.dataset.more;
