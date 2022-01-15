@@ -32,6 +32,6 @@ document.addEventListener('DOMContentReady', () => {
   const $div = document.getElementById('pulse');
   const $img = $div.querySelector('img');
   window.setInterval(() => {
-    $img.src = `${$div.dataset.href}?${Date.now()}`;
+    $img.src = $div.dataset.href + '?' + Date.now();
   }, 1000);
 });
