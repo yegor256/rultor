@@ -468,6 +468,9 @@
                             <jsEngine>CLOSURE</jsEngine>
                             <skipMerge>true</skipMerge>
                             <skipMinify>false</skipMinify>
+                            <arguments>
+                                <argument>--language_in=ECMASCRIPT6</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                     <execution>
