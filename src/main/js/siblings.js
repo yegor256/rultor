@@ -28,37 +28,52 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*globals $:false, document:false, window:false */
+document.addEventListener('DOMContentReady', () => {
+  const DELTA = 600;
 
-$(document).ready(
-  function () {
-    "use strict";
-    $(window).scroll(
-      function () {
-        var $box = $('#talks'), more = $box.attr('data-more'), $tail = $('#tail');
-        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 600 && more) {
-          $box.removeAttr('data-more');
-          $tail.show();
-          $.ajax(
-            {
-              url: more,
-              cache: false,
-              dataType: 'xml',
-              headers: { 'Accept': 'text/html' },
-              method: 'GET',
-              success: function (data) {
-                var $div = $(data).find('#talks');
-                $box.html($box.html() + $div.html());
-                $box.attr('data-more', $div.attr('data-more'));
-                $tail.hide();
-              },
-              error: function () {
-                $tail.html('Oops, an error :( Please, try to reload the page');
-              }
-            }
-          );
+  const needMore = () => document.scrollingElement.scrollTop >=
+    document.body.offsetHeight - window.visualViewport.height - DELTA;
+
+  async function changeHandler () {
+    const $box = document.getElementById('talks');
+    const $tail = document.getElementById('tail');
+    const more = $box.dataset.more;
+
+    if (!more) {
+      return true;
+    }
+
+    if (needMore()) {
+      delete $box.dataset.more;
+      $tail.style.display = 'block';
+
+      const data = await fetch(more, {
+        method: 'GET',
+        cache: 'no-cache',
+        headers: {
+          'Accept': 'text/html',
+          'Content-Type': 'text/xml',
+        },
+      })
+        .then((res) => res.text())
+        .catch((error) => {
+          $tail.innerText = 'Oops, an error :( Please, try to reload the page';
+        });
+
+      if (data) {
+        const parser = new DOMParser();
+        const $fragment = parser.parseFromString(data, 'text/xml');
+        const $newBox = fragment.getElementById('talks');
+        const newEls = [...$newBox.children];
+        for (let idx = 0; idx < newEls.length; idx += 1) {
+          $box.appendChild(newEls[idx]);
         }
+        $box.dataset.more = $newBox.dataset.more;
+        $tail.style.display = 'none';
       }
-    );
+    }
   }
-);
+
+  window.addEventListener('scroll', changeHandler);
+  window.addEventListener('resize', changeHandler);
+});

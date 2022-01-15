@@ -28,8 +28,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* globals $:false, document:false, window:false */
-
 document.addEventListener('DOMContentReady', () => {
   const $div = document.getElementById('pulse');
   const $img = $div.querySelector('img');
