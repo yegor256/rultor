@@ -28,11 +28,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-document.addEventListener('DOMContentReady', () => {
+document.addEventListener('DOMContentReady', function () {
   const DELTA = 600;
 
-  const needMore = () => document.scrollingElement.scrollTop >=
-    document.body.offsetHeight - window.visualViewport.height - DELTA;
+  function needMore () {
+    return document.scrollingElement.scrollTop >=
+      document.body.offsetHeight - window.visualViewport.height - DELTA;
+  }
 
   async function changeHandler () {
     const $box = document.getElementById('talks');
@@ -55,8 +57,8 @@ document.addEventListener('DOMContentReady', () => {
           'Content-Type': 'text/xml',
         },
       })
-        .then((res) => res.text())
-        .catch((error) => {
+        .then(function (res) { return res.text(); })
+        .catch(function (error) {
           $tail.innerText = 'Oops, an error :( Please, try to reload the page';
         });
 

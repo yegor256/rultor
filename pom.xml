@@ -468,7 +468,6 @@
                             <jsEngine>CLOSURE</jsEngine>
                             <skipMerge>true</skipMerge>
                             <skipMinify>false</skipMinify>
-                            <closureLanguageIn>ECMASCRIPT6</closureLanguageIn>
                         </configuration>
                     </execution>
                     <execution>

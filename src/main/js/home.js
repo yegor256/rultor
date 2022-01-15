@@ -28,10 +28,10 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-document.addEventListener('DOMContentReady', () => {
+document.addEventListener('DOMContentReady', function () {
   const $div = document.getElementById('pulse');
   const $img = $div.querySelector('img');
-  window.setInterval(() => {
+  window.setInterval(function () {
     $img.src = $div.dataset.href + '?' + Date.now();
   }, 1000);
 });
