@@ -448,7 +448,7 @@
             <plugin>
                 <groupId>com.samaxes.maven</groupId>
                 <artifactId>minify-maven-plugin</artifactId>
-                <version>1.7.4</version>
+                <version>1.7.6</version>
                 <configuration>
                     <charset>UTF-8</charset>
                     <nosuffix>true</nosuffix>
@@ -468,6 +468,7 @@
                             <jsEngine>CLOSURE</jsEngine>
                             <skipMerge>true</skipMerge>
                             <skipMinify>false</skipMinify>
+                            <closureLanguageIn>ECMASCRIPT6</closureLanguageIn>
                         </configuration>
                     </execution>
                     <execution>
