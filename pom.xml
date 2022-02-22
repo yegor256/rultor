@@ -91,6 +91,7 @@
     </distributionManagement>
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
+        <closeTestReports>true</closeTestReports>
     </properties>
     <dependencies>
         <dependency>
@@ -395,6 +396,7 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
+                        <disableXmlReport>${closeTestReports}</disableXmlReport>
                         <argLine>-Duser.language=en -Duser.region=US -Djava.awt.headless=true</argLine>
                     </configuration>
                 </plugin>
