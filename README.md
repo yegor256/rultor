@@ -1,4 +1,4 @@
-<img src="https://doc.rultor.com/images/logo.svg" width="64px" height="64px"/>
+<img alt="Rultor logo" src="https://doc.rultor.com/images/logo.svg" width="92px"/>
 
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
 [![DevOps By Rultor.com](https://www.rultor.com/b/yegor256/rultor)](https://www.rultor.com/p/yegor256/rultor)
