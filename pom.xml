@@ -65,7 +65,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <role>Architect</role>
         <role>Developer</role>
       </roles>
-      <timezone>+1</timezone>
+      <timezone>+3</timezone>
     </developer>
   </developers>
   <issueManagement>
@@ -89,6 +89,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   </distributionManagement>
   <properties>
     <timestamp>${maven.build.timestamp}</timestamp>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   <dependencies>
     <dependency>
@@ -114,7 +116,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
       <artifactId>xembly</artifactId>
-      <version>0.22</version>
+      <version>0.25.0</version>
     </dependency>
     <dependency>
       <groupId>org.twitter4j</groupId>
