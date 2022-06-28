@@ -27,14 +27,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.docker;
+package com.rultor;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DockerClientBuilder;
-import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import java.io.File;
@@ -47,6 +47,7 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Starts a Docker Container containing a Docker daemon and SSHD.
+ *
  * @author Armin Braun (me@obrown.io)
  * @version $Id$
  * @since 1.63
@@ -77,7 +78,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
         this.client = DockerClientBuilder.getInstance().build();
         this.containers = Collections.newSetFromMap(
             // @checkstyle MagicNumber (1 line)
-            new ConcurrentHashMap<CreateContainerResponse, Boolean>(1, 0.9f, 1)
+            new ConcurrentHashMap<>(1, 0.9f, 1)
         );
     }
 
@@ -89,19 +90,19 @@ public final class StartsDockerDaemon implements AutoCloseable {
     public PfShell shell() throws IOException {
         final ExposedPort ssh = ExposedPort.tcp(22);
         final Ports ports = new Ports();
-        ports.bind(ssh, Ports.Binding(null));
+        ports.bind(ssh, Ports.Binding.empty());
         final CreateContainerResponse container = this.client
-            .createContainerCmd(this.build()).withExposedPorts(
-                ssh
-            ).withPortBindings(ports).exec();
+            .createContainerCmd(this.build())
+            .withExposedPorts(ssh)
+            .exec();
         this.containers.add(container);
         this.client.startContainerCmd(container.getId()).exec();
         return new PfShell(
             this.profile,
             this.client.infoCmd().exec().getName(),
             this.client.inspectContainerCmd(container.getId())
-                .exec().getNetworkSettings().getPorts().getBindings().values()
-                .iterator().next()[0].getHostPort(),
+                .exec().getNetworkSettings().getPorts().getBindings().keySet()
+                .iterator().next().getPort(),
             "root",
             this.key(container)
         );
@@ -126,7 +127,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
         throws IOException {
         final StringWriter writer = new StringWriter();
         IOUtils.copy(
-            this.client.copyFileFromContainerCmd(
+            this.client.copyArchiveFromContainerCmd(
                 container.getId(), "/root/.ssh/id_rsa"
             ).exec(),
             writer

@@ -36,7 +36,6 @@ import java.net.HttpURLConnection;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.facets.fallback.Fallback;
 import org.takes.facets.fallback.FbChain;
 import org.takes.facets.fallback.FbStatus;
 import org.takes.facets.fallback.RqFallback;
@@ -87,20 +86,11 @@ final class TkAppFallback extends TkWrap {
                         HttpURLConnection.HTTP_NOT_FOUND
                     )
                 ),
-                new Fallback() {
-                    @Override
-                    public Opt<Response> route(final RqFallback req) {
-                        Sentry.capture(req.throwable());
-                        return new Opt.Empty<>();
-                    }
+                req -> {
+                    Sentry.captureException(req.throwable());
+                    return new Opt.Empty<>();
                 },
-                new Fallback() {
-                    @Override
-                    public Opt<Response> route(final RqFallback req)
-                        throws IOException {
-                        return new Opt.Single<>(TkAppFallback.fatal(req));
-                    }
-                }
+                req -> new Opt.Single<>(TkAppFallback.fatal(req))
             )
         );
     }

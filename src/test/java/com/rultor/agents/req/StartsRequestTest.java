@@ -432,10 +432,10 @@ public final class StartsRequestTest {
                     "git config user.name test",
                     "echo 'hello, world!' > hello.txt",
                     "git add .",
-                    "git commit -am 'first file'",
+                    "git -c commit.gpgsign=false commit -am 'first file'",
                     "git checkout -b frk",
                     "echo 'good bye!' > hello.txt",
-                    "git commit -am 'modified file'",
+                    "git -c commit.gpgsign=false commit -am 'modified file'",
                     "git checkout master",
                     "git config receive.denyCurrentBranch ignore"
                 ).asString()

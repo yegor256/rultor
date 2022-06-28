@@ -34,7 +34,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
-import com.rultor.agents.docker.StartsDockerDaemon;
+import com.rultor.StartsDockerDaemon;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Agent;

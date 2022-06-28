@@ -39,7 +39,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.text.JoinedText;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.xembly.Directives;
 
@@ -67,7 +67,7 @@ public final class TweetsTest {
         final Talk talk = TweetsTest.talk(repo, repo.issues().create("", ""));
         new Tweets(repo.github(), twitter).execute(talk);
         Mockito.verify(twitter).post(
-            Matchers.contains(repo.coordinates().repo())
+            ArgumentMatchers.contains(repo.coordinates().repo())
         );
     }
 
@@ -87,7 +87,7 @@ public final class TweetsTest {
             TweetsTest.talk(repo, repo.issues().create("", ""))
         );
         Mockito.verify(twitter).post(
-            Matchers.contains(
+            ArgumentMatchers.contains(
                 new JoinedText(
                     " ",
                     new Mapped<>(

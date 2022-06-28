@@ -1,65 +1,62 @@
 <?xml version="1.0"?>
 <!--
- * Copyright (c) 2009-2021 Yegor Bugayenko
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met: 1) Redistributions of source code must retain the above
- * copyright notice, this list of conditions and the following
- * disclaimer. 2) Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the rultor.com nor
- * the names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
- * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
- * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<project xmlns="http://maven.apache.org/DECORATION/1.3.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd"
-    name="rultor">
-    <skin>
-        <groupId>com.jcabi</groupId>
-        <artifactId>jcabi-maven-skin</artifactId>
-        <version>1.5.1</version>
-    </skin>
-    <googleAnalyticsAccountId>UA-1963507-28</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>rultor</name>
-        <src>https://doc.rultor.com/images/logo.svg</src>
-        <href>https://doc.rultor.com/</href>
-        <title>rultor.com</title>
-        <width>200</width>
-        <height>45</height>
-    </bannerLeft>
-    <body>
-        <head>
-            <link href="//doc.rultor.com/favicon.ico" rel="shortcut icon"/>
-            <link href="//plus.google.com/u/0/114792568016408327418?rel=author" rel="author"/>
-        </head>
-        <breadcrumbs>
-            <item name="doc.rultor.com" href="http://doc.rultor.com"/>
-        </breadcrumbs>
-        <menu name="Overview">
-            <item name="Introduction" href="./index.html"/>
-            <item name="JavaDoc ${project.version}" href="apidocs-${project.version}/index.html"/>
-            <item name="Test Coverage" href="cobertura/index.html"/>
-            <item name="Release History" href="https://github.com/yegor256/rultor/releases"/>
-        </menu>
-        <menu ref="reports"/>
-    </body>
+Copyright (c) 2009-2021 Yegor Bugayenko
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met: 1) Redistributions of source code must retain the above
+copyright notice, this list of conditions and the following
+disclaimer. 2) Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials provided
+with the distribution. 3) Neither the name of the rultor.com nor
+the names of its contributors may be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/DECORATION/1.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd" name="rultor">
+  <skin>
+    <groupId>com.jcabi</groupId>
+    <artifactId>jcabi-maven-skin</artifactId>
+    <version>1.5.1</version>
+  </skin>
+  <googleAnalyticsAccountId>UA-1963507-28</googleAnalyticsAccountId>
+  <bannerLeft>
+    <name>rultor</name>
+    <src>https://doc.rultor.com/images/logo.svg</src>
+    <href>https://doc.rultor.com/</href>
+    <title>rultor.com</title>
+    <width>200</width>
+    <height>45</height>
+  </bannerLeft>
+  <body>
+    <head>
+      <link href="//doc.rultor.com/favicon.ico" rel="shortcut icon"/>
+      <link href="//plus.google.com/u/0/114792568016408327418?rel=author" rel="author"/>
+    </head>
+    <breadcrumbs>
+      <item name="doc.rultor.com" href="http://doc.rultor.com"/>
+    </breadcrumbs>
+    <menu name="Overview">
+      <item name="Introduction" href="./index.html"/>
+      <item name="JavaDoc ${project.version}" href="apidocs-${project.version}/index.html"/>
+      <item name="Test Coverage" href="cobertura/index.html"/>
+      <item name="Release History" href="https://github.com/yegor256/rultor/releases"/>
+    </menu>
+    <menu ref="reports"/>
+  </body>
 </project>

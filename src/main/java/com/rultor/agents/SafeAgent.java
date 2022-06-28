@@ -66,7 +66,7 @@ public final class SafeAgent implements Agent {
                 this, "execute(): %s throws %[exception]s",
                 this.origin.getClass().getCanonicalName(), ex
             );
-            Sentry.capture(ex);
+            Sentry.captureException(ex);
         }
     }
 }

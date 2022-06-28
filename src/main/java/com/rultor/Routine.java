@@ -126,7 +126,7 @@ final class Routine implements Runnable, Closeable {
                 this.safe(),
                 System.currentTimeMillis() - this.start, new Date()
             );
-            this.pulse.error(Collections.<Throwable>emptyList());
+            this.pulse.error(Collections.emptyList());
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {
             if (!this.down.get()) {
@@ -137,7 +137,7 @@ final class Routine implements Runnable, Closeable {
                     Logger.info(this, "%[exception]s", iex);
                 }
             }
-            Sentry.capture(ex);
+            Sentry.captureException(ex);
             this.pulse.error(Collections.singleton(ex));
         }
     }

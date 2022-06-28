@@ -31,8 +31,8 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.rultor.StartsDockerDaemon;
 import com.rultor.Time;
-import com.rultor.agents.docker.StartsDockerDaemon;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;

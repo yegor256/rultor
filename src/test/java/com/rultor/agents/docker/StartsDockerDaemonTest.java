@@ -31,6 +31,7 @@ package com.rultor.agents.docker;
 
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.rultor.StartsDockerDaemon;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
