@@ -31,9 +31,3 @@ jobs:
           ruby-version: 2.7
       - run: gem install xcop
       - run: mvn clean install -Pqulice --errors --batch-mode
-
-  pdd-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: g4s8/pdd-action@master
