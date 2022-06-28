@@ -7,7 +7,6 @@ assets:
   pubring.gpg: yegor256/home#assets/pubring.gpg
   id_rsa.pub: yegor256/home#assets/heroku-key.pub
 install: |-
-  sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
   pdd --file=/dev/null
 merge:
   fast-forward: only
@@ -25,6 +24,7 @@ release:
   sensitive:
     - settings.xml
   script: |-
+    [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
     echo "Author of the request: ${author}"
     mvn versions:set "-DnewVersion=${tag}" --quiet
     git commit -am "${tag}"

@@ -1030,5 +1030,51 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         </plugins>
       </build>
     </profile>
+    <profile>
+      <!--
+      Just run it with -Pjacoco and a coverage report will be generated
+      in target/site/jacoco/jacoco.xml. Then, you can upload this file
+      to codecov.io and enjoy the report.
+      -->
+      <id>jacoco</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.7</version>
+            <configuration>
+              <output>file</output>
+            </configuration>
+            <executions>
+              <execution>
+                <id>jacoco-initialize</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>jacoco-initialize-integration</id>
+                <goals>
+                  <goal>prepare-agent-integration</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>jacoco-report</id>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>jacoco-report-integration</id>
+                <goals>
+                  <goal>report-integration</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>
