@@ -107,3 +107,5 @@ $ chown rultor:rultor -R /home/rultor/.ssh
 $ chmod 600 /home/rultor/.ssh/authorized_keys
 ```
 
+Make sure the `b4.rultor.com` is pointing to the server. At the moment the hosted
+app is working with a single server only, by this particular domain name.
