@@ -88,3 +88,22 @@ in one of your GitHub pull requests, it does exactly this:
 You can see it in action, for example, in this pull request:
 [jcabi/jcabi-github#878](https://github.com/jcabi/jcabi-github/pull/878).
 
+
+## How to Create a New Server
+
+Rultor expects a server with [installed Docker](https://docs.docker.com/engine/install/ubuntu/)
+to be available. It logins
+there via SSH and starts Docker containers per each task. This is how you
+configure a server from scratch (as `root` at Ubuntu 20.04):
+
+```
+$ groupadd docker
+$ adduser rultor
+$ gpasswd -a rultor docker
+$ echo 'rultor ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+$ mkdir /home/rultor/.ssh
+$ cat > /home/rultor/.ssh/authorized_keys
+$ chown rultor:rultor -R /home/rultor/.ssh
+$ chmod 600 /home/rultor/.ssh/authorized_keys
+```
+
