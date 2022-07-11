@@ -4,10 +4,9 @@ readers:
   - "urn:github:526301"
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
-  id_rsa: yegor256/home#assets/heroku-key
   settings.xml: yegor256/home#assets/rultor/settings.xml
   pubring.gpg: yegor256/home#assets/pubring.gpg
-  id_rsa.pub: yegor256/home#assets/heroku-key.pub
+  heroku-netrc: yegor256/home#assets/heroku-netrc
 install: |-
   pdd --file=/dev/null
 merge:
@@ -33,10 +32,7 @@ release:
     cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Prultor --errors --batch-mode --quiet
     git remote add heroku https://git.heroku.com/rultor.git
-    mkdir -p ~/.ssh
-    mv ../id_rsa ../id_rsa.pub ~/.ssh
-    chmod -R 600 ~/.ssh/*
-    echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
+    mv ../heroku-netrc ~/.netrc
     build=$(git rev-parse --short HEAD)
     sed -i "s/BUILD/${build}/g" src/main/resources/META-INF/MANIFEST.MF
     sed -i "s/BUILD/${build}/g" src/main/resources/log4j.properties
