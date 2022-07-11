@@ -32,7 +32,7 @@ release:
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Prultor --errors --batch-mode --quiet
-    git remote add heroku git@heroku.com:rultor.git
+    git remote add heroku https://git.heroku.com/rultor.git
     mkdir -p ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
     chmod -R 600 ~/.ssh/*
