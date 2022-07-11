@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
@@ -148,7 +149,10 @@ public final class PfShell {
                 );
             }
             try {
-                key = IOUtils.toString(this.profile.assets().get(path));
+                key = IOUtils.toString(
+                    this.profile.assets().get(path),
+                    StandardCharsets.UTF_8
+                );
             } catch (final IOException ex) {
                 throw new Profile.ConfigException(ex);
             }

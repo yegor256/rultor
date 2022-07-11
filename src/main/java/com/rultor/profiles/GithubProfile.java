@@ -52,13 +52,12 @@ import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.CharEncoding;
-import org.cactoos.collection.Mapped;
-import org.cactoos.list.SolidList;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapOf;
-import org.cactoos.map.SolidMap;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
+import org.cactoos.text.UncheckedText;
 
 /**
  * Github Profile.
@@ -144,7 +143,7 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        return new SolidMap<String, InputStream>(entries);
+        return new MapOf<>(new ListOf<>(entries));
     }
 
     /**
@@ -167,25 +166,24 @@ final class GithubProfile implements Profile {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "%s file must be present in root directory of %s, see http://doc.rultor.com/reference.html#assets",
+                    "%s file must be present in root directory of %s, see https://doc.rultor.com/reference.html#assets",
                     GithubProfile.FILE, rpo.coordinates()
                 )
             );
         }
-        final Collection<String> friends =
-            new SolidList<>(
-                new Mapped<>(
-                    input -> input.toLowerCase(Locale.ENGLISH),
-                    new YamlXML(
-                        new String(
-                            new Content.Smart(
-                                rpo.contents().get(GithubProfile.FILE)
-                            ).decoded(),
-                            StandardCharsets.UTF_8
-                        )
-                    ).get().xpath("/p/entry[@key='friends']/item/text()")
-                )
-            );
+        final Collection<String> friends = new ListOf<>(
+            new Mapped<>(
+                input -> input.toLowerCase(Locale.ENGLISH),
+                new YamlXML(
+                    new String(
+                        new Content.Smart(
+                            rpo.contents().get(GithubProfile.FILE)
+                        ).decoded(),
+                        StandardCharsets.UTF_8
+                    )
+                ).get().xpath("/p/entry[@key='friends']/item/text()")
+            )
+        );
         final String coords = this.repo.coordinates()
             .toString().toLowerCase(Locale.ENGLISH);
         if (!friends.contains(coords)) {
@@ -209,7 +207,7 @@ final class GithubProfile implements Profile {
      */
     private void checkTrustees(final Repo rpo) throws IOException {
         final Collection<String> trustees =
-            new SolidList<>(
+            new ListOf<>(
                 new Mapped<>(
                     input -> input.toLowerCase(Locale.ENGLISH),
                     new YamlXML(
@@ -224,7 +222,7 @@ final class GithubProfile implements Profile {
             );
         if (!trustees.isEmpty()) {
             final Iterable<RepoCommit> commits = this.repo.commits().iterate(
-                new MapOf<String, String>(
+                new MapOf<>(
                     new MapEntry<>("path", GithubProfile.FILE)
                 )
             );
@@ -303,7 +301,7 @@ final class GithubProfile implements Profile {
                 new Content.Smart(
                     this.repo.contents().get(GithubProfile.FILE)
                 ).decoded(),
-                CharEncoding.UTF_8
+                StandardCharsets.UTF_8
             );
         } else {
             yml = "";
@@ -314,9 +312,11 @@ final class GithubProfile implements Profile {
                 String.format(
                     "%s is not valid according to schema:\n``%s``",
                     GithubProfile.FILE,
-                    new JoinedText(
-                        "\n",
-                        msg
+                    new UncheckedText(
+                        new Joined(
+                            "\n",
+                            msg
+                        )
                     ).asString()
                 )
             );

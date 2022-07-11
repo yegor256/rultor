@@ -33,8 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
-import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
@@ -45,6 +45,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
@@ -53,8 +54,6 @@ import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
-import org.apache.commons.lang3.CharEncoding;
-import org.cactoos.text.JoinedText;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -123,11 +122,11 @@ public final class StartsDaemon extends AbstractAgent {
             new NullInputStream(0L),
             baos, baos
         );
-        final String dir = baos.toString(CharEncoding.UTF_8).trim();
+        final String dir = baos.toString(StandardCharsets.UTF_8.name()).trim();
         new Shell.Safe(shell).exec(
-            String.format("cd %s; cat > run.sh", SSH.escape(dir)),
+            String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
             IOUtils.toInputStream(
-                new JoinedText(
+                String.join(
                     "\n",
                     "#!/bin/bash",
                     "set -x",
@@ -137,7 +136,7 @@ public final class StartsDaemon extends AbstractAgent {
                     "echo $$ > pid",
                     String.format(
                         "echo %s",
-                        SSH.escape(
+                        Ssh.escape(
                             String.format(
                                 "%s %s",
                                 Manifests.read("Rultor-Version"),
@@ -149,21 +148,21 @@ public final class StartsDaemon extends AbstractAgent {
                     "uptime",
                     this.upload(shell, dir),
                     daemon.xpath("script/text()").get(0)
-                ).asString(),
-                CharEncoding.UTF_8
+                ),
+                StandardCharsets.UTF_8
             ),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
-            new JoinedText(
+            String.join(
                 " && ",
-                String.format("cd %s", SSH.escape(dir)),
+                String.format("cd %s", Ssh.escape(dir)),
                 "chmod a+x run.sh",
                 "echo 'run.sh failed to start' > stdout",
                 // @checkstyle LineLength (1 line)
                 "( ( nohup ./run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null & )"
-            ).asString()
+            )
         );
         Logger.info(this, "daemon started at %s", dir);
         return dir;
@@ -185,7 +184,7 @@ public final class StartsDaemon extends AbstractAgent {
                 shell.exec(
                     String.format(
                         "cat > %s",
-                        SSH.escape(String.format("%s/%s", dir, asset.getKey()))
+                        Ssh.escape(String.format("%s/%s", dir, asset.getKey()))
                     ),
                     asset.getValue(),
                     Logger.stream(Level.INFO, true),
@@ -221,12 +220,12 @@ public final class StartsDaemon extends AbstractAgent {
             final String[] names = {"pubring.gpg", "secring.gpg"};
             for (final String name : names) {
                 shell.exec(
-                    new JoinedText(
+                    String.join(
                         " &&  ",
-                        String.format("cd %s  ", SSH.escape(dir)),
+                        String.format("cd %s  ", Ssh.escape(dir)),
                         "mkdir -p .gpg",
                         String.format("cat > \".gpg/%s\"", name)
-                    ).asString(),
+                    ),
                     this.ring(name),
                     Logger.stream(Level.INFO, true),
                     Logger.stream(Level.WARNING, true)

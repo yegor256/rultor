@@ -55,7 +55,7 @@ public final class TkButtonTest {
             XhtmlMatchers.xhtml(
                 new RsPrint(
                     take.act(new RqRegex.Fake("(.*)", "hey"))
-                ).printBody()
+                ).asString()
             ),
             XhtmlMatchers.hasXPaths(
                 "/svg:svg",

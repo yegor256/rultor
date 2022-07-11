@@ -37,7 +37,7 @@ import com.jcabi.immutable.Array;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
@@ -93,11 +93,11 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Agents.
@@ -147,13 +147,13 @@ public final class Agents {
                 new Invitations(this.github),
                 new IndexesRequests(),
                 new DockerExec(
-                    new SSH(
+                    new Ssh(
                         // @checkstyle MagicNumber (1 line)
                         "b4.rultor.com", 22,
                         "rultor",
                         IOUtils.toString(
                             this.getClass().getResourceAsStream("rultor.key"),
-                            CharEncoding.UTF_8
+                            StandardCharsets.UTF_8
                         )
                     ),
                     "rmi.sh"
@@ -246,7 +246,7 @@ public final class Agents {
                 "rultor",
                 IOUtils.toString(
                     this.getClass().getResourceAsStream("rultor.key"),
-                    CharEncoding.UTF_8
+                    StandardCharsets.UTF_8
                 )
             ),
             new StartsDaemon(profile),

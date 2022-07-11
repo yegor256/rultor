@@ -32,7 +32,7 @@ package com.rultor.agents.req;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public final class DockerRunTest {
     public void fetchesEnvVars() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                new JoinedText(
+                new Joined(
                     SPACE,
                     "<p><entry key='a'><entry key='env'>",
                     "<item>A=5</item><item>B=f e</item></entry></entry>",
@@ -98,7 +98,7 @@ public final class DockerRunTest {
     public void fetchesScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                new JoinedText(
+                new Joined(
                     SPACE,
                     "<p><entry key='x'><entry key='script'>",
                     "mvn clean</entry></entry>",
@@ -125,7 +125,7 @@ public final class DockerRunTest {
     public void executesWithComment() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                new JoinedText(
+                new Joined(
                     SPACE,
                     "<p><entry key='z'><entry key='script'>",
                     "<item>echo \"first\"</item>",
@@ -190,7 +190,7 @@ public final class DockerRunTest {
     public void fetchesInstallScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                new JoinedText(
+                new Joined(
                     SPACE,
                     "<p><entry key='f'><entry key='script'>hi</entry></entry>",
                     "<entry key='install'><item>one</item><item>two</item>",
@@ -214,7 +214,7 @@ public final class DockerRunTest {
     public void fetchesUninstallScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                new JoinedText(
+                new Joined(
                     SPACE,
                     "<p>",
                     "<entry key='uninstall'>",
@@ -244,7 +244,7 @@ public final class DockerRunTest {
     public void fetchesEnvVarsDefaults() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                new JoinedText(
+                new Joined(
                     SPACE,
                     "<p><entry key='o'><entry key='env'>A=123</entry></entry>",
                     "<entry key='env'>ALPHA=909</entry></p>"

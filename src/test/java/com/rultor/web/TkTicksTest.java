@@ -82,10 +82,10 @@ public final class TkTicksTest {
                 }
             }
         );
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new RsPrint(home.act(new RqFake())).printBody(baos);
         final BufferedImage image = ImageIO.read(
-            new ByteArrayInputStream(baos.toByteArray())
+            new ByteArrayInputStream(
+                new RsPrint(home.act(new RqFake())).asBytes()
+            )
         );
         MatcherAssert.assertThat(
             image.getWidth(),
@@ -101,7 +101,7 @@ public final class TkTicksTest {
     public void rendersSvgWithoutTicks() throws Exception {
         final Take home = new TkTicks(Pulse.EMPTY);
         MatcherAssert.assertThat(
-            new RsPrint(home.act(new RqFake())).printBody(),
+            new RsPrint(home.act(new RqFake())).asString(),
             Matchers.notNullValue()
         );
     }

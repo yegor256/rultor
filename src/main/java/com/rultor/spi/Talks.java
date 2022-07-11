@@ -35,16 +35,16 @@ import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Sorted;
-import org.cactoos.list.SolidList;
-import org.cactoos.text.JoinedText;
+import org.cactoos.list.ListOf;
 
 /**
  * Talks in a repo.
@@ -188,7 +188,7 @@ public interface Talks {
                 file,
                 new StrictXML(
                     new XMLDocument(
-                        new JoinedText(
+                        String.join(
                             " ",
                             String.format(
                                 "<talk name='%s' number='1' later='false'>",
@@ -200,11 +200,11 @@ public interface Talks {
                                 name
                             ),
                             "</wire></talk>"
-                        ).asString()
+                        )
                     ),
                     Talk.SCHEMA
                 ).toString(),
-                CharEncoding.UTF_8
+                StandardCharsets.UTF_8
             );
             Logger.info(this, "talk '%s' created in %s", name, file);
         }
@@ -213,7 +213,7 @@ public interface Talks {
             final Collection<File> files = FileUtils.listFiles(
                 new File(this.path), null, false
             );
-            final SolidList<File> list = new SolidList<>(
+            final List<File> list = new ListOf<>(
                 new Sorted<>(
                     files
                 )

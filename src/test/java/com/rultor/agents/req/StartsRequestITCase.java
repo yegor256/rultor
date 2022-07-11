@@ -29,13 +29,13 @@
  */
 package com.rultor.agents.req;
 
-import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -79,14 +79,14 @@ public final class StartsRequestITCase {
     public void composesCorrectDeployRequest() throws Exception {
         Assume.assumeNotNull(StartsRequestITCase.HOST);
         final Shell shell = new Shell.Verbose(
-            new SSH(
+            new Ssh(
                 StartsRequestITCase.HOST, 22,
                 StartsRequestITCase.LOGIN, StartsRequestITCase.KEY
             )
         );
         final String repo = String.format("/tmp/%d.git", System.nanoTime());
         new Shell.Plain(new Shell.Safe(shell)).exec(
-            new JoinedText(
+            new Joined(
                 ";",
                 "cd /tmp",
                 String.format("git init %s", repo),
@@ -106,7 +106,7 @@ public final class StartsRequestITCase {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                         "\n",
                         "<p><entry key='deploy'><entry key='script'>",
                         "echo 'Hello, world!'",
@@ -129,7 +129,7 @@ public final class StartsRequestITCase {
         agent.execute(talk);
         final String dir = String.format("/tmp/test-%d", System.nanoTime());
         final String stdout = new Shell.Plain(shell).exec(
-            new JoinedText(
+            new Joined(
                 "\n",
                 String.format("mkdir %s", dir),
                 String.format("cd %s", dir),
@@ -137,7 +137,7 @@ public final class StartsRequestITCase {
             ).asString()
         );
         new Shell.Plain(new Shell.Safe(shell)).exec(
-            new JoinedText(
+            new Joined(
                 "\n",
                 String.format("rm -rf %s", repo),
                 String.format("sudo rm -rf %s", dir)

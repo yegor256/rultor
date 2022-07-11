@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.req;
 
-import org.cactoos.list.SolidList;
+import org.cactoos.list.ListOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public final class BracketsTest {
     @Test
     public void escapesInput() throws Exception {
         final Brackets brackets = new Brackets(
-            new SolidList<>(
+            new ListOf<>(
                 "Elegant",
                 "Objects"
             )

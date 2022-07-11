@@ -33,13 +33,11 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.File;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.takes.Request;
-import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.auth.PsFake;
 import org.takes.facets.auth.TkAuth;
@@ -70,7 +68,7 @@ public final class TkDaemonTest {
             TkDaemonTest.class.getCanonicalName(), ".txt"
         );
         final String content = "1 < привет > тебе от меня";
-        FileUtils.writeStringToFile(tail, content);
+        FileUtils.writeStringToFile(tail, content, StandardCharsets.UTF_8);
         talk.modify(
             new Directives().xpath("/talk").add("daemon")
                 .attr("id", "00000000")
@@ -79,19 +77,17 @@ public final class TkDaemonTest {
                 .add("title").set("no title")
         );
         final Take take = new TkAuth(
-            new Take() {
-                @Override
-                public Response act(final Request request) throws IOException {
-                    return new TkDaemon(talks).act(
-                        new RqRegex.Fake("(.*)-(.*)", "1-abcd")
-                    );
-                }
-            },
+            request -> new TkDaemon(talks).act(
+                new RqRegex.Fake("(.*)-(.*)", "1-abcd")
+            ),
             new PsFake(true)
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                IOUtils.toString(take.act(new RqFake()).body())
+                IOUtils.toString(
+                    take.act(new RqFake()).body(),
+                    StandardCharsets.UTF_8
+                )
             ),
             XhtmlMatchers.hasXPaths(
                 "/xhtml:html/xhtml:body",

@@ -63,7 +63,7 @@ public final class TkHomeTest {
                     take.act(
                         new RqWithHeader(new RqFake(), "Accept", "text/xml")
                     )
-                ).printBody()
+                ).asString()
             ),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",

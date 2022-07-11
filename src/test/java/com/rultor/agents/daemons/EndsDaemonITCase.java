@@ -30,7 +30,7 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.Time;
@@ -102,7 +102,7 @@ public final class EndsDaemonITCase {
             final Talk talk = new Talk.InFile();
             final PfShell sshd = this.start(start, talk, "");
             new Shell.Plain(
-                new SSH(sshd.host(), sshd.port(), sshd.login(), sshd.key())
+                new Ssh(sshd.host(), sshd.port(), sshd.login(), sshd.key())
             ).exec("echo '123' > /tmp/status");
             final Agent agent = new EndsDaemon();
             agent.execute(talk);
@@ -127,7 +127,7 @@ public final class EndsDaemonITCase {
             final Talk talk = new Talk.InFile();
             final PfShell sshd = this.start(start, talk, "");
             new Shell.Plain(
-                new SSH(sshd.host(), sshd.port(), sshd.login(), sshd.key())
+                new Ssh(sshd.host(), sshd.port(), sshd.login(), sshd.key())
             ).exec("echo '154' > /tmp/status");
             final Profile prof = Mockito.mock(Profile.class);
             final String exception = "This profile was broken!";
@@ -198,7 +198,7 @@ public final class EndsDaemonITCase {
         final PfShell sshd = start.shell();
         final int port = sshd.port();
         new Shell.Plain(
-            new SSH(sshd.host(), port, sshd.login(), sshd.key())
+            new Ssh(sshd.host(), port, sshd.login(), sshd.key())
         ).exec(String.format("echo '%s' > /tmp/stdout", stdout));
         talk.modify(
             new Directives().xpath("/talk")

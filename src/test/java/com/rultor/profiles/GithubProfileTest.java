@@ -39,7 +39,7 @@ import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Base64;
 import javax.json.Json;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -61,7 +61,7 @@ public final class GithubProfileTest {
     @Test
     public void fetchesYamlConfig() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets:",
                 "  test.xml: jeff/test1#test.xml",
@@ -126,7 +126,7 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenAssetIsMisconfigured() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets: ",
                 "  something.xml: -invalid.user.name/test1#test.xml"
@@ -142,7 +142,7 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets: ",
                 "  something.xml: invalid_username/test1#test.xml"
@@ -160,7 +160,7 @@ public final class GithubProfileTest {
     public void throwsWhenAssetsUsernameStartsWithUnderscore()
         throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets: ",
                 "  something.xml: _invalidusername/test1#test.xml"
@@ -187,7 +187,7 @@ public final class GithubProfileTest {
                 .add(
                     "content",
                     Base64.getEncoder().encodeToString(
-                        new JoinedText(
+                        new Joined(
                             "\n",
                             "assets: ",
                             String.format(
@@ -211,7 +211,7 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenRultorConfigIsAbsent() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets:   ",
                 "  something.xml: jeff/test2#.rultor.yml"
@@ -227,7 +227,7 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenFriendNotDefined() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets:    ",
                 "  a.xml: jeff/test1#test.xml"
@@ -244,7 +244,7 @@ public final class GithubProfileTest {
     @Test(expected = Profile.ConfigException.class)
     public void testAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets:",
                 "  test.xml: jeff/test1#test.xmls",

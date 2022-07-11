@@ -34,6 +34,7 @@ import com.jcabi.ssh.Shell;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
@@ -71,7 +72,8 @@ public final class DockerExec implements SuperAgent {
     public void execute(final Talks talks) throws IOException {
         new Shell.Safe(this.shell).exec(
             IOUtils.toString(
-                this.getClass().getResourceAsStream(this.script)
+                this.getClass().getResourceAsStream(this.script),
+                StandardCharsets.UTF_8
             ),
             new NullInputStream(0L),
             Logger.stream(Level.INFO, this),

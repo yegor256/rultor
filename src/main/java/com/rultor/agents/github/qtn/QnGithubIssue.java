@@ -34,7 +34,8 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
-import org.cactoos.list.SolidList;
+import java.util.List;
+import org.cactoos.list.ListOf;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -64,18 +65,13 @@ public final class QnGithubIssue implements Question {
     public Req understand(final Comment.Smart comment, final URI home)
         throws IOException {
         Req req = this.origin.understand(comment, home);
-        final SolidList<Directive> reqDirs = new SolidList<>(req.dirs());
+        final List<Directive> reqDirs = new ListOf<>(req.dirs());
         if (!reqDirs.isEmpty()) {
             final Directives dirs = new Directives().append(reqDirs);
-            req = new Req() {
-                @Override
-                public Iterable<Directive> dirs() {
-                    return dirs.addIf("args")
-                        .add("arg").attr("name", "github_issue")
-                        .set(String.valueOf(comment.issue().number()))
-                        .up().up();
-                }
-            };
+            req = () -> dirs.addIf("args")
+                .add("arg").attr("name", "github_issue")
+                .set(String.valueOf(comment.issue().number()))
+                .up().up();
         }
         return req;
     }

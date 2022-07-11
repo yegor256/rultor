@@ -40,10 +40,10 @@ import com.jcabi.xml.XSLChain;
 import com.jcabi.xml.XSLDocument;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Node;
 import org.xembly.Directive;
@@ -151,7 +151,8 @@ public interface Talk {
             this(File.createTempFile("rultor", ".talk"));
             FileUtils.write(
                 new File(this.path),
-                String.format("<talk name='%s' number='1'/>", Talk.TEST_NAME)
+                String.format("<talk name='%s' number='1'/>", Talk.TEST_NAME),
+                StandardCharsets.UTF_8
             );
         }
         /**
@@ -172,7 +173,7 @@ public interface Talk {
             FileUtils.write(
                 new File(this.path),
                 new StrictXML(xml, Talk.SCHEMA).toString(),
-                CharEncoding.UTF_8
+                StandardCharsets.UTF_8
             );
         }
         /**
@@ -199,7 +200,7 @@ public interface Talk {
             return Talk.UPGRADE.transform(
                 new XMLDocument(
                     FileUtils.readFileToString(
-                        new File(this.path), CharEncoding.UTF_8
+                        new File(this.path), StandardCharsets.UTF_8
                     )
                 )
             );
@@ -218,7 +219,7 @@ public interface Talk {
                     new StrictXML(
                         new XMLDocument(node), Talk.SCHEMA
                     ).toString(),
-                    CharEncoding.UTF_8
+                    StandardCharsets.UTF_8
                 );
             }
         }

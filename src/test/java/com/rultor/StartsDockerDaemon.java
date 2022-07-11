@@ -40,6 +40,7 @@ import com.rultor.spi.Profile;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
@@ -130,7 +131,8 @@ public final class StartsDockerDaemon implements AutoCloseable {
             this.client.copyArchiveFromContainerCmd(
                 container.getId(), "/root/.ssh/id_rsa"
             ).exec(),
-            writer
+            writer,
+            StandardCharsets.UTF_8
         );
         final String key = writer.toString();
         return key.substring(key.indexOf('-'), key.lastIndexOf('-') + 1);

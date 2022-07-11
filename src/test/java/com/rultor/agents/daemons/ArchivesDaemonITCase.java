@@ -30,8 +30,8 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
-import com.jcabi.s3.mock.MkBucket;
-import com.jcabi.ssh.SSH;
+import com.jcabi.s3.fake.FkBucket;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.Time;
@@ -80,7 +80,7 @@ public final class ArchivesDaemonITCase {
             final PfShell shell = start.shell();
             final int port = shell.port();
             new Shell.Plain(
-                new SSH(shell.host(), port, shell.login(), shell.key())
+                new Ssh(shell.host(), port, shell.login(), shell.key())
             ).exec("echo 'some output' > /tmp/stdout");
             final Talk talk = new Talk.InFile();
             talk.modify(
@@ -100,7 +100,7 @@ public final class ArchivesDaemonITCase {
                     .add("key").set(shell.key()).up().up()
             );
             final Agent agent = new ArchivesDaemon(
-                new MkBucket(this.temp.newFolder(), "test")
+                new FkBucket(this.temp.newFolder(), "test")
             );
             agent.execute(talk);
             MatcherAssert.assertThat(

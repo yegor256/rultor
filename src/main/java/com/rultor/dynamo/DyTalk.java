@@ -52,7 +52,7 @@ import java.util.zip.GZIPOutputStream;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
-import org.cactoos.list.SolidList;
+import org.cactoos.list.ListOf;
 import org.w3c.dom.Node;
 import org.xembly.Directive;
 import org.xembly.ImpossibleModificationException;
@@ -132,7 +132,7 @@ public final class DyTalk implements Talk {
 
     @Override
     public void modify(final Iterable<Directive> dirs) throws IOException {
-        if (!new SolidList<>(dirs).isEmpty()) {
+        if (!new ListOf<>(dirs).isEmpty()) {
             final XML xml = this.read();
             final Node node = xml.node();
             try {

@@ -38,16 +38,16 @@ import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.cactoos.Text;
-import org.cactoos.collection.Mapped;
 import org.cactoos.iterable.Filtered;
+import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Skipped;
-import org.cactoos.list.SolidList;
-import org.cactoos.text.JoinedText;
-import org.cactoos.text.SplitText;
+import org.cactoos.list.ListOf;
+import org.cactoos.text.Split;
 import org.cactoos.text.TextOf;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -111,21 +111,21 @@ public final class EndsDaemon extends AbstractAgent {
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
-        final SolidList<Text> lines = new SolidList<>(
-            new SplitText(
+        final List<Text> lines = new ListOf<>(
+            new Split(
                 new TextOf(
                     EndsDaemon.stdout(shell, dir)
                 ),
                 System.lineSeparator()
             )
         );
-        final SolidList<String> linesAsString = new SolidList<>(
+        final List<String> linesAsString = new ListOf<>(
             new Mapped<>(
                 line -> line.asString(),
                 lines
             )
         );
-        final String highlights = new JoinedText(
+        final String highlights = String.join(
             "\n",
             new Mapped<>(
                 s -> StringUtils.removeStart(
@@ -139,7 +139,7 @@ public final class EndsDaemon extends AbstractAgent {
                     lines
                 )
             )
-        ).asString();
+        );
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives()
             .xpath("/talk/daemon")
@@ -151,13 +151,13 @@ public final class EndsDaemon extends AbstractAgent {
             .set(
                 Xembler.escape(
                     StringUtils.substring(
-                        new JoinedText(
+                        String.join(
                             System.lineSeparator(),
                             new Skipped<>(
                                 Math.max(lines.size() - Tv.SIXTY, 0),
                                 linesAsString
                             )
-                        ).asString(),
+                        ),
                         -Tv.HUNDRED * Tv.THOUSAND
                     )
                 )
@@ -200,7 +200,7 @@ public final class EndsDaemon extends AbstractAgent {
         return new ShellCommand(
             shell,
             dir,
-            new JoinedText(
+            String.join(
                 ";",
                 "size=$(stat -c%s stdout)",
                 String.format("if [ $size -gt %d ]", max),
@@ -209,7 +209,7 @@ public final class EndsDaemon extends AbstractAgent {
                 String.format("tail -c %d stdout", max),
                 "else cat stdout",
                 "fi"
-            ).asString()
+            )
         ).exec();
     }
 

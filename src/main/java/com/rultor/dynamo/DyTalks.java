@@ -48,7 +48,7 @@ import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.cactoos.iterable.Filtered;
-import org.cactoos.iterable.Limited;
+import org.cactoos.iterable.HeadOf;
 import org.cactoos.iterable.Mapped;
 
 /**
@@ -249,7 +249,7 @@ public final class DyTalks implements Talks {
 
     @Override
     public Iterable<Talk> recent() {
-        return new Limited<>(
+        return new HeadOf<>(
             Tv.FIVE,
             new Filtered<>(
                 input -> {

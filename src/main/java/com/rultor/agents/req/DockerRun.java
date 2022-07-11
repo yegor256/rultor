@@ -45,7 +45,9 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Joined;
-import org.cactoos.list.SolidList;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.iterable.Sticky;
+import org.cactoos.list.ListOf;
 
 /**
  * Docker run command.
@@ -92,16 +94,16 @@ final class DockerRun {
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
             trap = Collections.emptyList();
         } else {
-            trap = new Joined<String>(
-                new SolidList<String>("function", "clean_up()", "{"),
+            trap = new Joined<>(
+                new Sticky<>("function", "clean_up()", "{"),
                 DockerRun.scripts(
                     this.profile.read(), "/p/entry[@key='uninstall']"
                 ),
-                new SolidList<String>("}", ";"),
-                new SolidList<String>("trap", "clean_up", "EXIT", ";")
+                new Sticky<>("}", ";"),
+                new Sticky<>("trap", "clean_up", "EXIT", ";")
             );
         }
-        return new Joined<String>(
+        return new Joined<>(
             trap,
             DockerRun.scripts(
                 this.profile.read(), "/p/entry[@key='install']"
@@ -129,7 +131,7 @@ final class DockerRun {
         return new Joined<String>(
             DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
             DockerRun.envs(this.node(), "entry[@key='env']"),
-            new SolidList<String>(entries)
+            new Sticky<>(entries)
         );
     }
 
@@ -234,8 +236,8 @@ final class DockerRun {
                 parts = DockerRun.lines(node);
             }
             envs.addAll(
-                new SolidList<String>(
-                    new org.cactoos.collection.Mapped<>(
+                new ListOf<>(
+                    new Mapped<>(
                         input -> String.format("%s", input),
                         parts
                     )
@@ -251,11 +253,11 @@ final class DockerRun {
      * @return Lines found
      */
     private static Collection<String> lines(final XML node) {
-        final Collection<String> lines = new LinkedList<String>();
+        final Collection<String> lines = new LinkedList<>();
         if (node.node().hasChildNodes()) {
             lines.addAll(
-                new SolidList<String>(
-                    new org.cactoos.collection.Mapped<>(
+                new ListOf<>(
+                    new Mapped<>(
                         input -> input.trim(),
                         Arrays.asList(
                             StringUtils.split(node.xpath("text()").get(0), '\n')

@@ -43,9 +43,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.cactoos.list.SolidList;
+import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.SolidMap;
+import org.cactoos.map.MapOf;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -87,25 +87,22 @@ public final class QnParametrized implements Question {
         throws IOException {
         final Map<String, String> map = QnParametrized.params(comment);
         Req req = this.origin.understand(comment, home);
-        final List<Directive> directives = new SolidList<>(req.dirs());
+        final List<Directive> directives = new ListOf<>(req.dirs());
         if (!directives.isEmpty()) {
             final Directives dirs = new Directives().append(req.dirs());
-            req = new Req() {
-                @Override
-                public Iterable<Directive> dirs() {
-                    if (!map.isEmpty()) {
-                        dirs.addIf("args");
-                        for (final Map.Entry<String, String> ent
-                            : map.entrySet()) {
-                            dirs.add("arg")
-                                .attr("name", ent.getKey())
-                                .set(ent.getValue())
-                                .up();
-                        }
-                        dirs.up();
+            req = () -> {
+                if (!map.isEmpty()) {
+                    dirs.addIf("args");
+                    for (final Entry<String, String> ent
+                        : map.entrySet()) {
+                        dirs.add("arg")
+                            .attr("name", ent.getKey())
+                            .set(ent.getValue())
+                            .up();
                     }
-                    return dirs;
+                    dirs.up();
                 }
+                return dirs;
             };
         }
         return req;
@@ -124,14 +121,12 @@ public final class QnParametrized implements Question {
         final Matcher matcher = QnParametrized.PTN.matcher(comment.body());
         while (matcher.find()) {
             entries.add(
-                new MapEntry<String, String>(
+                new MapEntry<>(
                     matcher.group(1), matcher.group(2)
                 )
             );
         }
-        return new SolidMap<String, String>(
-            entries
-        );
+        return new MapOf<>(new ListOf<>(entries));
     }
 
 }

@@ -33,8 +33,9 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import org.cactoos.collection.Mapped;
-import org.cactoos.list.SolidList;
+import java.util.List;
+import org.cactoos.iterable.Mapped;
+import org.cactoos.list.ListOf;
 import org.cactoos.scalar.MaxOf;
 import org.cactoos.scalar.NumberOf;
 import org.xembly.Directives;
@@ -86,7 +87,7 @@ public final class IndexesRequests implements SuperAgent {
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private int index(final Talk talk) throws IOException {
-        final SolidList<Number> indexes = new SolidList<>(
+        final List<Number> indexes = new ListOf<>(
             new Mapped<>(
                 input -> new NumberOf(input),
                 talk.read()

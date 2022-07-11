@@ -30,10 +30,9 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import java.io.IOException;
-import org.cactoos.text.JoinedText;
 
 /**
  * Command to run in a given shell and working directory.
@@ -84,11 +83,11 @@ final class ShellCommand {
      */
     public String exec() throws IOException {
         return new Shell.Plain(new Shell.Safe(this.shell)).exec(
-            new JoinedText(
+            String.join(
                 ShellCommand.SHELL_JOINER,
-                String.format("cd %s", SSH.escape(this.directory)),
+                String.format("cd %s", Ssh.escape(this.directory)),
                 this.command
-            ).asString()
+            )
         );
     }
 

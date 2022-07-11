@@ -39,14 +39,14 @@ import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.SequenceInputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.ProxyReader;
 import org.apache.commons.io.input.ReaderInputStream;
-import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.takes.Response;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.fork.RqRegex;
@@ -123,7 +123,7 @@ final class TkDaemon implements TkRegex {
         final Talk talk = this.talks.get(number);
         final String head = IOUtils.toString(
             this.getClass().getResourceAsStream("daemon/head.html"),
-            CharEncoding.UTF_8
+            StandardCharsets.UTF_8
         ).trim();
         return new SequenceInputStream(
             Collections.enumeration(
@@ -136,7 +136,8 @@ final class TkDaemon implements TkRegex {
                                     talk.read()
                                         .xpath("/talk/wire/href/text()").get(0)
                                 )
-                            )
+                            ),
+                        StandardCharsets.UTF_8
                     ),
                     TkDaemon.escape(new Tail(talk.read(), hash).read()),
                     this.getClass().getResourceAsStream("daemon/tail.html")
@@ -154,7 +155,7 @@ final class TkDaemon implements TkRegex {
     private static InputStream escape(final InputStream input)
         throws UnsupportedEncodingException {
         final PushbackReader src = new PushbackReader(
-            new InputStreamReader(input, CharEncoding.UTF_8),
+            new InputStreamReader(input, StandardCharsets.UTF_8),
             Tv.TEN * Tv.THOUSAND
         );
         return new ReaderInputStream(
@@ -178,7 +179,7 @@ final class TkDaemon implements TkRegex {
                     }
                 }
             },
-            CharEncoding.UTF_8
+            StandardCharsets.UTF_8
         );
     }
 

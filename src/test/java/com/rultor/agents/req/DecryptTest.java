@@ -34,11 +34,13 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
+import org.cactoos.text.UncheckedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -87,24 +89,29 @@ public final class DecryptTest {
                 "test/test"
             )
         ).commands();
-        final String script = new JoinedText(
+        final String script = new Joined(
             NEWLINE,
             "set -x",
             "set -e",
             "set -o pipefail",
-            new JoinedText(
+            new Joined(
                 NEWLINE,
                 commands
             ).asString()
         ).asString();
         final File dir = this.temp.newFolder();
-        FileUtils.write(new File(dir, "a.txt.asc"), new FakePGP().asString());
+        FileUtils.write(
+            new File(dir, "a.txt.asc"),
+            new FakePGP().asString(),
+            StandardCharsets.UTF_8
+        );
         final String[] keys = {"pubring", "secring"};
         for (final String key : keys) {
             final String gpg = IOUtils.toString(
                 this.getClass().getResourceAsStream(
                     String.format("%s.gpg.base64", key)
-                )
+                ),
+                StandardCharsets.UTF_8
             );
             Assume.assumeThat(gpg, Matchers.not(Matchers.startsWith("${")));
             FileUtils.writeByteArrayToFile(
@@ -119,7 +126,10 @@ public final class DecryptTest {
             Level.WARNING, Level.WARNING
         ).stdout();
         MatcherAssert.assertThat(
-            FileUtils.readFileToString(new File(dir, "a.txt")),
+            FileUtils.readFileToString(
+                new File(dir, "a.txt"),
+                StandardCharsets.UTF_8
+            ),
             Matchers.startsWith("hello, world!")
         );
     }
@@ -154,19 +164,17 @@ public final class DecryptTest {
      * @return XML document
      */
     private XMLDocument createTestProfileXML() {
-        try {
-            return new XMLDocument(
-                new JoinedText(
+        return new XMLDocument(
+            new UncheckedText(
+                new Joined(
                     "",
                     "<p>",
                     "<entry key='decrypt'>",
                     "<entry key='a.txt'>a.txt.asc</entry>",
                     "</entry>",
                     "</p>"
-                ).asString()
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+                )
+            ).asString()
+        );
     }
 }

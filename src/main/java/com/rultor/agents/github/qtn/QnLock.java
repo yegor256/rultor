@@ -40,6 +40,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -49,10 +50,11 @@ import javax.json.Json;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Mapped;
-import org.cactoos.text.JoinedText;
+import org.cactoos.list.ListOf;
+import org.cactoos.text.Joined;
+import org.cactoos.text.UncheckedText;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -94,15 +96,17 @@ public final class QnLock implements Question {
         users.add(comment.author().login().toLowerCase(Locale.ENGLISH));
         if (!args.nodes("//arg[@name='users']").isEmpty()) {
             users.addAll(
-                new org.cactoos.list.Mapped<>(
-                    input -> StringUtils.stripStart(
-                        input.trim().toLowerCase(Locale.ENGLISH),
-                        "@"
-                    ),
-                    Arrays.asList(
-                        args.xpath(
-                            "//arg[@name='users']/text()"
-                        ).get(0).split(",")
+                new ListOf<>(
+                    new Mapped<>(
+                        input -> StringUtils.stripStart(
+                            input.trim().toLowerCase(Locale.ENGLISH),
+                            "@"
+                        ),
+                        Arrays.asList(
+                            args.xpath(
+                                "//arg[@name='users']/text()"
+                            ).get(0).split(",")
+                        )
                     )
                 )
             );
@@ -132,10 +136,12 @@ public final class QnLock implements Question {
                     .add(
                         "content",
                         Base64.encodeBase64String(
-                            new JoinedText(
-                                "\n",
-                                users
-                            ).asString().getBytes(CharEncoding.UTF_8)
+                            new UncheckedText(
+                                new Joined(
+                                    "\n",
+                                    users
+                                )
+                            ).asString().getBytes(StandardCharsets.UTF_8)
                         )
                     )
                     .add("branch", branch)
@@ -146,11 +152,13 @@ public final class QnLock implements Question {
                 String.format(
                     QnLock.PHRASES.getString("QnLock.response"),
                     branch,
-                    new JoinedText(
-                        ", ",
-                        new Mapped<>(
-                            input -> String.format("@%s", input),
-                            users
+                    new UncheckedText(
+                        new Joined(
+                            ", ",
+                            new Mapped<>(
+                                input -> String.format("@%s", input),
+                                users
+                            )
                         )
                     ).asString()
                 )

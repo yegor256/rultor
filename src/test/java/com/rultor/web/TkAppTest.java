@@ -77,7 +77,7 @@ public final class TkAppTest {
                             "text/xml"
                         )
                     )
-                ).printBody()
+                ).asString()
             ),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
@@ -136,7 +136,7 @@ public final class TkAppTest {
                         "text/javascript"
                     )
                 )
-            ).printBody(),
+            ).asString(),
             new StringBuilder()
                 .append("$(document).ready(function(){var a=$(\"#pulse\");")
                 .append("window.setInterval(function(){a.find(\"img\")")

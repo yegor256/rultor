@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.SolidMap;
+import org.cactoos.map.MapOf;
 
 /**
  * Release request.
@@ -120,9 +120,9 @@ public final class QnRelease implements Question {
         );
         return new Req.Simple(
             "release",
-            new SolidMap<String, String>(
-                new MapEntry<String, String>("head_branch", "master"),
-                new MapEntry<String, String>(
+            new MapOf<>(
+                new MapEntry<>("head_branch", "master"),
+                new MapEntry<>(
                     "head",
                     String.format(
                         "git@github.com:%s.git",

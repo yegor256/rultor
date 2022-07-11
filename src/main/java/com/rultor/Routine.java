@@ -68,7 +68,7 @@ import javax.validation.constraints.NotNull;
  *  com.rultor.agents.github.Reports#process(com.jcabi.xml.XML) should be
  *  removed.
  */
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES, threads = 1)
+@ScheduleWithFixedDelay
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class Routine implements Runnable, Closeable {
 

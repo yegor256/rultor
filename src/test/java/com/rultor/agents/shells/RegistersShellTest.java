@@ -34,7 +34,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -62,7 +62,7 @@ public final class RegistersShellTest {
         final Agent agent = new RegistersShell(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                         " ",
                         "<p><entry key='ssh'>",
                         String.format("<entry key='host'>%s</entry>", host),

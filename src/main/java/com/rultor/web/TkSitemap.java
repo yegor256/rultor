@@ -36,7 +36,7 @@ import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;

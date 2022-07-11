@@ -33,8 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
-import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
@@ -50,8 +50,9 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.cactoos.text.JoinedText;
-import org.cactoos.text.SubText;
+import org.cactoos.text.Joined;
+import org.cactoos.text.Sub;
+import org.cactoos.text.UncheckedText;
 
 /**
  * Show current status.
@@ -104,15 +105,17 @@ public final class QnStatus implements Question {
             lines.add(
                 String.format(
                     " * Docker container ID: `%s...`",
-                    new SubText(
-                        shell.exec(
-                            String.format(
-                                // @checkstyle LineLength (1 line)
-                                "dir=%s; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
-                                SSH.escape(dir)
-                            )
-                        ),
-                        0, Tv.TWENTY
+                    new UncheckedText(
+                        new Sub(
+                            shell.exec(
+                                String.format(
+                                    // @checkstyle LineLength (1 line)
+                                    "dir=%s; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
+                                    Ssh.escape(dir)
+                                )
+                            ),
+                            0, Tv.TWENTY
+                        )
                     ).asString()
                 )
             );
@@ -137,10 +140,12 @@ public final class QnStatus implements Question {
             true,
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
-                new JoinedText(
-                    "\n",
-                    QnStatus.REPORT.applyTo(xml).trim(),
-                    lines.toString()
+                new UncheckedText(
+                    new Joined(
+                        "\n",
+                        QnStatus.REPORT.applyTo(xml).trim(),
+                        lines.toString()
+                    )
                 ).asString()
             )
         );

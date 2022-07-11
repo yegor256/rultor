@@ -50,7 +50,6 @@ public final class EntryTest {
      * of project dependencies. If there will be any dependency issue,
      * this test will crash with a different exception, not AssertionError.
      *
-     * @throws Exception If some problem inside
      */
     @Test(expected = AssertionError.class)
     public void sttcConnects() throws Exception {
@@ -68,7 +67,6 @@ public final class EntryTest {
      * of project dependencies. If there will be any dependency issue,
      * this test will crash with a different exception, not AssertionError.
      *
-     * @throws Exception If some problem inside
      */
     @Test(expected = AssertionError.class)
     public void githubConnects() throws Exception {

@@ -38,8 +38,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
-import org.cactoos.iterable.Limited;
-import org.cactoos.list.SolidList;
+import org.cactoos.iterable.HeadOf;
+import org.cactoos.list.ListOf;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Response;
 import org.takes.facets.flash.RsFlash;
@@ -87,8 +87,8 @@ final class TkSiblings implements TkRegex {
             )
         );
         final String repo = req.matcher().group(1);
-        final SolidList<Talk> siblings = new SolidList<>(
-            new Limited<>(
+        final List<Talk> siblings = new ListOf<>(
+            new HeadOf<>(
                 Tv.TWENTY,
                 this.talks.siblings(repo, since)
             )

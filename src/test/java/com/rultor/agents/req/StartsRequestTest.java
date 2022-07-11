@@ -38,9 +38,11 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
+import org.cactoos.text.UncheckedText;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -108,7 +110,7 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                         " ",
                         "<p><entry key='deploy'>",
                         "<entry key='script'>echo HEY</entry>",
@@ -132,7 +134,7 @@ public final class StartsRequestTest {
         agent.execute(talk);
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
-                new JoinedText(
+                new Joined(
                     "\n",
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh; cat script.sh"
@@ -181,7 +183,7 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                         "",
                         "<p><entry key='release'><entry key='script'>",
                         "echo HEY</entry></entry>",
@@ -216,7 +218,7 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                         "",
                         "<p><entry key='merge'><entry key='script'>",
                         "echo HEY</entry></entry></p>"
@@ -251,11 +253,15 @@ public final class StartsRequestTest {
     public void runsReleaseWithDockerfile() throws Exception {
         final File repo = this.repo();
         final File dir = this.temp.newFolder();
-        FileUtils.write(new File(dir, "Dockerfile"), "FROM yegor256/rultor");
+        FileUtils.write(
+            new File(dir, "Dockerfile"),
+            "FROM yegor256/rultor",
+            StandardCharsets.UTF_8
+        );
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                        "",
                         "<p><entry key='release'><entry key='script'>",
                         "echo HEY</entry></entry><entry key='docker'>",
@@ -308,7 +314,7 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                         "",
                         "<p><entry key='decrypt'><entry key='a.txt'>",
                         "a.txt.asc</entry></entry></p>"
@@ -343,7 +349,7 @@ public final class StartsRequestTest {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
-                    new JoinedText(
+                    new Joined(
                         "",
                         "<p><entry key='docker'>",
                         "<entry key='as_root'>true</entry></entry>",
@@ -366,7 +372,7 @@ public final class StartsRequestTest {
         agent.execute(talk);
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
-                new JoinedText(
+                new Joined(
                     "\n",
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh"
@@ -386,22 +392,24 @@ public final class StartsRequestTest {
      * @throws java.io.IOException If fails
      */
     private String exec(final Talk talk) throws IOException {
-        final String script = new JoinedText(
-            "\n",
-            "set -x",
-            "set -e",
-            "set -o pipefail",
-            "function docker {",
-            "  for (( i=1; i<=$#; i++ )); do",
-            "    echo \"DOCKER-$i: ${!i}\"",
-            "  done",
-            "}",
-            "function sudo {",
-            "  for (( i=1; i<=$#; i++ )); do ",
-            "    echo \"SUDO-$i: ${!i}\"",
-            "  done",
-            "} ",
-            talk.read().xpath("//script/text()").get(0)
+        final String script = new UncheckedText(
+            new Joined(
+                "\n",
+                "set -x",
+                "set -e",
+                "set -o pipefail",
+                "function docker {",
+                "  for (( i=1; i<=$#; i++ )); do",
+                "    echo \"DOCKER-$i: ${!i}\"",
+                "  done",
+                "}",
+                "function sudo {",
+                "  for (( i=1; i<=$#; i++ )); do ",
+                "    echo \"SUDO-$i: ${!i}\"",
+                "  done",
+                "} ",
+                talk.read().xpath("//script/text()").get(0)
+            )
         ).asString();
         return new VerboseProcess(
             new ProcessBuilder().command(
@@ -422,22 +430,24 @@ public final class StartsRequestTest {
             new ProcessBuilder().command(
                 "/bin/bash",
                 "-c",
-                new JoinedText(
-                    ";",
-                    "set -x",
-                    "set -e",
-                    "set -o pipefail",
-                    "git init .",
-                    "git config user.email test@rultor.com",
-                    "git config user.name test",
-                    "echo 'hello, world!' > hello.txt",
-                    "git add .",
-                    "git -c commit.gpgsign=false commit -am 'first file'",
-                    "git checkout -b frk",
-                    "echo 'good bye!' > hello.txt",
-                    "git -c commit.gpgsign=false commit -am 'modified file'",
-                    "git checkout master",
-                    "git config receive.denyCurrentBranch ignore"
+                new UncheckedText(
+                    new Joined(
+                        ";",
+                        "set -x",
+                        "set -e",
+                        "set -o pipefail",
+                        "git init .",
+                        "git config user.email test@rultor.com",
+                        "git config user.name test",
+                        "echo 'hello, world!' > hello.txt",
+                        "git add .",
+                        "git -c commit.gpgsign=false commit -am 'first file'",
+                        "git checkout -b frk",
+                        "echo 'good bye!' > hello.txt",
+                        "git -c commit.gpgsign=false commit -am 'modified file'",
+                        "git checkout master",
+                        "git config receive.denyCurrentBranch ignore"
+                    )
                 ).asString()
             ).directory(repo)
         ).stdout();

@@ -68,7 +68,7 @@ public final class TkSitemapTest {
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                new RsPrint(take.act(new RqFake())).printBody()
+                new RsPrint(take.act(new RqFake())).asString()
             ),
             XhtmlMatchers.hasXPath(
                 "/ns1:urlset[count(ns1:url)=1]",

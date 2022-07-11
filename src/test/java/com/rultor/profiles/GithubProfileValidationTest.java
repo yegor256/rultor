@@ -39,7 +39,7 @@ import java.io.InputStream;
 import java.util.Base64;
 import java.util.Map;
 import javax.json.Json;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
@@ -78,7 +78,7 @@ public final class GithubProfileValidationTest {
     @Test(expected = Profile.ConfigException.class)
     public void rejectsYamlWithoutMergeScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "merge:",
                 "  - pwd"
@@ -95,7 +95,7 @@ public final class GithubProfileValidationTest {
     @Test(expected = Profile.ConfigException.class)
     public void rejectsYamlWithoutDeployScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "deploy:",
                 "  - pwd"
@@ -112,7 +112,7 @@ public final class GithubProfileValidationTest {
     @Test(expected = Profile.ConfigException.class)
     public void rejectsYamlWithoutReleaseScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "release:",
                 "  - pwd"
@@ -128,7 +128,7 @@ public final class GithubProfileValidationTest {
     @Test
     public void acceptsYamlWithOnlyMerge() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "merge:",
                 " script:",
@@ -145,7 +145,7 @@ public final class GithubProfileValidationTest {
     @Test
     public void acceptsYamlWithOnlyRelease() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "release:",
                 " script:",
@@ -162,7 +162,7 @@ public final class GithubProfileValidationTest {
     @Test
     public void acceptsYamlWithOnlyDeploy() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "deploy:",
                 " script:",
@@ -179,7 +179,7 @@ public final class GithubProfileValidationTest {
     @Test
     public void acceptsYamlWithAllCommands() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "deploy:",
                 " script:",
@@ -202,7 +202,7 @@ public final class GithubProfileValidationTest {
     @Test
     public void getExistAssets() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "friends:",
                 " - jeff/test",
@@ -224,7 +224,7 @@ public final class GithubProfileValidationTest {
     @Test(expected = Profile.ConfigException.class)
     public void rejectGetAssetWithNotExistFile() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "friends:",
                 " - jeff/test",
@@ -242,7 +242,7 @@ public final class GithubProfileValidationTest {
     @Test(expected = IllegalArgumentException.class)
     public void rejectGetAssetWithWrongRepo() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "friends:",
                 " - jeff/test",
@@ -260,7 +260,7 @@ public final class GithubProfileValidationTest {
     @Test(expected = Profile.ConfigException.class)
     public void rejectGetAssetWithNoFriendUser() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "friends:",
                 " - zheus/test",
@@ -278,7 +278,7 @@ public final class GithubProfileValidationTest {
     @Test(expected = Profile.ConfigException.class)
     public void rejectGetAssetWithNoFriends() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
-            new JoinedText(
+            new Joined(
                 "\n",
                 "assets:",
                 " settings.xml: \"jeff/test#exist.txt\""

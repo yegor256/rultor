@@ -82,7 +82,7 @@ public final class TkSiblingsTest {
                             "x"
                         )
                     )
-                ).printBody()
+                ).asString()
             ),
             XhtmlMatchers.hasXPaths(
                 "/page[repo='x']",

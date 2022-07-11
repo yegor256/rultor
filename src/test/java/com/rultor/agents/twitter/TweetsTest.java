@@ -37,7 +37,7 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cactoos.iterable.Mapped;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -88,7 +88,7 @@ public final class TweetsTest {
         );
         Mockito.verify(twitter).post(
             ArgumentMatchers.contains(
-                new JoinedText(
+                new Joined(
                     " ",
                     new Mapped<>(
                         lang -> String.format("#%s", lang.name()),

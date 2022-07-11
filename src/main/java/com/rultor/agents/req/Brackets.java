@@ -29,10 +29,8 @@
  */
 package com.rultor.agents.req;
 
-import com.jcabi.ssh.SSH;
-import java.io.IOException;
+import com.jcabi.ssh.Ssh;
 import org.cactoos.iterable.Mapped;
-import org.cactoos.text.JoinedText;
 
 /**
  * List of texts for the script, in brackets.
@@ -58,20 +56,16 @@ final class Brackets {
 
     @Override
     public String toString() {
-        try {
-            return String.format(
-                "( %s )",
-                new JoinedText(
-                    " ",
-                    new Mapped<>(
-                        input -> SSH.escape(input),
-                        this.items
-                    )
-                ).asString()
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        return String.format(
+            "( %s )",
+            String.join(
+                " ",
+                new Mapped<>(
+                    input -> Ssh.escape(input),
+                    this.items
+                )
+            )
+        );
     }
 
 }

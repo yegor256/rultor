@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import org.takes.Request;
 import org.takes.Response;
@@ -64,11 +63,11 @@ final class FkAdminOnly implements Fork {
     }
 
     @Override
-    public Opt<Response> route(final Request req) throws IOException {
+    public Opt<Response> route(final Request req) throws Exception {
         final Identity identity = new RqAuth(req).identity();
         final Opt<Response> opt;
         if (identity.equals(Identity.ANONYMOUS)) {
-            opt = new Opt.Single<Response>(
+            opt = new Opt.Single<>(
                 new RsForward(
                     new RsFlash(
                         "sorry, you have to be logged in to see this page",
@@ -79,7 +78,7 @@ final class FkAdminOnly implements Fork {
         } else if ("urn:github:526301".equals(identity.urn())) {
             opt = new Opt.Single<>(this.origin.act(req));
         } else {
-            opt = new Opt.Single<Response>(
+            opt = new Opt.Single<>(
                 new RsForward(
                     new RsFlash(
                         "sorry, but this entrance is \"staff only\"",

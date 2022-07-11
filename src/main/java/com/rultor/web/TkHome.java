@@ -35,13 +35,12 @@ import com.rultor.Toggles;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import org.cactoos.iterable.Limited;
+import org.cactoos.iterable.HeadOf;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.xe.XeLink;
-import org.takes.rs.xe.XeSource;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -80,20 +79,10 @@ final class TkHome implements Take {
         return new RsPage(
             "/xsl/home.xsl",
             req,
-            new XeSource() {
-                @Override
-                public Iterable<Directive> toXembly() throws IOException {
-                    return TkHome.this.recent();
-                }
-            },
+            () -> TkHome.this.recent(),
             new XeLink("status", "/status"),
             new XeLink("ticks", "/ticks", "image/png"),
-            new XeSource() {
-                @Override
-                public Iterable<Directive> toXembly() throws IOException {
-                    return TkHome.this.flags(req);
-                }
-            }
+            () -> TkHome.this.flags(req)
         );
     }
 
@@ -105,7 +94,7 @@ final class TkHome implements Take {
     private Directives recent() throws IOException {
         final Directives dirs = new Directives().add("recent");
         final PrettyTime pretty = new PrettyTime();
-        for (final Talk talk : new Limited<>(Tv.FIVE, this.talks.recent())) {
+        for (final Talk talk : new HeadOf<>(Tv.FIVE, this.talks.recent())) {
             dirs.add("talk").set(talk.name())
                 .attr("timeago", pretty.format(talk.updated()));
             final XML xml = talk.read();

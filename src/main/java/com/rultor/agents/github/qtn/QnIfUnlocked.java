@@ -39,6 +39,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -47,9 +48,9 @@ import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.cactoos.iterable.Mapped;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
+import org.cactoos.text.UncheckedText;
 
 /**
  * If target branch is unlocked.
@@ -103,11 +104,13 @@ public final class QnIfUnlocked implements Question {
                 false,
                 QnIfUnlocked.PHRASES.getString("QnIfUnlocked.denied"),
                 branch,
-                new JoinedText(
-                    ", ",
-                    new Mapped<>(
-                        input -> String.format("@%s", input),
-                        guards
+                new UncheckedText(
+                    new Joined(
+                        ", ",
+                        new Mapped<>(
+                            input -> String.format("@%s", input),
+                            guards
+                        )
                     )
                 ).asString()
             );
@@ -132,7 +135,7 @@ public final class QnIfUnlocked implements Question {
                 Arrays.asList(
                     IOUtils.toString(
                         contents.get(QnIfUnlocked.PATH, branch).raw(),
-                        CharEncoding.UTF_8
+                        StandardCharsets.UTF_8
                     ).split("\n")
                 )
             );

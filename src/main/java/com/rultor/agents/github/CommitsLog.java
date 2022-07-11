@@ -41,14 +41,16 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import javax.json.JsonObject;
-import org.cactoos.list.SolidList;
+import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.SolidMap;
-import org.cactoos.text.JoinedText;
+import org.cactoos.map.MapOf;
+import org.cactoos.text.Joined;
+import org.cactoos.text.UncheckedText;
 
 /**
  * Log of commits.
@@ -94,12 +96,12 @@ final class CommitsLog {
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         final Collection<String> lines = new LinkedList<>();
-        final Map<String, String> params = new SolidMap<String, String>(
-            new MapEntry<String, String>("since", format.format(prev)),
-            new MapEntry<String, String>("until", format.format(current))
+        final Map<String, String> params = new MapOf<>(
+            new MapEntry<>("since", format.format(prev)),
+            new MapEntry<>("until", format.format(current))
         );
-        final SolidList<Smart> commits = new SolidList<>(
-            new Smarts<RepoCommit.Smart>(
+        final List<Smart> commits = new ListOf<>(
+            new Smarts<>(
                 this.repo.commits().iterate(params)
             )
         );
@@ -117,9 +119,11 @@ final class CommitsLog {
             lines.add(CommitsLog.asText(commit));
             ++count;
         }
-        return new JoinedText(
-            "\n",
-            lines
+        return new UncheckedText(
+            new Joined(
+                "\n",
+                lines
+            )
         ).asString();
     }
 

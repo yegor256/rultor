@@ -45,10 +45,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.input.NullInputStream;
-import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -98,7 +98,7 @@ public final class StartsDaemonITCase {
                 baos, baos
             );
             MatcherAssert.assertThat(
-                baos.toString(CharEncoding.UTF_8),
+                baos.toString(StandardCharsets.UTF_8.name()),
                 Matchers.allOf(
                     Matchers.containsString("+ set -o pipefail"),
                     Matchers.containsString("+ date"),

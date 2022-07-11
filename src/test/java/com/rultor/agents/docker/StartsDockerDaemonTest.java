@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.docker;
 
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.agents.shells.PfShell;
@@ -75,7 +75,7 @@ public final class StartsDockerDaemonTest {
                 Matchers.endsWith("-----END RSA PRIVATE KEY-----")
             );
             final Shell.Plain ssh = new Shell.Plain(
-                new SSH(shell.host(), shell.port(), shell.login(), shell.key())
+                new Ssh(shell.host(), shell.port(), shell.login(), shell.key())
             );
             MatcherAssert.assertThat(
                 ssh.exec("cat /root/.ssh/id_rsa"),

@@ -35,18 +35,18 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Bucket;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
-import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.agents.shells.TalkShells;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
@@ -98,42 +98,38 @@ public final class Tail {
     @SuppressWarnings("unchecked")
     public InputStream read() throws IOException {
         final Collection<Map.Entry<String, Tail.Connect>> connects =
-            Arrays.<Map.Entry<String, Tail.Connect>>asList(
-                new AbstractMap.SimpleEntry<String, Tail.Connect>(
+            Arrays.asList(
+                new AbstractMap.SimpleEntry<>(
                     String.format(
                         "/talk/archive/log[@id='%s' and starts-with(.,'s3:')]",
                         this.hash
                     ),
                     new Tail.S3Connect(this.xml, this.hash)
                 ),
-                new AbstractMap.SimpleEntry<String, Tail.Connect>(
+                new AbstractMap.SimpleEntry<>(
                     String.format(
                         "/talk[shell and daemon[@id='%s'] and daemon/dir]",
                         this.hash
                     ),
                     new Tail.SSHConnect(this.xml)
                 ),
-                new AbstractMap.SimpleEntry<String, Tail.Connect>(
+                new AbstractMap.SimpleEntry<>(
                     "/talk[daemon[@id='00000000'] and daemon/dir]",
                     new Tail.FakeConnect(this.xml)
                 ),
-                new AbstractMap.SimpleEntry<String, Tail.Connect>(
+                new AbstractMap.SimpleEntry<>(
                     "/talk",
-                    new Tail.Connect() {
-                        @Override
-                        public InputStream read() {
-                            return IOUtils.toInputStream(
-                                StringUtils.join(
-                                    String.format(
-                                        "rultor.com %s/%s\n",
-                                        Manifests.read("Rultor-Version"),
-                                        Manifests.read("Rultor-Revision")
-                                    ),
-                                    "nothing yet, try again in 15 seconds"
-                                )
-                            );
-                        }
-                    }
+                    () -> IOUtils.toInputStream(
+                        StringUtils.join(
+                            String.format(
+                                "rultor.com %s/%s\n",
+                                Manifests.read("Rultor-Version"),
+                                Manifests.read("Rultor-Revision")
+                            ),
+                            "nothing yet, try again in 15 seconds"
+                        ),
+                        StandardCharsets.UTF_8
+                    )
                 )
             );
         InputStream stream = null;
@@ -238,7 +234,7 @@ public final class Tail {
                 StringUtils.join(
                     String.format(
                         "dir=%s;",
-                        SSH.escape(
+                        Ssh.escape(
                             this.xml.xpath("/talk/daemon/dir/text()").get(0)
                         )
                     ),
@@ -273,7 +269,7 @@ public final class Tail {
         @Override
         public InputStream read() throws FileNotFoundException {
             return new FileInputStream(
-                new File(this.xml.xpath("/talk/daemon/dir/text() ").get(0))
+                this.xml.xpath("/talk/daemon/dir/text() ").get(0)
             );
         }
     }

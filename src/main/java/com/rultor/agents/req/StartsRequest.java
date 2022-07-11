@@ -31,27 +31,25 @@ package com.rultor.agents.req;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.cactoos.iterable.Joined;
 import org.cactoos.iterable.Mapped;
+import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEntry;
-import org.cactoos.map.SolidMap;
-import org.cactoos.text.JoinedText;
+import org.cactoos.map.MapOf;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -137,18 +135,18 @@ public final class StartsRequest extends AbstractAgent {
     @SuppressWarnings("unchecked")
     private String script(final XML req, final String type, final String name)
         throws IOException {
-        return new JoinedText(
+        return String.join(
             "\n",
-            new Joined<String>(
-                new Mapped<Map.Entry<String, String>, String>(
+            new Joined<>(
+                new Mapped<>(
                     input -> String.format(
                         "%s=%s", input.getKey(),
                         StartsRequest.escape(input.getValue())
                     ),
                     new Joined<Map.Entry<String, String>>(
                         this.vars(req, type).entrySet(),
-                        new SolidMap<String, String>(
-                            new MapEntry<String, String>(
+                        new MapOf<>(
+                            new MapEntry<>(
                                 "container",
                                 name.replaceAll("[^a-zA-Z0-9_.-]", "_")
                                     .toLowerCase(Locale.ENGLISH)
@@ -160,7 +158,7 @@ public final class StartsRequest extends AbstractAgent {
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResourceAsStream("_head.sh"),
-                        CharEncoding.UTF_8
+                        StandardCharsets.UTF_8
                     )
                 ),
                 Collections.singleton(this.sensitive()),
@@ -170,11 +168,11 @@ public final class StartsRequest extends AbstractAgent {
                         this.getClass().getResourceAsStream(
                             String.format("%s.sh", type)
                         ),
-                        CharEncoding.UTF_8
+                        StandardCharsets.UTF_8
                     )
                 )
             )
-        ).asString();
+        );
     }
 
     /**
@@ -202,7 +200,7 @@ public final class StartsRequest extends AbstractAgent {
                 String.join(
                     " ",
                     new Mapped<>(
-                        SSH::escape,
+                        Ssh::escape,
                         this.profile.read().xpath(
                             // @checkstyle LineLength (1 line)
                             "/p/entry[@key='release']/entry[@key='sensitive']/item/text()"
@@ -239,10 +237,10 @@ public final class StartsRequest extends AbstractAgent {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
-        final List<Entry<String, String>> entries = new LinkedList<>();
+        final Collection<Map.Entry<String, String>> entries = new LinkedList<>();
         for (final XML arg : req.nodes("args/arg")) {
             entries.add(
-                new MapEntry<String, String>(
+                new MapEntry<>(
                     arg.xpath("@name").get(0),
                     arg.xpath("text()").get(0)
                 )
@@ -252,19 +250,19 @@ public final class StartsRequest extends AbstractAgent {
             this.profile, String.format("/p/entry[@key='%s']", type)
         );
         entries.add(
-            new MapEntry<String, String>(
+            new MapEntry<>(
                 "author", req.xpath("author/text()").get(0)
             )
         );
         entries.add(
-            new MapEntry<String, String>(
+            new MapEntry<>(
                 "scripts",
                 new Brackets(
                     new Joined<String>(
                         StartsRequest.export(
                             docker.envs(
-                                new SolidMap<String, String>(
-                                    entries
+                                new MapOf<>(
+                                    new ListOf<>(entries)
                                 )
                             )
                         ),
@@ -274,7 +272,7 @@ public final class StartsRequest extends AbstractAgent {
             )
         );
         entries.add(
-            new MapEntry<String, String>(
+            new MapEntry<>(
                 "vars",
                 new Brackets(
                     new Mapped<>(
@@ -283,8 +281,8 @@ public final class StartsRequest extends AbstractAgent {
                             input.replace("\n", " ")
                         ),
                         docker.envs(
-                            new SolidMap<String, String>(
-                                entries
+                            new MapOf<>(
+                                new ListOf<>(entries)
                             )
                         )
                     )
@@ -293,7 +291,7 @@ public final class StartsRequest extends AbstractAgent {
         );
         final Profile.Defaults def = new Profile.Defaults(this.profile);
         entries.add(
-            new MapEntry<String, String>(
+            new MapEntry<>(
                 "image",
                 def.text(
                     "/p/entry[@key='docker']/entry[@key='image']",
@@ -302,14 +300,14 @@ public final class StartsRequest extends AbstractAgent {
             )
         );
         entries.add(
-            new MapEntry<String, String>(
+            new MapEntry<>(
                 "directory",
                 def.text("/p/entry[@key='docker']/entry[@key='directory']")
             )
         );
         if (!this.profile.read().nodes("/p/entry[@key='merge']").isEmpty()) {
             entries.add(
-                new MapEntry<String, String>(
+                new MapEntry<>(
                     "squash",
                     def.text(
                         "/p/entry[@key='merge']/entry[@key='squash']",
@@ -318,7 +316,7 @@ public final class StartsRequest extends AbstractAgent {
                 )
             );
             entries.add(
-                new MapEntry<String, String>(
+                new MapEntry<>(
                     "ff",
                     def.text(
                         "/p/entry[@key='merge']/entry[@key='fast-forward']",
@@ -327,7 +325,7 @@ public final class StartsRequest extends AbstractAgent {
                 )
             );
             entries.add(
-                new MapEntry<String, String>(
+                new MapEntry<>(
                     "rebase",
                     def.text(
                         "/p/entry[@key='merge']/entry[@key='rebase']",
@@ -336,9 +334,7 @@ public final class StartsRequest extends AbstractAgent {
                 )
             );
         }
-        return new SolidMap<String, String>(
-            entries
-        );
+        return new MapOf<>(new ListOf<>(entries));
     }
 
     /**
@@ -351,7 +347,7 @@ public final class StartsRequest extends AbstractAgent {
         if (raw.matches("\\(.*\\)")) {
             esc = raw;
         } else {
-            esc = SSH.escape(raw);
+            esc = Ssh.escape(raw);
         }
         return esc;
     }
@@ -364,7 +360,7 @@ public final class StartsRequest extends AbstractAgent {
     private static Iterable<String> export(final Iterable<String> envs) {
         final Collection<String> lines = new LinkedList<>();
         for (final String env : envs) {
-            lines.add(String.format("export %s", SSH.escape(env)));
+            lines.add(String.format("export %s", Ssh.escape(env)));
             lines.add(";");
         }
         return lines;

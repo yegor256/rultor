@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.daemons;
 
-import com.jcabi.ssh.SSH;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.Time;
@@ -69,7 +69,7 @@ public final class TailITCase {
             final PfShell sshd = start.shell();
             final String clean = "some output";
             new Shell.Plain(
-                new SSH(sshd.host(), sshd.port(), sshd.login(), sshd.key())
+                new Ssh(sshd.host(), sshd.port(), sshd.login(), sshd.key())
             ).exec(String.format("echo '%s\u00ea' > /tmp/stdout", clean));
             final Talk talk = new Talk.InFile();
             final String hash = "a1b5c3e3";

@@ -40,6 +40,7 @@ import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 import lombok.EqualsAndHashCode;
@@ -47,8 +48,9 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Reversed;
-import org.cactoos.list.SolidList;
-import org.cactoos.text.JoinedText;
+import org.cactoos.list.ListOf;
+import org.cactoos.text.Joined;
+import org.cactoos.text.UncheckedText;
 import org.xembly.Xembler;
 
 /**
@@ -97,9 +99,9 @@ public final class Answer {
     public void post(final boolean success, final String msg,
         final Object... args) throws IOException {
         final Issue issue = this.comment.issue();
-        final SolidList<Smart> comments = new SolidList<>(
+        final List<Smart> comments = new ListOf<>(
             new Reversed<>(
-                new Smarts<Comment.Smart>(
+                new Smarts<>(
                     issue.comments().iterate(new Date(0L))
                 )
             )
@@ -151,13 +153,15 @@ public final class Answer {
                 );
             }
             msg.append(
-                new JoinedText(
-                    SPACE,
-                    new Mapped<>(
-                        login -> String.format(
-                            "@%s", login.toLowerCase(Locale.ENGLISH)
-                        ),
-                        logins
+                new UncheckedText(
+                    new Joined(
+                        SPACE,
+                        new Mapped<>(
+                            login -> String.format(
+                                "@%s", login.toLowerCase(Locale.ENGLISH)
+                            ),
+                            logins
+                        )
                     )
                 ).asString()
             );
