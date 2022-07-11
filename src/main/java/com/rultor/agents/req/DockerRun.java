@@ -89,6 +89,7 @@ final class DockerRun {
      * @return Script
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     public Iterable<String> script() throws IOException {
         final Iterable<String> trap;
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {

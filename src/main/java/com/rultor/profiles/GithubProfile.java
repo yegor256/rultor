@@ -205,6 +205,7 @@ final class GithubProfile implements Profile {
      * @param rpo The repo
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     private void checkTrustees(final Repo rpo) throws IOException {
         final Collection<String> trustees =
             new ListOf<>(

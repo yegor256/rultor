@@ -103,6 +103,7 @@ public final class QnMerge implements Question {
      * @return Req
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     private static Req pack(final Comment.Smart comment,
         final Pull pull) throws IOException {
         final PullRef head = pull.head();
