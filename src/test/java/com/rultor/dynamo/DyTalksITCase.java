@@ -46,8 +46,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
 /**
@@ -100,7 +100,7 @@ public final class DyTalksITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @Ignore
+    @Disabled
     public void cachesRecentTalks() throws Exception {
         final Talks talks = new DyTalks(
             this.dynamo(), new MkSttc().counters().get("")

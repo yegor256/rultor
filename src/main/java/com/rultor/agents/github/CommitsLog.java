@@ -96,7 +96,7 @@ final class CommitsLog {
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         final Collection<String> lines = new LinkedList<>();
-        final Map<String, String> params = new MapOf<>(
+        final Map<String, String> params = new MapOf<String, String>(
             new MapEntry<>("since", format.format(prev)),
             new MapEntry<>("until", format.format(current))
         );

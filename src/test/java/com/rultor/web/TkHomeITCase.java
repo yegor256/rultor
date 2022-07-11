@@ -37,9 +37,9 @@ import java.net.HttpURLConnection;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link HomeRs}.
@@ -57,7 +57,7 @@ public final class TkHomeITCase {
     /**
      * Before the entire test.
      */
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         Assume.assumeNotNull(TkHomeITCase.HOME);
     }
@@ -67,7 +67,7 @@ public final class TkHomeITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @Ignore
+    @Disabled
     public void renderAbsentPages() throws Exception {
         final String[] pages = {
             "/page-doesnt-exist",

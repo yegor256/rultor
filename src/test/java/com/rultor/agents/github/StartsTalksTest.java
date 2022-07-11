@@ -36,8 +36,8 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link StartsTalks}.
@@ -53,7 +53,7 @@ public final class StartsTalksTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
+    @Disabled
     public void startsTalks() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");

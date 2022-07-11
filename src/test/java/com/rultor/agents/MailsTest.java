@@ -40,8 +40,8 @@ import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.xembly.Directives;
@@ -60,7 +60,7 @@ public final class MailsTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
+    @Disabled
     public void sendsMail() throws Exception {
         final Postman postman = Mockito.spy(Postman.CONSOLE);
         final Agent agent = new Mails(
@@ -96,7 +96,7 @@ public final class MailsTest {
      *  mail is sent to all recipients. Recipients are defined in Profile.
      */
     @Test
-    @Ignore
+    @Disabled
     public void sendsToRecipients() throws Exception {
         // nothing here
     }

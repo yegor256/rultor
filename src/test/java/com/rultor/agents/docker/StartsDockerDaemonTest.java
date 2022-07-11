@@ -36,8 +36,8 @@ import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
-import org.junit.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link StartsDockerDaemon}.
@@ -53,9 +53,7 @@ public final class StartsDockerDaemonTest {
      */
     @Test
     public void providesPfShell() throws Exception {
-        Assume.assumeTrue(
-            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
-        );
+        Assumptions.assumeTrue("true".equalsIgnoreCase(System.getProperty("run-docker-tests")));
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)

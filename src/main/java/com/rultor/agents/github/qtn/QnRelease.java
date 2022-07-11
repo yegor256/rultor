@@ -120,7 +120,7 @@ public final class QnRelease implements Question {
         );
         return new Req.Simple(
             "release",
-            new MapOf<>(
+            new MapOf<String, String>(
                 new MapEntry<>("head_branch", "master"),
                 new MapEntry<>(
                     "head",

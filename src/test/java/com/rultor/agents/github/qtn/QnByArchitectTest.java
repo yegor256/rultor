@@ -42,8 +42,8 @@ import java.util.Date;
 import java.util.Locale;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
@@ -115,7 +115,7 @@ public final class QnByArchitectTest {
      * pull request made by an architect.
      * @throws Exception In case of error.
      */
-    @Ignore
+    @Disabled
     @Test
     public void acceptsIfMergeArchitectPull() throws Exception {
         final Repo repo = new MkGithub().randomRepo();

@@ -40,8 +40,8 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assumptions;
 import org.xembly.Directives;
 
 /**
@@ -59,9 +59,7 @@ public final class TailITCase {
      */
     @Test
     public void tailsNonUtf() throws Exception {
-        Assume.assumeTrue(
-            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
-        );
+        Assumptions.assumeTrue("true".equalsIgnoreCase(System.getProperty("run-docker-tests")));
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)

@@ -32,8 +32,8 @@ package com.rultor.profiles;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link YamlXML}.
@@ -91,7 +91,7 @@ public final class YamlXMLTest {
         for (final String yaml : yamls) {
             try {
                 new YamlXML(yaml).get();
-                Assert.fail(String.format("exception expected for %s", yaml));
+                Assertions.fail(String.format("exception expected for %s", yaml));
             } catch (final Profile.ConfigException ex) {
                 continue;
             }

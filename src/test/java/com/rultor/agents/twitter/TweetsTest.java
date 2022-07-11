@@ -38,7 +38,7 @@ import java.io.IOException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.text.Joined;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.xembly.Directives;

@@ -37,7 +37,7 @@ import com.rultor.agents.github.Req;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnLock}.

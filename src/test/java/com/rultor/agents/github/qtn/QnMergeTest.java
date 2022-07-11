@@ -36,8 +36,8 @@ import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -57,7 +57,7 @@ public final class QnMergeTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
+    @Disabled
     public void buildsRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().get(

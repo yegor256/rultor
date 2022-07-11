@@ -34,7 +34,7 @@ import com.jcabi.github.RtGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile}.

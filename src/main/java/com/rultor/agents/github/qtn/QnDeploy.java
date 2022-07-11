@@ -82,7 +82,7 @@ public final class QnDeploy implements Question {
         );
         return new Req.Simple(
             "deploy",
-            new MapOf<>(
+            new MapOf<String, String>(
                 new MapEntry<>(
                     "head_branch", "master"
                 ),

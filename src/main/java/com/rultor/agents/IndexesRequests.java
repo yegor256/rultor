@@ -36,8 +36,8 @@ import java.io.IOException;
 import java.util.List;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.list.ListOf;
-import org.cactoos.scalar.MaxOf;
-import org.cactoos.scalar.NumberOf;
+import org.cactoos.number.MaxOf;
+import org.cactoos.number.NumberOf;
 import org.xembly.Directives;
 
 /**

@@ -35,8 +35,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Profiles}.
@@ -117,7 +117,7 @@ public class ProfilesTest {
         );
         try {
             new Profiles().validated(master, merged);
-            Assert.fail("Code above must throw an exception");
+            Assertions.fail("Code above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
                 exception.getMessage(),
@@ -165,7 +165,7 @@ public class ProfilesTest {
         );
         try {
             new Profiles().validated(master, merged);
-            Assert.fail("Method above must throw an exception");
+            Assertions.fail("Method above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
                 exception.getMessage(),
@@ -224,7 +224,7 @@ public class ProfilesTest {
         );
         try {
             new Profiles().validated(master, merged);
-            Assert.fail("Line above must throw an exception");
+            Assertions.fail("Line above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
                 exception.getMessage(),

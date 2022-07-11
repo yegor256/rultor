@@ -33,7 +33,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link ReleaseTag}.

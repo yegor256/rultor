@@ -35,7 +35,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
 /**

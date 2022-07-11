@@ -35,7 +35,7 @@ import com.jcabi.github.Github;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Agents}.

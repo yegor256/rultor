@@ -42,9 +42,9 @@ import java.io.IOException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.StringContains;
 import org.hamcrest.core.StringEndsWith;
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assumptions;
 import org.mockito.Mockito;
 import org.xembly.Directives;
 
@@ -118,7 +118,7 @@ public final class EndsDaemonITCase {
      * @throws Exception On failure
      */
     @Test
-    @Ignore
+    @Disabled
     public void exitsWhenProfileBroken() throws Exception {
         try (
             final StartsDockerDaemon start =
@@ -150,7 +150,7 @@ public final class EndsDaemonITCase {
      * @throws IOException In case of error
      */
     @Test
-    @Ignore
+    @Disabled
     public void deprecatesDefaultImage() throws IOException {
         try (
             final StartsDockerDaemon start =
@@ -192,9 +192,7 @@ public final class EndsDaemonITCase {
      */
     private PfShell start(final StartsDockerDaemon start, final Talk talk,
         final String stdout) throws IOException {
-        Assume.assumeTrue(
-            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
-        );
+        Assumptions.assumeTrue("true".equalsIgnoreCase(System.getProperty("run-docker-tests")));
         final PfShell sshd = start.shell();
         final int port = sshd.port();
         new Shell.Plain(

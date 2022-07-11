@@ -39,8 +39,8 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import java.net.HttpURLConnection;
 import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
@@ -127,21 +127,18 @@ public final class TkAppTest {
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
-        Assert.assertEquals(
-            new RsPrint(
-                take.act(
-                    new RqWithHeader(
-                        new RqFake("GET", "/js/home.js?{version/revision}"),
-                        "Accept",
-                        "text/javascript"
-                    )
+        Assertions.assertEquals(new RsPrint(
+            take.act(
+                new RqWithHeader(
+                    new RqFake("GET", "/js/home.js?{version/revision}"),
+                    "Accept",
+                    "text/javascript"
                 )
-            ).asString(),
-            new StringBuilder()
-                .append("$(document).ready(function(){var a=$(\"#pulse\");")
-                .append("window.setInterval(function(){a.find(\"img\")")
-                .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
-                .append("+Date.now())},1E3)});").toString()
-        );
+            )
+        ).asString(), new StringBuilder()
+            .append("$(document).ready(function(){var a=$(\"#pulse\");")
+            .append("window.setInterval(function(){a.find(\"img\")")
+            .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
+            .append("+Date.now())},1E3)});").toString());
     }
 }

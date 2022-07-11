@@ -39,7 +39,7 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
 /**

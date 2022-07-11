@@ -37,8 +37,8 @@ import java.net.HttpURLConnection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link SiblingsRs}.
@@ -56,7 +56,7 @@ public final class TkSiblingsITCase {
     /**
      * Before the entire test.
      */
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         Assume.assumeNotNull(TkSiblingsITCase.HOME);
     }

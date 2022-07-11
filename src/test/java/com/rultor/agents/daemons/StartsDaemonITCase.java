@@ -53,8 +53,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.StringStartsWith;
-import org.junit.Assume;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assumptions;
 import org.mockito.Mockito;
 import org.xembly.Directives;
 
@@ -151,9 +151,7 @@ public final class StartsDaemonITCase {
      */
     private static Talk talk(final StartsDockerDaemon start)
         throws IOException {
-        Assume.assumeTrue(
-            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
-        );
+        Assumptions.assumeTrue("true".equalsIgnoreCase(System.getProperty("run-docker-tests")));
         final PfShell shell = start.shell();
         final Talk talk = new Talk.InFile();
         talk.modify(
