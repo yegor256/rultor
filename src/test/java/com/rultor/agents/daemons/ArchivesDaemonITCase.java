@@ -31,8 +31,8 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.s3.fake.FkBucket;
-import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.Time;
 import com.rultor.agents.shells.PfShell;

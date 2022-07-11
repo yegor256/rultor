@@ -39,6 +39,7 @@ import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
@@ -78,6 +79,7 @@ public final class StartsRequestITCase {
     @Test
     public void composesCorrectDeployRequest() throws Exception {
         Assume.assumeNotNull(StartsRequestITCase.HOST);
+        Assumptions.assumeFalse(StartsRequestITCase.HOST.isEmpty());
         final Shell shell = new Shell.Verbose(
             new Ssh(
                 StartsRequestITCase.HOST, 22,

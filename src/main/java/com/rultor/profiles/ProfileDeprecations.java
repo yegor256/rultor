@@ -29,8 +29,8 @@
  */
 package com.rultor.profiles;
 
-import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayOutputStream;

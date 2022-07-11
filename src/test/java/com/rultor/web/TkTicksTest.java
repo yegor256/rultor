@@ -36,6 +36,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
+import org.cactoos.bytes.BytesOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -83,7 +84,9 @@ public final class TkTicksTest {
         );
         final BufferedImage image = ImageIO.read(
             new ByteArrayInputStream(
-                new RsPrint(home.act(new RqFake())).asBytes()
+                new BytesOf(
+                    new RsPrint(home.act(new RqFake())).body()
+                ).asBytes()
             )
         );
         MatcherAssert.assertThat(

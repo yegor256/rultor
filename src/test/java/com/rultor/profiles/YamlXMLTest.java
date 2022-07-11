@@ -46,10 +46,9 @@ public final class YamlXMLTest {
 
     /**
      * YamlXML can parse.
-     * @throws Exception In case of error.
      */
     @Test
-    public void parsesYamlConfig() throws Exception {
+    public void parsesYamlConfig() {
         MatcherAssert.assertThat(
             new YamlXML("a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e").get(),
             XhtmlMatchers.hasXPaths(
@@ -63,10 +62,9 @@ public final class YamlXMLTest {
 
     /**
      * YamlXML can parse a broken text.
-     * @throws Exception In case of error.
      */
     @Test
-    public void parsesYamlConfigWhenBroken() throws Exception {
+    public void parsesYamlConfigWhenBroken() {
         MatcherAssert.assertThat(
             new YamlXML("a: alpha\nb:\nc:\n  - beta").get(),
             XhtmlMatchers.hasXPaths(
@@ -79,11 +77,10 @@ public final class YamlXMLTest {
 
     /**
      * YamlXML can parse a broken text and throw.
-     * @throws Exception In case of error.
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void parsesBrokenConfigsAndThrows() throws Exception {
+    public void parsesBrokenConfigsAndThrows() {
         final String[] yamls = {
             "thre\n\t\\/\u0000",
             "first: \"привет \\/\t\r\"",
@@ -91,7 +88,9 @@ public final class YamlXMLTest {
         for (final String yaml : yamls) {
             try {
                 new YamlXML(yaml).get();
-                Assertions.fail(String.format("exception expected for %s", yaml));
+                Assertions.fail(
+                    String.format("exception expected for %s", yaml)
+                );
             } catch (final Profile.ConfigException ex) {
                 continue;
             }

@@ -32,6 +32,7 @@ package com.rultor.web;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.takes.Take;
@@ -68,7 +69,9 @@ public final class TkSitemapTest {
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                new RsPrint(take.act(new RqFake())).asString()
+                new TextOf(
+                    new RsPrint(take.act(new RqFake())).body()
+                ).asString()
             ),
             XhtmlMatchers.hasXPath(
                 "/ns1:urlset[count(ns1:url)=1]",

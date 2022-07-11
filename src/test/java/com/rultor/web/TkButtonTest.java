@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.takes.facets.fork.RqRegex;
@@ -53,8 +54,10 @@ public final class TkButtonTest {
         final TkRegex take = new TkButton();
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                new RsPrint(
-                    take.act(new RqRegex.Fake("(.*)", "hey"))
+                new TextOf(
+                    new RsPrint(
+                        take.act(new RqRegex.Fake("(.*)", "hey"))
+                    ).body()
                 ).asString()
             ),
             XhtmlMatchers.hasXPaths(

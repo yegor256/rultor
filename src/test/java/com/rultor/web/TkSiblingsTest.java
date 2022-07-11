@@ -32,6 +32,7 @@ package com.rultor.web;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.takes.facets.fork.RqRegex;
@@ -47,6 +48,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.23.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class TkSiblingsTest {
 
@@ -71,17 +73,19 @@ public final class TkSiblingsTest {
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                new RsPrint(
-                    take.act(
-                        new RqRegex.Fake(
-                            new RqWithHeader(
-                                new RqFake("GET", "/aa?s=123"),
-                                "Accept", "text/xml"
-                            ),
-                            "(.*)",
-                            "x"
+                new TextOf(
+                    new RsPrint(
+                        take.act(
+                            new RqRegex.Fake(
+                                new RqWithHeader(
+                                    new RqFake("GET", "/aa?s=123"),
+                                    "Accept", "text/xml"
+                                ),
+                                "(.*)",
+                                "x"
+                            )
                         )
-                    )
+                    ).body()
                 ).asString()
             ),
             XhtmlMatchers.hasXPaths(

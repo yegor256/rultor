@@ -32,6 +32,7 @@ package com.rultor.web;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.Toggles;
 import com.rultor.spi.Talks;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.takes.Take;
@@ -59,10 +60,12 @@ public final class TkHomeTest {
         talks.create("repo2", "test2");
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
-                new RsPrint(
-                    take.act(
-                        new RqWithHeader(new RqFake(), "Accept", "text/xml")
-                    )
+                new TextOf(
+                    new RsPrint(
+                        take.act(
+                            new RqWithHeader(new RqFake(), "Accept", "text/xml")
+                        )
+                    ).body()
                 ).asString()
             ),
             XhtmlMatchers.hasXPaths(

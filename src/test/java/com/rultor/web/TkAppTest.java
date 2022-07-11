@@ -38,9 +38,11 @@ import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import java.net.HttpURLConnection;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Test;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
@@ -67,18 +69,22 @@ public final class TkAppTest {
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
-        MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(
-                new RsPrint(
-                    take.act(
-                        new RqWithHeader(
-                            new RqFake("GET", "/"),
-                            "Accept",
-                            "text/xml"
-                        )
+        final String page = new TextOf(
+            new RsPrint(
+                take.act(
+                    new RqWithHeader(
+                        new RqFake("GET", "/"),
+                        "Accept",
+                        "text/xml"
                     )
-                ).asString()
-            ),
+                )
+            ).body()
+        ).asString();
+        MatcherAssert.assertThat(
+            page, Matchers.startsWith("<?xml ")
+        );
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(page),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
                 "/page/links/link[@rel='ticks']",
@@ -104,7 +110,8 @@ public final class TkAppTest {
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .as(XmlResponse.class)
-                    .assertXPath("/xhtml:html");
+                    .assertXPath("/xhtml:html")
+                    .assertXPath("//xhtml:img[@class='fork-me']");
                 new JdkRequest(home)
                     .through(VerboseWire.class)
                     .header("Accept", "application/xml")
@@ -127,18 +134,23 @@ public final class TkAppTest {
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
-        Assertions.assertEquals(new RsPrint(
-            take.act(
-                new RqWithHeader(
-                    new RqFake("GET", "/js/home.js?{version/revision}"),
-                    "Accept",
-                    "text/javascript"
-                )
-            )
-        ).asString(), new StringBuilder()
-            .append("$(document).ready(function(){var a=$(\"#pulse\");")
-            .append("window.setInterval(function(){a.find(\"img\")")
-            .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
-            .append("+Date.now())},1E3)});").toString());
+        Assertions.assertEquals(
+            new TextOf(
+                new RsPrint(
+                    take.act(
+                        new RqWithHeader(
+                            new RqFake("GET", "/js/home.js?{version/revision}"),
+                            "Accept",
+                            "text/javascript"
+                        )
+                    )
+                ).body()
+            ).asString(),
+            new StringBuilder()
+                .append("$(document).ready(function(){var a=$(\"#pulse\");")
+                .append("window.setInterval(function(){a.find(\"img\")")
+                .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
+                .append("+Date.now())},1E3)});").toString()
+        );
     }
 }

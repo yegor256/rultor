@@ -29,8 +29,8 @@
  */
 package com.rultor.agents.docker;
 
-import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
@@ -53,7 +53,9 @@ public final class StartsDockerDaemonTest {
      */
     @Test
     public void providesPfShell() throws Exception {
-        Assumptions.assumeTrue("true".equalsIgnoreCase(System.getProperty("run-docker-tests")));
+        Assumptions.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)

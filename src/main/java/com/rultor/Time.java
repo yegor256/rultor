@@ -110,7 +110,8 @@ public final class Time {
      */
     private static Date parse(final String date) {
         try {
-            return DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.parse(date);
+            return DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT
+                .parse(date);
         } catch (final ParseException ex) {
             throw new IllegalStateException(ex);
         }

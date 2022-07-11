@@ -30,8 +30,8 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.matchers.XhtmlMatchers;
-import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.Time;
 import com.rultor.agents.shells.PfShell;
@@ -42,9 +42,9 @@ import java.io.IOException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.StringContains;
 import org.hamcrest.core.StringEndsWith;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assumptions;
 import org.mockito.Mockito;
 import org.xembly.Directives;
 
@@ -192,7 +192,9 @@ public final class EndsDaemonITCase {
      */
     private PfShell start(final StartsDockerDaemon start, final Talk talk,
         final String stdout) throws IOException {
-        Assumptions.assumeTrue("true".equalsIgnoreCase(System.getProperty("run-docker-tests")));
+        Assumptions.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
         final PfShell sshd = start.shell();
         final int port = sshd.port();
         new Shell.Plain(

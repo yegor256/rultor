@@ -30,8 +30,8 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import java.io.IOException;
 
 /**

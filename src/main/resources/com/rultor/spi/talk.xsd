@@ -1,405 +1,400 @@
 <?xml version="1.0"?>
 <!--
- * Copyright (c) 2009-2022 Yegor Bugayenko
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met: 1) Redistributions of source code must retain the above
- * copyright notice, this list of conditions and the following
- * disclaimer. 2) Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the rultor.com nor
- * the names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
- * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
- * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
+Copyright (c) 2009-2022 Yegor Bugayenko
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met: 1) Redistributions of source code must retain the above
+copyright notice, this list of conditions and the following
+disclaimer. 2) Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials provided
+with the distribution. 3) Neither the name of the rultor.com nor
+the names of its contributors may be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:simpleType name="hash">
-        <xs:annotation>
-            <xs:documentation source="description">
+  <xs:simpleType name="hash">
+    <xs:annotation>
+      <xs:documentation source="description">
                 Alphanumeric type value used as ID in the elements of this file.
             </xs:documentation>
-        </xs:annotation>
-        <xs:restriction base="xs:string">
-            <xs:pattern value="[0-9a-f]+"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:complexType name="daemon">
-        <xs:annotation>
-            <xs:documentation source="description">
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9a-f]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="daemon">
+    <xs:annotation>
+      <xs:documentation source="description">
                 This type describes the specification of the daemon task.
             </xs:documentation>
-        </xs:annotation>
-        <xs:all>
-            <xs:element name="script" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="description">
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="script" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the script to run.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="title" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="title" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the title of the daemon.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="started" type="xs:dateTime" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="started" type="xs:dateTime" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the started time of the daemon.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="dir" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dir" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element defines the directory of the daemon.
                     </xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:pattern value="[0-9a-zA-Z_\\:/+\.-]+"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="ended" type="xs:dateTime" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9a-zA-Z_\\:/+\.-]+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ended" type="xs:dateTime" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the ended time of the daemon.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="code" type="xs:integer" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="code" type="xs:integer" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the code of the daemon.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="highlights" type="xs:string" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="highlights" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the description of the daemon.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="tail" type="xs:string" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="tail" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         The last few lines of the build log
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:all>
-        <xs:attribute name="id" type="hash" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="shell">
-        <xs:annotation>
-            <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="id" type="hash" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="shell">
+    <xs:annotation>
+      <xs:documentation source="description">
                 This type describes the specification about the shell task.
             </xs:documentation>
-        </xs:annotation>
-        <xs:all>
-            <xs:element name="host" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="description">
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="host" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the host name or IP address.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="port" type="xs:integer">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="port" type="xs:integer">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the port to use in the connection.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="login" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="login" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the username of the connection.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="key" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="key" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the password to use in the connection.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:all>
-        <xs:attribute name="id" type="hash" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="request">
-        <xs:annotation>
-            <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="id" type="hash" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="request">
+    <xs:annotation>
+      <xs:documentation source="description">
                 This type describes the specification about the request task.
             </xs:documentation>
-        </xs:annotation>
-        <xs:all>
-            <xs:element name="author" type="xs:string" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="author" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         The unique name (e.g. GitHub login)
                         of the author of the request.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="success" type="xs:boolean" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="success" type="xs:boolean" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the flag that indicates if the request
                         was successfully.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="msec" type="xs:integer" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="msec" type="xs:integer" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the number of milliseconds that takes
                         the request.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="highlights" type="xs:string" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="highlights" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the description of the request task.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="tail" type="xs:string" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="tail" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         The last few lines of the stdout
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="type">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="type">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the type of the request.
                     </xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:pattern value="[a-z]+"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="args">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="[a-z]+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="args">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the list arguments.
                     </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="arg" minOccurs="0"
-                            maxOccurs="unbounded">
-                            <xs:annotation>
-                                <xs:documentation source="description">
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation source="description">
                                     This type has an argument of the request.
                                 </xs:documentation>
-                            </xs:annotation>
-                            <xs:complexType>
-                                <xs:simpleContent>
-                                    <xs:extension base="xs:string">
-                                        <xs:attribute name="name"
-                                            use="required">
-                                            <xs:simpleType>
-                                                <xs:restriction base="xs:string">
-                                                    <xs:pattern
-                                                        value="[a-zA-Z_]+"/>
-                                                </xs:restriction>
-                                            </xs:simpleType>
-                                        </xs:attribute>
-                                    </xs:extension>
-                                </xs:simpleContent>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-                <xs:unique name="argName">
-                    <xs:annotation>
-                        <xs:documentation source="description">
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:string">
+                    <xs:attribute name="name" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:pattern value="[a-zA-Z_]+"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="argName">
+          <xs:annotation>
+            <xs:documentation source="description">
                             This is an unique constraint over the argument name.
                         </xs:documentation>
-                    </xs:annotation>
-                    <xs:selector xpath="arg" />
-                    <xs:field xpath="@name" />
-                </xs:unique>
-            </xs:element>
-        </xs:all>
-        <xs:attribute name="id" type="hash" use="required"/>
-        <xs:attribute name="index" type="xs:integer" use="optional"/>
-    </xs:complexType>
-    <xs:complexType name="wire">
-        <xs:annotation>
-            <xs:documentation source="description">
+          </xs:annotation>
+          <xs:selector xpath="arg"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="id" type="hash" use="required"/>
+    <xs:attribute name="index" type="xs:integer" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="wire">
+    <xs:annotation>
+      <xs:documentation source="description">
                 This type describes the specification of the wire task.
             </xs:documentation>
-        </xs:annotation>
-        <xs:all>
-            <xs:element name="href" type="xs:anyURI">
-                <xs:annotation>
-                    <xs:documentation source="description">
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="href" type="xs:anyURI">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the URI of the wire.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="github-repo" type="xs:string" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="github-repo" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the name of the repository in github.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="github-issue" type="xs:integer" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="github-issue" type="xs:integer" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the number of the issue in github.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="github-seen" type="xs:integer" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="github-seen" type="xs:integer" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the number of views of the issue.
                     </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:all>
-    </xs:complexType>
-    <xs:complexType name="archive">
-        <xs:annotation>
-            <xs:documentation source="description">
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="archive">
+    <xs:annotation>
+      <xs:documentation source="description">
                 This type describes the specification of the archive task.
             </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="log" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation source="description">
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="log" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation source="description">
                         This element has the log specification for the archive
                         task.
                     </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:anyURI">
-                            <xs:attribute name="id" type="hash" use="required"/>
-                            <xs:attribute name="title" type="xs:string"
-                                use="required"/>
-                            <xs:attribute name="index" type="xs:integer"
-                                use="optional"/>
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="ec2">
-        <xs:annotation>
-            <xs:documentation source="description">
-                This type describes the specification about the EC2.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:attribute name="id" type="xs:string" use="required"/>
-    </xs:complexType>
-    <xs:element name="talk">
-        <xs:annotation>
-            <xs:documentation source="description">
-                This element has the definition of the talk task.
-            </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:all>
-                <xs:element name="daemon" type="daemon" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation source="description">
+          <xs:simpleContent>
+            <xs:extension base="xs:anyURI">
+              <xs:attribute name="id" type="hash" use="required"/>
+              <xs:attribute name="title" type="xs:string" use="required"/>
+              <xs:attribute name="index" type="xs:integer" use="optional"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ec2">
+    <xs:annotation>
+      <xs:documentation source="description">
+                This type describes the specification about the EC2.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:element name="talk">
+    <xs:annotation>
+      <xs:documentation source="description">
+                This element has the definition of the talk task.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="daemon" type="daemon" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation source="description">
                             This element has the daemon definition.
                         </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="wire" type="wire" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation source="description">
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="wire" type="wire" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation source="description">
                             This element has the wire definition.
                         </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="shell" type="shell" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation source="description">
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="shell" type="shell" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation source="description">
                             This element has the shell definition.
                         </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="request" type="request" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation source="description">
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="request" type="request" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation source="description">
                             This element has the request definition.
                         </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="archive" type="archive" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation source="description">
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="archive" type="archive" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation source="description">
                             This element has the archive definition.
                         </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="ec2" type="ec2" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation source="description">
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ec2" type="ec2" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation source="description">
                             This element has the EC2 definition.
                         </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:all>
-            <xs:attribute name="name" use="required" type="xs:string"/>
-            <xs:attribute name="number" use="required" type="xs:integer"/>
-            <xs:attribute name="later" use="required" type="xs:boolean"/>
-            <xs:attribute name="public" use="optional" type="xs:boolean"/>
-        </xs:complexType>
-        <xs:unique name="daemonID">
-            <xs:annotation>
-                <xs:documentation source="description">
+          </xs:annotation>
+        </xs:element>
+      </xs:all>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="number" use="required" type="xs:integer"/>
+      <xs:attribute name="later" use="required" type="xs:boolean"/>
+      <xs:attribute name="public" use="optional" type="xs:boolean"/>
+    </xs:complexType>
+    <xs:unique name="daemonID">
+      <xs:annotation>
+        <xs:documentation source="description">
                     This is an unique constraint over the id attribute of log
                     in the element type archive
                 </xs:documentation>
-            </xs:annotation>
-            <xs:selector xpath="daemon|archive/log" />
-            <xs:field xpath="@id" />
-        </xs:unique>
-        <xs:unique name="requestID">
-            <xs:annotation>
-                <xs:documentation source="description">
+      </xs:annotation>
+      <xs:selector xpath="daemon|archive/log"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+    <xs:unique name="requestID">
+      <xs:annotation>
+        <xs:documentation source="description">
                     Request ID can't be the same as already
                     existing log ID
                 </xs:documentation>
-            </xs:annotation>
-            <xs:selector xpath="request|archive/log" />
-            <xs:field xpath="@id" />
-        </xs:unique>
-    </xs:element>
+      </xs:annotation>
+      <xs:selector xpath="request|archive/log"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+  </xs:element>
 </xs:schema>

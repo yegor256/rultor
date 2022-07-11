@@ -426,29 +426,30 @@ public final class StartsRequestTest {
      */
     private File repo() throws IOException {
         final File repo = this.temp.newFolder();
+        final String cmd = new UncheckedText(
+            new Joined(
+                ";",
+                "set -x",
+                "set -e",
+                "set -o pipefail",
+                "git init .",
+                "git config user.email test@rultor.com",
+                "git config user.name test",
+                "echo 'hello, world!' > hello.txt",
+                "git add .",
+                "git -c commit.gpgsign=false commit -am 'first file'",
+                "git checkout -b frk",
+                "echo 'good bye!' > hello.txt",
+                "git -c commit.gpgsign=false commit -am 'modified file'",
+                "git checkout master",
+                "git config receive.denyCurrentBranch ignore"
+            )
+        ).asString();
         new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash",
                 "-c",
-                new UncheckedText(
-                    new Joined(
-                        ";",
-                        "set -x",
-                        "set -e",
-                        "set -o pipefail",
-                        "git init .",
-                        "git config user.email test@rultor.com",
-                        "git config user.name test",
-                        "echo 'hello, world!' > hello.txt",
-                        "git add .",
-                        "git -c commit.gpgsign=false commit -am 'first file'",
-                        "git checkout -b frk",
-                        "echo 'good bye!' > hello.txt",
-                        "git -c commit.gpgsign=false commit -am 'modified file'",
-                        "git checkout master",
-                        "git config receive.denyCurrentBranch ignore"
-                    )
-                ).asString()
+                cmd
             ).directory(repo)
         ).stdout();
         return repo;

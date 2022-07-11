@@ -237,7 +237,8 @@ public final class StartsRequest extends AbstractAgent {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
-        final Collection<Map.Entry<String, String>> entries = new LinkedList<>();
+        final Collection<Map.Entry<String, String>> entries =
+            new LinkedList<>();
         for (final XML arg : req.nodes("args/arg")) {
             entries.add(
                 new MapEntry<>(

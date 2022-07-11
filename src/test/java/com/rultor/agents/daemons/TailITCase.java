@@ -29,8 +29,8 @@
  */
 package com.rultor.agents.daemons;
 
-import com.jcabi.ssh.Ssh;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.rultor.StartsDockerDaemon;
 import com.rultor.Time;
 import com.rultor.agents.shells.PfShell;
@@ -40,8 +40,8 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
 /**
@@ -59,7 +59,9 @@ public final class TailITCase {
      */
     @Test
     public void tailsNonUtf() throws Exception {
-        Assumptions.assumeTrue("true".equalsIgnoreCase(System.getProperty("run-docker-tests")));
+        Assumptions.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
         try (
             final StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
