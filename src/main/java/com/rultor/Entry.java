@@ -190,7 +190,9 @@ public final class Entry {
             final int port = Integer.parseInt(
                 System.getProperty("dynamo.port")
             );
-            creds = new Credentials.Direct(creds, port);
+            creds = new Credentials.Direct(
+                Credentials.Simple.class.cast(creds), port
+            );
             Logger.warn(this, "test DynamoDB at port #%d", port);
         }
         Logger.info(this, "DynamoDB connected as %s", key);

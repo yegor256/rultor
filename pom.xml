@@ -33,7 +33,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.58.0</version>
+    <version>0.59.0</version>
   </parent>
   <groupId>com.rultor</groupId>
   <artifactId>rultor</artifactId>
@@ -199,7 +199,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-dynamo</artifactId>
-      <version>0.21.9</version>
+      <version>0.22.0</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
@@ -218,9 +218,15 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <scope>runtime</scope>
     </dependency>
     <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>3.0.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>8.0.0.CR1</version>
+      <version>6.0.20.Final</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
