@@ -192,7 +192,7 @@ public final class DyTalksITCase {
     private Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
         Assume.assumeNotNull(key);
-        final String port = System.getProperty("dynamo.port");
+        final String port = System.getProperty("failsafe.ddl.port");
         Assume.assumeNotNull(port);
         MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(

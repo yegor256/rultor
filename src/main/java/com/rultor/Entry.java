@@ -188,7 +188,7 @@ public final class Entry {
         );
         if (key.startsWith("AAAAA")) {
             final int port = Integer.parseInt(
-                System.getProperty("dynamo.port")
+                System.getProperty("failsafe.ddl.port")
             );
             creds = new Credentials.Direct(
                 Credentials.Simple.class.cast(creds), port

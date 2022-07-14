@@ -1,8 +1,8 @@
 Rultor-Revision: a1b2c3e
 Rultor-Version: 1.0
 Rultor-Date: ${timestamp}
-Rultor-DynamoKey: ${failsafe.dynamo.key}
-Rultor-DynamoSecret: ${failsafe.dynamo.secret}
+Rultor-DynamoKey: ${failsafe.ddl.key}
+Rultor-DynamoSecret: ${failsafe.ddl.secret}
 Rultor-GithubId: ${failsafe.github.id}
 Rultor-GithubSecret: ${failsafe.github.secret}
 Rultor-SecurityKey: ${failsafe.security.key}

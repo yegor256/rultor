@@ -142,7 +142,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
-      <version>2.0.2</version>
+      <version>1.0.b2</version>
     </dependency>
     <dependency>
       <groupId>co.stateful</groupId>
@@ -199,7 +199,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-dynamo</artifactId>
-      <version>0.22.0</version>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
@@ -319,6 +319,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>2.0.0-alpha5</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -580,6 +581,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.3.0</version>
             <executions>
               <execution>
                 <goals>
@@ -613,6 +615,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>start-takes-server</id>
@@ -630,8 +633,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                   </arguments>
                   <systemProperties>
                     <property>
-                      <key>dynamo.port</key>
-                      <value>${dynamodblocal.port}</value>
+                      <key>failsafe.ddl.port</key>
+                      <value>${failsafe.ddl.port}</value>
                     </property>
                   </systemProperties>
                 </configuration>
@@ -649,8 +652,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         </property>
       </activation>
       <properties>
-        <failsafe.dynamo.key>AAAAABBBBBAAAAABBBBB</failsafe.dynamo.key>
-        <failsafe.dynamo.secret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</failsafe.dynamo.secret>
+        <failsafe.ddl.key>AAAAABBBBBAAAAABBBBB</failsafe.ddl.key>
+        <failsafe.ddl.secret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</failsafe.ddl.secret>
       </properties>
       <build>
         <plugins>
@@ -688,7 +691,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 </goals>
                 <configuration>
                   <portNames>
-                    <portName>dynamodblocal.port</portName>
+                    <portName>failsafe.ddl.port</portName>
                   </portNames>
                 </configuration>
               </execution>
@@ -706,10 +709,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>stop</goal>
                 </goals>
                 <configuration>
-                  <port>${dynamodblocal.port}</port>
+                  <port>${failsafe.ddl.port}</port>
                   <dist>${project.build.directory}/dynamodb-dist</dist>
-                  <key>${failsafe.dynamo.key}</key>
-                  <secret>${failsafe.dynamo.secret}</secret>
+                  <key>${failsafe.ddl.key}</key>
+                  <secret>${failsafe.ddl.secret}</secret>
                   <tables>
                     <table>${basedir}/src/test/dynamodb/talks.json</table>
                   </tables>
@@ -722,7 +725,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <parallel>none</parallel>
               <systemPropertyVariables combine.children="append">
-                <dynamo.port>${dynamodblocal.port}</dynamo.port>
+                <failsafe.ddl.port>${failsafe.ddl.port}</failsafe.ddl.port>
+                <failsafe.ddl.key>${failsafe.ddl.key}</failsafe.ddl.key>
+                <failsafe.ddl.secret>${failsafe.ddl.secret}</failsafe.ddl.secret>
               </systemPropertyVariables>
             </configuration>
           </plugin>
