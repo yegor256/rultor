@@ -88,6 +88,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </site>
   </distributionManagement>
   <properties>
+    <argLine/>
     <timestamp>${maven.build.timestamp}</timestamp>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -444,13 +445,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>
           <configuration>
-            <argLine>-Djava.awt.headless=true</argLine>
+            <argLine>${argLine} -Djava.awt.headless=true</argLine>
           </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <argLine>-Duser.language=en -Duser.region=US -Djava.awt.headless=true</argLine>
+            <argLine>${argLine} -Duser.language=en -Duser.region=US -Djava.awt.headless=true</argLine>
           </configuration>
         </plugin>
       </plugins>
