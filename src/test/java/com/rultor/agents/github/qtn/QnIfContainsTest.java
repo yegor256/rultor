@@ -62,7 +62,7 @@ public final class QnIfContainsTest {
         ).dirs();
         MatcherAssert.assertThat(
             issue.comments().iterate(new Date(0L)),
-            Matchers.<Comment>iterableWithSize(1)
+            Matchers.iterableWithSize(1)
         );
     }
 
@@ -80,7 +80,7 @@ public final class QnIfContainsTest {
         ).dirs();
         MatcherAssert.assertThat(
             issue.comments().iterate(new Date(0L)),
-            Matchers.<Comment>iterableWithSize(2)
+            Matchers.iterableWithSize(2)
         );
     }
 

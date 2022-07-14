@@ -173,11 +173,11 @@ public final class DockerRunTest {
             new DockerRun(profile, "/p/absent").envs(
                 new ArrayMap<String, String>()
             ),
-            Matchers.<String>emptyIterable()
+            Matchers.emptyIterable()
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/doesnt-exist").script(),
-            Matchers.<String>emptyIterable()
+            Matchers.emptyIterable()
         );
     }
 

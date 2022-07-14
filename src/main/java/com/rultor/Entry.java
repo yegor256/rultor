@@ -208,7 +208,7 @@ public final class Entry {
     @Cacheable(forever = true)
     private static Pulse pulse() {
         final Collection<Tick> ticks = Collections.synchronizedCollection(
-            EvictingQueue.<Tick>create((int) TimeUnit.HOURS.toMinutes(1L))
+            EvictingQueue.create((int) TimeUnit.HOURS.toMinutes(1L))
         );
         final Collection<Throwable> error = Collections.synchronizedCollection(
             new ArrayList<Throwable>(1)

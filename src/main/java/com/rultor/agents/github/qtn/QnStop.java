@@ -76,7 +76,7 @@ public final class QnStop implements Question {
             issue.repo().coordinates(), issue.number(), comment.number()
         );
         return new Req.Simple(
-            "stop", Collections.<String, String>emptyMap()
+            "stop", Collections.emptyMap()
         );
     }
 

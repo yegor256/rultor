@@ -143,11 +143,11 @@ public final class DyTalksITCase {
         TimeUnit.SECONDS.sleep(2L);
         MatcherAssert.assertThat(
             talks.siblings(repo, new Date()),
-            Matchers.<Talk>iterableWithSize(2)
+            Matchers.iterableWithSize(2)
         );
         MatcherAssert.assertThat(
             talks.siblings(repo, date),
-            Matchers.<Talk>iterableWithSize(1)
+            Matchers.iterableWithSize(1)
         );
     }
 

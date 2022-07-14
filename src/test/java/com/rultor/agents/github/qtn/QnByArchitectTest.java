@@ -77,7 +77,7 @@ public final class QnByArchitectTest {
         Mockito.verify(question, Mockito.never()).understand(comment, home);
         MatcherAssert.assertThat(
             issue.comments().iterate(new Date(0L)),
-            Matchers.<Comment>iterableWithSize(2)
+            Matchers.iterableWithSize(2)
         );
     }
 

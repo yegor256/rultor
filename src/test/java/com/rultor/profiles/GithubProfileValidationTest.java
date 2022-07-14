@@ -213,7 +213,7 @@ public final class GithubProfileValidationTest {
         final Map<String, InputStream> map = new GithubProfile(repo).assets();
         MatcherAssert.assertThat(
             map.keySet(),
-            Matchers.<String>iterableWithSize(1)
+            Matchers.iterableWithSize(1)
         );
     }
 

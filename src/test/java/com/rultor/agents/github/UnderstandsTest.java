@@ -75,7 +75,7 @@ public final class UnderstandsTest {
             repo.github(),
             new QnWithAuthor(
                 new QnFirstOf(
-                    Arrays.<Question>asList(
+                    Arrays.asList(
                         new QnIfContains("hello", new QnHello()),
                         new QnIfContains("deploy", new QnDeploy())
                     )
@@ -138,7 +138,7 @@ public final class UnderstandsTest {
         agent.execute(talk);
         MatcherAssert.assertThat(
             issue.comments().iterate(new Date(0L)),
-            Matchers.<Comment>iterableWithSize(1)
+            Matchers.iterableWithSize(1)
         );
     }
 

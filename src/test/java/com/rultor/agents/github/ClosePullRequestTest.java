@@ -123,7 +123,7 @@ public final class ClosePullRequestTest {
         );
         MatcherAssert.assertThat(
             smart.comments().iterate(new Date(0L)),
-            Matchers.is(Matchers.<Comment>emptyIterable())
+            Matchers.is(Matchers.emptyIterable())
         );
     }
 
