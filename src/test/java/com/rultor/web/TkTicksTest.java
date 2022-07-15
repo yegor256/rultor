@@ -53,11 +53,11 @@ import org.takes.rs.RsPrint;
 public final class TkTicksTest {
 
     /**
-     * TkSVG can render SVG.
+     * TkTicks can render PNG.
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersSvg() throws Exception {
+    public void rendersPngStatusImage() throws Exception {
         final Take home = new TkTicks(
             // @checkstyle AnonInnerLengthCheck (50 lines)
             new Pulse() {
@@ -96,11 +96,11 @@ public final class TkTicksTest {
     }
 
     /**
-     * TkSVG can render SVG without ticks.
+     * TkTicks can render PNG without ticks.
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersSvgWithoutTicks() throws Exception {
+    public void rendersPngWithoutTicks() throws Exception {
         final Take home = new TkTicks(Pulse.EMPTY);
         MatcherAssert.assertThat(
             new RsPrint(home.act(new RqFake())).asString(),
