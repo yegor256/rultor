@@ -53,7 +53,7 @@ import org.xembly.Directives;
 import org.xembly.Xembler;
 
 /**
- * SVG with pulse.
+ * PNG with pulse.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$

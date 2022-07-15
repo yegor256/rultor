@@ -38,11 +38,10 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import org.junit.Assume;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
- * Integration case for {@link HomeRs}.
+ * Integration case for {@link TkHome}.
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.5
@@ -67,10 +66,8 @@ public final class TkHomeITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @Disabled
     public void renderAbsentPages() throws Exception {
         final String[] pages = {
-            "/page-doesnt-exist",
             "/xsl/xsl-stylesheet-doesnt-exist.xsl",
             "/css/stylesheet-is-absent.css",
         };
@@ -80,9 +77,27 @@ public final class TkHomeITCase {
                 .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_NOT_FOUND)
-                .as(XmlResponse.class)
-                .assertXPath("//xhtml:title[contains(.,'page not found')]");
+                .assertStatus(HttpURLConnection.HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Redirects from absent URL.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void redirectsOnAbsence() throws Exception {
+        final String[] pages = {
+            "/page-doesnt-exist",
+            "/oops",
+        };
+        final Request request = new JdkRequest(TkHomeITCase.HOME);
+        for (final String page : pages) {
+            request.uri().path(page).back()
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         }
     }
 
