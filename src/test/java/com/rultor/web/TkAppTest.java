@@ -38,6 +38,7 @@ import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
 import java.net.HttpURLConnection;
+import java.util.zip.GZIPInputStream;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -47,6 +48,7 @@ import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqWithHeader;
+import org.takes.rq.RqWithHeaders;
 import org.takes.rs.RsPrint;
 
 /**
@@ -151,6 +153,34 @@ public final class TkAppTest {
                 .append("window.setInterval(function(){a.find(\"img\")")
                 .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
                 .append("+Date.now())},1E3)});").toString()
+        );
+    }
+
+    /**
+     * Tests GZIP content return.
+     * @throws Exception If fails
+     */
+    @Test
+    public void rendersGzipHomePage() throws Exception {
+        final Take take = new TkApp(
+            new Talks.InDir(), Pulse.EMPTY,
+            new Toggles.InFile()
+        );
+        MatcherAssert.assertThat(
+            new TextOf(
+                new GZIPInputStream(
+                    new RsPrint(
+                        take.act(
+                            new RqWithHeaders(
+                                new RqFake("GET", "/"),
+                                "Accept: plain/html",
+                                "Accept-Encoding: gzip"
+                            )
+                        )
+                    ).body()
+                )
+            ).asString(),
+            Matchers.startsWith("<!DOCTYPE html")
         );
     }
 }
