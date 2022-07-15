@@ -43,6 +43,7 @@ import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.takes.Take;
 import org.takes.http.FtRemote;
@@ -161,6 +162,7 @@ public final class TkAppTest {
      * @throws Exception If fails
      */
     @Test
+    @Disabled
     public void rendersGzipHomePage() throws Exception {
         final Take take = new TkApp(
             new Talks.InDir(), Pulse.EMPTY,
