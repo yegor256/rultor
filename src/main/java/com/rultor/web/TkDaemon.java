@@ -38,7 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.SequenceInputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,7 +82,7 @@ final class TkDaemon implements TkRegex {
         if (!this.talks.exists(number)) {
             throw new RsForward(
                 new RsFlash(
-                    "there is no such page here",
+                    "There is no such page here",
                     Level.WARNING
                 )
             );
@@ -150,10 +149,8 @@ final class TkDaemon implements TkRegex {
      * Escape HTML chars in input stream.
      * @param input Input stream
      * @return New input stream
-     * @throws UnsupportedEncodingException If fails
      */
-    private static InputStream escape(final InputStream input)
-        throws UnsupportedEncodingException {
+    private static InputStream escape(final InputStream input) {
         final PushbackReader src = new PushbackReader(
             new InputStreamReader(input, StandardCharsets.UTF_8),
             Tv.TEN * Tv.THOUSAND
