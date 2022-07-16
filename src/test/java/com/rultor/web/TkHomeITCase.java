@@ -29,13 +29,18 @@
  */
 package com.rultor.web;
 
+import com.jcabi.aspects.Tv;
 import com.jcabi.http.Request;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
+import java.io.ByteArrayInputStream;
 import java.net.HttpURLConnection;
+import javax.imageio.ImageIO;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -137,6 +142,25 @@ public final class TkHomeITCase {
             .assertStatus(HttpURLConnection.HTTP_OK)
             .as(XmlResponse.class)
             .assertXPath("/page/version/name");
+    }
+
+    /**
+     * Renders valid PNG image.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersValidPngTick() throws Exception {
+        final Request request = new JdkRequest(TkHomeITCase.HOME);
+        final byte[] data = request.uri().path("/ticks").back()
+            .method(Request.GET)
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .binary();
+        MatcherAssert.assertThat(
+            ImageIO.read(new ByteArrayInputStream(data)).getWidth(),
+            Matchers.equalTo(Tv.THOUSAND)
+        );
     }
 
 }
