@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.SequenceInputStream;
+import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
@@ -102,6 +103,7 @@ final class TkDaemon implements TkRegex {
         }
         final String hash = req.matcher().group(2);
         return new RsFluent()
+            .withStatus(HttpURLConnection.HTTP_OK)
             .withBody(this.html(number, hash))
             .withType("text/html; charset=utf-8")
             .withHeader(

@@ -40,7 +40,6 @@ import org.cactoos.list.ListOf;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.rs.RsEmpty;
 import org.takes.rs.RsWithBody;
 import org.takes.rs.RsWithStatus;
 
@@ -104,7 +103,7 @@ final class TkStatus implements Take {
                     "\n\nPlease, email this page to bug@rultor.com"
                 );
             } else {
-                response = new RsEmpty();
+                response = new RsWithStatus(HttpURLConnection.HTTP_OK);
                 msg.append(
                     Logger.format(
                         "It is up and running, last check done %[ms]s ago",
