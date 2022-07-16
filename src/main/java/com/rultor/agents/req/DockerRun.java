@@ -259,7 +259,7 @@ final class DockerRun {
             lines.addAll(
                 new ListOf<>(
                     new Mapped<>(
-                        input -> input.trim(),
+                        String::trim,
                         Arrays.asList(
                             StringUtils.split(node.xpath("text()").get(0), '\n')
                         )

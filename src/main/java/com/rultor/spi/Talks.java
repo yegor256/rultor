@@ -220,7 +220,7 @@ public interface Talks {
             );
             Logger.info(this, "%d files in %s", files.size(), this.path);
             return new Mapped<>(
-                file -> new Talk.InFile(file),
+                Talk.InFile::new,
                 list
             );
         }

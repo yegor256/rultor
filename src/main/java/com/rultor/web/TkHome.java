@@ -79,10 +79,10 @@ final class TkHome implements Take {
         return new RsPage(
             "/xsl/home.xsl",
             req,
-            () -> TkHome.this.recent(),
+            this::recent,
             new XeLink("status", "/status"),
             new XeLink("ticks", "/ticks", "image/png"),
-            () -> TkHome.this.flags(req)
+            () -> this.flags(req)
         );
     }
 

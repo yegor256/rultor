@@ -121,7 +121,7 @@ public final class EndsDaemon extends AbstractAgent {
         );
         final List<String> linesAsString = new ListOf<>(
             new Mapped<>(
-                line -> line.asString(),
+                Text::asString,
                 lines
             )
         );

@@ -61,7 +61,7 @@ final class Brackets {
             String.join(
                 " ",
                 new Mapped<>(
-                    input -> Ssh.escape(input),
+                    Ssh::escape,
                     this.items
                 )
             )

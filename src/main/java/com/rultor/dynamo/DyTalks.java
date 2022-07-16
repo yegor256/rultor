@@ -233,7 +233,7 @@ public final class DyTalks implements Talks {
     @Override
     public Iterable<Talk> active() {
         return new Mapped<>(
-            input -> new DyTalk(input),
+            DyTalk::new,
             this.region.table(DyTalks.TBL)
                 .frame()
                 .through(
@@ -262,7 +262,7 @@ public final class DyTalks implements Talks {
                     }
                 },
                 new Mapped<>(
-                    input -> new DyTalk(input),
+                    DyTalk::new,
                     this.region.table(DyTalks.TBL)
                         .frame()
                         .through(
@@ -284,7 +284,7 @@ public final class DyTalks implements Talks {
     @Override
     public Iterable<Talk> siblings(final String repo, final Date since) {
         return new Mapped<>(
-            input -> new DyTalk(input),
+            DyTalk::new,
             this.region.table(DyTalks.TBL)
                 .frame()
                 .through(

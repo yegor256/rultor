@@ -89,7 +89,7 @@ public final class IndexesRequests implements SuperAgent {
     private int index(final Talk talk) throws IOException {
         final List<Number> indexes = new ListOf<>(
             new Mapped<>(
-                input -> new NumberOf(input),
+                NumberOf::new,
                 talk.read()
                     .xpath("/talk/archive/log/@index|/talk/request/@index")
             )
