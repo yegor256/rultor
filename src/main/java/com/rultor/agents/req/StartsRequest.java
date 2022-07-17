@@ -247,14 +247,12 @@ public final class StartsRequest extends AbstractAgent {
                 )
             );
         }
-        final DockerRun docker = new DockerRun(
-            this.profile, String.format("/p/entry[@key='%s']", type)
-        );
         entries.add(
             new MapEntry<>(
                 "author", req.xpath("author/text()").get(0)
             )
         );
+        final DockerRun docker = this.docker(type);
         entries.add(
             new MapEntry<>(
                 "scripts",
@@ -336,6 +334,26 @@ public final class StartsRequest extends AbstractAgent {
             );
         }
         return new MapOf<>(new ListOf<>(entries));
+    }
+
+    /**
+     * Get docker run config.
+     * @param type Type of command, like 'release' or 'merge'
+     * @return Docker run cfg
+     * @throws IOException If fails
+     */
+    private DockerRun docker(final String type) throws IOException {
+        final String xpath = String.format("/p/entry[@key='%s']", type);
+        final Collection<XML> nodes = this.profile.read().nodes(xpath);
+        if (nodes.isEmpty()) {
+            throw new IllegalStateException(
+                String.format(
+                    "There is no '%s' section in .rultor.yml",
+                    type
+                )
+            );
+        }
+        return new DockerRun(this.profile, nodes.iterator().next());
     }
 
     /**

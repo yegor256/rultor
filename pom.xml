@@ -595,6 +595,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <systemPropertyVariables combine.children="append">
                 <takes.home>http://localhost:${takes.port}</takes.home>
+                <takes.port>${takes.port}</takes.port>
               </systemPropertyVariables>
               <reuseForks>false</reuseForks>
             </configuration>

@@ -43,6 +43,8 @@ import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.takes.Take;
@@ -61,6 +63,16 @@ import org.takes.rs.RsPrint;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class TkAppTest {
+
+    /**
+     * Make sure it's prepared.
+     */
+    @BeforeEach
+    public void resourcesAvailable() {
+        Assumptions.assumeFalse(
+            TkAppTest.class.getResourceAsStream("/xsl.home.xsl") == null
+        );
+    }
 
     /**
      * App can render front page.

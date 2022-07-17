@@ -41,8 +41,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -61,9 +61,11 @@ public final class TkHomeITCase {
     /**
      * Before the entire test.
      */
-    @BeforeAll
-    public static void before() {
-        Assume.assumeNotNull(TkHomeITCase.HOME);
+    @BeforeEach
+    public void before() {
+        Assumptions.assumeFalse(System.getProperty("takes.port").isEmpty());
+        Assumptions.assumeFalse(TkHomeITCase.HOME == null);
+        Assumptions.assumeFalse(TkHomeITCase.HOME.isEmpty());
     }
 
     /**

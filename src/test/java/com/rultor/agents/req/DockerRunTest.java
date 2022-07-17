@@ -163,25 +163,6 @@ public final class DockerRunTest {
     }
 
     /**
-     * DockerRun can fetch from an empty doc.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void fetchesFromEmptyProfile() throws Exception {
-        final Profile profile = new Profile.Fixed(new XMLDocument("<p/>"));
-        MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/absent").envs(
-                new ArrayMap<String, String>()
-            ),
-            Matchers.emptyIterable()
-        );
-        MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/doesnt-exist").script(),
-            Matchers.emptyIterable()
-        );
-    }
-
-    /**
      * DockerRun can fetch script.
      * @throws Exception In case of error.
      * @since 1.22

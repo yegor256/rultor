@@ -36,8 +36,8 @@ import com.jcabi.http.response.XmlResponse;
 import java.net.HttpURLConnection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.junit.Assume;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -56,9 +56,10 @@ public final class TkSiblingsITCase {
     /**
      * Before the entire test.
      */
-    @BeforeAll
-    public static void before() {
-        Assume.assumeNotNull(TkSiblingsITCase.HOME);
+    @BeforeEach
+    public void before() {
+        Assumptions.assumeFalse(System.getProperty("takes.port").isEmpty());
+        Assumptions.assumeFalse(TkSiblingsITCase.HOME == null);
     }
 
     /**

@@ -172,7 +172,16 @@ public interface Profile {
          * Ctor.
          */
         public Fixed() {
-            this(new XMLDocument("<p/>"));
+            this(
+                new XMLDocument(
+                    String.join(
+                        "",
+                        "<p><entry key='merge'/>",
+                        "<entry key='release'/>",
+                        "<entry key='deploy'/></p>"
+                    )
+                )
+            );
         }
         /**
          * Ctor.

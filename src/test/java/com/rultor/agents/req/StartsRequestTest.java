@@ -317,7 +317,7 @@ public final class StartsRequestTest {
                     new Joined(
                         "",
                         "<p><entry key='decrypt'><entry key='a.txt'>",
-                        "a.txt.asc</entry></entry></p>"
+                        "a.txt.asc</entry></entry><entry key='deploy'/></p>"
                     ).asString()
                 )
             )

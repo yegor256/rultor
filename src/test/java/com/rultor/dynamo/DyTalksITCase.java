@@ -46,6 +46,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assume;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
@@ -60,13 +62,26 @@ import org.xembly.Directives;
 public final class DyTalksITCase {
 
     /**
+     * DynamoDB Local port.
+     */
+    private static final String PORT = System.getProperty("failsafe.ddl.port");
+
+    /**
+     * Before the entire test.
+     */
+    @BeforeEach
+    public void before() {
+        Assumptions.assumeFalse(DyTalksITCase.PORT.isEmpty());
+    }
+
+    /**
      * DyTalks can add a talk.
      * @throws Exception If some problem inside
      */
     @Test
     public void addsTalks() throws Exception {
         final Talks talks = new DyTalks(
-            this.dynamo(), new MkSttc().counters().get("")
+            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "a5fe445";
         talks.create("hey/you", name);
@@ -83,7 +98,7 @@ public final class DyTalksITCase {
     @Test
     public void listsRecentTalks() throws Exception {
         final Talks talks = new DyTalks(
-            this.dynamo(), new MkSttc().counters().get("")
+            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "yegor256/rultor#529";
         talks.create("a/b", name);
@@ -103,7 +118,7 @@ public final class DyTalksITCase {
     @Disabled
     public void cachesRecentTalks() throws Exception {
         final Talks talks = new DyTalks(
-            this.dynamo(), new MkSttc().counters().get("")
+            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
         );
         final String first = "krzyk1/rultor#562";
         final String repo = "some/other";
@@ -133,7 +148,7 @@ public final class DyTalksITCase {
     @Test
     public void listsSiblings() throws Exception {
         final Talks talks = new DyTalks(
-            this.dynamo(), new MkSttc().counters().get("")
+            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
         );
         final String repo = "repo1";
         talks.create(repo, "yegor256/rultor#9");
@@ -158,7 +173,7 @@ public final class DyTalksITCase {
     @Test
     public void listsRecentTalksExceptPrivates() throws Exception {
         final Talks talks = new DyTalks(
-            this.dynamo(), new MkSttc().counters().get("")
+            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "yegor256/rultor#990";
         talks.create("a/ff", name);
@@ -189,11 +204,9 @@ public final class DyTalksITCase {
      * DynamoDB region for tests.
      * @return Region
      */
-    private Region dynamo() {
+    private static Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
         Assume.assumeNotNull(key);
-        final String port = System.getProperty("failsafe.ddl.port");
-        Assume.assumeNotNull(port);
         MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(
             new ReRegion(
@@ -203,7 +216,7 @@ public final class DyTalksITCase {
                             key,
                             Manifests.read("Rultor-DynamoSecret")
                         ),
-                        Integer.parseInt(port)
+                        Integer.parseInt(DyTalksITCase.PORT)
                     )
                 )
             ),

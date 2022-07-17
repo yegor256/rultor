@@ -67,7 +67,7 @@ public final class QnConfigTest {
         );
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("<p/>")
+            Matchers.containsString("</p>")
         );
     }
 

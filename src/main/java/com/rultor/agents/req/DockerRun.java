@@ -31,7 +31,6 @@ package com.rultor.agents.req;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
-import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Arrays;
@@ -60,7 +59,7 @@ import org.cactoos.list.ListOf;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "profile", "xpath" })
+@EqualsAndHashCode(of = { "profile", "command" })
 @SuppressWarnings("PMD.TooManyMethods")
 final class DockerRun {
 
@@ -70,18 +69,28 @@ final class DockerRun {
     private final transient Profile profile;
 
     /**
-     * Node name.
+     * XML element inside ".rultor.yml" with the command.
      */
-    private final transient String xpath;
+    private final transient XML command;
 
     /**
      * Ctor.
      * @param prof Profile
-     * @param path Node name in profile XML, XPath
+     * @param xpath XPath of the XML element inside .rultor.yml
+     * @throws IOException If fails
      */
-    DockerRun(final Profile prof, final String path) {
+    DockerRun(final Profile prof, final String xpath) throws IOException {
+        this(prof, prof.read().nodes(xpath).iterator().next());
+    }
+
+    /**
+     * Ctor.
+     * @param prof Profile
+     * @param node XML element inside ".rultor.yml" with the command
+     */
+    DockerRun(final Profile prof, final XML node) {
         this.profile = prof;
-        this.xpath = path;
+        this.command = node;
     }
 
     /**
@@ -109,7 +118,7 @@ final class DockerRun {
             DockerRun.scripts(
                 this.profile.read(), "/p/entry[@key='install']"
             ),
-            DockerRun.scripts(this.node(), "entry[@key='script']")
+            DockerRun.scripts(this.command, "entry[@key='script']")
         );
     }
 
@@ -131,25 +140,9 @@ final class DockerRun {
         }
         return new Joined<String>(
             DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
-            DockerRun.envs(this.node(), "entry[@key='env']"),
+            DockerRun.envs(this.command, "entry[@key='env']"),
             new Sticky<>(entries)
         );
-    }
-
-    /**
-     * Get xpath.
-     * @return XML
-     * @throws IOException If fails
-     */
-    private XML node() throws IOException {
-        final XML node;
-        final Collection<XML> nodes = this.profile.read().nodes(this.xpath);
-        if (nodes.isEmpty()) {
-            node = new XMLDocument("<x/>");
-        } else {
-            node = nodes.iterator().next();
-        }
-        return node;
     }
 
     /**
