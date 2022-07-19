@@ -346,7 +346,7 @@ public final class StartsRequest extends AbstractAgent {
         final String xpath = String.format("/p/entry[@key='%s']", type);
         final Collection<XML> nodes = this.profile.read().nodes(xpath);
         if (nodes.isEmpty()) {
-            throw new IllegalStateException(
+            throw new Profile.ConfigException(
                 String.format(
                     "There is no '%s' section in .rultor.yml",
                     type
