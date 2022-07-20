@@ -118,7 +118,6 @@ public final class EndsDaemonITCase {
      * @throws Exception On failure
      */
     @Test
-    @Disabled
     public void exitsWhenProfileBroken() throws Exception {
         try (
             final StartsDockerDaemon start =
