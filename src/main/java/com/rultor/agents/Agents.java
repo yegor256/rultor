@@ -39,6 +39,7 @@ import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Ssh;
 import com.rultor.agents.daemons.ArchivesDaemon;
+import com.rultor.agents.daemons.DismountDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
 import com.rultor.agents.daemons.SanitizesDaemon;
@@ -249,6 +250,8 @@ public final class Agents {
                     StandardCharsets.UTF_8
                 )
             ),
+            // @checkstyle MagicNumber (1 line)
+            new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),
             new StartsDaemon(profile),
             new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
             new StopsDaemon(),
