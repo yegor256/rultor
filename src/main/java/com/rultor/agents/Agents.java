@@ -49,6 +49,7 @@ import com.rultor.agents.daemons.WipesDaemon;
 import com.rultor.agents.docker.DockerExec;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Dephantomizes;
+import com.rultor.agents.github.DropsTalk;
 import com.rultor.agents.github.Invitations;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.ReleaseBinaries;
@@ -235,6 +236,7 @@ public final class Agents {
         return new Agent.Iterative(
             new SanitizesDaemon(),
             new WipesDaemon(),
+            new DropsTalk(),
             new Understands(
                 this.github,
                 new QnSafe(question)
