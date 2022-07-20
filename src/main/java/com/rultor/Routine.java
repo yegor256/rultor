@@ -124,9 +124,9 @@ final class Routine implements Runnable, Closeable {
         final long begin = System.currentTimeMillis();
         try {
             Logger.info(
-                this, "Starting processing active talks %s...",
+                this, "Start processing active talks %s...",
                 new Mapped<>(
-                    talk -> talk.name(),
+                    talk -> String.format("%s:%s", talk.name(), talk.number()),
                     this.talks.active()
                 )
             );

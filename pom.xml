@@ -431,10 +431,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>
@@ -611,7 +608,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>start-takes-server</id>
@@ -849,8 +845,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </plugin>
           <plugin>
-            <artifactId>exec-maven-plugin</artifactId>
             <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
             <executions>
               <execution>
                 <id>Copyright check</id>
