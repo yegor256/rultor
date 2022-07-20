@@ -97,6 +97,7 @@ there via SSH and starts Docker containers per each task. This is how you
 configure a server from scratch (as `root` at Ubuntu 20.04):
 
 ```
+$ apt-get install -y bc
 $ groupadd docker
 $ adduser rultor
 $ gpasswd -a rultor docker

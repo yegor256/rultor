@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.constraints.NotNull;
+import org.cactoos.iterable.Mapped;
 
 /**
  * Routine.
@@ -120,11 +121,23 @@ final class Routine implements Runnable, Closeable {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void run() {
+        final long begin = System.currentTimeMillis();
         try {
             Logger.info(
-                this, "%d active talks, alive for %[ms]s: %tc",
-                this.safe(),
-                System.currentTimeMillis() - this.start, new Date()
+                this, "Starting processing active talks %s...",
+                new Mapped<>(
+                    talk -> talk.name(),
+                    this.talks.active()
+                )
+            );
+            final int processed = this.safe();
+            Logger.info(
+                this,
+                "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
+                processed,
+                System.currentTimeMillis() - begin,
+                System.currentTimeMillis() - this.start,
+                new Date()
             );
             this.pulse.error(Collections.emptyList());
             // @checkstyle IllegalCatchCheck (1 line)
