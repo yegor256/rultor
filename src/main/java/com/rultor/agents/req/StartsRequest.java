@@ -34,6 +34,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.daemons.Container;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -148,8 +149,7 @@ public final class StartsRequest extends AbstractAgent {
                         new MapOf<>(
                             new MapEntry<>(
                                 "container",
-                                name.replaceAll("[^a-zA-Z0-9_.-]", "_")
-                                    .toLowerCase(Locale.ENGLISH)
+                                new Container(name).toString()
                             )
                         ).entrySet()
                     )
