@@ -88,7 +88,7 @@ public final class DropsDaemon extends AbstractAgent {
         final String container = new Container(talk).toString();
         final int exit = new Shell.Empty(shell).exec(
             String.format(
-                "docker ps | cut -f1 -d ' ' | grep %s",
+                "docker ps | grep %s",
                 Ssh.escape(container)
             )
         );
