@@ -35,7 +35,6 @@ release:
     mv ../heroku-netrc ~/.netrc
     build=$(git rev-parse --short HEAD)
     sed -i "s/BUILD/${build}/g" src/main/resources/META-INF/MANIFEST.MF
-    sed -i "s/BUILD/${build}/g" src/main/resources/log4j.properties
     git add src/main/resources/META-INF/MANIFEST.MF
     git add src/main/resources/log4j.properties
     git commit -m 'build number set'
@@ -45,4 +44,4 @@ release:
     git reset HEAD~1
     rm -rf settings.xml
     curl --insecure -f --connect-timeout 30 --retry 8 --retry-delay 60 https://www.rultor.com
-    mvn clean site-deploy -Prultor -Psite --errors --settings ../settings.xml --batch-mode || echo 'site-deploy failed'
+    mvn clean site-deploy -Prultor -Psite --errors --settings ../settings.xml --batch-mode

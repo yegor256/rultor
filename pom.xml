@@ -436,13 +436,19 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>
           <configuration>
-            <argLine>${argLine} -Djava.awt.headless=true</argLine>
+            <systemPropertyVariables combine.children="append">
+              <java.awt.headless>true</java.awt.headless>
+            </systemPropertyVariables>
           </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <argLine>${argLine} -Duser.language=en -Duser.region=US -Djava.awt.headless=true</argLine>
+            <systemPropertyVariables combine.children="append">
+              <user.language>en</user.language>
+              <user.region>US</user.region>
+              <java.awt.headless>true</java.awt.headless>
+            </systemPropertyVariables>
           </configuration>
         </plugin>
       </plugins>
