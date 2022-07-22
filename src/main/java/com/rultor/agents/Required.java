@@ -29,49 +29,55 @@
  */
 package com.rultor.agents;
 
-import com.jcabi.log.Logger;
-import com.rultor.spi.Agent;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.immutable.Array;
+import com.jcabi.xml.XML;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Aggent that tracks time and complains if too slow.
+ * The agent is required for this talk?
+ *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
- * @since 1.59
+ * @since 1.74
  */
-public final class TimedAgent implements Agent {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "xpaths")
+public final class Required {
 
     /**
-     * Limit in seconds.
+     * Encapsulated XPaths.
      */
-    private static final long LIMIT = TimeUnit.SECONDS.toMillis(30L);
-
-    /**
-     * Agent.
-     */
-    private final transient Agent origin;
+    private final transient Array<String> xpaths;
 
     /**
      * Ctor.
-     * @param agent Original agent
+     * @param args XPath expressions
      */
-    public TimedAgent(final Agent agent) {
-        this.origin = agent;
+    public Required(final Array<String> args) {
+        this.xpaths = args;
     }
 
-    @Override
-    public void execute(final Talk talk) throws IOException {
-        final long start = System.currentTimeMillis();
-        this.origin.execute(talk);
-        final long msec = System.currentTimeMillis() - start;
-        if (msec > TimedAgent.LIMIT) {
-            Logger.error(
-                this, "%s#execute() took %[ms]s, it's too long!",
-                this.origin.getClass().getCanonicalName(),
-                msec
-            );
+    /**
+     * This talk is required for this agent?
+     * @param talk The talk
+     * @return TRUE if this talk is required for this agent
+     * @throws IOException If fails
+     */
+    public boolean isIt(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        boolean good = true;
+        for (final String xpath : this.xpaths) {
+            if (xml.nodes(xpath).isEmpty()) {
+                good = false;
+                break;
+            }
         }
+        return good;
     }
+
 }

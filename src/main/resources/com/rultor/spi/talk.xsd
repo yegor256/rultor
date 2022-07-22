@@ -32,8 +32,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <xs:simpleType name="hash">
     <xs:annotation>
       <xs:documentation source="description">
-                Alphanumeric type value used as ID in the elements of this file.
-            </xs:documentation>
+        Alphanumeric type value used as ID in the elements of this file.
+      </xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="[0-9a-f]+"/>
@@ -42,36 +42,36 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <xs:complexType name="daemon">
     <xs:annotation>
       <xs:documentation source="description">
-                This type describes the specification of the daemon task.
-            </xs:documentation>
+        This type describes the specification of the daemon task.
+      </xs:documentation>
     </xs:annotation>
     <xs:all>
       <xs:element name="script" type="xs:string">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the script to run.
-                    </xs:documentation>
+            This element has the script to run.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="title" type="xs:string">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the title of the daemon.
-                    </xs:documentation>
+            This element has the title of the daemon.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="started" type="xs:dateTime" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the started time of the daemon.
-                    </xs:documentation>
+            This element has the started time of the daemon.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="dir" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element defines the directory of the daemon.
-                    </xs:documentation>
+            This element defines the directory of the daemon.
+          </xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
@@ -82,29 +82,29 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <xs:element name="ended" type="xs:dateTime" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the ended time of the daemon.
-                    </xs:documentation>
+            This element has the ended time of the daemon.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="code" type="xs:integer" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the code of the daemon.
-                    </xs:documentation>
+            This element has the code of the daemon.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="highlights" type="xs:string" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the description of the daemon.
-                    </xs:documentation>
+            This element has the description of the daemon.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="tail" type="xs:string" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        The last few lines of the build log
-                    </xs:documentation>
+            The last few lines of the build log
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:all>
@@ -113,36 +113,36 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <xs:complexType name="shell">
     <xs:annotation>
       <xs:documentation source="description">
-                This type describes the specification about the shell task.
-            </xs:documentation>
+        This type describes the specification about the shell task.
+      </xs:documentation>
     </xs:annotation>
     <xs:all>
       <xs:element name="host" type="xs:string">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the host name or IP address.
-                    </xs:documentation>
+            This element has the host name or IP address.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="port" type="xs:integer">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the port to use in the connection.
-                    </xs:documentation>
+            This element has the port to use in the connection.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="login" type="xs:string">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the username of the connection.
-                    </xs:documentation>
+            This element has the username of the connection.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="key" type="xs:string">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the password to use in the connection.
-                    </xs:documentation>
+            This element has the password to use in the connection.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:all>
@@ -151,46 +151,46 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <xs:complexType name="request">
     <xs:annotation>
       <xs:documentation source="description">
-                This type describes the specification about the request task.
-            </xs:documentation>
+        This type describes the specification about the request task.
+      </xs:documentation>
     </xs:annotation>
     <xs:all>
       <xs:element name="author" type="xs:string" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        The unique name (e.g. GitHub login)
-                        of the author of the request.
-                    </xs:documentation>
+            The unique name (e.g. GitHub login)
+            of the author of the request.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="success" type="xs:boolean" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the flag that indicates if the request
-                        was successfully.
-                    </xs:documentation>
+            This element has the flag that indicates if the request
+            was successfully.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="msec" type="xs:integer" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the number of milliseconds that takes
-                        the request.
-                    </xs:documentation>
+            This element has the number of milliseconds that takes
+            the request.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="highlights" type="xs:string" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        This element has the description of the request task.
-                    </xs:documentation>
+            This element has the description of the request task.
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="tail" type="xs:string" minOccurs="0">
         <xs:annotation>
           <xs:documentation source="description">
-                        The last few lines of the stdout
-                    </xs:documentation>
+            The last few lines of the stdout
+          </xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="type">

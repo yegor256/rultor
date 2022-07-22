@@ -31,16 +31,19 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
-import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.Required;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.profiles.ProfileDeprecations;
+import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
+import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +69,16 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public final class StartsDaemon extends AbstractAgent {
+public final class StartsDaemon implements Agent {
+
+    /**
+     * Paths to match.
+     */
+    private static final Array<String> PATHS = new Array<>(
+        "/talk/shell[host and port and login and key]",
+        "/talk/daemon[script and dir and not(started) and not(ended)]",
+        "/talk/daemon[dir != '']"
+    );
 
     /**
      * Profile to get assets from.
@@ -78,20 +90,31 @@ public final class StartsDaemon extends AbstractAgent {
      * @param prof Profile
      */
     public StartsDaemon(final Profile prof) {
-        super(
-            "/talk/shell[host and port and login and key]",
-            "/talk/daemon[script and dir and not(started) and not(ended)]",
-            "/talk/daemon[dir != '']"
-        );
         this.profile = prof;
     }
 
     @Override
+    public void execute(final Talk talk) throws IOException {
+        if (new Required(StartsDaemon.PATHS).isIt(talk)) {
+            talk.modify(
+                new Directives()
+                    .xpath("/talk/daemon[not(started)]")
+                    .strict(1)
+                    .add("started").set(new Time().iso())
+            );
+            talk.modify(this.process(talk.read()));
+        }
+    }
+
+    /**
+     * Process talk.
+     * @param xml The
+     * @return List of directives
+     */
     public Iterable<Directive> process(final XML xml) {
         final Directives dirs = new Directives()
-            .xpath("/talk/daemon[not(started)]")
-            .strict(1)
-            .add("started").set(new Time().iso()).up();
+            .xpath("/talk/daemon[not(ended)]")
+            .strict(1);
         try {
             this.run(xml);
         } catch (final IOException ex) {
@@ -114,11 +137,6 @@ public final class StartsDaemon extends AbstractAgent {
         final Shell shell = new TalkShells(xml).get();
         new ProfileDeprecations(this.profile).print(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        if (dir.isEmpty()) {
-            throw new IllegalArgumentException(
-                "The dir can't be empty"
-            );
-        }
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         new Shell.Safe(shell).exec(
             String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
@@ -161,7 +179,7 @@ public final class StartsDaemon extends AbstractAgent {
                 "( ( nohup ./run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null & )"
             )
         );
-        Logger.info(this, "daemon started at %s", dir);
+        Logger.info(this, "Daemon started at %s", dir);
         return dir;
     }
 

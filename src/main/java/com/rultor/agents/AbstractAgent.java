@@ -66,16 +66,8 @@ public abstract class AbstractAgent implements Agent {
 
     @Override
     public final void execute(final Talk talk) throws IOException {
-        final XML xml = talk.read();
-        boolean good = true;
-        for (final String xpath : this.xpaths) {
-            if (xml.nodes(xpath).isEmpty()) {
-                good = false;
-                break;
-            }
-        }
-        if (good) {
-            talk.modify(this.process(xml));
+        if (new Required(this.xpaths).isIt(talk)) {
+            talk.modify(this.process(talk.read()));
         }
     }
 
