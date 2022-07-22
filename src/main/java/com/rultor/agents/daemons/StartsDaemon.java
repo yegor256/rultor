@@ -80,7 +80,8 @@ public final class StartsDaemon extends AbstractAgent {
     public StartsDaemon(final Profile prof) {
         super(
             "/talk/shell[host and port and login and key]",
-            "/talk/daemon[script and dir and not(started) and not(ended)]"
+            "/talk/daemon[script and dir and not(started) and not(ended)]",
+            "/talk/daemon[dir != '']"
         );
         this.profile = prof;
     }
@@ -110,10 +111,15 @@ public final class StartsDaemon extends AbstractAgent {
      */
     @RetryOnFailure
     public String run(final XML xml) throws IOException {
-        final XML daemon = xml.nodes("/talk/daemon").get(0);
         final Shell shell = new TalkShells(xml).get();
         new ProfileDeprecations(this.profile).print(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
+        if (dir.isEmpty()) {
+            throw new IllegalArgumentException(
+                "The dir can't be empty"
+            );
+        }
+        final XML daemon = xml.nodes("/talk/daemon").get(0);
         new Shell.Safe(shell).exec(
             String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
             IOUtils.toInputStream(
