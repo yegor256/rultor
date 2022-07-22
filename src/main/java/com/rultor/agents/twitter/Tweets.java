@@ -112,6 +112,11 @@ public final class Tweets extends AbstractAgent {
         throws IOException {
         final StringBuilder text = new StringBuilder(2 * Tv.HUNDRED);
         if (repo.hasDescription() && !repo.description().isEmpty()) {
+            if (repo.description().length() > Tv.HUNDRED) {
+                text.append(repo.description(), 0, Tv.HUNDRED);
+            } else {
+                text.append(repo.description());
+            }
             text.append(repo.description(), 0, Tv.HUNDRED);
         } else {
             text.append(repo.coordinates().repo());
