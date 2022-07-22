@@ -31,6 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.aspects.Timeable;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -50,6 +51,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -69,6 +71,7 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class StartsDaemon implements Agent {
 
     /**
@@ -108,9 +111,15 @@ public final class StartsDaemon implements Agent {
 
     /**
      * Process talk.
-     * @param xml The
+     *
+     * The annotation here is a TEMPORARY solution. It will be removed in the
+     * future. We need it because the SSH shell is not dropping the connection
+     * when the command is in the background.
+     *
+     * @param xml The XML to process.
      * @return List of directives
      */
+    @Timeable(limit = 1, unit = TimeUnit.MINUTES)
     public Iterable<Directive> process(final XML xml) {
         final Directives dirs = new Directives()
             .xpath("/talk/daemon[not(ended)]")
