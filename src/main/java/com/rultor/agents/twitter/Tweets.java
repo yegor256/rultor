@@ -117,7 +117,6 @@ public final class Tweets extends AbstractAgent {
             } else {
                 text.append(repo.description());
             }
-            text.append(repo.description(), 0, Tv.HUNDRED);
         } else {
             text.append(repo.coordinates().repo());
         }
