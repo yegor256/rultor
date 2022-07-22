@@ -213,6 +213,9 @@ public final class Agents {
                                         "hello", new QnHello()
                                     ),
                                     new QnIfContains(
+                                        "ping", new QnHello()
+                                    ),
+                                    new QnIfContains(
                                         "stop",
                                         new QnAskedBy(
                                             profile,
