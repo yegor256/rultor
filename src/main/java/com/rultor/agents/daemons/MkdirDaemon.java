@@ -30,6 +30,7 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
@@ -76,6 +77,10 @@ public final class MkdirDaemon extends AbstractAgent {
             baos, baos
         );
         final String dir = baos.toString(StandardCharsets.UTF_8.name()).trim();
+        Logger.info(
+            this, "directory %s created for %s",
+            dir, xml.xpath("/talk/@name").get(0)
+        );
         return new Directives()
             .xpath("/talk/daemon[not(started) and not(dir)]")
             .strict(1)
