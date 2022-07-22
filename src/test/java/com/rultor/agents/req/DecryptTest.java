@@ -137,7 +137,7 @@ public final class DecryptTest {
     /**
      * This test reproduces issue #635 and validates that Decrypt uses HTTP
      * proxy server settings when running gpg, if they are provided.
-     * @throws java.io.IOException Thrown in case of XML parsing error
+     * @throws IOException Thrown in case of XML parsing error
      */
     @Test
     public void testHttpProxyHandling() throws IOException {

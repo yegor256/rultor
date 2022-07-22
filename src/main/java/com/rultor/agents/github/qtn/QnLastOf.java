@@ -61,7 +61,7 @@ public final class QnLastOf implements Question {
      * @param qtns Original questions
      */
     public QnLastOf(final Iterable<Question> qtns) {
-        this.questions = new Array<Question>(qtns);
+        this.questions = new Array<>(qtns);
     }
 
     @Override

@@ -128,6 +128,7 @@ final class DockerRun {
      * @return Envs
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     public Iterable<String> envs(final Map<String, String> extra)
         throws IOException {
         final List<String> entries = new LinkedList<>();
@@ -138,7 +139,7 @@ final class DockerRun {
                 )
             );
         }
-        return new Joined<String>(
+        return new Joined<>(
             DockerRun.envs(this.profile.read(), "/p/entry[@key='env']"),
             DockerRun.envs(this.command, "entry[@key='env']"),
             new Sticky<>(entries)
@@ -152,7 +153,7 @@ final class DockerRun {
      * @return Items
      */
     private static Iterable<String> scripts(final XML xml, final String path) {
-        final Collection<String> items = new LinkedList<String>();
+        final Collection<String> items = new LinkedList<>();
         if (!xml.nodes(path).isEmpty()) {
             final XML node = xml.nodes(path).get(0);
             if (node.nodes("item").isEmpty()) {
@@ -163,7 +164,7 @@ final class DockerRun {
                 }
             }
         }
-        final Collection<String> scripts = new LinkedList<String>();
+        final Collection<String> scripts = new LinkedList<>();
         for (final String item : items) {
             scripts.add(neutralize(item));
             scripts.add(";");

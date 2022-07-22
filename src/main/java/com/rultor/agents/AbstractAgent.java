@@ -61,7 +61,7 @@ public abstract class AbstractAgent implements Agent {
      * @param args XPath expressions
      */
     public AbstractAgent(final String... args) {
-        this.xpaths = new Array<String>(args);
+        this.xpaths = new Array<>(args);
     }
 
     @Override
@@ -83,7 +83,7 @@ public abstract class AbstractAgent implements Agent {
      * Process it.
      * @param xml Its xml
      * @return Directives
-     * @throws java.io.IOException If fails
+     * @throws IOException If fails
      */
     protected abstract Iterable<Directive> process(XML xml)
         throws IOException;

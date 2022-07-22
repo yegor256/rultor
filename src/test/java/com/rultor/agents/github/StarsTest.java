@@ -47,7 +47,7 @@ import org.xembly.Directives;
 public final class StarsTest {
     /**
      * Stars can star a new repo.
-     * @throws java.io.IOException In case of error
+     * @throws IOException In case of error
      */
     @Test
     public void starsNewRepo() throws IOException {
@@ -63,7 +63,7 @@ public final class StarsTest {
 
     /**
      * Stars should leave already starred repo.
-     * @throws java.io.IOException In case of error
+     * @throws IOException In case of error
      */
     @Test
     public void leavesStarredRepo() throws IOException {

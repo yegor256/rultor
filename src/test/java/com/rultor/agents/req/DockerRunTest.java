@@ -72,13 +72,13 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='a']").envs(
-                new ArrayMap<String, String>()
+                new ArrayMap<>()
             ),
             Matchers.hasItems("A=5", "B=f e")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='b']").envs(
-                new ArrayMap<String, String>()
+                new ArrayMap<>()
             ),
             Matchers.hasItems("HELLO='1'")
         );
@@ -234,7 +234,7 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/entry[@key='o']").envs(
-                new ArrayMap<String, String>()
+                new ArrayMap<>()
             ),
             Matchers.hasItems("ALPHA=909", "A=123")
         );
@@ -274,7 +274,7 @@ public final class DockerRunTest {
         MatcherAssert.assertThat(
             new Brackets(
                 new DockerRun(profile, "/p/entry[@key='ooo']").envs(
-                    new ArrayMap<String, String>()
+                    new ArrayMap<>()
                 )
             ).toString(),
             Matchers.startsWith("(  ")

@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
 /**
- * Tests for {@link com.rultor.agents.IndexesRequests}.
+ * Tests for {@link IndexesRequests}.
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$

@@ -389,7 +389,7 @@ public final class StartsRequestTest {
      * Execute script from daemon.
      * @param talk Talk to use
      * @return Full stdout
-     * @throws java.io.IOException If fails
+     * @throws IOException If fails
      */
     private String exec(final Talk talk) throws IOException {
         final String script = new UncheckedText(

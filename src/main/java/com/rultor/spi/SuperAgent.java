@@ -68,7 +68,7 @@ public interface SuperAgent {
          * @param list List of them
          */
         public Iterative(final Iterable<SuperAgent> list) {
-            this.children = new Array<SuperAgent>(list);
+            this.children = new Array<>(list);
         }
         @Override
         public void execute(final Talks talks) throws IOException {

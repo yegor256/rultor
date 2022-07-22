@@ -71,7 +71,7 @@ public interface Profile {
 
     /**
      * Get it in XML format (throws
-     * {@link com.rultor.spi.Profile.ConfigException}, if fails).
+     * {@link Profile.ConfigException}, if fails).
      *
      * @return XML
      * @throws IOException If fails

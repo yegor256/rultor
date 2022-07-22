@@ -211,7 +211,7 @@ public final class Entry {
             EvictingQueue.create((int) TimeUnit.HOURS.toMinutes(1L))
         );
         final Collection<Throwable> error = Collections.synchronizedCollection(
-            new ArrayList<Throwable>(1)
+            new ArrayList<>(1)
         );
         // @checkstyle AnonInnerLengthCheck (50 lines)
         return new Pulse() {

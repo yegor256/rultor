@@ -47,7 +47,7 @@ import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
- * Tests for ${@link com.rultor.agents.Mails}.
+ * Tests for ${@link Mails}.
  *
  * @author Yuriy Alevohin (alevohin@mail.ru)
  * @version $Id$
@@ -123,7 +123,7 @@ public final class MailsTest {
     /**
      * Make a talk with this tag.
      * @return Talk
-     * @throws java.io.IOException If fails
+     * @throws IOException If fails
      */
     private static Talk talk() throws IOException {
         final Talk talk = new Talk.InFile();
