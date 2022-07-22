@@ -42,7 +42,6 @@ import com.rultor.agents.shells.TalkShells;
 import com.rultor.profiles.ProfileDeprecations;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -53,7 +52,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.NullInputStream;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -82,7 +80,7 @@ public final class StartsDaemon extends AbstractAgent {
     public StartsDaemon(final Profile prof) {
         super(
             "/talk/shell[host and port and login and key]",
-            "/talk/daemon[script and not(started) and not(ended)]"
+            "/talk/daemon[script and dir and not(started) and not(ended)]"
         );
         this.profile = prof;
     }
@@ -94,8 +92,7 @@ public final class StartsDaemon extends AbstractAgent {
             .strict(1)
             .add("started").set(new Time().iso()).up();
         try {
-            final String dir = this.run(xml);
-            dirs.add("dir").set(dir);
+            this.run(xml);
         } catch (final IOException ex) {
             dirs.add("ended").set(new Time().iso()).up()
                 .add("code").set("128").up()
@@ -116,13 +113,7 @@ public final class StartsDaemon extends AbstractAgent {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final Shell shell = new TalkShells(xml).get();
         new ProfileDeprecations(this.profile).print(shell);
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new Shell.Safe(shell).exec(
-            "mktemp -d -t rultor-XXXX",
-            new NullInputStream(0L),
-            baos, baos
-        );
-        final String dir = baos.toString(StandardCharsets.UTF_8.name()).trim();
+        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
             String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
             IOUtils.toInputStream(

@@ -43,6 +43,7 @@ import com.rultor.agents.daemons.DismountDaemon;
 import com.rultor.agents.daemons.DropsDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
+import com.rultor.agents.daemons.MkdirDaemon;
 import com.rultor.agents.daemons.SanitizesDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.daemons.StopsDaemon;
@@ -259,6 +260,7 @@ public final class Agents {
             // @checkstyle MagicNumber (1 line)
             new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),
             new DropsDaemon(TimeUnit.DAYS.toMinutes(1L)),
+            new MkdirDaemon(),
             new StartsDaemon(profile),
             new KillsDaemon(TimeUnit.HOURS.toMinutes(2L)),
             new StopsDaemon(),
