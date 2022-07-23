@@ -97,6 +97,7 @@ public final class QnStatus implements Question {
         final URI home) throws IOException {
         final XML xml = this.talk.read();
         final Collection<String> lines = new LinkedList<>();
+        lines.add(QnStatus.REPORT.applyTo(xml).trim());
         if (!xml.nodes("/talk[shell/host and daemon/dir]").isEmpty()) {
             final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
             final Shell.Plain shell = new Shell.Plain(
@@ -141,11 +142,7 @@ public final class QnStatus implements Question {
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
                 new UncheckedText(
-                    new Joined(
-                        "\n",
-                        QnStatus.REPORT.applyTo(xml).trim(),
-                        lines.toString()
-                    )
+                    new Joined("\n", lines)
                 ).asString()
             )
         );
