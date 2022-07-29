@@ -32,6 +32,7 @@ package com.rultor.agents.daemons;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Timeable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -119,7 +120,7 @@ public final class StartsDaemon implements Agent {
      * @param xml The XML to process.
      * @return List of directives
      */
-    @Timeable(limit = 1, unit = TimeUnit.MINUTES)
+    @Timeable(limit = Tv.TEN, unit = TimeUnit.SECONDS)
     public Iterable<Directive> process(final XML xml) {
         final Directives dirs = new Directives()
             .xpath("/talk/daemon[not(ended)]")
