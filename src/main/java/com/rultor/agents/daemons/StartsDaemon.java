@@ -120,7 +120,7 @@ public final class StartsDaemon implements Agent {
      * @param xml The XML to process.
      * @return List of directives
      */
-    @Timeable(limit = Tv.TEN, unit = TimeUnit.SECONDS)
+    @Timeable(limit = Tv.THIRTY, unit = TimeUnit.SECONDS)
     public Iterable<Directive> process(final XML xml) {
         final Directives dirs = new Directives()
             .xpath("/talk/daemon[not(ended)]")
