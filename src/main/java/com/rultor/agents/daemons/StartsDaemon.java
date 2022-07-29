@@ -201,6 +201,7 @@ public final class StartsDaemon implements Agent {
      */
     private String upload(final Shell shell, final String dir)
         throws IOException {
+        final long start = System.currentTimeMillis();
         String script = "";
         try {
             for (final Map.Entry<String, InputStream> asset
@@ -215,8 +216,9 @@ public final class StartsDaemon implements Agent {
                     Logger.stream(Level.WARNING, true)
                 );
                 Logger.info(
-                    this, "\"%s\" uploaded into %s",
-                    asset.getKey(), dir
+                    this, "\"%s\" uploaded into %s in %[ms]s",
+                    asset.getKey(), dir,
+                    System.currentTimeMillis() - start
                 );
             }
             this.gpg(shell, dir);
