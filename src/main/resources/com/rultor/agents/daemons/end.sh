@@ -2,7 +2,7 @@
 set -e
 
 if [ ! -e pid ]; then
-  echo "'pid' file is absent, something was broken"
+  echo "'pid' file is absent on the server after the end of operation; it seems that we didn't manager to start it correctly"
   exit 1
 fi
 
@@ -12,7 +12,7 @@ if ps -p "${pid}" >/dev/null; then
 fi
 
 if [ ! -e cid ]; then
-  echo "'cid' file is absent, container wasn't started correctly"
+  echo "'cid' file is absent, most probably the Docker container wasn't started correctly"
   exit 1
 fi
 
