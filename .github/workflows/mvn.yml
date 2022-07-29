@@ -26,8 +26,4 @@ jobs:
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.7
-      - run: gem install xcop
       - run: mvn clean install -Pqulice --errors --batch-mode
