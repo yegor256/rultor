@@ -33,7 +33,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.59.0</version>
+    <version>0.60.0</version>
   </parent>
   <groupId>com.rultor</groupId>
   <artifactId>rultor</artifactId>
@@ -97,22 +97,22 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.takes</groupId>
       <artifactId>takes</artifactId>
-      <version>1.21.1</version>
+      <version>1.22.0</version>
     </dependency>
     <dependency>
       <groupId>io.sentry</groupId>
       <artifactId>sentry</artifactId>
-      <version>6.2.1</version>
+      <version>6.3.1</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.261</version>
+      <version>1.12.276</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-dynamodb</artifactId>
-      <version>1.12.261</version>
+      <version>1.12.276</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
@@ -138,7 +138,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.cactoos</groupId>
       <artifactId>cactoos</artifactId>
-      <version>0.51.0</version>
+      <version>0.52.0</version>
     </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
@@ -205,12 +205,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-s3</artifactId>
-      <version>0.18</version>
+      <version>0.19.0</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-ssh</artifactId>
-      <version>1.8.0</version>
+      <version>1.8.1</version>
     </dependency>
     <dependency>
       <groupId>org.aspectj</groupId>
@@ -409,6 +409,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <version>5.6.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
       <version>5.6.2</version>
       <scope>test</scope>
     </dependency>

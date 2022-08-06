@@ -1,5 +1,5 @@
 docker:
-  image: yegor256/rultor-image:1.9.1
+  image: yegor256/rultor-image:1.11.0
 readers:
   - "urn:github:526301"
 assets:
@@ -15,10 +15,6 @@ merge:
   script: |-
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml --quiet
-    mvn clean
-deploy:
-  script: |-
-    mvn clean package -Prultor --errors --settings ../settings.xml --batch-mode --quiet
     mvn clean
 release:
   pre: false
