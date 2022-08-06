@@ -29,7 +29,7 @@ docker_when_possible
 for f in "${sensitive[@]}"; do
   if [ -e "${f}" ]; then
     echo "Sensitive file ${f} is present, can't release"
-    exit - 1
+    exit -1
   fi
   echo "Sensitive file ${f} is absent, we are good"
 done
