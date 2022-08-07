@@ -2,7 +2,7 @@
 set -e
 
 if [ ! -e pid ]; then
-  echo "'pid' file is absent on the server after the end of operation; it seems that we didn't manager to start it correctly"
+  echo "'pid' file is absent on the server after the end of operation; it seems that we didn't manage to start Docker container correctly"
   exit 1
 fi
 
