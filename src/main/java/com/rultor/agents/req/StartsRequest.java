@@ -142,7 +142,7 @@ public final class StartsRequest extends AbstractAgent {
                 new Mapped<>(
                     input -> String.format(
                         "%s=%s", input.getKey(),
-                        StartsRequest.escape(input.getValue())
+                        StartsRequest.escape(input.getKey(), input.getValue())
                     ),
                     new Joined<Map.Entry<String, String>>(
                         this.vars(req, type).entrySet(),
@@ -358,12 +358,13 @@ public final class StartsRequest extends AbstractAgent {
 
     /**
      * Escape var.
+     * @param key The name of the var
      * @param raw The variable
      * @return Escaped one
      */
-    private static String escape(final String raw) {
+    private static String escape(final String key, final String raw) {
         final String esc;
-        if (raw.matches("\\(.*\\)")) {
+        if ("scripts".equals(key) || "vars".equals(key)) {
             esc = raw;
         } else {
             esc = Ssh.escape(raw);

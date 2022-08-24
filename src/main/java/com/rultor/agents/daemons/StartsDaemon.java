@@ -170,7 +170,6 @@ public final class StartsDaemon implements Agent {
             this.upload(shell, dir),
             daemon.xpath("script/text()").get(0)
         );
-        Logger.info(this, "run.sh uploaded:\n%s", script);
         new Shell.Safe(shell).exec(
             String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
             IOUtils.toInputStream(script, StandardCharsets.UTF_8),

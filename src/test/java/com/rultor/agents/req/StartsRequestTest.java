@@ -85,7 +85,8 @@ public final class StartsRequestTest {
                 .add("author").set("yegor256").up()
                 .add("type").set("merge").up()
                 .add("args")
-                .add("arg").attr("name", "hey").set("hello dude!")
+                .add("arg").attr("name", "hey").set("hello (#dude)!").up()
+                .add("arg").attr("name", "heyhey").set("(xyz)")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
@@ -93,9 +94,10 @@ public final class StartsRequestTest {
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon[@id='abcd' and script]",
                 "/talk/daemon/title",
-                "//script[contains(.,\"hey='hello dude!'\")]",
+                "//script[contains(.,\"hey='hello (#dude)!'\")]",
+                "//script[contains(.,\"heyhey='(xyz)'\")]",
                 "//script[contains(.,'--env=author=yegor256')]",
-                "//script[contains(.,'--env=hey=hello dude!')]"
+                "//script[contains(.,'--env=hey=hello (#dude)!')]"
             )
         );
     }
