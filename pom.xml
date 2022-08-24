@@ -33,7 +33,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.60.0</version>
+    <version>0.60.5</version>
   </parent>
   <groupId>com.rultor</groupId>
   <artifactId>rultor</artifactId>
