@@ -147,34 +147,33 @@ public final class StartsDaemon implements Agent {
         new ProfileDeprecations(this.profile).print(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final XML daemon = xml.nodes("/talk/daemon").get(0);
+        final String script = String.join(
+            "\n",
+            "#!/bin/bash",
+            "set -x",
+            "set -e",
+            "set -o pipefail",
+            "cd $(dirname $0)",
+            "echo $$ > pid",
+            String.format(
+                "echo %s",
+                Ssh.escape(
+                    String.format(
+                        "%s %s",
+                        Manifests.read("Rultor-Version"),
+                        Manifests.read("Rultor-Revision")
+                    )
+                )
+            ),
+            "date",
+            "uptime",
+            this.upload(shell, dir),
+            daemon.xpath("script/text()").get(0)
+        );
+        Logger.info(this, "run.sh uploaded:\n%s", script);
         new Shell.Safe(shell).exec(
             String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
-            IOUtils.toInputStream(
-                String.join(
-                    "\n",
-                    "#!/bin/bash",
-                    "set -x",
-                    "set -e",
-                    "set -o pipefail",
-                    "cd $(dirname $0)",
-                    "echo $$ > pid",
-                    String.format(
-                        "echo %s",
-                        Ssh.escape(
-                            String.format(
-                                "%s %s",
-                                Manifests.read("Rultor-Version"),
-                                Manifests.read("Rultor-Revision")
-                            )
-                        )
-                    ),
-                    "date",
-                    "uptime",
-                    this.upload(shell, dir),
-                    daemon.xpath("script/text()").get(0)
-                ),
-                StandardCharsets.UTF_8
-            ),
+            IOUtils.toInputStream(script, StandardCharsets.UTF_8),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
