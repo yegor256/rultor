@@ -32,6 +32,8 @@ package com.rultor;
 import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
+import java.io.IOException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -41,6 +43,15 @@ import org.junit.Test;
  * @since 1.58
  */
 public final class EntryTest {
+
+    /**
+     * To make sure we are online.
+     * @throws IOException If fails
+     */
+    @BeforeClass
+    public static void weAreOnline() throws IOException {
+        new WeAreOnline().assume();
+    }
 
     /**
      * RtSttc can work in production mode.

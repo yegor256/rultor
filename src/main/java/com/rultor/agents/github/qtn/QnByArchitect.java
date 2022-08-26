@@ -31,6 +31,7 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Repo;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -108,11 +109,23 @@ public final class QnByArchitect implements Question {
         final String author = comment.author()
             .login()
             .toLowerCase(Locale.ENGLISH);
-        final boolean legal = logins.isEmpty()
-            || logins.contains(author)
-            || logins.contains(author);
-        if (legal) {
+        if (logins.contains(author)) {
             req = this.origin.understand(comment, home);
+        } else if (logins.isEmpty()) {
+            if (QnByArchitect.allowed(comment.issue().repo(), author)) {
+                req = this.origin.understand(comment, home);
+            } else {
+                new Answer(comment).post(
+                    true,
+                    String.format(
+                        QnByArchitect.PHRASES.getString(
+                            "QnByArchitect.read-only"
+                        ),
+                        logins.get(0).toLowerCase(Locale.ENGLISH)
+                    )
+                );
+                req = Req.DONE;
+            }
         } else {
             new Answer(comment).post(
                 true,
@@ -124,6 +137,19 @@ public final class QnByArchitect implements Question {
             req = Req.DONE;
         }
         return req;
+    }
+
+    /**
+     * This repository allows this author to write into it.
+     * @param repo The repo
+     * @param author The author
+     * @return TRUE if write access allowed
+     * @throws IOException If fails
+     */
+    private static boolean allowed(final Repo repo,
+        final String author) throws IOException {
+        final String perm = repo.collaborators().permission(author);
+        return "write".equals(perm) || "admin".equals(perm);
     }
 
 }

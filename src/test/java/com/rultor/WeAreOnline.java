@@ -27,52 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.profiles;
+package com.rultor;
 
-import com.jcabi.github.Coordinates;
-import com.jcabi.github.RtGithub;
-import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.WeAreOnline;
-import com.rultor.spi.Profile;
 import java.io.IOException;
-import org.hamcrest.MatcherAssert;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.Test;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import org.junit.Assume;
 
 /**
- * Tests for ${@link GithubProfile}.
- *
+ * Assumption for IT cases.
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.75
  */
-public final class GithubProfileITCase {
+public final class WeAreOnline {
 
     /**
-     * To make sure we are online.
-     * @throws IOException If fails
+     * Assume it.
+     * @throws IOException Fails if...
      */
-    @BeforeClass
-    public static void weAreOnline() throws IOException {
-        new WeAreOnline().assume();
+    public void assume() throws IOException {
+        try {
+            Assume.assumeTrue(
+                // @checkstyle MagicNumber (1 line)
+                InetAddress.getByName("api.github.com").isReachable(1000)
+            );
+        } catch (final UnknownHostException ex) {
+            Assume.assumeFalse(true);
+        }
     }
 
-    /**
-     * GithubProfile can fetch a YAML config.
-     * @throws Exception In case of error.
-     */
-    @Test
-    public void fetchesYamlConfig() throws Exception {
-        final Profile profile = new GithubProfile(
-            new RtGithub().repos().get(
-                new Coordinates.Simple("yegor256/rultor")
-            )
-        );
-        MatcherAssert.assertThat(
-            profile.read(),
-            XhtmlMatchers.hasXPaths(
-                "/p/entry[@key='merge']/entry[@key='script']"
-            )
-        );
-    }
 }
