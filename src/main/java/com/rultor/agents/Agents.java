@@ -97,11 +97,12 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
+import org.cactoos.io.ResourceOf;
+import org.cactoos.text.TextOf;
+import org.cactoos.text.UncheckedText;
 
 /**
  * Agents.
@@ -118,6 +119,21 @@ import org.apache.commons.io.IOUtils;
 @EqualsAndHashCode(of = { "github", "sttc" })
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
+
+    /**
+     * Host to connect to.
+     */
+    private static final String HOST = "b4.rultor.com";
+
+    /**
+     * Port to connect to.
+     */
+    private static final int PORT = 22;
+
+    /**
+     * Login in SSH session.
+     */
+    private static final String LOGIN = "rultor";
 
     /**
      * Github client.
@@ -152,15 +168,10 @@ public final class Agents {
                 new IndexesRequests(),
                 new DockerExec(
                     new Ssh(
-                        // @checkstyle MagicNumber (1 line)
-                        "b4.rultor.com", 22,
-                        "rultor",
-                        IOUtils.toString(
-                            this.getClass().getResourceAsStream("rultor.key"),
-                            StandardCharsets.UTF_8
-                        )
+                        Agents.HOST, Agents.PORT, Agents.LOGIN,
+                        Agents.priv()
                     ),
-                    "rmi.sh"
+                    "rmi.sh </dev/null >/dev/null 2>&1 &"
                 )
             )
         );
@@ -249,13 +260,8 @@ public final class Agents {
             new StartsRequest(profile),
             new RegistersShell(
                 profile,
-                // @checkstyle MagicNumber (1 line)
-                "b4.rultor.com", 22,
-                "rultor",
-                IOUtils.toString(
-                    this.getClass().getResourceAsStream("rultor.key"),
-                    StandardCharsets.UTF_8
-                )
+                Agents.HOST, Agents.PORT, Agents.LOGIN,
+                Agents.priv()
             ),
             // @checkstyle MagicNumber (1 line)
             new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),
@@ -351,6 +357,18 @@ public final class Agents {
             "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
             entry
         );
+    }
+
+    /**
+     * Make private ssh key.
+     * @return The key
+     */
+    private static String priv() {
+        return new UncheckedText(
+            new TextOf(
+                new ResourceOf("com/rultor/agents/rultor.key")
+            )
+        ).asString();
     }
 
 }
