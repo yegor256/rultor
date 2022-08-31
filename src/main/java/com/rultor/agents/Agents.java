@@ -171,7 +171,7 @@ public final class Agents {
                         Agents.HOST, Agents.PORT, Agents.LOGIN,
                         Agents.priv()
                     ),
-                    "nohup rmi.sh </dev/null >/dev/null 2>&1 &"
+                    "rmi.sh"
                 )
             )
         );
