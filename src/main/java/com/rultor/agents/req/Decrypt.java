@@ -117,8 +117,8 @@ final class Decrypt {
             commands.add(
                 String.join(
                     Decrypt.SPACE,
-                    "gpg --verbose \"--keyring=$(pwd)/.gpg/pubring.gpg\"",
-                    "\"--secret-keyring=$(pwd)/.gpg/secring.gpg\"",
+                    "gpg --verbose \"--keyring=$(pwd)/.gnupg/pubring.gpg\"",
+                    "\"--secret-keyring=$(pwd)/.gnupg/secring.gpg\"",
                     String.format(
                         "--decrypt %s > %s",
                         Ssh.escape(asset.xpath("./text()").get(0)),
@@ -143,7 +143,7 @@ final class Decrypt {
             );
             commands.add(String.format("rm -rf %s", Ssh.escape(enc)));
         }
-        commands.add("rm -rf .gpg");
+        commands.add("rm -rf .gnupg");
         return commands;
     }
 }

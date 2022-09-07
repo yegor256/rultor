@@ -115,7 +115,7 @@ public final class DecryptTest {
             );
             Assume.assumeThat(gpg, Matchers.not(Matchers.startsWith("${")));
             FileUtils.writeByteArrayToFile(
-                new File(dir, String.format(".gpg/%s.gpg", key)),
+                new File(dir, String.format(".gnupg/%s.gpg", key)),
                 Base64.decodeBase64(gpg)
             );
         }
