@@ -118,7 +118,7 @@ final class Decrypt {
             commands.add(
                 String.join(
                     Decrypt.SPACE,
-                    "gpg --verbose \"--keyring=$(pwd)/.gnupg/pubring.gpg\"",
+                    "gpg --verbose",
                     "\"--secret-keyring=$(pwd)/.gnupg/secring.gpg\"",
                     String.format(
                         "--decrypt %s > %s",
