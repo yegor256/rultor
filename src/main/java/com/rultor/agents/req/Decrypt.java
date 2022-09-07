@@ -131,6 +131,7 @@ final class Decrypt {
                     String.join(
                         Decrypt.SPACE,
                         "gpg --no-tty --batch --verbose --decrypt",
+                        "--ignore-mdc-error",
                         "--passphrase %s %s > %s"
                     ),
                     Ssh.escape(
