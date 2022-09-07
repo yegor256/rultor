@@ -117,11 +117,8 @@ public final class QnByArchitect implements Question {
             } else {
                 new Answer(comment).post(
                     true,
-                    String.format(
-                        QnByArchitect.PHRASES.getString(
-                            "QnByArchitect.read-only"
-                        ),
-                        logins.get(0).toLowerCase(Locale.ENGLISH)
+                    QnByArchitect.PHRASES.getString(
+                        "QnByArchitect.read-only"
                     )
                 );
                 req = Req.DONE;
