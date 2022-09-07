@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 # ruby '2.2.4'
-gem 'jekyll', '3.6.3'
+gem 'jekyll', '3.9.2'
 gem 'sass', '3.7.4'
 gem 'jekyll-sass', '1.1.0'
 gem 'jekyll-plantuml', '1.0.2'
