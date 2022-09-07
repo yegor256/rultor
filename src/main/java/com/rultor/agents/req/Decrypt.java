@@ -110,6 +110,7 @@ final class Decrypt {
                 )
             );
             commands.add("gpg --version");
+            commands.add("gpg --list-keys");
         }
         for (final XML asset : assets) {
             final String key = asset.xpath("@key").get(0);
