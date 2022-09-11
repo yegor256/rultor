@@ -70,7 +70,7 @@ cat <<EOT > script.sh
 set -x
 set -e
 set -o pipefail
-source /home/r/.profile
+if [ -e /home/r/.profile ]; then source /home/r/.profile; fi
 shopt -s expand_aliases
 alias 'sudo=sudo -i'
 export HOME=/home/r
