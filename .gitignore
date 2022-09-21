@@ -9,3 +9,4 @@ _site
 .settings
 Gemfile.lock
 ajcore*
+.jekyll-cache/

@@ -32,7 +32,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <skin>
     <groupId>com.jcabi</groupId>
     <artifactId>jcabi-maven-skin</artifactId>
-    <version>1.5.1</version>
+    <version>1.7.1</version>
   </skin>
   <googleAnalyticsAccountId>UA-1963507-28</googleAnalyticsAccountId>
   <bannerLeft>
@@ -45,8 +45,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   </bannerLeft>
   <body>
     <head>
-      <link href="//doc.rultor.com/favicon.ico" rel="shortcut icon"/>
-      <link href="//plus.google.com/u/0/114792568016408327418?rel=author" rel="author"/>
+      &lt;link href="//doc.rultor.com/favicon.ico" rel="shortcut icon"/&gt;
+      &lt;link href="//plus.google.com/u/0/114792568016408327418?rel=author" rel="author"/&gt;
     </head>
     <breadcrumbs>
       <item name="doc.rultor.com" href="http://doc.rultor.com"/>
