@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.5
+FROM ubuntu:22.04
 MAINTAINER Armin Braun <me@obrown.io>
 LABEL Description="This is the image holding the Rultor build runner infrastructure."
 
