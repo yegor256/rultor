@@ -15,7 +15,6 @@ merge:
   script: |-
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml --quiet
-    mvn clean
 release:
   pre: false
   sensitive:

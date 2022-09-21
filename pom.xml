@@ -919,8 +919,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <executable>bundle</executable>
+                  <executable>sudo</executable>
                   <arguments>
+                    <argument>bundle</argument>
                     <argument>update</argument>
                   </arguments>
                 </configuration>
