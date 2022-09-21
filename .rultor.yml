@@ -9,6 +9,8 @@ assets:
   heroku-netrc: yegor256/home#assets/heroku-netrc
 install: |-
   pdd --file=/dev/null
+  sudo apt-get install -y python3-pygments
+  sudo pip3 install pygments
   sudo bundle install --no-color "--gemfile=$(pwd)/Gemfile"
 merge:
   fast-forward: only
