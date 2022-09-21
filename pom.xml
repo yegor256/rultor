@@ -913,20 +913,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <inherited>false</inherited>
             <executions>
               <execution>
-                <id>bundle install</id>
-                <phase>pre-site</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>sudo</executable>
-                  <arguments>
-                    <argument>bundle</argument>
-                    <argument>update</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-              <execution>
                 <id>jekyll-build</id>
                 <phase>pre-site</phase>
                 <goals>
