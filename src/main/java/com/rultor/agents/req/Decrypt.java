@@ -156,12 +156,14 @@ final class Decrypt {
             commands.add(String.format("rm -rf %s", Ssh.escape(enc)));
         }
         commands.add("rm -rf .gnupg");
-        commands.add(
-            String.format(
-                "gpg --batch --yes --delete-secret-keys %s",
-                Manifests.read("Rultor-GpgSecret")
-            )
-        );
+        if (!assets.isEmpty()) {
+            commands.add(
+                String.format(
+                    "gpg --batch --yes --delete-secret-keys %s",
+                    Manifests.read("Rultor-GpgSecret")
+                )
+            );
+        }
         return commands;
     }
 }
