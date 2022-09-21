@@ -105,7 +105,7 @@ public final class DecryptTest {
             new FakePGP().asString(),
             StandardCharsets.UTF_8
         );
-        final String[] keys = {"secring"};
+        final String[] keys = { "secring"};
         for (final String key : keys) {
             final String gpg = IOUtils.toString(
                 this.getClass().getResourceAsStream(

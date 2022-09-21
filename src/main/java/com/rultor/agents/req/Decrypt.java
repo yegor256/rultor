@@ -30,6 +30,7 @@
 package com.rultor.agents.req;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.manifests.Manifests;
 import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
@@ -106,7 +107,17 @@ final class Decrypt {
                     Decrypt.SPACE,
                     "gpg --keyserver keyserver.ubuntu.com",
                     this.proxy,
-                    "--verbose --recv-keys 3FD3FA7E9AF0FA4C"
+                    String.format(
+                        "--verbose --recv-keys %s",
+                        Manifests.read("Rultor-GpgPublic")
+                    )
+                )
+            );
+            commands.add(
+                String.join(
+                    Decrypt.SPACE,
+                    "gpg --import",
+                    "\"$(pwd)/.gnupg/secring.gpg\""
                 )
             );
             commands.add("gpg --version");
@@ -120,7 +131,6 @@ final class Decrypt {
                 String.join(
                     Decrypt.SPACE,
                     "gpg --verbose",
-                    "\"--secret-keyring=$(pwd)/.gnupg/secring.gpg\"",
                     String.format(
                         "--decrypt %s > %s",
                         Ssh.escape(asset.xpath("./text()").get(0)),
@@ -146,6 +156,12 @@ final class Decrypt {
             commands.add(String.format("rm -rf %s", Ssh.escape(enc)));
         }
         commands.add("rm -rf .gnupg");
+        commands.add(
+            String.format(
+                "gpg --batch --yes --delete-secret-keys %s",
+                Manifests.read("Rultor-GpgSecret")
+            )
+        );
         return commands;
     }
 }
