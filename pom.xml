@@ -654,7 +654,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <artifactItem>
                       <groupId>com.jcabi</groupId>
                       <artifactId>DynamoDBLocal</artifactId>
-                      <version>2014-01-08</version>
+                      <version>2015-07-16</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}/dynamodb-dist</outputDirectory>
                       <overWrite>false</overWrite>
