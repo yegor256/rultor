@@ -354,7 +354,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-codec</artifactId>
-      <version>1.14</version>
+      <version>1.15</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
