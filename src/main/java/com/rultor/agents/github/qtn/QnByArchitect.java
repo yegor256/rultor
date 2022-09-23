@@ -145,7 +145,12 @@ public final class QnByArchitect implements Question {
      */
     private static boolean allowed(final Repo repo,
         final String author) throws IOException {
-        final String perm = repo.collaborators().permission(author);
+        String perm;
+        try {
+            perm = repo.collaborators().permission(author);
+        } catch (final AssertionError ex) {
+            perm = "forbidden";
+        }
         return "write".equals(perm) || "admin".equals(perm);
     }
 
