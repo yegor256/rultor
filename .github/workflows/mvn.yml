@@ -8,13 +8,12 @@ on:
     branches:
       - master
 jobs:
-  test:
-    name: test
+  mvn:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04]
-        java: [8, 11, 17]
-    runs-on: ${{ matrix.os }}
+        os: [ubuntu-20.04, windows-2022, macos-12]
+        java: [11, 17]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -27,4 +26,6 @@ jobs:
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
-      - run: mvn clean install -Pqulice --errors --batch-mode
+      - run: java -version
+      - run: mvn -version
+      - run: mvn --errors --batch-mode clean install -Pqulice
