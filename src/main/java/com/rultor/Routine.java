@@ -47,10 +47,12 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.constraints.NotNull;
 import org.cactoos.iterable.Mapped;
+import org.cactoos.list.ListOf;
 
 /**
  * Routine.
@@ -58,6 +60,7 @@ import org.cactoos.iterable.Mapped;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.50
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @todo #1125:30min Routine should be delegate execution to separate threads.
  *  Currently com.rultor.Routine#process() is sequentially processing all Talks
  *  and breaking out of this sequential processing to log occurring exceptions.
@@ -183,8 +186,10 @@ final class Routine implements Runnable, Closeable {
     private int process() throws IOException {
         this.agents.starter().execute(this.talks);
         final Profiles profiles = new Profiles();
+        final List<Talk> active = new ListOf<>(this.talks.active());
+        Collections.shuffle(active);
         int total = 0;
-        for (final Talk talk : this.talks.active()) {
+        for (final Talk talk : active) {
             ++total;
             final Profile profile = profiles.fetch(talk);
             this.agents.agent(talk, profile).execute(talk);
