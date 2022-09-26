@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
+import com.jcabi.log.Logger;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
@@ -70,6 +71,7 @@ public final class QnReaction implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
+        final String emoji = "heart";
         comment.issue().repo().github().entry().uri()
             .path("/repos")
             .path(comment.issue().repo().coordinates().user())
@@ -80,11 +82,17 @@ public final class QnReaction implements Question {
             .back()
             .method(Request.POST)
             .body()
-            .set("{\"content\": \"heart\"}")
+            .set(String.format("{\"content\": \"%s\"}", emoji))
             .back()
             .fetch()
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_CREATED);
+        Logger.info(
+            this, "Emoji '%s' to GitHub comment #%d in %s",
+            emoji,
+            comment.number(),
+            comment.issue().repo().coordinates()
+        );
         return this.origin.understand(comment, home);
     }
 
