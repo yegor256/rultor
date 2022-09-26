@@ -187,7 +187,7 @@ final class Routine implements Runnable, Closeable {
         this.agents.starter().execute(this.talks);
         final Profiles profiles = new Profiles();
         final List<Talk> active = new ListOf<>(this.talks.active());
-        Collections.shuffle(active);
+        Collections.reverse(active);
         int total = 0;
         for (final Talk talk : active) {
             ++total;
