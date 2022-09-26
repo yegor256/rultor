@@ -160,7 +160,7 @@ final class Routine implements Runnable, Closeable {
      * @return Total talks processed
      * @throws IOException If fails
      */
-    @Timeable(limit = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @Timeable(limit = Tv.TWENTY, unit = TimeUnit.MINUTES)
     private int safe() throws IOException {
         final long begin = System.currentTimeMillis();
         int total = 0;
