@@ -77,6 +77,7 @@ import com.rultor.agents.github.qtn.QnLock;
 import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnNotSelf;
 import com.rultor.agents.github.qtn.QnParametrized;
+import com.rultor.agents.github.qtn.QnReaction;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
 import com.rultor.agents.github.qtn.QnSafe;
@@ -208,40 +209,42 @@ public final class Agents {
             new QnNotSelf(
                 new QnReferredTo(
                     this.github.users().self().login(),
-                    new QnParametrized(
-                        new QnWithAuthor(
-                            new QnFollow(
-                                new QnFirstOf(
-                                    new QnIfContains(
-                                        "config", new QnConfig(profile)
-                                    ),
-                                    new QnIfContains(
-                                        "status", new QnStatus(talk)
-                                    ),
-                                    new QnIfContains(
-                                        "version", new QnVersion()
-                                    ),
-                                    new QnIfContains(
-                                        "hello", new QnHello()
-                                    ),
-                                    new QnIfContains(
-                                        "ping", new QnHello()
-                                    ),
-                                    new QnIfContains(
-                                        "stop",
-                                        new QnAskedBy(
-                                            profile,
-                                            Agents.commanders("stop"),
-                                            new QnStop()
-                                        )
-                                    ),
-                                    new QnIfCollaborator(
-                                        new QnAlone(
-                                            talk, locks,
-                                            Agents.commands(profile)
-                                        )
-                                    ),
-                                    new QnIamLost()
+                    new QnReaction(
+                        new QnParametrized(
+                            new QnWithAuthor(
+                                new QnFollow(
+                                    new QnFirstOf(
+                                        new QnIfContains(
+                                            "config", new QnConfig(profile)
+                                        ),
+                                        new QnIfContains(
+                                            "status", new QnStatus(talk)
+                                        ),
+                                        new QnIfContains(
+                                            "version", new QnVersion()
+                                        ),
+                                        new QnIfContains(
+                                            "hello", new QnHello()
+                                        ),
+                                        new QnIfContains(
+                                            "ping", new QnHello()
+                                        ),
+                                        new QnIfContains(
+                                            "stop",
+                                            new QnAskedBy(
+                                                profile,
+                                                Agents.commanders("stop"),
+                                                new QnStop()
+                                            )
+                                        ),
+                                        new QnIfCollaborator(
+                                            new QnAlone(
+                                                talk, locks,
+                                                Agents.commands(profile)
+                                            )
+                                        ),
+                                        new QnIamLost()
+                                    )
                                 )
                             )
                         )

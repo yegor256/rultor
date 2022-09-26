@@ -140,7 +140,7 @@ public final class Understands extends AbstractAgent {
         if (next < seen) {
             throw new IllegalStateException(
                 String.format(
-                    "comment #%d is younger than #%d, something is wrong",
+                    "Comment #%d is younger than #%d, something is very wrong",
                     next, seen
                 )
             );
