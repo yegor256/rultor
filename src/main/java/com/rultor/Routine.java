@@ -77,6 +77,11 @@ import org.cactoos.list.ListOf;
 final class Routine implements Runnable, Closeable {
 
     /**
+     * How many talks to process in one cycle.
+     */
+    private static final int MAX_TALKS = 10;
+
+    /**
      * Shutting down?
      */
     private final transient AtomicBoolean down = new AtomicBoolean();
@@ -193,6 +198,9 @@ final class Routine implements Runnable, Closeable {
             ++total;
             final Profile profile = profiles.fetch(talk);
             this.agents.agent(talk, profile).execute(talk);
+            if (total > Routine.MAX_TALKS) {
+                break;
+            }
         }
         this.agents.closer().execute(this.talks);
         return total;
