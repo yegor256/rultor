@@ -349,7 +349,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-transcoder</artifactId>
-      <version>1.15</version>
+      <version>1.16</version>
     </dependency>
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
