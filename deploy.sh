@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 cd $(dirname $0)
 cp /code/home/assets/rultor/settings.xml .
