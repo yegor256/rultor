@@ -130,7 +130,7 @@ to the repository root from where your script is executed.
 ## Docker Image
 
 The default Docker image used for all commands is
-[`yegor256/rultor`](https://registry.hub.docker.com/u/yegor256/rultor/).
+[`yegor256/rultor-image`](https://registry.hub.docker.com/r/yegor256/rultor-image).
 
 You can change it to, say, `ubuntu:12.10`:
 
