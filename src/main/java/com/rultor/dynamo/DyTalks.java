@@ -234,16 +234,21 @@ public final class DyTalks implements Talks {
     public Iterable<Talk> active() {
         return new Mapped<>(
             DyTalk::new,
-            this.region.table(DyTalks.TBL)
-                .frame()
-                .through(
-                    new QueryValve()
-                        .withIndexName(DyTalks.IDX_ACTIVE)
-                        .withConsistentRead(false)
-                        .withSelect(Select.SPECIFIC_ATTRIBUTES)
-                        .withAttributesToGet(DyTalks.HASH, DyTalks.ATTR_NUMBER)
-                )
-                .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
+            new HeadOf<>(
+                Tv.TEN,
+                this.region.table(DyTalks.TBL)
+                    .frame()
+                    .through(
+                        new QueryValve()
+                            .withIndexName(DyTalks.IDX_ACTIVE)
+                            .withConsistentRead(false)
+                            .withSelect(Select.SPECIFIC_ATTRIBUTES)
+                            .withAttributesToGet(
+                                DyTalks.HASH, DyTalks.ATTR_NUMBER
+                            )
+                    )
+                    .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
+            )
         );
     }
 

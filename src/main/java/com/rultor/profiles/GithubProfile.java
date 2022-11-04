@@ -34,6 +34,7 @@ import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
@@ -305,6 +306,10 @@ final class GithubProfile implements Profile {
                 StandardCharsets.UTF_8
             );
         } else {
+            Logger.debug(
+                this, "There is no '%s' file in '%s' repository (branch '%s')",
+                GithubProfile.FILE, this.repo, this.branch
+            );
             yml = "";
         }
         final List<String> msg = this.validate(yml);

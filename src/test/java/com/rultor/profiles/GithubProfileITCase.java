@@ -37,15 +37,17 @@ import com.rultor.spi.Profile;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for ${@link GithubProfile}.
+ * Tests for {@link GithubProfile}.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.0
  */
+@SuppressWarnings("PMD.UseUtilityClass")
 public final class GithubProfileITCase {
 
     /**
@@ -62,6 +64,7 @@ public final class GithubProfileITCase {
      * @throws Exception In case of error.
      */
     @Test
+    @Disabled
     public void fetchesYamlConfig() throws Exception {
         final Profile profile = new GithubProfile(
             new RtGithub().repos().get(

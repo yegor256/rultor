@@ -131,14 +131,15 @@ final class Routine implements Runnable, Closeable {
     public void run() {
         final long begin = System.currentTimeMillis();
         try {
+            final List<Talk> active = new ListOf<>(this.talks.active());
             Logger.info(
                 this, "Start processing active talks %s...",
                 new Mapped<>(
                     talk -> String.format("%s:%s", talk.name(), talk.number()),
-                    this.talks.active()
+                    active
                 )
             );
-            final int processed = this.safe();
+            final int processed = this.unsafe(active);
             Logger.info(
                 this,
                 "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
@@ -165,17 +166,18 @@ final class Routine implements Runnable, Closeable {
 
     /**
      * Routine every-minute proc.
+     * @param active List of active talks
      * @return Total talks processed
      * @throws IOException If fails
      */
     @Timeable(limit = Tv.TWENTY, unit = TimeUnit.MINUTES)
-    private int safe() throws IOException {
+    private int unsafe(final List<Talk> active) throws IOException {
         final long begin = System.currentTimeMillis();
         int total = 0;
         if (new Toggles.InFile().readOnly()) {
             Logger.info(this, "read-only mode");
         } else {
-            total = this.process();
+            total = this.process(active);
         }
         this.pulse.add(
             new Tick(begin, System.currentTimeMillis() - begin, total)
@@ -185,13 +187,13 @@ final class Routine implements Runnable, Closeable {
 
     /**
      * Routine every-minute proc.
+     * @param active List of active talks
      * @return Total talks processed
      * @throws IOException If fails
      */
-    private int process() throws IOException {
+    private int process(final List<Talk> active) throws IOException {
         this.agents.starter().execute(this.talks);
         final Profiles profiles = new Profiles();
-        final List<Talk> active = new ListOf<>(this.talks.active());
         Collections.reverse(active);
         int total = 0;
         for (final Talk talk : active) {
