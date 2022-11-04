@@ -76,7 +76,7 @@ final class Script {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
             String.format(
-                "cd %s && cat > %s && chmod a+x %1$s",
+                "cd %s && cat > %s && chmod a+x %1$s/%2$s",
                 Ssh.escape(dir), Ssh.escape(this.name)
             ),
             this.getClass().getResourceAsStream(this.name),

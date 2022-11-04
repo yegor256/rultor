@@ -77,11 +77,18 @@ public final class KillsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        Logger.info(
-            this, "daemon of %s killed due to delay, code=%d",
-            xml.xpath("/talk/@name").get(0),
-            new Script("kill.sh").exec(xml)
-        );
+        final String name = xml.xpath("/talk/@name").get(0);
+        try {
+            Logger.info(
+                this, "Daemon of %s killed due to delay, code=%d",
+                name, new Script("kill.sh").exec(xml)
+            );
+        } catch (final IllegalArgumentException ex) {
+            Logger.warn(
+                this, "Failed to kill the daemon of %s due to delay: %s",
+                name, ex.getMessage()
+            );
+        }
         return new Directives();
     }
 
