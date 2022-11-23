@@ -371,7 +371,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java</artifactId>
-      <version>3.2.13</version>
+      <version>3.2.14</version>
       <scope>test</scope>
     </dependency>
     <dependency>
