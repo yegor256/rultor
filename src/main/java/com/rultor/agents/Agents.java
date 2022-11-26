@@ -172,7 +172,7 @@ public final class Agents {
                         Agents.HOST, Agents.PORT, Agents.LOGIN,
                         Agents.priv()
                     ),
-                    "rmi.sh"
+                    "prune.sh"
                 )
             )
         );
