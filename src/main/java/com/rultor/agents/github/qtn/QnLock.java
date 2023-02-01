@@ -88,7 +88,7 @@ public final class QnLock implements Question {
         final XML args = QnLock.args(comment, home);
         final String branch;
         if (args.nodes("//arg[@name='branch']").isEmpty()) {
-            branch = "master";
+            branch = new DefaultBranch(comment.issue().repo()).toString();
         } else {
             branch = args.xpath("//arg[@name='branch']/text()").get(0);
         }

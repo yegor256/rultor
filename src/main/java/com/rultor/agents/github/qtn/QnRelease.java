@@ -121,7 +121,10 @@ public final class QnRelease implements Question {
         return new Req.Simple(
             "release",
             new MapOf<String, String>(
-                new MapEntry<>("head_branch", "master"),
+                new MapEntry<>(
+                    "head_branch",
+                    new DefaultBranch(comment.issue().repo()).toString()
+                ),
                 new MapEntry<>(
                     "head",
                     String.format(

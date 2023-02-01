@@ -87,7 +87,7 @@ public final class GithubProfileTest {
                     )
                     .build()
             );
-        final Profile profile = new GithubProfile(repo);
+        final Profile profile = new GithubProfile(repo, "master");
         MatcherAssert.assertThat(
             profile.read(),
             XhtmlMatchers.hasXPaths(
@@ -115,7 +115,7 @@ public final class GithubProfileTest {
      */
     @Test(expected = Profile.ConfigException.class)
     public void throwsWhenYamlIsBroken() throws Exception {
-        new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n")).read();
+        new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n"), "master").read();
     }
 
     /**
@@ -132,7 +132,7 @@ public final class GithubProfileTest {
                 "  something.xml: -invalid.user.name/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        new GithubProfile(repo, "master").assets();
     }
 
     /**
@@ -148,7 +148,7 @@ public final class GithubProfileTest {
                 "  something.xml: invalid_username/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        new GithubProfile(repo, "master").assets();
     }
 
     /**
@@ -166,7 +166,7 @@ public final class GithubProfileTest {
                 "  something.xml: _invalidusername/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        new GithubProfile(repo, "master").assets();
     }
 
     /**
@@ -199,7 +199,7 @@ public final class GithubProfileTest {
                 ).build()
         );
         MatcherAssert.assertThat(
-            new GithubProfile(repo).assets().entrySet(),
+            new GithubProfile(repo, "master").assets().entrySet(),
             Matchers.not(Matchers.emptyIterable())
         );
     }
@@ -217,7 +217,7 @@ public final class GithubProfileTest {
                 "  something.xml: jeff/test2#.rultor.yml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        new GithubProfile(repo, "master").assets();
     }
 
     /**
@@ -233,7 +233,7 @@ public final class GithubProfileTest {
                 "  a.xml: jeff/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        new GithubProfile(repo, "master").assets();
     }
 
     /**
@@ -266,7 +266,7 @@ public final class GithubProfileTest {
                     )
                     .build()
             );
-        final Profile profile = new GithubProfile(repo);
+        final Profile profile = new GithubProfile(repo, "master");
         profile.assets();
     }
 

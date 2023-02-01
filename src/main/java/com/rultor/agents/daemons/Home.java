@@ -70,7 +70,7 @@ public final class Home {
      * @param talk Talk
      * @param hsh Hash
      */
-    public Home(final XML talk, final String hsh) {
+    public  Home(final XML talk, final String hsh) {
         this.xml = talk;
         this.hash = hsh;
     }

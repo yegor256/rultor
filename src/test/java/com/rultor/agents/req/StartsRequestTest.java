@@ -63,7 +63,6 @@ import org.xembly.Directives;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-@Ignore
 public final class StartsRequestTest {
 
     /**
