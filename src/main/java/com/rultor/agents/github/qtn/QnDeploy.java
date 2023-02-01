@@ -65,7 +65,8 @@ public final class QnDeploy implements Question {
         ResourceBundle.getBundle("phrases");
 
     @Override
-    public Req understand(final Comment.Smart comment,
+    public Req understand(
+        final Comment.Smart comment,
         final URI home
     ) throws IOException {
         new Answer(comment).post(
