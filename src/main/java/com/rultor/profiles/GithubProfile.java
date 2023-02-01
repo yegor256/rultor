@@ -36,6 +36,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
+import com.rultor.agents.github.qtn.DefaultBranch;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -106,7 +107,7 @@ final class GithubProfile implements Profile {
      * @param rpo Repo
      */
     GithubProfile(final Repo rpo) {
-        this(rpo, "master");
+        this(rpo, new DefaultBranch(rpo).toString());
     }
 
     /**

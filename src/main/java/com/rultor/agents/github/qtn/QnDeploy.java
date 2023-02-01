@@ -65,8 +65,10 @@ public final class QnDeploy implements Question {
         ResourceBundle.getBundle("phrases");
 
     @Override
-    public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
+    public Req understand(
+        final Comment.Smart comment,
+        final URI home
+    ) throws IOException {
         new Answer(comment).post(
             true,
             String.format(
@@ -84,7 +86,7 @@ public final class QnDeploy implements Question {
             "deploy",
             new MapOf<String, String>(
                 new MapEntry<>(
-                    "head_branch", "master"
+                    "head_branch", new DefaultBranch(repo).toString()
                 ),
                 new MapEntry<>(
                     "head",
