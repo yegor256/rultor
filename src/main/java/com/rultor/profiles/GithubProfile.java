@@ -295,30 +295,35 @@ final class GithubProfile implements Profile {
      * Get .rultor.yml file.
      * @return Its content
      * @throws IOException If fails
-     * @todo #1597:30min Rultor doesn't support using non-master branch yet because jacabi-github
-     *  library are using hardocoded branch name 'master' in some places. We should fix it.
-     *  After, we will able to remove !this.branch.equals("master") check.
+     * @todo #1597:30min Rultor doesn't support using non-master
+     *  branch yet because jacabi-github library are using hardocoded
+     *  branch name 'master' in some places. We should fix it.
+     *  After, we will able to remove this.branch.equals("master") check.
      */
     private String yml() throws IOException {
         final String yml;
-        if (!this.branch.equals("master")) {
-            Logger.debug(
-                this, "Rultor doesn't support using '%s' branch yet in repository '%s'",
-                this.branch, this.repo
-            );
-            yml = "";
-        } else if (this.repo.contents()
-            .exists(GithubProfile.FILE, this.branch)) {
-            yml = new String(
-                new Content.Smart(
-                    this.repo.contents().get(GithubProfile.FILE)
-                ).decoded(),
-                StandardCharsets.UTF_8
-            );
+        if (this.branch.equals("master")) {
+            if (this.repo.contents()
+                .exists(GithubProfile.FILE, this.branch)) {
+                yml = new String(
+                    new Content.Smart(
+                        this.repo.contents().get(GithubProfile.FILE)
+                    ).decoded(),
+                    StandardCharsets.UTF_8
+                );
+            } else {
+                Logger.debug(
+                    this,
+                    "There is no '%s' file in '%s' repository (branch '%s')",
+                    GithubProfile.FILE, this.repo, this.branch
+                );
+                yml = "";
+            }
         } else {
             Logger.debug(
-                this, "There is no '%s' file in '%s' repository (branch '%s')",
-                GithubProfile.FILE, this.repo, this.branch
+                this,
+                "Rultor doesn't support '%s' branch yet in repository '%s'",
+                this.branch, this.repo
             );
             yml = "";
         }

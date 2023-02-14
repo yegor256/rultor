@@ -49,7 +49,6 @@ import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.rules.TemporaryFolder;
 import org.xembly.Directives;
 
@@ -63,7 +62,6 @@ import org.xembly.Directives;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-@Ignore
 public final class StartsRequestTest {
 
     /**

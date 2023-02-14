@@ -87,14 +87,14 @@ public final class Publishes extends AbstractAgent {
                     new Coordinates.Simple(this.profile.name())
                 )
             ).isPrivate();
+            try {
+                pub &= this.profile.read()
+                    .nodes("/p/entry[@key='readers']/item")
+                    .isEmpty();
+            } catch (final Profile.ConfigException ex) {
+                pub = false;
+            }
         } catch (final AssertionError ex) {
-            pub = false;
-        }
-        try {
-            pub &= this.profile.read()
-                .nodes("/p/entry[@key='readers']/item")
-                .isEmpty();
-        } catch (final Profile.ConfigException ex) {
             pub = false;
         }
         return new Directives()
