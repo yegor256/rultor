@@ -74,7 +74,7 @@ public interface Profile {
      * @return Name
      * @since 1.5
      */
-    String branch();
+    String defaultBranch();
 
     /**
      * Get it in XML format (throws
@@ -227,7 +227,7 @@ public interface Profile {
         }
 
         @Override
-        public String branch() {
+        public String defaultBranch() {
             return this.branch;
         }
 

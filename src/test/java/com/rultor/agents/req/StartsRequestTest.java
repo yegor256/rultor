@@ -40,7 +40,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
-import lombok.val;
 import org.apache.commons.io.FileUtils;
 import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
@@ -62,7 +61,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
 public final class StartsRequestTest {
 
     /**
@@ -247,18 +246,15 @@ public final class StartsRequestTest {
     }
 
     /**
-     * StartsRequest can start a merge request.
+     * StartsRequest can not start a merge request.
      * @throws Exception In case of error.
      */
     @Test
     public void startsMergeRequestIfEmpty() throws Exception {
         final File repo = this.repo();
-        final Agent agent = new StartsRequest(new Profile.Fixed(new XMLDocument(
-            new Joined(
-                "",
-                "<p><entry key='release'><entry key='script'>",
-                "echo HEY</entry></entry></p>"
-            ).asString())));
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(new XMLDocument("<p></p>"))
+        );
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
@@ -276,7 +272,11 @@ public final class StartsRequestTest {
         MatcherAssert.assertThat(
             this.execQuietly(talk),
             Matchers.containsString(
-                "There is no 'merge' section in .rultor.yml for branch master in repo test/test"
+                String.format(
+                    "There is no '%s' section in .rultor.yml for branch %s",
+                    "merge",
+                    "master"
+                )
             )
         );
     }
@@ -433,10 +433,22 @@ public final class StartsRequestTest {
         return this.process(talk).stdout();
     }
 
+    /**
+     * Execute script from daemon without throwing exception if fails.
+     * @param talk Talk to use
+     * @return Full stdout
+     * @throws IOException If fails
+     */
     private String execQuietly(final Talk talk) throws IOException {
         return this.process(talk).stdoutQuietly();
     }
 
+    /**
+     * Create process to execute script from daemon.
+     * @param talk Talk to use
+     * @return Process
+     * @throws IOException If fails
+     */
     private VerboseProcess process(final Talk talk) throws IOException {
         final String script = new UncheckedText(
             new Joined(
@@ -487,7 +499,7 @@ public final class StartsRequestTest {
                 "git checkout -b frk",
                 "echo 'good bye!' > hello.txt",
                 "git -c commit.gpgsign=false commit -am 'modified file'",
-                "git checkout -b master",
+                "git checkout master",
                 "git config receive.denyCurrentBranch ignore"
             )
         ).asString();

@@ -127,7 +127,7 @@ final class GithubProfile implements Profile {
     }
 
     @Override
-    public String branch() {
+    public String defaultBranch() {
         return this.branch;
     }
 
