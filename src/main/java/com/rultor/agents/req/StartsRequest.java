@@ -351,7 +351,7 @@ public final class StartsRequest extends AbstractAgent {
                     "There is no '%s' section in %s for branch %s in repo %s",
                     type,
                     ".rultor.yml",
-                    "master",
+                    this.profile.defaultBranch(),
                     this.profile.name()
                 )
             );
