@@ -264,7 +264,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>1.15.3</version>
+      <version>1.15.4</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
