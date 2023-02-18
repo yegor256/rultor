@@ -127,6 +127,11 @@ final class GithubProfile implements Profile {
     }
 
     @Override
+    public String defaultBranch() {
+        return this.branch;
+    }
+
+    @Override
     public XML read() throws IOException {
         return new YamlXML(this.yml()).get();
     }

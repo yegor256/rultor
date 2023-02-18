@@ -70,6 +70,13 @@ public interface Profile {
     String name();
 
     /**
+     * Name of the branch.
+     * @return Name
+     * @since 1.5
+     */
+    String defaultBranch();
+
+    /**
      * Get it in XML format (throws
      * {@link Profile.ConfigException}, if fails).
      *
@@ -93,6 +100,7 @@ public interface Profile {
          * Serialization marker.
          */
         private static final long serialVersionUID = -3860028281726793988L;
+
         /**
          * Ctor.
          * @param cause Cause of it
@@ -100,6 +108,7 @@ public interface Profile {
         public ConfigException(final String cause) {
             super(cause);
         }
+
         /**
          * Ctor.
          * @param cause Cause of it
@@ -118,6 +127,7 @@ public interface Profile {
          * Original profile.
          */
         private final transient Profile origin;
+
         /**
          * Ctor.
          * @param profile The profile
@@ -125,6 +135,7 @@ public interface Profile {
         public Defaults(final Profile profile) {
             this.origin = profile;
         }
+
         /**
          * Get text item.
          * @param xpath Path
@@ -134,6 +145,7 @@ public interface Profile {
         public String text(final String xpath) throws IOException {
             return this.text(xpath, "");
         }
+
         /**
          * Get text item.
          * @param xpath Path
@@ -168,6 +180,12 @@ public interface Profile {
          * Name of it.
          */
         private final transient String label;
+
+        /**
+         * Name of the branch.
+         */
+        private final transient String branch;
+
         /**
          * Ctor.
          */
@@ -183,6 +201,7 @@ public interface Profile {
                 )
             );
         }
+
         /**
          * Ctor.
          * @param doc Document
@@ -190,6 +209,7 @@ public interface Profile {
         public Fixed(final XML doc) {
             this(new StrictXML(doc, Profile.SCHEMA), "test/test");
         }
+
         /**
          * Ctor.
          * @param doc Document
@@ -198,15 +218,24 @@ public interface Profile {
         public Fixed(final XML doc, final String name) {
             this.xml = new StrictXML(doc, Profile.SCHEMA);
             this.label = name;
+            this.branch = "master";
         }
+
         @Override
         public String name() {
             return this.label;
         }
+
+        @Override
+        public String defaultBranch() {
+            return this.branch;
+        }
+
         @Override
         public XML read() {
             return this.xml;
         }
+
         @Override
         public Map<String, InputStream> assets() {
             return new ArrayMap<>();

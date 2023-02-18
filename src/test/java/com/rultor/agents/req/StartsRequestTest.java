@@ -61,7 +61,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
 public final class StartsRequestTest {
 
     /**
@@ -246,6 +246,42 @@ public final class StartsRequestTest {
     }
 
     /**
+     * StartsRequest can not start a merge request.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void startsMergeRequestIfEmpty() throws Exception {
+        final File repo = this.repo();
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(new XMLDocument("<p></p>"))
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "a1b2c3")
+                .add("author").set("yegor256").up()
+                .add("type").set("merge").up()
+                .add("args")
+                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "fork").set(repo.toString()).up()
+                .add("arg").attr("name", "fork_branch").set("frk").up()
+                .add("arg").attr("name", "pull_title").set("the \"title").up()
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            this.execQuietly(talk),
+            Matchers.containsString(
+                String.format(
+                    "There is no '%s' section in .rultor.yml for branch %s",
+                    "merge",
+                    "master"
+                )
+            )
+        );
+    }
+
+    /**
      * StartsRequest can run release with dockerfile (the test is disabled,
      * because it doesn't work on Mac, see #702).
      * @throws Exception In case of error.
@@ -264,7 +300,7 @@ public final class StartsRequestTest {
             new Profile.Fixed(
                 new XMLDocument(
                     new Joined(
-                       "",
+                        "",
                         "<p><entry key='release'><entry key='script'>",
                         "echo HEY</entry></entry><entry key='docker'>",
                         String.format("<entry key='directory'>%s</entry>", dir),
@@ -293,13 +329,13 @@ public final class StartsRequestTest {
                         Matchers.containsString(
                             String.format(
                                 "docker build %s -t yegor256/rultor-", dir
+                            )
                         )
                     )
-                )
                     .with(Matchers.containsString("docker run"))
                     .with(
                         Matchers.containsString(
-                                "docker rmi yegor256/rultor-"
+                            "docker rmi yegor256/rultor-"
                         )
                     )
                     .with(Matchers.containsString("low enough to run a"))
@@ -394,6 +430,26 @@ public final class StartsRequestTest {
      * @throws IOException If fails
      */
     private String exec(final Talk talk) throws IOException {
+        return this.process(talk).stdout();
+    }
+
+    /**
+     * Execute script from daemon without throwing exception if fails.
+     * @param talk Talk to use
+     * @return Full stdout
+     * @throws IOException If fails
+     */
+    private String execQuietly(final Talk talk) throws IOException {
+        return this.process(talk).stdoutQuietly();
+    }
+
+    /**
+     * Create process to execute script from daemon.
+     * @param talk Talk to use
+     * @return Process
+     * @throws IOException If fails
+     */
+    private VerboseProcess process(final Talk talk) throws IOException {
         final String script = new UncheckedText(
             new Joined(
                 "\n",
@@ -418,7 +474,7 @@ public final class StartsRequestTest {
                 "/bin/bash", "-c", script
             ).directory(this.temp.newFolder()).redirectErrorStream(true),
             Level.WARNING, Level.WARNING
-        ).stdout();
+        );
     }
 
     /**

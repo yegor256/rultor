@@ -348,8 +348,11 @@ public final class StartsRequest extends AbstractAgent {
         if (nodes.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
-                    "There is no '%s' section in .rultor.yml",
-                    type
+                    "There is no '%s' section in %s for branch %s in repo %s",
+                    type,
+                    ".rultor.yml",
+                    this.profile.defaultBranch(),
+                    this.profile.name()
                 )
             );
         }
