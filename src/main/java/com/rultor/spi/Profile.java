@@ -220,15 +220,15 @@ public interface Profile {
         }
 
         /**
-         * Ctor
-         * @param xml Document
-         * @param label Name
-         * @param branch Branch
+         * Ctor.
+         * @param doc Document
+         * @param name Name
+         * @param brnch Branch
          */
-        public Fixed(final XML xml, final String label, final String branch) {
-            this.xml = xml;
-            this.label = label;
-            this.branch = branch;
+        public Fixed(final XML doc, final String name, final String brnch) {
+            this.xml = doc;
+            this.label = name;
+            this.branch = brnch;
         }
 
         @Override

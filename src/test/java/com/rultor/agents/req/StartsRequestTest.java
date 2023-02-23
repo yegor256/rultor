@@ -64,6 +64,9 @@ import org.xembly.Directives;
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
 public final class StartsRequestTest {
 
+    /**
+     * Default head_branch value.
+     */
     private static final String HEAD_BRANCH = "master";
 
     /**
@@ -507,14 +510,20 @@ public final class StartsRequestTest {
                 "git init .",
                 "git config user.email test@rultor.com",
                 "git config user.name test",
-                String.format("git checkout -b %s", StartsRequestTest.HEAD_BRANCH),
+                String.format(
+                    "git checkout -b %s",
+                    StartsRequestTest.HEAD_BRANCH
+                ),
                 "echo 'hello, world!' > hello.txt",
                 "git add .",
                 "git -c commit.gpgsign=false commit -am 'first file'",
                 "git checkout -b frk",
                 "echo 'good bye!' > hello.txt",
                 "git -c commit.gpgsign=false commit -am 'modified file'",
-                String.format("git checkout %s", StartsRequestTest.HEAD_BRANCH),
+                String.format(
+                    "git checkout %s",
+                    StartsRequestTest.HEAD_BRANCH
+                ),
                 "git config receive.denyCurrentBranch ignore"
             )
         ).asString();
