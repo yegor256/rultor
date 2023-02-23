@@ -216,9 +216,19 @@ public interface Profile {
          * @param name Name
          */
         public Fixed(final XML doc, final String name) {
-            this.xml = new StrictXML(doc, Profile.SCHEMA);
-            this.label = name;
-            this.branch = "master";
+            this(new StrictXML(doc, Profile.SCHEMA), name, "master");
+        }
+
+        /**
+         * Ctor
+         * @param xml Document
+         * @param label Name
+         * @param branch Branch
+         */
+        public Fixed(final XML xml, final String label, final String branch) {
+            this.xml = xml;
+            this.label = label;
+            this.branch = branch;
         }
 
         @Override

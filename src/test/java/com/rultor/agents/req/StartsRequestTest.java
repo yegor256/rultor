@@ -64,6 +64,8 @@ import org.xembly.Directives;
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
 public final class StartsRequestTest {
 
+    private static final String HEAD_BRANCH = "master";
+
     /**
      * Temp directory.
      * @checkstyle VisibilityModifierCheck (5 lines)
@@ -131,7 +133,9 @@ public final class StartsRequestTest {
                 .add("type").set("deploy").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
-                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "head_branch")
+                .set(StartsRequestTest.HEAD_BRANCH)
+                .up()
         );
         agent.execute(talk);
         talk.modify(
@@ -203,7 +207,8 @@ public final class StartsRequestTest {
                 .add("type").set("release").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
-                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "head_branch")
+                .set(StartsRequestTest.HEAD_BRANCH).up()
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
         );
         agent.execute(talk);
@@ -236,7 +241,8 @@ public final class StartsRequestTest {
                 .add("type").set("merge").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
-                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "head_branch")
+                .set(StartsRequestTest.HEAD_BRANCH).up()
                 .add("arg").attr("name", "fork").set(repo.toString()).up()
                 .add("arg").attr("name", "fork_branch").set("frk").up()
                 .add("arg").attr("name", "pull_title").set("the \"title").up()
@@ -253,7 +259,11 @@ public final class StartsRequestTest {
     public void startsMergeRequestIfEmpty() throws Exception {
         final File repo = this.repo();
         final Agent agent = new StartsRequest(
-            new Profile.Fixed(new XMLDocument("<p></p>"))
+            new Profile.Fixed(
+                new XMLDocument("<p></p>"),
+                "test/test",
+                StartsRequestTest.HEAD_BRANCH
+            )
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -263,7 +273,8 @@ public final class StartsRequestTest {
                 .add("type").set("merge").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
-                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "head_branch")
+                .set(StartsRequestTest.HEAD_BRANCH).up()
                 .add("arg").attr("name", "fork").set(repo.toString()).up()
                 .add("arg").attr("name", "fork_branch").set("frk").up()
                 .add("arg").attr("name", "pull_title").set("the \"title").up()
@@ -275,7 +286,7 @@ public final class StartsRequestTest {
                 String.format(
                     "There is no '%s' section in .rultor.yml for branch %s",
                     "merge",
-                    "master"
+                    StartsRequestTest.HEAD_BRANCH
                 )
             )
         );
@@ -317,7 +328,8 @@ public final class StartsRequestTest {
                 .add("type").set("release").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
-                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "head_branch")
+                .set(StartsRequestTest.HEAD_BRANCH).up()
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
         );
         agent.execute(talk);
@@ -405,7 +417,9 @@ public final class StartsRequestTest {
                 .add("type").set("deploy").up()
                 .add("args")
                 .add("arg").attr("name", "head").set(repo.toString()).up()
-                .add("arg").attr("name", "head_branch").set("master").up()
+                .add("arg").attr("name", "head_branch")
+                .set(StartsRequestTest.HEAD_BRANCH)
+                .up()
         );
         agent.execute(talk);
         talk.modify(
@@ -493,13 +507,14 @@ public final class StartsRequestTest {
                 "git init .",
                 "git config user.email test@rultor.com",
                 "git config user.name test",
+                String.format("git checkout -b %s", StartsRequestTest.HEAD_BRANCH),
                 "echo 'hello, world!' > hello.txt",
                 "git add .",
                 "git -c commit.gpgsign=false commit -am 'first file'",
                 "git checkout -b frk",
                 "echo 'good bye!' > hello.txt",
                 "git -c commit.gpgsign=false commit -am 'modified file'",
-                "git checkout master",
+                String.format("git checkout %s", StartsRequestTest.HEAD_BRANCH),
                 "git config receive.denyCurrentBranch ignore"
             )
         ).asString();
