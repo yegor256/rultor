@@ -67,7 +67,7 @@ public final class StartsRequestTest {
     /**
      * Default head_branch value.
      */
-    private static final String HEAD_BRANCH = "master";
+    private static final String HEAD_BRANCH = "main";
 
     /**
      * Temp directory.
