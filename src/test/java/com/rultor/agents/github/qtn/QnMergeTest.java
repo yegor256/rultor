@@ -30,12 +30,18 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
+import com.jcabi.github.Comments;
 import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.agents.github.Req;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
@@ -50,30 +56,110 @@ import org.xembly.Xembler;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnMergeTest {
+final class QnMergeTest {
+
+    /**
+     * The default command to the rultor with a request to merge changes.
+     */
+    private static final String COMMAND = "@rultor, merge, please";
+
+    /**
+     * All pull request comments.
+     */
+    private transient Comments comments;
+
+    /**
+     * Initial phase for all tests.
+     * @throws IOException In case of error.
+     */
+    @BeforeEach
+    public void setUp() throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        final String head = "head";
+        final String base = "base";
+        branches.create(head, "abcdef4");
+        branches.create(base, "abcdef5");
+        this.comments = repo.issues()
+            .get(repo.pulls().create("", head, base).number())
+            .comments();
+    }
 
     /**
      * QnMerge can build a request.
      * @throws Exception In case of error.
      */
     @Test
-    @Disabled
     public void buildsRequest() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().get(
-            repo.pulls().create("", "head", "base").number()
-        );
-        issue.comments().post("merge");
+        final String request = new Xembler(this.requestDirectives()).xml();
         MatcherAssert.assertThat(
-            new Xembler(
-                new Directives().add("request").append(
-                    new QnMerge().understand(
-                        new Comment.Smart(issue.comments().get(1)), new URI("#")
-                    ).dirs()
+            request,
+            Matchers.allOf(
+                XhtmlMatchers.hasXPath("/request/type[text()='merge']"),
+                XhtmlMatchers.hasXPath(
+                    "/request/args/arg[@name='fork_branch' and text()='head']"
+                ),
+                XhtmlMatchers.hasXPath(
+                    "/request/args/arg[@name='head_branch' and text()='base']"
                 )
-            ).xml(),
-            XhtmlMatchers.hasXPath("/request[not(type)]")
+            )
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(this.comments.get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(this.comments.get(2)).body(),
+            Matchers.containsString(
+                String.format(QnMerge.PHRASES.getString("QnMerge.start"), "#")
+            )
         );
     }
 
+    /**
+     * QnMerge can not build a request because some GitHub checks
+     *  were failed.
+     * @throws Exception In case of error
+     * @todo #1237:90min We need to implement a verification logic
+     *  for GitHub checks to determine whether they were completed
+     *  correctly or not. If not, Rultor should not create a merge
+     *  request and must display a comment to the user. Once the logic
+     *  is implemented, we can enable that test.
+     */
+    @Test
+    @Disabled
+    public void stopsBecauseCiChecksFailed() throws Exception {
+        final String request = new Xembler(this.requestDirectives()).xml();
+        MatcherAssert.assertThat(
+            new Comment.Smart(this.comments.get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(this.comments.get(2)).body(),
+            Matchers.equalTo(
+                QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
+            )
+        );
+        MatcherAssert.assertThat(request, Matchers.equalTo(Req.EMPTY));
+    }
+
+    /**
+     * Request directives.
+     * @return Directives
+     * @throws IOException In case of error
+     * @throws URISyntaxException In case of error
+     */
+    private Directives requestDirectives() throws IOException,
+        URISyntaxException {
+        return new Directives()
+            .add("request")
+            .append(
+                new QnMerge().understand(
+                    new Comment.Smart(
+                        this.comments.post(QnMergeTest.COMMAND)
+                    ),
+                    new URI("#")
+                ).dirs()
+            );
+    }
 }

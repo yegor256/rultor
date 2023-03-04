@@ -62,12 +62,13 @@ public final class QnMerge implements Question {
     /**
      * Message bundle.
      */
-    private static final ResourceBundle PHRASES =
+    public static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
 
     @Override
     public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
+        final URI home
+    ) throws IOException {
         final Issue.Smart issue = new Issue.Smart(comment.issue());
         final Req req;
         if (issue.isPull() && issue.isOpen()) {
@@ -105,7 +106,8 @@ public final class QnMerge implements Question {
      */
     @SuppressWarnings("unchecked")
     private static Req pack(final Comment.Smart comment,
-        final Pull pull) throws IOException {
+        final Pull pull
+    ) throws IOException {
         final PullRef head = pull.head();
         final PullRef base = pull.base();
         final Req req;
