@@ -496,6 +496,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <executions>
           <execution>
             <id>minify-js</id>
+            <phase>
+              prepare-package
+            </phase>
             <goals>
               <goal>minify</goal>
             </goals>
@@ -511,6 +514,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           </execution>
           <execution>
             <id>minify-css</id>
+            <phase>
+              prepare-package
+            </phase>
             <goals>
               <goal>minify</goal>
             </goals>
