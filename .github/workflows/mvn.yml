@@ -21,7 +21,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-          maven-version: ${{ matrix.maven }}
       - uses: stCarolas/setup-maven@v.4.5
         with:
           maven-version: ${{ matrix.maven }}
