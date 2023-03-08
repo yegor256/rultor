@@ -14,12 +14,16 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         java: [11, 17]
+        maven: ['3.8.7']
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
+      - uses: stCarolas/setup-maven@v.4.5
+        with:
+          maven-version: ${{ matrix.maven }}
       - uses: actions/cache@v3
         with:
           path: ~/.m2/repository

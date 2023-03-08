@@ -102,17 +102,17 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>io.sentry</groupId>
       <artifactId>sentry</artifactId>
-      <version>6.14.0</version>
+      <version>6.15.0</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.417</version>
+      <version>1.12.422</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-dynamodb</artifactId>
-      <version>1.12.417</version>
+      <version>1.12.422</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
