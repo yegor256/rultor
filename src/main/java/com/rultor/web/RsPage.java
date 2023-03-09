@@ -31,6 +31,8 @@ package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
 import lombok.EqualsAndHashCode;
 import org.takes.Request;
 import org.takes.Response;
@@ -38,8 +40,7 @@ import org.takes.facets.auth.XeIdentity;
 import org.takes.facets.auth.XeLogoutLink;
 import org.takes.facets.auth.social.XeGithubLink;
 import org.takes.facets.flash.XeFlash;
-import org.takes.facets.fork.FkTypes;
-import org.takes.facets.fork.RsFork;
+import org.takes.rq.RqHeaders;
 import org.takes.rs.RsWithType;
 import org.takes.rs.RsWrap;
 import org.takes.rs.RsXslt;
@@ -87,7 +88,8 @@ final class RsPage extends RsWrap {
      * @throws IOException If fails
      */
     private static Response make(final String xsl, final Request req,
-        final XeSource... src) throws IOException {
+        final XeSource... src
+    ) throws IOException {
         final Response raw = new RsXembly(
             new XeStylesheet(xsl),
             new XeAppend(
@@ -112,17 +114,48 @@ final class RsPage extends RsWrap {
                 )
             )
         );
-        return new RsFork(
-            req,
-            new FkTypes(
-                "application/xml,text/xml",
-                new RsWithType(raw, "text/xml")
-            ),
-            new FkTypes(
-                "*/*",
-                new RsXslt(new RsWithType(raw, "text/html"))
-            )
-        );
+        return RsPage.typedResponse(raw, req);
     }
 
+    /**
+     * Build correct response by requested header 'Accept'.
+     *
+     * @param raw Prepared raw response.
+     * @param req Request.
+     * @return Correct response according to 'Accept' header.
+     * @throws IOException If fails.
+     * @todo #1633:90min Replace typedResponse static method with RsFork.
+     *  The current solution with typedResponse method is crutch, actually.
+     *  The previous solution with {@link org.takes.facets.fork.RsFork} was broken after
+     *  the Maven 3.9.0 release. The proper solution would be to fix the original problem in
+     *  <a href="https://github.com/yegor256/takes">takes</a> framework and then to return
+     *  the correct solution with {@link org.takes.facets.fork.RsFork} back.
+     *  <p>{@code
+     *        return new RsFork(
+     *             req,
+     *             new FkTypes(
+     *                 "application/xml,text/xml",
+     *                 new RsWithType(raw, "text/xml")
+     *             ),
+     *             new FkTypes(
+     *                 "",
+     *                 *new RsXslt(new RsWithType(raw, "text/html"))
+     *             )
+     *        );
+     *  }
+     *  </p>
+     */
+    private static Response typedResponse(
+        final Response raw,
+        final Request req
+    ) throws IOException {
+        final Response resp;
+        final Collection<String> headers = new HashSet<>(new RqHeaders.Base(req).header("Accept"));
+        if (headers.contains("application/xml") || headers.contains("text/xml")) {
+            resp = new RsWithType(raw, "text/xml");
+        } else {
+            resp = new RsXslt(new RsWithType(raw, "text/html"));
+        }
+        return resp;
+    }
 }
