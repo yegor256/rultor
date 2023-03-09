@@ -479,19 +479,19 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <sassSourceDirectory>${basedir}/src/main/scss</sassSourceDirectory>
-              <destination>${project.build.directory}/css</destination>
+              <destination>${project.build.outputDirectory}/css</destination>
             </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
-        <groupId>com.samaxes.maven</groupId>
-        <artifactId>minify-maven-plugin</artifactId>
-        <version>1.7.6</version>
+        <groupId>com.github.blutorange</groupId>
+        <artifactId>closure-compiler-maven-plugin</artifactId>
+        <version>2.25.0</version>
         <configuration>
-          <charset>UTF-8</charset>
-          <nosuffix>true</nosuffix>
-          <webappTargetDir>${project.build.outputDirectory}</webappTargetDir>
+          <!-- Base configuration for all executions (bundles) -->
+          <baseTargetDir>${project.build.outputDirectory}</baseTargetDir>
+          <encoding>UTF-8</encoding>
         </configuration>
         <executions>
           <execution>
@@ -500,27 +500,19 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
               <goal>minify</goal>
             </goals>
             <configuration>
-              <webappSourceDir>${project.basedir}/src/main</webappSourceDir>
-              <jsSourceIncludes>
-                <include>*.js</include>
-              </jsSourceIncludes>
-              <jsEngine>CLOSURE</jsEngine>
+              <baseSourceDir>${project.basedir}/src/main</baseSourceDir>
+              <includes>
+                <include>**/*.js</include>
+              </includes>
               <skipMerge>true</skipMerge>
+              <closureEmitUseStrict>false</closureEmitUseStrict>
               <skipMinify>false</skipMinify>
-            </configuration>
-          </execution>
-          <execution>
-            <id>minify-css</id>
-            <goals>
-              <goal>minify</goal>
-            </goals>
-            <configuration>
-              <webappSourceDir>${project.build.directory}</webappSourceDir>
-              <cssSourceDir>css</cssSourceDir>
-              <cssSourceIncludes>
-                <include>*.css</include>
-              </cssSourceIncludes>
-              <skipMerge>false</skipMerge>
+              <outputFilename>
+                #{path}/#{basename}.#{extension}
+              </outputFilename>
+              <closureLanguageOut>
+                NO_TRANSPILE
+              </closureLanguageOut>
             </configuration>
           </execution>
         </executions>

@@ -37,7 +37,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <meta name="keywords" content="continuous integration, continuous delivery, DevOps"/>
         <meta name="author" content="rultor.com"/>
         <meta property="twitter:account_id" content="4503599630178231"/>
-        <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="/css/main.css?{version/revision}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="/css/siblings.css?{version/revision}"/>
         <link rel="stylesheet" type="text/css" media="all" href="//doc.rultor.com/css/layout.css?{version/revision}"/>
         <link rel="icon" type="image/gif" href="//doc.rultor.com/favicon.ico?{version/revision}"/>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1-rc1.min.js">
