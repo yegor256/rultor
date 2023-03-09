@@ -32,6 +32,7 @@
         <title>Internal application error</title>
         <link href="//doc.rultor.com/css/layout.css?${rev}" rel="stylesheet" type="text/css"/>
         <link href="/css/style.css?${rev}" rel="stylesheet" type="text/css"/>
+        <link href="/css/style.css?${rev}" rel="stylesheet" type="text/css"/>
         <link rel="icon" type="image/gif" href="//doc.rultor.com/favicon.ico"/>
     </head>
     <body>
