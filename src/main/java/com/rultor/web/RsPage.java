@@ -126,33 +126,24 @@ final class RsPage extends RsWrap {
      * @throws IOException If fails.
      * @todo #1633:90min Replace typedResponse static method with RsFork.
      *  The current solution with typedResponse method is crutch, actually.
-     *  The previous solution with {@link org.takes.facets.fork.RsFork} was broken after
-     *  the Maven 3.9.0 release. The proper solution would be to fix the original problem in
-     *  <a href="https://github.com/yegor256/takes">takes</a> framework and then to return
-     *  the correct solution with {@link org.takes.facets.fork.RsFork} back.
-     *  <p>{@code
-     *        return new RsFork(
-     *             req,
-     *             new FkTypes(
-     *                 "application/xml,text/xml",
-     *                 new RsWithType(raw, "text/xml")
-     *             ),
-     *             new FkTypes(
-     *                 "",
-     *                 *new RsXslt(new RsWithType(raw, "text/html"))
-     *             )
-     *        );
-     *  }
-     *  </p>
+     *  The previous solution with {@link org.takes.facets.fork.RsFork} was
+     *  broken after the Maven 3.9.0 release. The proper solution would be
+     *  to fix the original problem in
+     *  <a href="https://github.com/yegor256/takes">takes</a> framework and
+     *  then to return the correct solution with
+     *  {@link org.takes.facets.fork.RsFork} back.
      */
     private static Response typedResponse(
         final Response raw,
         final Request req
     ) throws IOException {
         final Response resp;
-        final Collection<String> headers = new HashSet<>(new RqHeaders.Base(req).header("Accept"));
-        if (headers.contains("application/xml") || headers.contains("text/xml")) {
-            resp = new RsWithType(raw, "text/xml");
+        final Collection<String> headers = new HashSet<>(
+            new RqHeaders.Base(req).header("Accept")
+        );
+        final String xml = "text/xml";
+        if (headers.contains("application/xml") || headers.contains(xml)) {
+            resp = new RsWithType(raw, xml);
         } else {
             resp = new RsXslt(new RsWithType(raw, "text/html"));
         }
