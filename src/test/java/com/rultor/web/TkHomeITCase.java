@@ -118,7 +118,8 @@ public final class TkHomeITCase {
             "/robots.txt",
             "/xsl/layout.xsl",
             "/xsl/home.xsl",
-            "/css/style.css",
+            "/css/main.css",
+            "/css/siblings.css",
         };
         final Request request = new JdkRequest(TkHomeITCase.HOME);
         for (final String page : pages) {
