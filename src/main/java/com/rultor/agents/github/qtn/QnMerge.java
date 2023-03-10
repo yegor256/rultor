@@ -62,7 +62,7 @@ public final class QnMerge implements Question {
     /**
      * Message bundle.
      */
-    public static final ResourceBundle PHRASES =
+    private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
 
     @Override

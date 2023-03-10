@@ -39,6 +39,7 @@ import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ResourceBundle;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +63,12 @@ final class QnMergeTest {
      * The default command to the rultor with a request to merge changes.
      */
     private static final String COMMAND = "@rultor, merge, please";
+
+    /**
+     * Message bundle.
+     */
+    private static final ResourceBundle PHRASES =
+        ResourceBundle.getBundle("phrases");
 
     /**
      * All pull request comments.
@@ -111,7 +118,10 @@ final class QnMergeTest {
         MatcherAssert.assertThat(
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.containsString(
-                String.format(QnMerge.PHRASES.getString("QnMerge.start"), "#")
+                String.format(
+                    QnMergeTest.PHRASES.getString("QnMerge.start"),
+                    "#"
+                )
             )
         );
     }
@@ -137,7 +147,7 @@ final class QnMergeTest {
         MatcherAssert.assertThat(
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.equalTo(
-                QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
+                QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
             )
         );
         MatcherAssert.assertThat(request, Matchers.equalTo(Req.EMPTY));
