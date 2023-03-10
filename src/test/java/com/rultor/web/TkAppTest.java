@@ -150,6 +150,13 @@ public final class TkAppTest {
             new Toggles.InFile()
         );
         Assertions.assertEquals(
+            new StringBuilder()
+                .append("$(document).ready(function(){var a=$(\"#pulse\");")
+                .append("window.setInterval(function(){a.find(\"img\")")
+                .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
+                .append("+Date.now())},1E3)});")
+                .append("\n")
+                .toString(),
             new TextOf(
                 new RsPrint(
                     take.act(
@@ -160,12 +167,7 @@ public final class TkAppTest {
                         )
                     )
                 ).body()
-            ).asString(),
-            new StringBuilder()
-                .append("$(document).ready(function(){var a=$(\"#pulse\");")
-                .append("window.setInterval(function(){a.find(\"img\")")
-                .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
-                .append("+Date.now())},1E3)});").toString()
+            ).asString()
         );
     }
 

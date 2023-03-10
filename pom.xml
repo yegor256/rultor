@@ -107,12 +107,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.422</version>
+      <version>1.12.424</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-dynamodb</artifactId>
-      <version>1.12.422</version>
+      <version>1.12.424</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
@@ -389,7 +389,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.1.1</version>
+      <version>5.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -479,54 +479,40 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <sassSourceDirectory>${basedir}/src/main/scss</sassSourceDirectory>
-              <destination>${project.build.directory}/css</destination>
+              <destination>${project.build.outputDirectory}/css</destination>
             </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
-        <groupId>com.samaxes.maven</groupId>
-        <artifactId>minify-maven-plugin</artifactId>
-        <version>1.7.6</version>
+        <groupId>com.github.blutorange</groupId>
+        <artifactId>closure-compiler-maven-plugin</artifactId>
+        <version>2.25.0</version>
         <configuration>
-          <charset>UTF-8</charset>
-          <nosuffix>true</nosuffix>
-          <webappTargetDir>${project.build.outputDirectory}</webappTargetDir>
+          <!-- Base configuration for all executions (bundles) -->
+          <baseTargetDir>${project.build.outputDirectory}</baseTargetDir>
+          <encoding>UTF-8</encoding>
         </configuration>
         <executions>
           <execution>
             <id>minify-js</id>
-            <phase>
-              prepare-package
-            </phase>
             <goals>
               <goal>minify</goal>
             </goals>
             <configuration>
-              <webappSourceDir>${project.basedir}/src/main</webappSourceDir>
-              <jsSourceIncludes>
-                <include>*.js</include>
-              </jsSourceIncludes>
-              <jsEngine>CLOSURE</jsEngine>
+              <baseSourceDir>${project.basedir}/src/main</baseSourceDir>
+              <includes>
+                <include>**/*.js</include>
+              </includes>
               <skipMerge>true</skipMerge>
+              <closureEmitUseStrict>false</closureEmitUseStrict>
               <skipMinify>false</skipMinify>
-            </configuration>
-          </execution>
-          <execution>
-            <id>minify-css</id>
-            <phase>
-              prepare-package
-            </phase>
-            <goals>
-              <goal>minify</goal>
-            </goals>
-            <configuration>
-              <webappSourceDir>${project.build.directory}</webappSourceDir>
-              <cssSourceDir>css</cssSourceDir>
-              <cssSourceIncludes>
-                <include>*.css</include>
-              </cssSourceIncludes>
-              <skipMerge>false</skipMerge>
+              <outputFilename>
+                #{path}/#{basename}.#{extension}
+              </outputFilename>
+              <closureLanguageOut>
+                NO_TRANSPILE
+              </closureLanguageOut>
             </configuration>
           </execution>
         </executions>
