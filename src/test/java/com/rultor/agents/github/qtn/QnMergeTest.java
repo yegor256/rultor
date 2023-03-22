@@ -29,10 +29,14 @@
  */
 package com.rultor.agents.github.qtn;
 
+import com.jcabi.github.Check;
+import com.jcabi.github.Checks;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Comments;
+import com.jcabi.github.Pull;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkBranches;
+import com.jcabi.github.mock.MkChecks;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Req;
@@ -45,6 +49,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -74,6 +79,7 @@ final class QnMergeTest {
      * All pull request comments.
      */
     private transient Comments comments;
+    private Pull pull;
 
     /**
      * Initial phase for all tests.
@@ -87,8 +93,9 @@ final class QnMergeTest {
         final String base = "base";
         branches.create(head, "abcdef4");
         branches.create(base, "abcdef5");
+        pull = repo.pulls().create("", head, base);
         this.comments = repo.issues()
-            .get(repo.pulls().create("", head, base).number())
+            .get(pull.number())
             .comments();
     }
 
@@ -98,7 +105,7 @@ final class QnMergeTest {
      */
     @Test
     public void buildsRequest() throws Exception {
-        final String request = new Xembler(this.requestDirectives()).xml();
+        final String request = new Xembler(this.mergeRequest()).xml();
         MatcherAssert.assertThat(
             request,
             Matchers.allOf(
@@ -130,36 +137,48 @@ final class QnMergeTest {
      * QnMerge can not build a request because some GitHub checks
      *  were failed.
      * @throws Exception In case of error
-     * @todo #1237:90min We need to implement a verification logic
-     *  for GitHub checks to determine whether they were completed
-     *  correctly or not. If not, Rultor should not create a merge
-     *  request and must display a comment to the user. Once the logic
-     *  is implemented, we can enable that test.
      */
     @Test
-    @Disabled
     public void stopsBecauseCiChecksFailed() throws Exception {
-        final String request = new Xembler(this.requestDirectives()).xml();
+        final MkChecks checks = (MkChecks) this.pull.checks();
+        checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
+        this.mergeRequest();
         MatcherAssert.assertThat(
             new Comment.Smart(this.comments.get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
         );
         MatcherAssert.assertThat(
             new Comment.Smart(this.comments.get(2)).body(),
-            Matchers.equalTo(
+            Matchers.containsString(
                 QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
             )
         );
-        MatcherAssert.assertThat(request, Matchers.equalTo(Req.EMPTY));
+    }
+
+    @Test
+    public void continuesBecauseCiChecksSuccessful() throws Exception {
+        final MkChecks checks = (MkChecks) this.pull.checks();
+        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        this.mergeRequest();
+        MatcherAssert.assertThat(
+            new Comment.Smart(this.comments.get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(this.comments.get(2)).body(),
+            Matchers.containsString(
+                String.format(QnMergeTest.PHRASES.getString("QnMerge.start"), "#")
+            )
+        );
     }
 
     /**
-     * Request directives.
+     * Merge request directives.
      * @return Directives
      * @throws IOException In case of error
      * @throws URISyntaxException In case of error
      */
-    private Directives requestDirectives() throws IOException,
+    private Directives mergeRequest() throws IOException,
         URISyntaxException {
         return new Directives()
             .add("request")
