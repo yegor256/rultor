@@ -30,7 +30,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Check;
-import com.jcabi.github.Checks;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Comments;
 import com.jcabi.github.Pull;
@@ -39,7 +38,6 @@ import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkChecks;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -47,9 +45,7 @@ import java.util.ResourceBundle;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -79,7 +75,11 @@ final class QnMergeTest {
      * All pull request comments.
      */
     private transient Comments comments;
-    private Pull pull;
+
+    /**
+     * Pull request.
+     */
+    private transient Pull pull;
 
     /**
      * Initial phase for all tests.
@@ -93,15 +93,16 @@ final class QnMergeTest {
         final String base = "base";
         branches.create(head, "abcdef4");
         branches.create(base, "abcdef5");
-        pull = repo.pulls().create("", head, base);
+        this.pull = repo.pulls().create("", head, base);
         this.comments = repo.issues()
-            .get(pull.number())
+            .get(this.pull.number())
             .comments();
     }
 
     /**
      * QnMerge can build a request.
-     * @throws Exception In case of error.
+     *
+     * @throws Exception In case of error
      */
     @Test
     public void buildsRequest() throws Exception {
@@ -136,10 +137,13 @@ final class QnMergeTest {
     /**
      * QnMerge can not build a request because some GitHub checks
      *  were failed.
-     * @throws Exception In case of error
+     *
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
      */
     @Test
-    public void stopsBecauseCiChecksFailed() throws Exception {
+    public void stopsBecauseCiChecksFailed()
+        throws IOException, URISyntaxException {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
         this.mergeRequest();
@@ -155,8 +159,15 @@ final class QnMergeTest {
         );
     }
 
+    /**
+     * QnMerge can build a request because GitHub checks finished successfully.
+     *
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
     @Test
-    public void continuesBecauseCiChecksSuccessful() throws Exception {
+    public void continuesBecauseCiChecksSuccessful()
+        throws IOException, URISyntaxException {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         this.mergeRequest();
@@ -167,7 +178,10 @@ final class QnMergeTest {
         MatcherAssert.assertThat(
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.containsString(
-                String.format(QnMergeTest.PHRASES.getString("QnMerge.start"), "#")
+                String.format(
+                    QnMergeTest.PHRASES.getString("QnMerge.start"),
+                    "#"
+                )
             )
         );
     }

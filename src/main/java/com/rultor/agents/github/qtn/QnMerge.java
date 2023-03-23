@@ -41,7 +41,6 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -180,7 +179,8 @@ public final class QnMerge implements Question {
      * @return True if all checks are successful
      * @throws IOException If fails
      */
-    private static boolean allChecksSuccessful(final Pull pull) throws IOException {
+    private static boolean allChecksSuccessful(final Pull pull)
+        throws IOException {
         boolean result = true;
         for (final Check check : pull.checks().all()) {
             if (!check.successful()) {
