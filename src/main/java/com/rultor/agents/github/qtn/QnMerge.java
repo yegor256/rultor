@@ -30,6 +30,7 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Check;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
@@ -72,21 +73,29 @@ public final class QnMerge implements Question {
         final Issue.Smart issue = new Issue.Smart(comment.issue());
         final Req req;
         if (issue.isPull() && issue.isOpen()) {
-            new Answer(comment).post(
-                true,
-                String.format(
-                    QnMerge.PHRASES.getString("QnMerge.start"),
-                    home.toASCIIString()
-                )
-            );
             Logger.info(
                 this, "merge request found in %s#%d, comment #%d",
                 issue.repo().coordinates(), issue.number(), comment.number()
             );
-            req = QnMerge.pack(
-                comment,
-                issue.repo().pulls().get(issue.number())
-            );
+            if (QnMerge.allChecksSuccessful(issue.pull())) {
+                new Answer(comment).post(
+                    true,
+                    String.format(
+                        QnMerge.PHRASES.getString("QnMerge.start"),
+                        home.toASCIIString()
+                    )
+                );
+                req = QnMerge.pack(
+                    comment,
+                    issue.repo().pulls().get(issue.number())
+                );
+            } else {
+                new Answer(comment).post(
+                    false,
+                    QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
+                );
+                req = Req.EMPTY;
+            }
         } else {
             new Answer(comment).post(
                 false,
@@ -162,6 +171,24 @@ public final class QnMerge implements Question {
             );
         }
         return req;
+    }
+
+    /**
+     * Checks if all checks are successful.
+     * @param pull Pull
+     * @return True if all checks are successful
+     * @throws IOException If fails
+     */
+    private static boolean allChecksSuccessful(final Pull pull)
+        throws IOException {
+        boolean result = true;
+        for (final Check check : pull.checks().all()) {
+            if (!check.successful()) {
+                result = false;
+                break;
+            }
+        }
+        return result;
     }
 
 }
