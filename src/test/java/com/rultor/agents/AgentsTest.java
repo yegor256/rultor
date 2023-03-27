@@ -58,5 +58,4 @@ public final class AgentsTest {
         final Profile profile = new Profile.Fixed();
         new Agents(github, sttc).agent(talk, profile).execute(talk);
     }
-
 }

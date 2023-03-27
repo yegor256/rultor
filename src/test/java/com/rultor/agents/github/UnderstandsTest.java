@@ -29,15 +29,23 @@
  */
 package com.rultor.agents.github;
 
+import com.jcabi.github.Check;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Comments;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
+import com.jcabi.github.Pull;
 import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkBranches;
+import com.jcabi.github.mock.MkChecks;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnFirstOf;
 import com.rultor.agents.github.qtn.QnHello;
+import com.rultor.agents.github.qtn.QnIamLost;
 import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
@@ -143,21 +151,83 @@ public final class UnderstandsTest {
     }
 
     /**
+     * The test that verifies that only one message is print if the
+     * pull request has a failed check.
+     * Test for issue #1657
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void understandsMergeMessageWithFailedCheck() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        ((MkChecks) pull.checks()).create(
+            Check.Status.COMPLETED,
+            Check.Conclusion.FAILURE
+        );
+        new Understands(
+            repo.github(),
+            new QnFirstOf(
+                new QnMerge(),
+                new QnIamLost()
+            )
+        ).execute(UnderstandsTest.talk(pull));
+        final Comments comments = repo.issues().get(1).comments();
+        MatcherAssert.assertThat(
+            comments.iterate(new Date(0)),
+            Matchers.iterableWithSize(1)
+        );
+        MatcherAssert.assertThat(
+            new Comment.Smart(comments.get(1)).body(),
+            Matchers.containsString("Can't merge")
+        );
+    }
+
+    /**
      * Make talk from issue.
      * @param issue The issue
      * @return Talk
      * @throws IOException If fails
      */
     private static Talk talk(final Issue issue) throws IOException {
+        return UnderstandsTest.talk(issue.repo().coordinates(), issue.number());
+    }
+
+    /**
+     * Make talk from issue.
+     * @param pull The issue
+     * @return Talk
+     * @throws IOException If fails
+     */
+    private static Talk talk(final Pull pull) throws IOException {
+        return UnderstandsTest.talk(
+            pull.repo().coordinates(),
+            pull.number()
+        );
+    }
+
+    /**
+     * Make talk from coordinates and number.
+     * @param coordinates Repo Coordinates
+     * @param number Issue Number
+     * @return Talk
+     * @throws IOException If fails
+     */
+    private static Talk talk(
+        final Coordinates coordinates,
+        final int number
+    ) throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
                 .attr("later", "true")
                 .add("wire")
                 .add("href").set("http://test2").up()
-                .add("github-repo").set(issue.repo().coordinates().toString())
+                .add("github-repo").set(coordinates.toString())
                 .up()
-                .add("github-issue").set(Integer.toString(issue.number())).up()
+                .add("github-issue").set(Integer.toString(number)).up()
         );
         return talk;
     }
