@@ -291,7 +291,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-github</artifactId>
-      <version>1.6.1</version>
+      <version>1.6.2</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
