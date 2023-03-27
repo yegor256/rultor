@@ -32,10 +32,9 @@ package com.rultor.agents.github;
 import com.jcabi.github.Check;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Comments;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
-import com.jcabi.github.PullComment;
-import com.jcabi.github.PullComments;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkChecks;
@@ -151,24 +150,30 @@ public final class UnderstandsTest {
         );
     }
 
+    /**
+     * The test that verifies that only one message is print if the
+     * pull request has a failed check.
+     * Test for issue #1657
+     * @throws Exception In case of error.
+     */
     @Test
-    public void understandsMergeMessage() throws Exception {
+    public void understandsMergeMessageWithFailedCheck() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final MkBranches branches = (MkBranches) repo.branches();
         branches.create("head", "abcdef4");
         branches.create("base", "abcdef5");
         final Pull pull = repo.pulls().create("", "head", "base");
-        final MkChecks checks = (MkChecks) pull.checks();
-        checks.create(Check.Status.COMPLETED, Check.Conclusion.FAILURE);
-        final Agent agent = new Understands(
+        ((MkChecks) pull.checks()).create(
+            Check.Status.COMPLETED,
+            Check.Conclusion.FAILURE
+        );
+        new Understands(
             repo.github(),
             new QnFirstOf(
                 new QnMerge(),
                 new QnIamLost()
             )
-        );
-        final Talk talk = UnderstandsTest.talk(pull);
-        agent.execute(talk);
+        ).execute(UnderstandsTest.talk(pull));
         final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(
             comments.iterate(new Date(0)),
@@ -187,17 +192,7 @@ public final class UnderstandsTest {
      * @throws IOException If fails
      */
     private static Talk talk(final Issue issue) throws IOException {
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk")
-                .attr("later", "true")
-                .add("wire")
-                .add("href").set("http://test2").up()
-                .add("github-repo").set(issue.repo().coordinates().toString())
-                .up()
-                .add("github-issue").set(Integer.toString(issue.number())).up()
-        );
-        return talk;
+        return UnderstandsTest.talk(issue.repo().coordinates(), issue.number());
     }
 
     /**
@@ -207,15 +202,32 @@ public final class UnderstandsTest {
      * @throws IOException If fails
      */
     private static Talk talk(final Pull pull) throws IOException {
+        return UnderstandsTest.talk(
+            pull.repo().coordinates(),
+            pull.number()
+        );
+    }
+
+    /**
+     * Make talk from coordinates and number.
+     * @param coordinates Repo Coordinates
+     * @param number Issue Number
+     * @return Talk
+     * @throws IOException If fails
+     */
+    private static Talk talk(
+        final Coordinates coordinates,
+        final int number
+    ) throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
                 .attr("later", "true")
                 .add("wire")
                 .add("href").set("http://test2").up()
-                .add("github-repo").set(pull.repo().coordinates().toString())
+                .add("github-repo").set(coordinates.toString())
                 .up()
-                .add("github-issue").set(Integer.toString(pull.number())).up()
+                .add("github-issue").set(Integer.toString(number)).up()
         );
         return talk;
     }

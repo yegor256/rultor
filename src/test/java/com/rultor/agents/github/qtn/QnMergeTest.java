@@ -186,30 +186,6 @@ final class QnMergeTest {
         );
     }
 
-    @Test
-    public void doesNotPrintsRedundantMessages()
-        throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
-        checks.create(Check.Status.COMPLETED, Check.Conclusion.FAILURE);
-        this.mergeRequest();
-        MatcherAssert.assertThat(
-            new Comment.Smart(this.comments.get(1)).body(),
-            Matchers.is(QnMergeTest.COMMAND)
-        );
-        MatcherAssert.assertThat(
-            new Comment.Smart(this.comments.get(2)).body(),
-            Matchers.containsString(
-                QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
-            )
-        );
-        MatcherAssert.assertThat(
-            new Comment.Smart(this.comments.get(3)).body(),
-            Matchers.containsString(
-                QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
-            )
-        );
-    }
-
     /**
      * Merge request directives.
      * @return Directives

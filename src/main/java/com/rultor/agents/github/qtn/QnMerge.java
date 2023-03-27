@@ -94,7 +94,7 @@ public final class QnMerge implements Question {
                     false,
                     QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
                 );
-                req = Req.EMPTY;
+                req = Req.DONE;
             }
         } else {
             new Answer(comment).post(
