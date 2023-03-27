@@ -54,6 +54,12 @@ import lombok.ToString;
 public final class QnSafe implements Question {
 
     /**
+     * Default error message format.
+     */
+    private static final String DEFAULT_FORMAT =
+        "We failed, sorry, try again:\n\n```\n%[exception]s\n```";
+
+    /**
      * Original question.
      */
     private final transient Question origin;
@@ -68,7 +74,8 @@ public final class QnSafe implements Question {
 
     @Override
     public Req understand(final Comment.Smart comment,
-        final URI home) throws IOException {
+        final URI home
+    ) throws IOException {
         Req req;
         if (QnSafe.valid(comment)) {
             try {
@@ -76,8 +83,9 @@ public final class QnSafe implements Question {
                 // @checkstyle IllegalCatchCheck (1 line)
             } catch (final Throwable ex) {
                 new Answer(comment).post(
-                    false, Logger.format(
-                        "We failed, sorry, try again:\n\n```%[exception]s```",
+                    false,
+                    Logger.format(
+                        QnSafe.DEFAULT_FORMAT,
                         ex
                     )
                 );
@@ -98,7 +106,7 @@ public final class QnSafe implements Question {
         boolean valid = true;
         try {
             comment.issue().json();
-        // @checkstyle IllegalCatchCheck (1 line)
+            // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {
             valid = false;
             Logger.warn(QnSafe.class, "%[exception]s", ex);
