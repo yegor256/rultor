@@ -271,6 +271,7 @@ public final class Agents {
             new DropsDaemon(TimeUnit.DAYS.toMinutes(1L)),
             new MkdirDaemon(),
             new TimedAgent(new StartsDaemon(profile)),
+            // @checkstyle MagicNumber (1 line)
             new KillsDaemon(TimeUnit.HOURS.toMinutes(3L)),
             new TimedAgent(new StopsDaemon()),
             new TimedAgent(new EndsDaemon()),
