@@ -99,7 +99,7 @@ public final class CommentsTagTest {
     @Test
     public void createsReleaseMessage() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("Issue title", "");
+        final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v1.5";
         final Talk talk = CommentsTagTest.talk(issue, tag);
@@ -117,8 +117,49 @@ public final class CommentsTagTest {
                 )
             )
         );
-        MatcherAssert.assertThat(smart.name(), Matchers.equalTo("Issue title"));
     }
+
+    /**
+     * CommentsTag can create a proper release title.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void createsReleaseTitleFromIssue() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("Issue title", "");
+        final Agent agent = new CommentsTag(repo.github());
+        final String tag = "v1.6";
+        agent.execute(CommentsTagTest.talk(issue, tag));
+        MatcherAssert.assertThat(
+            new Release.Smart(new Releases.Smart(repo.releases()).find(tag)).name(),
+            Matchers.equalTo("Issue title")
+        );
+    }
+
+    /**
+     * CommentsTag can create a proper release title.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void createsReleaseTitleFromTalk() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("Title from issue", "");
+        final Agent agent = new CommentsTag(repo.github());
+        final String tag = "v1.7";
+        final Talk talk = CommentsTagTest.talk(issue, tag);
+        final String title = "Custom Title";
+        talk.modify(
+            new Directives().xpath("/talk/request/args")
+                .add("arg")
+                .attr("name", "title")
+                .set(title));
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            new Release.Smart(new Releases.Smart(repo.releases()).find(tag)).name(),
+            Matchers.equalTo(title)
+        );
+    }
+
 
     /**
      * Make a talk with this tag.
@@ -143,9 +184,9 @@ public final class CommentsTagTest {
                 .add("author").set("yegor256").up()
                 .add("type").set("release").up()
                 .add("success").set("true").up()
-                .add("args").add("arg").attr("name", "tag").set(tag)
+                .add("args")
+                .add("arg").attr("name", "tag").set(tag).up()
         );
         return talk;
     }
-
 }
