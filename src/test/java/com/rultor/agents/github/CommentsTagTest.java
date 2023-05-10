@@ -99,15 +99,17 @@ public final class CommentsTagTest {
     @Test
     public void createsReleaseMessage() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
+        final Issue issue = repo.issues().create("Issue title", "");
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v1.5";
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
+        final Release.Smart smart = new Release.Smart(
+            new Releases.Smart(repo.releases()).find(tag)
+        );
+        final String body = smart.body();
         MatcherAssert.assertThat(
-            new Release.Smart(
-                new Releases.Smart(repo.releases()).find(tag)
-            ).body(),
+            body,
             Matchers.allOf(
                 Matchers.containsString("Released by Rultor"),
                 Matchers.containsString(
@@ -115,6 +117,7 @@ public final class CommentsTagTest {
                 )
             )
         );
+        MatcherAssert.assertThat(smart.name(), Matchers.equalTo("Issue title"));
     }
 
     /**
