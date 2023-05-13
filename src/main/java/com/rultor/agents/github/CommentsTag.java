@@ -139,7 +139,10 @@ public final class CommentsTag extends AbstractAgent {
      * @return Title
      * @throws IOException In case of problem communicating with repo.
      */
-    private static String title(final XML request, final Issue.Smart issue) throws IOException {
+    private static String title(
+        final XML request,
+        final Issue.Smart issue
+    ) throws IOException {
         final Optional<String> title = request.xpath(
             "args/arg[@name='title']/text()"
         ).stream().findFirst();

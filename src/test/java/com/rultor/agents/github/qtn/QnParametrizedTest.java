@@ -63,7 +63,9 @@ public final class QnParametrizedTest {
     public void fetchesParams() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        issue.comments().post("hey, tag=`1.9` and server is `p5`, title is `Version 1.9.0`");
+        issue.comments().post(
+            "hey, tag=`1.9` and server is `p5`, title is `Version 1.9.0`"
+        );
         final Question origin = new Question() {
             @Override
             public Req understand(final Comment.Smart comment, final URI home) {

@@ -131,7 +131,9 @@ public final class CommentsTagTest {
         final String tag = "v1.6";
         agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
-            new Release.Smart(new Releases.Smart(repo.releases()).find(tag)).name(),
+            new Release.Smart(
+                new Releases.Smart(repo.releases()).find(tag)
+            ).name(),
             Matchers.equalTo("Issue title")
         );
     }
@@ -152,14 +154,16 @@ public final class CommentsTagTest {
             new Directives().xpath("/talk/request/args")
                 .add("arg")
                 .attr("name", "title")
-                .set(title));
+                .set(title)
+        );
         agent.execute(talk);
         MatcherAssert.assertThat(
-            new Release.Smart(new Releases.Smart(repo.releases()).find(tag)).name(),
+            new Release.Smart(
+                new Releases.Smart(repo.releases()).find(tag)
+            ).name(),
             Matchers.equalTo(title)
         );
     }
-
 
     /**
      * Make a talk with this tag.
