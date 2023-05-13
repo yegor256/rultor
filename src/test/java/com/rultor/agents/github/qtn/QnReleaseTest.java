@@ -35,7 +35,9 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Req;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -126,6 +128,32 @@ public final class QnReleaseTest {
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("There is already a release `1.7`")
+        );
+    }
+
+    /**
+     * QnRelease can accept release title.
+     * @throws Exception In case of error
+     */
+    @Test
+    public void allowsToSetReleaseTitle() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("release `1.8`, title `Version 1.8.0`");
+        MatcherAssert.assertThat(
+            new Xembler(
+                new Directives().add("request").append(
+                    new QnRelease().understand(
+                        new Comment.Smart(issue.comments().get(1)), new URI("#")
+                    ).dirs()
+                )
+            ).xml(),
+            XhtmlMatchers.hasXPaths(
+                "/request[type='release']",
+                "/request/args[count(arg) = 2]",
+                "/request/args/arg[@name='head']",
+                "/request/args/arg[@name='head_branch']"
+            )
         );
     }
 
