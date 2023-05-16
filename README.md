@@ -14,9 +14,9 @@
 [![Availability at SixNines](https://www.sixnines.io/b/efd7)](https://www.sixnines.io/h/efd7)
 
 [Rultor](https://www.rultor.com) is a DevOps team assistant. It helps your programmers and
-release managers automate routine operations (merge, deploy and release),
+release managers automate routine operations (merge, deploy, and release)
 with an easy-to-use intuitive chat-bot interface. Just say `@rultor hello` in
-any of your GitHub issue and the converstaion will start.
+any of your GitHub issue and the conversation will start.
 
 Full documentation is at [doc.rultor.com](https://doc.rultor.com)
 
