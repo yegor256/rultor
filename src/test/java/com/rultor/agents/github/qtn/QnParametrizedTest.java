@@ -63,7 +63,9 @@ public final class QnParametrizedTest {
     public void fetchesParams() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        issue.comments().post("hey, tag=`1.9` and server is `p5`");
+        issue.comments().post(
+            "hey, tag=`1.9` and server is `p5`, title is `Version 1.9.0`"
+        );
         final Question origin = new Question() {
             @Override
             public Req understand(final Comment.Smart comment, final URI home) {
@@ -87,9 +89,10 @@ public final class QnParametrizedTest {
             ).xml(),
             XhtmlMatchers.hasXPaths(
                 "/request[type='xxx']",
-                "/request/args[count(arg) = 3]",
+                "/request/args[count(arg) = 4]",
                 "/request/args/arg[@name='tag' and .='1.9']",
-                "/request/args/arg[@name='server' and .='p5']"
+                "/request/args/arg[@name='server' and .='p5']",
+                "/request/args/arg[@name='title' and .='Version 1.9.0']"
             )
         );
     }

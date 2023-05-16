@@ -129,4 +129,30 @@ public final class QnReleaseTest {
         );
     }
 
+    /**
+     * QnRelease can accept release title.
+     * @throws Exception In case of error
+     */
+    @Test
+    public void allowsToSetReleaseTitle() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("release `1.8`, title `Version 1.8.0`");
+        MatcherAssert.assertThat(
+            new Xembler(
+                new Directives().add("request").append(
+                    new QnRelease().understand(
+                        new Comment.Smart(issue.comments().get(1)), new URI("#")
+                    ).dirs()
+                )
+            ).xml(),
+            XhtmlMatchers.hasXPaths(
+                "/request[type='release']",
+                "/request/args[count(arg) = 2]",
+                "/request/args/arg[@name='head']",
+                "/request/args/arg[@name='head_branch']"
+            )
+        );
+    }
+
 }

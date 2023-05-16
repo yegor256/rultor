@@ -44,6 +44,7 @@ import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -115,7 +116,7 @@ public final class CommentsTag extends AbstractAgent {
             final Release.Smart rel = new Release.Smart(
                 rels.create(tag.trim())
             );
-            rel.name(issue.title());
+            rel.name(CommentsTag.title(req, issue));
             rel.prerelease(true);
             rel.body(
                 String.format(
@@ -129,6 +130,29 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
+    }
+
+    /**
+     * Get title.
+     * @param request Request to get title from
+     * @param issue Issue to get title from as fallback
+     * @return Title
+     * @throws IOException In case of problem communicating with repo.
+     */
+    private static String title(
+        final XML request,
+        final Issue.Smart issue
+    ) throws IOException {
+        final Optional<String> title = request.xpath(
+            "args/arg[@name='title']/text()"
+        ).stream().findFirst();
+        final String res;
+        if (title.isPresent()) {
+            res = title.get();
+        } else {
+            res = issue.title();
+        }
+        return res;
     }
 
     /**
