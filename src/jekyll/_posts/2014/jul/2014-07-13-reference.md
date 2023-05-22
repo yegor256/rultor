@@ -269,6 +269,27 @@ The list of Github accounts able to give commands to Rultor is specified in
 commands. Configured commanders don't replace collaborators. In other words,
 Github collaborators *and* accounts mentioned here are allowed to give commands.
 
+### Release
+
+There are a few additional configurable parameters for `release` section:
+
+{% highlight yaml %}
+release:
+  pre: false
+  sensitive:
+    - my_password.txt
+  script: |
+    echo "testing..."
+    echo "building..."
+    echo "packaging..."
+{% endhighlight %}
+
+`sensitive` option lists files that must not present in the branch after the release. It is recommended to list your sensitive config files there.
+
+`pre` option if set to `false` will automatically mark the release in GitHub as "final."
+
+### Merge
+
 There are a few additional configurable parameters for `merge` section:
 
 {% highlight yaml %}
