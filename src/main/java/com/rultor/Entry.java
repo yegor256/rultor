@@ -60,6 +60,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import org.cactoos.scalar.IoChecked;
+import org.cactoos.scalar.LengthOf;
 import org.takes.http.Exit;
 import org.takes.http.FtCli;
 
@@ -158,9 +160,10 @@ public final class Entry {
     /**
      * Sttc.
      * @return Sttc
+     * @throws IOException If fails
      */
     @Cacheable(forever = true)
-    private Sttc sttc() {
+    private Sttc sttc() throws IOException {
         Logger.info(this, "Connecting Sttc...");
         final Sttc sttc = new CdSttc(
             new ReSttc(
@@ -169,6 +172,10 @@ public final class Entry {
                     Manifests.read("Rultor-SttcToken")
                 )
             )
+        );
+        Logger.info(
+            this, "There are %d counters for me in Sttc",
+            new IoChecked<>(new LengthOf(sttc.counters().names())).value()
         );
         Logger.info(this, "Sttc connected as %s", sttc);
         return sttc;
