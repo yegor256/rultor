@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 # ruby '2.2.4'
 gem 'jekyll', '4.3.2'
-gem 'jekyll-plantuml', '1.3.4'
+gem 'jekyll-plantuml', '1.4.1'
 gem 'jekyll-press', '0.2.1'
 gem 'jgd', '1.12'
 gem 'kramdown', '2.4.0'
