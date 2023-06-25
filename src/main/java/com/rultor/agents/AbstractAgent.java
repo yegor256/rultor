@@ -58,6 +58,11 @@ public abstract class AbstractAgent implements Agent {
 
     /**
      * Ctor.
+     *
+     * <p>The list of XPath expressions must all retrieve something from the
+     * XML in order for this agent to be executed. Consider them all to be
+     * joined with a logical AND.</p>
+     *
      * @param args XPath expressions
      */
     public AbstractAgent(final String... args) {
