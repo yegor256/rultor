@@ -97,12 +97,18 @@ public final class RegistersShell extends AbstractAgent {
                 hash, this.shell.host(), this.shell.port(),
                 xml.xpath("/talk/@name").get(0)
             );
+            final String key = this.shell.key();
+            if (key.isEmpty()) {
+                throw new Profile.ConfigException(
+                    "SSH key is empty, it's a mistake"
+                );
+            }
             dirs.xpath("/talk").add("shell")
                 .attr("id", hash)
                 .add("host").set(this.shell.host()).up()
                 .add("port").set(Integer.toString(this.shell.port())).up()
                 .add("login").set(this.shell.login()).up()
-                .add("key").set(this.shell.key());
+                .add("key").set(key);
         } catch (final Profile.ConfigException ex) {
             dirs.xpath("/talk/daemon/script").set(
                 String.format(
