@@ -103,7 +103,7 @@ public final class RegistersShellTest {
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doThrow(new Profile.ConfigException("")).when(profile).read();
         final Agent agent = new RegistersShell(
-            profile, "test-host", 1, "", ""
+            profile, "test-host", 1, "test-user", "test-key"
         );
         final Talk talk = new Talk.InFile();
         agent.execute(talk);

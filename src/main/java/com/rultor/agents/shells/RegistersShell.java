@@ -69,6 +69,21 @@ public final class RegistersShell extends AbstractAgent {
     public RegistersShell(final Profile profile, final String host,
         final int port, final String user, final String key) {
         super("/talk[daemon and not(shell)]");
+        if (host.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Host is mandatory"
+            );
+        }
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException(
+                "User name is mandatory"
+            );
+        }
+        if (key.isEmpty()) {
+            throw new IllegalArgumentException(
+                "SSH key is mandatory"
+            );
+        }
         this.shell = new PfShell(profile, host, port, user, key);
     }
 
@@ -78,7 +93,7 @@ public final class RegistersShell extends AbstractAgent {
         final Directives dirs = new Directives();
         try {
             Logger.info(
-                this, "shell %s registered as %s:%d in %s",
+                this, "Shell %s registered as %s:%d in %s",
                 hash, this.shell.host(), this.shell.port(),
                 xml.xpath("/talk/@name").get(0)
             );
@@ -91,7 +106,7 @@ public final class RegistersShell extends AbstractAgent {
         } catch (final Profile.ConfigException ex) {
             dirs.xpath("/talk/daemon/script").set(
                 String.format(
-                    "failed to read profile: %s", ex.getLocalizedMessage()
+                    "Failed to read profile: %s", ex.getLocalizedMessage()
                 )
             );
         }
