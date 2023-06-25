@@ -252,56 +252,58 @@ public final class Agents {
                 )
             )
         );
-        return new Agent.Iterative(
-            new SanitizesDaemon(),
-            new WipesDaemon(),
-            new DropsTalk(),
-            new Understands(
-                this.github,
-                new QnSafe(question)
-            ),
-            new StartsRequest(profile),
-            new RegistersShell(
-                profile,
-                Agents.HOST, Agents.PORT, Agents.LOGIN,
-                Agents.priv()
-            ),
-            // @checkstyle MagicNumber (1 line)
-            new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),
-            new DropsDaemon(TimeUnit.DAYS.toMinutes(1L)),
-            new MkdirDaemon(),
-            new TimedAgent(new StartsDaemon(profile)),
-            // @checkstyle MagicNumber (1 line)
-            new KillsDaemon(TimeUnit.HOURS.toMinutes(3L)),
-            new TimedAgent(new StopsDaemon()),
-            new TimedAgent(new EndsDaemon()),
-            new EndsRequest(),
-            new SafeAgent(
-                new Tweets(
+        return new VerboseAgent(
+            new Agent.Iterative(
+                new SanitizesDaemon(),
+                new WipesDaemon(),
+                new DropsTalk(),
+                new Understands(
                     this.github,
-                    new OAuthTwitter(
-                        Manifests.read("Rultor-TwitterKey"),
-                        Manifests.read("Rultor-TwitterSecret"),
-                        Manifests.read("Rultor-TwitterToken"),
-                        Manifests.read("Rultor-TwitterTokenSecret")
+                    new QnSafe(question)
+                ),
+                new StartsRequest(profile),
+                new RegistersShell(
+                    profile,
+                    Agents.HOST, Agents.PORT, Agents.LOGIN,
+                    Agents.priv()
+                ),
+                // @checkstyle MagicNumber (1 line)
+                new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),
+                new DropsDaemon(TimeUnit.DAYS.toMinutes(1L)),
+                new MkdirDaemon(),
+                new TimedAgent(new StartsDaemon(profile)),
+                // @checkstyle MagicNumber (1 line)
+                new KillsDaemon(TimeUnit.HOURS.toMinutes(3L)),
+                new TimedAgent(new StopsDaemon()),
+                new TimedAgent(new EndsDaemon()),
+                new EndsRequest(),
+                new SafeAgent(
+                    new Tweets(
+                        this.github,
+                        new OAuthTwitter(
+                            Manifests.read("Rultor-TwitterKey"),
+                            Manifests.read("Rultor-TwitterSecret"),
+                            Manifests.read("Rultor-TwitterToken"),
+                            Manifests.read("Rultor-TwitterTokenSecret")
+                        )
                     )
-                )
-            ),
-            new CommentsTag(this.github),
-            new ReleaseBinaries(this.github, profile),
-            new Dephantomizes(this.github),
-            new Reports(this.github),
-            new RemovesShell(),
-            new ArchivesDaemon(
-                new ReRegion(
-                    new Region.Simple(
-                        Manifests.read("Rultor-S3Key"),
-                        Manifests.read("Rultor-S3Secret")
-                    )
-                ).bucket(Manifests.read("Rultor-S3Bucket"))
-            ),
-            new Publishes(profile, this.github),
-            new SafeAgent(new Stars(this.github))
+                ),
+                new CommentsTag(this.github),
+                new ReleaseBinaries(this.github, profile),
+                new Dephantomizes(this.github),
+                new Reports(this.github),
+                new RemovesShell(),
+                new ArchivesDaemon(
+                    new ReRegion(
+                        new Region.Simple(
+                            Manifests.read("Rultor-S3Key"),
+                            Manifests.read("Rultor-S3Secret")
+                        )
+                    ).bucket(Manifests.read("Rultor-S3Bucket"))
+                ),
+                new Publishes(profile, this.github),
+                new SafeAgent(new Stars(this.github))
+            )
         );
     }
 
