@@ -145,7 +145,7 @@ public final class PfShell {
             final InputStream asset = this.profile.assets().get(path);
             if (asset == null) {
                 throw new Profile.ConfigException(
-                    String.format("private SSH key not found at %s", path)
+                    String.format("Private SSH key not found at %s", path)
                 );
             }
             try {

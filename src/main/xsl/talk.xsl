@@ -37,6 +37,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </title>
   </xsl:template>
   <xsl:template match="page" mode="body">
+    <p>
+      <a href="/{talk/name}/delete">
+        <xsl:text>/delete</xsl:text>
+      </a>
+    </p>
     <xsl:apply-templates select="talk"/>
   </xsl:template>
   <xsl:template match="talk">

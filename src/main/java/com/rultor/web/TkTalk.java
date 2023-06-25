@@ -69,7 +69,7 @@ final class TkTalk implements TkRegex {
         if (!this.talks.exists(number)) {
             throw new RsForward(
                 new RsFlash(
-                    "there is no such page here",
+                    "There is no such page here",
                     Level.WARNING
                 )
             );
