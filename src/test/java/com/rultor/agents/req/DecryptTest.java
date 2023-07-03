@@ -31,6 +31,7 @@ package com.rultor.agents.req;
 
 import com.jcabi.log.VerboseProcess;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.spi.Profile;
 import java.io.File;
 import java.io.IOException;
@@ -115,7 +116,10 @@ public final class DecryptTest {
             );
             Assume.assumeThat(gpg, Matchers.not(Matchers.startsWith("${")));
             FileUtils.writeByteArrayToFile(
-                new File(dir, String.format(".gnupg/%s.gpg", key)),
+                new File(
+                    dir,
+                    String.format("%s/%s.gpg", StartsDaemon.GPG_HOME, key)
+                ),
                 Base64.decodeBase64(gpg)
             );
         }

@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
+import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collection;
@@ -117,12 +118,20 @@ final class Decrypt {
                 String.join(
                     Decrypt.SPACE,
                     "gpg --import",
-                    "\"$(pwd)/.gnupg/secring.gpg\""
+                    String.format(
+                        "\"$(pwd)/%s/secring.gpg\"",
+                        StartsDaemon.GPG_HOME
+                    )
                 )
             );
             commands.add("gpg --version");
             commands.add("gpg --list-keys");
-            commands.add("ls -al \"$(pwd)/.gnupg\"");
+            commands.add(
+                String.format(
+                    "ls -al \"$(pwd)/%s\"",
+                    StartsDaemon.GPG_HOME
+                )
+            );
         }
         for (final XML asset : assets) {
             final String key = asset.xpath("@key").get(0);
@@ -153,9 +162,9 @@ final class Decrypt {
                     Ssh.escape(key)
                 )
             );
-            commands.add(String.format("rm -rf %s", Ssh.escape(enc)));
+            commands.add(String.format("rm -rf %s ", Ssh.escape(enc)));
         }
-        commands.add("rm -rf .gnupg");
+        commands.add(String.format("rm -rf %s", StartsDaemon.GPG_HOME));
         if (!assets.isEmpty()) {
             commands.add(
                 String.format(

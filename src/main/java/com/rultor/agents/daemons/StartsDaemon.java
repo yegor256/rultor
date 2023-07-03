@@ -75,6 +75,11 @@ import org.xembly.Directives;
 public final class StartsDaemon implements Agent {
 
     /**
+     * Gpg home dir.
+     */
+    public static final String GPG_HOME = ".gnupg";
+
+    /**
      * Paths to match.
      */
     private static final Array<String> PATHS = new Array<>(
@@ -82,7 +87,6 @@ public final class StartsDaemon implements Agent {
         "/talk/daemon[script and dir and not(started) and not(ended)]",
         "/talk/daemon[dir != '']"
     );
-
     /**
      * Profile to get assets from.
      */
@@ -247,15 +251,22 @@ public final class StartsDaemon implements Agent {
                     String.join(
                         " &&  ",
                         String.format("cd %s  ", Ssh.escape(dir)),
-                        "mkdir -p .gpg",
-                        String.format("cat > \".gpg/%s\"", name)
+                        String.format("mkdir -p %s", StartsDaemon.GPG_HOME),
+                        String.format(
+                            "cat > \"%s/%s\"",
+                            StartsDaemon.GPG_HOME, name
+                        )
                     ),
                     this.ring(name),
                     Logger.stream(Level.INFO, true),
                     Logger.stream(Level.WARNING, true)
                 );
             }
-            Logger.info(this, "GPG keys uploaded to %s", dir);
+            Logger.info(
+                this,
+                "GPG keys uploaded to %s/%s",
+                dir, StartsDaemon.GPG_HOME
+            );
         }
     }
 
