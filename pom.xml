@@ -148,7 +148,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>co.stateful</groupId>
       <artifactId>java-sdk</artifactId>
-      <version>0.16.2</version>
+      <version>0.17.0</version>
     </dependency>
     <dependency>
       <groupId>javax.json</groupId>
