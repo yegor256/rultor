@@ -1,6 +1,7 @@
 #!/bin/sh
 
 hostname
+pwd
 
 git --version
 docker --version
