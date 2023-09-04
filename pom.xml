@@ -215,7 +215,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
-      <version>1.9.20</version>
+      <version>1.9.20.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
