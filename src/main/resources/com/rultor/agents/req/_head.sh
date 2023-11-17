@@ -53,7 +53,7 @@ else
   cat <<EOT >> entry.sh
   shopt -s dotglob
   useradd -m -G sudo r
-  for g in \$(cat /etc/group | awk  -F  ':' '\$3 > 100 { print \$1 }'); do useradd -m -G "\${g}" r; done
+  for g in \$(cat /etc/group | awk  -F  ':' '\$3 > 100 { print \$1 }'); do usermod -a -G "\${g}" r; done
   usermod -s /bin/bash r
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
   cp -R /root/* /home/r
