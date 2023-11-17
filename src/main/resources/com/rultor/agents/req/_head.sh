@@ -53,6 +53,7 @@ else
   cat <<EOT >> entry.sh
   shopt -s dotglob
   useradd -m -G sudo r
+  for g in \$(cat /etc/group | awk  -F  ':' '\$3 > 100 { print \$1 }'); do useradd -m -G "\${g}" r; done
   usermod -s /bin/bash r
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
   cp -R /root/* /home/r
@@ -62,20 +63,19 @@ else
   chmod a+x /home/r/script.sh
   su --login r --command /home/r/script.sh
   mv /home/r/repo .
-  chown -R \$(whoami) repo
+  chown -R "\$(whoami)" repo
 EOT
 fi
 chmod a+x entry.sh
 cat <<EOT > script.sh
 #!/bin/bash
-set -x
 set -e
 set -o pipefail
 if [ -e /home/r/.profile ]; then source /home/r/.profile; fi
 shopt -s expand_aliases
 alias 'sudo=sudo -i'
 export HOME=/home/r
-cd \$HOME/repo
+cd "\${HOME}/repo"
 EOT
 echo "${scripts[@]}" >> script.sh
 
