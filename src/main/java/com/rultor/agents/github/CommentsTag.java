@@ -41,9 +41,11 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
+import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
@@ -77,15 +79,33 @@ public final class CommentsTag extends AbstractAgent {
     private final transient Github github;
 
     /**
+     * Profile.
+     */
+    private final transient Profile profile;
+
+    /**
      * Ctor.
      * @param ghub Github client
      */
     public CommentsTag(final Github ghub) {
+        this(ghub, Profile.EMPTY);
+    }
+
+    /**
+     * Constructor.
+     * @param github Github client
+     * @param profile Profile
+     */
+    public CommentsTag(
+        final Github github,
+        final Profile profile
+    ) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"
         );
-        this.github = ghub;
+        this.github = github;
+        this.profile = profile;
     }
 
     @Override
@@ -117,7 +137,7 @@ public final class CommentsTag extends AbstractAgent {
                 rels.create(tag.trim())
             );
             rel.name(CommentsTag.title(req, issue));
-            rel.prerelease(true);
+            rel.prerelease(this.isPrerelease());
             rel.body(
                 String.format(
                     // @checkstyle LineLength (1 line)
@@ -130,6 +150,29 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "tag %s created and commented", tag);
         }
         return new Directives();
+    }
+
+    /**
+     * Check if release is prerelease.
+     * @return True if prerelease, false otherwise.
+     */
+    private boolean isPrerelease() {
+        try {
+            final List<String> xpath = this.profile.read()
+                .xpath("/p/entry[@key='release']/entry[@key='pre']/text()");
+            if (xpath.isEmpty()) {
+                return true;
+            }
+            return "true".equals(xpath.get(0));
+        } catch (final IOException exception) {
+            throw new IllegalStateException(
+                String.format(
+                    "Can't read profile: '%s' to determine pre-release status",
+                    this.profile
+                ),
+                exception
+            );
+        }
     }
 
     /**

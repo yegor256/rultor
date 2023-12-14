@@ -166,6 +166,58 @@ public final class CommentsTagTest {
     }
 
     /**
+     * CommentsTag can create latest release if profile specify 'pre: false'.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void createsLatestRelease() throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues()
+            .create(
+                "Latest Release",
+                "This issue is created for latest release"
+            );
+        final Agent agent = new CommentsTag(repo.github());
+        final String tag = "v1.1.latest";
+        final Talk talk = CommentsTagTest.talk(issue, tag);
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            String.format(
+                "We expect that release with tag '%s' is the latest final release (not a pre-release)",
+                tag
+            ),
+            new Release.Smart(
+                new Releases.Smart(repo.releases()).find(tag)
+            ).prerelease(),
+            Matchers.is(false)
+        );
+    }
+
+    @Test
+    public void createsPreReleaseByDefault() throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues()
+            .create(
+                "Pre Release",
+                "This issue is created for pre release"
+            );
+        final Agent agent = new CommentsTag(repo.github());
+        final String tag = "v1.1.pre-release";
+        final Talk talk = CommentsTagTest.talk(issue, tag);
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            String.format(
+                "We expect that release with tag '%s' is the pre-release by default if profile does not specify 'pre: false'",
+                tag
+            ),
+            new Release.Smart(
+                new Releases.Smart(repo.releases()).find(tag)
+            ).prerelease(),
+            Matchers.is(true)
+        );
+    }
+
+    /**
      * Make a talk with this tag.
      * @param issue The issue
      * @param tag The tag

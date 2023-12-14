@@ -117,7 +117,7 @@ import org.cactoos.text.UncheckedText;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "github", "sttc" })
+@EqualsAndHashCode(of = {"github", "sttc"})
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
 
@@ -288,7 +288,7 @@ public final class Agents {
                         )
                     )
                 ),
-                new CommentsTag(this.github),
+                new CommentsTag(this.github, profile),
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
                 new Reports(this.github),
