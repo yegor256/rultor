@@ -34,7 +34,6 @@ import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
-import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
@@ -169,7 +168,7 @@ public final class CommentsTagTest {
 
     /**
      * CommentsTag can create latest release if profile specify 'pre: false'.
-     * @throws Exception In case of error.
+     * @throws IOException In case of error.
      */
     @Test
     public void createsLatestRelease() throws IOException {
@@ -182,17 +181,18 @@ public final class CommentsTagTest {
         final Agent agent = new CommentsTag(
             repo.github(),
             new Profile.Fixed(
-                "<p><entry key='release'><entry key='pre'>false</entry></entry></p>"
+                "<p>",
+                "<entry key='release'>",
+                "<entry key='pre'>",
+                "false",
+                "</entry></entry></p>"
             )
         );
         final String tag = "v1.1.latest";
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
-            String.format(
-                "We expect that release with tag '%s' is the latest final release (not a pre-release)",
-                tag
-            ),
+            "We expect latest release to be created (not pre)",
             new Release.Smart(
                 new Releases.Smart(repo.releases()).find(tag)
             ).prerelease(),
@@ -201,7 +201,8 @@ public final class CommentsTagTest {
     }
 
     /**
-     * CommentsTag can create pre-release by default if profile specify anything.
+     * CommentsTag can create pre-release by default.
+     * Check the default behaviour if profile specifies anything.
      * @throws IOException In case of error.
      */
     @Test
@@ -217,10 +218,7 @@ public final class CommentsTagTest {
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
-            String.format(
-                "We expect that release with tag '%s' is the pre-release by default if profile does not specify 'pre: false'",
-                tag
-            ),
+            "We expect pre-release to be created by default",
             new Release.Smart(
                 new Releases.Smart(repo.releases()).find(tag)
             ).prerelease(),

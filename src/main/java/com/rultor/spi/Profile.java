@@ -199,10 +199,10 @@ public interface Profile {
 
         /**
          * Ctor.
-         * @param xml Xml lines
+         * @param lines Xml lines
          */
-        public Fixed(String... xml) {
-            this(new XMLDocument(String.join("", xml)));
+        public Fixed(final String... lines) {
+            this(new XMLDocument(String.join("", lines)));
         }
 
         /**

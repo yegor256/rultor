@@ -93,19 +93,19 @@ public final class CommentsTag extends AbstractAgent {
 
     /**
      * Constructor.
-     * @param github Github client
-     * @param profile Profile
+     * @param ghub Github client
+     * @param config Profile
      */
     public CommentsTag(
-        final Github github,
-        final Profile profile
+        final Github ghub,
+        final Profile config
     ) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"
         );
-        this.github = github;
-        this.profile = profile;
+        this.github = ghub;
+        this.profile = config;
     }
 
     @Override
@@ -154,16 +154,20 @@ public final class CommentsTag extends AbstractAgent {
 
     /**
      * Check if release is prerelease.
+     * True if profile does not specify release.pre=false.
      * @return True if prerelease, false otherwise.
      */
     private boolean isPrerelease() {
         try {
+            final boolean result;
             final List<String> xpath = this.profile.read()
                 .xpath("/p/entry[@key='release']/entry[@key='pre']/text()");
             if (xpath.isEmpty()) {
-                return true;
+                result = true;
+            } else {
+                result = "true".equals(xpath.get(0).trim());
             }
-            return "true".equals(xpath.get(0).trim());
+            return result;
         } catch (final IOException exception) {
             throw new IllegalStateException(
                 String.format(
