@@ -191,15 +191,18 @@ public interface Profile {
          */
         public Fixed() {
             this(
-                new XMLDocument(
-                    String.join(
-                        "",
-                        "<p><entry key='merge'/>",
-                        "<entry key='release'/>",
-                        "<entry key='deploy'/></p>"
-                    )
-                )
+                "<p><entry key='merge'/>",
+                "<entry key='release'/>",
+                "<entry key='deploy'/></p>"
             );
+        }
+
+        /**
+         * Ctor.
+         * @param xml Xml lines
+         */
+        public Fixed(String... xml) {
+            this(new XMLDocument(String.join("", xml)));
         }
 
         /**

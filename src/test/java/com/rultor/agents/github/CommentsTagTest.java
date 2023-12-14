@@ -34,7 +34,9 @@ import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Agent;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
@@ -177,7 +179,12 @@ public final class CommentsTagTest {
                 "Latest Release",
                 "This issue is created for latest release"
             );
-        final Agent agent = new CommentsTag(repo.github());
+        final Agent agent = new CommentsTag(
+            repo.github(),
+            new Profile.Fixed(
+                "<p><entry key='release'><entry key='pre'>false</entry></entry></p>"
+            )
+        );
         final String tag = "v1.1.latest";
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
@@ -193,6 +200,10 @@ public final class CommentsTagTest {
         );
     }
 
+    /**
+     * CommentsTag can create pre-release by default if profile specify anything.
+     * @throws IOException In case of error.
+     */
     @Test
     public void createsPreReleaseByDefault() throws IOException {
         final Repo repo = new MkGithub().randomRepo();

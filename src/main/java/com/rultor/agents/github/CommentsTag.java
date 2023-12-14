@@ -163,7 +163,7 @@ public final class CommentsTag extends AbstractAgent {
             if (xpath.isEmpty()) {
                 return true;
             }
-            return "true".equals(xpath.get(0));
+            return "true".equals(xpath.get(0).trim());
         } catch (final IOException exception) {
             throw new IllegalStateException(
                 String.format(
