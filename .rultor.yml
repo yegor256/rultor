@@ -9,7 +9,7 @@ assets:
   heroku-netrc: yegor256/home#assets/heroku-netrc
 install: |-
   pdd --file=/dev/null
-  sudo bundle install --no-color "--gemfile=$(pwd)/Gemfile"
+  bundle install --no-color "--gemfile=$(pwd)/src/jekyll/Gemfile"
 merge:
   script: |-
     mvn help:system clean install -Pqulice -Prultor --errors --settings ../settings.xml
