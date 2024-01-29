@@ -1,0 +1,13 @@
+{
+  "healthchecks": {
+    "web": [
+      {
+        "type": "startup",
+        "name": "web check",
+        "description": "Checking if the app responds to the /robots.txt endpoint",
+        "path": "/robots.txt",
+        "attempts": 3
+      }
+    ]
+  }
+}
