@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,8 +42,9 @@ import javax.json.Json;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile} YAML validation.
@@ -74,8 +75,8 @@ public final class GithubProfileValidationTest {
      * GithubProfile can reject YAML with missing script in merge command.
      * @throws Exception In case of error.
      */
-    @Ignore
-    @Test(expected = Profile.ConfigException.class)
+    @Disabled
+    @Test
     public void rejectsYamlWithoutMergeScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
@@ -84,15 +85,17 @@ public final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
      * GithubProfile can reject YAML with missing script in deploy command.
      * @throws Exception In case of error.
      */
-    @Ignore
-    @Test(expected = Profile.ConfigException.class)
+    @Disabled
+    @Test
     public void rejectsYamlWithoutDeployScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
@@ -101,15 +104,17 @@ public final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
      * GithubProfile can reject YAML with missing script in release command.
      * @throws Exception In case of error.
      */
-    @Ignore
-    @Test(expected = Profile.ConfigException.class)
+    @Disabled
+    @Test
     public void rejectsYamlWithoutReleaseScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
@@ -118,7 +123,9 @@ public final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -221,7 +228,7 @@ public final class GithubProfileValidationTest {
      * GithubProfile reject get assets over not exist file.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void rejectGetAssetWithNotExistFile() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
@@ -232,14 +239,16 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/test#something.txt\""
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
      * GithubProfile reject get assets with wrong repository.
      * @throws Exception In case of error.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void rejectGetAssetWithWrongRepo() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
@@ -250,14 +259,16 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/fail#exist.txt\""
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
      * GithubProfile reject get assets with no friend user.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void rejectGetAssetWithNoFriendUser() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
@@ -268,14 +279,16 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/test#exist.txt\""
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
      * GithubProfile reject get assets with no friends.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void rejectGetAssetWithNoFriends() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
@@ -284,7 +297,9 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/test#exist.txt\""
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**

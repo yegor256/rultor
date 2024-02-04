@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,8 @@ import javax.json.Json;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile}.
@@ -113,9 +114,11 @@ public final class GithubProfileTest {
      * GithubProfile can throw when YAML is broken.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void throwsWhenYamlIsBroken() throws Exception {
-        new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n")).read();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n")).read()
+        );
     }
 
     /**
@@ -123,7 +126,7 @@ public final class GithubProfileTest {
      * @throws Exception In case of error.
      * @since 1.33
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void throwsWhenAssetIsMisconfigured() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
@@ -132,14 +135,16 @@ public final class GithubProfileTest {
                 "  something.xml: -invalid.user.name/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
      * GithubProfile can throw if asset contains username with underscore.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
@@ -148,7 +153,9 @@ public final class GithubProfileTest {
                 "  something.xml: invalid_username/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
@@ -156,7 +163,7 @@ public final class GithubProfileTest {
      * underscore.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void throwsWhenAssetsUsernameStartsWithUnderscore()
         throws Exception {
         final Repo repo = GithubProfileTest.repo(
@@ -166,7 +173,9 @@ public final class GithubProfileTest {
                 "  something.xml: _invalidusername/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
@@ -208,7 +217,7 @@ public final class GithubProfileTest {
      * GithubProfile can throw when rultor.yml is absent.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void throwsWhenRultorConfigIsAbsent() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
@@ -217,14 +226,16 @@ public final class GithubProfileTest {
                 "  something.xml: jeff/test2#.rultor.yml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
      * GithubProfile can throw when friend is not defined.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void throwsWhenFriendNotDefined() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
@@ -233,7 +244,9 @@ public final class GithubProfileTest {
                 "  a.xml: jeff/test1#test.xml"
             ).asString()
         );
-        new GithubProfile(repo).assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> new GithubProfile(repo).assets()
+        );
     }
 
     /**
@@ -241,7 +254,7 @@ public final class GithubProfileTest {
      * exist.
      * @throws Exception In case of error.
      */
-    @Test(expected = Profile.ConfigException.class)
+    @Test
     public void testAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
@@ -267,7 +280,9 @@ public final class GithubProfileTest {
                     .build()
             );
         final Profile profile = new GithubProfile(repo);
-        profile.assets();
+        Assertions.assertThrows(Profile.ConfigException.class,
+                () -> profile.assets()
+        );
     }
 
     /**

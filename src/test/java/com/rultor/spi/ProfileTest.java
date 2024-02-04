@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,8 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.xml.XMLDocument;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link Profile}.
@@ -72,36 +73,43 @@ public final class ProfileTest {
 
     /**
      * Profile.Fixed can reject incorrect XML.
-     * @throws Exception In case of error.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void rejectsMixedEntriesAndItems() throws Exception {
-        new Profile.Fixed(
-            new XMLDocument(
-                StringUtils.join(
-                    "<p><entry key='x'><entry key='test'>a</entry>",
-                    "<item>b</item></entry></p>"
-                )
-            )
+    @Test
+    public void rejectsMixedEntriesAndItems() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () ->
+                    new Profile.Fixed(
+                        new XMLDocument(
+                            StringUtils.join(
+                                "<p><entry key='x'><entry key='test'>a</entry>",
+                                "<item>b</item></entry></p>"
+                            )
+                        )
+                    )
         );
     }
 
     /**
      * Profile.Fixed can reject incorrect XML.
-     * @throws Exception In case of error.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void rejectsEntryWithoutKey() throws Exception {
-        new Profile.Fixed(new XMLDocument("<p><entry>test me</entry></p>"));
+    @Test
+    public void rejectsEntryWithoutKey() {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Profile.Fixed(new XMLDocument("<p><entry>test me</entry></p>"))
+        );
     }
 
     /**
      * Profile.Fixed can reject unknown attributes.
-     * @throws Exception In case of error.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void rejectsUnknownAttributes() throws Exception {
-        new Profile.Fixed(new XMLDocument("<p><entry f='x'>x</entry></p>"));
+    @Test
+    public void rejectsUnknownAttributes() {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () ->
+                new Profile.Fixed(new XMLDocument("<p><entry f='x'>x</entry></p>"))
+        );
     }
 
 }

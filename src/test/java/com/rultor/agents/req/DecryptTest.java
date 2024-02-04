@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,7 @@ import com.rultor.spi.Profile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -44,10 +45,10 @@ import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 /**
  * Tests for {@link Decrypt}.
@@ -71,19 +72,12 @@ public final class DecryptTest {
     private static final int PORT = 8080;
 
     /**
-     * Temp directory.
-     * @checkstyle VisibilityModifierCheck (5 lines)
-     */
-    @Rule
-    public final transient TemporaryFolder temp = new TemporaryFolder();
-
-    /**
      * StartsRequest can take decryption instructions into account.
      * @throws Exception In case of error.
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void decryptsAssets() throws Exception {
+    public void decryptsAssets(@TempDir Path tmpDir) throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
                 this.createTestProfileXML(),
@@ -100,7 +94,7 @@ public final class DecryptTest {
                 commands
             ).asString()
         ).asString();
-        final File dir = this.temp.newFolder();
+        final File dir = tmpDir.toFile();
         FileUtils.write(
             new File(dir, "a.txt.asc"),
             new FakePGP().asString(),
@@ -114,7 +108,7 @@ public final class DecryptTest {
                 ),
                 StandardCharsets.UTF_8
             );
-            Assume.assumeThat(gpg, Matchers.not(Matchers.startsWith("${")));
+            assumingThat(!gpg.startsWith("${"), () -> {});
             FileUtils.writeByteArrayToFile(
                 new File(
                     dir,

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,12 +45,13 @@ import org.hamcrest.Description;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Assume;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
+
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 /**
  * Integration case for {@link DyTalks}.
@@ -206,7 +207,7 @@ public final class DyTalksITCase {
      */
     private static Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
-        Assume.assumeNotNull(key);
+        assumingThat(key != null, () -> {});
         MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(
             new ReRegion(

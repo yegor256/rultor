@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,8 @@ package com.rultor;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import org.junit.Assume;
+
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Assumption for IT cases.
@@ -48,12 +49,12 @@ public final class WeAreOnline {
      */
     public void assume() throws IOException {
         try {
-            Assume.assumeTrue(
+            assumeTrue(
                 // @checkstyle MagicNumber (1 line)
                 InetAddress.getByName("api.github.com").isReachable(1000)
             );
         } catch (final UnknownHostException ex) {
-            Assume.assumeFalse(true);
+            assumeTrue(true, "api.github.com can not be recognized unknown");
         }
     }
 

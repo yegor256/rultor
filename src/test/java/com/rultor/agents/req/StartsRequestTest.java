@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,6 +39,7 @@ import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 import org.cactoos.text.Joined;
@@ -46,10 +47,9 @@ import org.cactoos.text.UncheckedText;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.io.TempDir;
 import org.xembly.Directives;
 
 /**
@@ -68,13 +68,6 @@ public final class StartsRequestTest {
      * Default head_branch value.
      */
     private static final String HEAD_BRANCH = "main";
-
-    /**
-     * Temp directory.
-     * @checkstyle VisibilityModifierCheck (5 lines)
-     */
-    @Rule
-    public final transient TemporaryFolder temp = new TemporaryFolder();
 
     /**
      * StartsRequest can start a request.
@@ -112,8 +105,8 @@ public final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void startsDeployRequest() throws Exception {
-        final File repo = this.repo();
+    public void startsDeployRequest(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
+        final File repo = this.repo(tempDir);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -151,7 +144,7 @@ public final class StartsRequestTest {
             )
         );
         MatcherAssert.assertThat(
-            this.exec(talk),
+            this.exec(talk, workDir),
             Matchers.allOf(
                 new Array<Matcher<? super String>>()
                     .with(
@@ -187,8 +180,8 @@ public final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void startsReleaseRequest() throws Exception {
-        final File repo = this.repo();
+    public void startsReleaseRequest(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
+        final File repo = this.repo(tempDir);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -215,7 +208,7 @@ public final class StartsRequestTest {
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
         );
         agent.execute(talk);
-        this.exec(talk);
+        this.exec(talk, workDir);
     }
 
     /**
@@ -223,8 +216,8 @@ public final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void startsMergeRequest() throws Exception {
-        final File repo = this.repo();
+    public void startsMergeRequest(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
+        final File repo = this.repo(tempDir);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -251,7 +244,7 @@ public final class StartsRequestTest {
                 .add("arg").attr("name", "pull_title").set("the \"title").up()
         );
         agent.execute(talk);
-        this.exec(talk);
+        this.exec(talk, workDir);
     }
 
     /**
@@ -259,8 +252,8 @@ public final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void startsMergeRequestIfEmpty() throws Exception {
-        final File repo = this.repo();
+    public void startsMergeRequestIfEmpty(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
+        final File repo = this.repo(tempDir);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument("<p></p>"),
@@ -284,7 +277,7 @@ public final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
-            this.execQuietly(talk),
+            this.execQuietly(talk, workDir),
             Matchers.containsString(
                 String.format(
                     "There is no '%s' section in .rultor.yml for branch %s",
@@ -301,10 +294,10 @@ public final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
-    public void runsReleaseWithDockerfile() throws Exception {
-        final File repo = this.repo();
-        final File dir = this.temp.newFolder();
+    @Disabled
+    public void runsReleaseWithDockerfile(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
+        final File repo = this.repo(tempDir);
+        final File dir = tempDir.toFile();
         FileUtils.write(
             new File(dir, "Dockerfile"),
             "FROM yegor256/rultor",
@@ -337,7 +330,7 @@ public final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
-            this.exec(talk),
+            this.exec(talk, workDir),
             Matchers.allOf(
                 new Array<Matcher<? super String>>()
                     .with(
@@ -397,8 +390,8 @@ public final class StartsRequestTest {
      * @since 1.37
      */
     @Test
-    public void runsAsRootIfRequested() throws Exception {
-        final File repo = this.repo();
+    public void runsAsRootIfRequested(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
+        final File repo = this.repo(tempDir);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -435,7 +428,7 @@ public final class StartsRequestTest {
             )
         );
         MatcherAssert.assertThat(
-            this.exec(talk),
+            this.exec(talk, workDir),
             Matchers.not(Matchers.containsString("useradd"))
         );
     }
@@ -446,8 +439,8 @@ public final class StartsRequestTest {
      * @return Full stdout
      * @throws IOException If fails
      */
-    private String exec(final Talk talk) throws IOException {
-        return this.process(talk).stdout();
+    private String exec(final Talk talk, final Path workPath) throws IOException {
+        return this.process(talk, workPath).stdout();
     }
 
     /**
@@ -456,8 +449,8 @@ public final class StartsRequestTest {
      * @return Full stdout
      * @throws IOException If fails
      */
-    private String execQuietly(final Talk talk) throws IOException {
-        return this.process(talk).stdoutQuietly();
+    private String execQuietly(final Talk talk, final Path workPath) throws IOException {
+        return this.process(talk, workPath).stdoutQuietly();
     }
 
     /**
@@ -466,7 +459,7 @@ public final class StartsRequestTest {
      * @return Process
      * @throws IOException If fails
      */
-    private VerboseProcess process(final Talk talk) throws IOException {
+    private VerboseProcess process(final Talk talk, final Path workPath) throws IOException {
         final String script = new UncheckedText(
             new Joined(
                 "\n",
@@ -489,7 +482,7 @@ public final class StartsRequestTest {
         return new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash", "-c", script
-            ).directory(this.temp.newFolder()).redirectErrorStream(true),
+            ).directory(workPath.toFile()).redirectErrorStream(true),
             Level.WARNING, Level.WARNING
         );
     }
@@ -497,10 +490,9 @@ public final class StartsRequestTest {
     /**
      * Create empty Git repo.
      * @return Its location
-     * @throws IOException If fails
      */
-    private File repo() throws IOException {
-        final File repo = this.temp.newFolder();
+    private File repo(Path tempDir) {
+        final File repo = tempDir.toFile();
         final String cmd = new UncheckedText(
             new Joined(
                 ";",

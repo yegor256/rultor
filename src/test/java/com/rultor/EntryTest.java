@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,8 +33,10 @@ import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
 import java.io.IOException;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * Test case for {@link Entry}.
@@ -48,7 +50,7 @@ public final class EntryTest {
      * To make sure we are online.
      * @throws IOException If fails
      */
-    @BeforeClass
+    @BeforeAll
     public static void weAreOnline() throws IOException {
         new WeAreOnline().assume();
     }
@@ -60,15 +62,16 @@ public final class EntryTest {
      * whether it can work in current environment, with full list
      * of project dependencies. If there will be any dependency issue,
      * this test will crash with a different exception, not AssertionError.
-     *
-     * @throws Exception If fails
      */
-    @Test(expected = AssertionError.class)
-    public void sttcConnects() throws Exception {
-        new RtSttc(
-            URN.create("urn:test:1"),
-            "invalid-token"
-        ).counters().names();
+    @Test
+    public void sttcConnects() {
+        Assertions.assertThrows(AssertionError.class,
+                () ->
+                    new RtSttc(
+                        URN.create("urn:test:1"),
+                        "invalid-token"
+                    ).counters().names()
+        );
     }
 
     /**
@@ -78,12 +81,12 @@ public final class EntryTest {
      * whether it can work in current environment, with full list
      * of project dependencies. If there will be any dependency issue,
      * this test will crash with a different exception, not AssertionError.
-     *
-     * @throws Exception If fails
      */
-    @Test(expected = AssertionError.class)
-    public void githubConnects() throws Exception {
-        new RtGithub("intentionally-invalid-token").users().self().login();
+    @Test
+    public void githubConnects() {
+        Assertions.assertThrows(AssertionError.class,
+                () ->
+                    new RtGithub("intentionally-invalid-token").users().self().login()
+        );
     }
-
 }

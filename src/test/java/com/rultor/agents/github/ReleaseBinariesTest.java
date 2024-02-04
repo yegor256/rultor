@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,18 +39,19 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.security.SecureRandom;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cactoos.io.TeeInput;
 import org.cactoos.scalar.LengthOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.xembly.Directives;
 
 /**
@@ -61,30 +62,25 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 public final class ReleaseBinariesTest {
-    /**
-     * Temp directory.
-     * @checkstyle VisibilityModifierCheck (5 lines)
-     */
-    @Rule
-    public final transient TemporaryFolder temp = new TemporaryFolder();
 
     /**
      * ReleaseBinaries should attach artifact to release.
      * @throws Exception In case of error
      */
     @Test
-    @Ignore
-    public void attachesBinaryToRelease() throws Exception {
+    @Disabled
+    public void attachesBinaryToRelease(@TempDir Path tempDir) throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final String tag = "v1.0";
-        final File dir = this.temp.newFolder();
+        final File dir = tempDir.toFile();
         final String target = "target";
         final String name = "name-${tag}.jar";
         final File bin = FileUtils.getFile(
             dir.getAbsolutePath(), "repo", target, name.replace("${tag}", tag)
         );
         bin.mkdirs();
-        final byte[] content = RandomUtils.nextBytes(Tv.HUNDRED);
+        new SecureRandom();
+        final byte[] content = SecureRandom.getSeed(Tv.HUNDRED);
         new LengthOf(new TeeInput(content, bin)).value();
         final Talk talk = ReleaseBinariesTest
             .talk(repo.issues().create("", ""), tag, dir);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,12 @@ import com.rultor.spi.Talk;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
+
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Integration tests for ${@link StartsRequest}.
@@ -78,8 +80,8 @@ public final class StartsRequestITCase {
      */
     @Test
     public void composesCorrectDeployRequest() throws Exception {
-        Assume.assumeNotNull(StartsRequestITCase.HOST);
-        Assumptions.assumeFalse(StartsRequestITCase.HOST.isEmpty());
+        assumeTrue(StartsRequestITCase.HOST != null);
+        assumeFalse(StartsRequestITCase.HOST.isEmpty());
         final Shell shell = new Shell.Verbose(
             new Ssh(
                 StartsRequestITCase.HOST, 22,

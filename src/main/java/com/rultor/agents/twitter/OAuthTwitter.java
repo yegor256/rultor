@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,7 @@ import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
+import twitter4j.v1.TwitterV1;
 
 /**
  * Twitter via OAuth2.
@@ -86,18 +85,16 @@ public final class OAuthTwitter implements Twitter {
         this.tsecret = tscrt;
     }
 
-    @Override
     @Quietly
     public void post(final String msg) throws IOException {
-        final TwitterFactory factory = new TwitterFactory();
-        final twitter4j.Twitter twitter = factory.getInstance();
-        twitter.setOAuthConsumer(this.key, this.secret);
-        twitter.setOAuthAccessToken(new AccessToken(this.token, this.tsecret));
+        final twitter4j.Twitter twitter = twitter4j.Twitter.newBuilder()
+                .oAuthAccessToken(this.token, this.tsecret)
+                .oAuthConsumer(this.key, this.secret)
+                .build();
         try {
-            twitter.updateStatus(msg);
+            twitter.v1().tweets().updateStatus(msg);
         } catch (final TwitterException ex) {
             throw new IOException(ex);
         }
     }
-
 }

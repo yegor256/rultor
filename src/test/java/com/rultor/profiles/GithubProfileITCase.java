@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@ import com.rultor.WeAreOnline;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +54,7 @@ public final class GithubProfileITCase {
      * To make sure we are online.
      * @throws IOException If fails
      */
-    @BeforeClass
+    @BeforeAll
     public static void weAreOnline() throws IOException {
         new WeAreOnline().assume();
     }

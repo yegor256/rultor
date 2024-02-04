@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2023 Yegor Bugayenko
+ * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,12 +39,13 @@ import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
-import org.junit.Assume;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.xembly.Directives;
+
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Tests for ${@link ArchivesDaemon}.
@@ -58,19 +59,12 @@ import org.xembly.Directives;
 public final class ArchivesDaemonITCase {
 
     /**
-     * Temp directory.
-     * @checkstyle VisibilityModifierCheck (5 lines)
-     */
-    @Rule
-    public final transient TemporaryFolder temp = new TemporaryFolder();
-
-    /**
      * ArchivesDaemon can archive a daemon.
      * @throws Exception In case of error.
      */
     @Test
-    public void archivesDaemon() throws Exception {
-        Assume.assumeTrue(
+    public void archivesDaemon(@TempDir Path tempDir) throws Exception {
+        assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
         try (
@@ -100,7 +94,7 @@ public final class ArchivesDaemonITCase {
                     .add("key").set(shell.key()).up().up()
             );
             final Agent agent = new ArchivesDaemon(
-                new FkBucket(this.temp.newFolder(), "test")
+                new FkBucket(tempDir, "test")
             );
             agent.execute(talk);
             MatcherAssert.assertThat(
