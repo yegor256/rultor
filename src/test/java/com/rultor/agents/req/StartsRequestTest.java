@@ -219,6 +219,7 @@ final class StartsRequestTest {
         );
         agent.execute(talk);
         // @todo #1 Improve assertion for correct start release request
+        //  Test should have an assertion, so it is the fastest way to add it.
         Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
     }
 
@@ -261,6 +262,7 @@ final class StartsRequestTest {
         );
         agent.execute(talk);
         // @todo #1 Improve assertion for correct start merge request
+        //  Test should have an assertion, so it is the fastest way to add it.
         Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
     }
 
