@@ -1,0 +1,1 @@
+eval File.read('./src/jekyll/Gemfile')
