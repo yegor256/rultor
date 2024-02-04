@@ -185,6 +185,9 @@ final class StartsRequestTest {
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
+     *  TODO #1 Improve assertion for correct start merge request
+     *  Test should have an assertion, so it is the fastest way to add it.
+     *  Comments are prohibited in methods by current stylechecker.
      */
     @Test
     public void startsReleaseRequest(
@@ -218,8 +221,6 @@ final class StartsRequestTest {
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
         );
         agent.execute(talk);
-        // @todo #1 Improve assertion for correct start release request
-        //  Test should have an assertion, so it is the fastest way to add it.
         Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
     }
 
@@ -228,6 +229,9 @@ final class StartsRequestTest {
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
+     *  TODO #1 Improve assertion for correct start merge request
+     *  Test should have an assertion, so it is the fastest way to add it.
+     *  Comments are prohibited in methods by current stylechecker.
      */
     @Test
     public void startsMergeRequest(
@@ -261,8 +265,6 @@ final class StartsRequestTest {
                 .add("arg").attr("name", "pull_title").set("the \"title").up()
         );
         agent.execute(talk);
-        // @todo #1 Improve assertion for correct start merge request
-        //  Test should have an assertion, so it is the fastest way to add it.
         Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
     }
 

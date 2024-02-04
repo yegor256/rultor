@@ -70,7 +70,10 @@ final class DyTalksITTestCase {
      */
     @BeforeEach
     public void before() {
-        Assumptions.assumeFalse(DyTalksITTestCase.PORT.isEmpty());
+        Assumptions.assumeFalse(
+            DyTalksITTestCase.PORT == null
+            || DyTalksITTestCase.PORT.isEmpty()
+        );
     }
 
     /**
