@@ -58,7 +58,7 @@ import org.xembly.Directives;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-final class DyTalksITCase {
+final class DyTalksITTestCase {
 
     /**
      * DynamoDB Local port.
@@ -70,7 +70,7 @@ final class DyTalksITCase {
      */
     @BeforeEach
     public void before() {
-        Assumptions.assumeFalse(DyTalksITCase.PORT.isEmpty());
+        Assumptions.assumeFalse(DyTalksITTestCase.PORT.isEmpty());
     }
 
     /**
@@ -80,7 +80,7 @@ final class DyTalksITCase {
     @Test
     public void addsTalks() throws Exception {
         final Talks talks = new DyTalks(
-            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "a5fe445";
         talks.create("hey/you", name);
@@ -97,7 +97,7 @@ final class DyTalksITCase {
     @Test
     public void listsRecentTalks() throws Exception {
         final Talks talks = new DyTalks(
-            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "yegor256/rultor#529";
         talks.create("a/b", name);
@@ -105,7 +105,7 @@ final class DyTalksITCase {
         talk.active(false);
         MatcherAssert.assertThat(
             talks.recent(),
-            Matchers.hasItem(new DyTalksITCase.TalkMatcher(name))
+            Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(name))
         );
     }
 
@@ -117,7 +117,7 @@ final class DyTalksITCase {
     @Disabled
     public void cachesRecentTalks() throws Exception {
         final Talks talks = new DyTalks(
-            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
         final String first = "krzyk1/rultor#562";
         final String repo = "some/other";
@@ -126,7 +126,7 @@ final class DyTalksITCase {
         talk.active(false);
         MatcherAssert.assertThat(
             talks.recent(),
-            Matchers.hasItem(new DyTalksITCase.TalkMatcher(first))
+            Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(first))
         );
         final String second = "krzyk2/rultor#562#2";
         talks.create(repo, second);
@@ -135,7 +135,7 @@ final class DyTalksITCase {
         MatcherAssert.assertThat(
             talks.recent(),
             Matchers.not(
-                Matchers.hasItem(new DyTalksITCase.TalkMatcher(second))
+                Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(second))
             )
         );
     }
@@ -147,7 +147,7 @@ final class DyTalksITCase {
     @Test
     public void listsSiblings() throws Exception {
         final Talks talks = new DyTalks(
-            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
         final String repo = "repo1";
         talks.create(repo, "yegor256/rultor#9");
@@ -172,7 +172,7 @@ final class DyTalksITCase {
     @Test
     public void listsRecentTalksExceptPrivates() throws Exception {
         final Talks talks = new DyTalks(
-            DyTalksITCase.dynamo(), new MkSttc().counters().get("")
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
         final String name = "yegor256/rultor#990";
         talks.create("a/ff", name);
@@ -215,7 +215,7 @@ final class DyTalksITCase {
                             key,
                             Manifests.read("Rultor-DynamoSecret")
                         ),
-                        Integer.parseInt(DyTalksITCase.PORT)
+                        Integer.parseInt(DyTalksITTestCase.PORT)
                     )
                 )
             ),

@@ -47,6 +47,7 @@ import org.cactoos.text.UncheckedText;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -217,7 +218,8 @@ final class StartsRequestTest {
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
         );
         agent.execute(talk);
-        this.exec(talk, jobtemp);
+        // @todo #1 Improve assertion for correct start release request
+        Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
     }
 
     /**
@@ -258,7 +260,8 @@ final class StartsRequestTest {
                 .add("arg").attr("name", "pull_title").set("the \"title").up()
         );
         agent.execute(talk);
-        this.exec(talk, jobtemp);
+        // @todo #1 Improve assertion for correct start merge request
+        Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
     }
 
     /**

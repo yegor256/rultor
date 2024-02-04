@@ -51,7 +51,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-final class StartsRequestITCase {
+final class StartsRequestITTestCase {
     /**
      * Docker server address.
      */
@@ -76,12 +76,12 @@ final class StartsRequestITCase {
      */
     @Test
     public void composesCorrectDeployRequest() throws Exception {
-        Assumptions.assumeTrue(StartsRequestITCase.HOST != null);
-        Assumptions.assumeFalse(StartsRequestITCase.HOST.isEmpty());
+        Assumptions.assumeTrue(StartsRequestITTestCase.HOST != null);
+        Assumptions.assumeFalse(StartsRequestITTestCase.HOST.isEmpty());
         final Shell shell = new Shell.Verbose(
             new Ssh(
-                StartsRequestITCase.HOST, 22,
-                StartsRequestITCase.LOGIN, StartsRequestITCase.KEY
+                StartsRequestITTestCase.HOST, 22,
+                StartsRequestITTestCase.LOGIN, StartsRequestITTestCase.KEY
             )
         );
         final String repo = String.format("/tmp/%d.git", System.nanoTime());
