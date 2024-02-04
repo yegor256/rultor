@@ -185,7 +185,7 @@ final class StartsRequestTest {
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
-     *  TODO #1 Improve assertion for correct start merge request
+     *  TODO #1 Improve assertion for correct start release request
      *  Test should have an assertion, so it is the fastest way to add it.
      *  Comments are prohibited in methods by current stylechecker.
      */
