@@ -67,7 +67,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @SuppressWarnings("PMD.ExcessiveImports")
-public final class StartsDaemonITCase {
+final class StartsDaemonITCase {
 
     /**
      * StartsDaemon can start a daemon.

@@ -46,7 +46,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-public final class DismountDaemonTest {
+final class DismountDaemonTest {
 
     /**
      * Sets daemon to ended when host is not responding.

@@ -45,7 +45,7 @@ import org.mockito.Mockito;
  * @version $Id$
  * @since 1.63
  */
-public final class DockerHealthCheckTest {
+final class DockerHealthCheckTest {
 
     /**
      * DockerHealthCheckTest can execute checkhost.sh.

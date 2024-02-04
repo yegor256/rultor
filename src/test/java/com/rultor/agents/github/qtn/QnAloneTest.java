@@ -52,7 +52,7 @@ import org.xembly.Xembler;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnAloneTest {
+final class QnAloneTest {
 
     /**
      * QnAlone can create lock repo.

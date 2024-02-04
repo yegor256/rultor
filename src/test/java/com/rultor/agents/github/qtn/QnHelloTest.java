@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.6
  */
-public final class QnHelloTest {
+final class QnHelloTest {
 
     /**
      * QnHello can reply.

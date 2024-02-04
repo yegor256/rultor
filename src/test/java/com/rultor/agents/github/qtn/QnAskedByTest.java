@@ -49,7 +49,7 @@ import org.mockito.Mockito;
  * @author Nathan Green (ngreen@inco5.com)
  * @version $Id$
  */
-public final class QnAskedByTest {
+final class QnAskedByTest {
 
     /**
      * QnAskedBy can exclude {@code @rultor} from list of commanders (#690).

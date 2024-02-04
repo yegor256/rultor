@@ -60,6 +60,9 @@ public interface Toggles {
      */
     boolean readOnly();
 
+    /**
+     * Inner file.
+     */
     @Immutable
     @ToString
     @EqualsAndHashCode

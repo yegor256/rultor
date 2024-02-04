@@ -41,11 +41,10 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.xembly.Directives;
-
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Tests for ${@link ArchivesDaemon}.
@@ -56,15 +55,15 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class ArchivesDaemonITCase {
-
+final class ArchivesDaemonITCase {
     /**
      * ArchivesDaemon can archive a daemon.
+     * @param temp Temporary directory
      * @throws Exception In case of error.
      */
     @Test
-    public void archivesDaemon(@TempDir Path tempDir) throws Exception {
-        assumeTrue(
+    public void archivesDaemon(@TempDir final Path temp) throws Exception {
+        Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
         try (
@@ -94,7 +93,7 @@ public final class ArchivesDaemonITCase {
                     .add("key").set(shell.key()).up().up()
             );
             final Agent agent = new ArchivesDaemon(
-                new FkBucket(tempDir, "test")
+                new FkBucket(temp, "test")
             );
             agent.execute(talk);
             MatcherAssert.assertThat(

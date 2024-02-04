@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.9
  */
-public final class StartsTalksTest {
+final class StartsTalksTest {
 
     /**
      * StartsTalks can start a talk.

@@ -175,7 +175,7 @@ public final class Profiles {
         } else {
             profile = this.merged(
                 new GithubProfile(
-                        new TalkIssues(Profiles.github(), xml).get().repo()
+                    new TalkIssues(Profiles.github(), xml).get().repo()
                 ),
                 xml.xpath("//request/args/arg[@name='fork']/text()").get(0),
                 xml.xpath(

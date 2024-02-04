@@ -49,7 +49,7 @@ import org.xembly.Xembler;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnDeployTest {
+final class QnDeployTest {
 
     /**
      * QnDeploy can build a request.

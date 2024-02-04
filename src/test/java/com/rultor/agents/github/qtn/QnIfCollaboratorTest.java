@@ -47,7 +47,7 @@ import org.xembly.Xembler;
  * @version $Id$
  * @since 1.40.4
  */
-public final class QnIfCollaboratorTest {
+final class QnIfCollaboratorTest {
 
     /**
      * QnCollaborators can block a request.

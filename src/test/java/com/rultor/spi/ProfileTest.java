@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.28
  */
-public final class ProfileTest {
+final class ProfileTest {
 
     /**
      * Profile.Fixed can accept correct XML.
@@ -76,16 +76,16 @@ public final class ProfileTest {
      */
     @Test
     public void rejectsMixedEntriesAndItems() {
-        Assertions.assertThrows(IllegalArgumentException.class,
-                () ->
-                    new Profile.Fixed(
-                        new XMLDocument(
-                            StringUtils.join(
-                                "<p><entry key='x'><entry key='test'>a</entry>",
-                                "<item>b</item></entry></p>"
-                            )
-                        )
+        Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> new Profile.Fixed(
+                new XMLDocument(
+                    StringUtils.join(
+                        "<p><entry key='x'><entry key='test'>a</entry>",
+                        "<item>b</item></entry></p>"
                     )
+                )
+            )
         );
     }
 
@@ -95,8 +95,10 @@ public final class ProfileTest {
     @Test
     public void rejectsEntryWithoutKey() {
         Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> new Profile.Fixed(new XMLDocument("<p><entry>test me</entry></p>"))
+            IllegalArgumentException.class,
+            () -> new Profile.Fixed(
+                new XMLDocument("<p><entry>test me</entry></p>")
+            )
         );
     }
 
@@ -106,9 +108,10 @@ public final class ProfileTest {
     @Test
     public void rejectsUnknownAttributes() {
         Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                new Profile.Fixed(new XMLDocument("<p><entry f='x'>x</entry></p>"))
+            IllegalArgumentException.class,
+            () -> new Profile.Fixed(
+                new XMLDocument("<p><entry f='x'>x</entry></p>")
+            )
         );
     }
 

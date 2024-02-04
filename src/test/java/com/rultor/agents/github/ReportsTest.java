@@ -49,7 +49,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.3
  */
-public final class ReportsTest {
+final class ReportsTest {
     /**
      * Message bundle.
      */
@@ -60,7 +60,7 @@ public final class ReportsTest {
     /**
      * Duration of command execution.
      */
-    private static final long DURATION = 1234567;
+    private static final long DURATION = 1_234_567;
 
     /**
      * Xpath to check that talk was executed correctly.

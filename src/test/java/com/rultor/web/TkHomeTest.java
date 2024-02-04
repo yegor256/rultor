@@ -46,7 +46,7 @@ import org.takes.rs.RsPrint;
  * @version $Id$
  * @since 1.50
  */
-public final class TkHomeTest {
+final class TkHomeTest {
 
     /**
      * TkHome can render home page.

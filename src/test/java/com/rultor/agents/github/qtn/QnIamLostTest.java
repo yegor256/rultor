@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.60
  */
-public final class QnIamLostTest {
+final class QnIamLostTest {
 
     /**
      * QnIamLost can build a report.

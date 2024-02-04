@@ -51,7 +51,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.62
  */
-public final class TailITCase {
+final class TailITCase {
 
     /**
      * Tail can convert non UTF-8 chars in StdOut to UTF-8.

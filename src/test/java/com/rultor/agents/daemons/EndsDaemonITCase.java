@@ -55,7 +55,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class EndsDaemonITCase {
+final class EndsDaemonITCase {
 
     /**
      * EndsDaemon should store highlighted stdout entry.
@@ -202,7 +202,7 @@ public final class EndsDaemonITCase {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon")
-                    // @checkstyle MultipleStringLiterals (1 line)
+                // @checkstyle MultipleStringLiterals (1 line)
                 .attr("id", "abcd")
                 .add("title").set("merge").up()
                 .add("script").set("ls").up()

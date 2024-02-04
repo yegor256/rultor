@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class DockerRunTest {
+final class DockerRunTest {
 
     /**
      * Space char.
@@ -146,13 +146,13 @@ public final class DockerRunTest {
             Matchers.hasItems(
                 "echo \"first\"",
                 ";",
-                "`# some comment`" ,
+                "`# some comment`",
                 ";",
-                "echo \"# some comment\" more" ,
+                "echo \"# some comment\" more",
                 ";",
-                "echo '# some comment' more" ,
+                "echo '# some comment' more",
                 ";",
-                "echo \"second\" `# some comment`" ,
+                "echo \"second\" `# some comment`",
                 ";",
                 "echo \"third\" \\# some comment",
                 ";",

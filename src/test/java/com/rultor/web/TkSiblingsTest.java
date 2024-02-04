@@ -50,7 +50,7 @@ import org.xembly.Directives;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class TkSiblingsTest {
+final class TkSiblingsTest {
 
     /**
      * TkSiblings can render a list.

@@ -126,7 +126,7 @@ public final class QnAskedBy implements Question {
      * @return Comma-delimited names
      */
     private String commandersAsDelimitedList(final Collection<String> logins,
-            final String excluded) {
+        final String excluded) {
         return StringUtils.join(
             new Mapped<>(
                 input -> String.format("@%s", input),

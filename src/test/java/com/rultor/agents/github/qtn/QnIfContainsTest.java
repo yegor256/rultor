@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.50
  */
-public final class QnIfContainsTest {
+final class QnIfContainsTest {
 
     /**
      * QnIfContains can block a request.

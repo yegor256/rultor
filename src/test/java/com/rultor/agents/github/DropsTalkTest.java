@@ -43,7 +43,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.3
  */
-public final class DropsTalkTest {
+final class DropsTalkTest {
 
     /**
      * Removes 'later' attr.

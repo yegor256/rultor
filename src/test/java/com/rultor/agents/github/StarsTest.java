@@ -44,7 +44,7 @@ import org.xembly.Directives;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  */
-public final class StarsTest {
+final class StarsTest {
     /**
      * Stars can star a new repo.
      * @throws IOException In case of error

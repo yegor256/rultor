@@ -51,8 +51,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
-import static org.junit.jupiter.api.Assumptions.assumingThat;
-
 /**
  * Integration case for {@link DyTalks}.
  * @author Yegor Bugayenko (yegor256@gmail.com)
@@ -60,7 +58,7 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class DyTalksITCase {
+final class DyTalksITCase {
 
     /**
      * DynamoDB Local port.
@@ -207,7 +205,7 @@ public final class DyTalksITCase {
      */
     private static Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
-        assumingThat(key != null, () -> {});
+        Assumptions.assumingThat(key != null, () -> { });
         MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(
             new ReRegion(
@@ -238,7 +236,7 @@ public final class DyTalksITCase {
          * Constructor.
          * @param nam Name of the talk.
          */
-        public TalkMatcher(final String nam) {
+        TalkMatcher(final String nam) {
             super();
             this.name = nam;
         }

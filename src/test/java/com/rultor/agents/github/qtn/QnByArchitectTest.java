@@ -53,7 +53,7 @@ import org.mockito.Mockito;
  * @version $Id$
  * @since 1.45
  */
-public final class QnByArchitectTest {
+final class QnByArchitectTest {
 
     /**
      * QnByArchitect can reject if not an architect.

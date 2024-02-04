@@ -47,7 +47,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.0
  */
-public final class RegistersShellTest {
+final class RegistersShellTest {
 
     /**
      * RegistersShell can register a shell.

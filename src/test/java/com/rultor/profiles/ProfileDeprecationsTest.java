@@ -42,7 +42,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.62
  */
-public final class ProfileDeprecationsTest {
+final class ProfileDeprecationsTest {
 
     /**
      * The format of an profile that defines the docker image to use.

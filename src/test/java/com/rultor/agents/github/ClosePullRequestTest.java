@@ -52,7 +52,7 @@ import org.xembly.Directives;
  * @since 1.63
  * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
-public final class ClosePullRequestTest {
+final class ClosePullRequestTest {
 
     /**
      * ClosePullRequest can close pull request if rebase mode.

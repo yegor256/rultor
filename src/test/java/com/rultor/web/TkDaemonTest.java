@@ -52,7 +52,7 @@ import org.xembly.Directives;
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class TkDaemonTest {
+final class TkDaemonTest {
 
     /**
      * TkDaemon can show log in HTML.

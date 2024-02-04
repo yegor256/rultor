@@ -54,7 +54,7 @@ import org.junit.jupiter.api.Test;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class GithubProfileTest {
+final class GithubProfileTest {
     /**
      * GithubProfile can fetch a YAML config.
      * @throws Exception In case of error.
@@ -112,12 +112,14 @@ public final class GithubProfileTest {
 
     /**
      * GithubProfile can throw when YAML is broken.
-     * @throws Exception In case of error.
      */
     @Test
-    public void throwsWhenYamlIsBroken() throws Exception {
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(GithubProfileTest.repo("&*(fds:[[\nfd\n")).read()
+    public void throwsWhenYamlIsBroken() {
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(
+                GithubProfileTest.repo("&*(fds:[[\nfd\n")
+            ).read()
         );
     }
 
@@ -135,8 +137,9 @@ public final class GithubProfileTest {
                 "  something.xml: -invalid.user.name/test1#test.xml"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -153,8 +156,9 @@ public final class GithubProfileTest {
                 "  something.xml: invalid_username/test1#test.xml"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -173,8 +177,9 @@ public final class GithubProfileTest {
                 "  something.xml: _invalidusername/test1#test.xml"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -226,8 +231,9 @@ public final class GithubProfileTest {
                 "  something.xml: jeff/test2#.rultor.yml"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -244,8 +250,9 @@ public final class GithubProfileTest {
                 "  a.xml: jeff/test1#test.xml"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -280,8 +287,9 @@ public final class GithubProfileTest {
                     .build()
             );
         final Profile profile = new GithubProfile(repo);
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> profile.assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> profile.assets()
         );
     }
 

@@ -44,7 +44,7 @@ import org.mockito.Mockito;
  * @version $Id$
  * @since 1.3
  */
-public final class DeactivatesTalksTest {
+final class DeactivatesTalksTest {
 
     /**
      * DeactivatesTalks can deactivate a talk.

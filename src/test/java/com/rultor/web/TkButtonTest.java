@@ -43,7 +43,7 @@ import org.takes.rs.RsPrint;
  * @version $Id$
  * @since 1.50
  */
-public final class TkButtonTest {
+final class TkButtonTest {
 
     /**
      * TkButton can render SVG.

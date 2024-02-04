@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
  * @since 1.0
  */
 @SuppressWarnings("PMD.UseUtilityClass")
-public final class GithubProfileITCase {
+final class GithubProfileITCase {
 
     /**
      * To make sure we are online.

@@ -42,7 +42,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.0
  */
-public final class YamlXMLTest {
+final class YamlXMLTest {
 
     /**
      * YamlXML can parse.

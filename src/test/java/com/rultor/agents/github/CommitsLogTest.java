@@ -54,7 +54,7 @@ import org.mockito.Mockito;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class CommitsLogTest {
+final class CommitsLogTest {
 
     /**
      * CommitsLog can create a log for release.

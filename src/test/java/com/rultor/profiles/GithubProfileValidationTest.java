@@ -60,7 +60,7 @@ import org.junit.jupiter.api.Test;
             "PMD.UseConcurrentHashMap"
         }
     )
-public final class GithubProfileValidationTest {
+final class GithubProfileValidationTest {
     /**
      * GithubProfile will accept empty rultor configuration.
      * @throws Exception In case of error.
@@ -85,8 +85,9 @@ public final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).read()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).read()
         );
     }
 
@@ -104,8 +105,9 @@ public final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).read()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).read()
         );
     }
 
@@ -123,8 +125,9 @@ public final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).read()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).read()
         );
     }
 
@@ -239,8 +242,9 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/test#something.txt\""
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -259,8 +263,9 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/fail#exist.txt\""
             ).asString()
         );
-        Assertions.assertThrows(IllegalArgumentException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -279,8 +284,9 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/test#exist.txt\""
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 
@@ -297,8 +303,9 @@ public final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/test#exist.txt\""
             ).asString()
         );
-        Assertions.assertThrows(Profile.ConfigException.class,
-                () -> new GithubProfile(repo).assets()
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).assets()
         );
     }
 

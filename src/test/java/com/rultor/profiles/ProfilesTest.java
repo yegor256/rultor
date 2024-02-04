@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.62
  */
-public class ProfilesTest {
+final class ProfilesTest {
 
     /**
      * Commanders section.
@@ -89,7 +89,7 @@ public class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public final void validationFailsOnArchitectsMismatch() throws Exception {
+    public void validationFailsOnArchitectsMismatch() throws Exception {
         final String commander = "Yegor1024";
         final Profile master = new Profile.Fixed(
             new XMLDocument(
@@ -136,7 +136,7 @@ public class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public final void validationFailsOnCommandersMismatch() throws Exception {
+    public void validationFailsOnCommandersMismatch() throws Exception {
         final String architect = "Yegor2048";
         final String commander = "Yegor4096";
         final Profile master = new Profile.Fixed(
@@ -186,7 +186,7 @@ public class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public final void validationFailsOnCommandersMix() throws Exception {
+    public void validationFailsOnCommandersMix() throws Exception {
         final String architect = "Yegor8192";
         final String first = "Commander Keen";
         final String second = "Commander Shepard";
@@ -244,7 +244,7 @@ public class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public final void validationReturnsMerged() throws Exception {
+    public void validationReturnsMerged() throws Exception {
         final String architect = "Yegor512";
         final String first = "Total Commander";
         final String second = "Midnight Commander";
@@ -284,7 +284,7 @@ public class ProfilesTest {
             Matchers.contains(architect)
         );
         final String path =
-                "//entry[@key='%s']/entry[@key='commanders']/item/text()";
+            "//entry[@key='%s']/entry[@key='commanders']/item/text()";
         final List<String> merge = validated.read().xpath(
             String.format(path, "merge")
         );

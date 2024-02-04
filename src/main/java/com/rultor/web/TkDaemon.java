@@ -151,36 +151,43 @@ final class TkDaemon implements TkRegex {
      * Escape HTML chars in input stream.
      * @param input Input stream
      * @return New input stream
+     * @throws IOException If fails
      */
-    private static InputStream escape(final InputStream input) throws IOException {
+    private static InputStream escape(
+        final InputStream input
+    ) throws IOException {
         final PushbackReader src = new PushbackReader(
             new InputStreamReader(input, StandardCharsets.UTF_8),
             Tv.TEN * Tv.THOUSAND
         );
         return ReaderInputStream.builder()
-                .setCharset(StandardCharsets.UTF_8)
-                .setReader(
-                        new ProxyReader(src) {
-                            @Override
-                            protected void beforeRead(final int len) throws IOException {
-                                super.beforeRead(len);
-                                final char[] buf = new char[len];
-                                final int found = src.read(buf);
-                                if (found > 0) {
-                                    final StringBuilder line = new StringBuilder(found);
-                                    for (int idx = 0; idx < found; ++idx) {
-                                        line.append(buf[idx]);
-                                    }
-                                    final String escape = StringEscapeUtils.escapeHtml4(
-                                        line.toString()
-                                    );
-                                    final char[] rpl = new char[escape.length()];
-                                    escape.getChars(0, escape.length(), rpl, 0);
-                                    src.unread(rpl);
-                                }
+            .setCharset(StandardCharsets.UTF_8)
+            .setReader(
+                // @checkstyle AnonInnerLengthCheck (30 lines)
+                new ProxyReader(src) {
+                    @Override
+                    protected void beforeRead(final int len)
+                        throws IOException {
+                        super.beforeRead(len);
+                        final char[] buf = new char[len];
+                        final int found = src.read(buf);
+                        if (found > 0) {
+                            final StringBuilder line =
+                                new StringBuilder(found);
+                            for (int idx = 0; idx < found; ++idx) {
+                                line.append(buf[idx]);
                             }
-                     }
-                ).get();
+                            final String escape =
+                                StringEscapeUtils.escapeHtml4(
+                                    line.toString()
+                                );
+                            final char[] rpl = new char[escape.length()];
+                            escape.getChars(0, escape.length(), rpl, 0);
+                            src.unread(rpl);
+                        }
+                    }
+                }
+            ).get();
     }
 
 }

@@ -33,10 +33,9 @@ import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
 import java.io.IOException;
-
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Entry}.
@@ -44,8 +43,7 @@ import org.junit.jupiter.api.BeforeAll;
  * @version $Id$
  * @since 1.58
  */
-public final class EntryTest {
-
+final class EntryTest {
     /**
      * To make sure we are online.
      * @throws IOException If fails
@@ -65,12 +63,12 @@ public final class EntryTest {
      */
     @Test
     public void sttcConnects() {
-        Assertions.assertThrows(AssertionError.class,
-                () ->
-                    new RtSttc(
-                        URN.create("urn:test:1"),
-                        "invalid-token"
-                    ).counters().names()
+        Assertions.assertThrows(
+            AssertionError.class,
+            () -> new RtSttc(
+                URN.create("urn:test:1"),
+                "invalid-token"
+            ).counters().names()
         );
     }
 
@@ -84,9 +82,10 @@ public final class EntryTest {
      */
     @Test
     public void githubConnects() {
-        Assertions.assertThrows(AssertionError.class,
-                () ->
-                    new RtGithub("intentionally-invalid-token").users().self().login()
+        Assertions.assertThrows(
+            AssertionError.class,
+            () -> new RtGithub("intentionally-invalid-token")
+                .users().self().login()
         );
     }
 }

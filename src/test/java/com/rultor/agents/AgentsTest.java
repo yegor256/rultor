@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.7
  */
-public final class AgentsTest {
+final class AgentsTest {
 
     /**
      * Agents can process a talk.

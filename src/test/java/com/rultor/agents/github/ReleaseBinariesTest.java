@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.security.SecureRandom;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -61,18 +60,21 @@ import org.xembly.Directives;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
-public final class ReleaseBinariesTest {
+final class ReleaseBinariesTest {
 
     /**
      * ReleaseBinaries should attach artifact to release.
+     * @param temp Temporary folder for talk
      * @throws Exception In case of error
      */
     @Test
     @Disabled
-    public void attachesBinaryToRelease(@TempDir Path tempDir) throws Exception {
+    public void attachesBinaryToRelease(
+        @TempDir final Path temp
+    ) throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final String tag = "v1.0";
-        final File dir = tempDir.toFile();
+        final File dir = temp.toFile();
         final String target = "target";
         final String name = "name-${tag}.jar";
         final File bin = FileUtils.getFile(
@@ -114,9 +116,11 @@ public final class ReleaseBinariesTest {
      * @return Talk
      * @throws IOException If fails
      */
-    private static Talk talk(final Issue issue, final String tag,
-        final File dir)
-        throws IOException {
+    private static Talk talk(
+        final Issue issue,
+        final String tag,
+        final File dir
+    ) throws IOException {
         final Talk talk = new Talk.InFile();
         final String identifier = "id";
         talk.modify(

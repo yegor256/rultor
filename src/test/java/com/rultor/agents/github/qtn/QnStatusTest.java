@@ -47,7 +47,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.5
  */
-public final class QnStatusTest {
+final class QnStatusTest {
 
     /**
      * QnStatus can build a report.

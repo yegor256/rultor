@@ -50,7 +50,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.30
  */
-public final class TweetsTest {
+final class TweetsTest {
 
     /**
      * Tweets can post a tweet.

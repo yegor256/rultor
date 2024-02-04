@@ -47,7 +47,7 @@ import org.xembly.Directives;
  * @since 1.32.7
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class PublishesTest {
+final class PublishesTest {
 
     /**
      * Publishes can add a public attribute.

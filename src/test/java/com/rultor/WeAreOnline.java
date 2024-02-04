@@ -32,8 +32,7 @@ package com.rultor;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import org.junit.jupiter.api.Assumptions;
 
 /**
  * Assumption for IT cases.
@@ -42,19 +41,21 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * @since 1.75
  */
 public final class WeAreOnline {
-
     /**
      * Assume it.
      * @throws IOException Fails if...
      */
     public void assume() throws IOException {
         try {
-            assumeTrue(
+            Assumptions.assumeTrue(
                 // @checkstyle MagicNumber (1 line)
                 InetAddress.getByName("api.github.com").isReachable(1000)
             );
         } catch (final UnknownHostException ex) {
-            assumeTrue(true, "api.github.com can not be recognized unknown");
+            Assumptions.assumeTrue(
+                true,
+                "api.github.com can not be recognized unknown"
+            );
         }
     }
 

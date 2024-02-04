@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.63
  */
-public final class StartsDockerDaemonTest {
+final class StartsDockerDaemonTest {
 
     /**
      * StartsDockerDaemon can provide a working PfShell.

@@ -50,7 +50,7 @@ import org.takes.rs.RsPrint;
  * @version $Id$
  * @since 1.50
  */
-public final class TkTicksTest {
+final class TkTicksTest {
 
     /**
      * TkTicks can render PNG.

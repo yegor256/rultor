@@ -52,7 +52,7 @@ import org.xembly.Xembler;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnReferredToTest {
+final class QnReferredToTest {
 
     /**
      * QnReferredTo can build a request.

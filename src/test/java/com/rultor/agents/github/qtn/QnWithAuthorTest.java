@@ -50,7 +50,7 @@ import org.xembly.Xembler;
  * @since 1.65
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnWithAuthorTest {
+final class QnWithAuthorTest {
 
     /**
      * QnWithAuthor can add author.

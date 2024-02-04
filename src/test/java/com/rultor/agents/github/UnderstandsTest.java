@@ -67,7 +67,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class UnderstandsTest {
+final class UnderstandsTest {
 
     /**
      * Understands can understand a message.

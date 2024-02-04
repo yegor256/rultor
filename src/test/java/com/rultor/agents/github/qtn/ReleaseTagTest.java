@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.62
  */
-public final class ReleaseTagTest {
+final class ReleaseTagTest {
 
     /**
      * ReleaseTag can deny release for outdated, semantically correct versions.

@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Test;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnVersionTest {
+final class QnVersionTest {
 
     /**
      * QnVersion can reply.

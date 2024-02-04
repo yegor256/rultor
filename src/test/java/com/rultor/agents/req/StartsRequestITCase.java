@@ -42,9 +42,6 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-
 /**
  * Integration tests for ${@link StartsRequest}.
  *
@@ -54,8 +51,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class StartsRequestITCase {
-
+final class StartsRequestITCase {
     /**
      * Docker server address.
      */
@@ -80,8 +76,8 @@ public final class StartsRequestITCase {
      */
     @Test
     public void composesCorrectDeployRequest() throws Exception {
-        assumeTrue(StartsRequestITCase.HOST != null);
-        assumeFalse(StartsRequestITCase.HOST.isEmpty());
+        Assumptions.assumeTrue(StartsRequestITCase.HOST != null);
+        Assumptions.assumeFalse(StartsRequestITCase.HOST.isEmpty());
         final Shell shell = new Shell.Verbose(
             new Ssh(
                 StartsRequestITCase.HOST, 22,

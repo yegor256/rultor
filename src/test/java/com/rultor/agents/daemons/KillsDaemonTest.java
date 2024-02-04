@@ -44,7 +44,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.0
  */
-public final class KillsDaemonTest {
+final class KillsDaemonTest {
 
     /**
      * KillsDaemon can ignore a daemon.

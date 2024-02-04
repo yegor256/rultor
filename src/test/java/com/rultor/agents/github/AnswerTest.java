@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.8.16
  */
-public final class AnswerTest {
+final class AnswerTest {
 
     /**
      * Answer can post a message.

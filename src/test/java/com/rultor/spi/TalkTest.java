@@ -41,7 +41,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.41.3
  */
-public final class TalkTest {
+final class TalkTest {
 
     /**
      * Talk can accept correct XML.

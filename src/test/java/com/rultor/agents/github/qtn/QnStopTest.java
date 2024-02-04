@@ -46,7 +46,7 @@ import org.xembly.Xembler;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  */
-public final class QnStopTest {
+final class QnStopTest {
     /**
      * QnMerge can build a request.
      * @throws Exception In case of error.

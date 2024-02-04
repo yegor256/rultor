@@ -47,7 +47,7 @@ import org.junit.jupiter.api.Test;
  * @since 1.53
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnUnlockTest {
+final class QnUnlockTest {
 
     /**
      * QnUnlock can lock a branch.

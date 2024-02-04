@@ -47,7 +47,7 @@ import org.xembly.Directives;
  * @since 1.50
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class TkSitemapTest {
+final class TkSitemapTest {
 
     /**
      * TkSitemap can render a list.

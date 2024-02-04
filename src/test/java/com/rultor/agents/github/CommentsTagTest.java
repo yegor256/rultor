@@ -52,7 +52,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class CommentsTagTest {
+final class CommentsTagTest {
 
     /**
      * CommentsTag can create a release.

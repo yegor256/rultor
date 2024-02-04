@@ -44,7 +44,7 @@ import org.xembly.Directives;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class IndexesRequestsTest {
+final class IndexesRequestsTest {
     /**
      * IndexesRequests should store index when it doesn't exist.
      * @throws Exception In case of error.

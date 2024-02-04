@@ -53,7 +53,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 2.0
  */
-public final class MailsTest {
+final class MailsTest {
 
     /**
      * Mails can send a mail.

@@ -85,9 +85,10 @@ class QnSafeTest {
                     new IOException("Artificial cause")
                 );
             }
-        ).understand(
-            new Comment.Smart(post),
-            new URI("http://www.example.com")
+        )
+            .understand(
+                new Comment.Smart(post),
+                new URI("http://www.example.com")
         );
         MatcherAssert.assertThat(
             issue.comments().iterate(new Date(0)),

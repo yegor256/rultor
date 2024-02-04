@@ -49,7 +49,7 @@ import org.xembly.Xembler;
  * @since 1.53
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class QnIfUnlockedTest {
+final class QnIfUnlockedTest {
 
     /**
      * QnIfUnlocked can build a request.

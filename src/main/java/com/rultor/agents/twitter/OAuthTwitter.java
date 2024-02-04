@@ -35,7 +35,6 @@ import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import twitter4j.TwitterException;
-import twitter4j.v1.TwitterV1;
 
 /**
  * Twitter via OAuth2.
@@ -85,12 +84,17 @@ public final class OAuthTwitter implements Twitter {
         this.tsecret = tscrt;
     }
 
+    /**
+     * Send message to tweet.
+     * @param msg Message to post
+     * @throws IOException If fail
+     */
     @Quietly
     public void post(final String msg) throws IOException {
         final twitter4j.Twitter twitter = twitter4j.Twitter.newBuilder()
-                .oAuthAccessToken(this.token, this.tsecret)
-                .oAuthConsumer(this.key, this.secret)
-                .build();
+            .oAuthAccessToken(this.token, this.tsecret)
+            .oAuthConsumer(this.key, this.secret)
+            .build();
         try {
             twitter.v1().tweets().updateStatus(msg);
         } catch (final TwitterException ex) {

@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.6.5
  */
-public final class QnLastOfTest {
+final class QnLastOfTest {
 
     /**
      * QnLastOf can get the last one.

@@ -45,10 +45,9 @@ import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 /**
  * Tests for {@link Decrypt}.
@@ -58,8 +57,7 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
  * @since 1.37.4
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class DecryptTest {
-
+final class DecryptTest {
     /**
      * Newline.
      */
@@ -73,11 +71,12 @@ public final class DecryptTest {
 
     /**
      * StartsRequest can take decryption instructions into account.
+     * @param temp Temporary folder
      * @throws Exception In case of error.
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void decryptsAssets(@TempDir Path tmpDir) throws Exception {
+    public void decryptsAssets(@TempDir final Path temp) throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
                 this.createTestProfileXML(),
@@ -94,7 +93,7 @@ public final class DecryptTest {
                 commands
             ).asString()
         ).asString();
-        final File dir = tmpDir.toFile();
+        final File dir = temp.toFile();
         FileUtils.write(
             new File(dir, "a.txt.asc"),
             new FakePGP().asString(),
@@ -108,7 +107,7 @@ public final class DecryptTest {
                 ),
                 StandardCharsets.UTF_8
             );
-            assumingThat(!gpg.startsWith("${"), () -> {});
+            Assumptions.assumeFalse(gpg.startsWith("${"));
             FileUtils.writeByteArrayToFile(
                 new File(
                     dir,

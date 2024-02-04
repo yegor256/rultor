@@ -47,8 +47,8 @@ import org.cactoos.text.UncheckedText;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.xembly.Directives;
 
@@ -62,8 +62,7 @@ import org.xembly.Directives;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
-public final class StartsRequestTest {
-
+final class StartsRequestTest {
     /**
      * Default head_branch value.
      */
@@ -102,11 +101,16 @@ public final class StartsRequestTest {
 
     /**
      * StartsRequest can start a request.
+     * @param temp Temporary folder for talk
+     * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
      */
     @Test
-    public void startsDeployRequest(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
-        final File repo = this.repo(tempDir);
+    public void startsDeployRequest(
+        @TempDir final Path temp,
+        @TempDir final Path jobtemp
+    ) throws Exception {
+        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -144,7 +148,7 @@ public final class StartsRequestTest {
             )
         );
         MatcherAssert.assertThat(
-            this.exec(talk, workDir),
+            this.exec(talk, jobtemp),
             Matchers.allOf(
                 new Array<Matcher<? super String>>()
                     .with(
@@ -177,11 +181,16 @@ public final class StartsRequestTest {
 
     /**
      * StartsRequest can start a release request.
+     * @param temp Temporary folder for talk
+     * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
      */
     @Test
-    public void startsReleaseRequest(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
-        final File repo = this.repo(tempDir);
+    public void startsReleaseRequest(
+        @TempDir final Path temp,
+        @TempDir final Path jobtemp
+    ) throws Exception {
+        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -208,16 +217,21 @@ public final class StartsRequestTest {
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
         );
         agent.execute(talk);
-        this.exec(talk, workDir);
+        this.exec(talk, jobtemp);
     }
 
     /**
      * StartsRequest can start a merge request.
+     * @param temp Temporary folder for talk
+     * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
      */
     @Test
-    public void startsMergeRequest(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
-        final File repo = this.repo(tempDir);
+    public void startsMergeRequest(
+        @TempDir final Path temp,
+        @TempDir final Path jobtemp
+    ) throws Exception {
+        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -244,16 +258,21 @@ public final class StartsRequestTest {
                 .add("arg").attr("name", "pull_title").set("the \"title").up()
         );
         agent.execute(talk);
-        this.exec(talk, workDir);
+        this.exec(talk, jobtemp);
     }
 
     /**
      * StartsRequest can not start a merge request.
+     * @param temp Temporary folder for talk
+     * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
      */
     @Test
-    public void startsMergeRequestIfEmpty(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
-        final File repo = this.repo(tempDir);
+    public void startsMergeRequestIfEmpty(
+        @TempDir final Path temp,
+        @TempDir final Path jobtemp
+    ) throws Exception {
+        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument("<p></p>"),
@@ -277,7 +296,7 @@ public final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
-            this.execQuietly(talk, workDir),
+            this.execQuietly(talk, jobtemp),
             Matchers.containsString(
                 String.format(
                     "There is no '%s' section in .rultor.yml for branch %s",
@@ -291,13 +310,18 @@ public final class StartsRequestTest {
     /**
      * StartsRequest can run release with dockerfile (the test is disabled,
      * because it doesn't work on Mac, see #702).
+     * @param temp Temporary folder for talk
+     * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
      */
     @Test
     @Disabled
-    public void runsReleaseWithDockerfile(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
-        final File repo = this.repo(tempDir);
-        final File dir = tempDir.toFile();
+    public void runsReleaseWithDockerfile(
+        @TempDir final Path temp,
+        @TempDir final Path jobtemp
+    ) throws Exception {
+        final File repo = this.repo(temp);
+        final File dir = temp.toFile();
         FileUtils.write(
             new File(dir, "Dockerfile"),
             "FROM yegor256/rultor",
@@ -330,7 +354,7 @@ public final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
-            this.exec(talk, workDir),
+            this.exec(talk, jobtemp),
             Matchers.allOf(
                 new Array<Matcher<? super String>>()
                     .with(
@@ -386,12 +410,17 @@ public final class StartsRequestTest {
 
     /**
      * StartsRequest can start a request.
+     * @param temp Temporary folder for talk
+     * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
      * @since 1.37
      */
     @Test
-    public void runsAsRootIfRequested(@TempDir Path tempDir, @TempDir Path workDir) throws Exception {
-        final File repo = this.repo(tempDir);
+    public void runsAsRootIfRequested(
+        @TempDir final Path temp,
+        @TempDir final Path jobtemp
+    ) throws Exception {
+        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -428,7 +457,7 @@ public final class StartsRequestTest {
             )
         );
         MatcherAssert.assertThat(
-            this.exec(talk, workDir),
+            this.exec(talk, jobtemp),
             Matchers.not(Matchers.containsString("useradd"))
         );
     }
@@ -436,30 +465,39 @@ public final class StartsRequestTest {
     /**
      * Execute script from daemon.
      * @param talk Talk to use
+     * @param wdir Temporary work directory
      * @return Full stdout
      * @throws IOException If fails
      */
-    private String exec(final Talk talk, final Path workPath) throws IOException {
-        return this.process(talk, workPath).stdout();
+    private String exec(final Talk talk, final Path wdir) throws IOException {
+        return this.process(talk, wdir).stdout();
     }
 
     /**
      * Execute script from daemon without throwing exception if fails.
      * @param talk Talk to use
+     * @param wdir Temporary work directory
      * @return Full stdout
      * @throws IOException If fails
      */
-    private String execQuietly(final Talk talk, final Path workPath) throws IOException {
-        return this.process(talk, workPath).stdoutQuietly();
+    private String execQuietly(
+        final Talk talk,
+        final Path wdir
+    ) throws IOException {
+        return this.process(talk, wdir).stdoutQuietly();
     }
 
     /**
      * Create process to execute script from daemon.
      * @param talk Talk to use
+     * @param wdir Temporary work directory
      * @return Process
      * @throws IOException If fails
      */
-    private VerboseProcess process(final Talk talk, final Path workPath) throws IOException {
+    private VerboseProcess process(
+        final Talk talk,
+        final Path wdir
+    ) throws IOException {
         final String script = new UncheckedText(
             new Joined(
                 "\n",
@@ -482,17 +520,18 @@ public final class StartsRequestTest {
         return new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash", "-c", script
-            ).directory(workPath.toFile()).redirectErrorStream(true),
+            ).directory(wdir.toFile()).redirectErrorStream(true),
             Level.WARNING, Level.WARNING
         );
     }
 
     /**
      * Create empty Git repo.
+     * @param temp Temporary work folder
      * @return Its location
      */
-    private File repo(Path tempDir) {
-        final File repo = tempDir.toFile();
+    private File repo(final Path temp) {
+        final File repo = temp.toFile();
         final String cmd = new UncheckedText(
             new Joined(
                 ";",

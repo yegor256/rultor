@@ -37,7 +37,7 @@ import lombok.ToString;
 
 /**
  * Safe iterator.
- *
+ * @param <T> Class to iterate
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.59

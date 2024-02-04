@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.6.5
  */
-public final class QnFirstOfTest {
+final class QnFirstOfTest {
 
     /**
      * QnFirstOf can get the first one.

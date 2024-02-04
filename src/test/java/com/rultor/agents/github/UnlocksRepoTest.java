@@ -46,7 +46,7 @@ import org.xembly.Directives;
  * @since 1.22.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-public final class UnlocksRepoTest {
+final class UnlocksRepoTest {
 
     /**
      * UnlocksRepo can unlock a repo.

@@ -45,7 +45,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.59.7
  */
-public final class DephantomizesTest {
+final class DephantomizesTest {
 
     /**
      * Dephantomizes can remove request and wire.

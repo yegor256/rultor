@@ -54,7 +54,7 @@ import org.xembly.Xembler;
  * @since 2.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class QnGithubIssueTest {
+final class QnGithubIssueTest {
 
     /**
      * QnGithubIssue can pass github_issue as env variable.

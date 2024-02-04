@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.23
  */
-public final class TkSiblingsITCase {
+final class TkSiblingsITCase {
 
     /**
      * Home page of Tomcat.

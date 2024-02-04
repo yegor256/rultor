@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  * @version $Id$
  * @since 1.51
  */
-public final class FirstCommentTest {
+final class FirstCommentTest {
 
     /**
      * FirstComment can parse an issue.
