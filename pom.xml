@@ -902,6 +902,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 </goals>
                 <configuration>
                   <executable>bundle</executable>
+                  <environmentVariables>
+                    <BUNDLE_GEMFILE>${basedir}/src/jekyll/Gemfile</BUNDLE_GEMFILE>
+                  </environmentVariables>
                   <arguments>
                     <argument>exec</argument>
                     <argument>jekyll</argument>
