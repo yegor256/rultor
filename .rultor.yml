@@ -25,7 +25,7 @@ release:
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Prultor --errors --batch-mode --quiet
-    git remote add heroku https://git.heroku.com/rultor.git
+    git remote add dokku dokku@dokku.rultor.com:rultor
     mv ../heroku-netrc ~/.netrc
     build=$(git rev-parse --short HEAD)
     sed -i "s/BUILD/${build}/g" src/main/resources/META-INF/MANIFEST.MF
@@ -34,7 +34,7 @@ release:
     git commit -m 'build number set'
     git add settings.xml
     git commit -m 'settings.xml'
-    git push -f heroku $(git symbolic-ref --short HEAD):master
+    git push -f dokku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     rm -rf settings.xml
     curl --insecure -f --connect-timeout 30 --retry 8 --retry-delay 60 https://www.rultor.com
