@@ -109,7 +109,7 @@ function docker_when_possible {
     --memory=8g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    --name="${container}" "${image}" /main/entry.sh
+    --name="${container}" "${use_image}" /main/entry.sh
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
   fi
