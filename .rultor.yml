@@ -6,7 +6,8 @@ assets:
   secring.gpg: yegor256/home#assets/secring.gpg
   settings.xml: yegor256/home#assets/rultor/settings.xml
   pubring.gpg: yegor256/home#assets/pubring.gpg
-  heroku-netrc: yegor256/home#assets/heroku-netrc
+  id_rsa: yegor256/home#assets/heroku-key
+  id_rsa.pub: yegor256/home#assets/heroku-key.pub
 install: |-
   pdd --file=/dev/null
   bundle install --no-color "--gemfile=$(pwd)/src/jekyll/Gemfile"
@@ -25,8 +26,6 @@ release:
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Prultor --errors --batch-mode --quiet
-    git remote add dokku dokku@dokku.rultor.com:rultor
-    mv ../heroku-netrc ~/.netrc
     build=$(git rev-parse --short HEAD)
     sed -i "s/BUILD/${build}/g" src/main/resources/META-INF/MANIFEST.MF
     git add src/main/resources/META-INF/MANIFEST.MF
@@ -34,6 +33,12 @@ release:
     git commit -m 'build number set'
     git add settings.xml
     git commit -m 'settings.xml'
+    git remote add dokku dokku@dokku.rultor.com:rultor
+    rm -rf ~/.ssh
+    mkdir ~/.ssh
+    mv ../id_rsa ../id_rsa.pub ~/.ssh
+    chmod -R 600 ~/.ssh/*
+    echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
     git push -f dokku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     rm -rf settings.xml
