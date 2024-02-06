@@ -77,7 +77,14 @@ public final class QnMerge implements Question {
                 this, "merge request found in %s#%d, comment #%d",
                 issue.repo().coordinates(), issue.number(), comment.number()
             );
-            if (QnMerge.allChecksSuccessful(issue.pull())) {
+            final CheckablePull mr = new CheckablePull(issue.pull());
+            if (mr.containsFile(".rultor.yml")) {
+                new Answer(comment).post(
+                        false,
+                        QnMerge.PHRASES.getString("QnMerge.system-files-affected")
+                );
+                req = Req.DONE;
+            } else if (mr.allChecksSuccessful()) {
                 new Answer(comment).post(
                     true,
                     String.format(
@@ -171,24 +178,6 @@ public final class QnMerge implements Question {
             );
         }
         return req;
-    }
-
-    /**
-     * Checks if all checks are successful.
-     * @param pull Pull
-     * @return True if all checks are successful
-     * @throws IOException If fails
-     */
-    private static boolean allChecksSuccessful(final Pull pull)
-        throws IOException {
-        boolean result = true;
-        for (final Check check : pull.checks().all()) {
-            if (!check.successful()) {
-                result = false;
-                break;
-            }
-        }
-        return result;
     }
 
 }
