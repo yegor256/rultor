@@ -30,97 +30,35 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.*;
-import javax.json.JsonObject;
+import com.jcabi.github.Check;
+import com.jcabi.github.Pull;
 import java.io.IOException;
+import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Checkable pull request.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
+ * @author Natalia Pozhidaeva (p.natasha.p@gmail.com)
+ * @version $Id$
  * @since 2.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode
-public class CheckablePull implements Pull {
+final class CheckablePull {
     /**
      * Pull request.
      */
-    private Pull pull;
+    private final transient Pull pull;
 
     /**
      * Ctor.
-     * @param pull Pull to validate
+     * @param ghpull Pull to validate
      */
-    public CheckablePull(final Pull pull) {
-        this.pull = pull;
-    }
-    @Override
-    public Repo repo() {
-        return pull.repo();
-    }
-
-    @Override
-    public int number() {
-        return pull.number();
-    }
-
-    @Override
-    public PullRef base() throws IOException {
-        return pull.base();
-    }
-
-    @Override
-    public PullRef head() throws IOException {
-        return pull.head();
-    }
-
-    @Override
-    public Iterable<Commit> commits() throws IOException {
-        return pull.commits();
-    }
-
-    @Override
-    public Iterable<JsonObject> files() throws IOException {
-        return pull.files();
-    }
-
-    @Override
-    public void merge(String s) throws IOException {
-        pull.merge(s);
-    }
-
-    @Override
-    public MergeState merge(String s, String s1) throws IOException {
-        return pull.merge(s, s1);
-    }
-
-    @Override
-    public PullComments comments() throws IOException {
-        return pull.comments();
-    }
-
-    @Override
-    public Checks checks() throws IOException {
-        return pull.checks();
-    }
-
-    @Override
-    public void patch(JsonObject jsonObject) throws IOException {
-        pull.patch(jsonObject);
-    }
-
-    @Override
-    public JsonObject json() throws IOException {
-        return pull.json();
-    }
-
-    @Override
-    public int compareTo(Pull o) {
-        return pull.compareTo(o);
+    public CheckablePull(final Pull ghpull) {
+        this.pull = ghpull;
     }
 
     /**
@@ -130,7 +68,7 @@ public class CheckablePull implements Pull {
      */
     public boolean allChecksSuccessful() throws IOException {
         boolean result = true;
-        for (final Check check : pull.checks().all()) {
+        for (final Check check : this.pull.checks().all()) {
             if (!check.successful()) {
                 result = false;
                 break;
@@ -141,16 +79,18 @@ public class CheckablePull implements Pull {
 
     /**
      * Checks if file is affected by pull request.
-     * @param fileName File name to check
+     * @param file File name to check
      * @return True if all checks are successful
      * @throws IOException If fails
      */
-    public boolean containsFile(String fileName) throws IOException {
-        for (final JsonObject file : pull.files()) {
-            if (file.getString("filename").equals(fileName)) {
-                return true;
+    public boolean containsFile(final String file) throws IOException {
+        boolean result = false;
+        for (final JsonObject jfile : this.pull.files()) {
+            if (jfile.getString("filename").equalsIgnoreCase(file)) {
+                result = true;
+                break;
             }
         }
-        return false;
+        return result;
     }
 }

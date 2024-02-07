@@ -30,7 +30,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Check;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
@@ -77,32 +76,34 @@ public final class QnMerge implements Question {
                 this, "merge request found in %s#%d, comment #%d",
                 issue.repo().coordinates(), issue.number(), comment.number()
             );
-            final CheckablePull mr = new CheckablePull(issue.pull());
-            if (mr.containsFile(".rultor.yml")) {
+            final CheckablePull pull = new CheckablePull(issue.pull());
+            if (pull.containsFile(".rultor.yml")) {
                 new Answer(comment).post(
                         false,
-                        QnMerge.PHRASES.getString("QnMerge.system-files-affected")
+                        QnMerge.PHRASES
+                                .getString("QnMerge.system-files-affected")
                 );
                 req = Req.DONE;
-            } else if (mr.allChecksSuccessful()) {
-                new Answer(comment).post(
-                    true,
-                    String.format(
-                        QnMerge.PHRASES.getString("QnMerge.start"),
-                        home.toASCIIString()
-                    )
-                );
-                req = QnMerge.pack(
-                    comment,
-                    issue.repo().pulls().get(issue.number())
-                );
-            } else {
-                new Answer(comment).post(
-                    false,
-                    QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
-                );
-                req = Req.DONE;
-            }
+            } else
+                if (pull.allChecksSuccessful()) {
+                    new Answer(comment).post(
+                            true,
+                            String.format(
+                                    QnMerge.PHRASES.getString("QnMerge.start"),
+                                    home.toASCIIString()
+                            )
+                    );
+                    req = QnMerge.pack(
+                            comment,
+                            issue.repo().pulls().get(issue.number())
+                    );
+                } else {
+                    new Answer(comment).post(
+                        false,
+                        QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
+                    );
+                    req = Req.DONE;
+                }
         } else {
             new Answer(comment).post(
                 false,
