@@ -85,8 +85,8 @@ final class CheckablePull {
      */
     public boolean containsFile(final String file) throws IOException {
         boolean result = false;
-        for (final JsonObject jfile : this.pull.files()) {
-            if (jfile.getString("filename").equalsIgnoreCase(file)) {
+        for (final JsonObject pullfile : this.pull.files()) {
+            if (pullfile.getString("filename").equalsIgnoreCase(file)) {
                 result = true;
                 break;
             }

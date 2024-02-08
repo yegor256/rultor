@@ -41,10 +41,15 @@ import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
+import javax.json.Json;
+import javax.json.JsonObject;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -183,6 +188,47 @@ final class QnMergeTest {
                     "#"
                 )
             )
+        );
+    }
+
+    /**
+     * QnMerge can not build a request because .rultor file is changed.
+     * @todo #1459 Enable this test after com.jcabi.github.mock.MkPull
+     *  change to allow to work with the files
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    @Disabled
+    public void stopsBecauseSystemFilesAffected()
+            throws IOException, URISyntaxException {
+        final MkChecks checks = (MkChecks) this.pull.checks();
+        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        final List<JsonObject> files = new LinkedList<>();
+        files.add(Json.createObjectBuilder()
+                .add("sha", "ef36558cbd")
+                .add("filename", "README.md")
+                .add("status", "modified")
+                .build()
+        );
+        files.add(Json.createObjectBuilder()
+                .add("sha", "ef3857cad")
+                .add("filename", ".rultor.yml")
+                .add("status", "modified")
+                .build()
+        );
+        this.mergeRequest();
+        MatcherAssert.assertThat(
+                new Comment.Smart(this.comments.get(1)).body(),
+                Matchers.is(QnMergeTest.COMMAND)
+        );
+        MatcherAssert.assertThat(
+                new Comment.Smart(this.comments.get(2)).body(),
+                Matchers.containsString(
+                        QnMergeTest.PHRASES.getString(
+                            "QnMerge.system-files-affected"
+                        )
+                )
         );
     }
 
