@@ -77,25 +77,30 @@ public final class QnMerge implements Question {
                 issue.repo().coordinates(), issue.number(), comment.number()
             );
             final CheckablePull pull = new CheckablePull(issue.pull());
-            if (pull.containsFile(".rultor.yml")) {
+            final String sysfile = ".rultor.yml";
+            if (pull.containsFile(sysfile)) {
                 new Answer(comment).post(
-                        false,
-                        QnMerge.PHRASES
-                                .getString("QnMerge.system-files-affected")
+                    false,
+                    String.format(
+                        QnMerge.PHRASES.getString(
+                            "QnMerge.system-files-affected"
+                        ),
+                        sysfile
+                    )
                 );
                 req = Req.DONE;
             } else
                 if (pull.allChecksSuccessful()) {
                     new Answer(comment).post(
-                            true,
-                            String.format(
-                                    QnMerge.PHRASES.getString("QnMerge.start"),
-                                    home.toASCIIString()
-                            )
+                        true,
+                        String.format(
+                                QnMerge.PHRASES.getString("QnMerge.start"),
+                                home.toASCIIString()
+                        )
                     );
                     req = QnMerge.pack(
-                            comment,
-                            issue.repo().pulls().get(issue.number())
+                        comment,
+                        issue.repo().pulls().get(issue.number())
                     );
                 } else {
                     new Answer(comment).post(

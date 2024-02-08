@@ -226,9 +226,9 @@ final class QnMergeTest {
         MatcherAssert.assertThat(
                 new Comment.Smart(this.comments.get(2)).body(),
                 Matchers.containsString(
-                        QnMergeTest.PHRASES.getString(
-                            "QnMerge.system-files-affected"
-                        )
+                    QnMergeTest.PHRASES.getString(
+                        "QnMerge.system-files-affected"
+                    )
                 )
         );
     }
