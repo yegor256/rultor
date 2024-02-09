@@ -145,7 +145,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -162,7 +164,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -179,7 +183,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -202,7 +208,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**

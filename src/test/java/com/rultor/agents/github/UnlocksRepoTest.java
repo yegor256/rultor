@@ -35,6 +35,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
@@ -70,7 +71,9 @@ final class UnlocksRepoTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .add("href").set("#").up()
         );
-        agent.execute(talks);
+        Assertions.assertDoesNotThrow(
+            () -> agent.execute(talks)
+        );
     }
 
 }

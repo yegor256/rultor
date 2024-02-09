@@ -36,6 +36,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.xembly.Directives;
@@ -104,7 +105,9 @@ final class RegistersShellTest {
             profile, "test-host", 1, "test-user", "test-key"
         );
         final Talk talk = new Talk.InFile();
-        agent.execute(talk);
+        Assertions.assertDoesNotThrow(
+            () -> agent.execute(talk)
+        );
     }
 
 }

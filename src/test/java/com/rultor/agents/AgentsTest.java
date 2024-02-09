@@ -35,6 +35,7 @@ import com.jcabi.github.Github;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -54,6 +55,9 @@ final class AgentsTest {
         final Github github = new MkGithub();
         final Sttc sttc = new MkSttc();
         final Profile profile = new Profile.Fixed();
-        new Agents(github, sttc).agent(talk, profile).execute(talk);
+        Assertions.assertDoesNotThrow(
+            () -> new Agents(github, sttc)
+                .agent(talk, profile).execute(talk)
+        );
     }
 }

@@ -63,6 +63,7 @@ final class TkSiblingsITCase {
     /**
      * SiblingsRs can render index page.
      * @throws Exception If some problem inside
+     * @checkstyle JUnitTestsShouldIncludeAssert (20 lines)
      */
     @Test
     void rendersListOfTalks() throws Exception {

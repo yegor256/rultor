@@ -116,24 +116,26 @@ final class TkAppTest {
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
-        new FtRemote(app).exec(
-            home -> {
-                new JdkRequest(home)
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .assertXPath("/xhtml:html")
-                    .assertXPath("//xhtml:img[@class='fork-me']");
-                new JdkRequest(home)
-                    .through(VerboseWire.class)
-                    .header("Accept", "application/xml")
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .assertXPath("/page/version");
-            }
+        Assertions.assertDoesNotThrow(
+            () -> new FtRemote(app).exec(
+                home -> {
+                    new JdkRequest(home)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/xhtml:html")
+                        .assertXPath("//xhtml:img[@class='fork-me']");
+                    new JdkRequest(home)
+                        .through(VerboseWire.class)
+                        .header("Accept", "application/xml")
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/page/version");
+                }
+            )
         );
     }
 

@@ -34,6 +34,7 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.util.Collections;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -58,7 +59,9 @@ final class DeactivatesTalksTest {
         );
         final Talks talks = Mockito.mock(Talks.class);
         Mockito.doReturn(Collections.singleton(talk)).when(talks).active();
-        agent.execute(talks);
+        Assertions.assertDoesNotThrow(
+            () -> agent.execute(talks)
+        );
     }
 
 }
