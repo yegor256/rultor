@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
  * Integration case for {@link SiblingsRs}.
  * @since 1.23
  */
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkSiblingsITCase {
 
     /**
@@ -63,7 +64,6 @@ final class TkSiblingsITCase {
     /**
      * SiblingsRs can render index page.
      * @throws Exception If some problem inside
-     * @checkstyle JUnitTestsShouldIncludeAssert (20 lines)
      */
     @Test
     void rendersListOfTalks() throws Exception {

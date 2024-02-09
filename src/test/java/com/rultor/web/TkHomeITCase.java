@@ -49,6 +49,7 @@ import org.junit.jupiter.api.Test;
  * Integration case for {@link TkHome}.
  * @since 0.5
  */
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkHomeITCase {
 
     /**
@@ -69,7 +70,6 @@ final class TkHomeITCase {
     /**
      * IndexRs can render absent pages.
      * @throws Exception If some problem inside
-     * @checkstyle JUnitTestsShouldIncludeAssert (20 lines)
      */
     @Test
     void renderAbsentPages() throws Exception {
@@ -90,7 +90,6 @@ final class TkHomeITCase {
     /**
      * Redirects from absent URL.
      * @throws Exception If some problem inside
-     * @checkstyle JUnitTestsShouldIncludeAssert (20 lines)
      */
     @Test
     void redirectsOnAbsence() throws Exception {
@@ -111,7 +110,6 @@ final class TkHomeITCase {
     /**
      * IndexRs can render valid pages.
      * @throws Exception If some problem inside
-     * @checkstyle JUnitTestsShouldIncludeAssert (20 lines)
      */
     @Test
     void rendersValidPages() throws Exception {
@@ -135,7 +133,6 @@ final class TkHomeITCase {
     /**
      * IndexRs can show version.
      * @throws Exception If some problem inside
-     * @checkstyle JUnitTestsShouldIncludeAssert (20 lines)
      */
     @Test
     void showsVersion() throws Exception {
