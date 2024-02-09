@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -56,8 +56,6 @@ import org.xembly.Xembler;
 /**
  * Answer to post.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -140,7 +138,10 @@ public final class Answer {
                 String.format(
                     "> %s\n\n",
                     StringUtils.abbreviate(
-                        this.comment.body().replaceAll("\\p{Space}", SPACE),
+                        this.comment.body().replaceAll(
+                            "\\p{Space}",
+                            Answer.SPACE
+                        ),
                         Tv.HUNDRED
                     )
                 )
@@ -155,7 +156,7 @@ public final class Answer {
             msg.append(
                 new UncheckedText(
                     new Joined(
-                        SPACE,
+                        Answer.SPACE,
                         new Mapped<>(
                             login -> String.format(
                                 "@%s", login.toLowerCase(Locale.ENGLISH)

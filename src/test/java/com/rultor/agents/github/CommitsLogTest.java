@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -48,8 +48,6 @@ import org.mockito.Mockito;
 /**
  * Tests for ${@link CommitsLog}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.51
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -62,7 +60,7 @@ final class CommitsLogTest {
      */
     @Test
     @SuppressWarnings("unchecked")
-    public void createsReleaseLog() throws Exception {
+    void createsReleaseLog() throws Exception {
         final RepoCommits commits = Mockito.mock(RepoCommits.class);
         Mockito.doReturn(
             Collections.singleton(
@@ -87,7 +85,7 @@ final class CommitsLogTest {
      */
     @Test
     @SuppressWarnings("unchecked")
-    public void createsLongReleaseLog() throws Exception {
+    void createsLongReleaseLog() throws Exception {
         final RepoCommits commits = Mockito.mock(RepoCommits.class);
         final Collection<RepoCommit> list = new LinkedList<>();
         for (int idx = 0; idx < Tv.HUNDRED; ++idx) {

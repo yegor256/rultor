@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -37,8 +37,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link ReleaseTag}.
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.62
  */
 final class ReleaseTagTest {
@@ -50,7 +48,7 @@ final class ReleaseTagTest {
      * @throws Exception In case of error
      */
     @Test
-    public void validatesReleaseVersion() throws Exception {
+    void validatesReleaseVersion() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         repo.releases().create("1.74");
         MatcherAssert.assertThat(
@@ -76,7 +74,7 @@ final class ReleaseTagTest {
      * @throws Exception In case of error
      */
     @Test
-    public void getsReferenceVersion() throws Exception {
+    void getsReferenceVersion() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final String latest = "2.2.1";
         repo.releases().create("1.0");

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import org.cactoos.list.ListOf;
 /**
  * Talks in a repo.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -124,6 +122,7 @@ public interface Talks {
 
     /**
      * In directory.
+     * @since 1.0
      */
     @Immutable
     final class InDir implements Talks {
@@ -131,6 +130,7 @@ public interface Talks {
          * Dir.
          */
         private final transient String path;
+
         /**
          * Ctor.
          * @throws IOException ex
@@ -140,10 +140,12 @@ public interface Talks {
                 .toAbsolutePath()
                 .toString();
         }
+
         @Override
         public boolean exists(final long number) {
             return this.get(number) != null;
         }
+
         @Override
         public Talk get(final long number) {
             return new Filtered<>(
@@ -158,10 +160,12 @@ public interface Talks {
                 this.active()
             ).iterator().next();
         }
+
         @Override
         public boolean exists(final String name) {
             return this.get(name) != null;
         }
+
         @Override
         public Talk get(final String name) {
             return new Filtered<>(
@@ -176,10 +180,12 @@ public interface Talks {
                 this.active()
             ).iterator().next();
         }
+
         @Override
         public void delete(final String name) {
             FileUtils.deleteQuietly(new File(new File(this.path), name));
         }
+
         @Override
         public void create(final String repo, final String name)
             throws IOException {
@@ -208,6 +214,7 @@ public interface Talks {
             );
             Logger.info(this, "talk '%s' created in %s", name, file);
         }
+
         @Override
         public Iterable<Talk> active() {
             final Collection<File> files = FileUtils.listFiles(
@@ -224,10 +231,12 @@ public interface Talks {
                 list
             );
         }
+
         @Override
         public Iterable<Talk> recent() {
             return this.active();
         }
+
         @Override
         public Iterable<Talk> siblings(final String repo, final Date since) {
             return this.active();

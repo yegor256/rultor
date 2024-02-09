@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -40,8 +40,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Profiles}.
- * @author Maksimenko Vladimir (xupypr@xupypr.com)
- * @version $Id$
  * @since 1.62
  */
 final class ProfilesTest {
@@ -89,7 +87,7 @@ final class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void validationFailsOnArchitectsMismatch() throws Exception {
+    void validationFailsOnArchitectsMismatch() throws Exception {
         final String commander = "Yegor1024";
         final Profile master = new Profile.Fixed(
             new XMLDocument(
@@ -136,7 +134,7 @@ final class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void validationFailsOnCommandersMismatch() throws Exception {
+    void validationFailsOnCommandersMismatch() throws Exception {
         final String architect = "Yegor2048";
         final String commander = "Yegor4096";
         final Profile master = new Profile.Fixed(
@@ -186,7 +184,7 @@ final class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void validationFailsOnCommandersMix() throws Exception {
+    void validationFailsOnCommandersMix() throws Exception {
         final String architect = "Yegor8192";
         final String first = "Commander Keen";
         final String second = "Commander Shepard";
@@ -244,7 +242,7 @@ final class ProfilesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void validationReturnsMerged() throws Exception {
+    void validationReturnsMerged() throws Exception {
         final String architect = "Yegor512";
         final String first = "Total Commander";
         final String second = "Midnight Commander";

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -40,8 +40,6 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 /**
  * Release Tag validator, ensures not releasing already outdated tags.
  *
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.62
  */
 @Immutable

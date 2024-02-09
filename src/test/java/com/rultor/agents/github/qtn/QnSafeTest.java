@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,8 +43,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test case for {@link QnSafe}.
  *
- * @author Volodya Lombrozo (volodya.lombrozo@gmail.com)
- * @version $Id$
  * @since 1.76
  */
 class QnSafeTest {
@@ -72,7 +70,7 @@ class QnSafeTest {
      * @throws IOException if I/O fails.
      */
     @Test
-    public void understandsWithThrowable()
+    void understandsWithThrowable()
         throws URISyntaxException, IOException {
         final Issue issue = new MkGithub().randomRepo()
             .issues()

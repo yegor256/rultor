@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -55,8 +55,6 @@ import org.cactoos.text.UncheckedText;
 /**
  * Log of commits.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.51
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -96,6 +94,7 @@ final class CommitsLog {
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         final Collection<String> lines = new LinkedList<>();
+        // @checkstyle DiamondOperatorCheck (2 lines)
         final Map<String, String> params = new MapOf<String, String>(
             new MapEntry<>("since", format.format(prev)),
             new MapEntry<>("until", format.format(current))
@@ -127,9 +126,9 @@ final class CommitsLog {
         ).asString();
     }
 
+    // @checkstyle LineLengthCheck (4 line)
     /**
      * Convert commit to text.
-     * @checkstyle LineLengthCheck (1 line)
      *  see <a href="https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository">link</a>
      * @param commit The commit
      * @return Text

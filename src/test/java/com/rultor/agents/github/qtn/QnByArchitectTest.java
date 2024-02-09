@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import org.mockito.Mockito;
 /**
  * Tests for {@link QnByArchitect}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.45
  */
 final class QnByArchitectTest {
@@ -60,7 +58,7 @@ final class QnByArchitectTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void rejectsIfNotArchitect() throws Exception {
+    void rejectsIfNotArchitect() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Comment.Smart comment = new Comment.Smart(
@@ -86,7 +84,7 @@ final class QnByArchitectTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void acceptsIfArchitect() throws Exception {
+    void acceptsIfArchitect() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Comment.Smart comment = new Comment.Smart(
@@ -117,7 +115,7 @@ final class QnByArchitectTest {
      */
     @Disabled
     @Test
-    public void acceptsIfMergeArchitectPull() throws Exception {
+    void acceptsIfMergeArchitectPull() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final User author = Mockito.mock(User.class);
         Mockito.when(author.login()).thenReturn(

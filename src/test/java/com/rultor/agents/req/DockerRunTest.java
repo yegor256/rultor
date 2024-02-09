@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -40,8 +40,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link DockerRun}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -57,11 +55,11 @@ final class DockerRunTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void fetchesEnvVars() throws Exception {
+    void fetchesEnvVars() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 new Joined(
-                    SPACE,
+                    DockerRunTest.SPACE,
                     "<p><entry key='a'><entry key='env'>",
                     "<item>A=5</item><item>B=f e</item></entry></entry>",
                     "<entry key='b'><entry key='env'>HELLO='1'</entry></entry>",
@@ -95,11 +93,11 @@ final class DockerRunTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void fetchesScript() throws Exception {
+    void fetchesScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 new Joined(
-                    SPACE,
+                    DockerRunTest.SPACE,
                     "<p><entry key='x'><entry key='script'>",
                     "mvn clean</entry></entry>",
                     "<entry key='y'><entry key='script'>",
@@ -122,11 +120,11 @@ final class DockerRunTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void executesWithComment() throws Exception {
+    void executesWithComment() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 new Joined(
-                    SPACE,
+                    DockerRunTest.SPACE,
                     "<p><entry key='z'><entry key='script'>",
                     "<item>echo \"first\"</item>",
                     "<item># some comment</item>",
@@ -168,11 +166,11 @@ final class DockerRunTest {
      * @since 1.22
      */
     @Test
-    public void fetchesInstallScript() throws Exception {
+    void fetchesInstallScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 new Joined(
-                    SPACE,
+                    DockerRunTest.SPACE,
                     "<p><entry key='f'><entry key='script'>hi</entry></entry>",
                     "<entry key='install'><item>one</item><item>two</item>",
                     "</entry></p>"
@@ -192,11 +190,11 @@ final class DockerRunTest {
      * @since 1.22
      */
     @Test
-    public void fetchesUninstallScript() throws Exception {
+    void fetchesUninstallScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 new Joined(
-                    SPACE,
+                    DockerRunTest.SPACE,
                     "<p>",
                     "<entry key='uninstall'>",
                     "<item>one</item><item>two</item>",
@@ -222,11 +220,11 @@ final class DockerRunTest {
      * @since 1.22
      */
     @Test
-    public void fetchesEnvVarsDefaults() throws Exception {
+    void fetchesEnvVarsDefaults() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 new Joined(
-                    SPACE,
+                    DockerRunTest.SPACE,
                     "<p><entry key='o'><entry key='env'>A=123</entry></entry>",
                     "<entry key='env'>ALPHA=909</entry></p>"
                 ).asString()
@@ -246,7 +244,7 @@ final class DockerRunTest {
      * @since 1.32.3
      */
     @Test
-    public void fetchesMultiLineScript() throws Exception {
+    void fetchesMultiLineScript() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 "<p><entry key='script'>How are you,\ndude</entry></p>"
@@ -265,7 +263,7 @@ final class DockerRunTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void fetchesEnvVarsFromEmptyList() throws Exception {
+    void fetchesEnvVarsFromEmptyList() throws Exception {
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
                 "<p><entry key='ooo'><entry key='env'/></entry></p>"

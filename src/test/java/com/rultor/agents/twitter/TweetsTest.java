@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,6 @@ import org.xembly.Directives;
 /**
  * Tests for {@link Tweets}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.30
  */
 final class TweetsTest {
@@ -57,7 +55,7 @@ final class TweetsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void postsTweet() throws Exception {
+    void postsTweet() throws Exception {
         final Repo repo = new MkGithub().repos().create(
             new Repos.RepoCreate(
                 RandomStringUtils.randomAlphanumeric(20), false
@@ -76,7 +74,7 @@ final class TweetsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void postsTweetWithLanguages() throws Exception {
+    void postsTweetWithLanguages() throws Exception {
         final Repo repo = new MkGithub().repos().create(
             new Repos.RepoCreate(
                 RandomStringUtils.randomAlphanumeric(20), false

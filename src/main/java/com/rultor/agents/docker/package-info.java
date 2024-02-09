@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -31,7 +31,6 @@
 /**
  * Docker agents.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 1.57
  */

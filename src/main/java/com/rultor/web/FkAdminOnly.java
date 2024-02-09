@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,8 +43,6 @@ import org.takes.misc.Opt;
 /**
  * Admin only.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  */
 final class FkAdminOnly implements Fork {

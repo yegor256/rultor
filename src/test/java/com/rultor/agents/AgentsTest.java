@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -40,8 +40,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link Agents}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.7
  */
 final class AgentsTest {
@@ -51,7 +49,7 @@ final class AgentsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void processesTalk() throws Exception {
+    void processesTalk() throws Exception {
         final Talk talk = new Talk.InFile();
         final Github github = new MkGithub();
         final Sttc sttc = new MkSttc();

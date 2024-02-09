@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -36,8 +36,6 @@ import io.sentry.Sentry;
 
 /**
  * Safe agent.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.59
  */
 public final class SafeAgent implements Agent {

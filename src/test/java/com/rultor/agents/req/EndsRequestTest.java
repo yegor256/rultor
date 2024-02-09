@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link EndsRequest}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  */
 final class EndsRequestTest {
@@ -50,7 +48,7 @@ final class EndsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void endsRequest() throws Exception {
+    void endsRequest() throws Exception {
         final Agent agent = new EndsRequest();
         final Talk talk = new Talk.InFile();
         talk.modify(

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.xembly.Directives;
 /**
  * Question that passes github_issue as env variable.
  *
- * @author Andrej Istomin (andrej.istomin.ikeen@gmail.com)
- * @version $Id$
  * @since 2.0
  */
 public final class QnGithubIssue implements Question {
@@ -65,9 +63,9 @@ public final class QnGithubIssue implements Question {
     public Req understand(final Comment.Smart comment, final URI home)
         throws IOException {
         Req req = this.origin.understand(comment, home);
-        final List<Directive> reqDirs = new ListOf<>(req.dirs());
-        if (!reqDirs.isEmpty()) {
-            final Directives dirs = new Directives().append(reqDirs);
+        final List<Directive> additions = new ListOf<>(req.dirs());
+        if (!additions.isEmpty()) {
+            final Directives dirs = new Directives().append(additions);
             req = () -> dirs.addIf("args")
                 .add("arg").attr("name", "github_issue")
                 .set(String.valueOf(comment.issue().number()))

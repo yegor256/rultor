@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -48,8 +48,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link GithubProfile}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -60,7 +58,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void fetchesYamlConfig() throws Exception {
+    void fetchesYamlConfig() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 "\n",
@@ -114,7 +112,7 @@ final class GithubProfileTest {
      * GithubProfile can throw when YAML is broken.
      */
     @Test
-    public void throwsWhenYamlIsBroken() {
+    void throwsWhenYamlIsBroken() {
         Assertions.assertThrows(
             Profile.ConfigException.class,
             () -> new GithubProfile(
@@ -129,7 +127,7 @@ final class GithubProfileTest {
      * @since 1.33
      */
     @Test
-    public void throwsWhenAssetIsMisconfigured() throws Exception {
+    void throwsWhenAssetIsMisconfigured() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 "\n",
@@ -148,7 +146,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
+    void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 "\n",
@@ -168,7 +166,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void throwsWhenAssetsUsernameStartsWithUnderscore()
+    void throwsWhenAssetsUsernameStartsWithUnderscore()
         throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
@@ -188,7 +186,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void acceptsAssetsFromDotRepo() throws Exception {
+    void acceptsAssetsFromDotRepo() throws Exception {
         final Github github = new MkGithub("jeff");
         final String name = "te.st";
         final Repo repo = github.repos().create(
@@ -223,7 +221,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void throwsWhenRultorConfigIsAbsent() throws Exception {
+    void throwsWhenRultorConfigIsAbsent() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 "\n",
@@ -242,7 +240,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void throwsWhenFriendNotDefined() throws Exception {
+    void throwsWhenFriendNotDefined() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 "\n",
@@ -262,7 +260,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void testAssetNotFound() throws Exception {
+    void testAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 "\n",

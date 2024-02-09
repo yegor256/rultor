@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import lombok.ToString;
 /**
  * Profiles.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
@@ -92,6 +90,7 @@ public final class Profiles {
      * @param fork Fork that will be merged
      * @param branch Fork branch that will be merged
      * @return Merged profile
+     * @checkstyle NonStaticMethodCheck (5 lines)
      */
     public Profile merged(final Profile master, final String fork,
         final String branch) {
@@ -113,6 +112,7 @@ public final class Profiles {
      *  `.rultor.yml` form result of real `git merge` of master branch and
      *  fork branch. We need real `git merge` result here. See some details
      *  here: https://github.com/yegor256/rultor/pull/1064/files#r56796959
+     * @checkstyle NonStaticMethodCheck (15 lines)
      */
     public Profile validated(final Profile master, final Profile merged)
         throws IOException {
@@ -156,7 +156,7 @@ public final class Profiles {
         final List<String> result = profile.read().xpath(
             String.format("/%s/item/text()", path.toString())
         );
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     /**

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,8 +43,6 @@ import javax.json.JsonObject;
 /**
  * GitHub invitations.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.62
  */
 public final class Invitations implements SuperAgent {

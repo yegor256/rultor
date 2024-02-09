@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.apache.commons.io.input.NullInputStream;
 /**
  * Checks the Health of a Docker host and tries to recover Docker daemon
  * crashes.
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.63
  * @todo #1041:30min Add DockerHealthCheck to the running SuperAgents.
  *  In doing so make sure that Rultor crashes throwing a meaningful exception

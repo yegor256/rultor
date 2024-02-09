@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -44,8 +44,6 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnIfUnlocked}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.53
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -57,7 +55,7 @@ final class QnIfUnlockedTest {
      */
     @Test
     @Disabled
-    public void buildsRequest() throws Exception {
+    void buildsRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().get(
             repo.pulls().create("", "head", "base").number()

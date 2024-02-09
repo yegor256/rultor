@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,8 +43,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link RegistersShell}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 final class RegistersShellTest {
@@ -54,7 +52,7 @@ final class RegistersShellTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void registersShell() throws Exception {
+    void registersShell() throws Exception {
         final String host = "local";
         final int port = 221;
         final String key = "";
@@ -99,7 +97,7 @@ final class RegistersShellTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void handlesBrokenProfileGracefully() throws Exception {
+    void handlesBrokenProfileGracefully() throws Exception {
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doThrow(new Profile.ConfigException("")).when(profile).read();
         final Agent agent = new RegistersShell(

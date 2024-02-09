@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -63,8 +63,6 @@ import org.xembly.Directives;
 /**
  * Starts daemon.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -87,6 +85,7 @@ public final class StartsDaemon implements Agent {
         "/talk/daemon[script and dir and not(started) and not(ended)]",
         "/talk/daemon[dir != '']"
     );
+
     /**
      * Profile to get assets from.
      */
@@ -217,11 +216,13 @@ public final class StartsDaemon implements Agent {
                     Logger.stream(Level.INFO, true),
                     Logger.stream(Level.WARNING, true)
                 );
-                Logger.info(
-                    this, "\"%s\" uploaded into %s in %[ms]s",
-                    asset.getKey(), dir,
-                    System.currentTimeMillis() - start
-                );
+                if (Logger.isInfoEnabled(this)) {
+                    Logger.info(
+                        this, "\"%s\" uploaded into %s in %[ms]s",
+                        asset.getKey(), dir,
+                        System.currentTimeMillis() - start
+                    );
+                }
             }
             this.gpg(shell, dir);
         } catch (final Profile.ConfigException ex) {

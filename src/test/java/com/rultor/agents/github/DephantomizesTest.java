@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -41,8 +41,6 @@ import org.xembly.Directives;
 /**
  * Tests for {@link Dephantomizes}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.59.7
  */
 final class DephantomizesTest {
@@ -52,7 +50,7 @@ final class DephantomizesTest {
      * @throws IOException In case of error
      */
     @Test
-    public void removesRequestAndWire() throws IOException {
+    void removesRequestAndWire() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Talk talk = DephantomizesTest.talk(repo, 0);
@@ -68,7 +66,7 @@ final class DephantomizesTest {
      * @throws IOException In case of error
      */
     @Test
-    public void doesntTouchRequestAndWire() throws IOException {
+    void doesntTouchRequestAndWire() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         repo.issues().create("title", "desc");

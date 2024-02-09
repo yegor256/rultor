@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,8 +43,6 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnIfCollaborator}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.40.4
  */
 final class QnIfCollaboratorTest {
@@ -54,7 +52,7 @@ final class QnIfCollaboratorTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void blocksRequest() throws Exception {
+    void blocksRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         repo.collaborators().add("friend");
         final Issue issue = repo.issues().create("", "");

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link ArchivesDaemon}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.23
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -62,12 +60,12 @@ final class ArchivesDaemonITCase {
      * @throws Exception In case of error.
      */
     @Test
-    public void archivesDaemon(@TempDir final Path temp) throws Exception {
+    void archivesDaemon(@TempDir final Path temp) throws Exception {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final PfShell shell = start.shell();

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,8 +45,6 @@ import org.xembly.Xembler;
 /**
  * Tests for {@link QnWithAuthor}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.65
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -57,7 +55,7 @@ final class QnWithAuthorTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void addsAuthor() throws Exception {
+    void addsAuthor() throws Exception {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("title", "body");
@@ -86,7 +84,7 @@ final class QnWithAuthorTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void doesntAddAuthorToEmptyReq() throws Exception {
+    void doesntAddAuthorToEmptyReq() throws Exception {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("the title", "the body");

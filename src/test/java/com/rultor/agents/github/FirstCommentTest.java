@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link FirstComment}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.51
  */
 final class FirstCommentTest {
@@ -50,7 +48,7 @@ final class FirstCommentTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void parsesGithubIssue() throws Exception {
+    void parsesGithubIssue() throws Exception {
         final Issue issue = new MkGithub().randomRepo().issues().create("", "");
         final Comment.Smart cmt = new Comment.Smart(
             new FirstComment(new Issue.Smart(issue))

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -41,8 +41,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link EndsDaemon}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
+ * @since 1.2
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiterals (500 lines)
  */
@@ -53,7 +52,7 @@ final class EndsDaemonTest {
      * @throws IOException In case of error.
      */
     @Test
-    public void failsIfHostNotFound() throws IOException {
+    void failsIfHostNotFound() throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.apache.commons.io.input.NullInputStream;
 /**
  * Remove old images from Docker.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.57
  */
 public final class DockerExec implements SuperAgent {

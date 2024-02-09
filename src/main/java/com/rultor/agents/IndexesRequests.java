@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,8 +43,7 @@ import org.xembly.Directives;
 /**
  * Adds index to all the requests received.
  *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ * @since 1.0
  */
 @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 public final class IndexesRequests implements SuperAgent {
@@ -84,6 +83,7 @@ public final class IndexesRequests implements SuperAgent {
      * @return The maximal index value
      * @throws IOException if the content of the {@link Talk} object can't be
      *  read
+     * @checkstyle NonStaticMethodCheck (15 lines)
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private int index(final Talk talk) throws IOException {

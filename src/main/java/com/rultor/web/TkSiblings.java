@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -57,8 +57,6 @@ import org.xembly.Directives;
 /**
  * Siblings.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -118,6 +116,7 @@ final class TkSiblings implements TkRegex {
      * @param siblings Siblings
      * @return Link or empty
      * @throws IOException If fails
+     * @checkstyle NonStaticMethodCheck (10 lines)
      */
     private XeSource more(final String repo, final List<Talk> siblings)
         throws IOException {
@@ -157,6 +156,7 @@ final class TkSiblings implements TkRegex {
      * @param talk The talk to convert
      * @return Directives
      * @throws IOException If fails
+     * @checkstyle NonStaticMethodCheck (10 lines)
      */
     private Iterable<Directive> dirs(final Talk talk) throws IOException {
         final XML xml = talk.read();

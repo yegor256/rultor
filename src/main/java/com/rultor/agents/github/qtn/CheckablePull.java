@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -40,8 +40,6 @@ import lombok.ToString;
 /**
  * Checkable pull request.
  *
- * @author Natalia Pozhidaeva (p.natasha.p@gmail.com)
- * @version $Id$
  * @since 2.0
  */
 @Immutable
@@ -57,7 +55,7 @@ final class CheckablePull {
      * Ctor.
      * @param ghpull Pull to validate
      */
-    public CheckablePull(final Pull ghpull) {
+    CheckablePull(final Pull ghpull) {
         this.pull = ghpull;
     }
 

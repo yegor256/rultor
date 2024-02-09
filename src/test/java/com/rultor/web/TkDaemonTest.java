@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -47,8 +47,6 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link TkDaemon}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -59,7 +57,7 @@ final class TkDaemonTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void showsLogInHtml() throws Exception {
+    void showsLogInHtml() throws Exception {
         final Talks talks = new Talks.InDir();
         final String name = "test";
         talks.create(name, Talk.TEST_NAME);

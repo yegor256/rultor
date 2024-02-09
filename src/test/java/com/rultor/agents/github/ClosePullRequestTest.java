@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -47,8 +47,6 @@ import org.xembly.Directives;
 /**
  * Tests for {@link ClosePullRequest}.
  *
- * @author Viktor Kuchyn (kuchin.victor@gmail.com)
- * @version $Id$
  * @since 1.63
  * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
@@ -64,7 +62,7 @@ final class ClosePullRequestTest {
      *  the active Agents.
      */
     @Test
-    public void closesPullRequestForRebaseMode() throws Exception {
+    void closesPullRequestForRebaseMode() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Profile profile = new Profile.Fixed(
@@ -103,7 +101,7 @@ final class ClosePullRequestTest {
      * @throws Exception If error
      */
     @Test
-    public void leavesPullRequestOpenWhenNoRebaseMode() throws Exception {
+    void leavesPullRequestOpenWhenNoRebaseMode() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Profile profile = new Profile.Fixed(

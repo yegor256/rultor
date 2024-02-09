@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,8 +39,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link IndexesRequests}.
  *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ * @since 1.2
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -50,7 +49,7 @@ final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void storesIndexIfNone() throws Exception {
+    void storesIndexIfNone() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();
         talks.create("", name);
@@ -75,7 +74,7 @@ final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void retrievesIndexFromLog() throws Exception {
+    void retrievesIndexFromLog() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();
         talks.create("", name);
@@ -106,7 +105,7 @@ final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void retrievesIndexFromSibling() throws Exception {
+    void retrievesIndexFromSibling() throws Exception {
         final String first = "first";
         final Talks talks = new Talks.InDir();
         talks.create("", first);
@@ -152,7 +151,7 @@ final class IndexesRequestsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void notStoreIndexWithoutRequest() throws Exception {
+    void notStoreIndexWithoutRequest() throws Exception {
         final String name = "talk";
         final Talks talks = new Talks.InDir();
         talks.create("", name);

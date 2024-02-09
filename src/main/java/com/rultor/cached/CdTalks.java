@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -44,8 +44,6 @@ import org.cactoos.iterable.Mapped;
 /**
  * Cached talks.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.51
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -61,8 +61,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link Understands}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -74,7 +72,7 @@ final class UnderstandsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void understandsMessage() throws Exception {
+    void understandsMessage() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hello");
@@ -109,7 +107,7 @@ final class UnderstandsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void ignoresLaterReq() throws Exception {
+    void ignoresLaterReq() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hey you");
@@ -135,7 +133,7 @@ final class UnderstandsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void understandsIssueBody() throws Exception {
+    void understandsIssueBody() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("test", "@test hello");
         final Agent agent = new Understands(
@@ -157,7 +155,7 @@ final class UnderstandsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void understandsMergeMessageWithFailedCheck() throws Exception {
+    void understandsMergeMessageWithFailedCheck() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final MkBranches branches = (MkBranches) repo.branches();
         branches.create("head", "abcdef4");

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -44,9 +44,7 @@ import org.xembly.Directives;
 /**
  * Publishes if it's public.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
- * @since 1.32.7
+* @since 1.32.7
  */
 @Immutable
 @ToString

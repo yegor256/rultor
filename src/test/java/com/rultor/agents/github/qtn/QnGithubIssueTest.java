@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnGithubIssue}.
  *
- * @author Andrej Istomin (andrej.istomin.ikeen@gmail.com)
- * @version $Id$
  * @since 2.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -61,7 +59,7 @@ final class QnGithubIssueTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void canAddGithubIssueVariable() throws Exception {
+    void canAddGithubIssueVariable() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("test comment.");

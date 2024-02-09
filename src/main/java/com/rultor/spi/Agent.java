@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ import lombok.ToString;
 /**
  * Agent.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
@@ -55,6 +53,8 @@ public interface Agent {
 
     /**
      * Iterative.
+     *
+     * @since 1.0
      */
     @Immutable
     @ToString
@@ -64,6 +64,7 @@ public interface Agent {
          * Agents to run.
          */
         private final transient Array<Agent> children;
+
         /**
          * Ctor.
          * @param list List of them
@@ -71,6 +72,7 @@ public interface Agent {
         public Iterative(final Agent... list) {
             this(Arrays.asList(list));
         }
+
         /**
          * Ctor.
          * @param list List of them
@@ -78,6 +80,7 @@ public interface Agent {
         public Iterative(final Iterable<Agent> list) {
             this.children = new Array<>(list);
         }
+
         @Override
         public void execute(final Talk talk) throws IOException {
             for (final Agent agent : this.children) {

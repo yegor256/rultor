@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -56,8 +56,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link ReleaseBinaries}.
  *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ * @since 1.1
  * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 final class ReleaseBinariesTest {
@@ -69,7 +68,7 @@ final class ReleaseBinariesTest {
      */
     @Test
     @Disabled
-    public void attachesBinaryToRelease(
+    void attachesBinaryToRelease(
         @TempDir final Path temp
     ) throws Exception {
         final Repo repo = new MkGithub().randomRepo();

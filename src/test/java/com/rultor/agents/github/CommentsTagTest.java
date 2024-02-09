@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link CommentsTag}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.41.1
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -59,7 +57,7 @@ final class CommentsTagTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void createsRelease() throws Exception {
+    void createsRelease() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(
@@ -79,7 +77,7 @@ final class CommentsTagTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void duplicatesRelease() throws Exception {
+    void duplicatesRelease() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
@@ -98,7 +96,7 @@ final class CommentsTagTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void createsReleaseMessage() throws Exception {
+    void createsReleaseMessage() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
@@ -125,7 +123,7 @@ final class CommentsTagTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void createsReleaseTitleFromIssue() throws Exception {
+    void createsReleaseTitleFromIssue() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("Issue title", "");
         final Agent agent = new CommentsTag(repo.github());
@@ -144,7 +142,7 @@ final class CommentsTagTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void createsReleaseTitleFromTalk() throws Exception {
+    void createsReleaseTitleFromTalk() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("Title from issue", "");
         final Agent agent = new CommentsTag(repo.github());
@@ -171,7 +169,7 @@ final class CommentsTagTest {
      * @throws IOException In case of error.
      */
     @Test
-    public void createsLatestRelease() throws IOException {
+    void createsLatestRelease() throws IOException {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues()
             .create(
@@ -206,7 +204,7 @@ final class CommentsTagTest {
      * @throws IOException In case of error.
      */
     @Test
-    public void createsPreReleaseByDefault() throws IOException {
+    void createsPreReleaseByDefault() throws IOException {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues()
             .create(

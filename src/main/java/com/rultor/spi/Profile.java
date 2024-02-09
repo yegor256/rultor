@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,8 +43,6 @@ import java.util.Map;
 /**
  * Profile.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
@@ -94,6 +92,8 @@ public interface Profile {
 
     /**
      * If can't read profile due to syntax error.
+     *
+     * @since 1.0
      */
     final class ConfigException extends RuntimeException {
         /**
@@ -120,6 +120,8 @@ public interface Profile {
 
     /**
      * Defaults.
+     *
+     * @since 1.0
      */
     @Immutable
     final class Defaults {
@@ -169,6 +171,8 @@ public interface Profile {
 
     /**
      * Fixed.
+     *
+     * @since 1.0
      */
     @Immutable
     final class Fixed implements Profile {
@@ -176,6 +180,7 @@ public interface Profile {
          * XML document.
          */
         private final transient XML xml;
+
         /**
          * Name of it.
          */

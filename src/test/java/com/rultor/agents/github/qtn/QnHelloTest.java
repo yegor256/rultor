@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link QnHello}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.6
  */
 final class QnHelloTest {
@@ -53,7 +51,7 @@ final class QnHelloTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void repliesInGithub() throws Exception {
+    void repliesInGithub() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");

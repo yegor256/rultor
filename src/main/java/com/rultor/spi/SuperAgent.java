@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -38,8 +38,6 @@ import lombok.ToString;
 /**
  * Super Agent.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
@@ -54,6 +52,8 @@ public interface SuperAgent {
 
     /**
      * Iterative.
+     *
+     * @since 1.0
      */
     @Immutable
     @ToString
@@ -63,6 +63,7 @@ public interface SuperAgent {
          * Agents to run.
          */
         private final transient Array<SuperAgent> children;
+
         /**
          * Ctor.
          * @param list List of them
@@ -70,6 +71,7 @@ public interface SuperAgent {
         public Iterative(final Iterable<SuperAgent> list) {
             this.children = new Array<>(list);
         }
+
         @Override
         public void execute(final Talks talks) throws IOException {
             for (final SuperAgent agent : this.children) {

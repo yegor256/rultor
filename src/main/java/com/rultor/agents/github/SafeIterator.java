@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -38,8 +38,6 @@ import lombok.ToString;
 /**
  * Safe iterator.
  * @param <T> Class to iterate
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.59
  */
 @Immutable

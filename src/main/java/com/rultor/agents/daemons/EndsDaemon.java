@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -56,8 +56,6 @@ import org.xembly.Xembler;
 /**
  * Marks the daemon as done.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @todo #1053:30min Reduce the data abstraction coupling of EndsDaemon in order
@@ -119,12 +117,6 @@ public final class EndsDaemon extends AbstractAgent {
                 System.lineSeparator()
             )
         );
-        final List<String> linesAsString = new ListOf<>(
-            new Mapped<>(
-                Text::asString,
-                lines
-            )
-        );
         final String highlights = String.join(
             "\n",
             new Mapped<>(
@@ -155,7 +147,12 @@ public final class EndsDaemon extends AbstractAgent {
                             System.lineSeparator(),
                             new Skipped<>(
                                 Math.max(lines.size() - Tv.SIXTY, 0),
-                                linesAsString
+                                new ListOf<>(
+                                    new Mapped<>(
+                                        Text::asString,
+                                        lines
+                                    )
+                                )
                             )
                         ),
                         -Tv.HUNDRED * Tv.THOUSAND

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -51,8 +51,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link EndsDaemon}.
  *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ * @since 1.2
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class EndsDaemonITCase {
@@ -62,9 +61,9 @@ final class EndsDaemonITCase {
      * @throws IOException In case of error.
      */
     @Test
-    public void parsesHighlightedStdout() throws IOException {
+    void parsesHighlightedStdout() throws IOException {
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final Talk talk = new Talk.InFile();
@@ -94,9 +93,9 @@ final class EndsDaemonITCase {
      * @throws IOException In case of error.
      */
     @Test
-    public void readsExitCodeCorrectly() throws IOException {
+    void readsExitCodeCorrectly() throws IOException {
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final Talk talk = new Talk.InFile();
@@ -118,9 +117,9 @@ final class EndsDaemonITCase {
      * @throws Exception On failure
      */
     @Test
-    public void exitsWhenProfileBroken() throws Exception {
+    void exitsWhenProfileBroken() throws Exception {
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final Talk talk = new Talk.InFile();
@@ -150,9 +149,9 @@ final class EndsDaemonITCase {
      */
     @Test
     @Disabled
-    public void deprecatesDefaultImage() throws IOException {
+    void deprecatesDefaultImage() throws IOException {
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final Talk talk = new Talk.InFile();

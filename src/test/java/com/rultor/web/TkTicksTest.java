@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,6 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkTicks}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  */
 final class TkTicksTest {
@@ -57,7 +55,7 @@ final class TkTicksTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersPngStatusImage() throws Exception {
+    void rendersPngStatusImage() throws Exception {
         final Take home = new TkTicks(
             // @checkstyle AnonInnerLengthCheck (50 lines)
             new Pulse() {
@@ -65,6 +63,7 @@ final class TkTicksTest {
                 public void add(final Tick tick) {
                     throw new UnsupportedOperationException("#add()");
                 }
+
                 @Override
                 public Iterable<Tick> ticks() {
                     return Arrays.asList(
@@ -72,10 +71,12 @@ final class TkTicksTest {
                         new Tick(2L, 1L, 1)
                     );
                 }
+
                 @Override
                 public Iterable<Throwable> error() {
                     throw new UnsupportedOperationException("#error()");
                 }
+
                 @Override
                 public void error(final Iterable<Throwable> errors) {
                     throw new UnsupportedOperationException("#error(..)");
@@ -100,7 +101,7 @@ final class TkTicksTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersPngWithoutTicks() throws Exception {
+    void rendersPngWithoutTicks() throws Exception {
         final Take home = new TkTicks(Pulse.EMPTY);
         MatcherAssert.assertThat(
             new RsPrint(home.act(new RqFake())).asString(),

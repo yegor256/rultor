@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -36,20 +36,20 @@ import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * Test case for {@link Entry}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.58
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 final class EntryTest {
     /**
      * To make sure we are online.
      * @throws IOException If fails
      */
     @BeforeAll
-    public static void weAreOnline() throws IOException {
+    public void weAreOnline() throws IOException {
         new WeAreOnline().assume();
     }
 
@@ -62,7 +62,7 @@ final class EntryTest {
      * this test will crash with a different exception, not AssertionError.
      */
     @Test
-    public void sttcConnects() {
+    void sttcConnects() {
         Assertions.assertThrows(
             AssertionError.class,
             () -> new RtSttc(
@@ -81,7 +81,7 @@ final class EntryTest {
      * this test will crash with a different exception, not AssertionError.
      */
     @Test
-    public void githubConnects() {
+    void githubConnects() {
         Assertions.assertThrows(
             AssertionError.class,
             () -> new RtGithub("intentionally-invalid-token")

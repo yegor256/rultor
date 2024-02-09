@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.xembly.Directives;
 /**
  * Tests for {@link Publishes}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.32.7
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -54,7 +52,7 @@ final class PublishesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void addsPublicAttribute() throws Exception {
+    void addsPublicAttribute() throws Exception {
         final MkGithub github = new MkGithub("test");
         github.repos().create(new Repos.RepoCreate("test", false));
         final Agent agent = new Publishes(new Profile.Fixed(), github);
@@ -75,7 +73,7 @@ final class PublishesTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void ignoresIfPublicAttributeSet() throws Exception {
+    void ignoresIfPublicAttributeSet() throws Exception {
         final Agent agent = new Publishes(new Profile.Fixed(), new MkGithub());
         final Talk talk = new Talk.InFile();
         talk.modify(

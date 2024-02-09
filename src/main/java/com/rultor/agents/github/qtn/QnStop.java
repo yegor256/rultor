@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,9 +45,7 @@ import lombok.ToString;
 
 /**
  * Stop a task.
- *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ * @since 1.1
  */
 @Immutable
 @ToString

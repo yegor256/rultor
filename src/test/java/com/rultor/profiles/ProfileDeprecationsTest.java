@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -38,8 +38,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link ProfileDeprecations}.
- * @author Nicolas Filotto (nicolas.filotto@gmail.com)
- * @version $Id$
  * @since 1.62
  */
 final class ProfileDeprecationsTest {
@@ -58,7 +56,7 @@ final class ProfileDeprecationsTest {
      * @throws Exception In case of error
      */
     @Test
-    public void identifiesDeprecatedProfile() throws Exception {
+    void identifiesDeprecatedProfile() throws Exception {
         ProfileDeprecations deprecations = new ProfileDeprecations(
             new Profile.Fixed()
         );
@@ -81,7 +79,7 @@ final class ProfileDeprecationsTest {
      * @throws Exception In case of error
      */
     @Test
-    public void identifiesValidProfile() throws Exception {
+    void identifiesValidProfile() throws Exception {
         final ProfileDeprecations deprecations = new ProfileDeprecations(
             new Profile.Fixed(
                 new XMLDocument(

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for {@link Profile}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.28
  */
 final class ProfileTest {
@@ -48,9 +46,10 @@ final class ProfileTest {
     /**
      * Profile.Fixed can accept correct XML.
      * @throws Exception In case of error.
+     * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
      */
     @Test
-    public void acceptsValidXML() throws Exception {
+    void acceptsValidXML() throws Exception {
         MatcherAssert.assertThat(
             new Profile.Fixed(
                 new XMLDocument(
@@ -75,7 +74,7 @@ final class ProfileTest {
      * Profile.Fixed can reject incorrect XML.
      */
     @Test
-    public void rejectsMixedEntriesAndItems() {
+    void rejectsMixedEntriesAndItems() {
         Assertions.assertThrows(
             IllegalArgumentException.class,
             () -> new Profile.Fixed(
@@ -93,7 +92,7 @@ final class ProfileTest {
      * Profile.Fixed can reject incorrect XML.
      */
     @Test
-    public void rejectsEntryWithoutKey() {
+    void rejectsEntryWithoutKey() {
         Assertions.assertThrows(
             IllegalArgumentException.class,
             () -> new Profile.Fixed(
@@ -106,7 +105,7 @@ final class ProfileTest {
      * Profile.Fixed can reject unknown attributes.
      */
     @Test
-    public void rejectsUnknownAttributes() {
+    void rejectsUnknownAttributes() {
         Assertions.assertThrows(
             IllegalArgumentException.class,
             () -> new Profile.Fixed(

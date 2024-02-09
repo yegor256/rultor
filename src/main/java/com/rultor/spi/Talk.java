@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -53,12 +53,12 @@ import org.xembly.Xembler;
 /**
  * Talk.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({"PMD.TooManyMethods",
+    "PMD.OnlyOneConstructorShouldDoInitialization",
+    "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"})
 public interface Talk {
 
     /**
@@ -136,6 +136,8 @@ public interface Talk {
 
     /**
      * In file.
+     *
+     * @since 1.0
      */
     @Immutable
     final class InFile implements Talk {
@@ -143,6 +145,7 @@ public interface Talk {
          * File.
          */
         private final transient String path;
+
         /**
          * Ctor.
          * @throws IOException If fails
@@ -155,6 +158,7 @@ public interface Talk {
                 StandardCharsets.UTF_8
             );
         }
+
         /**
          * Ctor.
          * @param lines Lines to concat
@@ -163,6 +167,7 @@ public interface Talk {
         public InFile(final String... lines) throws IOException {
             this(new XMLDocument(StringUtils.join(lines)));
         }
+
         /**
          * Ctor.
          * @param xml XML to save
@@ -176,6 +181,7 @@ public interface Talk {
                 StandardCharsets.UTF_8
             );
         }
+
         /**
          * Ctor.
          * @param file The file
@@ -183,18 +189,22 @@ public interface Talk {
         public InFile(final File file) {
             this.path = file.getAbsolutePath();
         }
+
         @Override
         public Long number() throws IOException {
             return Long.parseLong(this.read().xpath("/talk/@number").get(0));
         }
+
         @Override
         public String name() throws IOException {
             return this.read().xpath("/talk/@name").get(0);
         }
+
         @Override
         public Date updated() {
             return new Date(new File(this.path).lastModified());
         }
+
         @Override
         public XML read() throws IOException {
             return Talk.UPGRADE.transform(
@@ -205,6 +215,7 @@ public interface Talk {
                 )
             );
         }
+
         @Override
         public void modify(final Iterable<Directive> dirs) throws IOException {
             if (dirs.iterator().hasNext()) {
@@ -223,6 +234,7 @@ public interface Talk {
                 );
             }
         }
+
         @Override
         public void active(final boolean yes) {
             // nothing

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import org.apache.commons.io.IOUtils;
 /**
  * Starts a Docker Container containing a Docker daemon and SSHD.
  *
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.63
  */
 public final class StartsDockerDaemon implements AutoCloseable {
