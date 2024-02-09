@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -48,8 +48,6 @@ import org.xembly.Xembler;
 /**
  * If the daemon is too old and the Docker container is already gone.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.72
  */
 @Immutable

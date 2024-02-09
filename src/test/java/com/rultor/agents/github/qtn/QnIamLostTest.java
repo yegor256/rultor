@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link QnIamLost}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.60
  */
 final class QnIamLostTest {
@@ -53,7 +51,7 @@ final class QnIamLostTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void saySomethingBack() throws Exception {
+    void saySomethingBack() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("boom");

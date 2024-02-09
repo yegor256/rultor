@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -35,13 +35,12 @@ import com.jcabi.github.Github;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Agents}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.7
  */
 final class AgentsTest {
@@ -51,11 +50,14 @@ final class AgentsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void processesTalk() throws Exception {
+    void processesTalk() throws Exception {
         final Talk talk = new Talk.InFile();
         final Github github = new MkGithub();
         final Sttc sttc = new MkSttc();
         final Profile profile = new Profile.Fixed();
-        new Agents(github, sttc).agent(talk, profile).execute(talk);
+        Assertions.assertDoesNotThrow(
+            () -> new Agents(github, sttc)
+                .agent(talk, profile).execute(talk)
+        );
     }
 }

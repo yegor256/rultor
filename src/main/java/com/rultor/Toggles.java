@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -41,8 +41,6 @@ import org.apache.commons.io.FileUtils;
 /**
  * Feature toggles.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
@@ -62,17 +60,21 @@ public interface Toggles {
 
     /**
      * Inner file.
+     *
+     * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode
     final class InFile implements Toggles {
+
         /**
          * Directory to work in.
          */
         private static final String DIR = String.format(
             "/tmp/rultor-%s", Manifests.read("Rultor-Revision")
         );
+
         @Override
         public void toggle() throws IOException {
             final File file = this.file();
@@ -88,12 +90,14 @@ public interface Toggles {
                 }
             }
         }
+
         @Override
         public boolean readOnly() {
             synchronized (Toggles.class) {
                 return this.file().exists();
             }
         }
+
         /**
          * Get file.
          * @return File

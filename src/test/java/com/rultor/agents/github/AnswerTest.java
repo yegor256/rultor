@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -44,8 +44,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link Answer}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.8.16
  */
 final class AnswerTest {
@@ -55,7 +53,7 @@ final class AnswerTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void postsGithubComment() throws Exception {
+    void postsGithubComment() throws Exception {
         final Issue issue = AnswerTest.issue();
         issue.comments().post("hey, do it");
         new Answer(new Comment.Smart(issue.comments().get(1))).post(
@@ -72,7 +70,7 @@ final class AnswerTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void preventsSpam() throws Exception {
+    void preventsSpam() throws Exception {
         final Issue issue = AnswerTest.issue();
         MkGithub.class.cast(issue.repo().github()).relogin("walter")
             .repos().get(issue.repo().coordinates())

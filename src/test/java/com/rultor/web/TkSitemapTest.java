@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link TkSitemap}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -54,7 +52,7 @@ final class TkSitemapTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersListOfTalks() throws Exception {
+    void rendersListOfTalks() throws Exception {
         final Talks talks = new Talks.InDir();
         final Take take = new TkSitemap(talks);
         talks.create("repo1", Talk.TEST_NAME);

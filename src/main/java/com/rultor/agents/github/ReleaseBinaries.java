@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,8 @@ import org.xembly.Directives;
 /**
  * Attach binaries to release.
  *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ * @since 1.3
+ *
  * @todo #662:30min Implement attaching artifacts to release, remove PMD
  *  suppression below and enable attachesBinariesToRelease test. Similar
  *  functionality exists in CommentsTag so you can look there for clues.

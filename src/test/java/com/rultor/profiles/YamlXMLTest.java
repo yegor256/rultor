@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -38,9 +38,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link YamlXML}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
+ * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
  */
 final class YamlXMLTest {
 
@@ -48,7 +47,7 @@ final class YamlXMLTest {
      * YamlXML can parse.
      */
     @Test
-    public void parsesYamlConfig() {
+    void parsesYamlConfig() {
         MatcherAssert.assertThat(
             new YamlXML("a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e").get(),
             XhtmlMatchers.hasXPaths(
@@ -64,7 +63,7 @@ final class YamlXMLTest {
      * YamlXML can parse a broken text.
      */
     @Test
-    public void parsesYamlConfigWhenBroken() {
+    void parsesYamlConfigWhenBroken() {
         MatcherAssert.assertThat(
             new YamlXML("a: alpha\nb:\nc:\n  - beta").get(),
             XhtmlMatchers.hasXPaths(
@@ -80,7 +79,7 @@ final class YamlXMLTest {
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void parsesBrokenConfigsAndThrows() {
+    void parsesBrokenConfigsAndThrows() {
         final String[] yamls = {
             "thre\n\t\\/\u0000",
             "first: \"привет \\/\t\r\"",

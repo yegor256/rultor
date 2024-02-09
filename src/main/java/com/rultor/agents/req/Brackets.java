@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -35,8 +35,6 @@ import org.cactoos.iterable.Mapped;
 /**
  * List of texts for the script, in brackets.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.64
  */
 final class Brackets {

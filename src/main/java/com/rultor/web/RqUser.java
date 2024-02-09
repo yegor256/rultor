@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,6 @@ import org.takes.rq.RqWrap;
 /**
  * Web user.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  */
 final class RqUser extends RqWrap {

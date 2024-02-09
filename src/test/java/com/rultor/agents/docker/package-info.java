@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -31,8 +31,6 @@
 /**
  * Docker daemon, tests.
  *
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.63
  */
 package com.rultor.agents.docker;

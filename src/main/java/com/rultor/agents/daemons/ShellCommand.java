@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -37,8 +37,6 @@ import java.io.IOException;
 /**
  * Command to run in a given shell and working directory.
  *
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.62
  */
 @Immutable

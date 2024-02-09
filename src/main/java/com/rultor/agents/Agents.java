@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -108,8 +108,6 @@ import org.cactoos.text.UncheckedText;
 /**
  * Agents.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
@@ -205,7 +203,7 @@ public final class Agents {
         final Locks locks = this.sttc.locks();
         final Question question = new QnSince(
             // @checkstyle MagicNumber (1 line)
-            49092213,
+            49_092_213,
             new QnNotSelf(
                 new QnReferredTo(
                     this.github.users().self().login(),

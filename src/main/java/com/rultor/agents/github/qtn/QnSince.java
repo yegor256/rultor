@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import lombok.ToString;
 /**
  * Question asked after given Github message number.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.6.5
  */
 @Immutable

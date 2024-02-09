@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -56,8 +56,6 @@ import org.xembly.Directives;
 /**
  * Tests for {@link StartsRequest}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -74,7 +72,7 @@ final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void startsRequest() throws Exception {
+    void startsRequest() throws Exception {
         final Agent agent = new StartsRequest(new Profile.Fixed());
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -107,7 +105,7 @@ final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void startsDeployRequest(
+    void startsDeployRequest(
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
@@ -190,7 +188,7 @@ final class StartsRequestTest {
      *  Comments are prohibited in methods by current stylechecker.
      */
     @Test
-    public void startsReleaseRequest(
+    void startsReleaseRequest(
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
@@ -234,7 +232,7 @@ final class StartsRequestTest {
      *  Comments are prohibited in methods by current stylechecker.
      */
     @Test
-    public void startsMergeRequest(
+    void startsMergeRequest(
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
@@ -275,7 +273,7 @@ final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void startsMergeRequestIfEmpty(
+    void startsMergeRequestIfEmpty(
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
@@ -323,7 +321,7 @@ final class StartsRequestTest {
      */
     @Test
     @Disabled
-    public void runsReleaseWithDockerfile(
+    void runsReleaseWithDockerfile(
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
@@ -387,7 +385,7 @@ final class StartsRequestTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void decryptsAssets() throws Exception {
+    void decryptsAssets() throws Exception {
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -423,7 +421,7 @@ final class StartsRequestTest {
      * @since 1.37
      */
     @Test
-    public void runsAsRootIfRequested(
+    void runsAsRootIfRequested(
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {

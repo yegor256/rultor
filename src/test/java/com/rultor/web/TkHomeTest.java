@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkHome}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  */
 final class TkHomeTest {
@@ -53,7 +51,7 @@ final class TkHomeTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersHomePage() throws Exception {
+    void rendersHomePage() throws Exception {
         final Talks talks = new Talks.InDir();
         final Take take = new TkHome(talks, new Toggles.InFile());
         talks.create("repo1", "test1");

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,6 @@ import org.takes.rs.RsWithType;
 /**
  * Sitemap.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.26
  */
 final class TkSitemap implements Take {
@@ -98,6 +96,7 @@ final class TkSitemap implements Take {
      * @param hash Hash
      * @return XML text
      * @throws IOException If fails
+     * @checkstyle AbbreviationAsWordInNameCheck (10 lines)
      */
     private static String toXML(final Talk talk, final XML xml,
         final String hash) throws IOException {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -60,8 +60,6 @@ import org.xembly.Directives;
 
 /**
  * Integration test for ${@link StartsDaemon}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3.8
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -75,9 +73,9 @@ final class StartsDaemonITCase {
      * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
-    public void startsDaemon() throws Exception {
+    void startsDaemon() throws Exception {
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final Talk talk = StartsDaemonITCase.talk(start);
@@ -118,9 +116,9 @@ final class StartsDaemonITCase {
      * @throws IOException In case of error
      */
     @Test
-    public void deprecatesDefaultImage() throws IOException {
+    void deprecatesDefaultImage() throws IOException {
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final Talk talk = StartsDaemonITCase.talk(start);

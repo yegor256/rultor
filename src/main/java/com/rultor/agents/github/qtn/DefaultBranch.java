@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -35,8 +35,6 @@ import java.io.IOException;
 /**
  * Default branch of a repo.
  *
- * @author Volodya Lombrozo (volodya.lombrozo@gmail.com)
- * @version $Id$
  * @since 2.1
  */
 public final class DefaultBranch {

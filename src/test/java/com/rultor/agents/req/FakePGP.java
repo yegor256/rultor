@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -37,9 +37,8 @@ import org.cactoos.text.UncheckedText;
 /**
  * Fake PGP Signature.
  *
- * @author Filipe Freire (livrofubia@gmail.com)
- * @version $Id$
- * @since ?
+ * @since 1.67.1
+ * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
  */
 final class FakePGP {
 
@@ -48,6 +47,7 @@ final class FakePGP {
      *
      * @return String
      * @throws IOException ex
+     * @checkstyle NonStaticMethodCheck (35 lines)
      */
     public String asString() throws IOException {
         return new UncheckedText(

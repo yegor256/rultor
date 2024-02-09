@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -34,14 +34,13 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.util.Collections;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
  * Tests for ${@link DeactivatesTalks}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  */
 final class DeactivatesTalksTest {
@@ -51,7 +50,7 @@ final class DeactivatesTalksTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void deactivatesTalk() throws Exception {
+    void deactivatesTalk() throws Exception {
         final SuperAgent agent = new DeactivatesTalks();
         final Talk talk = new Talk.InFile(
             new XMLDocument(
@@ -60,7 +59,9 @@ final class DeactivatesTalksTest {
         );
         final Talks talks = Mockito.mock(Talks.class);
         Mockito.doReturn(Collections.singleton(talk)).when(talks).active();
-        agent.execute(talks);
+        Assertions.assertDoesNotThrow(
+            () -> agent.execute(talks)
+        );
     }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -41,12 +41,12 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.shells.TalkShells;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,8 +61,6 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Tail daemon output.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
@@ -147,6 +145,7 @@ public final class Tail {
 
     /**
      * Connect to the log.
+     * @since 1.1
      */
     @Immutable
     private interface Connect {
@@ -160,6 +159,7 @@ public final class Tail {
 
     /**
      * S3 connect.
+     * @since 1.1
      */
     @Immutable
     private static final class S3Connect implements Tail.Connect {
@@ -167,10 +167,12 @@ public final class Tail {
          * XML of the talk.
          */
         private final transient XML xml;
+
         /**
          * Hash.
          */
         private final transient String hash;
+
         /**
          * Ctor.
          * @param talk Talk
@@ -180,6 +182,7 @@ public final class Tail {
             this.xml = talk;
             this.hash = name;
         }
+
         @Override
         public InputStream read() throws IOException {
             final URI uri = URI.create(
@@ -196,6 +199,7 @@ public final class Tail {
             );
             return new ByteArrayInputStream(baos.toByteArray());
         }
+
         /**
          * S3 bucket.
          * @return Bucket
@@ -212,6 +216,8 @@ public final class Tail {
 
     /**
      * SSH connect.
+     * @since 1.1
+     * @checkstyle AbbreviationAsWordInNameCheck (50 lines)
      */
     @Immutable
     private static final class SSHConnect implements Tail.Connect {
@@ -219,6 +225,7 @@ public final class Tail {
          * XML of the talk.
          */
         private final transient XML xml;
+
         /**
          * Ctor.
          * @param talk Talk
@@ -226,6 +233,7 @@ public final class Tail {
         private SSHConnect(final XML talk) {
             this.xml = talk;
         }
+
         @Override
         public InputStream read() throws IOException {
             final Shell shell = new TalkShells(this.xml).get();
@@ -252,6 +260,7 @@ public final class Tail {
 
     /**
      * Fake file connect.
+     * @since 1.1
      */
     @Immutable
     private static final class FakeConnect implements Tail.Connect {
@@ -259,6 +268,7 @@ public final class Tail {
          * XML of the talk.
          */
         private final transient XML xml;
+
         /**
          * Ctor.
          * @param talk Talk
@@ -266,10 +276,11 @@ public final class Tail {
         private FakeConnect(final XML talk) {
             this.xml = talk;
         }
+
         @Override
-        public InputStream read() throws FileNotFoundException {
-            return new FileInputStream(
-                this.xml.xpath("/talk/daemon/dir/text() ").get(0)
+        public InputStream read() throws IOException {
+            return Files.newInputStream(
+                Paths.get(this.xml.xpath("/talk/daemon/dir/text() ").get(0))
             );
         }
     }

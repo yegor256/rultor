@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -47,10 +47,9 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link TkHome}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.5
  */
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkHomeITCase {
 
     /**
@@ -62,7 +61,7 @@ final class TkHomeITCase {
      * Before the entire test.
      */
     @BeforeEach
-    public void before() {
+    void before() {
         Assumptions.assumeFalse(System.getProperty("takes.port").isEmpty());
         Assumptions.assumeFalse(TkHomeITCase.HOME == null);
         Assumptions.assumeFalse(TkHomeITCase.HOME.isEmpty());
@@ -73,7 +72,7 @@ final class TkHomeITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void renderAbsentPages() throws Exception {
+    void renderAbsentPages() throws Exception {
         final String[] pages = {
             "/xsl/xsl-stylesheet-doesnt-exist.xsl",
             "/css/stylesheet-is-absent.css",
@@ -93,7 +92,7 @@ final class TkHomeITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void redirectsOnAbsence() throws Exception {
+    void redirectsOnAbsence() throws Exception {
         final String[] pages = {
             "/page-doesnt-exist",
             "/oops",
@@ -113,7 +112,7 @@ final class TkHomeITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersValidPages() throws Exception {
+    void rendersValidPages() throws Exception {
         final String[] pages = {
             "/robots.txt",
             "/xsl/layout.xsl",
@@ -136,7 +135,7 @@ final class TkHomeITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void showsVersion() throws Exception {
+    void showsVersion() throws Exception {
         new JdkRequest(TkHomeITCase.HOME)
             .uri().path("/").back()
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
@@ -152,7 +151,7 @@ final class TkHomeITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersValidPngTick() throws Exception {
+    void rendersValidPngTick() throws Exception {
         final Request request = new JdkRequest(TkHomeITCase.HOME);
         final byte[] data = request.uri().path("/ticks").back()
             .method(Request.GET)

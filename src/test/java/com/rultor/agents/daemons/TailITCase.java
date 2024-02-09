@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -47,8 +47,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link Tail}.
  *
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.62
  */
 final class TailITCase {
@@ -58,12 +56,12 @@ final class TailITCase {
      * @throws Exception In case of error.
      */
     @Test
-    public void tailsNonUtf() throws Exception {
+    void tailsNonUtf() throws Exception {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final PfShell sshd = start.shell();

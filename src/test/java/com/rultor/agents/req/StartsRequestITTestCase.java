@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,8 +45,6 @@ import org.xembly.Directives;
 /**
  * Integration tests for ${@link StartsRequest}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.24.1
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -73,9 +71,10 @@ final class StartsRequestITTestCase {
     /**
      * StartsRequest can compose an executable DEPLOY request.
      * @throws Exception In case of error.
+     * @checkstyle NonStaticMethodCheck (100 lines)
      */
     @Test
-    public void composesCorrectDeployRequest() throws Exception {
+    void composesCorrectDeployRequest() throws Exception {
         Assumptions.assumeTrue(StartsRequestITTestCase.HOST != null);
         Assumptions.assumeFalse(StartsRequestITTestCase.HOST.isEmpty());
         final Shell shell = new Shell.Verbose(

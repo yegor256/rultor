@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,15 +39,15 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * Tests for {@link GithubProfile}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @SuppressWarnings("PMD.UseUtilityClass")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 final class GithubProfileITCase {
 
     /**
@@ -55,7 +55,7 @@ final class GithubProfileITCase {
      * @throws IOException If fails
      */
     @BeforeAll
-    public static void weAreOnline() throws IOException {
+    public void weAreOnline() throws IOException {
         new WeAreOnline().assume();
     }
 
@@ -65,7 +65,7 @@ final class GithubProfileITCase {
      */
     @Test
     @Disabled
-    public void fetchesYamlConfig() throws Exception {
+    void fetchesYamlConfig() throws Exception {
         final Profile profile = new GithubProfile(
             new RtGithub().repos().get(
                 new Coordinates.Simple("yegor256/rultor")

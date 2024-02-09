@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ import org.xembly.Directives;
 /**
  * Request.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  */
 @Immutable
@@ -84,6 +82,8 @@ public interface Req {
 
     /**
      * Simple impl.
+     *
+     * @since 1.3
      */
     @Immutable
     final class Simple implements Req {
@@ -91,10 +91,12 @@ public interface Req {
          * Type.
          */
         private final transient String type;
+
         /**
          * Map of args.
          */
         private final transient ArrayMap<String, String> map;
+
         /**
          * Ctor.
          * @param tpe Type
@@ -104,6 +106,7 @@ public interface Req {
             this.type = tpe;
             this.map = new ArrayMap<>(args);
         }
+
         @Override
         public Iterable<Directive> dirs() {
             final Directives dirs = new Directives()

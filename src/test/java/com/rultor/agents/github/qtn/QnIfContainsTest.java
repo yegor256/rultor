@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link QnIfContains}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  */
 final class QnIfContainsTest {
@@ -53,7 +51,7 @@ final class QnIfContainsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void blocksRequest() throws Exception {
+    void blocksRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("something");
@@ -71,7 +69,7 @@ final class QnIfContainsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void allowsRequest() throws Exception {
+    void allowsRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("something else to MErge");

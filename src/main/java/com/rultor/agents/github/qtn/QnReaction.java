@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,6 @@ import lombok.ToString;
  * Mark this question in GitHub with an emoji, to show the
  * author that the comments has been seen.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50.0
  */
 @Immutable

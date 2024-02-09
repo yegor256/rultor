@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import org.cactoos.map.MapOf;
 /**
  * Merge request.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -94,8 +92,8 @@ public final class QnMerge implements Question {
                     new Answer(comment).post(
                         true,
                         String.format(
-                                QnMerge.PHRASES.getString("QnMerge.start"),
-                                home.toASCIIString()
+                            QnMerge.PHRASES.getString("QnMerge.start"),
+                            home.toASCIIString()
                         )
                     );
                     req = QnMerge.pack(

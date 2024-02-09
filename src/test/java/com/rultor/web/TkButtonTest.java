@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkButton}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  */
 final class TkButtonTest {
@@ -50,7 +48,7 @@ final class TkButtonTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersSvg() throws Exception {
+    void rendersSvg() throws Exception {
         final TkRegex take = new TkButton();
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(

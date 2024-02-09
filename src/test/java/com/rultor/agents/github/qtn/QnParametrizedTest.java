@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -47,8 +47,6 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnParametrized}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -60,7 +58,7 @@ final class QnParametrizedTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void fetchesParams() throws Exception {
+    void fetchesParams() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post(
@@ -102,7 +100,7 @@ final class QnParametrizedTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void ignoresEmptyParams() throws Exception {
+    void ignoresEmptyParams() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey");
@@ -119,7 +117,7 @@ final class QnParametrizedTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void ignoresEmptyReq() throws Exception {
+    void ignoresEmptyReq() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey you");
@@ -136,7 +134,7 @@ final class QnParametrizedTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void ignoresLaterReq() throws Exception {
+    void ignoresLaterReq() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("");

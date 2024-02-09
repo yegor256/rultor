@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link StartsTalks}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.9
  */
 final class StartsTalksTest {
@@ -54,7 +52,7 @@ final class StartsTalksTest {
      */
     @Test
     @Disabled
-    public void startsTalks() throws Exception {
+    void startsTalks() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, do it");

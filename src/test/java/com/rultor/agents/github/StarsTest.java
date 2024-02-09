@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -41,8 +41,7 @@ import org.xembly.Directives;
 /**
  * Tests for {@link Stars}.
  *
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ * @since 1.1
  */
 final class StarsTest {
     /**
@@ -50,7 +49,7 @@ final class StarsTest {
      * @throws IOException In case of error
      */
     @Test
-    public void starsNewRepo() throws IOException {
+    void starsNewRepo() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Talk talk = this.talk(repo);
@@ -66,7 +65,7 @@ final class StarsTest {
      * @throws IOException In case of error
      */
     @Test
-    public void leavesStarredRepo() throws IOException {
+    void leavesStarredRepo() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Talk talk = this.talk(repo);

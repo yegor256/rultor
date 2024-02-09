@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -37,9 +37,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for {@link Brackets}.
  *
- * @author Filipe Freire (livrofubia@gmail.com)
- * @version $Id$
- * @since ?
+ * @since 1.2
  */
 final class BracketsTest {
     /**
@@ -47,7 +45,7 @@ final class BracketsTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void escapesInput() throws Exception {
+    void escapesInput() throws Exception {
         final Brackets brackets = new Brackets(
             new ListOf<>(
                 "Elegant",

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -35,14 +35,13 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
 /**
  * Tests for ${@link UnlocksRepo}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.22.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -53,7 +52,7 @@ final class UnlocksRepoTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void unlocksRepo() throws Exception {
+    void unlocksRepo() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, do it");
@@ -72,7 +71,9 @@ final class UnlocksRepoTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .add("href").set("#").up()
         );
-        agent.execute(talks);
+        Assertions.assertDoesNotThrow(
+            () -> agent.execute(talks)
+        );
     }
 
 }

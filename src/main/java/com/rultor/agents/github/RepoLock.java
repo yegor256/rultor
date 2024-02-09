@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,8 +45,6 @@ import lombok.ToString;
  * <p>It is used by {@link com.rultor.agents.github.qtn.QnAlone}
  * and {@link UnlocksRepo}.</p>
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.8.12
  */
 @Immutable

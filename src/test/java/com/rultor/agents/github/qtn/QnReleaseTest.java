@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,8 +45,6 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnRelease}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -58,7 +56,7 @@ final class QnReleaseTest {
      * @throws Exception In case of error
      */
     @Test
-    public void buildsRequest() throws Exception {
+    void buildsRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("release");
@@ -85,7 +83,7 @@ final class QnReleaseTest {
      * @throws Exception In case of error
      */
     @Test
-    public void allowsNewerTag() throws Exception {
+    void allowsNewerTag() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         repo.releases().create("1.5");
@@ -112,7 +110,7 @@ final class QnReleaseTest {
      * @throws Exception In case of error
      */
     @Test
-    public void denyOutdatedTag() throws Exception {
+    void denyOutdatedTag() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         repo.releases().create("1.7");
@@ -134,7 +132,7 @@ final class QnReleaseTest {
      * @throws Exception In case of error
      */
     @Test
-    public void allowsToSetReleaseTitle() throws Exception {
+    void allowsToSetReleaseTitle() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("release `1.8`, title `Version 1.8.0`");

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,6 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnReferredTo}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.20.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -59,7 +57,7 @@ final class QnReferredToTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void buildsRequest() throws Exception {
+    void buildsRequest() throws Exception {
         MatcherAssert.assertThat(
             this.xemblerXml("  @xx deploy"),
             XhtmlMatchers.hasXPath("/request/type")
@@ -75,7 +73,7 @@ final class QnReferredToTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void recognizesCommaAsDelimiter() throws Exception {
+    void recognizesCommaAsDelimiter() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
             this.reqFromComment(
@@ -97,7 +95,7 @@ final class QnReferredToTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void recognizesInvalidBoundary() throws Exception {
+    void recognizesInvalidBoundary() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
             this.reqFromComment(
@@ -118,7 +116,7 @@ final class QnReferredToTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void answerWhenMentioned() throws Exception {
+    void answerWhenMentioned() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final String login = "xx";

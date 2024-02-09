@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -57,8 +57,6 @@ import org.cactoos.list.ListOf;
 /**
  * Routine.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @todo #1125:30min Routine should be delegate execution to separate threads.
@@ -73,7 +71,8 @@ import org.cactoos.list.ListOf;
  *  removed.
  */
 @ScheduleWithFixedDelay
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({"PMD.DoNotUseThreads",
+    "PMD.ConstructorShouldDoInitialization"})
 final class Routine implements Runnable, Closeable {
 
     /**
@@ -140,14 +139,16 @@ final class Routine implements Runnable, Closeable {
                 )
             );
             final int processed = this.unsafe(active);
-            Logger.info(
-                this,
-                "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
-                processed,
-                System.currentTimeMillis() - begin,
-                System.currentTimeMillis() - this.start,
-                new Date()
-            );
+            if (Logger.isInfoEnabled(this)) {
+                Logger.info(
+                    this,
+                    "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
+                    processed,
+                    System.currentTimeMillis() - begin,
+                    System.currentTimeMillis() - this.start,
+                    new Date()
+                );
+            }
             this.pulse.error(Collections.emptyList());
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -37,8 +37,6 @@ import org.xembly.Directives;
 /**
  * Tests for {@link Talk}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.41.3
  */
 final class TalkTest {
@@ -46,9 +44,10 @@ final class TalkTest {
     /**
      * Talk can accept correct XML.
      * @throws Exception In case of error.
+     * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
      */
     @Test
-    public void acceptsValidXML() throws Exception {
+    void acceptsValidXML() throws Exception {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives()

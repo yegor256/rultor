@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -37,8 +37,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Aggent that tracks time and complains if too slow.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.59
  */
 public final class TimedAgent implements Agent {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,8 +49,6 @@ import org.cactoos.list.ListOf;
 /**
  * Question by architect only (if configured).
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.45
  * @todo #1246:30min PR by ARC merge shouldn't require confirmation by ARC.
  *  Implement the asked in #1246. The tests have already benn implemented in

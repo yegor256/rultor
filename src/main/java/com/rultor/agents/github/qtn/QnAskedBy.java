@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -51,8 +51,6 @@ import org.cactoos.iterable.Mapped;
 /**
  * Question asked by one of them.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  */
 @Immutable
@@ -124,6 +122,7 @@ public final class QnAskedBy implements Question {
      * @param logins Commanders
      * @param excluded Excluded commander
      * @return Comma-delimited names
+     * @checkstyle NonStaticMethodCheck (10 lines)
      */
     private String commandersAsDelimitedList(final Collection<String> logins,
         final String excluded) {

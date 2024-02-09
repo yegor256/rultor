@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -31,7 +31,6 @@
 /**
  * Front end, tests.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
  * @since 1.0
  */
 package com.rultor.web;

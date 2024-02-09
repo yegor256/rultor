@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -57,8 +57,6 @@ import org.xembly.Directives;
 /**
  * Merges.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -73,10 +71,12 @@ public final class StartsRequest extends AbstractAgent {
      * Default port value to be used with Decrypt.
      */
     private static final String DEFAULT_PORT = "80";
+
     /**
      * HTTP proxy port system property key.
      */
     private static final String PORT_KEY = "http.proxyPort";
+
     /**
      * HTTP proxy host system property key.
      */
@@ -182,8 +182,13 @@ public final class StartsRequest extends AbstractAgent {
     private Decrypt decryptor() {
         return new Decrypt(
             this.profile,
-            System.getProperty(HOST_KEY, ""),
-            Integer.parseInt(System.getProperty(PORT_KEY, DEFAULT_PORT))
+            System.getProperty(StartsRequest.HOST_KEY, ""),
+            Integer.parseInt(
+                System.getProperty(
+                    StartsRequest.PORT_KEY,
+                    StartsRequest.DEFAULT_PORT
+                )
+            )
         );
     }
 

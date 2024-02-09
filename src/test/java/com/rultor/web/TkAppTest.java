@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -56,8 +56,6 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkApp}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.50
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -68,7 +66,7 @@ final class TkAppTest {
      * Make sure it's prepared.
      */
     @BeforeEach
-    public void resourcesAvailable() {
+    void resourcesAvailable() {
         Assumptions.assumeFalse(
             TkAppTest.class.getResourceAsStream("/xsl/home.xsl") == null
         );
@@ -79,7 +77,7 @@ final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersHomePage() throws Exception {
+    void rendersHomePage() throws Exception {
         final Take take = new TkApp(
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
@@ -113,29 +111,31 @@ final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersHomePageViaHttp() throws Exception {
+    void rendersHomePageViaHttp() throws Exception {
         final Take app = new TkApp(
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
         );
-        new FtRemote(app).exec(
-            home -> {
-                new JdkRequest(home)
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .assertXPath("/xhtml:html")
-                    .assertXPath("//xhtml:img[@class='fork-me']");
-                new JdkRequest(home)
-                    .through(VerboseWire.class)
-                    .header("Accept", "application/xml")
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .assertXPath("/page/version");
-            }
+        Assertions.assertDoesNotThrow(
+            () -> new FtRemote(app).exec(
+                home -> {
+                    new JdkRequest(home)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/xhtml:html")
+                        .assertXPath("//xhtml:img[@class='fork-me']");
+                    new JdkRequest(home)
+                        .through(VerboseWire.class)
+                        .header("Accept", "application/xml")
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/page/version");
+                }
+            )
         );
     }
 
@@ -144,7 +144,7 @@ final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersHomeJs() throws Exception {
+    void rendersHomeJs() throws Exception {
         final Take take = new TkApp(
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()
@@ -177,7 +177,7 @@ final class TkAppTest {
      */
     @Test
     @Disabled
-    public void rendersGzipHomePage() throws Exception {
+    void rendersGzipHomePage() throws Exception {
         final Take take = new TkApp(
             new Talks.InDir(), Pulse.EMPTY,
             new Toggles.InFile()

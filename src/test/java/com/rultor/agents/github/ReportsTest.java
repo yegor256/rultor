@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,8 +45,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link Reports}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.3
  */
 final class ReportsTest {
@@ -72,7 +70,7 @@ final class ReportsTest {
      * @throws Exception In case of error
      */
     @Test
-    public void reportsRequestResult() throws Exception {
+    void reportsRequestResult() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Talk talk = ReportsTest.example(
             repo, repo.issues().create("", "")
@@ -81,7 +79,7 @@ final class ReportsTest {
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
-            XhtmlMatchers.hasXPath(XPATH)
+            XhtmlMatchers.hasXPath(ReportsTest.XPATH)
         );
     }
 
@@ -90,7 +88,7 @@ final class ReportsTest {
      * @throws Exception In case of error
      */
     @Test
-    public void reportsRequestResultWhenStopFails() throws Exception {
+    void reportsRequestResultWhenStopFails() throws Exception {
         final String user = "john";
         final String stop = "stop it please";
         final Repo repo = new MkGithub(user).randomRepo();
@@ -101,7 +99,7 @@ final class ReportsTest {
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
-            XhtmlMatchers.hasXPath(XPATH)
+            XhtmlMatchers.hasXPath(ReportsTest.XPATH)
         );
         MatcherAssert.assertThat(
             "Comment contains warning about stop request",
@@ -116,7 +114,7 @@ final class ReportsTest {
                     Logger.format(
                         ReportsTest.PHRASES.getString("Reports.success"),
                         "https://www.rultor.com/t/1-1",
-                        DURATION
+                        ReportsTest.DURATION
                     )
                 )
             )
@@ -141,7 +139,7 @@ final class ReportsTest {
                 .up()
                 .add("request").attr("id", "1")
                 .add("author").set("yegor256").up()
-                .add("msec").set(DURATION).up()
+                .add("msec").set(ReportsTest.DURATION).up()
                 .add("success").set("true").up()
                 .add("type").set("something").up()
                 .add("args")

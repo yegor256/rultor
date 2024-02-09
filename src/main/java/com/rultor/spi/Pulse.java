@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -34,28 +34,30 @@ import java.util.Collections;
 /**
  * Pulse.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.20
  */
 public interface Pulse {
 
     /**
      * Empty.
+     * @checkstyle AnonInnerLengthCheck (24 lines)
      */
     Pulse EMPTY = new Pulse() {
         @Override
         public void add(final Tick tick) {
             throw new UnsupportedOperationException("#add()");
         }
+
         @Override
         public Iterable<Tick> ticks() {
             return Collections.emptyList();
         }
+
         @Override
         public Iterable<Throwable> error() {
             return Collections.emptyList();
         }
+
         @Override
         public void error(final Iterable<Throwable> errors) {
             throw new UnsupportedOperationException("#error()");

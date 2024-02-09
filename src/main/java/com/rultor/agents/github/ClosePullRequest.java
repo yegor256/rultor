@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,8 +45,6 @@ import org.xembly.Directives;
 /**
  * Closes pull request manually, leaves comment with description.
  *
- * @author Viktor Kuchyn (kuchin.victor@gmail.com)
- * @version $Id$
  * @since 1.63
  */
 @Immutable

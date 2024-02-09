@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -40,11 +40,10 @@ import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.ws.rs.core.MediaType;
@@ -58,8 +57,6 @@ import org.xembly.Directives;
 /**
  * Marks the daemon as done.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -106,7 +103,7 @@ public final class ArchivesDaemon extends AbstractAgent {
                 "fi"
             ),
             new NullInputStream(0L),
-            new FileOutputStream(file),
+            Files.newOutputStream(file.toPath()),
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
@@ -140,7 +137,7 @@ public final class ArchivesDaemon extends AbstractAgent {
         meta.setContentEncoding(StandardCharsets.UTF_8.name());
         meta.setContentLength(file.length());
         final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);
-        this.bucket.ocket(key).write(new FileInputStream(file), meta);
+        this.bucket.ocket(key).write(Files.newInputStream(file.toPath()), meta);
         return URI.create(String.format("s3://%s/%s", this.bucket.name(), key));
     }
 

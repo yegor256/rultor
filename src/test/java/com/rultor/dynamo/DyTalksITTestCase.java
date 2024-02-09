@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -53,10 +53,10 @@ import org.xembly.Directives;
 
 /**
  * Integration case for {@link DyTalks}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
- * @since 1.0
+ *
+ * @since 1.1
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle NonStaticMethodCheck (500 lines)
  */
 final class DyTalksITTestCase {
 
@@ -69,7 +69,7 @@ final class DyTalksITTestCase {
      * Before the entire test.
      */
     @BeforeEach
-    public void before() {
+    void before() {
         Assumptions.assumeFalse(
             DyTalksITTestCase.PORT == null
             || DyTalksITTestCase.PORT.isEmpty()
@@ -81,7 +81,7 @@ final class DyTalksITTestCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void addsTalks() throws Exception {
+    void addsTalks() throws Exception {
         final Talks talks = new DyTalks(
             DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
@@ -98,7 +98,7 @@ final class DyTalksITTestCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void listsRecentTalks() throws Exception {
+    void listsRecentTalks() throws Exception {
         final Talks talks = new DyTalks(
             DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
@@ -118,7 +118,7 @@ final class DyTalksITTestCase {
      */
     @Test
     @Disabled
-    public void cachesRecentTalks() throws Exception {
+    void cachesRecentTalks() throws Exception {
         final Talks talks = new DyTalks(
             DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
@@ -148,7 +148,7 @@ final class DyTalksITTestCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void listsSiblings() throws Exception {
+    void listsSiblings() throws Exception {
         final Talks talks = new DyTalks(
             DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
@@ -173,7 +173,7 @@ final class DyTalksITTestCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void listsRecentTalksExceptPrivates() throws Exception {
+    void listsRecentTalksExceptPrivates() throws Exception {
         final Talks talks = new DyTalks(
             DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
@@ -228,6 +228,7 @@ final class DyTalksITTestCase {
 
     /**
      * Matcher for Talks.
+     * @since 1.1
      */
     private static final class TalkMatcher extends TypeSafeMatcher<Talk> {
         /**

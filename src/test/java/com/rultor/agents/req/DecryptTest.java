@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -52,8 +52,6 @@ import org.junit.jupiter.api.io.TempDir;
 /**
  * Tests for {@link Decrypt}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.37.4
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -76,7 +74,7 @@ final class DecryptTest {
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void decryptsAssets(@TempDir final Path temp) throws Exception {
+    void decryptsAssets(@TempDir final Path temp) throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
                 this.createTestProfileXML(),
@@ -84,12 +82,12 @@ final class DecryptTest {
             )
         ).commands();
         final String script = new Joined(
-            NEWLINE,
+            DecryptTest.NEWLINE,
             "set -x",
             "set -e",
             "set -o pipefail",
             new Joined(
-                NEWLINE,
+                DecryptTest.NEWLINE,
                 commands
             ).asString()
         ).asString();
@@ -137,7 +135,7 @@ final class DecryptTest {
      * @throws IOException Thrown in case of XML parsing error
      */
     @Test
-    public void testHttpProxyHandling() throws IOException {
+    void testHttpProxyHandling() throws IOException {
         MatcherAssert.assertThat(
             new Decrypt(
                 new Profile.Fixed(
@@ -159,6 +157,7 @@ final class DecryptTest {
      * Creates a profile XML for testing purposes.
      *
      * @return XML document
+     * @checkstyle AbbreviationAsWordInNameCheck (100 lines)
      */
     private XMLDocument createTestProfileXML() {
         return new XMLDocument(

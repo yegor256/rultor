@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,8 +46,7 @@ import org.mockito.Mockito;
 /**
  * Tests for {@link QnAskedBy}.
  *
- * @author Nathan Green (ngreen@inco5.com)
- * @version $Id$
+ * @since 1.1
  */
 final class QnAskedByTest {
 
@@ -56,7 +55,7 @@ final class QnAskedByTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void excludesRultorFromListOfCommanders() throws Exception {
+    void excludesRultorFromListOfCommanders() throws Exception {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         repo.collaborators().add("testuser1");
@@ -86,7 +85,7 @@ final class QnAskedByTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void includesArchitectsInListOfCommanders() throws Exception {
+    void includesArchitectsInListOfCommanders() throws Exception {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         repo.collaborators().add("testuser2");

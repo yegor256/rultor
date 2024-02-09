@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Class allowing to print the deprecation notice if and only if the
  * underlying {@link Profile} is deprecated.
- * @author Nicolas Filotto (nicolas.filotto@gmail.com)
- * @version $Id$
  * @since 1.62
  */
 public final class ProfileDeprecations {

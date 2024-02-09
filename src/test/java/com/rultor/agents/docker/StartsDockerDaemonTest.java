@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -41,8 +41,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link StartsDockerDaemon}.
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.63
  */
 final class StartsDockerDaemonTest {
@@ -52,12 +50,12 @@ final class StartsDockerDaemonTest {
      * @throws Exception In case of failure
      */
     @Test
-    public void providesPfShell() throws Exception {
+    void providesPfShell() throws Exception {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
         try (
-            final StartsDockerDaemon start =
+            StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final PfShell shell = start.shell();

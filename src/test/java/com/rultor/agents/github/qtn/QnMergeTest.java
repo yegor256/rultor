@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -57,8 +57,6 @@ import org.xembly.Xembler;
 /**
  * Tests for ${@link QnMerge}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
@@ -91,7 +89,7 @@ final class QnMergeTest {
      * @throws IOException In case of error.
      */
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         final Repo repo = new MkGithub().randomRepo();
         final MkBranches branches = (MkBranches) repo.branches();
         final String head = "head";
@@ -110,7 +108,7 @@ final class QnMergeTest {
      * @throws Exception In case of error
      */
     @Test
-    public void buildsRequest() throws Exception {
+    void buildsRequest() throws Exception {
         final String request = new Xembler(this.mergeRequest()).xml();
         MatcherAssert.assertThat(
             request,
@@ -147,7 +145,7 @@ final class QnMergeTest {
      * @throws URISyntaxException In case of URI error
      */
     @Test
-    public void stopsBecauseCiChecksFailed()
+    void stopsBecauseCiChecksFailed()
         throws IOException, URISyntaxException {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
@@ -171,7 +169,7 @@ final class QnMergeTest {
      * @throws URISyntaxException In case of URI error
      */
     @Test
-    public void continuesBecauseCiChecksSuccessful()
+    void continuesBecauseCiChecksSuccessful()
         throws IOException, URISyntaxException {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
@@ -201,35 +199,35 @@ final class QnMergeTest {
      */
     @Test
     @Disabled
-    public void stopsBecauseSystemFilesAffected()
-            throws IOException, URISyntaxException {
+    void stopsBecauseSystemFilesAffected()
+        throws IOException, URISyntaxException {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         final List<JsonObject> files = new LinkedList<>();
         files.add(Json.createObjectBuilder()
-                .add("sha", "ef36558cbd")
-                .add("filename", "README.md")
-                .add("status", "modified")
-                .build()
+            .add("sha", "ef36558cbd")
+            .add("filename", "README.md")
+            .add("status", "modified")
+            .build()
         );
         files.add(Json.createObjectBuilder()
-                .add("sha", "ef3857cad")
-                .add("filename", ".rultor.yml")
-                .add("status", "modified")
-                .build()
+            .add("sha", "ef3857cad")
+            .add("filename", ".rultor.yml")
+            .add("status", "modified")
+            .build()
         );
         this.mergeRequest();
         MatcherAssert.assertThat(
-                new Comment.Smart(this.comments.get(1)).body(),
-                Matchers.is(QnMergeTest.COMMAND)
+            new Comment.Smart(this.comments.get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
         );
         MatcherAssert.assertThat(
-                new Comment.Smart(this.comments.get(2)).body(),
-                Matchers.containsString(
-                    QnMergeTest.PHRASES.getString(
-                        "QnMerge.system-files-affected"
-                    )
+            new Comment.Smart(this.comments.get(2)).body(),
+            Matchers.containsString(
+                QnMergeTest.PHRASES.getString(
+                    "QnMerge.system-files-affected"
                 )
+            )
         );
     }
 

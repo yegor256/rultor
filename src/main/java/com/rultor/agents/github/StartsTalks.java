@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -57,8 +57,6 @@ import org.xembly.Directives;
 /**
  * Starts talk when I'm mentioned in a Github issue.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 @Immutable
@@ -161,6 +159,7 @@ public final class StartsTalks implements SuperAgent {
      * Get coordinates from JSON.
      * @param event Event
      * @return Coords
+     * @checkstyle NonStaticMethodCheck (5 lines)
      */
     private Coordinates coords(final JsonObject event) {
         return new Coordinates.Simple(

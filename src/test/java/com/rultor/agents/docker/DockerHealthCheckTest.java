@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -41,8 +41,6 @@ import org.mockito.Mockito;
 /**
  * Tests for ${@link DockerHealthCheck}.
  *
- * @author Armin Braun (me@obrown.io)
- * @version $Id$
  * @since 1.63
  */
 final class DockerHealthCheckTest {
@@ -52,7 +50,7 @@ final class DockerHealthCheckTest {
      * @throws Exception In case of error
      */
     @Test
-    public void runsCheckHostScript() throws Exception {
+    void runsCheckHostScript() throws Exception {
         final Shell shell = Mockito.mock(Shell.class);
         new DockerHealthCheck(shell).execute(Mockito.mock(Talks.class));
         Mockito.verify(shell).exec(

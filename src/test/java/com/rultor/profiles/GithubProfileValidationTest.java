@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -48,8 +48,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile} YAML validation.
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ *
+ * @since 1.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings
@@ -66,7 +66,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void acceptsEmptyYaml() throws Exception {
+    void acceptsEmptyYaml() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo("");
         new GithubProfile(repo).read();
     }
@@ -77,7 +77,7 @@ final class GithubProfileValidationTest {
      */
     @Disabled
     @Test
-    public void rejectsYamlWithoutMergeScript() throws Exception {
+    void rejectsYamlWithoutMergeScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -97,7 +97,7 @@ final class GithubProfileValidationTest {
      */
     @Disabled
     @Test
-    public void rejectsYamlWithoutDeployScript() throws Exception {
+    void rejectsYamlWithoutDeployScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -117,7 +117,7 @@ final class GithubProfileValidationTest {
      */
     @Disabled
     @Test
-    public void rejectsYamlWithoutReleaseScript() throws Exception {
+    void rejectsYamlWithoutReleaseScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -136,7 +136,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void acceptsYamlWithOnlyMerge() throws Exception {
+    void acceptsYamlWithOnlyMerge() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -145,7 +145,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -153,7 +155,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void acceptsYamlWithOnlyRelease() throws Exception {
+    void acceptsYamlWithOnlyRelease() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -162,7 +164,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -170,7 +174,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void acceptsYamlWithOnlyDeploy() throws Exception {
+    void acceptsYamlWithOnlyDeploy() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -179,7 +183,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -187,7 +193,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void acceptsYamlWithAllCommands() throws Exception {
+    void acceptsYamlWithAllCommands() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -202,7 +208,9 @@ final class GithubProfileValidationTest {
                 "  - pwd"
             ).asString()
         );
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
     }
 
     /**
@@ -210,7 +218,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void getExistAssets() throws Exception {
+    void getExistAssets() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -232,7 +240,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void rejectGetAssetWithNotExistFile() throws Exception {
+    void rejectGetAssetWithNotExistFile() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -253,7 +261,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void rejectGetAssetWithWrongRepo() throws Exception {
+    void rejectGetAssetWithWrongRepo() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -274,7 +282,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void rejectGetAssetWithNoFriendUser() throws Exception {
+    void rejectGetAssetWithNoFriendUser() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",
@@ -295,7 +303,7 @@ final class GithubProfileValidationTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void rejectGetAssetWithNoFriends() throws Exception {
+    void rejectGetAssetWithNoFriends() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
                 "\n",

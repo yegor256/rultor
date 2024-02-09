@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -42,10 +42,9 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link SiblingsRs}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.23
  */
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkSiblingsITCase {
 
     /**
@@ -57,7 +56,7 @@ final class TkSiblingsITCase {
      * Before the entire test.
      */
     @BeforeEach
-    public void before() {
+    void before() {
         Assumptions.assumeFalse(System.getProperty("takes.port").isEmpty());
         Assumptions.assumeFalse(TkSiblingsITCase.HOME == null);
     }
@@ -67,7 +66,7 @@ final class TkSiblingsITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersListOfTalks() throws Exception {
+    void rendersListOfTalks() throws Exception {
         new JdkRequest(TkSiblingsITCase.HOME).uri().path("/p/test/me").back()
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .method(Request.GET)

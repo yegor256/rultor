@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -44,8 +44,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for ${@link QnFirstOf}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.6.5
  */
 final class QnFirstOfTest {
@@ -55,7 +53,7 @@ final class QnFirstOfTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void getsFirstReq() throws Exception {
+    void getsFirstReq() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Comment comment = issue.comments().post("deploy");

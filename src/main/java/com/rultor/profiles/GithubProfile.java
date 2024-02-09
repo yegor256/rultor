@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -68,8 +68,6 @@ import org.cactoos.text.UncheckedText;
  * it is obvious that the configuration of the repository is stored
  * in Github.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle AvoidInstantiatingObjectsInLoops
@@ -345,6 +343,7 @@ final class GithubProfile implements Profile {
      *  class called ValidYaml, move this method to that class and move tests
      *  from GitHubProfileValidationTest to ValidYamlTest. Remember about
      *  removing PMD suppress below.
+     * @checkstyle NonStaticMethodCheck (5 lines)
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private List<String> validate(final String yml) {

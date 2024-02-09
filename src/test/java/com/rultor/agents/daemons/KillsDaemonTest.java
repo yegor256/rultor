@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2009-2024 Yegor Bugayenko
  * All rights reserved.
  *
@@ -40,8 +40,6 @@ import org.xembly.Directives;
 /**
  * Tests for ${@link KillsDaemon}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 final class KillsDaemonTest {
@@ -51,7 +49,7 @@ final class KillsDaemonTest {
      * @throws Exception In case of error.
      */
     @Test
-    public void ignoresFreshDaemon() throws Exception {
+    void ignoresFreshDaemon() throws Exception {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk").add("daemon")
