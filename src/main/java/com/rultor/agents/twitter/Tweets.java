@@ -30,7 +30,6 @@
 package com.rultor.agents.twitter;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Language;
@@ -108,10 +107,10 @@ public final class Tweets extends AbstractAgent {
     @SuppressWarnings("PMD.InsufficientStringBufferDeclaration")
     private static String tweet(final Repo.Smart repo, final String tag)
         throws IOException {
-        final StringBuilder text = new StringBuilder(2 * Tv.HUNDRED);
+        final StringBuilder text = new StringBuilder(200);
         if (repo.hasDescription() && !repo.description().isEmpty()) {
-            if (repo.description().length() > Tv.HUNDRED) {
-                text.append(repo.description(), 0, Tv.HUNDRED);
+            if (repo.description().length() > 100) {
+                text.append(repo.description(), 0, 100);
             } else {
                 text.append(repo.description());
             }

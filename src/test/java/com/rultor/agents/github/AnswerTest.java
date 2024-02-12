@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
@@ -79,12 +78,12 @@ final class AnswerTest {
             issue.comments().get(1)
         );
         final Answer answer = new Answer(comment);
-        for (int idx = 0; idx < Tv.TEN; ++idx) {
+        for (int idx = 0; idx < 10; ++idx) {
             answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
             new ListOf<>(issue.comments().iterate(new Date(0L))).size(),
-            Matchers.is(Tv.SIX)
+            Matchers.is(6)
         );
     }
 

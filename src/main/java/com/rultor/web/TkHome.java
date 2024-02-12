@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rultor.Toggles;
 import com.rultor.spi.Talk;
@@ -92,7 +91,7 @@ final class TkHome implements Take {
     private Directives recent() throws IOException {
         final Directives dirs = new Directives().add("recent");
         final PrettyTime pretty = new PrettyTime();
-        for (final Talk talk : new HeadOf<>(Tv.FIVE, this.talks.recent())) {
+        for (final Talk talk : new HeadOf<>(5, this.talks.recent())) {
             dirs.add("talk").set(talk.name())
                 .attr("timeago", pretty.format(talk.updated()));
             final XML xml = talk.read();

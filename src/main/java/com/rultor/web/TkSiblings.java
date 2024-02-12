@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
@@ -87,7 +86,7 @@ final class TkSiblings implements TkRegex {
         final String repo = req.matcher().group(1);
         final List<Talk> siblings = new ListOf<>(
             new HeadOf<>(
-                Tv.TWENTY,
+                20,
                 this.talks.siblings(repo, since)
             )
         );
@@ -121,7 +120,7 @@ final class TkSiblings implements TkRegex {
     private XeSource more(final String repo, final List<Talk> siblings)
         throws IOException {
         final XeSource src;
-        if (siblings.size() == Tv.TWENTY) {
+        if (siblings.size() == 20) {
             final Talk last = siblings.get(siblings.size() - 1);
             src = new XeLink(
                 "more",

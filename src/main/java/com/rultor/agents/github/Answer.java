@@ -30,7 +30,6 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Comment.Smart;
 import com.jcabi.github.Issue;
@@ -132,7 +131,7 @@ public final class Answer {
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private String msg(final boolean success, final String text) {
-        final StringBuilder msg = new StringBuilder(Tv.HUNDRED);
+        final StringBuilder msg = new StringBuilder(100);
         try {
             msg.append(
                 String.format(
@@ -142,7 +141,7 @@ public final class Answer {
                             "\\p{Space}",
                             Answer.SPACE
                         ),
-                        Tv.HUNDRED
+                        100
                     )
                 )
             );

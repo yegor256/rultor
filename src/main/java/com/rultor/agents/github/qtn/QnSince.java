@@ -30,7 +30,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -73,7 +72,7 @@ public final class QnSince implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        if (comment.number() > this.number || comment.number() < Tv.TEN) {
+        if (comment.number() > this.number || comment.number() < 10) {
             req = this.origin.understand(comment, home);
         } else {
             req = Req.EMPTY;

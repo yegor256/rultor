@@ -32,7 +32,6 @@ package com.rultor;
 import co.stateful.Sttc;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Timeable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.log.Logger;
 import com.rultor.agents.Agents;
@@ -171,7 +170,7 @@ final class Routine implements Runnable, Closeable {
      * @return Total talks processed
      * @throws IOException If fails
      */
-    @Timeable(limit = Tv.TWENTY, unit = TimeUnit.MINUTES)
+    @Timeable(limit = 20, unit = TimeUnit.MINUTES)
     private int unsafe(final List<Talk> active) throws IOException {
         final long begin = System.currentTimeMillis();
         int total = 0;

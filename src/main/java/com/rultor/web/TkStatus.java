@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
@@ -73,7 +72,7 @@ final class TkStatus implements Take {
     @Override
     public Response act(final Request req) {
         final List<Tick> ticks = new ListOf<>(this.pulse.ticks());
-        final StringBuilder msg = new StringBuilder(Tv.THOUSAND);
+        final StringBuilder msg = new StringBuilder(1_000);
         msg.append(
             Logger.format(
                 "Up for %[ms]s already\n",
@@ -87,7 +86,7 @@ final class TkStatus implements Take {
         } else {
             final long age = System.currentTimeMillis()
                 - ticks.get(ticks.size() - 1).start();
-            if (age > TimeUnit.MINUTES.toMillis((long) Tv.FIVE)) {
+            if (age > TimeUnit.MINUTES.toMillis(5L)) {
                 response = new RsWithStatus(
                     HttpURLConnection.HTTP_INTERNAL_ERROR
                 );

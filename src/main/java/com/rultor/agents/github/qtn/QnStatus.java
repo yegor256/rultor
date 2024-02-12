@@ -30,7 +30,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.Shell;
@@ -113,7 +112,7 @@ public final class QnStatus implements Question {
                                     Ssh.escape(dir)
                                 )
                             ),
-                            0, Tv.TWENTY
+                            0, 20
                         )
                     ).asString()
                 )
