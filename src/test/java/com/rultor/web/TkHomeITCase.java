@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.http.Request;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
@@ -161,7 +160,7 @@ final class TkHomeITCase {
             .binary();
         MatcherAssert.assertThat(
             ImageIO.read(new ByteArrayInputStream(data)).getWidth(),
-            Matchers.equalTo(Tv.THOUSAND)
+            Matchers.equalTo(1_000)
         );
     }
 

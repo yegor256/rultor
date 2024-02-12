@@ -31,7 +31,6 @@ package com.rultor.cached;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -113,7 +112,7 @@ public final class CdTalks implements Talks {
     }
 
     @Override
-    @Cacheable(lifetime = Tv.TWENTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = 20, unit = TimeUnit.MINUTES)
     public Iterable<Talk> recent() {
         return new Mapped<>(
             CdTalk::new,

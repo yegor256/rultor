@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.github.RepoCommits;
@@ -88,7 +87,7 @@ final class CommitsLogTest {
     void createsLongReleaseLog() throws Exception {
         final RepoCommits commits = Mockito.mock(RepoCommits.class);
         final Collection<RepoCommit> list = new LinkedList<>();
-        for (int idx = 0; idx < Tv.HUNDRED; ++idx) {
+        for (int idx = 0; idx < 100; ++idx) {
             list.add(this.commit(String.format("commit #%d", idx)));
         }
         Mockito.doReturn(list).when(commits).iterate(Mockito.any(Map.class));

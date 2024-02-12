@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Tv;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
 import java.awt.image.BufferedImage;
@@ -92,7 +91,7 @@ final class TkTicksTest {
         );
         MatcherAssert.assertThat(
             image.getWidth(),
-            Matchers.equalTo(Tv.THOUSAND)
+            Matchers.equalTo(1_000)
         );
     }
 

@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Tv;
 import com.rultor.agents.daemons.Tail;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
@@ -156,7 +155,7 @@ final class TkDaemon implements TkRegex {
     ) throws IOException {
         final PushbackReader src = new PushbackReader(
             new InputStreamReader(input, StandardCharsets.UTF_8),
-            Tv.TEN * Tv.THOUSAND
+            10_000
         );
         return ReaderInputStream.builder()
             .setCharset(StandardCharsets.UTF_8)

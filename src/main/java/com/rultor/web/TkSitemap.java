@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.daemons.Home;
@@ -77,7 +76,7 @@ final class TkSitemap implements Take {
      * @throws IOException If fails
      */
     private String xml() throws IOException {
-        final StringBuilder doc = new StringBuilder(Tv.THOUSAND).append(
+        final StringBuilder doc = new StringBuilder(1_000).append(
             "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>"
         );
         for (final Talk talk : this.talks.recent()) {
@@ -100,7 +99,7 @@ final class TkSitemap implements Take {
      */
     private static String toXML(final Talk talk, final XML xml,
         final String hash) throws IOException {
-        return new StringBuilder(Tv.HUNDRED)
+        return new StringBuilder(100)
             .append("<url><loc>")
             .append(
                 StringEscapeUtils.escapeXml11(

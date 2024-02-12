@@ -36,7 +36,6 @@ import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.QueryValve;
@@ -233,7 +232,7 @@ public final class DyTalks implements Talks {
         return new Mapped<>(
             DyTalk::new,
             new HeadOf<>(
-                Tv.TEN,
+                10,
                 this.region.table(DyTalks.TBL)
                     .frame()
                     .through(
@@ -253,7 +252,7 @@ public final class DyTalks implements Talks {
     @Override
     public Iterable<Talk> recent() {
         return new HeadOf<>(
-            Tv.FIVE,
+            5,
             new Filtered<>(
                 input -> {
                     try {
@@ -273,7 +272,7 @@ public final class DyTalks implements Talks {
                                 .withIndexName(DyTalks.IDX_ACTIVE)
                                 .withScanIndexForward(false)
                                 .withConsistentRead(false)
-                                .withLimit(Tv.FIVE)
+                                .withLimit(5)
                                 .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                         )
                         .where(
@@ -295,7 +294,7 @@ public final class DyTalks implements Talks {
                         .withIndexName(DyTalks.IDX_SIBLINGS)
                         .withScanIndexForward(false)
                         .withConsistentRead(false)
-                        .withLimit(Tv.TWENTY)
+                        .withLimit(20)
                         .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                 )
                 .where(DyTalks.ATTR_REPO, repo)

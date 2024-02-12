@@ -30,7 +30,6 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.github.RepoCommit.Smart;
@@ -137,7 +136,7 @@ final class CommitsLog {
      */
     private static String asText(final RepoCommit.Smart commit)
         throws IOException {
-        final StringBuilder line = new StringBuilder(Tv.HUNDRED);
+        final StringBuilder line = new StringBuilder(100);
         final JsonObject json = commit.json();
         line.append(" * ").append(commit.sha());
         if (!json.isNull("author")) {

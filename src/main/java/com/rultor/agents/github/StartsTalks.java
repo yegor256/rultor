@@ -30,7 +30,6 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
@@ -81,7 +80,7 @@ public final class StartsTalks implements SuperAgent {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
-            DateUtils.addMinutes(new Date(), -Tv.THREE)
+            DateUtils.addMinutes(new Date(), -3)
         ).iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();

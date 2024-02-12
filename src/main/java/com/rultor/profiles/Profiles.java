@@ -31,7 +31,6 @@ package com.rultor.profiles;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.wire.RetryCarefulWire;
@@ -149,7 +148,7 @@ public final class Profiles {
     private static String[] section(final Profile profile,
         final String... section)
         throws IOException {
-        final StringBuilder path = new StringBuilder(Tv.HUNDRED);
+        final StringBuilder path = new StringBuilder(100);
         for (final String element : section) {
             path.append(String.format("/entry[@key='%s']", element));
         }
@@ -197,7 +196,7 @@ public final class Profiles {
                 Manifests.read("Rultor-GithubToken")
             ).entry().through(
                 RetryCarefulWire.class,
-                Tv.HUNDRED
+                100
             )
         );
     }

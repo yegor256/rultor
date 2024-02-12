@@ -30,7 +30,6 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
@@ -146,7 +145,7 @@ public final class EndsDaemon extends AbstractAgent {
                         String.join(
                             System.lineSeparator(),
                             new Skipped<>(
-                                Math.max(lines.size() - Tv.SIXTY, 0),
+                                Math.max(lines.size() - 60, 0),
                                 new ListOf<>(
                                     new Mapped<>(
                                         Text::asString,
@@ -155,7 +154,7 @@ public final class EndsDaemon extends AbstractAgent {
                                 )
                             )
                         ),
-                        -Tv.HUNDRED * Tv.THOUSAND
+                        100_000
                     )
                 )
             );
@@ -193,7 +192,7 @@ public final class EndsDaemon extends AbstractAgent {
      */
     private static CharSequence stdout(final Shell shell, final String dir)
         throws IOException {
-        final int max = Tv.FOUR * Tv.MILLION;
+        final int max = 4_000_000;
         return new ShellCommand(
             shell,
             dir,

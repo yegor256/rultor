@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.github;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
@@ -81,7 +80,7 @@ final class ReleaseBinariesTest {
         );
         bin.mkdirs();
         new SecureRandom();
-        final byte[] content = SecureRandom.getSeed(Tv.HUNDRED);
+        final byte[] content = SecureRandom.getSeed(100);
         new LengthOf(new TeeInput(content, bin)).value();
         final Talk talk = ReleaseBinariesTest
             .talk(repo.issues().create("", ""), tag, dir);
