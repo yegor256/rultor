@@ -35,6 +35,7 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -59,20 +60,17 @@ public final class RegistersShell extends AbstractAgent {
     /**
      * Constructor.
      * @param profile Profile
-     * @param host Default IP address
+     * @param host Default IP address or host name
      * @param port Default Port of server
      * @param user Default Login
      * @param key Default Private SSH key
+     * @throws UnknownHostException in case of host is not resolved
      * @checkstyle ParameterNumberCheck (6 lines)
      */
     public RegistersShell(final Profile profile, final String host,
-        final int port, final String user, final String key) {
+        final int port, final String user, final String key)
+        throws UnknownHostException {
         super("/talk[daemon and not(shell)]");
-        if (host.isEmpty()) {
-            throw new IllegalArgumentException(
-                "Host is mandatory"
-            );
-        }
         if (user.isEmpty()) {
             throw new IllegalArgumentException(
                 "User name is mandatory"
@@ -83,7 +81,13 @@ public final class RegistersShell extends AbstractAgent {
                 "SSH key is mandatory"
             );
         }
-        this.shell = new PfShell(profile, host, port, user, key);
+        this.shell = new PfShell(
+            profile,
+            new SmartHost(host).ip(),
+            port,
+            user,
+            key
+        );
     }
 
     @Override
