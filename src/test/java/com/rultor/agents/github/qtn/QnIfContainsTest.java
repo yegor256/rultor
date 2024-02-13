@@ -82,4 +82,21 @@ final class QnIfContainsTest {
         );
     }
 
+    /**
+     * QnIfContains skips the content in ``.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void ignoreQuotedCommandsRequest() throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("`another version` to release");
+        new QnIfContains("version", new QnHello()).understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        ).dirs();
+        MatcherAssert.assertThat(
+            issue.comments().iterate(new Date(0L)),
+            Matchers.iterableWithSize(1)
+        );
+    }
 }
