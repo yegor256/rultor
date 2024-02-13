@@ -51,7 +51,6 @@ import org.takes.tk.TkWrap;
  * App with fallback.
  *
  * @since 1.53
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkAppFallback extends TkWrap {
 

@@ -57,8 +57,6 @@ public final class DropsTalk extends AbstractAgent {
         super("/talk[not(wire) and @later='true']");
     }
 
-    // @checkstyle ExecutableStatementCountCheck (50 lines)
-    // @checkstyle CyclomaticComplexityCheck (100 lines)
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         Logger.info(

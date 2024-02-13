@@ -58,7 +58,6 @@ import org.xembly.Directives;
  * Marks the daemon as done.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

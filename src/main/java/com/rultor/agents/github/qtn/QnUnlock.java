@@ -52,7 +52,6 @@ import org.xembly.Xembler;
  * Unlock branch.
  *
  * @since 1.53
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

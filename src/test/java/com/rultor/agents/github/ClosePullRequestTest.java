@@ -48,7 +48,6 @@ import org.xembly.Directives;
  * Tests for {@link ClosePullRequest}.
  *
  * @since 1.63
- * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 final class ClosePullRequestTest {
 

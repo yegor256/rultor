@@ -45,7 +45,6 @@ import org.junit.jupiter.api.Test;
  *
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class QnVersionTest {
 

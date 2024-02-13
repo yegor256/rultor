@@ -68,7 +68,6 @@ import org.takes.http.FtCli;
  * Command line entry.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Entry {

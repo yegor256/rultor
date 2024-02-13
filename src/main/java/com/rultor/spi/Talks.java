@@ -50,7 +50,6 @@ import org.cactoos.list.ListOf;
  * Talks in a repo.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")

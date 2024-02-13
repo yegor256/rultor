@@ -49,8 +49,6 @@ import org.xembly.Xembler;
  * daemon is older than a few days.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString

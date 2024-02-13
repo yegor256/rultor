@@ -48,7 +48,6 @@ import org.xembly.Xembler;
  *
  * @since 1.20.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class QnReferredToTest {
 

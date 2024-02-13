@@ -47,7 +47,6 @@ import org.xembly.Directives;
  * Index resource, front page of the website.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkHome implements Take {
 

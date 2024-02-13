@@ -47,7 +47,6 @@ import org.xembly.Directives;
  * Tests for ${@link CommentsTag}.
  *
  * @since 1.41.1
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class CommentsTagTest {

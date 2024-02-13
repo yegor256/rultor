@@ -56,7 +56,6 @@ import org.xembly.Directives;
  * Tests for {@link ReleaseBinaries}.
  *
  * @since 1.1
- * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 final class ReleaseBinariesTest {
 

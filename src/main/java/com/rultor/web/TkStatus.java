@@ -46,7 +46,6 @@ import org.takes.rs.RsWithStatus;
  * Status (OK or not OK).
  *
  * @since 1.52
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkStatus implements Take {
 

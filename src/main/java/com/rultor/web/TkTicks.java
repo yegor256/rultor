@@ -55,7 +55,6 @@ import org.xembly.Xembler;
  * PNG with pulse.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkTicks implements Take {
 

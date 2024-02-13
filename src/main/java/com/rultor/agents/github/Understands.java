@@ -56,7 +56,6 @@ import org.xembly.Directives;
  * Understands request.
  *
  * @since 1.3
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString
