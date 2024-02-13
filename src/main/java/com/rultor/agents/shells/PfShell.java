@@ -54,7 +54,7 @@ public final class PfShell {
     private final transient Profile profile;
 
     /**
-     * Host name.
+     * Host name or IP address.
      */
     private final transient String addr;
 
@@ -76,7 +76,7 @@ public final class PfShell {
     /**
      * Constructor.
      * @param prof Profile
-     * @param host Default IP address
+     * @param host Default IP address or Host name
      * @param port Default Port of server
      * @param login Default Login
      * @param key Default Private SSH key

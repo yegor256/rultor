@@ -46,10 +46,11 @@ import org.xembly.Directives;
  *
  * @since 1.0
  */
+@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 final class RegistersShellTest {
 
     /**
-     * RegistersShell can register a shell.
+     * RegistersShell can register a shell with hostname.
      * @throws Exception In case of error.
      */
     @Test
@@ -72,7 +73,7 @@ final class RegistersShellTest {
                     ).asString()
                 )
             ),
-            "localhost", 22, "rultor", "def-key"
+            "127.0.0.1", 22, "rultor", "def-key"
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -94,6 +95,36 @@ final class RegistersShellTest {
     }
 
     /**
+     * RegistersShell can register shell by IP.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void registerShellWithIP() {
+        final String host = "192.168.5.49";
+        final int port = 221;
+        final String key = "";
+        final String login = "john";
+        Assertions.assertDoesNotThrow(
+            () -> new RegistersShell(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            " ",
+                            "<p><entry key='ssh'>",
+                            String.format("<entry key='host'>%s</entry>", host),
+                            String.format("<entry key='port'>%d</entry>", port),
+                            String.format("<entry key='key'>%s</entry>", key),
+                            String.format("<entry key='login'>%s</entry>", login),
+                            "</entry></p>"
+                        ).asString()
+                    )
+                ),
+                host, 22, "rultor", "def-key"
+            )
+        );
+    }
+
+    /**
      * RegistersShell can handle broken profile.
      * @throws Exception In case of error.
      */
@@ -102,12 +133,11 @@ final class RegistersShellTest {
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doThrow(new Profile.ConfigException("")).when(profile).read();
         final Agent agent = new RegistersShell(
-            profile, "test-host", 1, "test-user", "test-key"
+            profile, "localhost", 1, "test-user", "test-key"
         );
         final Talk talk = new Talk.InFile();
         Assertions.assertDoesNotThrow(
             () -> agent.execute(talk)
         );
     }
-
 }
