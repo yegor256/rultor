@@ -73,12 +73,14 @@ public final class QnIfContains implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        if (comment.body().toLowerCase(Locale.ENGLISH).contains(this.pattern)) {
+        if (comment.body().toLowerCase(Locale.ENGLISH)
+            .replaceAll("`[^`]*`", "")
+            .contains(this.pattern)
+        ) {
             req = this.origin.understand(comment, home);
         } else {
             req = Req.EMPTY;
         }
         return req;
     }
-
 }
