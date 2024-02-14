@@ -54,7 +54,6 @@ import org.takes.tk.TkWrap;
  * Authenticated app.
  *
  * @since 1.53
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkAppAuth extends TkWrap {
 

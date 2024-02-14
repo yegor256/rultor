@@ -69,7 +69,6 @@ import org.cactoos.text.UncheckedText;
  * in Github.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle AvoidInstantiatingObjectsInLoops
  */
 @Immutable

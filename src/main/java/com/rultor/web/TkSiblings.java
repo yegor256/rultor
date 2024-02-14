@@ -57,7 +57,6 @@ import org.xembly.Directives;
  * Siblings.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkSiblings implements TkRegex {
 

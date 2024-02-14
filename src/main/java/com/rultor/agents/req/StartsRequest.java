@@ -58,7 +58,6 @@ import org.xembly.Directives;
  * Merges.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable

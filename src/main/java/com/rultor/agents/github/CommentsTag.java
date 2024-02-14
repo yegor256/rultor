@@ -57,7 +57,6 @@ import org.xembly.Directives;
  * Comments a new tag in Github.
  *
  * @since 1.31
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

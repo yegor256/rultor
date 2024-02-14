@@ -60,7 +60,6 @@ import org.takes.rs.xe.XeStylesheet;
  * Index resource, front page of the website.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @EqualsAndHashCode(callSuper = true)
 final class RsPage extends RsWrap {

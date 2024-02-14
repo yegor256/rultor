@@ -44,7 +44,6 @@ import org.cactoos.iterable.Mapped;
  * Cached talks.
  *
  * @since 1.51
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

@@ -52,7 +52,6 @@ import org.xembly.Directives;
  * Tests for {@link EndsDaemon}.
  *
  * @since 1.2
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class EndsDaemonITCase {
 

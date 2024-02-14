@@ -48,8 +48,6 @@ import org.mockito.Mockito;
  * Tests for ${@link CommitsLog}.
  *
  * @since 1.51
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class CommitsLogTest {
 

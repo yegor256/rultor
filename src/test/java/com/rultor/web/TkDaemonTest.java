@@ -48,7 +48,6 @@ import org.xembly.Directives;
 /**
  * Test case for {@link TkDaemon}.
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkDaemonTest {
 

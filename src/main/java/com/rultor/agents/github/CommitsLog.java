@@ -55,7 +55,6 @@ import org.cactoos.text.UncheckedText;
  * Log of commits.
  *
  * @since 1.51
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 final class CommitsLog {

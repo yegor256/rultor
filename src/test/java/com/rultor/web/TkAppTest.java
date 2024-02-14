@@ -57,7 +57,6 @@ import org.takes.rs.RsPrint;
 /**
  * Test case for {@link TkApp}.
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class TkAppTest {

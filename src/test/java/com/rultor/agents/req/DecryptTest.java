@@ -53,7 +53,6 @@ import org.junit.jupiter.api.io.TempDir;
  * Tests for {@link Decrypt}.
  *
  * @since 1.37.4
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class DecryptTest {
     /**

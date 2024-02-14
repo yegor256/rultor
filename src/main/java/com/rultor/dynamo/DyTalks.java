@@ -54,7 +54,6 @@ import org.cactoos.iterable.Mapped;
  * Talks in Dynamo.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

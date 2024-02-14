@@ -62,7 +62,6 @@ import org.xembly.Directives;
  * Integration test for ${@link StartsDaemon}.
  * @since 1.3.8
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @SuppressWarnings("PMD.ExcessiveImports")
 final class StartsDaemonITCase {
