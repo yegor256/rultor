@@ -57,7 +57,6 @@ import org.takes.rs.RsFluent;
  * Single daemon.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkDaemon implements TkRegex {
 

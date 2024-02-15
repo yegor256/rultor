@@ -53,7 +53,6 @@ import org.cactoos.list.ListOf;
  *
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

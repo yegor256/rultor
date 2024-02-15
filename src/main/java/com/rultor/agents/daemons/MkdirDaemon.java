@@ -48,7 +48,6 @@ import org.xembly.Directives;
  * Make directory for the daemon.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

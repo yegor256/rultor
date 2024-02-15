@@ -55,7 +55,6 @@ import org.xembly.Directives;
  * Integration case for {@link DyTalks}.
  *
  * @since 1.1
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle NonStaticMethodCheck (500 lines)
  */
 final class DyTalksITTestCase {

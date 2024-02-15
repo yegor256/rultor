@@ -49,7 +49,6 @@ import org.xembly.Xembler;
  *
  * @since 1.3.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class QnParametrizedTest {
 

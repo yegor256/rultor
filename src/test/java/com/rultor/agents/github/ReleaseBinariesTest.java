@@ -56,7 +56,6 @@ import org.xembly.Directives;
  * Tests for {@link ReleaseBinaries}.
  *
  * @since 1.1
- * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 final class ReleaseBinariesTest {
 
@@ -79,7 +78,6 @@ final class ReleaseBinariesTest {
             dir.getAbsolutePath(), "repo", target, name.replace("${tag}", tag)
         );
         bin.mkdirs();
-        new SecureRandom();
         final byte[] content = SecureRandom.getSeed(100);
         new LengthOf(new TeeInput(content, bin)).value();
         final Talk talk = ReleaseBinariesTest

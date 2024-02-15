@@ -42,7 +42,6 @@ import org.xembly.Directives;
  * Tests for {@link DismountDaemon}.
  *
  * @since 1.2
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiterals (500 lines)
  */
 final class DismountDaemonTest {

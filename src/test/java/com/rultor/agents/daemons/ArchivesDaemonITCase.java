@@ -50,7 +50,6 @@ import org.xembly.Directives;
  * Tests for ${@link ArchivesDaemon}.
  *
  * @since 1.23
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class ArchivesDaemonITCase {

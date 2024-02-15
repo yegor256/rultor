@@ -52,7 +52,6 @@ import org.takes.tk.TkWrap;
  * App.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class TkApp extends TkWrap {
 

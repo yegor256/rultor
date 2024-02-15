@@ -57,7 +57,6 @@ import org.xembly.Directives;
  * Tests for {@link StartsRequest}.
  *
  * @since 1.3
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})

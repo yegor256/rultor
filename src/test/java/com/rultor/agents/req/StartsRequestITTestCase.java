@@ -46,7 +46,6 @@ import org.xembly.Directives;
  * Integration tests for ${@link StartsRequest}.
  *
  * @since 1.24.1
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class StartsRequestITTestCase {

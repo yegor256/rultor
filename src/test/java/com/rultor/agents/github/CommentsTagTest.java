@@ -47,7 +47,6 @@ import org.xembly.Directives;
  * Tests for ${@link CommentsTag}.
  *
  * @since 1.41.1
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class CommentsTagTest {
@@ -170,6 +169,47 @@ final class CommentsTagTest {
      */
     @Test
     void createsLatestRelease() throws IOException {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues()
+            .create(
+                "Latest Release",
+                "This issue is created for latest release"
+            );
+        final Agent agent = new CommentsTag(
+            repo.github(),
+            new Profile.Fixed(
+                "<p>",
+                "<entry key='release'>",
+                "<entry key='pre'>",
+                "true",
+                "</entry></entry></p>"
+            )
+        );
+        final String tag = "v1.1.latest";
+        final Talk talk = CommentsTagTest.talk(issue, tag);
+        talk.modify(
+            new Directives().xpath("/talk/request/args")
+                .add("arg")
+                .attr("name", "pre")
+                .set("false")
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            "We expect latest release to be created (not pre)",
+            new Release.Smart(
+                new Releases.Smart(repo.releases()).find(tag)
+            ).prerelease(),
+            Matchers.is(false)
+        );
+    }
+
+    /**
+     * CommentsTag can create latest release if profile specify 'pre: true',
+     * but 'pre: false' is written in the comment.
+     * @throws IOException In case of error.
+     */
+    @Test
+    void createsLatestReleaseFromTalk() throws IOException {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues()
             .create(

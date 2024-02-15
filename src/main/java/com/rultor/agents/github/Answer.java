@@ -56,7 +56,6 @@ import org.xembly.Xembler;
  * Answer to post.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

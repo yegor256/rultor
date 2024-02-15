@@ -113,7 +113,6 @@ import org.cactoos.text.UncheckedText;
  * Agents.
  *
  * @since 1.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */

@@ -46,7 +46,6 @@ import org.xembly.Xembler;
  * Tests for {@link QnWithAuthor}.
  *
  * @since 1.65
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class QnWithAuthorTest {
 

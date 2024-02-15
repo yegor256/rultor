@@ -57,7 +57,6 @@ import org.cactoos.list.ListOf;
  * Routine.
  *
  * @since 1.50
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @todo #1125:30min Routine should be delegate execution to separate threads.
  *  Currently com.rultor.Routine#process() is sequentially processing all Talks
  *  and breaking out of this sequential processing to log occurring exceptions.

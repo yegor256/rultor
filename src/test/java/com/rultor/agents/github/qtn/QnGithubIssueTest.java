@@ -50,7 +50,6 @@ import org.xembly.Xembler;
  * Tests for ${@link QnGithubIssue}.
  *
  * @since 2.0
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class QnGithubIssueTest {
 

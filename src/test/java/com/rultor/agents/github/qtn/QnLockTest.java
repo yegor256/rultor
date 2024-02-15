@@ -43,7 +43,6 @@ import org.junit.jupiter.api.Test;
  * Tests for ${@link QnLock}.
  *
  * @since 1.53
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class QnLockTest {
 
