@@ -270,7 +270,10 @@ public final class Agents {
                             Manifests.read("Rultor-EC2Secret")
                         ),
                         Manifests.read("Rultor-EC2Image")
-                    )
+                    ),
+                    profile,
+                    Agents.PORT, Agents.LOGIN,
+                    Agents.priv()
                 ),
                 new RegistersShell(
                     profile,

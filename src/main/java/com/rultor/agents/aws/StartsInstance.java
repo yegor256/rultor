@@ -30,8 +30,11 @@
 package com.rultor.agents.aws;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.PfShell;
+import com.rultor.spi.Profile;
 import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -44,6 +47,7 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
+@SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
 public final class StartsInstance extends AbstractAgent {
 
     /**
@@ -57,33 +61,94 @@ public final class StartsInstance extends AbstractAgent {
     private final String tag;
 
     /**
+     * Shell in profile.
+     */
+    private final transient PfShell shell;
+
+    /**
      * Ctor.
      * @param image Instance image to run
+     * @param profile Profile
+     * @param port Default Port of server
+     * @param user Default Login
+     * @param key Default Private SSH key
+     * @checkstyle ParameterNumberCheck (6 lines)
      */
-    public StartsInstance(final AwsEc2Image image) {
-        this(image, "rultor");
+    public StartsInstance(final AwsEc2Image image, final Profile profile,
+        final int port, final String user, final String key) {
+        this(image, "rultor", profile, port, user, key);
     }
 
     /**
      * Ctor.
      * @param image Instance image to run
      * @param tag Name tag value
+     * @param profile Profile
+     * @param port Default Port of server
+     * @param user Default Login
+     * @param key Default Private SSH key
+     * @checkstyle ParameterNumberCheck (6 lines)
      */
-    public StartsInstance(final AwsEc2Image image, final String tag) {
+    public StartsInstance(final AwsEc2Image image, final String tag,
+        final Profile profile, final int port,
+        final String user, final String key) {
         super("/talk[daemon and not(shell)]");
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException(
+                "User name is mandatory"
+            );
+        }
+        if (key.isEmpty()) {
+            throw new IllegalArgumentException(
+                "SSH key is mandatory"
+            );
+        }
         this.image = image;
         this.tag = tag;
+        this.shell = new PfShell(profile, "", port, user, key);
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
+        final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final Directives dirs = new Directives();
-        final AwsEc2Instance inst = this.image.run();
-        if (!this.tag.isEmpty()) {
-            inst.tag("Name", this.tag);
+        try {
+            final String login = this.shell.login();
+            if (login.isEmpty()) {
+                throw new Profile.ConfigException(
+                    "SSH login is empty, it's a mistake"
+                );
+            }
+            final String key = this.shell.key();
+            if (key.isEmpty()) {
+                throw new Profile.ConfigException(
+                    "SSH key is empty, it's a mistake"
+                );
+            }
+            final AwsEc2Instance inst = this.image.run();
+            if (!this.tag.isEmpty()) {
+                inst.tag("Name", this.tag);
+            }
+            Logger.info(
+                this, "EC2 instance %s on %s started in %s",
+                inst.id(), inst.ipv6(),
+                xml.xpath("/talk/@name").get(0)
+            );
+            dirs.xpath("/talk").add("ec2")
+                .attr("id", inst.id());
+            dirs.xpath("/talk").add("shell")
+                .attr("id", hash)
+                .add("host").set(inst.ipv6()).up()
+                .add("port").set(Integer.toString(this.shell.port())).up()
+                .add("login").set(login).up()
+                .add("key").set(key);
+        } catch (final Profile.ConfigException ex) {
+            dirs.xpath("/talk/daemon/script").set(
+                String.format(
+                    "Failed to read profile: %s", ex.getLocalizedMessage()
+                )
+            );
         }
-        dirs.xpath("/talk").add("ec2")
-            .attr("id", inst.id());
         return dirs;
     }
 }

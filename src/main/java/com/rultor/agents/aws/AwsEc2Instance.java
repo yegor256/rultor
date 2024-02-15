@@ -33,6 +33,7 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DryRunResult;
 import com.amazonaws.services.ec2.model.DryRunSupportedRequest;
+import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
 import com.amazonaws.services.ec2.model.Tag;
 import com.jcabi.aspects.Immutable;
@@ -48,7 +49,8 @@ import lombok.ToString;
 @ToString
 @SuppressWarnings({"PMD.ShortMethodName",
     "PMD.ConstructorOnlyInitializesOrCallOtherConstructors",
-    "PMD.AvoidFieldNameMatchingMethodName"
+    "PMD.AvoidFieldNameMatchingMethodName",
+    "PMD.OnlyOneConstructorShouldDoInitialization"
 })
 public final class AwsEc2Instance {
     /**
@@ -57,9 +59,30 @@ public final class AwsEc2Instance {
     private final transient AwsEc2 api;
 
     /**
+     * AWS Instance.
+     */
+    private final Instance instance;
+
+    /**
      * AWS Instance id.
      */
     private final String id;
+
+    /**
+     * Ctor.
+     * @param api AwsEc2 api client
+     * @param inst Instance
+     */
+    public AwsEc2Instance(final AwsEc2 api, final Instance inst) {
+        if (inst == null) {
+            throw new IllegalArgumentException(
+                "Instance id is mandatory"
+            );
+        }
+        this.api = api;
+        this.instance = inst;
+        this.id = this.instance.getInstanceId();
+    }
 
     /**
      * Ctor.
@@ -74,6 +97,7 @@ public final class AwsEc2Instance {
         }
         this.api = api;
         this.id = id;
+        this.instance = new Instance().withInstanceId(id);
     }
 
     /**
@@ -82,7 +106,7 @@ public final class AwsEc2Instance {
     public void stop() {
         final DryRunSupportedRequest<StopInstancesRequest> draft = () -> {
             final StopInstancesRequest request = new StopInstancesRequest()
-                .withInstanceIds(this.id);
+                .withInstanceIds(this.instance.getInstanceId());
             return request.getDryRunRequest();
         };
         final AmazonEC2 client = this.api.aws();
@@ -125,5 +149,14 @@ public final class AwsEc2Instance {
      */
     public String id() {
         return this.id;
+    }
+
+    /**
+     * Instance Ip.
+     * @return Instance Ipv6 address
+     * @checkstyle MethodNameCheck (3 lines)
+     */
+    public String ipv6() {
+        return this.instance.getIpv6Address();
     }
 }
