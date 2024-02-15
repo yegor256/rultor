@@ -135,7 +135,7 @@ public final class CommentsTag extends AbstractAgent {
                 rels.create(tag.trim())
             );
             rel.name(CommentsTag.title(req, issue));
-            rel.prerelease(this.isPrerelease());
+            rel.prerelease(this.isPrerelease(req));
             rel.body(
                 String.format(
                     // @checkstyle LineLength (1 line)
@@ -153,17 +153,24 @@ public final class CommentsTag extends AbstractAgent {
     /**
      * Check if release is prerelease.
      * True if profile does not specify release.pre=false.
+     * @param req Comment's xml
      * @return True if prerelease, false otherwise.
      */
-    private boolean isPrerelease() {
+    private boolean isPrerelease(final XML req) {
         try {
             final boolean result;
-            final List<String> xpath = this.profile.read()
-                .xpath("/p/entry[@key='release']/entry[@key='pre']/text()");
-            if (xpath.isEmpty()) {
-                result = true;
+            final List<String> comment = req
+                .xpath("args/arg[@name='pre']/text()");
+            if (comment.isEmpty()) {
+                final List<String> xpath = this.profile.read()
+                    .xpath("/p/entry[@key='release']/entry[@key='pre']/text()");
+                if (xpath.isEmpty()) {
+                    result = true;
+                } else {
+                    result = "true".equals(xpath.get(0).trim());
+                }
             } else {
-                result = "true".equals(xpath.get(0).trim());
+                result = "true".equals(comment.get(0).trim());
             }
             return result;
         } catch (final IOException exception) {
