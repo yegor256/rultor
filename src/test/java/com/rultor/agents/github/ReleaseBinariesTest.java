@@ -78,7 +78,6 @@ final class ReleaseBinariesTest {
             dir.getAbsolutePath(), "repo", target, name.replace("${tag}", tag)
         );
         bin.mkdirs();
-        new SecureRandom();
         final byte[] content = SecureRandom.getSeed(100);
         new LengthOf(new TeeInput(content, bin)).value();
         final Talk talk = ReleaseBinariesTest
