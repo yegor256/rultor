@@ -38,6 +38,10 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Ssh;
+import com.rultor.agents.aws.AwsEc2;
+import com.rultor.agents.aws.AwsEc2Image;
+import com.rultor.agents.aws.StartsInstance;
+import com.rultor.agents.aws.StopsInstance;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.DismountDaemon;
 import com.rultor.agents.daemons.DropsDaemon;
@@ -260,6 +264,15 @@ public final class Agents {
                     new QnSafe(question)
                 ),
                 new StartsRequest(profile),
+                new StartsInstance(
+                    new AwsEc2Image(
+                        new AwsEc2(
+                            Manifests.read("Rultor-EC2Key"),
+                            Manifests.read("Rultor-EC2Secret")
+                        ),
+                        Manifests.read("Rultor-EC2Image")
+                    )
+                ),
                 new RegistersShell(
                     profile,
                     Agents.HOST, Agents.PORT, Agents.LOGIN,
@@ -290,6 +303,12 @@ public final class Agents {
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
                 new Reports(this.github),
+                new StopsInstance(
+                    new AwsEc2(
+                        Manifests.read("Rultor-EC2Key"),
+                        Manifests.read("Rultor-EC2Secret")
+                    )
+                ),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
