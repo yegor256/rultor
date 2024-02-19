@@ -156,7 +156,7 @@ public final class StartsRequest extends AbstractAgent {
                 Collections.singleton(this.asRoot()),
                 Collections.singleton(
                     IOUtils.toString(
-                        this.getClass().getResourceAsStream("_head.sh"),
+                        this.getClass().getResource("_head.sh"),
                         StandardCharsets.UTF_8
                     )
                 ),
@@ -164,7 +164,7 @@ public final class StartsRequest extends AbstractAgent {
                 this.decryptor().commands(),
                 Collections.singleton(
                     IOUtils.toString(
-                        this.getClass().getResourceAsStream(
+                        this.getClass().getResource(
                             String.format("%s.sh", type)
                         ),
                         StandardCharsets.UTF_8

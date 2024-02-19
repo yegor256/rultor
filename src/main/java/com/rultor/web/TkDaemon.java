@@ -119,7 +119,7 @@ final class TkDaemon implements TkRegex {
         throws IOException {
         final Talk talk = this.talks.get(number);
         final String head = IOUtils.toString(
-            this.getClass().getResourceAsStream("daemon/head.html"),
+            this.getClass().getResource("daemon/head.html"),
             StandardCharsets.UTF_8
         ).trim();
         return new SequenceInputStream(

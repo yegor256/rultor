@@ -99,7 +99,7 @@ final class DecryptTest {
         final String[] keys = {"secring"};
         for (final String key : keys) {
             final String gpg = IOUtils.toString(
-                this.getClass().getResourceAsStream(
+                this.getClass().getResource(
                     String.format("%s.gpg.base64", key)
                 ),
                 StandardCharsets.UTF_8

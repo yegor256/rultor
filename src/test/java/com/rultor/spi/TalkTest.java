@@ -44,10 +44,9 @@ final class TalkTest {
     /**
      * Talk can accept correct XML.
      * @throws Exception In case of error.
-     * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
      */
     @Test
-    void acceptsValidXML() throws Exception {
+    void acceptsValidXml() throws Exception {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives()

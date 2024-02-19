@@ -242,7 +242,7 @@ final class StartsRequestTest {
                     new Joined(
                         "",
                         "<p><entry key='merge'><entry key='script'>",
-                        "echo HEY</entry></entry></p>"
+                        "echo \"some('.env');\"</entry></entry></p>"
                     ).asString()
                 )
             )
