@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.log.Logger;
 import com.rultor.agents.daemons.Tail;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
@@ -98,14 +99,23 @@ final class TkDaemon implements TkRegex {
             );
         }
         final String hash = req.matcher().group(2);
-        return new RsFluent()
-            .withStatus(HttpURLConnection.HTTP_OK)
-            .withBody(this.html(number, hash))
-            .withType("text/html; charset=utf-8")
-            .withHeader(
-                "X-Rultor-Daemon",
-                String.format("%s-%s", number, hash)
+        try {
+            return new RsFluent()
+                .withStatus(HttpURLConnection.HTTP_OK)
+                .withBody(this.html(number, hash))
+                .withType("text/html; charset=utf-8")
+                .withHeader(
+                    "X-Rultor-Daemon",
+                    String.format("%s-%s", number, hash)
+                );
+        } catch (final IOException err) {
+            Logger.error(
+                this,
+                "Error during answering in talk %d to %s. %s",
+                hash, err
             );
+            throw err;
+        }
     }
 
     /**
@@ -154,7 +164,7 @@ final class TkDaemon implements TkRegex {
     ) throws IOException {
         final PushbackReader src = new PushbackReader(
             new InputStreamReader(input, StandardCharsets.UTF_8),
-            10_000
+            100_000
         );
         return ReaderInputStream.builder()
             .setCharset(StandardCharsets.UTF_8)
