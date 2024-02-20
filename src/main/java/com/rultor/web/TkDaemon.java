@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.log.Logger;
 import com.rultor.agents.daemons.Tail;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
@@ -43,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.AutoCloseInputStream;
 import org.apache.commons.io.input.ProxyReader;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.commons.text.StringEscapeUtils;
@@ -98,14 +100,23 @@ final class TkDaemon implements TkRegex {
             );
         }
         final String hash = req.matcher().group(2);
-        return new RsFluent()
-            .withStatus(HttpURLConnection.HTTP_OK)
-            .withBody(this.html(number, hash))
-            .withType("text/html; charset=utf-8")
-            .withHeader(
-                "X-Rultor-Daemon",
-                String.format("%s-%s", number, hash)
+        try {
+            return new RsFluent()
+                .withStatus(HttpURLConnection.HTTP_OK)
+                .withBody(this.html(number, hash))
+                .withType("text/html; charset=utf-8")
+                .withHeader(
+                    "X-Rultor-Daemon",
+                    String.format("%s-%s", number, hash)
+                );
+        } catch (final IOException err) {
+            Logger.error(
+                this,
+                "Error during answering in talk %d to %s. %s",
+                hash, err
             );
+            throw err;
+        }
     }
 
     /**
@@ -119,7 +130,7 @@ final class TkDaemon implements TkRegex {
         throws IOException {
         final Talk talk = this.talks.get(number);
         final String head = IOUtils.toString(
-            this.getClass().getResourceAsStream("daemon/head.html"),
+            this.getClass().getResource("daemon/head.html"),
             StandardCharsets.UTF_8
         ).trim();
         return new SequenceInputStream(
@@ -137,7 +148,10 @@ final class TkDaemon implements TkRegex {
                         StandardCharsets.UTF_8
                     ),
                     TkDaemon.escape(new Tail(talk.read(), hash).read()),
-                    this.getClass().getResourceAsStream("daemon/tail.html")
+                    AutoCloseInputStream.builder()
+                        .setInputStream(
+                            this.getClass().getResourceAsStream("daemon/tail.html")
+                        ).get()
                 )
             )
         );
@@ -154,7 +168,7 @@ final class TkDaemon implements TkRegex {
     ) throws IOException {
         final PushbackReader src = new PushbackReader(
             new InputStreamReader(input, StandardCharsets.UTF_8),
-            10_000
+            100_000
         );
         return ReaderInputStream.builder()
             .setCharset(StandardCharsets.UTF_8)

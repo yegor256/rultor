@@ -56,7 +56,7 @@ final class DockerHealthCheckTest {
         Mockito.verify(shell).exec(
             Mockito.eq(
                 IOUtils.toString(
-                    DockerHealthCheck.class.getResourceAsStream("checkhost.sh"),
+                    DockerHealthCheck.class.getResource("checkhost.sh"),
                     StandardCharsets.UTF_8
                 )
             ),

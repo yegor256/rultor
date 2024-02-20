@@ -62,7 +62,7 @@ final class TkTicks implements Take {
      * XSLT for pulse render.
      */
     private static final XSL PULSE = XSLDocument.make(
-        TkTicks.class.getResourceAsStream("pulse.xsl")
+        TkTicks.class.getResource("pulse.xsl")
     );
 
     /**

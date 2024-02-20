@@ -58,7 +58,7 @@ final class TkButton implements TkRegex {
         return new RsWithType(
             new RsWithHeaders(
                 new RsWithBody(
-                    this.getClass().getResourceAsStream(
+                    this.getClass().getResource(
                         String.format("button-%s.svg", suffix)
                     )
                 ),

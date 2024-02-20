@@ -52,7 +52,7 @@ public interface Profile {
      * Schema.
      */
     XSD SCHEMA = XSDDocument.make(
-        Talk.class.getResourceAsStream("profile.xsd")
+        Talk.class.getResource("profile.xsd")
     );
 
     /**

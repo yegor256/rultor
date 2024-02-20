@@ -280,7 +280,7 @@ public final class StartsDaemon implements Agent {
         return new ByteArrayInputStream(
             Base64.decodeBase64(
                 IOUtils.toByteArray(
-                    this.getClass().getResourceAsStream(
+                    this.getClass().getResource(
                         String.format("%s.base64", name)
                     )
                 )

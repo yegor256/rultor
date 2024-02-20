@@ -70,7 +70,7 @@ public final class DockerExec implements SuperAgent {
     public void execute(final Talks talks) throws IOException {
         new Shell.Safe(this.shell).exec(
             IOUtils.toString(
-                this.getClass().getResourceAsStream(this.script),
+                this.getClass().getResource(this.script),
                 StandardCharsets.UTF_8
             ),
             new NullInputStream(0L),
