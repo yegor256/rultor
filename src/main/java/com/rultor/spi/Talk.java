@@ -70,7 +70,7 @@ public interface Talk {
      * Schema.
      */
     XSD SCHEMA = XSDDocument.make(
-        Talk.class.getResourceAsStream("talk.xsd")
+        Talk.class.getResource("talk.xsd")
     );
 
     /**
@@ -79,12 +79,12 @@ public interface Talk {
     XSL UPGRADE = new XSLChain(
         Arrays.asList(
             XSLDocument.make(
-                Talk.class.getResourceAsStream(
+                Talk.class.getResource(
                     "upgrade/001-talks.xsl"
                 )
             ),
             XSLDocument.make(
-                Talk.class.getResourceAsStream(
+                Talk.class.getResource(
                     "upgrade/002-public-attribute.xsl"
                 )
             )

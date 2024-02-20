@@ -67,7 +67,7 @@ final class TkAppTest {
     @BeforeEach
     void resourcesAvailable() {
         Assumptions.assumeFalse(
-            TkAppTest.class.getResourceAsStream("/xsl/home.xsl") == null
+            TkAppTest.class.getResource("/xsl/home.xsl") == null
         );
     }
 

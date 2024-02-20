@@ -73,7 +73,7 @@ public final class QnStatus implements Question {
      * XSL to generate report.
      */
     private static final XSL REPORT = XSLDocument.make(
-        QnStatus.class.getResourceAsStream("status.xsl")
+        QnStatus.class.getResource("status.xsl")
     );
 
     /**

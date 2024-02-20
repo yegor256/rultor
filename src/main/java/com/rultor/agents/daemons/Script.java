@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.input.AutoCloseInputStream;
 
 /**
  * Script to run.
@@ -77,7 +78,10 @@ final class Script {
                 "cd %s && cat > %s && chmod a+x %1$s/%2$s",
                 Ssh.escape(dir), Ssh.escape(this.name)
             ),
-            this.getClass().getResourceAsStream(this.name),
+            AutoCloseInputStream.builder()
+                .setInputStream(
+                    this.getClass().getResourceAsStream(this.name)
+                ).get(),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );

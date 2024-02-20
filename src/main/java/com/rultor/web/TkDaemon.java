@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.AutoCloseInputStream;
 import org.apache.commons.io.input.ProxyReader;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.commons.text.StringEscapeUtils;
@@ -147,7 +148,10 @@ final class TkDaemon implements TkRegex {
                         StandardCharsets.UTF_8
                     ),
                     TkDaemon.escape(new Tail(talk.read(), hash).read()),
-                    this.getClass().getResourceAsStream("daemon/tail.html")
+                    AutoCloseInputStream.builder()
+                        .setInputStream(
+                            this.getClass().getResourceAsStream("daemon/tail.html")
+                        ).get()
                 )
             )
         );
