@@ -89,4 +89,31 @@ public interface Agent {
         }
     }
 
+    /**
+     * Disabled.
+     *
+     * @since 1.0
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "agent")
+    final class Disabled implements Agent {
+        /**
+         * Agent to disable.
+         */
+        private final transient Agent agent;
+
+        /**
+         * Ctor.
+         * @param agt Agent
+         */
+        public Disabled(final Agent agt) {
+            this.agent = agt;
+        }
+
+        @Override
+        public void execute(final Talk talk) throws IOException {
+            // nothing to do
+        }
+    }
 }

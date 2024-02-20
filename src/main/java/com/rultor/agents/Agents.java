@@ -263,17 +263,19 @@ public final class Agents {
                     new QnSafe(question)
                 ),
                 new StartsRequest(profile),
-                new StartsInstance(
-                    new AwsEc2Image(
-                        new AwsEc2(
-                            Manifests.read("Rultor-EC2Key"),
-                            Manifests.read("Rultor-EC2Secret")
+                new Agent.Disabled(
+                    new StartsInstance(
+                        new AwsEc2Image(
+                            new AwsEc2(
+                                Manifests.read("Rultor-EC2Key"),
+                                Manifests.read("Rultor-EC2Secret")
+                            ),
+                            Manifests.read("Rultor-EC2Image")
                         ),
-                        Manifests.read("Rultor-EC2Image")
-                    ),
-                    profile,
-                    Agents.PORT, Agents.LOGIN,
-                    Agents.priv()
+                        profile,
+                        Agents.PORT, Agents.LOGIN,
+                        Agents.priv()
+                    )
                 ),
                 new RegistersShell(
                     profile,
@@ -305,10 +307,12 @@ public final class Agents {
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
                 new Reports(this.github),
-                new StopsInstance(
-                    new AwsEc2(
-                        Manifests.read("Rultor-EC2Key"),
-                        Manifests.read("Rultor-EC2Secret")
+                new Agent.Disabled(
+                    new StopsInstance(
+                        new AwsEc2(
+                            Manifests.read("Rultor-EC2Key"),
+                            Manifests.read("Rultor-EC2Secret")
+                        )
                     )
                 ),
                 new RemovesShell(),
