@@ -49,7 +49,6 @@ import java.util.LinkedList;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.xembly.Directives;
 
@@ -57,6 +56,12 @@ import org.xembly.Directives;
  * Starts talk when I'm mentioned in a Github issue.
  *
  * @since 1.0
+ * @todo #1074:1h Current implementation can answer only for
+ *  issue and PR comments, mostly because of Issue structure
+ *  from jcabi-github (id is integer). For now mentions NOT
+ *  from issue or PR will be ignored. Can be extended if
+ *  more generic entity will be created to cover commits
+ *  and may be other types.
  */
 @Immutable
 @ToString
@@ -93,8 +98,11 @@ public final class StartsTalks implements SuperAgent {
         );
         final Collection<String> names = new LinkedList<>();
         for (final JsonObject event : events) {
-            final String reason = event.getString("reason");
-            if ("mention".equals(reason)) {
+            if ("mention".equals(event.getString("reason"))
+                && new IssueUrl(
+                    event.getJsonObject("subject").getString("url")
+                ).valid()
+            ) {
                 names.add(this.activate(talks, event));
             }
         }
@@ -122,12 +130,7 @@ public final class StartsTalks implements SuperAgent {
         throws IOException {
         final Coordinates coords = this.coords(event);
         final Issue issue = this.github.repos().get(coords).issues().get(
-            Integer.parseInt(
-                StringUtils.substringAfterLast(
-                    event.getJsonObject("subject").getString("url"),
-                    "/"
-                )
-            )
+            new IssueUrl(event.getJsonObject("subject").getString("url")).id()
         );
         final String name = String.format("%s#%d", coords, issue.number());
         if (!talks.exists(name)) {
