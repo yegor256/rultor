@@ -31,10 +31,12 @@ package com.rultor;
 
 import com.jcabi.aspects.Immutable;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Date and time in ISO 8601.
@@ -87,10 +89,10 @@ public final class Time {
      * @return Text
      */
     public String iso() {
-        return DateFormatUtils.formatUTC(
-            new Date(this.millis),
-            "yyyy-MM-dd'T'HH:mm:ss'Z'"
-        );
+        final SimpleDateFormat format =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return format.format(new Date(this.millis));
     }
 
     /**
@@ -108,7 +110,7 @@ public final class Time {
      */
     private static Date parse(final String date) {
         try {
-            return DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
                 .parse(date);
         } catch (final ParseException ex) {
             throw new IllegalStateException(ex);
