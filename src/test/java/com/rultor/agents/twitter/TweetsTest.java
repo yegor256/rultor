@@ -35,7 +35,7 @@ import com.jcabi.github.Repos;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import org.apache.commons.lang3.RandomStringUtils;
+import java.util.UUID;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.text.Joined;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ final class TweetsTest {
     void postsTweet() throws Exception {
         final Repo repo = new MkGithub().repos().create(
             new Repos.RepoCreate(
-                RandomStringUtils.randomAlphanumeric(20), false
+                UUID.randomUUID().toString().replace("-", ""), false
             )
         );
         final Twitter twitter = Mockito.mock(Twitter.class);
@@ -77,7 +77,7 @@ final class TweetsTest {
     void postsTweetWithLanguages() throws Exception {
         final Repo repo = new MkGithub().repos().create(
             new Repos.RepoCreate(
-                RandomStringUtils.randomAlphanumeric(20), false
+                UUID.randomUUID().toString().replace("-", ""), false
             )
         );
         final Twitter twitter = Mockito.mock(Twitter.class);
