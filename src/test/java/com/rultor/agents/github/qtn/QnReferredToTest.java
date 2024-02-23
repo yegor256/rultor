@@ -36,7 +36,7 @@ import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Req;
 import java.net.URI;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -129,12 +129,13 @@ final class QnReferredToTest {
         MatcherAssert.assertThat(
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString(
-                StringUtils.join(
+                new Joined(
+                    "",
                     "I see you're talking about me, but I don't",
                     " understand it. If you want to say something to me",
                     " directly, start a message with @",
                     login
-                )
+                ).asString()
             )
         );
     }

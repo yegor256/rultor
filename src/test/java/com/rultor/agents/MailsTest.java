@@ -37,7 +37,7 @@ import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -107,17 +107,18 @@ final class MailsTest {
      * Profile for test.
      * @return Profile
      */
-    private Profile.Fixed profile() {
+    private Profile.Fixed profile() throws Exception {
         return new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                new Joined(
+                    "",
                     "<p><entry key='release'>",
                     "<entry key='email'>",
                     "<item>test1@localhost</item>",
                     "<item>test2@localhost</item>",
                     "</entry>",
                     "</entry></p>"
-                )
+                ).asString()
             )
         );
     }

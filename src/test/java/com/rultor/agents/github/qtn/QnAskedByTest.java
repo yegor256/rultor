@@ -37,7 +37,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -99,13 +99,13 @@ final class QnAskedByTest {
         final QnAskedBy qab = new QnAskedBy(
             new Profile.Fixed(
                 new XMLDocument(
-                    String.format(
-                        StringUtils.join(
-                            "<p><entry key='architect'><item>%s</item>",
-                            "<item>fooo</item></entry></p>"
-                        ),
-                        repo.github().users().self().login()
-                    )
+                    new Joined(
+                        "",
+                        "<p><entry key='architect'><item>",
+                        repo.github().users().self().login(),
+                        "</item>",
+                        "<item>fooo</item></entry></p>"
+                    ).asString()
                 )
             ),
             String.format(

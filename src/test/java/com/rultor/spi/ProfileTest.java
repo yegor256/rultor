@@ -31,7 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.xml.XMLDocument;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -53,13 +53,14 @@ final class ProfileTest {
         MatcherAssert.assertThat(
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new Joined(
+                        "",
                         "<p><entry key='deploy'>",
                         "<entry key='script'>this is a plain text</entry>",
                         "<entry key='&gt;'><item>hello</item></entry>",
                         "<entry key='abc'><entry key='a'>b</entry></entry>",
                         "</entry></p>"
-                    )
+                    ).asString()
                 )
             ).read(),
             XhtmlMatchers.hasXPaths(
@@ -79,10 +80,11 @@ final class ProfileTest {
             IllegalArgumentException.class,
             () -> new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new Joined(
+                        "",
                         "<p><entry key='x'><entry key='test'>a</entry>",
                         "<item>b</item></entry></p>"
-                    )
+                    ).asString()
                 )
             )
         );
