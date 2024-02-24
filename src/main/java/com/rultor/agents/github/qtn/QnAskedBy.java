@@ -44,9 +44,9 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
+import org.cactoos.text.Joined;
 
 /**
  * Question asked by one of them.
@@ -126,16 +126,16 @@ public final class QnAskedBy implements Question {
      */
     private String commandersAsDelimitedList(final Collection<String> logins,
         final String excluded) {
-        return StringUtils.join(
+        return new Joined(
+            ", ",
             new Mapped<>(
                 input -> String.format("@%s", input),
                 new Filtered<>(
                     login -> !excluded.equals(login),
                     logins
                 )
-            ),
-            ", "
-        );
+            )
+        ).toString();
     }
 
     /**

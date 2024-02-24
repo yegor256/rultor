@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.cactoos.Text;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
@@ -115,9 +114,8 @@ public final class EndsDaemon extends AbstractAgent {
         final String highlights = String.join(
             "\n",
             new Mapped<>(
-                s -> StringUtils.removeStart(
-                    s.asString(),
-                    EndsDaemon.HIGHLIGHTS_PREFIX
+                s -> s.asString().substring(
+                    EndsDaemon.HIGHLIGHTS_PREFIX.length()
                 ),
                 new Filtered<>(
                     input -> input.asString().startsWith(
@@ -137,21 +135,18 @@ public final class EndsDaemon extends AbstractAgent {
             .add("tail")
             .set(
                 Xembler.escape(
-                    StringUtils.substring(
-                        String.join(
-                            System.lineSeparator(),
-                            new Skipped<>(
-                                Math.max(lines.size() - 60, 0),
-                                new ListOf<>(
-                                    new Mapped<>(
-                                        Text::asString,
-                                        lines
-                                    )
+                    String.join(
+                        System.lineSeparator(),
+                        new Skipped<>(
+                            Math.max(lines.size() - 60, 0),
+                            new ListOf<>(
+                                new Mapped<>(
+                                    Text::asString,
+                                    lines
                                 )
                             )
-                        ),
-                        100_000
-                    )
+                        )
+                    ).substring(100_000)
                 )
             );
     }

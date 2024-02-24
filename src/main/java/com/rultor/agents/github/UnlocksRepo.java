@@ -41,7 +41,7 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 
 /**
  * Unlocks repo.
@@ -56,10 +56,11 @@ public final class UnlocksRepo implements SuperAgent {
     /**
      * Which talks should be unlocked.
      */
-    private static final String XPATH = StringUtils.join(
+    private static final String XPATH = new Joined(
+        "",
         "/talk[not(request) and not(daemon) and not(shell)",
         " and wire/github-repo and wire/github-issue]"
-    );
+    ).toString();
 
     /**
      * Locks.
