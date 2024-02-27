@@ -90,21 +90,35 @@ public final class StartsTalks implements SuperAgent {
         final Request req = this.github.entry()
             .uri().path("/notifications").back();
         final Iterable<JsonObject> events = new RtPagination<>(
-            req.uri().queryParam("participating", "true")
+            req.uri()
+                .queryParam("participating", "true")
                 .queryParam("since", since)
                 .queryParam("all", Boolean.toString(true))
                 .back(),
             RtPagination.COPYING
         );
         final Collection<String> names = new LinkedList<>();
+        int skipped = 0;
         for (final JsonObject event : events) {
-            if ("mention".equals(event.getString("reason"))
-                && new IssueUrl(
-                    event.getJsonObject("subject").getString("url")
-                ).valid()
-            ) {
-                names.add(this.activate(talks, event));
+            final String url = event.getJsonObject("subject").getString("url");
+            final String reason = event.getString("reason");
+            if (!"mention".equals(reason)) {
+                ++skipped;
+                Logger.info(
+                    this, "Skipped, since not interesting reason '%s' in %s",
+                    reason, url
+                );
+                continue;
             }
+            if (!new IssueUrl(url).valid()) {
+                ++skipped;
+                Logger.info(
+                    this, "Skipped, since not valid URL at %s",
+                    reason, url
+                );
+                continue;
+            }
+            names.add(this.activate(talks, event));
         }
         req.uri()
             .queryParam("last_read_at", since).back()
@@ -114,8 +128,8 @@ public final class StartsTalks implements SuperAgent {
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_RESET);
         Logger.info(
-            this, "%d new notification(s): %[list]s",
-            names.size(), names
+            this, "%d new notification(s) since %s (%d skipped): %[list]s",
+            names.size(), since, skipped, names
         );
     }
 
