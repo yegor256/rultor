@@ -263,7 +263,7 @@ public final class Agents {
                     new QnSafe(question)
                 ),
                 new StartsRequest(profile),
-                new Agent.Disabled(
+                new Agent.Quiet(
                     new StartsInstance(
                         new AwsEc2Image(
                             new AwsEc2(
@@ -278,8 +278,7 @@ public final class Agents {
                         Agents.PORT,
                         "ubuntu",
                         Agents.priv()
-                    ),
-                    false
+                    )
                 ),
                 new RegistersShell(
                     profile,
@@ -311,14 +310,13 @@ public final class Agents {
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
                 new Reports(this.github),
-                new Agent.Disabled(
+                new Agent.Quiet(
                     new StopsInstance(
                         new AwsEc2(
                             Manifests.read("Rultor-EC2Key"),
                             Manifests.read("Rultor-EC2Secret")
                         )
-                    ),
-                    false
+                    )
                 ),
                 new RemovesShell(),
                 new ArchivesDaemon(

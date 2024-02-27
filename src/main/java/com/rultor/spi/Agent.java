@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.Array;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
@@ -144,37 +145,26 @@ public interface Agent {
     @EqualsAndHashCode(of = "agent")
     final class Quiet implements Agent {
         /**
-         * Agent to disable.
+         * Agent to defend.
          */
         private final transient Agent agent;
 
         /**
-         * Disable it?
-         */
-        private final transient boolean disable;
-
-        /**
          * Ctor.
          * @param agt Agent
          */
-        public Disabled(final Agent agt) {
-            this(agt, true);
-        }
-
-        /**
-         * Ctor.
-         * @param agt Agent
-         * @param dsbl Disable it?
-         */
-        public Disabled(final Agent agt, final boolean dsbl) {
+        public Quiet(final Agent agt) {
             this.agent = agt;
-            this.disable = dsbl;
         }
 
         @Override
+        @SuppressWarnings("PMD.AvoidCatchingGenericException")
         public void execute(final Talk talk) throws IOException {
-            if (!this.disable) {
+            try {
                 this.agent.execute(talk);
+            // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final Exception ex) {
+                Logger.error(this, "%[exception]s", ex);
             }
         }
     }
