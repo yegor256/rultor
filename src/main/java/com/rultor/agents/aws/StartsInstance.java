@@ -32,6 +32,7 @@ package com.rultor.agents.aws;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
@@ -175,7 +176,7 @@ public final class StartsInstance extends AbstractAgent {
         this.api.aws().createTags(
             new CreateTagsRequest()
                 .withResources(iid)
-                .withTags(new Tag().withKey("name").withValue(talk))
+                .withTags(new Tag().withKey("Name").withValue(talk))
         );
         while (true) {
             final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
@@ -184,12 +185,19 @@ public final class StartsInstance extends AbstractAgent {
                     .withInstanceIds(iid)
             );
             final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
-            Logger.info(this, "AWS instance %s state: %s", instance, state.getName());
+            Logger.info(this, "AWS instance %s state: %s", iid, state.getName());
             if ("running".equals(state.getName())) {
                 break;
             }
         }
-        Logger.info(this, "AWS instance %s launched and running", iid);
-        return instance;
+        final Instance ready = this.api.aws().describeInstances(
+            new DescribeInstancesRequest()
+                .withInstanceIds(iid)
+        ).getReservations().get(0).getInstances().get(0);
+        Logger.info(
+            this, "AWS instance %s launched and running at %s",
+            ready.getInstanceId(), ready.getPublicIpAddress()
+        );
+        return ready;
     }
 }
