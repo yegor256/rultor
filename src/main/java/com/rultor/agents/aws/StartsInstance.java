@@ -45,6 +45,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -188,6 +189,12 @@ public final class StartsInstance extends AbstractAgent {
             Logger.info(this, "AWS instance %s state: %s", iid, state.getName());
             if ("running".equals(state.getName())) {
                 break;
+            }
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(4L));
+            } catch (final InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException(ex);
             }
         }
         final Instance ready = this.api.aws().describeInstances(
