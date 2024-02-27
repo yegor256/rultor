@@ -30,6 +30,7 @@
 package com.rultor.agents.aws;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import java.io.IOException;
@@ -67,6 +68,7 @@ public final class StopsInstance extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String inst = xml.xpath("/talk/ec2/@id").get(0);
         new AwsEc2Instance(this.api, inst).stop();
+        Logger.info(this, "AWS instance %s stopped", inst);
         return new Directives().xpath("/talk/ec2").strict(1).remove();
     }
 }

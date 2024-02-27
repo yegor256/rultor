@@ -33,6 +33,7 @@ import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import lombok.ToString;
 
 /**
@@ -103,9 +104,8 @@ public final class AwsEc2Image {
             .withMinCount(1);
         final RunInstancesResult response =
             this.api.aws().runInstances(request);
-        return new AwsEc2Instance(
-            this.api,
-            response.getReservation().getInstances().get(0).getInstanceId()
-        );
+        final String iid = response.getReservation().getInstances().get(0).getInstanceId();
+        Logger.info(this, "AWS instance %s launched", iid);
+        return new AwsEc2Instance(this.api, iid);
     }
 }
