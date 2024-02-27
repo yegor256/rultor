@@ -122,7 +122,7 @@ public final class AwsEc2Instance {
         final StopInstancesRequest request = new StopInstancesRequest()
             .withInstanceIds(this.id);
         client.stopInstances(request);
-        Logger.info("Successfully stop instance %s", this.id);
+        Logger.info("Successfully stopped instance %s", this.id);
     }
 
     /**

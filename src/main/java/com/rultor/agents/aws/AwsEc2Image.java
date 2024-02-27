@@ -61,35 +61,39 @@ public final class AwsEc2Image {
     private final transient InstanceType type;
 
     /**
-     * Ctor.
-     * @param api AwsEc2 api client
-     * @param image Ec2 instance ami_id
+     * EC2 security group.
      */
-    public AwsEc2Image(final AwsEc2 api, final String image) {
-        this(api, image, "t2.nano");
-    }
+    private final String sgroup;
 
     /**
      * Ctor.
      * @param api AwsEc2 api client
      * @param image Ec2 instance ami_id
      * @param type Instance type
+     * @param grp Security group
+     * @checkstyle ParameterNumberCheck (5 lines)
      */
     public AwsEc2Image(final AwsEc2 api, final String image,
-        final String type) {
+        final String type, final String grp) {
+        this.api = api;
         if (image.isEmpty()) {
             throw new IllegalArgumentException(
                 "Machine image id is mandatory"
             );
         }
+        this.image = image;
         if (type.isEmpty()) {
             throw new IllegalArgumentException(
                 "Machine type is mandatory"
             );
         }
-        this.api = api;
-        this.image = image;
         this.type = InstanceType.fromValue(type);
+        if (grp.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Security group is mandatory"
+            );
+        }
+        this.sgroup = grp;
     }
 
     /**
@@ -98,6 +102,7 @@ public final class AwsEc2Image {
      */
     public AwsEc2Instance run() {
         final RunInstancesRequest request = new RunInstancesRequest()
+            .withSecurityGroups(this.sgroup)
             .withImageId(this.image)
             .withInstanceType(this.type)
             .withMaxCount(1)
