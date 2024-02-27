@@ -112,10 +112,7 @@ public final class StartsTalks implements SuperAgent {
             }
             if (!new IssueUrl(url).valid()) {
                 ++skipped;
-                Logger.info(
-                    this, "Skipped, since not valid URL at %s",
-                    reason, url
-                );
+                Logger.info(this, "Skipped, since not valid URL at %s", url);
                 continue;
             }
             names.add(this.activate(talks, event));
@@ -144,7 +141,7 @@ public final class StartsTalks implements SuperAgent {
         throws IOException {
         final Coordinates coords = this.coords(event);
         final Issue issue = this.github.repos().get(coords).issues().get(
-            new IssueUrl(event.getJsonObject("subject").getString("url")).id()
+            new IssueUrl(event.getJsonObject("subject").getString("url")).uid()
         );
         final String name = String.format("%s#%d", coords, issue.number());
         if (!talks.exists(name)) {

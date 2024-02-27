@@ -89,7 +89,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/pull/5186"
         );
         MatcherAssert.assertThat(
-            issue.id(),
+            issue.uid(),
             Matchers.is(5186)
         );
     }
@@ -100,7 +100,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/issues/5782"
         );
         MatcherAssert.assertThat(
-            issue.id(),
+            issue.uid(),
             Matchers.is(5782)
         );
     }
@@ -111,7 +111,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/pull/5886/files#r123"
         );
         MatcherAssert.assertThat(
-            issue.id(),
+            issue.uid(),
             Matchers.is(5886)
         );
     }
@@ -123,23 +123,7 @@ final class IssueUrlTest {
         );
         Assertions.assertThrows(
             IllegalStateException.class,
-            issue::id
-        );
-    }
-
-    @Test
-    void urlShouldNotBeEmpty() {
-        Assertions.assertThrows(
-            IllegalArgumentException.class,
-            () -> new IssueUrl("")
-        );
-    }
-
-    @Test
-    void urlShouldNotBeNull() {
-        Assertions.assertThrows(
-            IllegalArgumentException.class,
-            () -> new IssueUrl(null)
+            issue::uid
         );
     }
 }

@@ -43,14 +43,13 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "url")
-@SuppressWarnings("PMD.ConstructorShouldDoInitialization")
 final class IssueUrl {
 
     /**
-     * Pattern for issue Url.
+     * Pattern for issue URL.
      */
-    private final Pattern correct =
-        Pattern.compile(".*/(?:issues|pull)/(\\d+)(?:/|$).*");
+    private static final Pattern CORRECT =
+        Pattern.compile("https://api.github.com/repos/[^/]+/[^/]+/(?:issues|pull)/(\\d+).*");
 
     /**
      * Url.
@@ -61,11 +60,7 @@ final class IssueUrl {
      * Ctor.
      * @param url Issue url.
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     IssueUrl(final String url) {
-        if (url == null || url.isEmpty()) {
-            throw new IllegalArgumentException("URL should not be empty");
-        }
         this.url = url;
     }
 
@@ -74,14 +69,13 @@ final class IssueUrl {
      * @return Issue id
      * @checkstyle MethodNameCheck (10 lines)
      */
-    @SuppressWarnings("PMD.ShortMethodName")
-    public int id() {
-        final Matcher matcher = this.correct.matcher(this.url);
+    public int uid() {
+        final Matcher matcher = IssueUrl.CORRECT.matcher(this.url);
         if (matcher.matches()) {
             return Integer.parseInt(matcher.group(1));
         }
         throw new IllegalStateException(
-            String.format("Url %s is not valid issue url", this.url)
+            String.format("URL %s is not valid issue url", this.url)
         );
     }
 
@@ -90,6 +84,11 @@ final class IssueUrl {
      * @return True if valid
      */
     public boolean valid() {
-        return this.correct.matcher(this.url).matches();
+        if (this.url == null || this.url.isEmpty()) {
+            throw new IllegalArgumentException(
+                "URL should not be empty"
+            );
+        }
+        return IssueUrl.CORRECT.matcher(this.url).matches();
     }
 }
