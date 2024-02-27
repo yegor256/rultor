@@ -179,7 +179,9 @@ public final class StartsInstance extends AbstractAgent {
         );
         while (true) {
             final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
-                new DescribeInstanceStatusRequest().withInstanceIds(iid)
+                new DescribeInstanceStatusRequest()
+                    .withIncludeAllInstances(true)
+                    .withInstanceIds(iid)
             );
             final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
             Logger.info(this, "AWS instance %s state: %s", state.getName());
