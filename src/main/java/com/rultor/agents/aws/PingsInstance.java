@@ -64,20 +64,23 @@ public final class PingsInstance extends AbstractAgent {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
+        final String instance = xml.xpath("/talk/ec2/@id").get(0);
+        final String host = xml.xpath("/talk/shell/host/text()").get(0);
         final Directives dirs = new Directives();
         int attempt = 0;
         while (true) {
             try {
                 new Shell.Empty(new Shell.Safe(shell)).exec("whoami");
+                Logger.warn(
+                    this, "AWS instance %s is alive at %s",
+                    instance, host
+                );
                 break;
             // @checkstyle IllegalCatchCheck (1 line)
             } catch (final Exception ex) {
                 Logger.warn(
                     this, "Failed to ping AWS instance %s at %s (attempt no.%d): %s",
-                    xml.xpath("/talk/ec2/@id").get(0),
-                    xml.xpath("/talk/shell/host/text()").get(0),
-                    attempt,
-                    ex.getMessage()
+                    instance, host, attempt, ex.getMessage()
                 );
                 ++attempt;
                 if (attempt > 5) {
