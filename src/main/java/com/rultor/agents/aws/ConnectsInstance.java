@@ -102,7 +102,7 @@ public final class ConnectsInstance extends AbstractAgent {
         final Directives dirs = new Directives();
         dirs.xpath("/talk").add("shell")
             .attr("id", xml.xpath("/talk/daemon/@id").get(0))
-            .add("host").set(ready.getPublicDnsName()).up()
+            .add("host").set(ready.getPublicIpAddress()).up()
             .add("port").set(Integer.toString(this.shell.port())).up()
             .add("login").set(this.shell.login()).up()
             .add("key").set(this.shell.key());

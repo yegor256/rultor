@@ -72,8 +72,8 @@ public final class PingsInstance extends AbstractAgent {
             try {
                 new Shell.Empty(new Shell.Safe(shell)).exec("whoami");
                 Logger.warn(
-                    this, "AWS instance %s is alive at %s",
-                    instance, host
+                    this, "AWS instance %s is alive at %s for %s",
+                    instance, host, xml.xpath("/talk/@name").get(0)
                 );
                 break;
             // @checkstyle IllegalCatchCheck (1 line)
