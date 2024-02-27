@@ -272,7 +272,8 @@ public final class Agents {
                             ),
                             Manifests.read("Rultor-EC2Image"),
                             Manifests.read("Rultor-EC2Type"),
-                            Manifests.read("Rultor-EC2Group")
+                            Manifests.read("Rultor-EC2Group"),
+                            Manifests.read("Rultor-EC2Subnet")
                         ),
                         profile,
                         Agents.PORT,

@@ -20,4 +20,5 @@ Rultor-EC2Secret: none
 Rultor-EC2Image: none
 Rultor-EC2Type: t3.large
 Rultor-EC2Group: none
+Rultor-EC2Subnet: none
 

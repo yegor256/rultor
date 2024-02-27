@@ -66,15 +66,21 @@ public final class AwsEc2Image {
     private final String sgroup;
 
     /**
+     * EC2 subnet.
+     */
+    private final String subnet;
+
+    /**
      * Ctor.
      * @param api AwsEc2 api client
      * @param image Ec2 instance ami_id
      * @param type Instance type
      * @param grp Security group
+     * @param net Subnet
      * @checkstyle ParameterNumberCheck (5 lines)
      */
     public AwsEc2Image(final AwsEc2 api, final String image,
-        final String type, final String grp) {
+        final String type, final String grp, final String net) {
         this.api = api;
         if (image.isEmpty()) {
             throw new IllegalArgumentException(
@@ -94,6 +100,12 @@ public final class AwsEc2Image {
             );
         }
         this.sgroup = grp;
+        if (net.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Subnet is mandatory"
+            );
+        }
+        this.subnet = net;
     }
 
     /**
@@ -103,6 +115,7 @@ public final class AwsEc2Image {
     public AwsEc2Instance run() {
         final RunInstancesRequest request = new RunInstancesRequest()
             .withSecurityGroupIds(this.sgroup)
+            .withSubnetId(this.subnet)
             .withImageId(this.image)
             .withInstanceType(this.type)
             .withMaxCount(1)
