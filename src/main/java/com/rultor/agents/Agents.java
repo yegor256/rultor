@@ -39,6 +39,7 @@ import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Ssh;
 import com.rultor.agents.aws.AwsEc2;
+import com.rultor.agents.aws.ConnectsInstance;
 import com.rultor.agents.aws.KillsInstance;
 import com.rultor.agents.aws.PingsInstance;
 import com.rultor.agents.aws.StartsInstance;
@@ -275,19 +276,24 @@ public final class Agents {
                     new Agent.Disabled(
                         new StartsInstance(
                             aws,
-                            new PfShell(
-                                profile,
-                                "none",
-                                Agents.PORT,
-                                "ubuntu",
-                                Agents.priv()
-                            ),
                             Manifests.read("Rultor-EC2Image"),
                             Manifests.read("Rultor-EC2Type"),
                             Manifests.read("Rultor-EC2Group"),
                             Manifests.read("Rultor-EC2Subnet")
                         ),
                         false
+                    )
+                ),
+                new Agent.Quiet(
+                    new ConnectsInstance(
+                        aws,
+                        new PfShell(
+                            profile,
+                            "none",
+                            Agents.PORT,
+                            "ubuntu",
+                            Agents.priv()
+                        )
                     )
                 ),
                 new RegistersShell(
