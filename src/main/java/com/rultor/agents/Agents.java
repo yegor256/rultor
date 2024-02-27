@@ -39,6 +39,8 @@ import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Ssh;
 import com.rultor.agents.aws.AwsEc2;
+import com.rultor.agents.aws.KillsInstance;
+import com.rultor.agents.aws.PingsInstance;
 import com.rultor.agents.aws.StartsInstance;
 import com.rultor.agents.aws.StopsInstance;
 import com.rultor.agents.daemons.ArchivesDaemon;
@@ -255,6 +257,10 @@ public final class Agents {
                 )
             )
         );
+        final AwsEc2 aws = new AwsEc2(
+            Manifests.read("Rultor-EC2Key"),
+            Manifests.read("Rultor-EC2Secret")
+        );
         return new VerboseAgent(
             new Agent.Iterative(
                 new SanitizesDaemon(),
@@ -268,10 +274,7 @@ public final class Agents {
                 new Agent.Quiet(
                     new Agent.Disabled(
                         new StartsInstance(
-                            new AwsEc2(
-                                Manifests.read("Rultor-EC2Key"),
-                                Manifests.read("Rultor-EC2Secret")
-                            ),
+                            aws,
                             new PfShell(
                                 profile,
                                 "none",
@@ -317,14 +320,9 @@ public final class Agents {
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
                 new Reports(this.github),
-                new Agent.Quiet(
-                    new StopsInstance(
-                        new AwsEc2(
-                            Manifests.read("Rultor-EC2Key"),
-                            Manifests.read("Rultor-EC2Secret")
-                        )
-                    )
-                ),
+                new Agent.Quiet(new StopsInstance(aws)),
+                new Agent.Quiet(new PingsInstance()),
+                new Agent.Quiet(new KillsInstance(aws, TimeUnit.HOURS.toMinutes(2L))),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(

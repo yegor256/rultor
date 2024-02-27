@@ -45,7 +45,6 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -190,7 +189,7 @@ public final class StartsInstance extends AbstractAgent {
             if ("running".equals(state.getName())) {
                 break;
             }
-            StartsInstance.sleep(5L);
+            new Sleep(5L).now();
         }
         final Instance ready = this.api.aws().describeInstances(
             new DescribeInstancesRequest()
@@ -200,20 +199,7 @@ public final class StartsInstance extends AbstractAgent {
             this, "AWS instance %s launched and running at %s",
             ready.getInstanceId(), ready.getPublicIpAddress()
         );
-        StartsInstance.sleep(30L);
+        new Sleep(60L).now();
         return ready;
-    }
-
-    /**
-     * Sleep for a while.
-     * @param seconds Seconds
-     */
-    private static void sleep(final long seconds) {
-        try {
-            Thread.sleep(TimeUnit.SECONDS.toMillis(seconds));
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(ex);
-        }
     }
 }
