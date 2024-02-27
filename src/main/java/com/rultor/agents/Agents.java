@@ -266,22 +266,25 @@ public final class Agents {
                 ),
                 new StartsRequest(profile),
                 new Agent.Quiet(
-                    new StartsInstance(
-                        new AwsEc2(
-                            Manifests.read("Rultor-EC2Key"),
-                            Manifests.read("Rultor-EC2Secret")
+                    new Agent.Disabled(
+                        new StartsInstance(
+                            new AwsEc2(
+                                Manifests.read("Rultor-EC2Key"),
+                                Manifests.read("Rultor-EC2Secret")
+                            ),
+                            new PfShell(
+                                profile,
+                                "none",
+                                Agents.PORT,
+                                "ubuntu",
+                                Agents.priv()
+                            ),
+                            Manifests.read("Rultor-EC2Image"),
+                            Manifests.read("Rultor-EC2Type"),
+                            Manifests.read("Rultor-EC2Group"),
+                            Manifests.read("Rultor-EC2Subnet")
                         ),
-                        new PfShell(
-                            profile,
-                            "none",
-                            Agents.PORT,
-                            "ubuntu",
-                            Agents.priv()
-                        ),
-                        Manifests.read("Rultor-EC2Image"),
-                        Manifests.read("Rultor-EC2Type"),
-                        Manifests.read("Rultor-EC2Group"),
-                        Manifests.read("Rultor-EC2Subnet")
+                        false
                     )
                 ),
                 new RegistersShell(

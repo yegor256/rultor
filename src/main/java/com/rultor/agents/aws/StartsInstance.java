@@ -30,7 +30,10 @@
 package com.rultor.agents.aws;
 
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.Tag;
@@ -167,14 +170,23 @@ public final class StartsInstance extends AbstractAgent {
         final RunInstancesResult response =
             this.api.aws().runInstances(request);
         final Instance instance = response.getReservation().getInstances().get(0);
-        final Tag awstag = new Tag()
-            .withKey("name")
-            .withValue("rultor");
-        final CreateTagsRequest req = new CreateTagsRequest()
-            .withResources(instance.getInstanceId())
-            .withTags(awstag);
-        this.api.aws().createTags(req);
-        Logger.info(this, "AWS instance %s launched", instance.getInstanceId());
+        final String iid = instance.getInstanceId();
+        this.api.aws().createTags(
+            new CreateTagsRequest()
+                .withResources(iid)
+                .withTags(new Tag().withKey("name").withValue("rultor"))
+        );
+        while (true) {
+            final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
+                new DescribeInstanceStatusRequest().withInstanceIds(iid)
+            );
+            final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
+            Logger.info(this, "AWS instance %s state: %s", state.getName());
+            if ("running".equals(state.getName())) {
+                break;
+            }
+        }
+        Logger.info(this, "AWS instance %s launched and running", iid);
         return instance;
     }
 }
