@@ -165,8 +165,8 @@ public final class StartsInstance extends AbstractAgent {
             .withMinCount(1);
         Logger.info(
             this,
-            "Starting a new AWS instance, image=%s, type=%s, group=%s, subnet=%s ...",
-            this.image, this.type, this.sgroup, this.subnet
+            "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
+            talk, this.image, this.type, this.sgroup, this.subnet
         );
         final RunInstancesResult response =
             this.api.aws().runInstances(request);
