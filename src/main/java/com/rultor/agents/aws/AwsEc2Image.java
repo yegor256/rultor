@@ -121,8 +121,9 @@ public final class AwsEc2Image {
             .withMaxCount(1)
             .withMinCount(1);
         Logger.info(
-            this, "Starting a new AWS instance, image=%s, type=%s, group=%s ...",
-            this.image, this.type, this.sgroup
+            this,
+            "Starting a new AWS instance, image=%s, type=%s, group=%s, subnet=%s ...",
+            this.image, this.type, this.sgroup, this.subnet
         );
         final RunInstancesResult response =
             this.api.aws().runInstances(request);

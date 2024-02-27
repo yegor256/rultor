@@ -80,4 +80,32 @@ public interface SuperAgent {
         }
     }
 
+    /**
+     * Disabled.
+     *
+     * @since 1.0
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "agent")
+    final class Disabled implements SuperAgent {
+        /**
+         * Agent to disable.
+         */
+        private final transient SuperAgent agent;
+
+        /**
+         * Ctor.
+         * @param agt The agent
+         */
+        public Disabled(final SuperAgent agt) {
+            this.agent = agt;
+        }
+
+        @Override
+        public void execute(final Talks talks) throws IOException {
+            // do nothing
+        }
+    }
+
 }

@@ -168,12 +168,14 @@ public final class Agents {
                 new StartsTalks(this.github),
                 new Invitations(this.github),
                 new IndexesRequests(),
-                new DockerExec(
-                    new Ssh(
-                        Agents.HOST, Agents.PORT, Agents.LOGIN,
-                        Agents.priv()
-                    ),
-                    "prune.sh"
+                new SuperAgent.Disabled(
+                    new DockerExec(
+                        new Ssh(
+                            Agents.HOST, Agents.PORT, Agents.LOGIN,
+                            Agents.priv()
+                        ),
+                        "prune.sh"
+                    )
                 )
             )
         );
