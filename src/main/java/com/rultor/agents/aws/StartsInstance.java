@@ -126,7 +126,7 @@ public final class StartsInstance extends AbstractAgent {
                     "SSH key is empty, it's a mistake"
                 );
             }
-            final Instance instance = this.run();
+            final Instance instance = this.run(xml.xpath("/talk/@name").get(0));
             Logger.info(
                 this, "EC2 instance %s on %s started in %s",
                 instance.getInstanceId(), instance.getPublicIpAddress(),
@@ -152,9 +152,10 @@ public final class StartsInstance extends AbstractAgent {
 
     /**
      * Run a new instance.
+     * @param talk Name of the talk
      * @return Instance ID
      */
-    private Instance run() {
+    private Instance run(final String talk) {
         final RunInstancesRequest request = new RunInstancesRequest()
             .withSecurityGroupIds(this.sgroup)
             .withSubnetId(this.subnet)
@@ -174,7 +175,7 @@ public final class StartsInstance extends AbstractAgent {
         this.api.aws().createTags(
             new CreateTagsRequest()
                 .withResources(iid)
-                .withTags(new Tag().withKey("name").withValue("rultor"))
+                .withTags(new Tag().withKey("name").withValue(talk))
         );
         while (true) {
             final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
