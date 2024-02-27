@@ -43,7 +43,7 @@ final class IssueUrlTest {
     @Test
     void pullRequestUrlShouldBeValid() {
         final IssueUrl issue =
-            new IssueUrl("https://api.github.com/repos/USER/REPO/pull/5086");
+            new IssueUrl("https://api.github.com/repos/USER/REPO/pulls/5086");
         MatcherAssert.assertThat(
             issue.valid(),
             Matchers.is(true)
@@ -53,7 +53,7 @@ final class IssueUrlTest {
     @Test
     void pullRequestReviewUrlShouldBeValid() {
         final IssueUrl issue = new IssueUrl(
-            "https://api.github.com/repos/USER/REPO/pull/5386/files#r123"
+            "https://api.github.com/repos/USER/REPO/pulls/5386/files#r123"
         );
         MatcherAssert.assertThat(
             issue.valid(),
@@ -86,7 +86,7 @@ final class IssueUrlTest {
     @Test
     void pullRequestIdShouldBeReturned() {
         final IssueUrl issue = new IssueUrl(
-            "https://api.github.com/repos/USER/REPO/pull/5186"
+            "https://api.github.com/repos/USER/REPO/pulls/5186"
         );
         MatcherAssert.assertThat(
             issue.uid(),
@@ -108,7 +108,7 @@ final class IssueUrlTest {
     @Test
     void pullRequestIdFromReviewUrlShouldBeValid() {
         final IssueUrl issue = new IssueUrl(
-            "https://api.github.com/repos/USER/REPO/pull/5886/files#r123"
+            "https://api.github.com/repos/USER/REPO/pulls/5886/files#r123"
         );
         MatcherAssert.assertThat(
             issue.uid(),

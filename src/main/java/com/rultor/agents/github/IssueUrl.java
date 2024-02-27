@@ -49,7 +49,7 @@ final class IssueUrl {
      * Pattern for issue URL.
      */
     private static final Pattern CORRECT =
-        Pattern.compile("https://api.github.com/repos/[^/]+/[^/]+/(?:issues|pull)/(\\d+).*");
+        Pattern.compile("https://api.github.com/repos/[^/]+/[^/]+/(?:issues|pulls)/(\\d+).*");
 
     /**
      * Url.
