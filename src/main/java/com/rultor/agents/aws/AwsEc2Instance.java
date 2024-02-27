@@ -29,15 +29,10 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
-import com.amazonaws.services.ec2.model.DryRunResult;
-import com.amazonaws.services.ec2.model.DryRunSupportedRequest;
 import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.StopInstancesRequest;
 import com.amazonaws.services.ec2.model.Tag;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
 import lombok.ToString;
 
 /**
@@ -82,47 +77,6 @@ public final class AwsEc2Instance {
         this.api = api;
         this.instance = inst;
         this.id = this.instance.getInstanceId();
-    }
-
-    /**
-     * Ctor.
-     * @param api AwsEc2 api client
-     * @param id Instance id
-     */
-    public AwsEc2Instance(final AwsEc2 api, final String id) {
-        if (id.isEmpty()) {
-            throw new IllegalArgumentException(
-                "Instance id is mandatory"
-            );
-        }
-        this.api = api;
-        this.id = id;
-        this.instance = new Instance().withInstanceId(id);
-    }
-
-    /**
-     * Stop instance.
-     */
-    public void stop() {
-        final DryRunSupportedRequest<StopInstancesRequest> draft = () -> {
-            final StopInstancesRequest request = new StopInstancesRequest()
-                .withInstanceIds(this.instance.getInstanceId());
-            return request.getDryRunRequest();
-        };
-        final AmazonEC2 client = this.api.aws();
-        final DryRunResult<StopInstancesRequest> response =
-            client.dryRun(draft);
-        if (!response.isSuccessful()) {
-            Logger.error(
-                this,
-                "Failed dry run to stop instance %s", this.id
-            );
-            throw response.getDryRunResponse();
-        }
-        final StopInstancesRequest request = new StopInstancesRequest()
-            .withInstanceIds(this.id);
-        client.stopInstances(request);
-        Logger.info("Successfully stopped instance %s", this.id);
     }
 
     /**

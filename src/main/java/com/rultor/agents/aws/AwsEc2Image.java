@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
@@ -127,8 +128,8 @@ public final class AwsEc2Image {
         );
         final RunInstancesResult response =
             this.api.aws().runInstances(request);
-        final String iid = response.getReservation().getInstances().get(0).getInstanceId();
-        Logger.info(this, "AWS instance %s launched", iid);
-        return new AwsEc2Instance(this.api, iid);
+        final Instance instance = response.getReservation().getInstances().get(0);
+        Logger.info(this, "AWS instance %s launched", instance.getInstanceId());
+        return new AwsEc2Instance(this.api, instance);
     }
 }

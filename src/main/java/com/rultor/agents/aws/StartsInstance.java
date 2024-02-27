@@ -125,20 +125,20 @@ public final class StartsInstance extends AbstractAgent {
                     "SSH key is empty, it's a mistake"
                 );
             }
-            final AwsEc2Instance inst = this.image.run();
+            final AwsEc2Instance instance = this.image.run();
             if (!this.tag.isEmpty()) {
-                inst.tag("Name", this.tag);
+                instance.tag("Name", this.tag);
             }
             Logger.info(
                 this, "EC2 instance %s on %s started in %s",
-                inst.id(), inst.address(),
+                instance.id(), instance.address(),
                 xml.xpath("/talk/@name").get(0)
             );
             dirs.xpath("/talk").add("ec2")
-                .attr("id", inst.id());
+                .attr("id", instance.id());
             dirs.xpath("/talk").add("shell")
                 .attr("id", hash)
-                .add("host").set(inst.address()).up()
+                .add("host").set(instance.address()).up()
                 .add("port").set(Integer.toString(this.shell.port())).up()
                 .add("login").set(login).up()
                 .add("key").set(key);
@@ -151,4 +151,5 @@ public final class StartsInstance extends AbstractAgent {
         }
         return dirs;
     }
+
 }

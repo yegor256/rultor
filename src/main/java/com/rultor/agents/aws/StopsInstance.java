@@ -29,6 +29,10 @@
  */
 package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.DryRunResult;
+import com.amazonaws.services.ec2.model.DryRunSupportedRequest;
+import com.amazonaws.services.ec2.model.StopInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -66,9 +70,34 @@ public final class StopsInstance extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String inst = xml.xpath("/talk/ec2/@id").get(0);
-        new AwsEc2Instance(this.api, inst).stop();
-        Logger.info(this, "AWS instance %s stopped", inst);
+        final String instance = xml.xpath("/talk/ec2/@id").get(0);
+        this.stop(instance);
         return new Directives().xpath("/talk/ec2").strict(1).remove();
+    }
+
+    /**
+     * Stop instance.
+     * @param instance Instance ID
+     */
+    private void stop(final String instance) {
+        final DryRunSupportedRequest<StopInstancesRequest> draft = () -> {
+            final StopInstancesRequest request = new StopInstancesRequest()
+                .withInstanceIds(instance);
+            return request.getDryRunRequest();
+        };
+        final AmazonEC2 client = this.api.aws();
+        final DryRunResult<StopInstancesRequest> response =
+            client.dryRun(draft);
+        if (!response.isSuccessful()) {
+            Logger.error(
+                this,
+                "Failed dry run to stop instance %s", instance
+            );
+            throw response.getDryRunResponse();
+        }
+        final StopInstancesRequest request = new StopInstancesRequest()
+            .withInstanceIds(instance);
+        client.stopInstances(request);
+        Logger.info("Successfully stopped instance %s", instance);
     }
 }
