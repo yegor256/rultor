@@ -107,6 +107,10 @@ public final class AwsEc2Image {
             .withInstanceType(this.type)
             .withMaxCount(1)
             .withMinCount(1);
+        Logger.info(
+            this, "Starting a new AWS instance, image=%s, type=%s, group=%s ...",
+            this.image, this.type, this.sgroup
+        );
         final RunInstancesResult response =
             this.api.aws().runInstances(request);
         final String iid = response.getReservation().getInstances().get(0).getInstanceId();
