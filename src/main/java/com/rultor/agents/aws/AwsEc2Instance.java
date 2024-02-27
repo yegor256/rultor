@@ -152,11 +152,11 @@ public final class AwsEc2Instance {
     }
 
     /**
-     * Instance Ip.
-     * @return Instance Ipv6 address
+     * Instance IP.
+     * @return Instance IP address
      * @checkstyle MethodNameCheck (3 lines)
      */
-    public String ipv6() {
-        return this.instance.getIpv6Address();
+    public String address() {
+        return this.instance.getPublicIpAddress();
     }
 }

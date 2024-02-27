@@ -131,14 +131,14 @@ public final class StartsInstance extends AbstractAgent {
             }
             Logger.info(
                 this, "EC2 instance %s on %s started in %s",
-                inst.id(), inst.ipv6(),
+                inst.id(), inst.address(),
                 xml.xpath("/talk/@name").get(0)
             );
             dirs.xpath("/talk").add("ec2")
                 .attr("id", inst.id());
             dirs.xpath("/talk").add("shell")
                 .attr("id", hash)
-                .add("host").set(inst.ipv6()).up()
+                .add("host").set(inst.address()).up()
                 .add("port").set(Integer.toString(this.shell.port())).up()
                 .add("login").set(login).up()
                 .add("key").set(key);
