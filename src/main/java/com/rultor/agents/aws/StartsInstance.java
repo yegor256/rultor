@@ -29,6 +29,11 @@
  */
 package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.RunInstancesRequest;
+import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.Tag;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -47,65 +52,58 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
 public final class StartsInstance extends AbstractAgent {
 
     /**
-     * AWS Ec2 Instance.
+     * AWS Client.
      */
-    private final AwsEc2Image image;
+    private final transient AwsEc2 api;
 
     /**
-     * Name Tag value.
-     */
-    private final String tag;
-
-    /**
-     * Shell in profile.
+     * Shell.
      */
     private final transient PfShell shell;
 
     /**
-     * Ctor.
-     * @param image Instance image to run
-     * @param profile Profile
-     * @param port Default Port of server
-     * @param user Default Login
-     * @param key Default Private SSH key
-     * @checkstyle ParameterNumberCheck (6 lines)
+     * Amazon machine image id.
      */
-    public StartsInstance(final AwsEc2Image image, final Profile profile,
-        final int port, final String user, final String key) {
-        this(image, "rultor", profile, port, user, key);
-    }
+    private final String image;
+
+    /**
+     * AWS Instance type.
+     */
+    private final transient String type;
+
+    /**
+     * EC2 security group.
+     */
+    private final String sgroup;
+
+    /**
+     * EC2 subnet.
+     */
+    private final String subnet;
 
     /**
      * Ctor.
-     * @param image Instance image to run
-     * @param tag Name tag value
-     * @param profile Profile
-     * @param port Default Port of server
-     * @param user Default Login
-     * @param key Default Private SSH key
-     * @checkstyle ParameterNumberCheck (6 lines)
+     * @param aws API
+     * @param shll The shell
+     * @param image Instance AMI image name to run
+     * @param tpe Type of instance, like "t1.micro"
+     * @param grp Security group, like "sg-38924038290"
+     * @param net Subnet, like "subnet-0890890"
+     * @checkstyle ParameterNumberCheck (5 lines)
      */
-    public StartsInstance(final AwsEc2Image image, final String tag,
-        final Profile profile, final int port,
-        final String user, final String key) {
+    public StartsInstance(final AwsEc2 aws,
+        final PfShell shll, final String image, final String tpe,
+        final String grp, final String net) {
         super("/talk[daemon and not(shell)]");
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException(
-                "User name is mandatory"
-            );
-        }
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException(
-                "SSH key is mandatory"
-            );
-        }
+        this.api = aws;
+        this.shell = shll;
         this.image = image;
-        this.tag = tag;
-        this.shell = new PfShell(profile, "", port, user, key);
+        this.type = tpe;
+        this.sgroup = grp;
+        this.subnet = net;
     }
 
     @Override
@@ -125,20 +123,17 @@ public final class StartsInstance extends AbstractAgent {
                     "SSH key is empty, it's a mistake"
                 );
             }
-            final AwsEc2Instance instance = this.image.run();
-            if (!this.tag.isEmpty()) {
-                instance.tag("Name", this.tag);
-            }
+            final Instance instance = this.run();
             Logger.info(
                 this, "EC2 instance %s on %s started in %s",
-                instance.id(), instance.address(),
+                instance.getInstanceId(), instance.getPublicIpAddress(),
                 xml.xpath("/talk/@name").get(0)
             );
             dirs.xpath("/talk").add("ec2")
-                .attr("id", instance.id());
+                .attr("id", instance.getInstanceId());
             dirs.xpath("/talk").add("shell")
                 .attr("id", hash)
-                .add("host").set(instance.address()).up()
+                .add("host").set(instance.getPublicDnsName()).up()
                 .add("port").set(Integer.toString(this.shell.port())).up()
                 .add("login").set(login).up()
                 .add("key").set(key);
@@ -152,4 +147,34 @@ public final class StartsInstance extends AbstractAgent {
         return dirs;
     }
 
+    /**
+     * Run a new instance.
+     * @return Instance ID
+     */
+    private Instance run() {
+        final RunInstancesRequest request = new RunInstancesRequest()
+            .withSecurityGroupIds(this.sgroup)
+            .withSubnetId(this.subnet)
+            .withImageId(this.image)
+            .withInstanceType(this.type)
+            .withMaxCount(1)
+            .withMinCount(1);
+        Logger.info(
+            this,
+            "Starting a new AWS instance, image=%s, type=%s, group=%s, subnet=%s ...",
+            this.image, this.type, this.sgroup, this.subnet
+        );
+        final RunInstancesResult response =
+            this.api.aws().runInstances(request);
+        final Instance instance = response.getReservation().getInstances().get(0);
+        final Tag awstag = new Tag()
+            .withKey("name")
+            .withValue("rultor");
+        final CreateTagsRequest req = new CreateTagsRequest()
+            .withResources(instance.getInstanceId())
+            .withTags(awstag);
+        this.api.aws().createTags(req);
+        Logger.info(this, "AWS instance %s launched", instance.getInstanceId());
+        return instance;
+    }
 }

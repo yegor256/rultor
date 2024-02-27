@@ -39,7 +39,6 @@ import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Ssh;
 import com.rultor.agents.aws.AwsEc2;
-import com.rultor.agents.aws.AwsEc2Image;
 import com.rultor.agents.aws.StartsInstance;
 import com.rultor.agents.aws.StopsInstance;
 import com.rultor.agents.daemons.ArchivesDaemon;
@@ -93,6 +92,7 @@ import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
+import com.rultor.agents.shells.PfShell;
 import com.rultor.agents.shells.RegistersShell;
 import com.rultor.agents.shells.RemovesShell;
 import com.rultor.agents.twitter.OAuthTwitter;
@@ -267,20 +267,21 @@ public final class Agents {
                 new StartsRequest(profile),
                 new Agent.Quiet(
                     new StartsInstance(
-                        new AwsEc2Image(
-                            new AwsEc2(
-                                Manifests.read("Rultor-EC2Key"),
-                                Manifests.read("Rultor-EC2Secret")
-                            ),
-                            Manifests.read("Rultor-EC2Image"),
-                            Manifests.read("Rultor-EC2Type"),
-                            Manifests.read("Rultor-EC2Group"),
-                            Manifests.read("Rultor-EC2Subnet")
+                        new AwsEc2(
+                            Manifests.read("Rultor-EC2Key"),
+                            Manifests.read("Rultor-EC2Secret")
                         ),
-                        profile,
-                        Agents.PORT,
-                        "ubuntu",
-                        Agents.priv()
+                        new PfShell(
+                            profile,
+                            "none",
+                            Agents.PORT,
+                            "ubuntu",
+                            Agents.priv()
+                        ),
+                        Manifests.read("Rultor-EC2Image"),
+                        Manifests.read("Rultor-EC2Type"),
+                        Manifests.read("Rultor-EC2Group"),
+                        Manifests.read("Rultor-EC2Subnet")
                     )
                 ),
                 new RegistersShell(
