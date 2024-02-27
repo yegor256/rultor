@@ -15,3 +15,7 @@ Rultor-S3Bucket: ${failsafe.s3.bucket}
 Rultor-SentryDsn: test
 Rultor-GpgPublic: ${gpg.public}
 Rultor-GpgSecret: ${gpg.secret}
+Rultor-EC2Key: none
+Rultor-EC2Secret: none
+Rultor-EC2Image: none
+Rultor-EC2Type: t3.large
