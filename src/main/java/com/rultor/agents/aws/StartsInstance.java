@@ -184,7 +184,7 @@ public final class StartsInstance extends AbstractAgent {
                     .withInstanceIds(iid)
             );
             final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
-            Logger.info(this, "AWS instance %s state: %s", state.getName());
+            Logger.info(this, "AWS instance %s state: %s", instance, state.getName());
             if ("running".equals(state.getName())) {
                 break;
             }
