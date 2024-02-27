@@ -273,9 +273,11 @@ public final class Agents {
                             Manifests.read("Rultor-EC2Image")
                         ),
                         profile,
-                        Agents.PORT, Agents.LOGIN,
+                        Agents.PORT,
+                        Agents.LOGIN,
                         Agents.priv()
-                    )
+                    ),
+                    false
                 ),
                 new RegistersShell(
                     profile,
@@ -313,7 +315,8 @@ public final class Agents {
                             Manifests.read("Rultor-EC2Key"),
                             Manifests.read("Rultor-EC2Secret")
                         )
-                    )
+                    ),
+                    false
                 ),
                 new RemovesShell(),
                 new ArchivesDaemon(

@@ -104,16 +104,33 @@ public interface Agent {
         private final transient Agent agent;
 
         /**
+         * Disable it?
+         */
+        private final transient boolean disable;
+
+        /**
          * Ctor.
          * @param agt Agent
          */
         public Disabled(final Agent agt) {
+            this(agt, true);
+        }
+
+        /**
+         * Ctor.
+         * @param agt Agent
+         * @param dsbl Disable it?
+         */
+        public Disabled(final Agent agt, final boolean dsbl) {
             this.agent = agt;
+            this.disable = dsbl;
         }
 
         @Override
         public void execute(final Talk talk) throws IOException {
-            // nothing to do
+            if (!this.disable) {
+                this.agent.execute(talk);
+            }
         }
     }
 }
