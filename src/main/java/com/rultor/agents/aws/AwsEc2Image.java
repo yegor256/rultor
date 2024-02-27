@@ -102,7 +102,7 @@ public final class AwsEc2Image {
      */
     public AwsEc2Instance run() {
         final RunInstancesRequest request = new RunInstancesRequest()
-            .withSecurityGroups(this.sgroup)
+            .withSecurityGroupIds(this.sgroup)
             .withImageId(this.image)
             .withInstanceType(this.type)
             .withMaxCount(1)
