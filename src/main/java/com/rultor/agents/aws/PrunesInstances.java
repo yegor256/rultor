@@ -79,19 +79,23 @@ public final class PrunesInstances implements SuperAgent {
         final Collection<String> seen = new LinkedList<>();
         for (final Reservation rsrv : res.getReservations()) {
             final Instance instance = rsrv.getInstances().get(0);
+            final String status = this.api.aws().describeInstanceStatus(
+                new DescribeInstanceStatusRequest()
+                    .withIncludeAllInstances(true)
+                    .withInstanceIds(instance.getInstanceId())
+            ).getInstanceStatuses().get(0).getInstanceState().getName();
             final String label = String.format(
                 "%s/%s/%s",
                 instance.getInstanceId(),
                 instance.getInstanceType(),
-                this.api.aws().describeInstanceStatus(
-                    new DescribeInstanceStatusRequest()
-                        .withIncludeAllInstances(true)
-                        .withInstanceIds(instance.getInstanceId())
-                ).getInstanceStatuses().get(0).getInstanceState().getName()
+                status
             );
             seen.add(label);
             final Date time = instance.getLaunchTime();
             if (time.getTime() > threshold) {
+                continue;
+            }
+            if ("terminated".equals(status)) {
                 continue;
             }
             this.api.aws().terminateInstances(
