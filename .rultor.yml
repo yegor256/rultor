@@ -3,6 +3,7 @@ docker:
 readers:
   - "urn:github:526301"
 assets:
+  netrc: yegor256/home#assets/heroku-netrc
   secring.gpg: yegor256/home#assets/secring.gpg
   settings.xml: yegor256/home#assets/rultor/settings.xml
   pubring.gpg: yegor256/home#assets/pubring.gpg
@@ -20,6 +21,7 @@ release:
   sensitive:
     - settings.xml
   script: |-
+    mv ../netrc ~/.netrc
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
     echo "Author of the request: ${author}"
     mvn versions:set "-DnewVersion=${tag}" --quiet
