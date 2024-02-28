@@ -59,7 +59,10 @@ public final class ConnectsInstance extends AbstractAgent {
      * @param shll The shell
      */
     public ConnectsInstance(final PfShell shll) {
-        super("/talk[daemon and ec2/host and not(shell)]");
+        super(
+            "/talk[daemon and ec2 and not(shell)]",
+            "/talk/ec2/host"
+        );
         this.shell = shll;
     }
 
