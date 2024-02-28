@@ -75,7 +75,6 @@ public final class PrunesInstances implements SuperAgent {
             new DescribeInstancesRequest()
                 .withFilters(new Filter().withName("tag:rultor").withValues("yes"))
         );
-        final long threshold = new Date().getTime() - TimeUnit.HOURS.toMillis(6L);
         final Collection<String> seen = new LinkedList<>();
         for (final Reservation rsrv : res.getReservations()) {
             final Instance instance = rsrv.getInstances().get(0);
@@ -84,15 +83,17 @@ public final class PrunesInstances implements SuperAgent {
                     .withIncludeAllInstances(true)
                     .withInstanceIds(instance.getInstanceId())
             ).getInstanceStatuses().get(0).getInstanceState().getName();
+            final double hours =
+                (double) (new Date().getTime() - instance.getLaunchTime().getTime())
+                / TimeUnit.HOURS.toMillis(1L);
             final String label = String.format(
-                "%s/%s/%s",
+                "%s/%s/%s/%.2fh",
                 instance.getInstanceId(),
                 instance.getInstanceType(),
-                status
+                status, hours
             );
             seen.add(label);
-            final Date time = instance.getLaunchTime();
-            if (time.getTime() > threshold) {
+            if (hours < 8.0d) {
                 continue;
             }
             if ("terminated".equals(status)) {
