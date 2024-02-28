@@ -43,6 +43,7 @@ import com.rultor.agents.aws.ConnectsInstance;
 import com.rultor.agents.aws.DescribesInstance;
 import com.rultor.agents.aws.KillsInstance;
 import com.rultor.agents.aws.PingsInstance;
+import com.rultor.agents.aws.PrunesInstances;
 import com.rultor.agents.aws.StartsInstance;
 import com.rultor.agents.aws.TerminatesInstance;
 import com.rultor.agents.daemons.ArchivesDaemon;
@@ -167,11 +168,16 @@ public final class Agents {
      * @throws IOException If fails
      */
     public SuperAgent starter() throws IOException {
+        final AwsEc2 aws = new AwsEc2(
+            Manifests.read("Rultor-EC2Key"),
+            Manifests.read("Rultor-EC2Secret")
+        );
         return new SuperAgent.Iterative(
             new Array<>(
                 new StartsTalks(this.github),
                 new Invitations(this.github),
                 new IndexesRequests(),
+                new SuperAgent.Quiet(new PrunesInstances(aws)),
                 new SuperAgent.Disabled(
                     new DockerExec(
                         new Ssh(
