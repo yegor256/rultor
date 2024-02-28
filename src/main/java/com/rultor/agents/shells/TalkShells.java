@@ -31,8 +31,8 @@ package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.ssh.Shell;
-import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
+import com.rultor.spi.Profile;
 import java.net.UnknownHostException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -67,11 +67,12 @@ public final class TalkShells {
      */
     public Shell get() throws UnknownHostException {
         final XML shell = this.xml.nodes("/talk/shell").get(0);
-        return new Ssh(
+        return new PfShell(
+            Profile.EMPTY,
             shell.xpath("host/text()").get(0),
             Integer.parseInt(shell.xpath("port/text()").get(0)),
             shell.xpath("login/text()").get(0),
             shell.xpath("key/text()").get(0)
-        );
+        ).toSsh();
     }
 }

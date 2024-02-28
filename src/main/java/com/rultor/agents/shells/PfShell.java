@@ -30,9 +30,11 @@
 package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.ssh.Ssh;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -89,6 +91,15 @@ public final class PfShell {
         this.prt = port;
         this.user = login;
         this.pvt = key;
+    }
+
+    /**
+     * Make a new shell, with a different address.
+     * @param host New address
+     * @return New shell
+     */
+    public PfShell withHost(final String host) {
+        return new PfShell(this.profile, host, this.prt, this.user, this.pvt);
     }
 
     /**
@@ -156,6 +167,15 @@ public final class PfShell {
             }
         }
         return key;
+    }
+
+    /**
+     * Make SSH shell.
+     * @return SSH shell
+     * @throws UnknownHostException If fails
+     */
+    public Ssh toSsh() throws UnknownHostException {
+        return new Ssh(this.addr, this.prt, this.user, this.pvt);
     }
 
 }
