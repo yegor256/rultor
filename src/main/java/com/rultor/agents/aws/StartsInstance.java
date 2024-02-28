@@ -110,7 +110,7 @@ public final class StartsInstance extends AbstractAgent {
             );
             dirs.xpath("/talk")
                 .add("ec2")
-                .attr("id", instance.getInstanceId());
+                .add("instance").set(instance.getInstanceId());
         } catch (final Profile.ConfigException ex) {
             dirs.xpath("/talk/daemon/script").set(
                 String.format(

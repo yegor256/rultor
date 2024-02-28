@@ -60,7 +60,8 @@ public final class ConnectsInstance extends AbstractAgent {
      */
     public ConnectsInstance(final PfShell shll) {
         super(
-            "/talk[daemon and ec2 and not(shell)]",
+            "/talk[daemon and not(shell)]",
+            "/talk/ec2/instance",
             "/talk/ec2/host"
         );
         this.shell = shll;
@@ -68,8 +69,8 @@ public final class ConnectsInstance extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String instance = xml.xpath("/talk/ec2/@id").get(0);
-        final String host = xml.xpath("/talk/ec2/host").get(0);
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
+        final String host = xml.xpath("/talk/ec2/host/text()").get(0);
         final Directives dirs = new Directives();
         if (this.alive(host)) {
             Logger.warn(

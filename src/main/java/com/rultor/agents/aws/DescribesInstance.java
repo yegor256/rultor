@@ -62,13 +62,16 @@ public final class DescribesInstance extends AbstractAgent {
      * @param aws API
      */
     public DescribesInstance(final AwsEc2 aws) {
-        super("/talk[daemon and ec2 and not(ec2/host)]");
+        super(
+            "/talk[daemon and not(ec2/host)]",
+            "/talk/ec2/instance"
+        );
         this.api = aws;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String instance = xml.xpath("/talk/ec2/@id").get(0);
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
             new DescribeInstanceStatusRequest()
                 .withIncludeAllInstances(true)

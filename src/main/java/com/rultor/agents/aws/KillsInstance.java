@@ -60,7 +60,7 @@ public final class KillsInstance extends AbstractAgent {
      */
     public KillsInstance(final AwsEc2 aws, final long mins) {
         super(
-            "/talk/ec2",
+            "/talk/ec2/instance",
             "/talk/daemon[started and not(code) and not(ended)]",
             "/talk/daemon/dir",
             String.format(
@@ -74,7 +74,7 @@ public final class KillsInstance extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String instance = xml.xpath("/talk/ec2/@id").get(0);
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         this.api.aws().stopInstances(
             new StopInstancesRequest()
                 .withInstanceIds(instance)

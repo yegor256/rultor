@@ -59,7 +59,7 @@ public final class TerminatesInstance extends AbstractAgent {
      */
     public TerminatesInstance(final AwsEc2 api) {
         super(
-            "/talk/ec2[@id and host]",
+            "/talk/ec2[instance and host]",
             "/talk[not(daemon)]"
         );
         this.api = api;
@@ -67,7 +67,7 @@ public final class TerminatesInstance extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String instance = xml.xpath("/talk/ec2/@id").get(0);
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         this.api.aws().terminateInstances(
             new TerminateInstancesRequest()
                 .withInstanceIds(instance)

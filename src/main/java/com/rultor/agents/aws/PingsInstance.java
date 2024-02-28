@@ -64,7 +64,7 @@ public final class PingsInstance extends AbstractAgent {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
-        final String instance = xml.xpath("/talk/ec2/@id").get(0);
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         final String host = xml.xpath("/talk/shell/host/text()").get(0);
         final Directives dirs = new Directives();
         int attempt = 0;
