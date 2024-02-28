@@ -54,7 +54,7 @@ public final class PingsInstance extends AbstractAgent {
      */
     public PingsInstance() {
         super(
-            "/talk/ec2",
+            "/talk/ec2/host",
             "/talk/daemon",
             "/talk/shell[host and port and login and key]"
         );

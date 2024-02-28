@@ -90,7 +90,7 @@ public final class StartsInstance extends AbstractAgent {
     public StartsInstance(final AwsEc2 aws,
         final String image, final String tpe,
         final String grp, final String net) {
-        super("/talk[daemon and not(shell)]");
+        super("/talk[daemon and not(ec2) and not(shell)]");
         this.api = aws;
         this.image = image;
         this.type = tpe;
@@ -146,7 +146,10 @@ public final class StartsInstance extends AbstractAgent {
         this.api.aws().createTags(
             new CreateTagsRequest()
                 .withResources(iid)
-                .withTags(new Tag().withKey("Name").withValue(talk))
+                .withTags(
+                    new Tag().withKey("Name").withValue(talk),
+                    new Tag().withKey("rultor-talk").withValue(talk)
+                )
         );
         return instance;
     }

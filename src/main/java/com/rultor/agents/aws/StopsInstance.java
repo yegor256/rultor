@@ -59,7 +59,7 @@ public final class StopsInstance extends AbstractAgent {
      */
     public StopsInstance(final AwsEc2 api) {
         super(
-            "/talk/ec2[@id]",
+            "/talk/ec2[@id and host]",
             "/talk[not(daemon)]"
         );
         this.api = api;
