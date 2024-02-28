@@ -72,7 +72,7 @@ public final class PrunesInstances implements SuperAgent {
     public void execute(final Talks talks) throws IOException {
         final DescribeInstancesResult res = this.api.aws().describeInstances(
             new DescribeInstancesRequest()
-                .withFilters(new Filter().withName("rultor").withValues("yes"))
+                .withFilters(new Filter().withName("tag:rultor").withValues("yes"))
         );
         final long threshold = new Date().getTime() - TimeUnit.HOURS.toMillis(6L);
         final Collection<String> seen = new LinkedList<>();
