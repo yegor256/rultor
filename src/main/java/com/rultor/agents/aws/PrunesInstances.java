@@ -40,7 +40,9 @@ import com.jcabi.log.Logger;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 import lombok.ToString;
 
@@ -73,8 +75,10 @@ public final class PrunesInstances implements SuperAgent {
                 .withFilters(new Filter().withName("rultor-talk"))
         );
         final long threshold = new Date().getTime() - TimeUnit.HOURS.toMillis(6L);
+        final Collection<String> seen = new LinkedList<>();
         for (final Reservation rsrv : res.getReservations()) {
             final Instance instance = rsrv.getInstances().get(0);
+            seen.add(instance.getInstanceId());
             final Date time = instance.getLaunchTime();
             if (time.getTime() > threshold) {
                 continue;
@@ -88,6 +92,10 @@ public final class PrunesInstances implements SuperAgent {
                 instance.getInstanceId()
             );
         }
+        Logger.info(
+            this, "Checked %d AWS instances: %[list]s",
+            seen.size(), seen
+        );
     }
 
 }
