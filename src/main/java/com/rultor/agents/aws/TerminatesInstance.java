@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.StopInstancesRequest;
+import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -46,7 +46,7 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-public final class StopsInstance extends AbstractAgent {
+public final class TerminatesInstance extends AbstractAgent {
 
     /**
      * Aws Ec2 instance.
@@ -57,7 +57,7 @@ public final class StopsInstance extends AbstractAgent {
      * Ctor.
      * @param api Aws Ec2 api.
      */
-    public StopsInstance(final AwsEc2 api) {
+    public TerminatesInstance(final AwsEc2 api) {
         super(
             "/talk/ec2[@id and host]",
             "/talk[not(daemon)]"
@@ -68,11 +68,11 @@ public final class StopsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/@id").get(0);
-        this.api.aws().stopInstances(
-            new StopInstancesRequest()
+        this.api.aws().terminateInstances(
+            new TerminateInstancesRequest()
                 .withInstanceIds(instance)
         );
-        Logger.info("Successfully stopped instance %s", instance);
+        Logger.info("Successfully terminated %s instance", instance);
         return new Directives().xpath("/talk/ec2").strict(1).remove();
     }
 }

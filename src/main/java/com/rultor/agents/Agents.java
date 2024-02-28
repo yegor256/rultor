@@ -44,7 +44,7 @@ import com.rultor.agents.aws.DescribesInstance;
 import com.rultor.agents.aws.KillsInstance;
 import com.rultor.agents.aws.PingsInstance;
 import com.rultor.agents.aws.StartsInstance;
-import com.rultor.agents.aws.StopsInstance;
+import com.rultor.agents.aws.TerminatesInstance;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.DismountDaemon;
 import com.rultor.agents.daemons.DropsDaemon;
@@ -327,7 +327,7 @@ public final class Agents {
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
                 new Reports(this.github),
-                new Agent.Quiet(new StopsInstance(aws)),
+                new Agent.Quiet(new TerminatesInstance(aws)),
                 new Agent.Quiet(new PingsInstance()),
                 new Agent.Quiet(new KillsInstance(aws, TimeUnit.HOURS.toMinutes(2L))),
                 new RemovesShell(),
