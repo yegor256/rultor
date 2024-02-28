@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Filter;
@@ -78,7 +79,17 @@ public final class PrunesInstances implements SuperAgent {
         final Collection<String> seen = new LinkedList<>();
         for (final Reservation rsrv : res.getReservations()) {
             final Instance instance = rsrv.getInstances().get(0);
-            seen.add(instance.getInstanceId());
+            final String label = String.format(
+                "%s/%s/%s",
+                instance.getInstanceId(),
+                instance.getInstanceType(),
+                this.api.aws().describeInstanceStatus(
+                    new DescribeInstanceStatusRequest()
+                        .withIncludeAllInstances(true)
+                        .withInstanceIds(instance.getInstanceId())
+                ).getInstanceStatuses().get(0).getInstanceState().getName()
+            );
+            seen.add(label);
             final Date time = instance.getLaunchTime();
             if (time.getTime() > threshold) {
                 continue;
@@ -89,7 +100,7 @@ public final class PrunesInstances implements SuperAgent {
             );
             Logger.warn(
                 this, "AWS instance %s is too old, terminated",
-                instance.getInstanceId()
+                label
             );
         }
         Logger.info(
