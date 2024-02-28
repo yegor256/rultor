@@ -148,6 +148,7 @@ public final class StartsInstance extends AbstractAgent {
                 .withResources(iid)
                 .withTags(
                     new Tag().withKey("Name").withValue(talk),
+                    new Tag().withKey("rultor").withValue("yes"),
                     new Tag().withKey("rultor-talk").withValue(talk)
                 )
         );
