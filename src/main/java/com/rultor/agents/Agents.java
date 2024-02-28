@@ -282,6 +282,7 @@ public final class Agents {
                 new Agent.Quiet(
                     new Agent.Disabled(
                         new StartsInstance(
+                            profile,
                             aws,
                             Manifests.read("Rultor-EC2Image"),
                             Manifests.read("Rultor-EC2Type"),

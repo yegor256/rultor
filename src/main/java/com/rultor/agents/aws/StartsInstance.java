@@ -40,6 +40,7 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Arrays;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -52,6 +53,18 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 public final class StartsInstance extends AbstractAgent {
+
+    /**
+     * Allowed instance types.
+     */
+    private static final String[] ALLOWED_TYPES = {
+        "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large",
+    };
+
+    /**
+     * Profile to get EC2 params.
+     */
+    private final transient Profile profile;
 
     /**
      * AWS Client.
@@ -80,6 +93,7 @@ public final class StartsInstance extends AbstractAgent {
 
     /**
      * Ctor.
+     * @param pfl Profile
      * @param aws API
      * @param image Instance AMI image name to run
      * @param tpe Type of instance, like "t1.micro"
@@ -87,10 +101,11 @@ public final class StartsInstance extends AbstractAgent {
      * @param net Subnet, like "subnet-0890890"
      * @checkstyle ParameterNumberCheck (5 lines)
      */
-    public StartsInstance(final AwsEc2 aws,
+    public StartsInstance(final Profile pfl, final AwsEc2 aws,
         final String image, final String tpe,
         final String grp, final String net) {
         super("/talk[daemon and not(ec2) and not(shell)]");
+        this.profile = pfl;
         this.api = aws;
         this.image = image;
         this.type = tpe;
@@ -125,13 +140,14 @@ public final class StartsInstance extends AbstractAgent {
      * Run a new instance.
      * @param talk Name of the talk
      * @return Instance ID
+     * @throws IOException If fails
      */
-    private Instance run(final String talk) {
+    private Instance run(final String talk) throws IOException {
         final RunInstancesRequest request = new RunInstancesRequest()
             .withSecurityGroupIds(this.sgroup)
             .withSubnetId(this.subnet)
             .withImageId(this.image)
-            .withInstanceType(this.type)
+            .withInstanceType(this.instanceType())
             .withMaxCount(1)
             .withMinCount(1);
         Logger.info(
@@ -153,5 +169,26 @@ public final class StartsInstance extends AbstractAgent {
                 )
         );
         return instance;
+    }
+
+    /**
+     * Read one EC2 param from .rultor.xml.
+     * @return Value
+     * @throws IOException If fails
+     */
+    private String instanceType() throws IOException {
+        final String required = new Profile.Defaults(this.profile).text(
+            "/p/entry[@key='ec2']/entry[@key='type']/text()",
+            this.type
+        );
+        if (!Arrays.asList(StartsInstance.ALLOWED_TYPES).contains(required)) {
+            throw new Profile.ConfigException(
+                Logger.format(
+                    "EC2 instance type '%s' is not valid, use one of %[list]s",
+                    required, StartsInstance.ALLOWED_TYPES
+                )
+            );
+        }
+        return required;
     }
 }
