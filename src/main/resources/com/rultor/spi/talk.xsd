@@ -295,10 +295,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <xs:sequence>
       <xs:element name="log" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the log specification for the archive
-                        task.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the log specification for the archive task.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:simpleContent>
@@ -314,32 +311,31 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   </xs:complexType>
   <xs:complexType name="ec2">
     <xs:annotation>
-      <xs:documentation source="description">
-                This type describes the specification about the EC2.
-            </xs:documentation>
+      <xs:documentation source="description">This type describes the specification about the EC2.</xs:documentation>
     </xs:annotation>
+    <xs:all>
+      <xs:element name="host" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">IP of the EC2 server.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
     <xs:attribute name="id" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:element name="talk">
     <xs:annotation>
-      <xs:documentation source="description">
-                This element has the definition of the talk task.
-            </xs:documentation>
+      <xs:documentation source="description">This element has the definition of the talk task.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:all>
         <xs:element name="daemon" type="daemon" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the daemon definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the daemon definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="wire" type="wire" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the wire definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the wire definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="shell" type="shell" minOccurs="0">

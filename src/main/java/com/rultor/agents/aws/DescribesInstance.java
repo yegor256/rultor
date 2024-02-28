@@ -69,25 +69,24 @@ public final class DescribesInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/@id").get(0);
-        while (true) {
-            final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
-                new DescribeInstanceStatusRequest()
-                    .withIncludeAllInstances(true)
-                    .withInstanceIds(instance)
-            );
-            final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
-            Logger.info(this, "AWS instance %s state: %s", instance, state.getName());
-            if ("running".equals(state.getName())) {
-                break;
-            }
-            new Sleep(5L).now();
-        }
-        final Instance ready = this.api.aws().describeInstances(
-            new DescribeInstancesRequest()
+        final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
+            new DescribeInstanceStatusRequest()
+                .withIncludeAllInstances(true)
                 .withInstanceIds(instance)
-        ).getReservations().get(0).getInstances().get(0);
-        final String host = ready.getPublicIpAddress();
-        return new Directives().xpath("/talk/ec2").add("host").set(host);
+        );
+        final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
+        Logger.info(this, "AWS instance %s state: %s", instance, state.getName());
+        final Directives dirs = new Directives();
+        if ("running".equals(state.getName())) {
+            final Instance ready = this.api.aws().describeInstances(
+                new DescribeInstancesRequest()
+                    .withInstanceIds(instance)
+            ).getReservations().get(0).getInstances().get(0);
+            final String host = ready.getPublicIpAddress();
+            dirs.xpath("/talk/ec2").add("host").set(host);
+            Logger.info(this, "AWS instance %s is at %s", instance, host);
+        }
+        return dirs;
     }
 
 }

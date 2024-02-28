@@ -104,8 +104,8 @@ public final class StartsInstance extends AbstractAgent {
         try {
             final Instance instance = this.run(xml.xpath("/talk/@name").get(0));
             Logger.info(
-                this, "EC2 instance %s on %s started in %s",
-                instance.getInstanceId(), instance.getPublicIpAddress(),
+                this, "EC2 instance %s started for %s",
+                instance.getInstanceId(),
                 xml.xpath("/talk/@name").get(0)
             );
             dirs.xpath("/talk")
