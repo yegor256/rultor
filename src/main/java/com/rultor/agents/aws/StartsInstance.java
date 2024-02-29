@@ -143,17 +143,18 @@ public final class StartsInstance extends AbstractAgent {
      * @throws IOException If fails
      */
     private Instance run(final String talk) throws IOException {
+        final String itype = this.instanceType();
         final RunInstancesRequest request = new RunInstancesRequest()
             .withSecurityGroupIds(this.sgroup)
             .withSubnetId(this.subnet)
             .withImageId(this.image)
-            .withInstanceType(this.instanceType())
+            .withInstanceType(itype)
             .withMaxCount(1)
             .withMinCount(1);
         Logger.info(
             this,
             "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
-            talk, this.image, this.type, this.sgroup, this.subnet
+            talk, this.image, itype, this.sgroup, this.subnet
         );
         final RunInstancesResult response =
             this.api.aws().runInstances(request);
@@ -178,7 +179,7 @@ public final class StartsInstance extends AbstractAgent {
      */
     private String instanceType() throws IOException {
         final String required = new Profile.Defaults(this.profile).text(
-            "/p/entry[@key='ec2']/entry[@key='type']/text()",
+            "/p/entry[@key='ec2']/entry[@key='type']",
             this.type
         );
         if (!Arrays.asList(StartsInstance.ALLOWED_TYPES).contains(required)) {
