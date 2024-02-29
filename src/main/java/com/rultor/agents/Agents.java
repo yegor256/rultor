@@ -315,7 +315,7 @@ public final class Agents {
                 new MkdirDaemon(),
                 new TimedAgent(new StartsDaemon(profile)),
                 // @checkstyle MagicNumber (1 line)
-                new KillsDaemon(TimeUnit.HOURS.toMinutes(3L)),
+                new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(3L))),
                 new TimedAgent(new StopsDaemon()),
                 new TimedAgent(new EndsDaemon()),
                 new EndsRequest(),
