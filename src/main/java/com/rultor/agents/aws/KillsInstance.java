@@ -29,7 +29,7 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.StopInstancesRequest;
+import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -75,11 +75,11 @@ public final class KillsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        this.api.aws().stopInstances(
-            new StopInstancesRequest()
+        this.api.aws().terminateInstances(
+            new TerminateInstancesRequest()
                 .withInstanceIds(instance)
         );
-        Logger.info("Killed AWS instance %s because it's too old", instance);
+        Logger.info("Terminated AWS instance %s because it's too old", instance);
         return new Directives();
     }
 }
