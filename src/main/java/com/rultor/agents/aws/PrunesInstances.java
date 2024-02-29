@@ -96,11 +96,11 @@ public final class PrunesInstances implements SuperAgent {
                 instance.getInstanceType(),
                 status, age
             );
-            seen.add(label);
-            if (age < this.max) {
+            if ("terminated".equals(status)) {
                 continue;
             }
-            if ("terminated".equals(status)) {
+            seen.add(label);
+            if (age < this.max) {
                 continue;
             }
             this.api.aws().terminateInstances(
