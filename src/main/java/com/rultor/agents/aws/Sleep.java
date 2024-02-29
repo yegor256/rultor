@@ -61,7 +61,7 @@ final class Sleep {
      */
     void now() {
         try {
-            Logger.info(StartsInstance.class, "Sleeping for %d seconds...", this.seconds);
+            Logger.info(this, "Sleeping for %d seconds...", this.seconds);
             Thread.sleep(TimeUnit.SECONDS.toMillis(this.seconds));
         } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
