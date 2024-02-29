@@ -271,7 +271,7 @@ public final class Agents {
         );
         return new VerboseAgent(
             new Agent.Iterative(
-                new SanitizesDaemon(),
+                new Agent.Quiet(new SanitizesDaemon()),
                 new WipesDaemon(),
                 new DropsTalk(),
                 new Understands(
