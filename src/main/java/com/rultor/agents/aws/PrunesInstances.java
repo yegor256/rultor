@@ -91,7 +91,7 @@ public final class PrunesInstances implements SuperAgent {
             ).getInstanceStatuses().get(0).getInstanceState().getName();
             final long age = new Date().getTime() - instance.getLaunchTime().getTime();
             final String label = Logger.format(
-                "%s/%s/%s/%[msec]s",
+                "%s/%s/%s/%[ms]s",
                 instance.getInstanceId(),
                 instance.getInstanceType(),
                 status, age

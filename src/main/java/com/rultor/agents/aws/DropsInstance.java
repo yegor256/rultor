@@ -73,7 +73,10 @@ public final class DropsInstance extends AbstractAgent {
         final Directives dirs = new Directives();
         if (res.getReservations().isEmpty()) {
             dirs.xpath("/talk/ec2").strict(1).remove();
-            Logger.info(this, "AWS instance %s is absent, deleting the link", instance);
+            Logger.info(
+                this, "AWS instance %s is absent, deleting the link from %s",
+                instance, xml.xpath("/talk/@name").get(0)
+            );
         }
         return dirs;
     }
