@@ -29,8 +29,8 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -66,13 +66,12 @@ public final class DropsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
-            new DescribeInstanceStatusRequest()
-                .withIncludeAllInstances(true)
+        final DescribeInstancesResult res = this.api.aws().describeInstances(
+            new DescribeInstancesRequest()
                 .withInstanceIds(instance)
         );
         final Directives dirs = new Directives();
-        if (res.getInstanceStatuses().isEmpty()) {
+        if (res.getReservations().isEmpty()) {
             dirs.xpath("/talk/ec2").strict(1).remove();
             Logger.info(this, "AWS instance %s is absent, deleting the link", instance);
         }
