@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 import lombok.ToString;
 
 /**
@@ -62,11 +61,18 @@ public final class PrunesInstances implements SuperAgent {
     private final transient AwsEc2 api;
 
     /**
+     * Maximum age to tolerate, in milliseconds.
+     */
+    private final transient long max;
+
+    /**
      * Ctor.
      * @param aws API
+     * @param msec Maximum age to tolerate
      */
-    public PrunesInstances(final AwsEc2 aws) {
+    public PrunesInstances(final AwsEc2 aws, final long msec) {
         this.api = aws;
+        this.max = msec;
     }
 
     @Override
@@ -83,17 +89,15 @@ public final class PrunesInstances implements SuperAgent {
                     .withIncludeAllInstances(true)
                     .withInstanceIds(instance.getInstanceId())
             ).getInstanceStatuses().get(0).getInstanceState().getName();
-            final double hours =
-                (double) (new Date().getTime() - instance.getLaunchTime().getTime())
-                / TimeUnit.HOURS.toMillis(1L);
-            final String label = String.format(
-                "%s/%s/%s/%.2fh",
+            final long age = new Date().getTime() - instance.getLaunchTime().getTime();
+            final String label = Logger.format(
+                "%s/%s/%s/%[msec]s",
                 instance.getInstanceId(),
                 instance.getInstanceType(),
-                status, hours
+                status, age
             );
             seen.add(label);
-            if (hours < 8.0d) {
+            if (age < this.max) {
                 continue;
             }
             if ("terminated".equals(status)) {

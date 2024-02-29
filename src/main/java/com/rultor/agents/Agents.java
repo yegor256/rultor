@@ -177,7 +177,11 @@ public final class Agents {
                 new StartsTalks(this.github),
                 new Invitations(this.github),
                 new IndexesRequests(),
-                new SuperAgent.Quiet(new PrunesInstances(aws)),
+                new SuperAgent.Quiet(
+                    new PrunesInstances(
+                        aws, TimeUnit.HOURS.toMillis(8L)
+                    )
+                ),
                 new SuperAgent.Disabled(
                     new DockerExec(
                         new Ssh(
