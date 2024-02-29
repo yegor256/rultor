@@ -317,7 +317,7 @@ public final class Agents {
                 // @checkstyle MagicNumber (1 line)
                 new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(3L))),
                 new TimedAgent(new StopsDaemon()),
-                new TimedAgent(new EndsDaemon()),
+                new TimedAgent(new Agent.Quiet(new EndsDaemon())),
                 new EndsRequest(),
                 new SafeAgent(
                     new Tweets(
