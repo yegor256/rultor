@@ -73,7 +73,10 @@ public final class TerminatesInstance extends AbstractAgent {
             new TerminateInstancesRequest()
                 .withInstanceIds(instance)
         );
-        Logger.info("Successfully terminated %s instance", instance);
+        Logger.info(
+            this, "Successfully terminated %s instance of %s",
+            instance, xml.xpath("/talk/@name").get(0)
+        );
         return new Directives().xpath("/talk/ec2").strict(1).remove();
     }
 }
