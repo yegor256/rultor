@@ -88,7 +88,7 @@ public final class PingsInstance extends AbstractAgent {
                     Logger.warn(this, "The AWS instance %s is officially dead", instance);
                     break;
                 }
-                new Sleep(2L).now();
+                new Sleep(1L).now();
             }
         }
         return dirs;
