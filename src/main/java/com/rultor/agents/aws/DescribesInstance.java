@@ -30,10 +30,8 @@
 package com.rultor.agents.aws;
 
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.InstanceState;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -63,7 +61,8 @@ public final class DescribesInstance extends AbstractAgent {
      */
     public DescribesInstance(final AwsEc2 aws) {
         super(
-            "/talk[daemon and not(ec2/host)]",
+            "/talk[daemon]",
+            "/talk/ec2[not(host)]",
             "/talk/ec2/instance"
         );
         this.api = aws;
@@ -72,15 +71,14 @@ public final class DescribesInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
+        final String state = this.api.aws().describeInstanceStatus(
             new DescribeInstanceStatusRequest()
                 .withIncludeAllInstances(true)
                 .withInstanceIds(instance)
-        );
-        final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
-        Logger.info(this, "AWS instance %s state: %s", instance, state.getName());
+        ).getInstanceStatuses().get(0).getInstanceState().getName();
+        Logger.info(this, "AWS instance %s state: %s", instance, state);
         final Directives dirs = new Directives();
-        if ("running".equals(state.getName())) {
+        if ("running".equals(state)) {
             final Instance ready = this.api.aws().describeInstances(
                 new DescribeInstancesRequest()
                     .withInstanceIds(instance)

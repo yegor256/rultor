@@ -312,10 +312,13 @@ public final class Agents {
                         )
                     )
                 ),
-                new RegistersShell(
-                    profile,
-                    Agents.HOST, Agents.PORT, Agents.LOGIN,
-                    Agents.priv()
+                new Agent.Disabled(
+                    new RegistersShell(
+                        profile,
+                        Agents.HOST, Agents.PORT, Agents.LOGIN,
+                        Agents.priv()
+                    ),
+                    true
                 ),
                 // @checkstyle MagicNumber (1 line)
                 new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),

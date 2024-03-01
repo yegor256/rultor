@@ -84,9 +84,12 @@ public interface Agent {
 
         @Override
         public void execute(final Talk talk) throws IOException {
+            int total = 0;
             for (final Agent agent : this.children) {
                 agent.execute(talk);
+                ++total;
             }
+            Logger.debug(this, "Executed %d agent(s)", total);
         }
     }
 

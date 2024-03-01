@@ -76,7 +76,7 @@ final class Routine implements Runnable, Closeable {
     /**
      * How many talks to process in one cycle.
      */
-    private static final int MAX_TALKS = 5;
+    private static final int MAX_TALKS = 16;
 
     /**
      * Shutting down?
