@@ -181,7 +181,7 @@ public final class Agents {
                 new IndexesRequests(),
                 new SuperAgent.Quiet(
                     new PrunesInstances(
-                        aws, TimeUnit.HOURS.toMillis(8L)
+                        aws, TimeUnit.HOURS.toMillis(3L)
                     )
                 ),
                 new SuperAgent.Disabled(
