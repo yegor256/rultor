@@ -60,7 +60,7 @@ public final class TerminatesInstance extends AbstractAgent {
      */
     public TerminatesInstance(final AwsEc2 api) {
         super(
-            "/talk/ec2[instance and host and shell]",
+            "/talk/ec2[instance and host]",
             "/talk[not(daemon)]"
         );
         this.api = api;
