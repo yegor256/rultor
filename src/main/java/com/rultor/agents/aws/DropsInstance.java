@@ -41,7 +41,9 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Deletes the "ec2" XML element if the instance doesn't exist in EC2.
+ * Deletes the "ec2" XML element if the instance doesn't exist in EC2 --
+ * this means that the instance was killed by some other mechanisms
+ * and doesn't need to be connected anymore to the talk.
  *
  * @since 1.77
  */

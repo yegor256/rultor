@@ -40,7 +40,8 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Stops EC2 instance.
+ * Stops EC2 instance, when the "daemon" is gone (the job has
+ * been completed successfully).
  *
  * @since 1.77
  */
@@ -59,7 +60,7 @@ public final class TerminatesInstance extends AbstractAgent {
      */
     public TerminatesInstance(final AwsEc2 api) {
         super(
-            "/talk/ec2[instance and host]",
+            "/talk/ec2[instance and host and shell]",
             "/talk[not(daemon)]"
         );
         this.api = api;

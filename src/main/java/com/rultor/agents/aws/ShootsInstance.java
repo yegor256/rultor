@@ -40,14 +40,14 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Kills EC2 instance if it's older than X hours -- this means that
- * the script takes too long to execute, we stop it.
+ * Terminates EC2 instance if it's older than X hours, but
+ * the work hasn't been started yet and the shell is not registered.
  *
  * @since 1.77
  */
 @Immutable
 @ToString
-public final class KillsInstance extends AbstractAgent {
+public final class ShootsInstance extends AbstractAgent {
 
     /**
      * AWS Client.
@@ -59,11 +59,11 @@ public final class KillsInstance extends AbstractAgent {
      * @param aws API
      * @param mins Max age in minutes
      */
-    public KillsInstance(final AwsEc2 aws, final long mins) {
+    public ShootsInstance(final AwsEc2 aws, final long mins) {
         super(
             "/talk/ec2/instance",
-            "/talk/daemon[started and not(code) and not(ended)]",
-            "/talk/daemon/dir",
+            "/talk/ec2/host",
+            "/talk[not(shell)]",
             String.format(
                 // @checkstyle LineLength (1 line)
                 "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",

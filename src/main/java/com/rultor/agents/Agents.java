@@ -46,6 +46,7 @@ import com.rultor.agents.aws.DropsInstance;
 import com.rultor.agents.aws.KillsInstance;
 import com.rultor.agents.aws.PingsInstance;
 import com.rultor.agents.aws.PrunesInstances;
+import com.rultor.agents.aws.ShootsInstance;
 import com.rultor.agents.aws.StartsInstance;
 import com.rultor.agents.aws.TerminatesInstance;
 import com.rultor.agents.daemons.ArchivesDaemon;
@@ -346,6 +347,7 @@ public final class Agents {
                 new Agent.Quiet(new DropsInstance(aws)),
                 new Agent.Quiet(new DetachesInstance(aws)),
                 new Agent.Quiet(new KillsInstance(aws, TimeUnit.HOURS.toMinutes(2L))),
+                new Agent.Quiet(new ShootsInstance(aws, TimeUnit.HOURS.toMinutes(2L))),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
