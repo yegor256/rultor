@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.Shell;
@@ -36,6 +37,7 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.PfShell;
 import java.io.IOException;
+import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -50,20 +52,27 @@ import org.xembly.Directives;
 public final class ConnectsInstance extends AbstractAgent {
 
     /**
+     * AWS Client.
+     */
+    private final transient AwsEc2 api;
+
+    /**
      * Shell.
      */
     private final transient PfShell shell;
 
     /**
      * Ctor.
+     * @param aws API
      * @param shll The shell
      */
-    public ConnectsInstance(final PfShell shll) {
+    public ConnectsInstance(final AwsEc2 aws, final PfShell shll) {
         super(
             "/talk[daemon and not(shell)]",
             "/talk/ec2/instance",
             "/talk/ec2/host"
         );
+        this.api = aws;
         this.shell = shll;
     }
 
@@ -88,9 +97,16 @@ public final class ConnectsInstance extends AbstractAgent {
                 instance, host
             );
         } else {
+            final long age = new Date().getTime() - this.api.aws()
+                .describeInstances(
+                    new DescribeInstancesRequest().withInstanceIds(instance)
+                )
+                .getReservations().get(0)
+                .getInstances().get(0)
+                .getLaunchTime().getTime();
             Logger.warn(
-                this, "Can't connect to AWS instance %s at %s",
-                instance, host
+                this, "Can't connect to AWS instance %s at %s (%[ms]s old)",
+                instance, host, age
             );
         }
         return dirs;

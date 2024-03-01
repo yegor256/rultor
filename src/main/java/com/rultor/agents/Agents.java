@@ -301,6 +301,7 @@ public final class Agents {
                 new Agent.Quiet(new DescribesInstance(aws)),
                 new Agent.Quiet(
                     new ConnectsInstance(
+                        aws,
                         new PfShell(
                             profile,
                             "none",
