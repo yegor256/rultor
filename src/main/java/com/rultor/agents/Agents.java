@@ -347,7 +347,7 @@ public final class Agents {
                 new Agent.Quiet(new DropsInstance(aws)),
                 new Agent.Quiet(new DetachesInstance(aws)),
                 new Agent.Quiet(new KillsInstance(aws, TimeUnit.HOURS.toMinutes(2L))),
-                new Agent.Quiet(new ShootsInstance(aws, 10L)),
+                new Agent.Quiet(new ShootsInstance(aws, TimeUnit.MINUTES.toMillis(15L))),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(

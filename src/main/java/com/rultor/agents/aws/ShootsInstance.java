@@ -29,12 +29,14 @@
  */
 package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import java.io.IOException;
+import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -55,32 +57,45 @@ public final class ShootsInstance extends AbstractAgent {
     private final transient AwsEc2 api;
 
     /**
+     * Maximum age to tolerate, in milliseconds.
+     */
+    private final transient long max;
+
+    /**
      * Ctor.
      * @param aws API
-     * @param mins Max age in minutes
+     * @param msec Max age in millis
      */
-    public ShootsInstance(final AwsEc2 aws, final long mins) {
+    public ShootsInstance(final AwsEc2 aws, final long msec) {
         super(
             "/talk/ec2/instance",
             "/talk/ec2/host",
-            "/talk[not(shell)]",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-            )
+            "/talk[not(shell)]"
         );
         this.api = aws;
+        this.max = msec;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        this.api.aws().terminateInstances(
-            new TerminateInstancesRequest()
-                .withInstanceIds(instance)
-        );
-        Logger.info("Terminated AWS instance %s because it's too old", instance);
+        final long age = new Date().getTime() - this.api.aws()
+            .describeInstances(
+                new DescribeInstancesRequest().withInstanceIds(instance)
+            )
+            .getReservations().get(0)
+            .getInstances().get(0)
+            .getLaunchTime().getTime();
+        if (age > this.max) {
+            this.api.aws().terminateInstances(
+                new TerminateInstancesRequest()
+                    .withInstanceIds(instance)
+            );
+            Logger.warn(
+                "Terminated AWS instance %s because it's too old (%[ms]s)",
+                instance, age
+            );
+        }
         return new Directives();
     }
 }
