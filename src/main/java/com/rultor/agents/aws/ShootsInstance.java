@@ -92,7 +92,7 @@ public final class ShootsInstance extends AbstractAgent {
                     .withInstanceIds(instance)
             );
             Logger.warn(
-                "Terminated AWS instance %s because it's too old (%[ms]s)",
+                "Terminated AWS instance %s because it's %[ms]s old (most probably dead)",
                 instance, age
             );
         }
