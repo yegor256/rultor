@@ -322,7 +322,7 @@ public final class Agents {
                 // @checkstyle MagicNumber (1 line)
                 new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),
                 new DropsDaemon(TimeUnit.DAYS.toMinutes(1L)),
-                new MkdirDaemon(),
+                new Agent.Quiet(new MkdirDaemon()),
                 new TimedAgent(new StartsDaemon(profile)),
                 // @checkstyle MagicNumber (1 line)
                 new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(3L))),
