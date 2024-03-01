@@ -80,11 +80,12 @@ public final class ConnectsInstance extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         final String host = xml.xpath("/talk/ec2/host/text()").get(0);
+        final String name = xml.xpath("/talk/@name").get(0);
         final Directives dirs = new Directives();
         if (this.alive(host)) {
             Logger.warn(
                 this, "AWS instance %s is alive at %s for %s",
-                instance, host, xml.xpath("/talk/@name").get(0)
+                instance, host, name
             );
             dirs.xpath("/talk").add("shell")
                 .attr("id", xml.xpath("/talk/daemon/@id").get(0))
@@ -93,8 +94,8 @@ public final class ConnectsInstance extends AbstractAgent {
                 .add("login").set(this.shell.login()).up()
                 .add("key").set(this.shell.key());
             Logger.info(
-                this, "AWS instance %s launched and running at %s",
-                instance, host
+                this, "AWS instance %s launched for %s and running at %s",
+                instance, name, host
             );
         } else {
             final long age = new Date().getTime() - this.api.aws()
@@ -105,8 +106,8 @@ public final class ConnectsInstance extends AbstractAgent {
                 .getInstances().get(0)
                 .getLaunchTime().getTime();
             Logger.warn(
-                this, "Can't connect to AWS instance %s at %s (%[ms]s old)",
-                instance, host, age
+                this, "Can't connect %s to AWS instance %s at %s (%[ms]s old)",
+                name, instance, host, age
             );
         }
         return dirs;
