@@ -85,7 +85,7 @@ public final class PingsInstance extends AbstractAgent {
                     instance, host, name, attempt, ex.getMessage()
                 );
                 ++attempt;
-                if (attempt > 5) {
+                if (attempt > 3) {
                     dirs.xpath("/talk/daemon").remove();
                     Logger.warn(
                         this, "The AWS instance %s is officially dead at %s",
