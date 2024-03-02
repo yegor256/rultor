@@ -30,43 +30,72 @@
 package com.rultor.agents.aws;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
+import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Stops EC2 instance.
+ * Ping EC2 instance and deletes "daemon" if it doesn't reply.
  *
  * @since 1.77
  */
 @Immutable
 @ToString
-public final class StopsInstance extends AbstractAgent {
-
-    /**
-     * Aws Ec2 instance.
-     */
-    private final AwsEc2 api;
+public final class PingsInstance extends AbstractAgent {
 
     /**
      * Ctor.
-     * @param api Aws Ec2 api.
      */
-    public StopsInstance(final AwsEc2 api) {
+    public PingsInstance() {
         super(
-            "/talk/ec2[@id]",
-            "/talk[not(daemon)]"
+            "/talk/ec2/host",
+            "/talk/daemon",
+            "/talk/shell[host and port and login and key]"
         );
-        this.api = api;
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String inst = xml.xpath("/talk/ec2/@id").get(0);
-        new AwsEc2Instance(this.api, inst).stop();
-        return new Directives().xpath("/talk/ec2").strict(1).remove();
+        final String name = xml.xpath("/talk/@name").get(0);
+        final Shell shell = new TalkShells(xml).get();
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
+        final String host = xml.xpath("/talk/shell/host/text()").get(0);
+        final Directives dirs = new Directives();
+        int attempt = 0;
+        while (true) {
+            try {
+                new Shell.Empty(new Shell.Safe(shell)).exec("whoami");
+                Logger.warn(
+                    this, "AWS instance %s is alive at %s for %s",
+                    instance, host, name
+                );
+                break;
+            // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final Exception ex) {
+                Logger.warn(
+                    this,
+                    "Failed to ping AWS instance %s at %s for %s (attempt no.%d): %s",
+                    instance, host, name, attempt, ex.getMessage()
+                );
+                ++attempt;
+                if (attempt > 3) {
+                    dirs.xpath("/talk/daemon").remove();
+                    Logger.warn(
+                        this, "The AWS instance %s is officially dead at %s",
+                        instance, name
+                    );
+                    break;
+                }
+                new Sleep(1L).now();
+            }
+        }
+        return dirs;
     }
 }

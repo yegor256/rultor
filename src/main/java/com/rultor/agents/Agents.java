@@ -39,9 +39,15 @@ import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Ssh;
 import com.rultor.agents.aws.AwsEc2;
-import com.rultor.agents.aws.AwsEc2Image;
+import com.rultor.agents.aws.ConnectsInstance;
+import com.rultor.agents.aws.DescribesInstance;
+import com.rultor.agents.aws.DetachesInstance;
+import com.rultor.agents.aws.DropsInstance;
+import com.rultor.agents.aws.PingsInstance;
+import com.rultor.agents.aws.PrunesInstances;
+import com.rultor.agents.aws.ShootsInstance;
 import com.rultor.agents.aws.StartsInstance;
-import com.rultor.agents.aws.StopsInstance;
+import com.rultor.agents.aws.TerminatesInstance;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.DismountDaemon;
 import com.rultor.agents.daemons.DropsDaemon;
@@ -93,6 +99,7 @@ import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
+import com.rultor.agents.shells.PfShell;
 import com.rultor.agents.shells.RegistersShell;
 import com.rultor.agents.shells.RemovesShell;
 import com.rultor.agents.twitter.OAuthTwitter;
@@ -163,17 +170,28 @@ public final class Agents {
      * @throws IOException If fails
      */
     public SuperAgent starter() throws IOException {
+        final AwsEc2 aws = new AwsEc2(
+            Manifests.read("Rultor-EC2Key"),
+            Manifests.read("Rultor-EC2Secret")
+        );
         return new SuperAgent.Iterative(
             new Array<>(
                 new StartsTalks(this.github),
                 new Invitations(this.github),
                 new IndexesRequests(),
-                new DockerExec(
-                    new Ssh(
-                        Agents.HOST, Agents.PORT, Agents.LOGIN,
-                        Agents.priv()
-                    ),
-                    "prune.sh"
+                new SuperAgent.Quiet(
+                    new PrunesInstances(
+                        aws, TimeUnit.HOURS.toMillis(3L)
+                    )
+                ),
+                new SuperAgent.Disabled(
+                    new DockerExec(
+                        new Ssh(
+                            Agents.HOST, Agents.PORT, Agents.LOGIN,
+                            Agents.priv()
+                        ),
+                        "prune.sh"
+                    )
                 )
             )
         );
@@ -253,9 +271,13 @@ public final class Agents {
                 )
             )
         );
+        final AwsEc2 aws = new AwsEc2(
+            Manifests.read("Rultor-EC2Key"),
+            Manifests.read("Rultor-EC2Secret")
+        );
         return new VerboseAgent(
             new Agent.Iterative(
-                new SanitizesDaemon(),
+                new Agent.Quiet(new SanitizesDaemon()),
                 new WipesDaemon(),
                 new DropsTalk(),
                 new Understands(
@@ -263,34 +285,49 @@ public final class Agents {
                     new QnSafe(question)
                 ),
                 new StartsRequest(profile),
-                new Agent.Disabled(
-                    new StartsInstance(
-                        new AwsEc2Image(
-                            new AwsEc2(
-                                Manifests.read("Rultor-EC2Key"),
-                                Manifests.read("Rultor-EC2Secret")
-                            ),
-                            Manifests.read("Rultor-EC2Image")
+                new Agent.Quiet(
+                    new Agent.Disabled(
+                        new StartsInstance(
+                            profile,
+                            aws,
+                            Manifests.read("Rultor-EC2Image"),
+                            Manifests.read("Rultor-EC2Type"),
+                            Manifests.read("Rultor-EC2Group"),
+                            Manifests.read("Rultor-EC2Subnet")
                         ),
-                        profile,
-                        Agents.PORT, Agents.LOGIN,
-                        Agents.priv()
+                        false
                     )
                 ),
-                new RegistersShell(
-                    profile,
-                    Agents.HOST, Agents.PORT, Agents.LOGIN,
-                    Agents.priv()
+                new Agent.Quiet(new DescribesInstance(aws)),
+                new Agent.Quiet(
+                    new ConnectsInstance(
+                        aws,
+                        new PfShell(
+                            profile,
+                            "none",
+                            Agents.PORT,
+                            "ubuntu",
+                            Agents.priv()
+                        )
+                    )
+                ),
+                new Agent.Disabled(
+                    new RegistersShell(
+                        profile,
+                        Agents.HOST, Agents.PORT, Agents.LOGIN,
+                        Agents.priv()
+                    ),
+                    true
                 ),
                 // @checkstyle MagicNumber (1 line)
                 new DismountDaemon(TimeUnit.DAYS.toMinutes(5L)),
                 new DropsDaemon(TimeUnit.DAYS.toMinutes(1L)),
-                new MkdirDaemon(),
+                new Agent.Quiet(new MkdirDaemon()),
                 new TimedAgent(new StartsDaemon(profile)),
                 // @checkstyle MagicNumber (1 line)
-                new KillsDaemon(TimeUnit.HOURS.toMinutes(3L)),
+                new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(3L))),
                 new TimedAgent(new StopsDaemon()),
-                new TimedAgent(new EndsDaemon()),
+                new TimedAgent(new Agent.Quiet(new EndsDaemon())),
                 new EndsRequest(),
                 new SafeAgent(
                     new Tweets(
@@ -307,14 +344,11 @@ public final class Agents {
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
                 new Reports(this.github),
-                new Agent.Disabled(
-                    new StopsInstance(
-                        new AwsEc2(
-                            Manifests.read("Rultor-EC2Key"),
-                            Manifests.read("Rultor-EC2Secret")
-                        )
-                    )
-                ),
+                new Agent.Quiet(new TerminatesInstance(aws)),
+                new Agent.Quiet(new PingsInstance()),
+                new Agent.Quiet(new DropsInstance(aws)),
+                new Agent.Quiet(new DetachesInstance(aws)),
+                new Agent.Quiet(new ShootsInstance(aws, TimeUnit.MINUTES.toMillis(15L))),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(

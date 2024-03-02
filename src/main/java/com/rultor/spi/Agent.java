@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.Array;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
@@ -83,9 +84,12 @@ public interface Agent {
 
         @Override
         public void execute(final Talk talk) throws IOException {
+            int total = 0;
             for (final Agent agent : this.children) {
                 agent.execute(talk);
+                ++total;
             }
+            Logger.debug(this, "Executed %d agent(s)", total);
         }
     }
 
@@ -104,16 +108,67 @@ public interface Agent {
         private final transient Agent agent;
 
         /**
+         * Disable it?
+         */
+        private final transient boolean disable;
+
+        /**
          * Ctor.
          * @param agt Agent
          */
         public Disabled(final Agent agt) {
+            this(agt, true);
+        }
+
+        /**
+         * Ctor.
+         * @param agt Agent
+         * @param dsbl Disable it?
+         */
+        public Disabled(final Agent agt, final boolean dsbl) {
             this.agent = agt;
+            this.disable = dsbl;
         }
 
         @Override
         public void execute(final Talk talk) throws IOException {
-            // nothing to do
+            if (!this.disable) {
+                this.agent.execute(talk);
+            }
+        }
+    }
+
+    /**
+     * Swallows all exceptions.
+     *
+     * @since 1.0
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "agent")
+    final class Quiet implements Agent {
+        /**
+         * Agent to defend.
+         */
+        private final transient Agent agent;
+
+        /**
+         * Ctor.
+         * @param agt Agent
+         */
+        public Quiet(final Agent agt) {
+            this.agent = agt;
+        }
+
+        @Override
+        @SuppressWarnings("PMD.AvoidCatchingGenericException")
+        public void execute(final Talk talk) throws IOException {
+            try {
+                this.agent.execute(talk);
+            // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final Exception ex) {
+                Logger.error(this, "%[exception]s", ex);
+            }
         }
     }
 }

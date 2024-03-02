@@ -120,11 +120,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           </a>
         </div>
       </div>
-      <p itemprop="creator">
-        <a href="https://www.0crat.com/p/C3SAYRPH9">
-          <img src="https://www.0crat.com/badge/C3SAYRPH9.svg" alt="Managed by Zerocracy"/>
-        </a>
-      </p>
       <p>
         <a href="https://www.sixnines.io/h/efd7">
           <img src="https://www.sixnines.io/b/efd7?style=flat" alt="sixnines"/>

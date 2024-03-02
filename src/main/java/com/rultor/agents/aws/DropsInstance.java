@@ -27,52 +27,60 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.shells;
+package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.Shell;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.spi.Profile;
-import java.net.UnknownHostException;
-import lombok.EqualsAndHashCode;
+import com.rultor.agents.AbstractAgent;
+import java.io.IOException;
 import lombok.ToString;
+import org.xembly.Directive;
+import org.xembly.Directives;
 
 /**
- * Shells referenced from Talks.
+ * Deletes the "ec2" XML element if the instance doesn't exist in EC2 --
+ * this means that the instance was killed by some other mechanisms
+ * and doesn't need to be connected anymore to the talk.
  *
- * @since 1.0
+ * @since 1.77
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "xml")
-public final class TalkShells {
+public final class DropsInstance extends AbstractAgent {
 
     /**
-     * Encapsulated XML.
+     * AWS Client.
      */
-    private final transient XML xml;
+    private final transient AwsEc2 api;
 
     /**
      * Ctor.
-     * @param talk XML in talk
+     * @param aws API
      */
-    public TalkShells(final XML talk) {
-        this.xml = talk;
+    public DropsInstance(final AwsEc2 aws) {
+        super("/talk/ec2/instance");
+        this.api = aws;
     }
 
-    /**
-     * Find and get shell.
-     * @return Issue
-     * @throws UnknownHostException If fails
-     */
-    public Shell get() throws UnknownHostException {
-        final XML shell = this.xml.nodes("/talk/shell").get(0);
-        return new PfShell(
-            Profile.EMPTY,
-            shell.xpath("host/text()").get(0),
-            Integer.parseInt(shell.xpath("port/text()").get(0)),
-            shell.xpath("login/text()").get(0),
-            shell.xpath("key/text()").get(0)
-        ).toSsh();
+    @Override
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
+        final DescribeInstancesResult res = this.api.aws().describeInstances(
+            new DescribeInstancesRequest()
+                .withInstanceIds(instance)
+        );
+        final Directives dirs = new Directives();
+        if (res.getReservations().isEmpty()) {
+            dirs.xpath("/talk/ec2").strict(1).remove();
+            Logger.warn(
+                this, "AWS instance %s is absent, deleting the link from %s",
+                instance, xml.xpath("/talk/@name").get(0)
+            );
+        }
+        return dirs;
     }
+
 }

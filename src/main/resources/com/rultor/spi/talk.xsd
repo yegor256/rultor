@@ -195,9 +195,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       </xs:element>
       <xs:element name="type">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the type of the request.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the type of the request.</xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
@@ -207,17 +205,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       </xs:element>
       <xs:element name="args">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the list arguments.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the list arguments.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:sequence>
             <xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
               <xs:annotation>
-                <xs:documentation source="description">
-                                    This type has an argument of the request.
-                                </xs:documentation>
+                <xs:documentation source="description">This type has an argument of the request.</xs:documentation>
               </xs:annotation>
               <xs:complexType>
                 <xs:simpleContent>
@@ -237,9 +231,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         </xs:complexType>
         <xs:unique name="argName">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This is an unique constraint over the argument name.
-                        </xs:documentation>
+            <xs:documentation source="description">This is an unique constraint over the argument name.</xs:documentation>
           </xs:annotation>
           <xs:selector xpath="arg"/>
           <xs:field xpath="@name"/>
@@ -251,54 +243,39 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   </xs:complexType>
   <xs:complexType name="wire">
     <xs:annotation>
-      <xs:documentation source="description">
-                This type describes the specification of the wire task.
-            </xs:documentation>
+      <xs:documentation source="description">This type describes the specification of the wire task.</xs:documentation>
     </xs:annotation>
     <xs:all>
       <xs:element name="href" type="xs:anyURI">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the URI of the wire.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the URI of the wire.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="github-repo" type="xs:string" minOccurs="0">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the name of the repository in github.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the name of the repository in github.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="github-issue" type="xs:integer" minOccurs="0">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the number of the issue in github.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the number of the issue in github.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="github-seen" type="xs:integer" minOccurs="0">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the number of views of the issue.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the number of views of the issue.</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:all>
   </xs:complexType>
   <xs:complexType name="archive">
     <xs:annotation>
-      <xs:documentation source="description">
-                This type describes the specification of the archive task.
-            </xs:documentation>
+      <xs:documentation source="description">This type describes the specification of the archive task.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="log" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
-          <xs:documentation source="description">
-                        This element has the log specification for the archive
-                        task.
-                    </xs:documentation>
+          <xs:documentation source="description">This element has the log specification for the archive task.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:simpleContent>
@@ -314,60 +291,55 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   </xs:complexType>
   <xs:complexType name="ec2">
     <xs:annotation>
-      <xs:documentation source="description">
-                This type describes the specification about the EC2.
-            </xs:documentation>
+      <xs:documentation source="description">This type describes the specification about the EC2.</xs:documentation>
     </xs:annotation>
-    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:all>
+      <xs:element name="instance" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">Instance ID of the EC2 server.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="host" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="description">IP of the EC2 server.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
   </xs:complexType>
   <xs:element name="talk">
     <xs:annotation>
-      <xs:documentation source="description">
-                This element has the definition of the talk task.
-            </xs:documentation>
+      <xs:documentation source="description">This element has the definition of the talk task.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:all>
         <xs:element name="daemon" type="daemon" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the daemon definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the daemon definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="wire" type="wire" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the wire definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the wire definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="shell" type="shell" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the shell definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the shell definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="request" type="request" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the request definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the request definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="archive" type="archive" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the archive definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the archive definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="ec2" type="ec2" minOccurs="0">
           <xs:annotation>
-            <xs:documentation source="description">
-                            This element has the EC2 definition.
-                        </xs:documentation>
+            <xs:documentation source="description">This element has the EC2 definition.</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:all>
@@ -378,20 +350,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </xs:complexType>
     <xs:unique name="daemonID">
       <xs:annotation>
-        <xs:documentation source="description">
-                    This is an unique constraint over the id attribute of log
-                    in the element type archive
-                </xs:documentation>
+        <xs:documentation source="description">This is an unique constraint over the id attribute of log in the element type archive</xs:documentation>
       </xs:annotation>
       <xs:selector xpath="daemon|archive/log"/>
       <xs:field xpath="@id"/>
     </xs:unique>
     <xs:unique name="requestID">
       <xs:annotation>
-        <xs:documentation source="description">
-                    Request ID can't be the same as already
-                    existing log ID
-                </xs:documentation>
+        <xs:documentation source="description">Request ID can't be the same as already existing log ID</xs:documentation>
       </xs:annotation>
       <xs:selector xpath="request|archive/log"/>
       <xs:field xpath="@id"/>

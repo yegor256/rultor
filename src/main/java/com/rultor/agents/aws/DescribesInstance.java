@@ -29,83 +29,65 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.InstanceType;
-import com.amazonaws.services.ec2.model.RunInstancesRequest;
-import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.Instance;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
+import com.rultor.agents.AbstractAgent;
+import java.io.IOException;
 import lombok.ToString;
+import org.xembly.Directive;
+import org.xembly.Directives;
 
 /**
- * Amazon EC2 instance image to run.
+ * Finds IP of a running EC2 instance.
  *
  * @since 1.77
  */
 @Immutable
 @ToString
-@SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-public final class AwsEc2Image {
+public final class DescribesInstance extends AbstractAgent {
+
     /**
      * AWS Client.
      */
     private final transient AwsEc2 api;
 
     /**
-     * Amazon machine image id.
-     */
-    private final String image;
-
-    /**
-     * AWS Instance type.
-     */
-    private final transient InstanceType type;
-
-    /**
      * Ctor.
-     * @param api AwsEc2 api client
-     * @param image Ec2 instance ami_id
+     * @param aws API
      */
-    public AwsEc2Image(final AwsEc2 api, final String image) {
-        this(api, image, "t2.nano");
-    }
-
-    /**
-     * Ctor.
-     * @param api AwsEc2 api client
-     * @param image Ec2 instance ami_id
-     * @param type Instance type
-     */
-    public AwsEc2Image(final AwsEc2 api, final String image,
-        final String type) {
-        if (image.isEmpty()) {
-            throw new IllegalArgumentException(
-                "Machine image id is mandatory"
-            );
-        }
-        if (type.isEmpty()) {
-            throw new IllegalArgumentException(
-                "Machine type is mandatory"
-            );
-        }
-        this.api = api;
-        this.image = image;
-        this.type = InstanceType.fromValue(type);
-    }
-
-    /**
-     * Run image.
-     * @return Instance_id
-     */
-    public AwsEc2Instance run() {
-        final RunInstancesRequest request = new RunInstancesRequest()
-            .withImageId(this.image)
-            .withInstanceType(this.type)
-            .withMaxCount(1)
-            .withMinCount(1);
-        final RunInstancesResult response =
-            this.api.aws().runInstances(request);
-        return new AwsEc2Instance(
-            this.api,
-            response.getReservation().getInstances().get(0).getInstanceId()
+    public DescribesInstance(final AwsEc2 aws) {
+        super(
+            "/talk[daemon]",
+            "/talk/ec2[not(host)]",
+            "/talk/ec2/instance"
         );
+        this.api = aws;
     }
+
+    @Override
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
+        final String state = this.api.aws().describeInstanceStatus(
+            new DescribeInstanceStatusRequest()
+                .withIncludeAllInstances(true)
+                .withInstanceIds(instance)
+        ).getInstanceStatuses().get(0).getInstanceState().getName();
+        Logger.info(this, "AWS instance %s state: %s", instance, state);
+        final Directives dirs = new Directives();
+        if ("running".equals(state)) {
+            final Instance ready = this.api.aws().describeInstances(
+                new DescribeInstancesRequest()
+                    .withInstanceIds(instance)
+            ).getReservations().get(0).getInstances().get(0);
+            final String host = ready.getPublicIpAddress();
+            dirs.xpath("/talk/ec2").add("host").set(host);
+            Logger.info(this, "AWS instance %s is at %s", instance, host);
+        }
+        return dirs;
+    }
+
 }

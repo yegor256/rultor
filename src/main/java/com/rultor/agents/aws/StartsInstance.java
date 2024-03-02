@@ -29,13 +29,18 @@
  */
 package com.rultor.agents.aws;
 
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.RunInstancesRequest;
+import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.Tag;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
-import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Arrays;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -47,101 +52,80 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
 public final class StartsInstance extends AbstractAgent {
 
     /**
-     * AWS Ec2 Instance.
+     * Allowed instance types.
      */
-    private final AwsEc2Image image;
+    private static final String[] ALLOWED_TYPES = {
+        "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large",
+    };
 
     /**
-     * Name Tag value.
+     * Profile to get EC2 params.
      */
-    private final String tag;
+    private final transient Profile profile;
 
     /**
-     * Shell in profile.
+     * AWS Client.
      */
-    private final transient PfShell shell;
+    private final transient AwsEc2 api;
+
+    /**
+     * Amazon machine image id.
+     */
+    private final String image;
+
+    /**
+     * AWS Instance type.
+     */
+    private final transient String type;
+
+    /**
+     * EC2 security group.
+     */
+    private final String sgroup;
+
+    /**
+     * EC2 subnet.
+     */
+    private final String subnet;
 
     /**
      * Ctor.
-     * @param image Instance image to run
-     * @param profile Profile
-     * @param port Default Port of server
-     * @param user Default Login
-     * @param key Default Private SSH key
-     * @checkstyle ParameterNumberCheck (6 lines)
+     * @param pfl Profile
+     * @param aws API
+     * @param image Instance AMI image name to run
+     * @param tpe Type of instance, like "t1.micro"
+     * @param grp Security group, like "sg-38924038290"
+     * @param net Subnet, like "subnet-0890890"
+     * @checkstyle ParameterNumberCheck (5 lines)
      */
-    public StartsInstance(final AwsEc2Image image, final Profile profile,
-        final int port, final String user, final String key) {
-        this(image, "rultor", profile, port, user, key);
-    }
-
-    /**
-     * Ctor.
-     * @param image Instance image to run
-     * @param tag Name tag value
-     * @param profile Profile
-     * @param port Default Port of server
-     * @param user Default Login
-     * @param key Default Private SSH key
-     * @checkstyle ParameterNumberCheck (6 lines)
-     */
-    public StartsInstance(final AwsEc2Image image, final String tag,
-        final Profile profile, final int port,
-        final String user, final String key) {
-        super("/talk[daemon and not(shell)]");
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException(
-                "User name is mandatory"
-            );
-        }
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException(
-                "SSH key is mandatory"
-            );
-        }
+    public StartsInstance(final Profile pfl, final AwsEc2 aws,
+        final String image, final String tpe,
+        final String grp, final String net) {
+        super("/talk[daemon and not(ec2) and not(shell)]");
+        this.profile = pfl;
+        this.api = aws;
         this.image = image;
-        this.tag = tag;
-        this.shell = new PfShell(profile, "", port, user, key);
+        this.type = tpe;
+        this.sgroup = grp;
+        this.subnet = net;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final Directives dirs = new Directives();
         try {
-            final String login = this.shell.login();
-            if (login.isEmpty()) {
-                throw new Profile.ConfigException(
-                    "SSH login is empty, it's a mistake"
-                );
-            }
-            final String key = this.shell.key();
-            if (key.isEmpty()) {
-                throw new Profile.ConfigException(
-                    "SSH key is empty, it's a mistake"
-                );
-            }
-            final AwsEc2Instance inst = this.image.run();
-            if (!this.tag.isEmpty()) {
-                inst.tag("Name", this.tag);
-            }
+            final Instance instance = this.run(xml.xpath("/talk/@name").get(0));
             Logger.info(
-                this, "EC2 instance %s on %s started in %s",
-                inst.id(), inst.ipv6(),
+                this, "EC2 instance %s started for %s",
+                instance.getInstanceId(),
                 xml.xpath("/talk/@name").get(0)
             );
-            dirs.xpath("/talk").add("ec2")
-                .attr("id", inst.id());
-            dirs.xpath("/talk").add("shell")
-                .attr("id", hash)
-                .add("host").set(inst.ipv6()).up()
-                .add("port").set(Integer.toString(this.shell.port())).up()
-                .add("login").set(login).up()
-                .add("key").set(key);
+            dirs.xpath("/talk")
+                .add("ec2")
+                .add("instance").set(instance.getInstanceId());
         } catch (final Profile.ConfigException ex) {
             dirs.xpath("/talk/daemon/script").set(
                 String.format(
@@ -150,5 +134,62 @@ public final class StartsInstance extends AbstractAgent {
             );
         }
         return dirs;
+    }
+
+    /**
+     * Run a new instance.
+     * @param talk Name of the talk
+     * @return Instance ID
+     * @throws IOException If fails
+     */
+    private Instance run(final String talk) throws IOException {
+        final String itype = this.instanceType();
+        final RunInstancesRequest request = new RunInstancesRequest()
+            .withSecurityGroupIds(this.sgroup)
+            .withSubnetId(this.subnet)
+            .withImageId(this.image)
+            .withInstanceType(itype)
+            .withMaxCount(1)
+            .withMinCount(1);
+        Logger.info(
+            this,
+            "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
+            talk, this.image, itype, this.sgroup, this.subnet
+        );
+        final RunInstancesResult response =
+            this.api.aws().runInstances(request);
+        final Instance instance = response.getReservation().getInstances().get(0);
+        final String iid = instance.getInstanceId();
+        this.api.aws().createTags(
+            new CreateTagsRequest()
+                .withResources(iid)
+                .withTags(
+                    new Tag().withKey("Name").withValue(talk),
+                    new Tag().withKey("rultor").withValue("yes"),
+                    new Tag().withKey("rultor-talk").withValue(talk)
+                )
+        );
+        return instance;
+    }
+
+    /**
+     * Read one EC2 param from .rultor.xml.
+     * @return Value
+     * @throws IOException If fails
+     */
+    private String instanceType() throws IOException {
+        final String required = new Profile.Defaults(this.profile).text(
+            "/p/entry[@key='ec2']/entry[@key='type']",
+            this.type
+        );
+        if (!Arrays.asList(StartsInstance.ALLOWED_TYPES).contains(required)) {
+            throw new Profile.ConfigException(
+                Logger.format(
+                    "EC2 instance type '%s' is not valid, use one of %[list]s",
+                    required, StartsInstance.ALLOWED_TYPES
+                )
+            );
+        }
+        return required;
     }
 }

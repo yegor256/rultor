@@ -27,52 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.shells;
+package com.rultor.agents.aws;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.ssh.Shell;
-import com.jcabi.xml.XML;
-import com.rultor.spi.Profile;
-import java.net.UnknownHostException;
-import lombok.EqualsAndHashCode;
+import com.jcabi.log.Logger;
+import java.util.concurrent.TimeUnit;
 import lombok.ToString;
 
 /**
- * Shells referenced from Talks.
+ * Sleep.
  *
- * @since 1.0
+ * @since 1.77
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "xml")
-public final class TalkShells {
+final class Sleep {
 
     /**
-     * Encapsulated XML.
+     * Seconds.
      */
-    private final transient XML xml;
+    private final transient long seconds;
 
     /**
      * Ctor.
-     * @param talk XML in talk
+     * @param scnd Seconds
      */
-    public TalkShells(final XML talk) {
-        this.xml = talk;
+    Sleep(final long scnd) {
+        this.seconds = scnd;
     }
 
     /**
-     * Find and get shell.
-     * @return Issue
-     * @throws UnknownHostException If fails
+     * Sleep for a while.
      */
-    public Shell get() throws UnknownHostException {
-        final XML shell = this.xml.nodes("/talk/shell").get(0);
-        return new PfShell(
-            Profile.EMPTY,
-            shell.xpath("host/text()").get(0),
-            Integer.parseInt(shell.xpath("port/text()").get(0)),
-            shell.xpath("login/text()").get(0),
-            shell.xpath("key/text()").get(0)
-        ).toSsh();
+    void now() {
+        try {
+            Logger.info(this, "Sleeping for %d seconds...", this.seconds);
+            Thread.sleep(TimeUnit.SECONDS.toMillis(this.seconds));
+        } catch (final InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(ex);
+        }
     }
+
 }

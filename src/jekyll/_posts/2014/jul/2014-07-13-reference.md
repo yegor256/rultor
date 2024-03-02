@@ -149,6 +149,17 @@ docker:
   directory: repo/my-docker-image
 {% endhighlight %}
 
+## EC2
+
+You can configure the type of EC2 instance that is used for your builds:
+
+{% highlight yaml %}
+ec2:
+  type: t2.medium
+{% endhighlight %}
+
+Please, be careful and don't use too large instances if you don't really need them.
+
 ## Environment Variables
 
 You can specify environment variables common for all

@@ -15,6 +15,9 @@ Rultor-S3Bucket: ${s3.bucket}
 Rultor-EC2Key: ${ec2.key}
 Rultor-EC2Secret: ${ec2.secret}
 Rultor-EC2Image: ${ec2.image}
+Rultor-EC2Type: ${ec2.type}
+Rultor-EC2Group: ${ec2.group}
+Rultor-EC2Subnet: ${ec2.subnet}
 Rultor-TwitterKey: ${twitter.key}
 Rultor-TwitterSecret: ${twitter.secret}
 Rultor-TwitterToken: ${twitter.token}

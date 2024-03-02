@@ -70,7 +70,10 @@ public final class RegistersShell extends AbstractAgent {
     public RegistersShell(final Profile profile, final String host,
         final int port, final String user, final String key)
         throws UnknownHostException {
-        super("/talk[daemon and not(shell)]");
+        super(
+            "/talk[daemon and not(shell)]",
+            "/talk[not(ec2/instance)]"
+        );
         if (user.isEmpty()) {
             throw new IllegalArgumentException(
                 "User name is mandatory"
