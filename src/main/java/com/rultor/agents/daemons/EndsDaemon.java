@@ -45,7 +45,9 @@ import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Skipped;
 import org.cactoos.list.ListOf;
+import org.cactoos.text.Joined;
 import org.cactoos.text.Split;
+import org.cactoos.text.Sub;
 import org.cactoos.text.TextOf;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -99,6 +101,10 @@ public final class EndsDaemon extends AbstractAgent {
      * @param dir The dir
      * @return Directives
      * @throws IOException If fails
+     * @todo #1207:1h There is no limit of tail message (only shifting to
+     *  100_000 symbols), but TkDaemon has a limit of 100_000 symbols in buffer
+     *  It is better to have a restriction for the tail length, not about start
+     *  position.
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
@@ -135,18 +141,21 @@ public final class EndsDaemon extends AbstractAgent {
             .add("tail")
             .set(
                 Xembler.escape(
-                    String.join(
-                        System.lineSeparator(),
-                        new Skipped<>(
-                            Math.max(lines.size() - 60, 0),
-                            new ListOf<>(
-                                new Mapped<>(
-                                    Text::asString,
-                                    lines
+                    new Sub(
+                        new Joined(
+                            System.lineSeparator(),
+                            new Skipped<>(
+                                Math.max(lines.size() - 60, 0),
+                                new ListOf<>(
+                                    new Mapped<>(
+                                        Text::asString,
+                                        lines
+                                    )
                                 )
                             )
-                        )
-                    ).substring(100_000)
+                        ),
+                        100_000
+                    ).toString()
                 )
             );
     }
