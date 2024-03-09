@@ -46,6 +46,7 @@ import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Skipped;
 import org.cactoos.list.ListOf;
 import org.cactoos.text.Joined;
+import org.cactoos.text.StartsWith;
 import org.cactoos.text.Split;
 import org.cactoos.text.Sub;
 import org.cactoos.text.TextOf;
@@ -117,20 +118,22 @@ public final class EndsDaemon extends AbstractAgent {
                 System.lineSeparator()
             )
         );
-        final String highlights = String.join(
+        final String highlights = new Joined(
             "\n",
             new Mapped<>(
-                s -> s.asString().substring(
+                s -> new Sub(
+                    s,
                     EndsDaemon.HIGHLIGHTS_PREFIX.length()
-                ),
+                ).asString(),
                 new Filtered<>(
-                    input -> input.asString().startsWith(
-                        EndsDaemon.HIGHLIGHTS_PREFIX
-                    ),
+                    input -> new StartsWith(
+                        input,
+                        new TextOf(EndsDaemon.HIGHLIGHTS_PREFIX)
+                    ).value(),
                     lines
                 )
             )
-        );
+        ).toString();
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives()
             .xpath("/talk/daemon")
