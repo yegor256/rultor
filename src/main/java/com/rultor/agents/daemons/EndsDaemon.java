@@ -40,13 +40,15 @@ import java.io.IOException;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.cactoos.Text;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Skipped;
 import org.cactoos.list.ListOf;
+import org.cactoos.text.Joined;
 import org.cactoos.text.Split;
+import org.cactoos.text.StartsWith;
+import org.cactoos.text.Sub;
 import org.cactoos.text.TextOf;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -100,6 +102,10 @@ public final class EndsDaemon extends AbstractAgent {
      * @param dir The dir
      * @return Directives
      * @throws IOException If fails
+     * @todo #1207:1h There is no limit of tail message (only shifting to
+     *  100_000 symbols), but TkDaemon has a limit of 100_000 symbols in buffer
+     *  It is better to have a restriction for the tail length, not about start
+     *  position.
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
@@ -112,21 +118,22 @@ public final class EndsDaemon extends AbstractAgent {
                 System.lineSeparator()
             )
         );
-        final String highlights = String.join(
+        final String highlights = new Joined(
             "\n",
             new Mapped<>(
-                s -> StringUtils.removeStart(
-                    s.asString(),
-                    EndsDaemon.HIGHLIGHTS_PREFIX
-                ),
+                s -> new Sub(
+                    s,
+                    EndsDaemon.HIGHLIGHTS_PREFIX.length()
+                ).asString(),
                 new Filtered<>(
-                    input -> input.asString().startsWith(
-                        EndsDaemon.HIGHLIGHTS_PREFIX
-                    ),
+                    input -> new StartsWith(
+                        input,
+                        new TextOf(EndsDaemon.HIGHLIGHTS_PREFIX)
+                    ).value(),
                     lines
                 )
             )
-        );
+        ).toString();
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives()
             .xpath("/talk/daemon")
@@ -137,8 +144,8 @@ public final class EndsDaemon extends AbstractAgent {
             .add("tail")
             .set(
                 Xembler.escape(
-                    StringUtils.substring(
-                        String.join(
+                    new Sub(
+                        new Joined(
                             System.lineSeparator(),
                             new Skipped<>(
                                 Math.max(lines.size() - 60, 0),
@@ -151,7 +158,7 @@ public final class EndsDaemon extends AbstractAgent {
                             )
                         ),
                         100_000
-                    )
+                    ).toString()
                 )
             );
     }

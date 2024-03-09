@@ -38,7 +38,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Date;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -66,11 +66,12 @@ final class ClosePullRequestTest {
         final Issue issue = repo.issues().create("", "");
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                new Joined(
+                    "",
                     "<p><entry key='merge'>",
                     "<entry key='rebase'>true</entry>",
                     "</entry></p>"
-                )
+                ).asString()
             )
         );
         final Talk talk = ClosePullRequestTest.talk(repo, issue);
@@ -82,7 +83,8 @@ final class ClosePullRequestTest {
         MatcherAssert.assertThat(
             new Comment.Smart(smart.comments().get(1)).body(),
             Matchers.containsString(
-                StringUtils.join(
+                new Joined(
+                    "",
                     "Rultor closed this pull request for you because your ",
                     ".rultor.yml specified the use of rebasing before ",
                     "merging. GitHub does not mark rebased pull requests as ",
@@ -90,7 +92,7 @@ final class ClosePullRequestTest {
                     "hashes. Nevertheless all your files have been merged ",
                     "exactly as they would have been merged without the ",
                     "rebase option set."
-                )
+                ).asString()
             )
         );
     }
@@ -105,11 +107,12 @@ final class ClosePullRequestTest {
         final Issue issue = repo.issues().create("", "");
         final Profile profile = new Profile.Fixed(
             new XMLDocument(
-                StringUtils.join(
+                new Joined(
+                    "",
                     "<p> <entry key='merge'>",
                     "  <entry key='rebase'>false</entry>",
                     "</entry> </p>"
-                )
+                ).asString()
             )
         );
         final Talk talk = ClosePullRequestTest.talk(repo, issue);

@@ -54,9 +54,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.io.InputStreamOf;
+import org.cactoos.text.Joined;
 
 /**
  * Tail daemon output.
@@ -117,13 +117,14 @@ public final class Tail {
                 ),
                 new AbstractMap.SimpleEntry<>(
                     "/talk",
-                    () -> IOUtils.toInputStream(
-                        StringUtils.join(
-                            String.format(
-                                "rultor.com %s/%s\n",
-                                Manifests.read("Rultor-Version"),
-                                Manifests.read("Rultor-Revision")
-                            ),
+                    () -> new InputStreamOf(
+                        new Joined(
+                            "",
+                            "rultor.com ",
+                            Manifests.read("Rultor-Version"),
+                            "/",
+                            Manifests.read("Rultor-Version"),
+                            "\n",
                             "nothing yet, try again in 15 seconds"
                         ),
                         StandardCharsets.UTF_8
@@ -239,18 +240,18 @@ public final class Tail {
             final Shell shell = new TalkShells(this.xml).get();
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(
-                StringUtils.join(
-                    String.format(
-                        "dir=%s;",
-                        Ssh.escape(
-                            this.xml.xpath("/talk/daemon/dir/text()").get(0)
-                        )
+                new Joined(
+                    "",
+                    "dir=",
+                    Ssh.escape(
+                        this.xml.xpath("/talk/daemon/dir/text()").get(0)
                     ),
+                    ";",
                     " (cat \"${dir}/stdout\" 2>/dev/null",
                     " || echo \"file $file is gone\")",
                     " | iconv -f utf-8 -t utf-8 -c",
                     " | LANG=en_US.UTF-8 col -b"
-                ),
+                ).toString(),
                 new NullInputStream(0L), baos,
                 Logger.stream(Level.SEVERE, true)
             );

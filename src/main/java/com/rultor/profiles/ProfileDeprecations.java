@@ -37,7 +37,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import org.apache.commons.io.input.NullInputStream;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 
 /**
  * Class allowing to print the deprecation notice if and only if the
@@ -49,7 +49,8 @@ public final class ProfileDeprecations {
     /**
      * The content of the notice.
      */
-    private static final String CONTENT = StringUtils.join(
+    private static final String CONTENT = new Joined(
+        "",
         "#### Deprecation Notice #### \n",
         "You are using the Rultor default Docker image in your build.",
         "The Rultor has to:\n",
@@ -59,7 +60,7 @@ public final class ProfileDeprecations {
         "2. Not install any gems to the global scope that interfere ",
         "with pdd or est\n",
         "#####################################\n"
-    );
+    ).toString();
 
     /**
      * The underlying profile.

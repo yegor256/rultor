@@ -44,12 +44,10 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.time.DateUtils;
 import org.xembly.Directives;
 
 /**
@@ -85,7 +83,7 @@ public final class StartsTalks implements SuperAgent {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
-            DateUtils.addMinutes(new Date(), -3)
+            System.currentTimeMillis() - 180_000
         ).iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();

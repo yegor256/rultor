@@ -42,9 +42,9 @@ import java.nio.file.Path;
 import java.security.SecureRandom;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.cactoos.io.TeeInput;
 import org.cactoos.scalar.LengthOf;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Disabled;
@@ -87,11 +87,12 @@ final class ReleaseBinariesTest {
             repo.github(),
             new Profile.Fixed(
                 new XMLDocument(
-                    StringUtils.join(
+                    new Joined(
+                        "",
                         "<p><entry key='release'><entry key='artifacts'>",
-                        String.format("%s/%s", target, name),
+                        target, "/", name,
                         "</entry></entry></p>"
-                    )
+                    ).asString()
                 )
             )
         ).execute(talk);

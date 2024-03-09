@@ -38,7 +38,7 @@ import com.rultor.spi.Talks;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 
 /**
  * Deactivates empty talks.
@@ -53,10 +53,11 @@ public final class DeactivatesTalks implements SuperAgent {
     /**
      * Which talks should be deactivated.
      */
-    private static final String XPATH = StringUtils.join(
+    private static final String XPATH = new Joined(
+        "",
         "/talk[@later='false' and not(request) and not(daemon)",
         " and not(shell)]"
-    );
+    ).toString();
 
     @Override
     public void execute(final Talks talks) throws IOException {

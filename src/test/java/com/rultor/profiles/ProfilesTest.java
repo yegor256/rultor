@@ -32,7 +32,7 @@ package com.rultor.profiles;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -64,7 +64,8 @@ final class ProfilesTest {
     /**
      * Profile template.
      */
-    private static final String PROFILE = StringUtils.join(
+    private static final String PROFILE = new Joined(
+        "",
         "<p><entry key='architect'><item>%s</item></entry>",
         "<entry key='merge'>",
         ProfilesTest.COMMANDERS,
@@ -74,7 +75,7 @@ final class ProfilesTest {
         "</entry><entry key='release'>",
         ProfilesTest.COMMANDERS,
         "</entry></p>"
-    );
+    ).toString();
 
     /**
      * Template for exception message.
@@ -203,19 +204,22 @@ final class ProfilesTest {
         final Profile merged = new Profile.Fixed(
             new XMLDocument(
                 String.format(
-                    StringUtils.join(
-                        "<p><entry key='architect'><item>%s</item>",
+                    new Joined(
+                        "",
+                        "<p><entry key='architect'><item>",
+                        architect, "</item>",
                         "</entry><entry key='merge'>",
                         "<entry key='commanders'>",
-                        "<item>%s</item><item>%s</item><item>%s</item>",
+                        "<item>", first,
+                        "</item><item>",
+                        second,
+                        "</item><item>",
+                        second,
+                        "</item>",
                         "</entry>",
                         ProfilesTest.SCRIPT,
                         "</entry> </p>"
-                    ),
-                    architect,
-                    first,
-                    second,
-                    second,
+                    ).asString(),
                     "do_another4"
                 )
             )

@@ -31,7 +31,7 @@ package com.rultor.profiles;
 
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
-import org.apache.commons.lang3.StringUtils;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -45,11 +45,12 @@ final class ProfileDeprecationsTest {
     /**
      * The format of an profile that defines the docker image to use.
      */
-    private static final String PROFILE_FORMAT = StringUtils.join(
+    private static final String PROFILE_FORMAT = new Joined(
+        "",
         "<p><entry key='docker'>",
         "<entry key='image'>%s</entry>",
         "</entry></p>"
-    );
+    ).toString();
 
     /**
      * ProfileDeprecations can identify a deprecated profile.
