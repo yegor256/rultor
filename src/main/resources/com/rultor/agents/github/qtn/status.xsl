@@ -28,9 +28,7 @@ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:r="https://www.rultor.com"
-  version="2.0" exclude-result-prefixes="xs r">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:r="https://www.rultor.com" version="2.0" exclude-result-prefixes="xs r">
   <xsl:output method="text"/>
   <xsl:template match="/talk">
     <xsl:apply-templates select="archive[log]"/>
