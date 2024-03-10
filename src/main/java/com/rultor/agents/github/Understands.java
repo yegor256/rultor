@@ -47,7 +47,6 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.cactoos.iterable.Joined;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -200,7 +199,7 @@ public final class Understands extends AbstractAgent {
                 false,
                 String.format(
                     Understands.PHRASES.getString("Understands.broken-profile"),
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Understands.rootCause(ex)
                 )
             );
             req = Req.EMPTY;
@@ -225,4 +224,16 @@ public final class Understands extends AbstractAgent {
         return seen;
     }
 
+    /**
+     * Root cause exception message.
+     * @param exception Error
+     * @return Message
+     */
+    private static String rootCause(final Profile.ConfigException exception) {
+        Throwable root = exception;
+        while (root.getCause() != root) {
+            root = root.getCause();
+        }
+        return root.getMessage();
+    }
 }

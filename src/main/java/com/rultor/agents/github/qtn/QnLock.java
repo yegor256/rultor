@@ -50,10 +50,11 @@ import javax.json.Json;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.list.ListOf;
 import org.cactoos.text.Joined;
+import org.cactoos.text.Replaced;
+import org.cactoos.text.TextOf;
 import org.cactoos.text.UncheckedText;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -95,10 +96,10 @@ public final class QnLock implements Question {
             users.addAll(
                 new ListOf<>(
                     new Mapped<>(
-                        input -> StringUtils.stripStart(
-                            input.trim().toLowerCase(Locale.ENGLISH),
-                            "@"
-                        ),
+                        input -> new Replaced(
+                            new TextOf(input.trim().toLowerCase(Locale.ENGLISH)),
+                            "^@", ""
+                        ).asString(),
                         Arrays.asList(
                             args.xpath(
                                 "//arg[@name='users']/text()"

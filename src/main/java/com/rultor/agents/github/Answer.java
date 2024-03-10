@@ -44,10 +44,11 @@ import java.util.Locale;
 import java.util.TreeSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Reversed;
 import org.cactoos.list.ListOf;
+import org.cactoos.text.Abbreviated;
+import org.cactoos.text.FormattedText;
 import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
 import org.xembly.Xembler;
@@ -133,16 +134,16 @@ public final class Answer {
         final StringBuilder msg = new StringBuilder(100);
         try {
             msg.append(
-                String.format(
+                new FormattedText(
                     "> %s\n\n",
-                    StringUtils.abbreviate(
+                    new Abbreviated(
                         this.comment.body().replaceAll(
                             "\\p{Space}",
                             Answer.SPACE
                         ),
                         100
                     )
-                )
+                ).asString()
             );
             final Collection<String> logins = new TreeSet<>();
             logins.add(this.comment.author().login());

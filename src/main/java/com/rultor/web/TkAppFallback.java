@@ -33,7 +33,6 @@ import com.jcabi.manifests.Manifests;
 import io.sentry.Sentry;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.fallback.FbChain;
@@ -105,7 +104,7 @@ final class TkAppFallback extends TkWrap {
                     TkAppFallback.class.getResource("error.html.vm"),
                     new RsVelocity.Pair(
                         "err",
-                        ExceptionUtils.getStackTrace(req.throwable())
+                        req.throwable().getStackTrace()
                     ),
                     new RsVelocity.Pair("rev", TkAppFallback.REV)
                 ),

@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -42,11 +41,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.cactoos.iterable.Joined;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Sticky;
 import org.cactoos.list.ListOf;
+import org.cactoos.text.Split;
+import org.cactoos.text.Trimmed;
 
 /**
  * Docker run command.
@@ -176,8 +176,9 @@ final class DockerRun {
      * @return If hash is in quotes.
      */
     private static boolean inquotes(final String item, final int pos) {
-        return StringUtils.countMatches(item.substring(0, pos), "\"") % 2 == 1
-            || StringUtils.countMatches(item.substring(0, pos), "'") % 2 == 1;
+        final String sub = item.substring(0, pos);
+        return sub.chars().filter(c -> c == '"').count() % 2 == 1
+            || sub.chars().filter(c -> c == '\'').count() % 2 == 1;
     }
 
     /**
@@ -250,10 +251,8 @@ final class DockerRun {
             lines.addAll(
                 new ListOf<>(
                     new Mapped<>(
-                        String::trim,
-                        Arrays.asList(
-                            StringUtils.split(node.xpath("text()").get(0), '\n')
-                        )
+                        t -> new Trimmed(t).asString(),
+                        new Split(node.xpath("text()").get(0), "\n")
                     )
                 )
             );
