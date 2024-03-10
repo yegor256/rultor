@@ -33,19 +33,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <html lang="en">
       <head>
         <meta charset="UTF-8"/>
-        <meta name="description"
-            content=
-                "DevOps team assistant that helps to automate merge, deploy and release operations,
-                 mostly for Github projects"
-        />
+        <meta name="description" content="DevOps team assistant that helps to automate merge, deploy and release operations, mostly for Github projects"/>
         <meta name="keywords" content="continuous integration, continuous delivery, DevOps"/>
         <meta name="author" content="rultor.com"/>
         <meta property="twitter:account_id" content="4503599630178231"/>
         <link rel="stylesheet" type="text/css" media="all" href="/css/main.css?{version/revision}"/>
-        <link rel="stylesheet" type="text/css" media="all"
-            href="/css/siblings.css?{version/revision}"/>
-        <link rel="stylesheet" type="text/css" media="all"
-            href="//doc.rultor.com/css/layout.css?{version/revision}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="/css/siblings.css?{version/revision}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="//doc.rultor.com/css/layout.css?{version/revision}"/>
         <link rel="icon" type="image/gif" href="//doc.rultor.com/favicon.ico?{version/revision}"/>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1-rc1.min.js">
           <xsl:text> </xsl:text>
@@ -118,8 +112,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </span>
     <xsl:if test="revision != 'BUILD'">
       <span>
-        <a href="https://github.com/yegor256/rultor/commit/{revision}"
-           title="Github revision deployed is {revision}">
+        <a href="https://github.com/yegor256/rultor/commit/{revision}" title="Github revision deployed is {revision}">
           <xsl:value-of select="substring(revision,1,3)"/>
         </a>
       </span>
