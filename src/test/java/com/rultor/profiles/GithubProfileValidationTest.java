@@ -52,14 +52,13 @@ import org.junit.jupiter.api.Test;
  * @since 1.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings
-    (
-        {
-            "PMD.AvoidDuplicateLiterals",
-            "PMD.TooManyMethods",
-            "PMD.UseConcurrentHashMap"
-        }
-    )
+@SuppressWarnings(
+    {
+    "PMD.AvoidDuplicateLiterals",
+    "PMD.TooManyMethods",
+    "PMD.UseConcurrentHashMap"
+    }
+)
 final class GithubProfileValidationTest {
     /**
      * GithubProfile will accept empty rultor configuration.

@@ -295,7 +295,8 @@ release:
     echo "packaging..."
 {% endhighlight %}
 
-`sensitive` option lists files that must not present in the branch after the release. It is recommended to list your sensitive config files there.
+`sensitive` option lists files that must not present in the branch after the release. 
+It is recommended to list your sensitive config files there.
 
 `pre` option if set to `false` will automatically mark the release in GitHub as "final."
 

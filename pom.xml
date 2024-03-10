@@ -828,13 +828,18 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.22.0</version>
+            <version>0.22.1</version>
             <configuration>
               <excludes combine.children="append">
                 <exclude>checkstyle:/src/main/js/.*</exclude>
                 <exclude>checkstyle:/src/main/scss/.*</exclude>
+                <exclude>checkstyle:/src/main/resources/com/rultor/web/.*</exclude>
+                <exclude>checkstyle:/src/main/resources/com/rultor/agents/daemons/.*</exclude>
+                <exclude>checkstyle:/src/main/resources/com/rultor/agents/docker/.*</exclude>
+                <exclude>checkstyle:/src/main/resources/com/rultor/agents/req/.*</exclude>
                 <exclude>checkstyle:/src/jekyll/guard-article.pdf</exclude>
                 <exclude>checkstyle:/src/jekyll/images/.*</exclude>
+                <exclude>checkstyle:/src/jekyll/favicon.ico</exclude>
                 <exclude>findbugs:.*</exclude>
                 <exclude>duplicatefinder:.*</exclude>
               </excludes>

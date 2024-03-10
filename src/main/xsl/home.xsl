@@ -28,7 +28,8 @@ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns="http://www.w3.org/1999/xhtml" version="1.0">
   <xsl:output method="xml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes"/>
   <xsl:include href="/xsl/layout.xsl"/>
   <xsl:template match="page" mode="head">
@@ -102,21 +103,24 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <span>powered by</span>
           <br/>
           <a href="http://www.docker.io" title="Docker">
-            <img src="//doc.rultor.com/images/docker-logo.png" style="width:96px" alt="docker logo"/>
+            <img src="//doc.rultor.com/images/docker-logo.png"
+               style="width:96px" alt="docker logo"/>
           </a>
         </div>
         <div>
           <span>operates at</span>
           <br/>
           <a href="http://www.github.com" title="Github">
-            <img src="//doc.rultor.com/images/github-logo.png" style="width:96px" alt="github logo"/>
+            <img src="//doc.rultor.com/images/github-logo.png" style="width:96px"
+               alt="github logo"/>
           </a>
         </div>
         <div>
           <span>hosted by</span>
           <br/>
           <a href="http://www.heroku.com" title="Heroku">
-            <img src="//doc.rultor.com/images/heroku-logo.png" style="width:96px" alt="heroku logo"/>
+            <img src="//doc.rultor.com/images/heroku-logo.png" style="width:96px"
+               alt="heroku logo"/>
           </a>
         </div>
       </div>

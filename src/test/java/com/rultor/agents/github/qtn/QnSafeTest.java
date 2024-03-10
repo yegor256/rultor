@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
  *
  * @since 1.76
  */
-class QnSafeTest {
+final class QnSafeTest {
 
     /**
      * QnSafe can understand a comment even if some exception is thrown.

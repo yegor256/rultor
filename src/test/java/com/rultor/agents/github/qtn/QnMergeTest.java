@@ -190,11 +190,11 @@ final class QnMergeTest {
 
     /**
      * QnMerge can not build a request because .rultor file is changed.
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
      * @todo #1459 Enable this test after com.jcabi.github.mock.MkPull
      *  changed to allow to work with the files in Pull according to
      *  https://github.com/jcabi/jcabi-github/issues/1720
-     * @throws IOException In case of I/O error
-     * @throws URISyntaxException In case of URI error
      */
     @Test
     @Disabled

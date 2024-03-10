@@ -59,14 +59,13 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "github", "question" })
-@SuppressWarnings
-    (
-        {
-            "PMD.CyclomaticComplexity",
-            "PMD.StdCyclomaticComplexity",
-            "PMD.ModifiedCyclomaticComplexity"
-        }
-    )
+@SuppressWarnings(
+    {
+    "PMD.CyclomaticComplexity",
+    "PMD.StdCyclomaticComplexity",
+    "PMD.ModifiedCyclomaticComplexity"
+    }
+)
 public final class Understands extends AbstractAgent {
 
     /**

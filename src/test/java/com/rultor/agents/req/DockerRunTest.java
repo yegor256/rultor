@@ -209,8 +209,11 @@ final class DockerRunTest {
             new Brackets(
                 new DockerRun(profile, "/p/entry[@key='f']").script()
             ).toString(),
-            // @checkstyle LineLength (1 line)
-            Matchers.equalTo("( 'function' 'clean_up()' '{' 'one' ';' 'two' ';' '}' ';' 'trap' 'clean_up' 'EXIT' ';' 'hi' ';' )")
+            // @checkstyle LineLength (3 line)
+            // @checkstyle LineLengthCheck (3 line)
+            Matchers.equalTo(
+                "( 'function' 'clean_up()' '{' 'one' ';' 'two' ';' '}' ';' 'trap' 'clean_up' 'EXIT' ';' 'hi' ';' )"
+            )
         );
     }
 

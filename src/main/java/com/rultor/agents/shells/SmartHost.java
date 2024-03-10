@@ -42,7 +42,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "host" })
+@EqualsAndHashCode(of = "host")
 @SuppressWarnings({"PMD.ShortMethodName",
     "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"})
 final class SmartHost {

@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
     <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+      href="http://doc.thindeck.com/rss.xml"/>
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
     <link rel="stylesheet" href="/css/layout.css?{{ site.data['hash'] }}"/>
     <link rel="canonical" href="//doc.rultor.com{{ page.url }}" />
@@ -79,7 +80,9 @@
           </div>
         </div>
         <p>
-          <a href="https://github.com/yegor256/rultor/commit/{{ site.data['hash'] }}">{{ site.data['hash'] }}</a>
+          <a href="https://github.com/yegor256/rultor/commit/{{ site.data['hash'] }}">
+            {{ site.data['hash'] }}
+          </a>
         </p>
       </footer>
     </div>
@@ -99,7 +102,8 @@
       f = function () { n.parentNode.insertBefore(s, n); };
       s.type = "text/javascript";
       s.async = true;
-      s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+      s.src = (d.location.protocol == "https:" ? "https:" : "http:") +
+        "//mc.yandex.ru/metrika/watch.js";
       if (w.opera == "[object Opera]") {
       d.addEventListener("DOMContentLoaded", f, false);
       } else { f(); }
