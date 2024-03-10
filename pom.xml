@@ -839,6 +839,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <exclude>checkstyle:/src/main/resources/com/rultor/agents/docker/.*</exclude>
                 <exclude>checkstyle:/src/main/resources/com/rultor/agents/github/qtn/.*</exclude>
                 <exclude>checkstyle:/src/main/resources/com/rultor/agents/req/.*</exclude>
+                <exclude>checkstyle:/src/main/resources/com/rultor/spi/upgrade/.*</exclude>
                 <exclude>checkstyle:/src/site/.*</exclude>
                 <exclude>checkstyle:/src/jekyll/guard-article.pdf</exclude>
                 <exclude>checkstyle:/src/jekyll/images/.*</exclude>
