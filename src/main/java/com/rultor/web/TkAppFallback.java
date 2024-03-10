@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import io.sentry.Sentry;
 import java.io.IOException;
@@ -104,7 +105,7 @@ final class TkAppFallback extends TkWrap {
                     TkAppFallback.class.getResource("error.html.vm"),
                     new RsVelocity.Pair(
                         "err",
-                        req.throwable().getStackTrace()
+                        Logger.format("%[exception]s", req.throwable())
                     ),
                     new RsVelocity.Pair("rev", TkAppFallback.REV)
                 ),
