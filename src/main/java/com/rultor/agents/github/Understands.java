@@ -230,7 +230,7 @@ public final class Understands extends AbstractAgent {
      */
     private static String rootCause(final Profile.ConfigException exception) {
         Throwable root = exception;
-        while (root.getCause() != root) {
+        while (!root.equals(root.getCause())) {
             root = root.getCause();
         }
         return root.getMessage();
