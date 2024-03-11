@@ -112,7 +112,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-dynamodb</artifactId>
-      <version>1.12.676</version>
+      <version>1.12.677</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
@@ -122,7 +122,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-core</artifactId>
-      <version>1.12.676</version>
+      <version>1.12.677</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
