@@ -36,7 +36,7 @@ import com.rultor.Time;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -89,9 +89,10 @@ final class TailITCase {
                     .add("key").set(sshd.key()).up().up()
             );
             MatcherAssert.assertThat(
+                "SSH output should be in the Tail",
                 IOUtils.toString(
                     new Tail(talk.read(), hash).read(),
-                    Charset.forName("UTF-8")
+                    StandardCharsets.UTF_8
                 ),
                 Matchers.is(String.format("%sê\n", clean))
             );

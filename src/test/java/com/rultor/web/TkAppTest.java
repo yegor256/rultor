@@ -154,7 +154,7 @@ final class TkAppTest {
                 .append("window.setInterval(function(){a.find(\"img\")")
                 .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
                 .append("+Date.now())},1E3)});")
-                .append("\n")
+                .append('\n')
                 .toString(),
             new TextOf(
                 new RsPrint(
