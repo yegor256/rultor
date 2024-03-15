@@ -64,6 +64,7 @@ final class IndexesRequestsTest {
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
+            "Talk should be reindexed (1 based)",
             talks.get(name).read(),
             XhtmlMatchers.hasXPaths("/talk/request[@index='1']")
         );
@@ -94,14 +95,14 @@ final class IndexesRequestsTest {
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
+            "Index value should be started from log records max",
             talks.get(name).read(),
             XhtmlMatchers.hasXPaths("/talk/request[@index='3']")
         );
     }
 
     /**
-     * IndexesRequests should retrieve index from sibling
-     * (the test is skipped, more information in #733).
+     * IndexesRequests should retrieve index from sibling.
      * @throws Exception In case of error.
      */
     @Test
@@ -141,6 +142,7 @@ final class IndexesRequestsTest {
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
+            "Index value should be started from log records max",
             talks.get(third).read(),
             XhtmlMatchers.hasXPaths("/talk/request[@index='5']")
         );
@@ -163,6 +165,7 @@ final class IndexesRequestsTest {
         );
         new IndexesRequests().execute(talks);
         MatcherAssert.assertThat(
+            "Request tag should not be created if does not exist",
             talks.get(name).read(),
             Matchers.not(
                 XhtmlMatchers.hasXPaths("/talk/request")

@@ -53,7 +53,6 @@ final class EndsRequestTest {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
-                // @checkstyle MultipleStringLiteralsCheck (1 line)
                 .add("daemon").attr("id", "abcd")
                 .add("title").set("some operation").up()
                 .add("script").set("test").up()
@@ -67,6 +66,7 @@ final class EndsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Request should unsuccessfully ended",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk/request[success='false']")
         );

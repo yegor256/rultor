@@ -142,6 +142,7 @@ final class StartsRequestITTestCase {
             ).asString()
         );
         MatcherAssert.assertThat(
+            "stdout should contain executed commands",
             stdout,
             Matchers.allOf(
                 Matchers.containsString("Hello, world!"),

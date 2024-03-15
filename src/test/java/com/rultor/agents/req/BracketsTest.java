@@ -45,7 +45,7 @@ final class BracketsTest {
      * @throws Exception In case of error.
      */
     @Test
-    void escapesInput() throws Exception {
+    void escapesInput() {
         final Brackets brackets = new Brackets(
             new ListOf<>(
                 "Elegant",
@@ -53,6 +53,7 @@ final class BracketsTest {
             )
         );
         MatcherAssert.assertThat(
+            "Each element should be wrapped in ''",
             brackets.toString(),
             Matchers.equalTo("( 'Elegant' 'Objects' )")
         );

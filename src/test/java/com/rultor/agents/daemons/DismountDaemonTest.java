@@ -71,6 +71,7 @@ final class DismountDaemonTest {
         final Agent agent = new DismountDaemon();
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Daemon should be stopped for not found host",
             talk.read(),
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon/ended",
@@ -104,6 +105,7 @@ final class DismountDaemonTest {
         final Agent agent = new DismountDaemon();
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Daemon should not be ended if younger then 10 days",
             talk.read(),
             XhtmlMatchers.hasXPaths("/talk/daemon[not(ended)]")
         );

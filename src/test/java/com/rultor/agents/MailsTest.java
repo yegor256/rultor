@@ -72,6 +72,7 @@ final class MailsTest {
         Mockito.verify(postman).send(captor.capture());
         final Envelope envelope = captor.getValue();
         MatcherAssert.assertThat(
+            "Mail text should contain some data",
             envelope.unwrap().getContent().toString(),
             Matchers.allOf(
                 Matchers.containsString("See #456, release log:"),
@@ -83,6 +84,7 @@ final class MailsTest {
             )
         );
         MatcherAssert.assertThat(
+            "Mail subject should be about release",
             envelope.unwrap().getSubject(),
             Matchers.equalTo("user/repo v2.0 released!")
         );

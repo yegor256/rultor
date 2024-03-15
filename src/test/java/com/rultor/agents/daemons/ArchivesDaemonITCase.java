@@ -94,6 +94,7 @@ final class ArchivesDaemonITCase {
             );
             agent.execute(talk);
             MatcherAssert.assertThat(
+                "archive tag should be created with bucket name",
                 talk.read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk[not(daemon)]",
