@@ -159,6 +159,7 @@ final class TkHomeITCase {
             .assertStatus(HttpURLConnection.HTTP_OK)
             .binary();
         MatcherAssert.assertThat(
+            "Tick HTTP GET response should return valid png image",
             ImageIO.read(new ByteArrayInputStream(data)).getWidth(),
             Matchers.equalTo(1_000)
         );

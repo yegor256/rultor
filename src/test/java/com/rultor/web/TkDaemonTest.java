@@ -80,6 +80,7 @@ final class TkDaemonTest {
             new PsFake(true)
         );
         MatcherAssert.assertThat(
+            "Talk answer should contain data from tail",
             XhtmlMatchers.xhtml(
                 IOUtils.toString(
                     take.act(new RqFake()).body(),

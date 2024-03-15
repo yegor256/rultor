@@ -69,6 +69,7 @@ final class TkSiblingsTest {
                 .attr("id", "a1b2c3").set("s3://test")
         );
         MatcherAssert.assertThat(
+            "Response on GET request should contain info",
             XhtmlMatchers.xhtml(
                 new TextOf(
                     new RsPrint(

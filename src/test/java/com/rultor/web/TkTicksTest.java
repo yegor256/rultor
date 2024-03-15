@@ -90,6 +90,7 @@ final class TkTicksTest {
             )
         );
         MatcherAssert.assertThat(
+            "TkTicks should generate png status image",
             image.getWidth(),
             Matchers.equalTo(1_000)
         );
@@ -103,6 +104,7 @@ final class TkTicksTest {
     void rendersPngWithoutTicks() throws Exception {
         final Take home = new TkTicks(Pulse.EMPTY);
         MatcherAssert.assertThat(
+            "TkTicks should generate some image without Ticks",
             new RsPrint(home.act(new RqFake())).asString(),
             Matchers.notNullValue()
         );

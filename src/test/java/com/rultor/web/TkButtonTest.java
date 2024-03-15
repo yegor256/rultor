@@ -51,6 +51,7 @@ final class TkButtonTest {
     void rendersSvg() throws Exception {
         final TkRegex take = new TkButton();
         MatcherAssert.assertThat(
+            "Button in svg format should be generated",
             XhtmlMatchers.xhtml(
                 new TextOf(
                     new RsPrint(
