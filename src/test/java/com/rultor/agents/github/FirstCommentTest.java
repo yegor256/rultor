@@ -54,6 +54,7 @@ final class FirstCommentTest {
             new FirstComment(new Issue.Smart(issue))
         );
         MatcherAssert.assertThat(
+            "Author should be added",
             cmt.author().login(),
             Matchers.equalTo("jeff")
         );

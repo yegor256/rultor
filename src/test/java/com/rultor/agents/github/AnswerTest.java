@@ -59,6 +59,7 @@ final class AnswerTest {
             true, "hey you\u0000"
         );
         MatcherAssert.assertThat(
+            "Answer with source comment should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("> hey, do it\n\n")
         );
@@ -82,6 +83,7 @@ final class AnswerTest {
             answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
+            "Only 5 answers should be posted",
             new ListOf<>(issue.comments().iterate(new Date(0L))).size(),
             Matchers.is(6)
         );

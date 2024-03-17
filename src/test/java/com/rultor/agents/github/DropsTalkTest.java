@@ -57,6 +57,7 @@ final class DropsTalkTest {
         final Agent agent = new DropsTalk();
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Talk should be not with later after DropsTalk",
             talk.read(),
             XhtmlMatchers.hasXPaths("/talk[@later='false']")
         );

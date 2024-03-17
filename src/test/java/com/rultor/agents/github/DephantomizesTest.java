@@ -56,6 +56,7 @@ final class DephantomizesTest {
         final Talk talk = DephantomizesTest.talk(repo, 0);
         new Dephantomizes(github).execute(talk);
         MatcherAssert.assertThat(
+            "Request and wire should be removed",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk[not(request) and not(wire)]")
         );
@@ -73,6 +74,7 @@ final class DephantomizesTest {
         final Talk talk = DephantomizesTest.talk(repo, 1);
         new Dephantomizes(github).execute(talk);
         MatcherAssert.assertThat(
+            "Request and wire should not be removed",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk[request and wire]")
         );
