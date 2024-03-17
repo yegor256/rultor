@@ -63,6 +63,7 @@ final class PublishesTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "public attribute should be added",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk[@public='true']")
         );
@@ -84,6 +85,7 @@ final class PublishesTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "public attribute should be kept false",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk[@public='false']")
         );
