@@ -91,6 +91,7 @@ final class UnderstandsTest {
         agent.execute(talk);
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Deploy request should be created",
             talk.read(),
             XhtmlMatchers.hasXPaths(
                 "/talk/wire[github-seen='2']",
@@ -122,6 +123,7 @@ final class UnderstandsTest {
         final Talk talk = UnderstandsTest.talk(issue);
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Request should not be created",
             talk.read(),
             XhtmlMatchers.hasXPaths("/talk[not(request)]")
         );
@@ -142,6 +144,7 @@ final class UnderstandsTest {
         final Talk talk = UnderstandsTest.talk(issue);
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Reply comment should be created for hello",
             issue.comments().iterate(new Date(0L)),
             Matchers.iterableWithSize(1)
         );
@@ -173,10 +176,12 @@ final class UnderstandsTest {
         ).execute(UnderstandsTest.talk(pull));
         final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(
+            "Reply comment should be created",
             comments.iterate(new Date(0)),
             Matchers.iterableWithSize(1)
         );
         MatcherAssert.assertThat(
+            "Message about not possible merge should be created",
             new Comment.Smart(comments.get(1)).body(),
             Matchers.containsString("Can't merge")
         );

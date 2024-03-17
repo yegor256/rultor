@@ -366,12 +366,13 @@ final class StartsRequestTest {
                     .with(
                         Matchers.containsString(
                             String.format(
-                                "head=%s", dir
+                                "directory=%s", dir
                             )
                         )
                     )
                     .with(Matchers.containsString("docker_when_possible"))
                     .with(Matchers.containsString("enough to run a new Docker"))
+                    .with(Matchers.containsString("echo HEY"))
             )
         );
     }

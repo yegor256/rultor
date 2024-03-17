@@ -60,6 +60,7 @@ final class StartsTalksTest {
         final Talks talks = new Talks.InDir();
         agent.execute(talks);
         MatcherAssert.assertThat(
+            "Active talk should not be created",
             talks.active(),
             Matchers.not(Matchers.emptyIterable())
         );
