@@ -60,6 +60,7 @@ final class TalkTest {
                 .add("dir").set("C:\\Windows32\\Temp_One").up()
         );
         MatcherAssert.assertThat(
+            "All info should be in the talk",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk/wire")
         );
