@@ -63,6 +63,7 @@ final class QnAloneTest {
         final Talk talk = new Talk.InFile();
         final Locks locks = new MkSttc().locks();
         MatcherAssert.assertThat(
+            "Deploy request should be created",
             new Xembler(
                 new Directives().add("request").append(
                     new QnAlone(talk, locks, new QnDeploy()).understand(

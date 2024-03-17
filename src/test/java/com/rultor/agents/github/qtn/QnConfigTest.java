@@ -58,12 +58,14 @@ final class QnConfigTest {
         issue.comments().post("hello");
         final Profile profile = new Profile.Fixed();
         MatcherAssert.assertThat(
+            "hello command should be recognized",
             new QnConfig(profile).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Xml view of rultor.yml should be added to the comment",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("</p>")
         );

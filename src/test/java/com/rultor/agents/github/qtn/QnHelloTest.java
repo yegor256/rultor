@@ -56,12 +56,14 @@ final class QnHelloTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");
         MatcherAssert.assertThat(
+            "Request should be marked as done",
             new QnHello().understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Hello message should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("Have fun :)")
         );

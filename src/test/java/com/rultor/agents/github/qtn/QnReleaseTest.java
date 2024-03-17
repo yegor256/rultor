@@ -60,6 +60,7 @@ final class QnReleaseTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("release");
         MatcherAssert.assertThat(
+            "Release request should be created",
             new Xembler(
                 new Directives().add("request").append(
                     new QnRelease().understand(
@@ -86,8 +87,9 @@ final class QnReleaseTest {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         repo.releases().create("1.5");
-        issue.comments().post("release `1.7`");
+        issue.comments().post("release, title `1.7`");
         MatcherAssert.assertThat(
+            "Release request should be created",
             new Xembler(
                 new Directives().add("request").append(
                     new QnRelease().understand(
@@ -115,12 +117,14 @@ final class QnReleaseTest {
         repo.releases().create("1.7");
         issue.comments().post("release `1.6`");
         MatcherAssert.assertThat(
+            "Empty request should be created",
             new QnRelease().understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.EMPTY)
         );
         MatcherAssert.assertThat(
+            " Comment about existing release should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("There is already a release `1.7`")
         );
@@ -136,6 +140,7 @@ final class QnReleaseTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("release `1.8`, title `Version 1.8.0`");
         MatcherAssert.assertThat(
+            "Request should be created",
             new Xembler(
                 new Directives().add("request").append(
                     new QnRelease().understand(

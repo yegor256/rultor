@@ -52,18 +52,22 @@ final class ReleaseTagTest {
         final Repo repo = new MkGithub().randomRepo();
         repo.releases().create("1.74");
         MatcherAssert.assertThat(
+            "Greater tag should be allowed",
             new ReleaseTag(repo, "1.87.15").allowed(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
+            "bar tag should be allowed",
             new ReleaseTag(repo, "1.5-bar").allowed(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
+            "beta tag should be allowed",
             new ReleaseTag(repo, "1.9-beta").allowed(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
+            "Lower tag should be allowed",
             new ReleaseTag(repo, "1.62").allowed(),
             Matchers.is(false)
         );
@@ -81,6 +85,7 @@ final class ReleaseTagTest {
         repo.releases().create(latest);
         repo.releases().create("3.0-beta");
         MatcherAssert.assertThat(
+            "Latest tag should be returned",
             new ReleaseTag(repo, "2.4").reference(),
             Matchers.is(latest)
         );

@@ -58,6 +58,7 @@ final class QnIfCollaboratorTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("deploy");
         MatcherAssert.assertThat(
+            "Empty request should be created",
             new Xembler(
                 new Directives().add("request").append(
                     new QnIfCollaborator(new QnDeploy()).understand(

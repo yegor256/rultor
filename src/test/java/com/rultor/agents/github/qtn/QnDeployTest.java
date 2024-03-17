@@ -58,6 +58,7 @@ final class QnDeployTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("deploy");
         MatcherAssert.assertThat(
+            "Deploy request should be created",
             new Xembler(
                 new Directives().add("request").append(
                     new QnDeploy().understand(

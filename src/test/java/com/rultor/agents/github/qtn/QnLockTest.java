@@ -56,12 +56,14 @@ final class QnLockTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("lock users=`@test1, test2`");
         MatcherAssert.assertThat(
+            "Command should be marked as done",
             new QnLock().understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Message about action should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.allOf(
                 Matchers.containsString(

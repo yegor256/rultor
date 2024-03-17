@@ -74,6 +74,7 @@ final class QnGithubIssueTest {
             }
         };
         MatcherAssert.assertThat(
+            "request should save issue data",
             new StrictXML(
                 new XMLDocument(
                     new Xembler(

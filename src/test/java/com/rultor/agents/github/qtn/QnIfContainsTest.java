@@ -59,6 +59,7 @@ final class QnIfContainsTest {
             new Comment.Smart(issue.comments().get(1)), new URI("#")
         ).dirs();
         MatcherAssert.assertThat(
+            "No message should be posted",
             issue.comments().iterate(new Date(0L)),
             Matchers.iterableWithSize(1)
         );
@@ -77,6 +78,7 @@ final class QnIfContainsTest {
             new Comment.Smart(issue.comments().get(1)), new URI("#test")
         ).dirs();
         MatcherAssert.assertThat(
+            "Hello message should be posted",
             issue.comments().iterate(new Date(0L)),
             Matchers.iterableWithSize(2)
         );
@@ -95,6 +97,7 @@ final class QnIfContainsTest {
             new Comment.Smart(issue.comments().get(1)), new URI("#")
         ).dirs();
         MatcherAssert.assertThat(
+            "No comments should be posted",
             issue.comments().iterate(new Date(0L)),
             Matchers.iterableWithSize(1)
         );

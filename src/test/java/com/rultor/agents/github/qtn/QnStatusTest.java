@@ -67,6 +67,7 @@ final class QnStatusTest {
             "</talk>"
         );
         MatcherAssert.assertThat(
+            "Request should have done status",
             new QnWithAuthor(new QnStatus(talk)).understand(
                 new Comment.Smart(issue.comments().get(1)),
                 new URI("#")
@@ -74,6 +75,7 @@ final class QnStatusTest {
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Current status should be posted in the comment",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.allOf(
                 Matchers.containsString("request `454` is in processing"),

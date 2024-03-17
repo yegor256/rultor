@@ -58,6 +58,7 @@ final class QnLastOfTest {
         final Issue issue = repo.issues().create("", "");
         final Comment comment = issue.comments().post("deploy");
         MatcherAssert.assertThat(
+            "Deploy request should be created",
             new QnLastOf(
                 Arrays.asList(
                     Question.EMPTY,

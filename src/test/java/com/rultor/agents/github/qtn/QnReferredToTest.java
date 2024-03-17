@@ -58,12 +58,14 @@ final class QnReferredToTest {
     @Test
     void buildsRequest() throws Exception {
         MatcherAssert.assertThat(
+            "deploy request should be created",
             this.xemblerXml("  @xx deploy"),
-            XhtmlMatchers.hasXPath("/request/type")
+            XhtmlMatchers.hasXPath("/request/type[text()='deploy']")
         );
         MatcherAssert.assertThat(
+            "deploy request should be created",
             this.xemblerXml("  @xx, deploy"),
-            XhtmlMatchers.hasXPath("/request/type")
+            XhtmlMatchers.hasXPath("/request/type[text()='deploy']")
         );
     }
 
@@ -75,12 +77,14 @@ final class QnReferredToTest {
     void recognizesCommaAsDelimiter() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
+            "deploy command should be recognized",
             this.reqFromComment(
                 String.format("hello @%s, deploy", login), login
             ),
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "deploy command should be recognized",
             this.reqFromComment(
                 String.format("hello ,@%s deploy", login), login
             ),
@@ -97,12 +101,14 @@ final class QnReferredToTest {
     void recognizesInvalidBoundary() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
+            "Comment should be ignored without mention",
             this.reqFromComment(
                 String.format("hello @%sx deploy", login), login
             ),
             Matchers.is(Req.EMPTY)
         );
         MatcherAssert.assertThat(
+            "Comment should be ignored without mention",
             this.reqFromComment(
                 String.format("hello x@%s deploy", login), login
             ),
@@ -121,12 +127,14 @@ final class QnReferredToTest {
         final String login = "xx";
         issue.comments().post(String.format("hello @%s deploy", login));
         MatcherAssert.assertThat(
+            "Deploy command should be recognized, if mentioned",
             new QnReferredTo(login, new QnDeploy()).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Answer comment should be posted with instruction",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString(
                 new Joined(

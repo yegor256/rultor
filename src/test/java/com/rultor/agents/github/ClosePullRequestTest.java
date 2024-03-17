@@ -78,9 +78,11 @@ final class ClosePullRequestTest {
         new ClosePullRequest(profile, repo.github()).execute(talk);
         final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
+            "PR should be closed",
             smart.state(), Matchers.is("closed")
         );
         MatcherAssert.assertThat(
+            "Rebase message should be added",
             new Comment.Smart(smart.comments().get(1)).body(),
             Matchers.containsString(
                 new Joined(
@@ -119,9 +121,11 @@ final class ClosePullRequestTest {
         new ClosePullRequest(profile, repo.github()).execute(talk);
         final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
+            "Issue should be open",
             smart.state(), Matchers.is("open")
         );
         MatcherAssert.assertThat(
+            "No comments should be added",
             smart.comments().iterate(new Date(0L)),
             Matchers.is(Matchers.emptyIterable())
         );
