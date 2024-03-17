@@ -69,18 +69,21 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            "Multiple env items should be saved",
             new DockerRun(profile, "/p/entry[@key='a']").envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("A=5", "B=f e")
         );
         MatcherAssert.assertThat(
+            "Single evn item should be saved",
             new DockerRun(profile, "/p/entry[@key='b']").envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("HELLO='1'")
         );
         MatcherAssert.assertThat(
+            "Additional value should be saved from envs parameter",
             new DockerRun(profile, "/p/entry[@key='c']").envs(
                 new ArrayMap<String, String>().with("X", "a\"'b")
             ),
@@ -106,10 +109,12 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            "Script should be read from profile",
             new DockerRun(profile, "/p/entry[@key='x']").script(),
             Matchers.hasItems("mvn clean", ";")
         );
         MatcherAssert.assertThat(
+            "Script should be read from several items with ;",
             new DockerRun(profile, "/p/entry[@key='y']").script(),
             Matchers.hasItems("pw", ";", "ls", ";")
         );
@@ -140,6 +145,7 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            "All items from xpath should be in the script even with comment",
             new DockerRun(profile, "/p/entry[@key='z']").script(),
             Matchers.hasItems(
                 "echo \"first\"",
@@ -178,7 +184,7 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
-            // @checkstyle MultipleStringLiterals (1 line)
+            "install should be also in the script",
             new DockerRun(profile, "/p/entry[@key='f']").script(),
             Matchers.hasItems("one", ";", "two", ";", "hi", ";")
         );
@@ -205,11 +211,11 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            "uninstall should be placed in the script",
             // @checkstyle MultipleStringLiterals (1 line)
             new Brackets(
                 new DockerRun(profile, "/p/entry[@key='f']").script()
             ).toString(),
-            // @checkstyle LineLength (3 line)
             // @checkstyle LineLengthCheck (3 line)
             Matchers.equalTo(
                 "( 'function' 'clean_up()' '{' 'one' ';' 'two' ';' '}' ';' 'trap' 'clean_up' 'EXIT' ';' 'hi' ';' )"
@@ -234,6 +240,7 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            "Env variables should be read from the xpath",
             new DockerRun(profile, "/p/entry[@key='o']").envs(
                 new ArrayMap<>()
             ),
@@ -254,6 +261,7 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            "mulitline script should be place in script as two commands",
             new Brackets(
                 new DockerRun(profile, "/p").script()
             ).toString(),
@@ -273,6 +281,7 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
+            "Empty env variables are allowed",
             new Brackets(
                 new DockerRun(profile, "/p/entry[@key='ooo']").envs(
                     new ArrayMap<>()
