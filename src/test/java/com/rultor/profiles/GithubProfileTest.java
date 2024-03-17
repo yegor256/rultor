@@ -88,6 +88,7 @@ final class GithubProfileTest {
             );
         final Profile profile = new GithubProfile(repo);
         MatcherAssert.assertThat(
+            "Profile should have all info",
             profile.read(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='merge']/entry[@key='script']",
@@ -96,10 +97,12 @@ final class GithubProfileTest {
             )
         );
         MatcherAssert.assertThat(
+            "Architect should be saved",
             profile.read().xpath("/p/entry[@key='architect']/item/text()"),
             Matchers.contains("jeff", "donald")
         );
         MatcherAssert.assertThat(
+            "Asset should be saved",
             profile.assets(),
             Matchers.hasEntry(
                 Matchers.equalTo("test.xml"),
@@ -211,6 +214,7 @@ final class GithubProfileTest {
                 ).build()
         );
         MatcherAssert.assertThat(
+            "Assets should be created",
             new GithubProfile(repo).assets().entrySet(),
             Matchers.not(Matchers.emptyIterable())
         );

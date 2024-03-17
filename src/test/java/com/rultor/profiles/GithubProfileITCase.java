@@ -72,6 +72,7 @@ final class GithubProfileITCase {
             )
         );
         MatcherAssert.assertThat(
+            "script for merge should be read",
             profile.read(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='merge']/entry[@key='script']"

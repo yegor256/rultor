@@ -36,8 +36,6 @@ import com.jcabi.http.response.XmlResponse;
 import java.io.ByteArrayInputStream;
 import java.net.HttpURLConnection;
 import javax.imageio.ImageIO;
-import javax.ws.rs.core.MediaType;
-import org.apache.http.HttpHeaders;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assumptions;
@@ -137,7 +135,7 @@ final class TkHomeITCase {
     void showsVersion() throws Exception {
         new JdkRequest(TkHomeITCase.HOME)
             .uri().path("/").back()
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header("Accept", "application/xml")
             .fetch()
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_OK)

@@ -34,8 +34,6 @@ import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
 import java.net.HttpURLConnection;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +66,7 @@ final class TkSiblingsITCase {
     @Test
     void rendersListOfTalks() throws Exception {
         new JdkRequest(TkSiblingsITCase.HOME).uri().path("/p/test/me").back()
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header("Accept", "application/xml")
             .method(Request.GET)
             .fetch()
             .as(RestResponse.class)

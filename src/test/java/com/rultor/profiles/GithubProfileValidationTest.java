@@ -229,6 +229,7 @@ final class GithubProfileValidationTest {
         );
         final Map<String, InputStream> map = new GithubProfile(repo).assets();
         MatcherAssert.assertThat(
+            "Asset should be added from profile",
             map.keySet(),
             Matchers.iterableWithSize(1)
         );

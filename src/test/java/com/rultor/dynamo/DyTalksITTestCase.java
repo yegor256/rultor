@@ -215,7 +215,11 @@ final class DyTalksITTestCase {
     private static Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
         Assumptions.assumingThat(key != null, () -> { });
-        MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
+        MatcherAssert.assertThat(
+            "Key should be valid",
+            key.startsWith("AAAA"),
+            Matchers.is(true)
+        );
         return new Region.Prefixed(
             new ReRegion(
                 new Region.Simple(
