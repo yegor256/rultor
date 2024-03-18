@@ -107,7 +107,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.681</version>
+      <version>1.12.682</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
@@ -117,12 +117,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-ec2</artifactId>
-      <version>1.12.681</version>
+      <version>1.12.682</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-core</artifactId>
-      <version>1.12.681</version>
+      <version>1.12.682</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
