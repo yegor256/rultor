@@ -46,7 +46,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Date;
 import java.util.logging.Level;
-import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.FileUtils;
@@ -132,7 +131,7 @@ public final class ArchivesDaemon extends AbstractAgent {
      */
     private URI upload(final File file, final String hash) throws IOException {
         final ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentType(MediaType.TEXT_PLAIN);
+        meta.setContentType("text/plain");
         meta.setContentEncoding(StandardCharsets.UTF_8.name());
         meta.setContentLength(file.length());
         final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);

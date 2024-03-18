@@ -87,6 +87,7 @@ final class DyTalksITTestCase {
         final String name = "a5fe445";
         talks.create("hey/you", name);
         MatcherAssert.assertThat(
+            "Talk should be with later attribute",
             talks.get(name).read(),
             XhtmlMatchers.hasXPath("/talk[@later]")
         );
@@ -106,6 +107,7 @@ final class DyTalksITTestCase {
         final Talk talk = talks.get(name);
         talk.active(false);
         MatcherAssert.assertThat(
+            "Recent talk should be selected",
             talks.recent(),
             Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(name))
         );
@@ -127,6 +129,7 @@ final class DyTalksITTestCase {
         final Talk talk = talks.get(first);
         talk.active(false);
         MatcherAssert.assertThat(
+            "Recent talk should be received",
             talks.recent(),
             Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(first))
         );
@@ -135,6 +138,7 @@ final class DyTalksITTestCase {
         final Talk talking = talks.get(second);
         talking.active(false);
         MatcherAssert.assertThat(
+            "may be it is not true, as test is disabled",
             talks.recent(),
             Matchers.not(
                 Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(second))
@@ -158,10 +162,12 @@ final class DyTalksITTestCase {
         talks.create(repo, "yegor256/rultor#10");
         TimeUnit.SECONDS.sleep(2L);
         MatcherAssert.assertThat(
+            "All talks should be returned",
             talks.siblings(repo, new Date()),
             Matchers.iterableWithSize(2)
         );
         MatcherAssert.assertThat(
+            "Only one talk should be returned",
             talks.siblings(repo, date),
             Matchers.iterableWithSize(1)
         );
@@ -182,6 +188,7 @@ final class DyTalksITTestCase {
         talk.active(false);
         talk.modify(new Directives().xpath("/talk").attr("public", "false"));
         MatcherAssert.assertThat(
+            "Private talks should not be in recent list",
             talks.recent(),
             Matchers.not(
                 Matchers.hasItem(
@@ -208,7 +215,11 @@ final class DyTalksITTestCase {
     private static Region dynamo() {
         final String key = Manifests.read("Rultor-DynamoKey");
         Assumptions.assumingThat(key != null, () -> { });
-        MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
+        MatcherAssert.assertThat(
+            "Key should be valid",
+            key.startsWith("AAAA"),
+            Matchers.is(true)
+        );
         return new Region.Prefixed(
             new ReRegion(
                 new Region.Simple(

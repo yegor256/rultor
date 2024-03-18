@@ -34,6 +34,8 @@ import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for ${@link YamlXML}.
@@ -49,6 +51,7 @@ final class YamlXMLTest {
     @Test
     void parsesYamlConfig() {
         MatcherAssert.assertThat(
+            "yml should be parsed to xml",
             new YamlXML("a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e").get(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='a' and .='test']",
@@ -65,6 +68,7 @@ final class YamlXMLTest {
     @Test
     void parsesYamlConfigWhenBroken() {
         MatcherAssert.assertThat(
+            "empty values should be kept",
             new YamlXML("a: alpha\nb:\nc:\n  - beta").get(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='a' and .='alpha']",
@@ -76,24 +80,18 @@ final class YamlXMLTest {
 
     /**
      * YamlXML can parse a broken text and throw.
+     * @param yaml Test yaml string
      */
-    @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    void parsesBrokenConfigsAndThrows() {
-        final String[] yamls = {
-            "thre\n\t\\/\u0000",
-            "first: \"привет \\/\t\r\"",
-        };
-        for (final String yaml : yamls) {
-            try {
-                new YamlXML(yaml).get();
-                Assertions.fail(
-                    String.format("exception expected for %s", yaml)
-                );
-            } catch (final Profile.ConfigException ex) {
-                continue;
-            }
-        }
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "thre\n\t\\/\u0000",
+        "first: \"привет \\/\t\r\""
+    })
+    void parsesBrokenConfigsAndThrows(final String yaml) {
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new YamlXML(yaml).get()
+        );
     }
 
 }

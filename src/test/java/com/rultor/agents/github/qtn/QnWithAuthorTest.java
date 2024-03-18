@@ -67,6 +67,7 @@ final class QnWithAuthorTest {
         );
         final Req req = question.understand(comment, new URI("#"));
         MatcherAssert.assertThat(
+            "stop request should be created",
             new Xembler(
                 new Directives().add("request").append(req.dirs())
             ).xml(),
@@ -94,6 +95,7 @@ final class QnWithAuthorTest {
         final Question question = new QnWithAuthor(new QnHello());
         final Req req = question.understand(comment, new URI("#url"));
         MatcherAssert.assertThat(
+            "Author should not be added to request",
             new Xembler(
                 new Directives().add("r").append(req.dirs())
             ).xml(),

@@ -30,7 +30,6 @@
 package com.rultor;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -54,7 +53,8 @@ final class TimeTest {
     void canParseValidTime() {
         final String date = "2005-10-08T15:48:39";
         Assertions.assertDoesNotThrow(
-            () -> new Time(date)
+            () -> new Time(date),
+            "Time should be able to create from date-time string"
         );
     }
 
@@ -71,7 +71,8 @@ final class TimeTest {
     void exceptionParseInvalidTime(final String date) {
         Assertions.assertThrows(
             IllegalStateException.class,
-            () -> new Time(date)
+            () -> new Time(date),
+            "Exception is expected for invalid date time string"
         );
     }
 
@@ -80,12 +81,13 @@ final class TimeTest {
      */
     @Test
     void isoValidFormat() {
-        final Date date = Calendar.getInstance().getTime();
+        final Date date = new Date();
         final SimpleDateFormat format =
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
         final Time time =  new Time(date);
         MatcherAssert.assertThat(
+            "ISO value should be for the GMT timezone",
             time.iso(),
             Matchers.equalTo(format.format(date))
         );
@@ -99,6 +101,7 @@ final class TimeTest {
         final Date date = new Date();
         final Time time = new Time();
         MatcherAssert.assertThat(
+            "Time without parameters should get current time",
             time.msec(),
             Matchers.allOf(
                 Matchers.greaterThanOrEqualTo(date.getTime()),
@@ -115,6 +118,7 @@ final class TimeTest {
         final Date date = new Date();
         final Time time = new Time(date);
         MatcherAssert.assertThat(
+            "Time should get date from the parameter",
             time.msec(),
             Matchers.equalTo(date.getTime())
         );
@@ -128,6 +132,7 @@ final class TimeTest {
         final Date date = new Date();
         final Time time = new Time(date.getTime());
         MatcherAssert.assertThat(
+            "Time should get msec value from parameter",
             time.msec(),
             Matchers.equalTo(date.getTime())
         );

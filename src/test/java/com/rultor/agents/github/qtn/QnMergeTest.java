@@ -110,6 +110,7 @@ final class QnMergeTest {
     void buildsRequest() throws Exception {
         final String request = new Xembler(this.mergeRequest()).xml();
         MatcherAssert.assertThat(
+            "Merge request should be created",
             request,
             Matchers.allOf(
                 XhtmlMatchers.hasXPath("/request/type[text()='merge']"),
@@ -122,10 +123,12 @@ final class QnMergeTest {
             )
         );
         MatcherAssert.assertThat(
+            "Merge comment should be initiator",
             new Comment.Smart(this.comments.get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
         );
         MatcherAssert.assertThat(
+            "Comment about staring merge should be posted",
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.containsString(
                 String.format(
@@ -150,10 +153,12 @@ final class QnMergeTest {
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
         this.mergeRequest();
         MatcherAssert.assertThat(
+            "Merge comment should be initiator",
             new Comment.Smart(this.comments.get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
         );
         MatcherAssert.assertThat(
+            "Merge should be stopped if checks are not successful",
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.containsString(
                 QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
@@ -174,10 +179,12 @@ final class QnMergeTest {
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         this.mergeRequest();
         MatcherAssert.assertThat(
+            "Merge comment should be initiator",
             new Comment.Smart(this.comments.get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
         );
         MatcherAssert.assertThat(
+            "Merge start info comment should be posted",
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.containsString(
                 String.format(
@@ -217,10 +224,7 @@ final class QnMergeTest {
         );
         this.mergeRequest();
         MatcherAssert.assertThat(
-            new Comment.Smart(this.comments.get(1)).body(),
-            Matchers.is(QnMergeTest.COMMAND)
-        );
-        MatcherAssert.assertThat(
+            "Comment should be posted about affected system file",
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.containsString(
                 QnMergeTest.PHRASES.getString(

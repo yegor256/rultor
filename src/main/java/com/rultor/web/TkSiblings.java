@@ -163,7 +163,6 @@ final class TkSiblings implements TkRegex {
             dirs.append(TkSiblings.log(xml, log));
         }
         return dirs.up().add("name").set(talk.name()).up()
-            // @checkstyle MultipleStringLiteralsCheck (1 line)
             .add("href").set(xml.xpath("/talk/wire/href/text()").get(0)).up()
             .add("updated").set(Long.toString(talk.updated().getTime())).up()
             .add("timeago").set(new PrettyTime().format(talk.updated())).up()

@@ -73,6 +73,7 @@ final class QnAskedByTest {
         qab.understand(comment, new URI("http://localhost"));
         final Comment.Smart reply = new Comment.Smart(issue.comments().get(2));
         MatcherAssert.assertThat(
+            "Rultor should not be included in the message",
             reply.body(),
             Matchers.not(
                 Matchers.containsString("@rultor")

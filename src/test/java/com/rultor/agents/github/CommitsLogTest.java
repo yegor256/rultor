@@ -69,6 +69,7 @@ final class CommitsLogTest {
         final Repo repo = Mockito.mock(Repo.class);
         Mockito.doReturn(commits).when(repo).commits();
         MatcherAssert.assertThat(
+            "Message should be shorter",
             new CommitsLog(repo).build(new Date(), new Date()),
             Matchers.equalTo(
                 " * a1b2c3 by @jeff: hi\u20ac this is a very long commit..."
@@ -92,6 +93,7 @@ final class CommitsLogTest {
         final Repo repo = Mockito.mock(Repo.class);
         Mockito.doReturn(commits).when(repo).commits();
         MatcherAssert.assertThat(
+            "Only 20 commits should be mentioned directly",
             new CommitsLog(repo).build(new Date(), new Date()),
             Matchers.containsString("* and 80 more..")
         );

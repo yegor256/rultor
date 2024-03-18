@@ -79,6 +79,7 @@ final class StartsDaemonITCase {
         ) {
             final Talk talk = StartsDaemonITCase.talk(start);
             MatcherAssert.assertThat(
+                "started tag should be added with start time",
                 talk.read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk/daemon[started and dir]",
@@ -95,6 +96,7 @@ final class StartsDaemonITCase {
                 baos, baos
             );
             MatcherAssert.assertThat(
+                "Start script should be send to daemon",
                 baos.toString(StandardCharsets.UTF_8.name()),
                 Matchers.allOf(
                     Matchers.containsString("+ set -o pipefail"),
@@ -104,7 +106,9 @@ final class StartsDaemonITCase {
                 )
             );
             MatcherAssert.assertThat(
-                new File(dir, "status").exists(), Matchers.is(false)
+                "status file should not be created",
+                new File(dir, "status").exists(),
+                Matchers.is(false)
             );
         }
     }
@@ -136,7 +140,11 @@ final class StartsDaemonITCase {
             } else {
                 matcher = Matchers.not(StringStartsWith.startsWith(notice));
             }
-            MatcherAssert.assertThat(dir, matcher);
+            MatcherAssert.assertThat(
+                "Deprecation message in case of default image should be printed",
+                dir,
+                matcher
+            );
         }
     }
 

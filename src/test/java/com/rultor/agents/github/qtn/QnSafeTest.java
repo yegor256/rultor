@@ -89,11 +89,13 @@ final class QnSafeTest {
                 new URI("http://www.example.com")
         );
         MatcherAssert.assertThat(
+            "Two comments should be posted",
             issue.comments().iterate(new Date(0)),
             Matchers.iterableWithSize(2)
         );
         final String body = new Comment.Smart(issue.comments().get(2)).body();
         MatcherAssert.assertThat(
+            "Failed comment should be posted with part of the log",
             body, Matchers.allOf(
                 Matchers.containsString("We failed, sorry"),
                 Matchers.containsString("```\n")

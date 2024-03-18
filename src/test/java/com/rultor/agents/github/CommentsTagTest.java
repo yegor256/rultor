@@ -66,6 +66,7 @@ final class CommentsTagTest {
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Release should be created",
             new Releases.Smart(repo.releases()).exists(tag),
             Matchers.is(true)
         );
@@ -85,6 +86,7 @@ final class CommentsTagTest {
         final Talk talk = CommentsTagTest.talk(issue, tag);
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Release should be created",
             new Releases.Smart(repo.releases()).exists(tag),
             Matchers.is(true)
         );
@@ -107,6 +109,7 @@ final class CommentsTagTest {
         );
         final String body = smart.body();
         MatcherAssert.assertThat(
+            "Release message should be posted",
             body,
             Matchers.allOf(
                 Matchers.containsString("Released by Rultor"),
@@ -129,6 +132,7 @@ final class CommentsTagTest {
         final String tag = "v1.6";
         agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
+            "Issue should be in release title",
             new Release.Smart(
                 new Releases.Smart(repo.releases()).find(tag)
             ).name(),
@@ -156,6 +160,7 @@ final class CommentsTagTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Release title should be from the command",
             new Release.Smart(
                 new Releases.Smart(repo.releases()).find(tag)
             ).name(),

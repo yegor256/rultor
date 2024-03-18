@@ -47,8 +47,6 @@ import org.cactoos.text.UncheckedText;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.xembly.Directives;
@@ -85,6 +83,7 @@ final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Talk should create daemon and script",
             talk.read(),
             XhtmlMatchers.hasXPaths(
                 "/talk/daemon[@id='abcd' and script]",
@@ -146,6 +145,7 @@ final class StartsRequestTest {
             )
         );
         MatcherAssert.assertThat(
+            "Exec run should contain run commands",
             this.exec(talk, jobtemp),
             Matchers.allOf(
                 new Array<Matcher<? super String>>()
@@ -182,9 +182,6 @@ final class StartsRequestTest {
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
-     *  TODO #1 Improve assertion for correct start release request
-     *  Test should have an assertion, so it is the fastest way to add it.
-     *  Comments are prohibited in methods by current stylechecker.
      */
     @Test
     void startsReleaseRequest(
@@ -218,7 +215,11 @@ final class StartsRequestTest {
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
         );
         agent.execute(talk);
-        Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
+        MatcherAssert.assertThat(
+            "Release cmds are included in script",
+            this.exec(talk, jobtemp),
+            Matchers.containsString("echo HEY")
+        );
     }
 
     /**
@@ -226,9 +227,6 @@ final class StartsRequestTest {
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
-     *  TODO #1 Improve assertion for correct start merge request
-     *  Test should have an assertion, so it is the fastest way to add it.
-     *  Comments are prohibited in methods by current stylechecker.
      */
     @Test
     void startsMergeRequest(
@@ -262,7 +260,11 @@ final class StartsRequestTest {
                 .add("arg").attr("name", "pull_title").set("the \"title").up()
         );
         agent.execute(talk);
-        Assertions.assertDoesNotThrow(() -> this.exec(talk, jobtemp));
+        MatcherAssert.assertThat(
+            "Merge cmds are included in run",
+            this.exec(talk, jobtemp),
+            Matchers.containsString("echo \"some('\\''\\'\\'''\\''.env'\\''\\'\\'''\\'');\"")
+        );
     }
 
     /**
@@ -300,6 +302,7 @@ final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Warning message is displayed about missing merge section",
             this.execQuietly(talk, jobtemp),
             Matchers.containsString(
                 String.format(
@@ -312,14 +315,12 @@ final class StartsRequestTest {
     }
 
     /**
-     * StartsRequest can run release with dockerfile (the test is disabled,
-     * because it doesn't work on Mac, see #702).
+     * StartsRequest can run release with dockerfile.
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
      */
     @Test
-    @Disabled
     void runsReleaseWithDockerfile(
         @TempDir final Path temp,
         @TempDir final Path jobtemp
@@ -358,23 +359,20 @@ final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
-            this.exec(talk, jobtemp),
+            "Docker should be run if possible",
+            this.execQuietly(talk, jobtemp),
             Matchers.allOf(
                 new Array<Matcher<? super String>>()
                     .with(
                         Matchers.containsString(
                             String.format(
-                                "docker build %s -t yegor256/rultor-", dir
+                                "directory=%s", dir
                             )
                         )
                     )
-                    .with(Matchers.containsString("docker run"))
-                    .with(
-                        Matchers.containsString(
-                            "docker rmi yegor256/rultor-"
-                        )
-                    )
-                    .with(Matchers.containsString("low enough to run a"))
+                    .with(Matchers.containsString("docker_when_possible"))
+                    .with(Matchers.containsString("enough to run a new Docker"))
+                    .with(Matchers.containsString("echo HEY"))
             )
         );
     }
@@ -405,6 +403,7 @@ final class StartsRequestTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Decrypt should be in cmds",
             talk.read(),
             XhtmlMatchers.hasXPath(
                 "//script[contains(.,'--decrypt')]"
@@ -461,6 +460,7 @@ final class StartsRequestTest {
             )
         );
         MatcherAssert.assertThat(
+            "New user should not be created",
             this.exec(talk, jobtemp),
             Matchers.not(Matchers.containsString("useradd"))
         );

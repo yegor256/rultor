@@ -84,7 +84,7 @@ final class CommitsLog {
      * @return Release body text.
      * @throws IOException In case of problem communicating with git.
      */
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
+    @SuppressWarnings({"PMD.UseConcurrentHashMap", "PMD.UseDiamondOperator"})
     public String build(final Date prev, final Date current)
         throws IOException {
         final DateFormat format = new SimpleDateFormat(

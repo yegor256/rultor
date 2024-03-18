@@ -61,7 +61,11 @@ final class ProfileDeprecationsTest {
         ProfileDeprecations deprecations = new ProfileDeprecations(
             new Profile.Fixed()
         );
-        MatcherAssert.assertThat(deprecations.empty(), Matchers.is(false));
+        MatcherAssert.assertThat(
+            "Deprecated merge, release, deploy should be in the list",
+            deprecations.empty(),
+            Matchers.is(false)
+        );
         deprecations = new ProfileDeprecations(
             new Profile.Fixed(
                 new XMLDocument(
@@ -72,7 +76,11 @@ final class ProfileDeprecationsTest {
                 )
             )
         );
-        MatcherAssert.assertThat(deprecations.empty(), Matchers.is(false));
+        MatcherAssert.assertThat(
+            "Deprecated image should be in the list",
+            deprecations.empty(),
+            Matchers.is(false)
+        );
     }
 
     /**
@@ -91,6 +99,10 @@ final class ProfileDeprecationsTest {
                 )
             )
         );
-        MatcherAssert.assertThat(deprecations.empty(), Matchers.is(true));
+        MatcherAssert.assertThat(
+            "Deprecation list should be empty",
+            deprecations.empty(),
+            Matchers.is(true)
+        );
     }
 }

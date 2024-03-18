@@ -39,6 +39,7 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 
@@ -78,6 +79,7 @@ final class ReportsTest {
         final Agent agent = new Reports(repo.github());
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Request should not be created",
             talk.read(),
             XhtmlMatchers.hasXPath(ReportsTest.XPATH)
         );
@@ -98,6 +100,7 @@ final class ReportsTest {
         final Agent agent = new Reports(repo.github());
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "Request should not be created",
             talk.read(),
             XhtmlMatchers.hasXPath(ReportsTest.XPATH)
         );
@@ -105,7 +108,8 @@ final class ReportsTest {
             "Comment contains warning about stop request",
             repo.issues().get(1).comments().get(1).json().getString(
                 "body"
-            ).equals(
+            ),
+            Matchers.is(
                 String.format(
                     "> %s\n\n@%s %s %s",
                     stop,

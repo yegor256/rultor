@@ -77,6 +77,7 @@ final class QnParametrizedTest {
             }
         };
         MatcherAssert.assertThat(
+            "Parameters should be saved to the request",
             new Xembler(
                 new Directives().add("request").append(
                     new QnParametrized(origin).understand(
@@ -104,6 +105,7 @@ final class QnParametrizedTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey");
         MatcherAssert.assertThat(
+            "No dirs should be added to the empty command",
             new QnParametrized(Question.EMPTY).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#1")
             ).dirs(),
@@ -121,6 +123,7 @@ final class QnParametrizedTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey you");
         MatcherAssert.assertThat(
+            "Empty request should be in case of empty question",
             new QnParametrized(Question.EMPTY).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#2")
             ),
@@ -144,6 +147,7 @@ final class QnParametrizedTest {
             }
         };
         MatcherAssert.assertThat(
+            "Later request should be in the result",
             new QnParametrized(question).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#2")
             ),

@@ -84,6 +84,7 @@ final class RegistersShellTest {
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "All data should be saved to shell",
             talk.read(),
             XhtmlMatchers.hasXPaths(
                 String.format("/talk/shell[@id='abcd']/host[.='%s']", host),

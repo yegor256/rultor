@@ -58,12 +58,14 @@ final class QnVersionTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("version");
         MatcherAssert.assertThat(
+            "Request should be marked as done",
             new QnVersion().understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Version should be printed",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("My current version is")
         );
@@ -79,12 +81,14 @@ final class QnVersionTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("version");
         MatcherAssert.assertThat(
+            "Request should be marked as done",
             new QnVersion().understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Link to the revision should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString(
                 String.format(

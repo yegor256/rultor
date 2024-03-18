@@ -120,6 +120,7 @@ final class DecryptTest {
             Level.WARNING, Level.WARNING
         ).stdout();
         MatcherAssert.assertThat(
+            "File should be decrypted",
             FileUtils.readFileToString(
                 new File(dir, "a.txt"),
                 StandardCharsets.UTF_8
@@ -136,6 +137,7 @@ final class DecryptTest {
     @Test
     void testHttpProxyHandling() throws IOException {
         MatcherAssert.assertThat(
+            "proxy should be added to commands",
             new Decrypt(
                 new Profile.Fixed(
                     this.createTestProfileXML(),
@@ -156,7 +158,7 @@ final class DecryptTest {
      * Creates a profile XML for testing purposes.
      *
      * @return XML document
-     * @checkstyle AbbreviationAsWordInNameCheck (100 lines)
+     * @checkstyle AbbreviationAsWordInNameCheck (15 lines)
      */
     private XMLDocument createTestProfileXML() {
         return new XMLDocument(

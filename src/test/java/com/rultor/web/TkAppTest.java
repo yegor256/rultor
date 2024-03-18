@@ -93,9 +93,11 @@ final class TkAppTest {
             ).body()
         ).asString();
         MatcherAssert.assertThat(
+            "Page should be xml document",
             page, Matchers.startsWith("<?xml ")
         );
         MatcherAssert.assertThat(
+            "Xml document should contain some data",
             XhtmlMatchers.xhtml(page),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
@@ -154,7 +156,7 @@ final class TkAppTest {
                 .append("window.setInterval(function(){a.find(\"img\")")
                 .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
                 .append("+Date.now())},1E3)});")
-                .append("\n")
+                .append('\n')
                 .toString(),
             new TextOf(
                 new RsPrint(
@@ -182,6 +184,7 @@ final class TkAppTest {
             new Toggles.InFile()
         );
         MatcherAssert.assertThat(
+            "Page can be gzip compressed",
             new TextOf(
                 new GZIPInputStream(
                     new RsPrint(

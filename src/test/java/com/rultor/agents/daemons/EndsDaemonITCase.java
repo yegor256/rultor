@@ -40,6 +40,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.hamcrest.core.StringContains;
 import org.hamcrest.core.StringEndsWith;
 import org.junit.jupiter.api.Assumptions;
@@ -78,6 +79,7 @@ final class EndsDaemonITCase {
             final Agent agent = new EndsDaemon();
             agent.execute(talk);
             MatcherAssert.assertThat(
+                "Rultor prefix should be moved to highlights",
                 talk.read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk/daemon/highlights",
@@ -105,6 +107,7 @@ final class EndsDaemonITCase {
             final Agent agent = new EndsDaemon();
             agent.execute(talk);
             MatcherAssert.assertThat(
+                "Status code should be placed to daemon/code",
                 talk.read(),
                 XhtmlMatchers.hasXPath("/talk/daemon[code='123']")
             );
@@ -133,6 +136,7 @@ final class EndsDaemonITCase {
             final Agent agent = new EndsDaemon();
             agent.execute(talk);
             MatcherAssert.assertThat(
+                "Exception message should be placed in tail text",
                 talk.read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk/daemon[code='154']",
@@ -165,14 +169,14 @@ final class EndsDaemonITCase {
                     final String dir = talk.read()
                         .xpath("/talk/daemon/dir/text()").get(0);
                     MatcherAssert.assertThat(
+                        "Deprecation message should be printed",
                         dir,
-                        StringContains.containsString(
-                            "#### Deprecation Notice ####"
+                        Matchers.allOf(
+                            StringContains.containsString(
+                                "#### Deprecation Notice ####"
+                            ),
+                            StringEndsWith.endsWith("##############")
                         )
-                    );
-                    MatcherAssert.assertThat(
-                        dir,
-                        StringEndsWith.endsWith("##############")
                     );
                 }
             }
@@ -200,7 +204,6 @@ final class EndsDaemonITCase {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon")
-                // @checkstyle MultipleStringLiterals (1 line)
                 .attr("id", "abcd")
                 .add("title").set("merge").up()
                 .add("script").set("ls").up()

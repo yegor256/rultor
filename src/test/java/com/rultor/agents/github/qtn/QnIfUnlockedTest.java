@@ -32,11 +32,11 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -54,14 +54,17 @@ final class QnIfUnlockedTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Disabled
     void buildsRequest() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "dfgsadf4");
+        branches.create("base", "retygdy6");
         final Issue issue = repo.issues().get(
             repo.pulls().create("", "head", "base").number()
         );
         issue.comments().post("merge");
         MatcherAssert.assertThat(
+            "Merge request should be created if not locked",
             new Xembler(
                 new Directives().add("request").append(
                     new QnIfUnlocked(new QnMerge()).understand(
@@ -69,7 +72,7 @@ final class QnIfUnlockedTest {
                     ).dirs()
                 )
             ).xml(),
-            XhtmlMatchers.hasXPath("/request[not(type)]")
+            XhtmlMatchers.hasXPath("/request/type[text()='merge']")
         );
     }
 

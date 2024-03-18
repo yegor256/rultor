@@ -60,22 +60,24 @@ final class StartsDockerDaemonTest {
         ) {
             final PfShell shell = start.shell();
             MatcherAssert.assertThat(
+                "Should login as root",
                 shell.login(),
                 Matchers.is("root")
             );
             final String key = shell.key();
             MatcherAssert.assertThat(
+                "Should be RSA key",
                 key,
-                Matchers.startsWith("-----BEGIN RSA PRIVATE KEY-----")
-            );
-            MatcherAssert.assertThat(
-                key,
-                Matchers.endsWith("-----END RSA PRIVATE KEY-----")
+                Matchers.allOf(
+                    Matchers.startsWith("-----BEGIN RSA PRIVATE KEY-----"),
+                    Matchers.endsWith("-----END RSA PRIVATE KEY-----")
+                )
             );
             final Shell.Plain ssh = new Shell.Plain(
                 new Ssh(shell.host(), shell.port(), shell.login(), shell.key())
             );
             MatcherAssert.assertThat(
+                "Key should be placed in /root/.ssh/id_rsa",
                 ssh.exec("cat /root/.ssh/id_rsa"),
                 Matchers.containsString(key)
             );

@@ -55,6 +55,7 @@ final class StarsTest {
         final Talk talk = this.talk(repo);
         new Stars(github).execute(talk);
         MatcherAssert.assertThat(
+            "Star should be added to the repo",
             repo.stars().starred(),
             Matchers.is(true)
         );
@@ -72,6 +73,7 @@ final class StarsTest {
         repo.stars().star();
         new Stars(github).execute(talk);
         MatcherAssert.assertThat(
+            "Star should be kept if already stared",
             repo.stars().starred(),
             Matchers.is(true)
         );

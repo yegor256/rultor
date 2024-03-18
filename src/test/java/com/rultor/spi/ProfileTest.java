@@ -51,6 +51,7 @@ final class ProfileTest {
     @Test
     void acceptsValidXML() throws Exception {
         MatcherAssert.assertThat(
+            "All data should be saved in profile",
             new Profile.Fixed(
                 new XMLDocument(
                     new Joined(

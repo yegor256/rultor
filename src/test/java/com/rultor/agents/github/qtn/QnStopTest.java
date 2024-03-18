@@ -56,6 +56,7 @@ final class QnStopTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("stop");
         MatcherAssert.assertThat(
+            "stop request should be created",
             new Xembler(
                 new Directives().add("request").append(
                     new QnStop().understand(

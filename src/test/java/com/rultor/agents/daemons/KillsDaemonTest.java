@@ -62,6 +62,7 @@ final class KillsDaemonTest {
         final Agent agent = new KillsDaemon();
         agent.execute(talk);
         MatcherAssert.assertThat(
+            "KillsDaemon stops daemon older then 1h by default",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk/daemon")
         );

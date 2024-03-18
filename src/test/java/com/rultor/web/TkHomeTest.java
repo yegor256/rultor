@@ -57,6 +57,7 @@ final class TkHomeTest {
         talks.create("repo1", "test1");
         talks.create("repo2", "test2");
         MatcherAssert.assertThat(
+            "Homepage should contain some data",
             XhtmlMatchers.xhtml(
                 new TextOf(
                     new RsPrint(

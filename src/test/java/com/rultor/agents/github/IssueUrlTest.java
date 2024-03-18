@@ -45,6 +45,7 @@ final class IssueUrlTest {
         final IssueUrl issue =
             new IssueUrl("https://api.github.com/repos/USER/REPO/pulls/5086");
         MatcherAssert.assertThat(
+            "It is a valid url for github PR",
             issue.valid(),
             Matchers.is(true)
         );
@@ -56,6 +57,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/pulls/5386/files#r123"
         );
         MatcherAssert.assertThat(
+            "it is a valid url for file is github PR",
             issue.valid(),
             Matchers.is(true)
         );
@@ -67,6 +69,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/issues/5182"
         );
         MatcherAssert.assertThat(
+            "It is a valid url for github issue",
             issue.valid(),
             Matchers.is(true)
         );
@@ -78,6 +81,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/commit/2a1f8"
         );
         MatcherAssert.assertThat(
+            "It is a valid url for github commit",
             issue.valid(),
             Matchers.is(false)
         );
@@ -89,6 +93,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/pulls/5186"
         );
         MatcherAssert.assertThat(
+            "Id should be parsed from PR url",
             issue.uid(),
             Matchers.is(5186)
         );
@@ -100,6 +105,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/issues/5782"
         );
         MatcherAssert.assertThat(
+            "Id should be parsed from issue url",
             issue.uid(),
             Matchers.is(5782)
         );
@@ -111,6 +117,7 @@ final class IssueUrlTest {
             "https://api.github.com/repos/USER/REPO/pulls/5886/files#r123"
         );
         MatcherAssert.assertThat(
+            "PR id should be parsed from file url",
             issue.uid(),
             Matchers.is(5886)
         );
@@ -123,7 +130,8 @@ final class IssueUrlTest {
         );
         Assertions.assertThrows(
             IllegalStateException.class,
-            issue::uid
+            issue::uid,
+            "Id should not be parsed from commit url"
         );
     }
 }

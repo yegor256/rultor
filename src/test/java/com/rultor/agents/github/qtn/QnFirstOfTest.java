@@ -58,6 +58,7 @@ final class QnFirstOfTest {
         final Issue issue = repo.issues().create("", "");
         final Comment comment = issue.comments().post("deploy");
         MatcherAssert.assertThat(
+            "First not empty question should be taken",
             new QnFirstOf(
                 Arrays.asList(
                     Question.EMPTY,

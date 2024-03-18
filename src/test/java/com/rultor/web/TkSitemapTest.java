@@ -66,6 +66,7 @@ final class TkSitemapTest {
                 .attr("id", "a1b2c3").set("s3://test")
         );
         MatcherAssert.assertThat(
+            "Sitemap should be generated",
             XhtmlMatchers.xhtml(
                 new TextOf(
                     new RsPrint(take.act(new RqFake())).body()

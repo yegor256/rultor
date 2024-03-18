@@ -56,6 +56,7 @@ final class QnIamLostTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("boom");
         MatcherAssert.assertThat(
+            "Command should be marked as done",
             new QnIamLost().understand(
                 new Comment.Smart(issue.comments().get(1)),
                 new URI("#")
@@ -63,6 +64,7 @@ final class QnIamLostTest {
             Matchers.is(Req.DONE)
         );
         MatcherAssert.assertThat(
+            "Comment about not found command should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("don't understand you")
         );

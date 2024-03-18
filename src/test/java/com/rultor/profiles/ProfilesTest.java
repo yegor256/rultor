@@ -119,6 +119,7 @@ final class ProfilesTest {
             Assertions.fail("Code above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
+                "Message should be with a reason for merge error",
                 exception.getMessage(),
                 Matchers.is(
                     String.format(
@@ -167,6 +168,7 @@ final class ProfilesTest {
             Assertions.fail("Method above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
+                "Message should be with a reason for merge error",
                 exception.getMessage(),
                 Matchers.is(
                     String.format(
@@ -229,6 +231,7 @@ final class ProfilesTest {
             Assertions.fail("Line above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
+                "Message should be with a reason for merge error",
                 exception.getMessage(),
                 Matchers.is(
                     String.format(

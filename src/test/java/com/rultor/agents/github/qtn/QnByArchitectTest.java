@@ -42,7 +42,6 @@ import java.util.Date;
 import java.util.Locale;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -74,8 +73,16 @@ final class QnByArchitectTest {
         ).understand(comment, home);
         Mockito.verify(question, Mockito.never()).understand(comment, home);
         MatcherAssert.assertThat(
+            "Two comments should be posted",
             issue.comments().iterate(new Date(0L)),
             Matchers.iterableWithSize(2)
+        );
+        MatcherAssert.assertThat(
+            "Confirmation request comment should be posted",
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.containsString(
+                "Thanks for your request; @johnny please confirm this"
+            )
         );
     }
 
@@ -113,7 +120,6 @@ final class QnByArchitectTest {
      * pull request made by an architect.
      * @throws Exception In case of error.
      */
-    @Disabled
     @Test
     void acceptsIfMergeArchitectPull() throws Exception {
         final Repo repo = new MkGithub().randomRepo();
