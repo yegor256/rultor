@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "description": "Schema for .rultor.yml file.",
+  "properties": {
+    "docker": {
+      "type": "object",
+      "description": "Docker image to be used in merge and release.",
+      "properties": {
+        "image": {
+          "type": "string",
+          "description": "Docker url for the image, default value is yegor256/rultor."
+        },
+        "as_root": {
+          "type": "boolean",
+          "description": "Flag to create a user inside a docker or use a default one (root), default value is false."
+        }
+      },
+      "required": ["image"]
+    },
+    "readers": {
+      "type": "array",
+      "description": "Github user allowed to read logs (should be defined for private repos)."
+    },
+    "architect": {
+      "type": "array",
+      "description": "Project architects."
+    },
+    "commanders": {
+      "type": "array",
+      "description": "Project commanders."
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Additional resources needed for the operations."
+    },
+    "decrypt": {
+      "type": "object",
+      "properties": {
+        "before_install": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["before_install"]
+    },
+    "merge": {
+      "type": "object",
+      "properties": {
+        "script": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["script"]
+    },
+    "release": {
+      "type": "object",
+      "properties": {
+        "script": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["script"]
+    }
+  },
+  "required": ["decrypt", "merge", "release"]
+}
