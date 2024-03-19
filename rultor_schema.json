@@ -33,7 +33,7 @@
     "assets": {
       "type": "object",
       "additionalProperties": true,
-      "description": "Additional resources needed for the operations."
+      "description": "Additional resources, typically some secrets."
     },
     "decrypt": {
       "type": "object",
@@ -47,9 +47,58 @@
       },
       "required": ["before_install"]
     },
+    "install": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "Common script to be used in merge and deploy."
+    },
+    "uninstall": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "Common script to be used after operation is completed."
+    },
     "merge": {
       "type": "object",
       "properties": {
+        "squash": {
+          "type": "boolean",
+          "description": "Flag to squash commits or not, default is false."
+        },
+        "fast-forward": {
+          "type": "string",
+          "description": "May be either default (--ff argument for Git), only (--ff-only) or no (--no-ff)."
+        },
+        "rebase": {
+          "type": "boolean",
+          "description": "Flag to perform rebase from origin, default is false."
+        },
+        "commanders": {
+          "type": "array",
+          "description": "Additional users who can perform this action."
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Additional environment variables."
+        },
         "script": {
           "type": "array",
           "items": {
@@ -71,6 +120,5 @@
       },
       "required": ["script"]
     }
-  },
-  "required": ["decrypt", "merge", "release"]
+  }
 }
