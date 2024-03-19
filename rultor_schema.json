@@ -9,26 +9,31 @@
       "properties": {
         "image": {
           "type": "string",
-          "description": "Docker url for the image, default value is yegor256/rultor."
+          "description": "Docker url for the image, default value is yegor256/rultor-image.",
+          "examples": [
+            "yegor256/rultor-image:1.9.1"
+          ]
         },
         "as_root": {
           "type": "boolean",
-          "description": "Flag to create a user inside a docker or use a default one (root), default value is false."
+          "description": "Flag to create a user inside a docker or use a default one (root), default value is false.",
+          "default": false
         }
-      },
-      "required": ["image"]
+      }
     },
     "readers": {
       "type": "array",
-      "description": "Github user allowed to read logs (should be defined for private repos)."
+      "description": "Github user allowed to read logs (should be defined for private repos).",
+      "examples": [
+        "urn:github:8086956"
+      ]
     },
     "architect": {
       "type": "array",
-      "description": "Project architects."
-    },
-    "commanders": {
-      "type": "array",
-      "description": "Project commanders."
+      "description": "Project architects.",
+      "examples": [
+        "urn:github:8086956"
+      ]
     },
     "assets": {
       "type": "object",
@@ -37,15 +42,13 @@
     },
     "decrypt": {
       "type": "object",
-      "properties": {
-        "before_install": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": ["before_install"]
+      "additionalProperties": true,
+      "description": "Files that should be decrypted."
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Additional environment variables for all operations."
     },
     "install": {
       "anyOf": [
@@ -75,35 +78,72 @@
       ],
       "description": "Common script to be used after operation is completed."
     },
+    "ssh": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "Host of your custom server."
+        },
+        "port": {
+          "type": "integer",
+          "description": "Port to connect ssh."
+        },
+        "login": {
+          "type": "string",
+          "description": "Login."
+        },
+        "key": {
+          "type": "string",
+          "description": "Key to connect.",
+          "examples": ["./keys/id_rsa"]
+        }
+      }
+    },
     "merge": {
       "type": "object",
       "properties": {
         "squash": {
           "type": "boolean",
-          "description": "Flag to squash commits or not, default is false."
+          "description": "Flag to squash commits or not, default is false.",
+          "default": false
         },
         "fast-forward": {
           "type": "string",
-          "description": "May be either default (--ff argument for Git), only (--ff-only) or no (--no-ff)."
+          "description": "May be either default (--ff argument for Git), only (--ff-only) or no (--no-ff).",
+          "enum": [
+            "default", "only", "no"
+          ]
         },
         "rebase": {
           "type": "boolean",
-          "description": "Flag to perform rebase from origin, default is false."
+          "description": "Flag to perform rebase from origin, default is false.",
+          "default": false
         },
         "commanders": {
           "type": "array",
-          "description": "Additional users who can perform this action."
+          "description": "Additional users who can perform this action.",
+          "examples": [
+            "urn:github:8086956"
+          ]
         },
         "env": {
           "type": "object",
           "additionalProperties": true,
-          "description": "Additional environment variables."
+          "description": "Additional environment variables for merge operation."
         },
         "script": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
         }
       },
       "required": ["script"]
@@ -111,11 +151,66 @@
     "release": {
       "type": "object",
       "properties": {
-        "script": {
+        "pre": {
+          "type": "boolean",
+          "description": "Flag to make it prerelease or latest release, default is true",
+          "default": true
+        },
+        "commanders": {
           "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "description": "Additional users who can perform this action.",
+          "examples": [
+            "urn:github:8086956"
+          ]
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Additional environment variables for release operation."
+        },
+        "script": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "required": ["script"]
+    },
+    "deploy": {
+      "type": "object",
+      "properties": {
+        "commanders": {
+          "type": "array",
+          "description": "Additional users who can perform this action.",
+          "examples": [
+            "urn:github:8086956"
+          ]
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Additional environment variables for deploy operation."
+        },
+        "script": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
         }
       },
       "required": ["script"]
