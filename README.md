@@ -19,6 +19,8 @@ any of your GitHub issue and the conversation will start.
 
 Full documentation is at [doc.rultor.com](https://doc.rultor.com)
 
+[Schema](rultor_schema.json) for .rultor.yml file
+
 Need help online? Try our [Telegram group](https://t.me/zerocracy).
 
 These blog posts may be helpful:
