@@ -30,7 +30,7 @@
     },
     "architect": {
       "type": "array",
-      "description": "Project architects.",
+      "description": "Project's architects.",
       "examples": [
         "urn:github:8086956"
       ]
@@ -39,6 +39,14 @@
       "type": "object",
       "additionalProperties": true,
       "description": "Additional resources, typically some secrets."
+    },
+    "friends": {
+      "type": "array",
+      "description": "List of the projects that can use your secrets.",
+      "items": {
+        "type": "string"
+      },
+      "examples": ["yegor256/rultor", "jcabi/*"]
     },
     "decrypt": {
       "type": "object",
@@ -153,8 +161,15 @@
       "properties": {
         "pre": {
           "type": "boolean",
-          "description": "Flag to make it prerelease or latest release, default is true",
+          "description": "Flag to make it prerelease or latest release, default is true.",
           "default": true
+        },
+        "sensitive": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Files with sensitive information."
         },
         "commanders": {
           "type": "array",
