@@ -175,7 +175,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
+      <version>1.18.32</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
