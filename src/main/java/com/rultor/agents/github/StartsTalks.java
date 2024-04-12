@@ -112,9 +112,6 @@ public final class StartsTalks implements SuperAgent {
                 Logger.info(this, "Skipped, since not valid URL at %s", url);
             }
             
-            // Loops should not contain more than a single "break"
-            // or "continue"
-            // The use of break and continue statements increases the complexity of the control flow and makes it harder to understand the program logic. In order to keep a good program structure, they should not be applied more than once per loop.
             if (!"mention".equals(reason) || !new IssueUrl(url).valid()) {
                 continue;
             }
