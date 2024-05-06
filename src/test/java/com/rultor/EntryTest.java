@@ -32,26 +32,19 @@ package com.rultor;
 import co.stateful.RtSttc;
 import com.jcabi.github.RtGithub;
 import com.jcabi.urn.URN;
-import java.io.IOException;
+import com.yegor256.WeAreOnline;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link Entry}.
  * @since 1.58
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(WeAreOnline.class)
 final class EntryTest {
-    /**
-     * To make sure we are online.
-     * @throws IOException If fails
-     */
-    @BeforeAll
-    public void weAreOnline() throws IOException {
-        new WeAreOnline().assume();
-    }
 
     /**
      * RtSttc can work in production mode.

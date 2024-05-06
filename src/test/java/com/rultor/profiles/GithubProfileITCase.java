@@ -32,14 +32,13 @@ package com.rultor.profiles;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.RtGithub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.WeAreOnline;
 import com.rultor.spi.Profile;
-import java.io.IOException;
+import com.yegor256.WeAreOnline;
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Tests for {@link GithubProfile}.
@@ -48,16 +47,8 @@ import org.junit.jupiter.api.TestInstance;
  */
 @SuppressWarnings("PMD.UseUtilityClass")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(WeAreOnline.class)
 final class GithubProfileITCase {
-
-    /**
-     * To make sure we are online.
-     * @throws IOException If fails
-     */
-    @BeforeAll
-    public void weAreOnline() throws IOException {
-        new WeAreOnline().assume();
-    }
 
     /**
      * GithubProfile can fetch a YAML config.
