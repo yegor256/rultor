@@ -29,11 +29,11 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.Tag;
+import com.amazonaws.services.ec2.model.TagSpecification;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -150,7 +150,14 @@ public final class StartsInstance extends AbstractAgent {
             .withImageId(this.image)
             .withInstanceType(itype)
             .withMaxCount(1)
-            .withMinCount(1);
+            .withMinCount(1)
+            .withTagSpecifications(
+                new TagSpecification().withTags(
+                    new Tag().withKey("Name").withValue(talk),
+                    new Tag().withKey("rultor").withValue("yes"),
+                    new Tag().withKey("rultor-talk").withValue(talk)
+                )
+            );
         Logger.info(
             this,
             "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
@@ -159,15 +166,10 @@ public final class StartsInstance extends AbstractAgent {
         final RunInstancesResult response =
             this.api.aws().runInstances(request);
         final Instance instance = response.getReservation().getInstances().get(0);
-        final String iid = instance.getInstanceId();
-        this.api.aws().createTags(
-            new CreateTagsRequest()
-                .withResources(iid)
-                .withTags(
-                    new Tag().withKey("Name").withValue(talk),
-                    new Tag().withKey("rultor").withValue("yes"),
-                    new Tag().withKey("rultor-talk").withValue(talk)
-                )
+        Logger.info(
+            this,
+            "Started a new AWS instance %s for '%s'",
+            instance.getInstanceId(), talk
         );
         return instance;
     }
