@@ -157,7 +157,8 @@ public final class EndsDaemon extends AbstractAgent {
                                 )
                             )
                         ),
-                        100_000
+                        0,
+                        10_000
                     ).toString()
                 )
             );
