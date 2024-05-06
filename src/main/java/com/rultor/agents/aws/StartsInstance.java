@@ -30,6 +30,7 @@
 package com.rultor.agents.aws;
 
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.ResourceType;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.Tag;
@@ -152,11 +153,13 @@ public final class StartsInstance extends AbstractAgent {
             .withMaxCount(1)
             .withMinCount(1)
             .withTagSpecifications(
-                new TagSpecification().withTags(
-                    new Tag().withKey("Name").withValue(talk),
-                    new Tag().withKey("rultor").withValue("yes"),
-                    new Tag().withKey("rultor-talk").withValue(talk)
-                )
+                new TagSpecification()
+                    .withResourceType(ResourceType.Instance)
+                    .withTags(
+                        new Tag().withKey("Name").withValue(talk),
+                        new Tag().withKey("rultor").withValue("yes"),
+                        new Tag().withKey("rultor-talk").withValue(talk)
+                    )
             );
         Logger.info(
             this,
