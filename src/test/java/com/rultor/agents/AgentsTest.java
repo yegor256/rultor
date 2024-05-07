@@ -35,8 +35,10 @@ import com.jcabi.github.Github;
 import com.jcabi.github.mock.MkGithub;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import com.yegor256.WeAreOnline;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Tests for ${@link Agents}.
@@ -50,6 +52,7 @@ final class AgentsTest {
      * @throws Exception In case of error.
      */
     @Test
+    @ExtendWith(WeAreOnline.class)
     void processesTalk() throws Exception {
         final Talk talk = new Talk.InFile();
         final Github github = new MkGithub();
