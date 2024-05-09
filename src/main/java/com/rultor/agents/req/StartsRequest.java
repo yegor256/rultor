@@ -126,10 +126,10 @@ public final class StartsRequest extends AbstractAgent {
 
     /**
      * Make a script.
-     * @param req Request
-     * @param type Its type
-     * @param name Name of talk
-     * @return Script
+     * @param req Request in XML
+     * @param type Its type, like "merge", "deploy", or "release"
+     * @param name Name of the talk
+     * @return Bash script to run on the server
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
@@ -234,11 +234,10 @@ public final class StartsRequest extends AbstractAgent {
     /**
      * Get variables from script.
      * @param req Request
-     * @param type Its type
+     * @param type Its type, like "merge", "deploy", or "release"
      * @return Vars
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
         final Collection<Map.Entry<String, String>> entries =

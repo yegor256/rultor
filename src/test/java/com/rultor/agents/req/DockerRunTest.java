@@ -270,6 +270,27 @@ final class DockerRunTest {
     }
 
     /**
+     * DockerRun can skip empty lines in a multi-line script.
+     * @throws Exception In case of error.
+     * @since 1.32.3
+     */
+    @Test
+    void skipsEmptyLinesInMultiLineScript() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                "<p><entry key='script'>echo 1\necho 2\n\n\necho 3</entry></p>"
+            )
+        );
+        MatcherAssert.assertThat(
+            "empty lines should be skipped",
+            new Brackets(
+                new DockerRun(profile, "/p").script()
+            ).toString(),
+            Matchers.equalTo("( 'echo 1' ';' 'echo 2' ';' 'echo 3' ';' )")
+        );
+    }
+
+    /**
      * DockerRun can fetch environment vars from empty list.
      * @throws Exception In case of error.
      */

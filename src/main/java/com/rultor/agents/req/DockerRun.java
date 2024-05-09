@@ -248,14 +248,17 @@ final class DockerRun {
     private static Collection<String> lines(final XML node) {
         final Collection<String> lines = new LinkedList<>();
         if (node.node().hasChildNodes()) {
-            lines.addAll(
-                new ListOf<>(
-                    new Mapped<>(
-                        t -> new Trimmed(t).asString(),
-                        new Split(node.xpath("text()").get(0), "\n")
-                    )
+            final List<String> src = new ListOf<>(
+                new Mapped<>(
+                    t -> new Trimmed(t).asString(),
+                    new Split(node.xpath("text()").get(0), "\n")
                 )
             );
+            for (final String str : src) {
+                if (!str.isEmpty()) {
+                    lines.add(str);
+                }
+            }
         }
         return lines;
     }
