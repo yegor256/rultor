@@ -834,7 +834,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.22.2</version>
+            <version>0.23.0</version>
             <configuration>
               <excludes combine.children="append">
                 <exclude>checkstyle:/src/main/js/.*</exclude>
