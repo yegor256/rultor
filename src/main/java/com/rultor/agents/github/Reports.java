@@ -95,7 +95,7 @@ public final class Reports extends AbstractAgent {
         } else {
             pattern = "Reports.failure";
         }
-        final int number = Integer.parseInt(req.xpath("@id").get(0));
+        final long number = Long.parseLong(req.xpath("@id").get(0));
         final Comment.Smart comment = new Comment.Smart(
             new SfComment(
                 Reports.origin(issue, number)
@@ -162,7 +162,7 @@ public final class Reports extends AbstractAgent {
      * @return Comment
      */
     private static Comment.Smart origin(final Issue.Smart issue,
-        final int number) {
+        final long number) {
         final Comment comment;
         if (number == 1) {
             comment = new FirstComment(issue);
