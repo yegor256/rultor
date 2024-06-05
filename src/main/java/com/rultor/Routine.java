@@ -35,6 +35,7 @@ import com.jcabi.aspects.Timeable;
 import com.jcabi.github.Github;
 import com.jcabi.log.Logger;
 import com.rultor.agents.Agents;
+import com.rultor.agents.github.qtn.DefaultBranch;
 import com.rultor.profiles.Profiles;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Pulse;
@@ -197,10 +198,14 @@ final class Routine implements Runnable, Closeable {
         int total = 0;
         for (final Talk talk : active) {
             ++total;
-            final Profile profile = profiles.fetch(talk);
-            this.agents.agent(talk, profile).execute(talk);
-            if (total > Routine.MAX_TALKS) {
-                break;
+            try {
+                final Profile profile = profiles.fetch(talk);
+                this.agents.agent(talk, profile).execute(talk);
+                if (total > Routine.MAX_TALKS) {
+                    break;
+                }
+            } catch (final DefaultBranch.RepoNotFoundException ex) {
+                Logger.warn(this, "The repo not found: %[exception]s", ex);
             }
         }
         this.agents.closer().execute(this.talks);

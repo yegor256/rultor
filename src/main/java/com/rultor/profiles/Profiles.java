@@ -32,11 +32,13 @@ package com.rultor.profiles;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
+import com.jcabi.github.Repo;
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
 import com.rultor.agents.github.TalkIssues;
+import com.rultor.agents.github.qtn.DefaultBranch;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
@@ -168,8 +170,12 @@ public final class Profiles {
         final Profile profile;
         final List<String> type = xml.xpath("//request/type/text()");
         if (type.isEmpty() || !Profiles.MERGE.equals(type.get(0))) {
+            final Repo repo = new TalkIssues(
+                Profiles.github(), xml
+            ).get().repo();
             profile = new GithubProfile(
-                new TalkIssues(Profiles.github(), xml).get().repo()
+                repo,
+                new DefaultBranch(repo).toString()
             );
         } else {
             profile = this.merged(
