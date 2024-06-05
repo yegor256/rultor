@@ -111,7 +111,7 @@ public final class Understands extends AbstractAgent {
                 )
             ).iterator()
         );
-        final int seen = Understands.seen(xml);
+        final long seen = Understands.seen(xml);
         long next = seen;
         int fresh = 0;
         int total = 0;
@@ -211,12 +211,12 @@ public final class Understands extends AbstractAgent {
      * @param xml XML
      * @return Number
      */
-    private static int seen(final XML xml) {
-        final int seen;
+    private static long seen(final XML xml) {
+        final long seen;
         if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
             seen = 0;
         } else {
-            seen = Integer.parseInt(
+            seen = Long.parseLong(
                 xml.xpath("/talk/wire/github-seen/text()").get(0)
             );
         }
