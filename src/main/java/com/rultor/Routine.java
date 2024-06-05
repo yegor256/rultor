@@ -206,6 +206,7 @@ final class Routine implements Runnable, Closeable {
                 }
             } catch (final DefaultBranch.RepoNotFoundException ex) {
                 Logger.warn(this, "The repo not found: %[exception]s", ex);
+                talk.active(false);
             }
         }
         this.agents.closer().execute(this.talks);
