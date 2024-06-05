@@ -112,7 +112,7 @@ public final class Understands extends AbstractAgent {
             ).iterator()
         );
         final int seen = Understands.seen(xml);
-        int next = seen;
+        long next = seen;
         int fresh = 0;
         int total = 0;
         Req req = Req.EMPTY;
@@ -161,7 +161,7 @@ public final class Understands extends AbstractAgent {
             dirs.xpath("/talk/request").remove()
                 .xpath("/talk[not(request)]").strict(1)
                 .add("request")
-                .attr("id", Integer.toString(next))
+                .attr("id", Long.toString(next))
                 .append(req.dirs());
         } else {
             Logger.error(
@@ -172,7 +172,7 @@ public final class Understands extends AbstractAgent {
         if (next > seen) {
             dirs.xpath("/talk/wire")
                 .addIf("github-seen")
-                .set(Integer.toString(next));
+                .set(Long.toString(next));
         }
         return dirs.xpath("/talk")
             .attr("later", Boolean.toString(!req.equals(Req.EMPTY)));
@@ -191,7 +191,7 @@ public final class Understands extends AbstractAgent {
         try {
             req = this.question.understand(
                 comment,
-                new Home(xml, Integer.toString(comment.number())).uri()
+                new Home(xml, Long.toString(comment.number())).uri()
             );
         } catch (final Profile.ConfigException ex) {
             new Answer(comment).post(

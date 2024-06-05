@@ -69,8 +69,8 @@ final class FirstComment implements Comment {
     }
 
     @Override
-    public int number() {
-        return 1;
+    public long number() {
+        return 1L;
     }
 
     @Override

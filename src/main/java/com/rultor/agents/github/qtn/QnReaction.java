@@ -75,7 +75,7 @@ public final class QnReaction implements Question {
             .path(comment.issue().repo().coordinates().user())
             .path(comment.issue().repo().coordinates().repo())
             .path("issues/comments")
-            .path(Integer.toString(comment.number()))
+            .path(Long.toString(comment.number()))
             .path("reactions")
             .back()
             .method(Request.POST)
