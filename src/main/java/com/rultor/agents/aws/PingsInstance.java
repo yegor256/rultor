@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
+import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
@@ -86,11 +87,20 @@ public final class PingsInstance extends AbstractAgent {
                 );
                 ++attempt;
                 if (attempt > 3) {
-                    dirs.xpath("/talk/daemon").remove();
-                    Logger.warn(
-                        this, "The AWS instance %s is officially dead at %s",
-                        instance, name
-                    );
+                    dirs.xpath("/talk/daemon").strict(1);
+                    if (xml.nodes("/talk/daemon/started").isEmpty()) {
+                        dirs.remove();
+                        Logger.warn(
+                            this, "The AWS instance %s is officially dead at %s (never started)",
+                            instance, name
+                        );
+                    } else {
+                        dirs.add("ended").set(new Time().iso()).up().add("code").set(1);
+                        Logger.warn(
+                            this, "The AWS instance %s is officially dead at %s",
+                            instance, name
+                        );
+                    }
                     break;
                 }
                 new Sleep(1L).now();
