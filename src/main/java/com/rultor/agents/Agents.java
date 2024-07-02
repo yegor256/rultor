@@ -350,13 +350,15 @@ public final class Agents {
                 new Agent.Quiet(new DetachesInstance(aws)),
                 new Agent.Quiet(new ShootsInstance(aws, TimeUnit.MINUTES.toMillis(15L))),
                 new RemovesShell(),
-                new ArchivesDaemon(
-                    new ReRegion(
-                        new Region.Simple(
-                            Manifests.read("Rultor-S3Key"),
-                            Manifests.read("Rultor-S3Secret")
-                        )
-                    ).bucket(Manifests.read("Rultor-S3Bucket"))
+                new Agent.Quiet(
+                    new ArchivesDaemon(
+                        new ReRegion(
+                            new Region.Simple(
+                                Manifests.read("Rultor-S3Key"),
+                                Manifests.read("Rultor-S3Secret")
+                            )
+                        ).bucket(Manifests.read("Rultor-S3Bucket"))
+                    )
                 ),
                 new Publishes(profile, this.github),
                 new SafeAgent(new Stars(this.github))
