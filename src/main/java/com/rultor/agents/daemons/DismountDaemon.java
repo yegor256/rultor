@@ -100,6 +100,9 @@ public final class DismountDaemon extends AbstractAgent {
             );
             dirs.append(
                 new Directives()
+                    .xpath("/talk/daemon/ended").remove()
+                    .xpath("/talk/daemon/code").remove()
+                    .xpath("/talk/daemon/tail").remove()
                     .xpath("/talk/daemon")
                     .strict(1)
                     .add("ended").set(new Time().iso()).up()
