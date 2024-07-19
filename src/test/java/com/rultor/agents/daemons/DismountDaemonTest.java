@@ -74,8 +74,7 @@ final class DismountDaemonTest {
             "Daemon should be stopped for not found host",
             talk.read(),
             XhtmlMatchers.hasXPaths(
-                "/talk/daemon/ended",
-                "/talk/daemon/tail"
+                "/talk[not(daemon)]"
             )
         );
     }

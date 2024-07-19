@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
-import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
@@ -42,7 +41,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
-import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done when the host is not reachable and the
@@ -100,28 +98,9 @@ public final class DismountDaemon extends AbstractAgent {
             );
             dirs.append(
                 new Directives()
-                    .xpath("/talk/daemon/ended").remove()
-                    .xpath("/talk/daemon/code").remove()
-                    .xpath("/talk/daemon/tail").remove()
                     .xpath("/talk/daemon")
                     .strict(1)
-                    .add("ended").set(new Time().iso()).up()
-                    .add("code").set("1").up()
-                    .add("tail").set(
-                        Xembler.escape(
-                            String.join(
-                                "\n",
-                                String.format(
-                                    "The host %s is not reachable",
-                                    DismountDaemon.host(xml)
-                                ),
-                                "The daemon is older than a few days",
-                                "The daemon is marked as done",
-                                ex.getMessage(),
-                                "Please, try to run the daemon again"
-                            )
-                        )
-                    )
+                    .remove()
             );
         }
         return dirs;

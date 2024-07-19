@@ -56,7 +56,7 @@ public final class SanitizesDaemon extends AbstractAgent {
      * Ctor.
      */
     public SanitizesDaemon() {
-        super("/talk/daemon[dir]");
+        super("/talk/daemon[dir and not(ended)]");
     }
 
     @Override
