@@ -167,7 +167,10 @@ public interface Agent {
                 this.agent.execute(talk);
             // @checkstyle IllegalCatchCheck (1 line)
             } catch (final Exception ex) {
-                Logger.error(this, "%[exception]s", ex);
+                Logger.error(
+                    this, "In %s:%d %[exception]s",
+                    talk.name(), talk.number(), ex
+                );
             }
         }
     }
