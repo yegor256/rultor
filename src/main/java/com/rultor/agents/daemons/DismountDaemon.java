@@ -37,7 +37,6 @@ import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -93,7 +92,7 @@ public final class DismountDaemon extends AbstractAgent {
                 this, "The host %s is alive",
                 DismountDaemon.host(xml)
             );
-        } catch (final UnknownHostException ex) {
+        } catch (final IOException ex) {
             Logger.warn(
                 this, "The host %s is unreachable: %s",
                 DismountDaemon.host(xml),
