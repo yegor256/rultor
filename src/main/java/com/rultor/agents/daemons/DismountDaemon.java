@@ -69,7 +69,7 @@ public final class DismountDaemon extends AbstractAgent {
      */
     public DismountDaemon(final long mins) {
         super(
-            "/talk/daemon[started and not(code) and not(ended)]",
+            "/talk/daemon[started and dir]",
             String.format(
                 // @checkstyle LineLength (1 line)
                 "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
