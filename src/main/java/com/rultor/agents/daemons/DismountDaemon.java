@@ -31,6 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
+import com.jcabi.ssh.Shell;
 import com.jcabi.xml.XML;
 import com.rultor.Time;
 import com.rultor.agents.AbstractAgent;
@@ -87,7 +88,7 @@ public final class DismountDaemon extends AbstractAgent {
                 this, "Checking %s...",
                 DismountDaemon.host(xml)
             );
-            new TalkShells(xml).get();
+            new Shell.Empty(new TalkShells(xml).get()).exec("pwd");
             Logger.info(
                 this, "The host %s is alive",
                 DismountDaemon.host(xml)
