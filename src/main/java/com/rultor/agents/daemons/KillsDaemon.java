@@ -78,16 +78,16 @@ public final class KillsDaemon extends AbstractAgent {
         final String name = xml.xpath("/talk/@name").get(0);
         try {
             Logger.info(
-                this, "Daemon of %s killed due to delay, code=%d",
+                this, "The daemon of %s has been killed due to delay, code=%d",
                 name, new Script("kill.sh").exec(xml)
             );
         } catch (final IllegalArgumentException ex) {
             Logger.warn(
-                this, "Failed to kill the daemon of %s due to delay: %s",
+                this, "We failed to kill the daemon of %s due to delay: %s",
                 name, ex.getMessage()
             );
         }
-        return new Directives();
+        return new Directives().xpath("/talk/request").remove();
     }
 
 }

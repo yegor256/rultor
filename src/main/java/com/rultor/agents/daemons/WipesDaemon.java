@@ -58,7 +58,9 @@ public final class WipesDaemon extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) {
         Logger.warn(this, "daemon wiped: %s", xml.xpath("/talk/@name").get(0));
-        return new Directives().xpath("/talk/daemon").remove();
+        return new Directives()
+            .xpath("/talk/daemon")
+            .remove();
     }
 
 }

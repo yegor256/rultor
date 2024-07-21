@@ -70,7 +70,7 @@ public final class SanitizesDaemon extends AbstractAgent {
         if (exit != 0) {
             dirs.xpath("/talk/daemon/dir").remove();
             Logger.warn(
-                this, "daemon of %s lost its directory: %s",
+                this, "The daemon of %s has lost its directory: %s",
                 xml.xpath("/talk/@name").get(0),
                 dir
             );
