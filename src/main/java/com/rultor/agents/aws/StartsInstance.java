@@ -59,7 +59,21 @@ public final class StartsInstance extends AbstractAgent {
      * Allowed instance types.
      */
     private static final String[] ALLOWED_TYPES = {
-        "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.xlarge",
+        "t2.nano", "t2.micro", "t2.small",
+    };
+
+    /**
+     * Elite instance types, allowed only for special organizations.
+     */
+    private static final String[] ELITE_TYPES = {
+        "t2.medium", "t2.xlarge", "t2.2xlarge",
+    };
+
+    /**
+     * Elite organizations.
+     */
+    private static final String[] ELITE_ORGS = {
+        "objectionary", "zerocracy", "yegor256",
     };
 
     /**
@@ -105,7 +119,7 @@ public final class StartsInstance extends AbstractAgent {
     public StartsInstance(final Profile pfl, final AwsEc2 aws,
         final String image, final String tpe,
         final String grp, final String net) {
-        super("/talk[daemon and not(ec2) and not(shell)]");
+        super("/talk[wire/github-repo and daemon and not(ec2) and not(shell)]");
         this.profile = pfl;
         this.api = aws;
         this.image = image;
@@ -118,7 +132,7 @@ public final class StartsInstance extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Directives dirs = new Directives();
         try {
-            final Instance instance = this.run(xml.xpath("/talk/@name").get(0));
+            final Instance instance = this.run(xml.xpath("/talk/@name").get(0), xml);
             Logger.info(
                 this, "EC2 instance %s started for %s",
                 instance.getInstanceId(),
@@ -140,11 +154,12 @@ public final class StartsInstance extends AbstractAgent {
     /**
      * Run a new instance.
      * @param talk Name of the talk
+     * @param xml Talk XML
      * @return Instance ID
      * @throws IOException If fails
      */
-    private Instance run(final String talk) throws IOException {
-        final String itype = this.instanceType();
+    private Instance run(final String talk, final XML xml) throws IOException {
+        final String itype = this.instanceType(xml);
         final RunInstancesRequest request = new RunInstancesRequest()
             .withSecurityGroupIds(this.sgroup)
             .withSubnetId(this.subnet)
@@ -179,21 +194,34 @@ public final class StartsInstance extends AbstractAgent {
 
     /**
      * Read one EC2 param from .rultor.xml.
+     * @param xml Talk XML
      * @return Value
      * @throws IOException If fails
      */
-    private String instanceType() throws IOException {
+    private String instanceType(final XML xml) throws IOException {
         final String required = new Profile.Defaults(this.profile).text(
             "/p/entry[@key='ec2']/entry[@key='type']",
             this.type
         );
-        if (!Arrays.asList(StartsInstance.ALLOWED_TYPES).contains(required)) {
+        if (!Arrays.asList(StartsInstance.ALLOWED_TYPES).contains(required)
+            && !Arrays.asList(StartsInstance.ELITE_TYPES).contains(required)) {
             throw new Profile.ConfigException(
                 Logger.format(
                     "EC2 instance type '%s' is not valid, use one of %[list]s",
                     required, StartsInstance.ALLOWED_TYPES
                 )
             );
+        }
+        if (Arrays.asList(StartsInstance.ELITE_TYPES).contains(required)) {
+            final String org = xml.xpath("/talk/wire/github-repo/text()").get(0).split("/")[0];
+            if (!Arrays.asList(StartsInstance.ELITE_ORGS).contains(org)) {
+                throw new Profile.ConfigException(
+                    Logger.format(
+                        "You are not allowed to use EC2 instance type '%s', use one of %[list]s",
+                        required, StartsInstance.ALLOWED_TYPES
+                    )
+                );
+            }
         }
         return required;
     }
