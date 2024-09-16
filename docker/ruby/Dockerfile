@@ -49,6 +49,7 @@ ENV LANGUAGE=en_US.UTF-8
 RUN apt-get -y --no-install-recommends install \
     curl=* \
     sudo=* \
+    git=* \
     unzip=* \
     zip=* \
     gnupg2=* \
