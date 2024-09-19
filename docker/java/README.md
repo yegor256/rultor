@@ -12,4 +12,4 @@ Then, deploy it:
 docker push yegor256/rultor-java
 ```
 
-This image is used by [qbash](https://github.com/yegor256/qbash) and others.
+This image is used by [takes](https://github.com/yegor256/takes) and others.
