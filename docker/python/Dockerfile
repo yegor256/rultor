@@ -27,30 +27,18 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FROM yegor256/rultor-ruby
-LABEL Description="RULTOR image for simple Java+Maven projects" Version="0.0.0"
+LABEL Description="RULTOR image for simple Python+Pip projects" Version="0.0.0"
 
-RUN apt-get -y --no-install-recommends install \
-    wget=* \
+RUN apt-get update -y --fix-missing \
+  && apt-get -y --no-install-recommends install software-properties-common=* \
   && apt-get clean
 
-ENV MAVEN_OPTS=-Xmx1g
-ENV JAVA_OPTS=-Xmx1g
-ENV JAVA_HOME=/usr/lib/jvm/java-17
-RUN apt-get -y install ca-certificates openjdk-11-jdk openjdk-17-jdk \
-  && update-java-alternatives --set $(ls /usr/lib/jvm | grep java-1.11) \
-  && ln -s "/usr/lib/jvm/$(ls /usr/lib/jvm | grep java-1.11)" /usr/lib/jvm/java-11 \
-  && ln -s "/usr/lib/jvm/$(ls /usr/lib/jvm | grep java-1.17)" /usr/lib/jvm/java-17 \
-  && echo 'export JAVA_HOME=/usr/lib/jvm/java-11' >> /root/.profile \
-  && bash -c '[[ "$(javac  --version)" =~ "11.0" ]]'
-
-ENV MAVEN_VERSION=3.9.6
-ENV M2_HOME=/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}
-RUN echo 'export M2_HOME=/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}' >> /root/.profile \
-  && wget --quiet "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
-  && mkdir -p /usr/local/apache-maven \
-  && mv "apache-maven-${MAVEN_VERSION}-bin.tar.gz" /usr/local/apache-maven \
-  && tar xzvf "/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C /usr/local/apache-maven/ \
-  && update-alternatives --install /usr/bin/mvn mvn "${M2_HOME}/bin/mvn" 1 \
-  && update-alternatives --config mvn \
-  && mvn -version \
-  && bash -c '[[ "$(mvn --version)" =~ "${MAVEN_VERSION}" ]]'
+# Python3
+RUN add-apt-repository -y ppa:deadsnakes/ppa \
+  && apt-get update -y --fix-missing \
+  && apt-get -y install libpq-dev libssl-dev openssl libffi-dev python3.7 python3-pip python3.7-dev \
+  && rm -f /usr/lib/python3.*/EXTERNALLY-MANAGED \
+  && ln -s $(which python3) /usr/bin/python \
+  && bash -c 'python --version' \
+  && pip3 install -Iv --upgrade pip \
+  && bash -c 'pip --version'
