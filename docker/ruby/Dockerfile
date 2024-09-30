@@ -46,25 +46,31 @@ ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 
-RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime \
+RUN ln -snf "/usr/share/zoneinfo/${CONTAINER_TIMEZONE}" /etc/localtime \
   && echo $CONTAINER_TIMEZONE > /etc/timezone \
   && apt-get update \
   && apt-get install -y tzdata=* \
   && apt-get clean
 
-RUN apt-get -y --no-install-recommends install \
+RUN apt-get -qq -y --no-install-recommends install \
     curl=* \
     sudo=* \
     git=* \
     unzip=* \
     zip=* \
     gnupg2=* \
+    ssh=* \
     libcurl4-gnutls-dev=* \
     libxml2-utils=* \
     libjpeg-dev=* \
     build-essential=* \
     ruby-dev=* libmagic-dev=* zlib1g-dev=* openssl=* \
   && apt-get clean
+
+RUN mkdir -p /tmp/download \
+  && curl -s -L "https://download.docker.com/linux/static/stable/x86_64/docker-18.06.3-ce.tgz" | tar -xz -C /tmp/download \
+  && mv /tmp/download/docker/docker /usr/bin/ \
+  && rm -rf /tmp/download
 
 RUN gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB \
   && curl -L https://get.rvm.io | sudo bash -s stable \
