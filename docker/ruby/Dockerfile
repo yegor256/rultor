@@ -46,6 +46,12 @@ ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime \
+  && echo $CONTAINER_TIMEZONE > /etc/timezone \
+  && apt-get update \
+  && apt-get install -y tzdata=* \
+  && apt-get clean
+
 RUN apt-get -y --no-install-recommends install \
     curl=* \
     sudo=* \
