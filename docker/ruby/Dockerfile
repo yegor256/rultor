@@ -68,7 +68,7 @@ RUN apt-get -qq -y --no-install-recommends install \
   && apt-get clean
 
 RUN mkdir -p /tmp/download \
-  && curl -s -L "https://download.docker.com/linux/static/stable/x86_64/docker-18.06.3-ce.tgz" | tar -xz -C /tmp/download \
+  && curl -s -L "https://download.docker.com/linux/static/stable/x86_64/docker-27.3.1.tgz" | tar -xz -C /tmp/download \
   && mv /tmp/download/docker/docker /usr/bin/ \
   && rm -rf /tmp/download
 
