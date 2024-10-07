@@ -106,7 +106,7 @@ function docker_when_possible {
   ls -al .
   docker run -t --rm \
     -v "$(pwd):/main" "${vars[@]}" \
-    --hostname=docker --privileged \
+    --hostname=docker --privileged --net=host \
     --memory=8g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
     -v /var/run/docker.sock:/var/run/docker.sock \
