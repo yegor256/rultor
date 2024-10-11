@@ -61,6 +61,7 @@ RUN wget -q --no-check-certificate http://mirror.ctan.org/systems/texlive/tlnet/
 
 RUN tlmgr option repository ctan \
   && tlmgr --verify-repo=none update --self \
-  && tlmgr --verify-repo=none install biber
+  && tlmgr --verify-repo=none install biber \
+  && tlmgr --verify-repo=none install xetex
 
 RUN gem install texsc texqc
