@@ -64,10 +64,12 @@ RUN tlmgr option repository ctan \
   && tlmgr --verify-repo=none install biber \
   && tlmgr --verify-repo=none install xetex
 
-RUN gem install texsc texqc
-
 RUN apt-get -y -q update \
   && apt-get -y install --no-install-recommends \
     ghostscript=* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+RUN bash -c 'gem install texsc texqc' \
+  && bash -c 'texsc --version' \
+  && bash -c 'texqc --version' \
