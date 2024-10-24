@@ -70,6 +70,7 @@ RUN apt-get -y -q update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-RUN bash -c 'gem install texsc texqc' \
-  && bash -c 'texsc --version' \
-  && bash -c 'texqc --version' \
+RUN bash -l -c ". /etc/profile.d/rvm.sh \
+  && gem install texsc texqc \
+  && texsc --version \
+  && texqc --version"
