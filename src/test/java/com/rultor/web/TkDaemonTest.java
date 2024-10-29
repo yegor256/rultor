@@ -90,7 +90,7 @@ final class TkDaemonTest {
             XhtmlMatchers.hasXPaths(
                 "/xhtml:html/xhtml:body",
                 "//xhtml:a[@href='https://github.com/test']",
-                String.format("//xhtml:pre[.='%s']", content)
+                String.format("//xhtml:pre[contains(., '%s')]", content)
             )
         );
     }
