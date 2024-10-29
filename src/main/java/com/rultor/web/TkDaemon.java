@@ -81,7 +81,7 @@ final class TkDaemon implements TkRegex {
         if (!this.talks.exists(number)) {
             throw new RsForward(
                 new RsFlash(
-                    "There is no such page here",
+                    String.format("There is no such page here, for talk #%d", number),
                     Level.WARNING
                 )
             );
@@ -112,8 +112,8 @@ final class TkDaemon implements TkRegex {
         } catch (final IOException err) {
             Logger.error(
                 this,
-                "Error during answering in talk %d to %s. %s",
-                hash, err
+                "Error during answering in talk #%d to %s: %s",
+                number, hash, err
             );
             throw err;
         }
