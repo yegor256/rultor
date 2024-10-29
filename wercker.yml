@@ -1,9 +1,0 @@
-box: yegor256/java8
-build:
-  steps:
-    - script:
-        name: maven
-        code: |
-          export MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
-          export JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
-          mvn clean install -Pqulice --batch-mode --quiet
