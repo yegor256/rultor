@@ -243,7 +243,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-xml</artifactId>
-      <version>0.29.0</version>
+      <version>0.29.1</version>
     </dependency>
     <dependency>
       <groupId>com.sun.jersey</groupId>
