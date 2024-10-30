@@ -66,7 +66,7 @@ public final class StartsInstance extends AbstractAgent {
      * Elite instance types, allowed only for special organizations.
      */
     private static final String[] ELITE_TYPES = {
-        "t2.medium", "t2.xlarge", "t2.2xlarge",
+        "t2.medium", "t2.large", "t2.xlarge", "t2.2xlarge",
     };
 
     /**
