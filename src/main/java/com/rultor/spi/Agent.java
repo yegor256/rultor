@@ -34,6 +34,7 @@ import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -171,6 +172,44 @@ public interface Agent {
                     this, "In %s:%d %[exception]s",
                     talk.name(), talk.number(), ex
                 );
+            }
+        }
+    }
+
+    /**
+     * Only if the name of the talk DOESN'T match the regular expression.
+     *
+     * @since 1.0
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = {"agent", "pattern"})
+    final class SkipIfName implements Agent {
+        /**
+         * Agent to defend.
+         */
+        private final transient Agent agent;
+
+        /**
+         * The regular expression.
+         */
+        private final transient Pattern pattern;
+
+        /**
+         * Ctor.
+         * @param agt Agent
+         * @param ptn Pattern to match
+         */
+        public SkipIfName(final Agent agt, final String ptn) {
+            this.agent = agt;
+            this.pattern = Pattern.compile(ptn);
+        }
+
+        @Override
+        public void execute(final Talk talk) throws IOException {
+            final String name = talk.read().xpath("/talk/@name").get(0);
+            if (!this.pattern.matcher(name).matches()) {
+                this.agent.execute(talk);
             }
         }
     }

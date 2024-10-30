@@ -217,6 +217,7 @@ public final class Agents {
      * @param profile Profile
      * @return The agent
      * @throws IOException If fails
+     * @checkstyle MethodLengthCheck (500 lines)
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
     public Agent agent(final Talk talk, final Profile profile)
@@ -327,7 +328,11 @@ public final class Agents {
                 new Agent.Quiet(new MkdirDaemon()),
                 new TimedAgent(new StartsDaemon(profile)),
                 // @checkstyle MagicNumber (1 line)
-                new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(3L))),
+                new Agent.SkipIfName(
+                    new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(1L))),
+                    "^(objectionary|yegor256|zerocracy)/.*$"
+                ),
+                new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(5L))),
                 new TimedAgent(new StopsDaemon()),
                 new TimedAgent(new Agent.Quiet(new EndsDaemon())),
                 new EndsRequest(),
