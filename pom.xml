@@ -112,7 +112,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-dynamodb</artifactId>
-      <version>1.12.778</version>
+      <version>1.12.779</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
