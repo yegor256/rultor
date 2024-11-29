@@ -102,7 +102,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>io.sentry</groupId>
       <artifactId>sentry</artifactId>
-      <version>7.18.0</version>
+      <version>7.18.1</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
