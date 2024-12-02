@@ -416,7 +416,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>
