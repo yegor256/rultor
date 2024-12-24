@@ -35,8 +35,8 @@ import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.wire.RetryCarefulWire;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
+import com.rultor.Env;
 import com.rultor.agents.github.TalkIssues;
 import com.rultor.agents.github.qtn.DefaultBranch;
 import com.rultor.spi.Profile;
@@ -199,7 +199,7 @@ public final class Profiles {
     private static Github github() {
         return new RtGithub(
             new RtGithub(
-                Manifests.read("Rultor-GithubToken")
+                Env.read("Rultor-GithubToken")
             ).entry().through(
                 RetryCarefulWire.class,
                 100

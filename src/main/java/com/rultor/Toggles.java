@@ -31,7 +31,6 @@ package com.rultor;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import java.io.File;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
@@ -72,7 +71,7 @@ public interface Toggles {
          * Directory to work in.
          */
         private static final String DIR = String.format(
-            "/tmp/rultor-%s", Manifests.read("Rultor-Revision")
+            "/tmp/rultor-%s", Env.read("Rultor-Revision")
         );
 
         @Override

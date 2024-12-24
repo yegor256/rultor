@@ -29,7 +29,7 @@
  */
 package com.rultor.web;
 
-import com.jcabi.manifests.Manifests;
+import com.rultor.Env;
 import java.util.regex.Pattern;
 import org.takes.Take;
 import org.takes.facets.auth.PsByFlag;
@@ -82,14 +82,14 @@ final class TkAppAuth extends TkWrap {
             ),
             new PsChain(
                 new PsFake(
-                    Manifests.read("Rultor-DynamoKey").startsWith("AAAA")
+                    Env.read("Rultor-DynamoKey").startsWith("AAAA")
                 ),
                 new PsByFlag(
                     new PsByFlag.Pair(
                         PsGithub.class.getSimpleName(),
                         new PsGithub(
-                            Manifests.read("Rultor-GithubId"),
-                            Manifests.read("Rultor-GithubSecret")
+                            Env.read("Rultor-GithubId"),
+                            Env.read("Rultor-GithubSecret")
                         )
                     ),
                     new PsByFlag.Pair(
@@ -102,7 +102,7 @@ final class TkAppAuth extends TkWrap {
                         new CcHex(
                             new CcXor(
                                 new CcSalted(new CcCompact()),
-                                Manifests.read("Rultor-SecurityKey")
+                                Env.read("Rultor-SecurityKey")
                             )
                         )
                     )

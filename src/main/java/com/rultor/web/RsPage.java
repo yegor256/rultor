@@ -29,7 +29,7 @@
  */
 package com.rultor.web;
 
-import com.jcabi.manifests.Manifests;
+import com.rultor.Env;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -101,13 +101,13 @@ final class RsPage extends RsWrap {
                 new XeLocalhost(),
                 new XeIdentity(req),
                 new XeFlash(req),
-                new XeGithubLink(req, Manifests.read("Rultor-GithubId")),
+                new XeGithubLink(req, Env.read("Rultor-GithubId")),
                 new XeLogoutLink(req),
                 new XeAppend(
                     "version",
-                    new XeAppend("name", Manifests.read("Rultor-Version")),
-                    new XeAppend("revision", Manifests.read("Rultor-Revision")),
-                    new XeAppend("date", Manifests.read("Rultor-Date"))
+                    new XeAppend("name", Env.read("Rultor-Version")),
+                    new XeAppend("revision", Env.read("Rultor-Revision")),
+                    new XeAppend("date", Env.read("Rultor-Date"))
                 )
             )
         );

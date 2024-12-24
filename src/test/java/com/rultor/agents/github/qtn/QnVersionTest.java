@@ -33,7 +33,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
-import com.jcabi.manifests.Manifests;
+import com.rultor.Env;
 import com.rultor.agents.github.Req;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
@@ -93,7 +93,7 @@ final class QnVersionTest {
             Matchers.containsString(
                 String.format(
                     "/commit/%s",
-                    Manifests.read("Rultor-Revision")
+                    Env.read("Rultor-Revision")
                 )
             )
         );

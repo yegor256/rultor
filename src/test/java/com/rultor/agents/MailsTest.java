@@ -31,8 +31,8 @@ package com.rultor.agents;
 
 import com.jcabi.email.Envelope;
 import com.jcabi.email.Postman;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XMLDocument;
+import com.rultor.Env;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
@@ -77,7 +77,7 @@ final class MailsTest {
             Matchers.allOf(
                 Matchers.containsString("See #456, release log:"),
                 Matchers.containsString("Released by Rultor"),
-                Matchers.containsString(Manifests.read("Rultor-Version")),
+                Matchers.containsString(Env.read("Rultor-Version")),
                 Matchers.containsString(
                     "see [build log](https://www.rultor.com/t/123-abcdef)"
                 )

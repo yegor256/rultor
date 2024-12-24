@@ -30,7 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
+import com.rultor.Env;
 import io.sentry.Sentry;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -57,7 +57,7 @@ final class TkAppFallback extends TkWrap {
     /**
      * Revision of rultor.
      */
-    private static final String REV = Manifests.read("Rultor-Revision");
+    private static final String REV = Env.read("Rultor-Revision");
 
     /**
      * Ctor.

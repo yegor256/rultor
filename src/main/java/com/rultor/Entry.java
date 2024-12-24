@@ -44,7 +44,6 @@ import com.jcabi.github.RtGithub;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rultor.cached.CdTalks;
 import com.rultor.dynamo.DyTalks;
@@ -101,7 +100,7 @@ public final class Entry {
      * @throws IOException If fails
      */
     public void exec() throws IOException {
-        final String dsn = Manifests.read("Rultor-SentryDsn");
+        final String dsn = Env.read("Rultor-SentryDsn");
         if (!dsn.startsWith("test")) {
             Sentry.init(dsn);
         }
@@ -133,7 +132,7 @@ public final class Entry {
     @Cacheable(forever = true)
     private Github github() throws IOException {
         Logger.info(this, "Connecting GitHub...");
-        final String token = Manifests.read("Rultor-GithubToken");
+        final String token = Env.read("Rultor-GithubToken");
         final Github github;
         if (token.startsWith("${")) {
             github = new MkGithub();
@@ -164,8 +163,8 @@ public final class Entry {
         final Sttc sttc = new CdSttc(
             new ReSttc(
                 RtSttc.make(
-                    URN.create(Manifests.read("Rultor-SttcUrn")),
-                    Manifests.read("Rultor-SttcToken")
+                    URN.create(Env.read("Rultor-SttcUrn")),
+                    Env.read("Rultor-SttcToken")
                 )
             )
         );
@@ -184,10 +183,10 @@ public final class Entry {
     @Cacheable(forever = true)
     private Region dynamo() {
         Logger.info(this, "Connecting DynamoDB...");
-        final String key = Manifests.read("Rultor-DynamoKey");
+        final String key = Env.read("Rultor-DynamoKey");
         Credentials creds = new Credentials.Simple(
             key,
-            Manifests.read("Rultor-DynamoSecret")
+            Env.read("Rultor-DynamoSecret")
         );
         if (key.startsWith("AAAAA")) {
             final int port = Integer.parseInt(

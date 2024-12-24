@@ -31,13 +31,13 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Bucket;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
+import com.rultor.Env;
 import com.rultor.agents.shells.TalkShells;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -121,9 +121,9 @@ public final class Tail {
                         new Joined(
                             "",
                             "rultor.com ",
-                            Manifests.read("Rultor-Version"),
+                            Env.read("Rultor-Version"),
                             "/",
-                            Manifests.read("Rultor-Version"),
+                            Env.read("Rultor-Version"),
                             "\n",
                             "nothing yet, try again in 15 seconds"
                         ),
@@ -208,10 +208,10 @@ public final class Tail {
         private static Bucket bucket() {
             return new ReRegion(
                 new Region.Simple(
-                    Manifests.read("Rultor-S3Key"),
-                    Manifests.read("Rultor-S3Secret")
+                    Env.read("Rultor-S3Key"),
+                    Env.read("Rultor-S3Secret")
                 )
-            ).bucket(Manifests.read("Rultor-S3Bucket"));
+            ).bucket(Env.read("Rultor-S3Bucket"));
         }
     }
 

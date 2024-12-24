@@ -29,7 +29,7 @@
  */
 package com.rultor.web;
 
-import com.jcabi.manifests.Manifests;
+import com.rultor.Env;
 import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
@@ -58,7 +58,7 @@ public final class TkApp extends TkWrap {
     /**
      * Revision of rultor.
      */
-    private static final String REV = Manifests.read("Rultor-Revision");
+    private static final String REV = Env.read("Rultor-Revision");
 
     /**
      * Ctor.

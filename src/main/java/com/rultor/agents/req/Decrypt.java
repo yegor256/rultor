@@ -30,9 +30,9 @@
 package com.rultor.agents.req;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
+import com.rultor.Env;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.spi.Profile;
 import java.io.IOException;
@@ -109,7 +109,7 @@ final class Decrypt {
                     this.proxy,
                     String.format(
                         "--verbose --recv-keys %s",
-                        Manifests.read("Rultor-GpgPublic")
+                        Env.read("Rultor-GpgPublic")
                     )
                 )
             );
@@ -168,7 +168,7 @@ final class Decrypt {
             commands.add(
                 String.format(
                     "gpg --batch --yes --delete-secret-keys %s",
-                    Manifests.read("Rultor-GpgSecret")
+                    Env.read("Rultor-GpgSecret")
                 )
             );
         }

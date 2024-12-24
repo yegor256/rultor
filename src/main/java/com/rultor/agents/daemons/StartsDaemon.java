@@ -34,10 +34,10 @@ import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Timeable;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
+import com.rultor.Env;
 import com.rultor.Time;
 import com.rultor.agents.Required;
 import com.rultor.agents.shells.TalkShells;
@@ -162,8 +162,8 @@ public final class StartsDaemon implements Agent {
                 Ssh.escape(
                     String.format(
                         "%s %s",
-                        Manifests.read("Rultor-Version"),
-                        Manifests.read("Rultor-Revision")
+                        Env.read("Rultor-Version"),
+                        Env.read("Rultor-Revision")
                     )
                 )
             ),

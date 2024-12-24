@@ -33,8 +33,8 @@ import co.stateful.mock.MkSttc;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.Env;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -213,7 +213,7 @@ final class DyTalksITTestCase {
      * @return Region
      */
     private static Region dynamo() {
-        final String key = Manifests.read("Rultor-DynamoKey");
+        final String key = Env.read("Rultor-DynamoKey");
         Assumptions.assumingThat(key != null, () -> { });
         MatcherAssert.assertThat(
             "Key should be valid",
@@ -226,7 +226,7 @@ final class DyTalksITTestCase {
                     new Credentials.Direct(
                         new Credentials.Simple(
                             key,
-                            Manifests.read("Rultor-DynamoSecret")
+                            Env.read("Rultor-DynamoSecret")
                         ),
                         Integer.parseInt(DyTalksITTestCase.PORT)
                     )

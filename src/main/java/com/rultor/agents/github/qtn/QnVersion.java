@@ -32,7 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
+import com.rultor.Env;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -65,8 +65,8 @@ public final class QnVersion implements Question {
             true,
             String.format(
                 QnVersion.PHRASES.getString("QnVersion.intro"),
-                Manifests.read("Rultor-Version"),
-                Manifests.read("Rultor-Revision")
+                Env.read("Rultor-Version"),
+                Env.read("Rultor-Revision")
             )
         );
         Logger.info(this, "version request in #%d", comment.issue().number());

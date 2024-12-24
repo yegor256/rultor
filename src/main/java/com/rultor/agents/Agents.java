@@ -34,10 +34,10 @@ import co.stateful.Sttc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.immutable.Array;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.ssh.Ssh;
+import com.rultor.Env;
 import com.rultor.agents.aws.AwsEc2;
 import com.rultor.agents.aws.ConnectsInstance;
 import com.rultor.agents.aws.DescribesInstance;
@@ -171,8 +171,8 @@ public final class Agents {
      */
     public SuperAgent starter() throws IOException {
         final AwsEc2 aws = new AwsEc2(
-            Manifests.read("Rultor-EC2Key"),
-            Manifests.read("Rultor-EC2Secret")
+            Env.read("Rultor-EC2Key"),
+            Env.read("Rultor-EC2Secret")
         );
         return new SuperAgent.Iterative(
             new Array<>(
@@ -273,8 +273,8 @@ public final class Agents {
             )
         );
         final AwsEc2 aws = new AwsEc2(
-            Manifests.read("Rultor-EC2Key"),
-            Manifests.read("Rultor-EC2Secret")
+            Env.read("Rultor-EC2Key"),
+            Env.read("Rultor-EC2Secret")
         );
         return new VerboseAgent(
             new Agent.Iterative(
@@ -291,10 +291,10 @@ public final class Agents {
                         new StartsInstance(
                             profile,
                             aws,
-                            Manifests.read("Rultor-EC2Image"),
-                            Manifests.read("Rultor-EC2Type"),
-                            Manifests.read("Rultor-EC2Group"),
-                            Manifests.read("Rultor-EC2Subnet")
+                            Env.read("Rultor-EC2Image"),
+                            Env.read("Rultor-EC2Type"),
+                            Env.read("Rultor-EC2Group"),
+                            Env.read("Rultor-EC2Subnet")
                         ),
                         false
                     )
@@ -340,10 +340,10 @@ public final class Agents {
                     new Tweets(
                         this.github,
                         new OAuthTwitter(
-                            Manifests.read("Rultor-TwitterKey"),
-                            Manifests.read("Rultor-TwitterSecret"),
-                            Manifests.read("Rultor-TwitterToken"),
-                            Manifests.read("Rultor-TwitterTokenSecret")
+                            Env.read("Rultor-TwitterKey"),
+                            Env.read("Rultor-TwitterSecret"),
+                            Env.read("Rultor-TwitterToken"),
+                            Env.read("Rultor-TwitterTokenSecret")
                         )
                     )
                 ),
@@ -361,10 +361,10 @@ public final class Agents {
                     new ArchivesDaemon(
                         new ReRegion(
                             new Region.Simple(
-                                Manifests.read("Rultor-S3Key"),
-                                Manifests.read("Rultor-S3Secret")
+                                Env.read("Rultor-S3Key"),
+                                Env.read("Rultor-S3Secret")
                             )
-                        ).bucket(Manifests.read("Rultor-S3Bucket"))
+                        ).bucket(Env.read("Rultor-S3Bucket"))
                     )
                 ),
                 new Publishes(profile, this.github),
