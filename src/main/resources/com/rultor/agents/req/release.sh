@@ -27,6 +27,8 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+set -ex
+
 if [ -z "${tag}" ]; then
   echo "tag name is not provided in the request, see http://doc.rultor.com/basics.html"
   exit -1

@@ -27,8 +27,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-set -e
-set -x
+set -ex
 
 cd $(dirname $0)
 cp /code/home/assets/rultor/settings.xml .
