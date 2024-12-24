@@ -409,6 +409,18 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <version>0.0.3</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>uk.org.webcompere</groupId>
+      <artifactId>system-stubs-core</artifactId>
+      <version>2.1.7</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.org.webcompere</groupId>
+      <artifactId>system-stubs-jupiter</artifactId>
+      <version>2.1.7</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <pluginManagement>
@@ -474,6 +486,30 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                   <version>[1.7,)</version>
                 </requireJavaVersion>
               </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/rultor-mf</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/META-INF</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>MANIFEST.MF</include>
+                  </includes>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
