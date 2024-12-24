@@ -64,6 +64,16 @@ final class EnvTest {
     }
 
     @Test
+    void readsVersionFromManifest() {
+        this.environment.remove(Env.SETTINGS_XML);
+        MatcherAssert.assertThat(
+            "takes the right value of the version",
+            Env.read("Rultor-Version"),
+            Matchers.not(Matchers.emptyString())
+        );
+    }
+
+    @Test
     void readsRevisionFromManifest() {
         this.environment.remove(Env.SETTINGS_XML);
         MatcherAssert.assertThat(
@@ -105,6 +115,19 @@ final class EnvTest {
         MatcherAssert.assertThat(
             "takes the right value",
             Env.read("Rultor-Revision"),
+            Matchers.not(Matchers.emptyString())
+        );
+    }
+
+    @Test
+    void readsVersionFromSettingsXml() {
+        this.environment.set(
+            Env.SETTINGS_XML,
+            "<settings />"
+        );
+        MatcherAssert.assertThat(
+            "takes the right value of the version, while it's absent in the XML",
+            Env.read("Rultor-Version"),
             Matchers.not(Matchers.emptyString())
         );
     }
