@@ -55,7 +55,7 @@ final class EnvTest {
 
     @Test
     void readsFromManifest() {
-        this.environment.remove("SETTINGS_XML");
+        this.environment.remove(Env.SETTINGS_XML);
         MatcherAssert.assertThat(
             "takes the right value",
             Env.read("Rultor-SecurityKey"),
@@ -64,9 +64,19 @@ final class EnvTest {
     }
 
     @Test
+    void readsRevisionFromManifest() {
+        this.environment.remove(Env.SETTINGS_XML);
+        MatcherAssert.assertThat(
+            "takes the right value",
+            Env.read("Rultor-Revision"),
+            Matchers.not(Matchers.emptyString())
+        );
+    }
+
+    @Test
     void readsFromSettingsXml() {
         this.environment.set(
-            "SETTINGS_XML",
+            Env.SETTINGS_XML,
             String.join(
                 "",
                 "<settings><profiles><profile><properties>",
@@ -76,13 +86,26 @@ final class EnvTest {
         );
         MatcherAssert.assertThat(
             "has the right XML in env",
-            System.getenv("SETTINGS_XML"),
+            System.getenv(Env.SETTINGS_XML),
             Matchers.not(Matchers.nullValue())
         );
         MatcherAssert.assertThat(
             "takes the right value",
             Env.read("Rultor-DynamoKey"),
             Matchers.equalTo("hello")
+        );
+    }
+
+    @Test
+    void readsRevisionFromSettingsXml() {
+        this.environment.set(
+            Env.SETTINGS_XML,
+            "<settings/>"
+        );
+        MatcherAssert.assertThat(
+            "takes the right value",
+            Env.read("Rultor-Revision"),
+            Matchers.not(Matchers.emptyString())
         );
     }
 }

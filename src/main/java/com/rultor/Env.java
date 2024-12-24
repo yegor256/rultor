@@ -46,6 +46,11 @@ import org.cactoos.text.UncheckedText;
 public final class Env {
 
     /**
+     * Environment variable.
+     */
+    public static final String SETTINGS_XML = "SETTINGS_XML";
+
+    /**
      * Private.
      */
     private Env() {
@@ -59,7 +64,7 @@ public final class Env {
      */
     @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static String read(final String name) {
-        final String xml = System.getenv("SETTINGS_XML");
+        final String xml = System.getenv(Env.SETTINGS_XML);
         final String ret;
         if (xml == null) {
             ret = Manifests.read(name);
@@ -69,7 +74,7 @@ public final class Env {
                 new TextOf(new ResourceOf(res))
             ).asString();
             final Matcher matcher = Pattern.compile(
-                String.format("%s: \\$\\{([^}]+)}", name)
+                String.format("%s: (\\$\\{[^}]+}|[^\\s]+)", name)
             ).matcher(manifest);
             if (!matcher.find()) {
                 throw new IllegalArgumentException(
@@ -77,9 +82,16 @@ public final class Env {
                 );
             }
             final String prop = matcher.group(1);
-            ret = new XMLDocument(xml).xpath(
-                String.format("/settings//*[name()='%s']/text()", prop)
-            ).get(0);
+            if (prop.startsWith("${")) {
+                ret = new XMLDocument(xml).xpath(
+                    String.format(
+                        "/settings//*[name()='%s']/text()",
+                        prop.substring(2, prop.length() - 1)
+                    )
+                ).get(0);
+            } else {
+                ret = prop;
+            }
         }
         return ret;
     }
