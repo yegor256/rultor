@@ -436,11 +436,15 @@ public final class Agents {
      * @return The key
      */
     private static String priv() {
-        return new UncheckedText(
-            new TextOf(
-                new ResourceOf("com/rultor/agents/rultor.key")
-            )
-        ).asString();
+        String priv = System.getenv("PRIVATE_SSH_KEY");
+        if (priv == null) {
+            priv = new UncheckedText(
+                new TextOf(
+                    new ResourceOf("com/rultor/agents/rultor.key")
+                )
+            ).asString();
+        }
+        return priv;
     }
 
 }
