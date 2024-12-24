@@ -66,7 +66,7 @@ public final class Env {
     public static String read(final String name) {
         final String xml = System.getenv(Env.SETTINGS_XML);
         final String ret;
-        if (xml == null) {
+        if (xml == null || Manifests.exists(name) && !Manifests.read(name).startsWith("${")) {
             ret = Manifests.read(name);
         } else {
             final String res = "rultor-mf/MANIFEST.MF";

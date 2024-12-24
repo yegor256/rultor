@@ -80,7 +80,7 @@ final class EnvTest {
             String.join(
                 "",
                 "<settings><profiles><profile><properties>",
-                "<dynamo.key>hello</dynamo.key>",
+                "<test>hello</test>",
                 "</properties></profile></profiles></settings>"
             )
         );
@@ -91,7 +91,7 @@ final class EnvTest {
         );
         MatcherAssert.assertThat(
             "takes the right value",
-            Env.read("Rultor-DynamoKey"),
+            Env.read("Rultor-Test"),
             Matchers.equalTo("hello")
         );
     }
