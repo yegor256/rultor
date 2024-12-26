@@ -134,6 +134,7 @@ function docker_when_possible {
   docker run -t --rm \
     -v "$(pwd):/main" "${vars[@]}" \
     --hostname=docker --privileged --net=host \
+    --dns 8.8.8.8 \
     --memory=8g --memory-swap=16g --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
     -v /var/run/docker.sock:/var/run/docker.sock \
