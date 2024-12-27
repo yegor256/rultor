@@ -132,13 +132,21 @@ function docker_when_possible {
   fi
   ls -al .
   docker run -t --rm \
-    -v "$(pwd):/main" "${vars[@]}" \
-    --hostname=docker --privileged --net=host \
+    -v "$(pwd):/main" \
+    "${vars[@]}" \
+    --hostname=docker \
+    --privileged \
+    --net=host \
     --dns 8.8.8.8 \
-    --memory=8g --memory-swap=16g --oom-kill-disable \
+    --add-host docker:127.0.0.1 \
+    --memory=8g \
+    --memory-swap=16g \
+    --oom-kill-disable \
     "--cidfile=$(pwd)/cid" -w=/main \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    --name="${container}" "${use_image}" /main/entry.sh
+    --name="${container}" \
+    "${use_image}" \
+    /main/entry.sh
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
   fi
