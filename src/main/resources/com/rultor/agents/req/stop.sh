@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2009-2024 Yegor Bugayenko
+# Copyright (c) 2009-2025 Yegor Bugayenko
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
