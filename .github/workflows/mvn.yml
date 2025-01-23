@@ -27,7 +27,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 ---
 name: mvn
-on:
+'on':
   push:
     branches:
       - master
