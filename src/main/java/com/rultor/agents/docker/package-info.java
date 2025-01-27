@@ -31,7 +31,6 @@
 /**
  * Docker agents.
  *
- * @version $Id$
  * @since 1.57
  */
 package com.rultor.agents.docker;

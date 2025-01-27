@@ -52,4 +52,3 @@ else
   date
   exit 1
 fi
-

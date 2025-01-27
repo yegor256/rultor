@@ -1,93 +1,93 @@
 {
-    "AttributeDefinitions": [
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "name",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "active",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "number",
+      "AttributeType": "N"
+    },
+    {
+      "AttributeName": "updated",
+      "AttributeType": "N"
+    },
+    {
+      "AttributeName": "repo",
+      "AttributeType": "S"
+    }
+  ],
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "active",
+      "KeySchema": [
         {
-            "AttributeName": "name",
-            "AttributeType": "S"
+          "AttributeName": "active",
+          "KeyType": "HASH"
         },
         {
-            "AttributeName": "active",
-            "AttributeType": "S"
-        },
-        {
-            "AttributeName": "number",
-            "AttributeType": "N"
-        },
-        {
-            "AttributeName": "updated",
-            "AttributeType": "N"
-        },
-        {
-            "AttributeName": "repo",
-            "AttributeType": "S"
+          "AttributeName": "updated",
+          "KeyType": "RANGE"
         }
-    ],
-    "KeySchema": [
-        {
-            "AttributeName": "name",
-            "KeyType": "HASH"
-        }
-    ],
-    "ProvisionedThroughput": {
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": {
         "ReadCapacityUnits": "1",
         "WriteCapacityUnits": "1"
+      }
     },
-    "TableName": "rt-talks",
-    "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "numbers",
+      "KeySchema": [
         {
-            "IndexName": "active",
-            "KeySchema": [
-                {
-                    "AttributeName": "active",
-                    "KeyType": "HASH"
-                },
-                {
-                    "AttributeName": "updated",
-                    "KeyType": "RANGE"
-                }
-            ],
-            "Projection": {
-                "ProjectionType": "ALL"
-            },
-            "ProvisionedThroughput": {
-                "ReadCapacityUnits": "1",
-                "WriteCapacityUnits": "1"
-            }
-        },
-        {
-            "IndexName": "numbers",
-            "KeySchema": [
-                {
-                    "AttributeName": "number",
-                    "KeyType": "HASH"
-                }
-            ],
-            "Projection": {
-                "ProjectionType": "KEYS_ONLY"
-            },
-            "ProvisionedThroughput": {
-                "ReadCapacityUnits": "1",
-                "WriteCapacityUnits": "1"
-            }
-        },
-        {
-            "IndexName": "siblings",
-            "KeySchema": [
-                {
-                    "AttributeName": "repo",
-                    "KeyType": "HASH"
-                },
-                {
-                    "AttributeName": "updated",
-                    "KeyType": "RANGE"
-                }
-            ],
-            "Projection": {
-                "ProjectionType": "ALL"
-            },
-            "ProvisionedThroughput": {
-                "ReadCapacityUnits": "1",
-                "WriteCapacityUnits": "1"
-            }
+          "AttributeName": "number",
+          "KeyType": "HASH"
         }
-    ]
+      ],
+      "Projection": {
+        "ProjectionType": "KEYS_ONLY"
+      },
+      "ProvisionedThroughput": {
+        "ReadCapacityUnits": "1",
+        "WriteCapacityUnits": "1"
+      }
+    },
+    {
+      "IndexName": "siblings",
+      "KeySchema": [
+        {
+          "AttributeName": "repo",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "updated",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": {
+        "ReadCapacityUnits": "1",
+        "WriteCapacityUnits": "1"
+      }
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "name",
+      "KeyType": "HASH"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": "1",
+    "WriteCapacityUnits": "1"
+  },
+  "TableName": "rt-talks"
 }

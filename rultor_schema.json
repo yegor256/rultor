@@ -1,62 +1,90 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
   "description": "Schema for .rultor.yml file.",
   "properties": {
-    "docker": {
-      "type": "object",
-      "description": "Docker image to be used in merge and release.",
-      "properties": {
-        "image": {
-          "type": "string",
-          "description": "Docker url for the image, default value is yegor256/rultor-image.",
-          "examples": [
-            "yegor256/rultor-image:1.9.1"
-          ]
-        },
-        "as_root": {
-          "type": "boolean",
-          "description": "Flag to create a user inside a docker or use a default one (root), default value is false.",
-          "default": false
-        }
-      }
-    },
-    "readers": {
-      "type": "array",
-      "description": "Github user allowed to read logs (should be defined for private repos).",
-      "examples": [
-        "urn:github:8086956"
-      ]
-    },
     "architect": {
-      "type": "array",
       "description": "Project's architects.",
       "examples": [
         "urn:github:8086956"
-      ]
+      ],
+      "type": "array"
     },
     "assets": {
-      "type": "object",
       "additionalProperties": true,
-      "description": "Additional resources, typically some secrets."
+      "description": "Additional resources, typically some secrets.",
+      "type": "object"
+    },
+    "decrypt": {
+      "additionalProperties": true,
+      "description": "Files that should be decrypted.",
+      "type": "object"
+    },
+    "deploy": {
+      "properties": {
+        "commanders": {
+          "description": "Additional users who can perform this action.",
+          "examples": [
+            "urn:github:8086956"
+          ],
+          "type": "array"
+        },
+        "env": {
+          "additionalProperties": true,
+          "description": "Additional environment variables for deploy operation.",
+          "type": "object"
+        },
+        "script": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "required": [
+        "script"
+      ],
+      "type": "object"
+    },
+    "docker": {
+      "description": "Docker image to be used in merge and release.",
+      "properties": {
+        "as_root": {
+          "default": false,
+          "description": "Flag to create a user inside a docker or use a default one (root), default value is false.",
+          "type": "boolean"
+        },
+        "image": {
+          "description": "Docker url for the image, default value is yegor256/rultor-image.",
+          "examples": [
+            "yegor256/rultor-image:1.9.1"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "env": {
+      "additionalProperties": true,
+      "description": "Additional environment variables for all operations.",
+      "type": "object"
     },
     "friends": {
-      "type": "array",
       "description": "List of the projects that can use your secrets.",
+      "examples": [
+        "yegor256/rultor",
+        "jcabi/*"
+      ],
       "items": {
         "type": "string"
       },
-      "examples": ["yegor256/rultor", "jcabi/*"]
-    },
-    "decrypt": {
-      "type": "object",
-      "additionalProperties": true,
-      "description": "Files that should be decrypted."
-    },
-    "env": {
-      "type": "object",
-      "additionalProperties": true,
-      "description": "Additional environment variables for all operations."
+      "type": "array"
     },
     "install": {
       "anyOf": [
@@ -64,13 +92,141 @@
           "type": "string"
         },
         {
-          "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "type": "array"
         }
       ],
       "description": "Common script to be used in merge and deploy."
+    },
+    "merge": {
+      "properties": {
+        "commanders": {
+          "description": "Additional users who can perform this action.",
+          "examples": [
+            "urn:github:8086956"
+          ],
+          "type": "array"
+        },
+        "env": {
+          "additionalProperties": true,
+          "description": "Additional environment variables for merge operation.",
+          "type": "object"
+        },
+        "fast-forward": {
+          "description": "May be either default (--ff argument for Git), only (--ff-only) or no (--no-ff).",
+          "enum": [
+            "default",
+            "only",
+            "no"
+          ],
+          "type": "string"
+        },
+        "rebase": {
+          "default": false,
+          "description": "Flag to perform rebase from origin, default is false.",
+          "type": "boolean"
+        },
+        "script": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "squash": {
+          "default": false,
+          "description": "Flag to squash commits or not, default is false.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "script"
+      ],
+      "type": "object"
+    },
+    "readers": {
+      "description": "Github user allowed to read logs (should be defined for private repos).",
+      "examples": [
+        "urn:github:8086956"
+      ],
+      "type": "array"
+    },
+    "release": {
+      "properties": {
+        "commanders": {
+          "description": "Additional users who can perform this action.",
+          "examples": [
+            "urn:github:8086956"
+          ],
+          "type": "array"
+        },
+        "env": {
+          "additionalProperties": true,
+          "description": "Additional environment variables for release operation.",
+          "type": "object"
+        },
+        "pre": {
+          "default": true,
+          "description": "Flag to make it prerelease or latest release, default is true.",
+          "type": "boolean"
+        },
+        "script": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "sensitive": {
+          "description": "Files with sensitive information.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "script"
+      ],
+      "type": "object"
+    },
+    "ssh": {
+      "properties": {
+        "host": {
+          "description": "Host of your custom server.",
+          "type": "string"
+        },
+        "key": {
+          "description": "Key to connect.",
+          "examples": [
+            "./keys/id_rsa"
+          ],
+          "type": "string"
+        },
+        "login": {
+          "description": "Login.",
+          "type": "string"
+        },
+        "port": {
+          "description": "Port to connect ssh.",
+          "type": "integer"
+        }
+      },
+      "type": "object"
     },
     "uninstall": {
       "anyOf": [
@@ -78,157 +234,14 @@
           "type": "string"
         },
         {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      ],
-      "description": "Common script to be used after operation is completed."
-    },
-    "ssh": {
-      "type": "object",
-      "properties": {
-        "host": {
-          "type": "string",
-          "description": "Host of your custom server."
-        },
-        "port": {
-          "type": "integer",
-          "description": "Port to connect ssh."
-        },
-        "login": {
-          "type": "string",
-          "description": "Login."
-        },
-        "key": {
-          "type": "string",
-          "description": "Key to connect.",
-          "examples": ["./keys/id_rsa"]
-        }
-      }
-    },
-    "merge": {
-      "type": "object",
-      "properties": {
-        "squash": {
-          "type": "boolean",
-          "description": "Flag to squash commits or not, default is false.",
-          "default": false
-        },
-        "fast-forward": {
-          "type": "string",
-          "description": "May be either default (--ff argument for Git), only (--ff-only) or no (--no-ff).",
-          "enum": [
-            "default", "only", "no"
-          ]
-        },
-        "rebase": {
-          "type": "boolean",
-          "description": "Flag to perform rebase from origin, default is false.",
-          "default": false
-        },
-        "commanders": {
-          "type": "array",
-          "description": "Additional users who can perform this action.",
-          "examples": [
-            "urn:github:8086956"
-          ]
-        },
-        "env": {
-          "type": "object",
-          "additionalProperties": true,
-          "description": "Additional environment variables for merge operation."
-        },
-        "script": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
-        }
-      },
-      "required": ["script"]
-    },
-    "release": {
-      "type": "object",
-      "properties": {
-        "pre": {
-          "type": "boolean",
-          "description": "Flag to make it prerelease or latest release, default is true.",
-          "default": true
-        },
-        "sensitive": {
-          "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Files with sensitive information."
-        },
-        "commanders": {
-          "type": "array",
-          "description": "Additional users who can perform this action.",
-          "examples": [
-            "urn:github:8086956"
-          ]
-        },
-        "env": {
-          "type": "object",
-          "additionalProperties": true,
-          "description": "Additional environment variables for release operation."
-        },
-        "script": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "type": "array"
         }
-      },
-      "required": ["script"]
-    },
-    "deploy": {
-      "type": "object",
-      "properties": {
-        "commanders": {
-          "type": "array",
-          "description": "Additional users who can perform this action.",
-          "examples": [
-            "urn:github:8086956"
-          ]
-        },
-        "env": {
-          "type": "object",
-          "additionalProperties": true,
-          "description": "Additional environment variables for deploy operation."
-        },
-        "script": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
-        }
-      },
-      "required": ["script"]
+      ],
+      "description": "Common script to be used after operation is completed."
     }
-  }
+  },
+  "type": "object"
 }

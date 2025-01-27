@@ -117,4 +117,3 @@ final class FirstComment implements Comment {
         return json.build();
     }
 }
-
