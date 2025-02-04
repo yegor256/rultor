@@ -36,6 +36,7 @@ name: mvn
       - master
 jobs:
   mvn:
+    timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
