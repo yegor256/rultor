@@ -44,6 +44,5 @@ git reset --hard
 git clean -fd
 git checkout "${head_branch}"
 git branch -D "${BRANCH_NAME}"
-git pull origin
 git push --all origin
 git push --tags origin
