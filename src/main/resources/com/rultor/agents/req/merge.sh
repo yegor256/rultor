@@ -42,5 +42,4 @@ fi
 
 docker_when_possible
 
-git pull origin
 git push origin "${head_branch}"
