@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 # SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e
+set -e -o pipefail
 
 if [ -e cid ]; then
   cid=$(cat cid)
@@ -17,12 +18,12 @@ if [ ! -e pid ]; then
 fi
 pid=$(cat pid)
 
-if [ -n "$(ps -p $pid -opid=)" ]; then
+if [ -n "$(ps -p "${pid}" -opid=)" ]; then
   kill "${pid}"
 fi
 
 sleep 15
-if [ -n "$(ps -p $pid -opid=)" ]; then
+if [ -n "$(ps -p "${pid}" -opid=)" ]; then
   kill -9 "${pid}"
 fi
 rm -f pid

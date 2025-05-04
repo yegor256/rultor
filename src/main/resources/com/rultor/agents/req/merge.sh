@@ -1,8 +1,11 @@
-#!/bin/sh
+#!/bin/bash
+
 # SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -ex
+# shellcheck disable=SC2154
+
+set -ex -o pipefail
 
 cd repo
 git remote add fork "${fork}"
@@ -19,8 +22,9 @@ if [ "${ff}" == "only" ]; then
 fi
 
 export BRANCH=__rultor
-while [ $(git show-branch "${BRANCH}" 2>/dev/null | wc -l) -gt 0 ]; do
-  export BRANCH="__rultor-$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 16)"
+while [ "$(git show-branch "${BRANCH}" 2>/dev/null | wc -l)" -gt 0 ]; do
+  BRANCH="__rultor-$(openssl rand -base64 32 | LC_CTYPE=C tr -dc 'a-zA-Z' | head -c 16)"
+  export BRANCH
 done
 
 git status
@@ -34,10 +38,10 @@ if [ "${rebase}" == "true" ]; then
 fi
 
 if [ "${squash}" == "true" ]; then
-  git merge ${args} --squash "${BRANCH}"
+  git merge "${args}" --squash "${BRANCH}"
   git commit -m "${pull_title}"
 else
-  git merge ${args} "${BRANCH}"
+  git merge "${args}" "${BRANCH}"
 fi
 
 docker_when_possible

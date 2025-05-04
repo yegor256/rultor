@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+
 # SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
+
+# shellcheck disable=SC2154
 
 hostname
 pwd
@@ -12,7 +15,7 @@ mkdir -p ~/.ssh
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 chmod 600 ~/.ssh/config
 git clone "${head}" repo
-cd repo
+cd repo || exit 1
 git config user.email "me@rultor.com"
 git config user.name "rultor"
 
@@ -31,11 +34,11 @@ if [ -z "${scripts}" ]; then
     echo "build.sbt or project/Build.scala is here, I guess it is Scala SBT"
   else
     echo "I can't guess your build automation tool, see http://doc.rultor.com/basics.html"
-    exit -1
+    exit 1
   fi
 fi
 
-cd ..
+cd .. || exit 1
 cat <<EOT > entry.sh
 #!/bin/bash
 set -x
@@ -85,7 +88,7 @@ echo "${scripts[@]}" >> script.sh
 function docker_when_possible {
   while true; do
     load=$(uptime | sed 's/ /\n/g' | tail -n 1)
-    if [ `echo $load \> 30 | bc` -eq 1 ]; then
+    if [ "$(echo "${load}" \> 30 | bc)" -eq 1 ]; then
       echo "load average is ${load}, too high to run a new Docker container"
       echo "I will try again in 15 seconds"
       sleep 15
@@ -94,7 +97,7 @@ function docker_when_possible {
       break
     fi
   done
-  cd ..
+  cd .. || exit 1
   if [ -n "${directory}" ]; then
     use_image="yegor256/rultor-$(dd if=/dev/urandom bs=10k count=1 2>/dev/null | tr -cd 'a-z0-9' | head -c 8)"
     docker build "${directory}" -t "${use_image}"
@@ -125,6 +128,6 @@ function docker_when_possible {
   if [ -n "${directory}" ]; then
     docker rmi "${use_image}"
   fi
-  sudo chown -R $(whoami) repo
-  cd repo
+  sudo chown -R "$(whoami)" repo
+  cd repo || exit 1
 }

@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 # SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e
+set -e -o pipefail
 
 if [ ! -e pid ]; then
   echo "'pid' file is absent on the server after the end of operation; it seems that we didn't manage to start Docker container correctly"

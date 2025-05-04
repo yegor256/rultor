@@ -1,10 +1,11 @@
 #!/bin/bash
+
 # SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -ex
+set -ex -o pipefail
 
-cd $(dirname $0)
+cd "$(dirname "$0")" || exit 1
 cp /code/home/assets/rultor/settings.xml .
 git add settings.xml
 git commit -m 'settings.xml for heroku'
