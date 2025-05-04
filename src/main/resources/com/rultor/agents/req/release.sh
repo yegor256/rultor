@@ -25,11 +25,11 @@ if [ -n "$(git tag -l "${tag}")" ]; then
   exit 1
 fi
 
-export BRANCH_NAME=__rultor
+BRANCH_NAME=__rultor
 while [ "$(git show-branch "${BRANCH_NAME}" 2>/dev/null | wc -l)" -gt 0 ]; do
   BRANCH_NAME="__rultor-$(openssl rand -base64 32 | LC_CTYPE=C tr -dc 'a-zA-Z' | head -c 16)"
-  export BRANCH_NAME
 done
+export BRANCH_NAME
 git checkout -b "${BRANCH_NAME}"
 
 docker_when_possible

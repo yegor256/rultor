@@ -21,11 +21,11 @@ if [ "${ff}" == "only" ]; then
   args+=(--ff-only)
 fi
 
-export BRANCH=__rultor
+BRANCH=__rultor
 while [ "$(git show-branch "${BRANCH}" 2>/dev/null | wc -l)" -gt 0 ]; do
   BRANCH="__rultor-$(openssl rand -base64 32 | LC_CTYPE=C tr -dc 'a-zA-Z' | head -c 16)"
-  export BRANCH
 done
+export BRANCH
 
 git status
 git checkout -B "${BRANCH}" "fork/${fork_branch}"
