@@ -45,7 +45,9 @@ if [ "${squash}" == "true" ]; then
 else
   git merge "${args[@]}" "${BRANCH}"
 fi
-git config --global user.signingkey "${before}"
+if [ -n "${before}" ]; then
+  git config --global user.signingkey "${before}"
+fi
 
 docker_when_possible
 
