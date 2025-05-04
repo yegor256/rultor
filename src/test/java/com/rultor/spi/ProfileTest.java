@@ -62,7 +62,7 @@ final class ProfileTest {
                         "<item>b</item></entry></p>"
                     ).asString()
                 )
-            )
+            ).read().inner()
         );
     }
 
@@ -75,7 +75,7 @@ final class ProfileTest {
             IllegalArgumentException.class,
             () -> new Profile.Fixed(
                 new XMLDocument("<p><entry>test me</entry></p>")
-            )
+            ).read().inner()
         );
     }
 
@@ -88,7 +88,7 @@ final class ProfileTest {
             IllegalArgumentException.class,
             () -> new Profile.Fixed(
                 new XMLDocument("<p><entry f='x'>x</entry></p>")
-            )
+            ).read().inner()
         );
     }
 

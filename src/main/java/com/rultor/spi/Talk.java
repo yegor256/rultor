@@ -8,8 +8,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
-import com.jcabi.xml.XSD;
-import com.jcabi.xml.XSDDocument;
 import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLChain;
 import com.jcabi.xml.XSLDocument;
@@ -44,7 +42,7 @@ public interface Talk {
     /**
      * Schema.
      */
-    XSD SCHEMA = XSDDocument.make(
+    XML SCHEMA = XMLDocument.make(
         Talk.class.getResource("talk.xsd")
     );
 
@@ -194,7 +192,7 @@ public interface Talk {
         @Override
         public void modify(final Iterable<Directive> dirs) throws IOException {
             if (dirs.iterator().hasNext()) {
-                final Node node = this.read().node();
+                final Node node = this.read().inner();
                 try {
                     new Xembler(dirs).apply(node);
                 } catch (final ImpossibleModificationException ex) {

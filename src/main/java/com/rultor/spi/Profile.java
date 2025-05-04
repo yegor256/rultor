@@ -9,8 +9,6 @@ import com.jcabi.immutable.ArrayMap;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
-import com.jcabi.xml.XSD;
-import com.jcabi.xml.XSDDocument;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -26,7 +24,7 @@ public interface Profile {
     /**
      * Schema.
      */
-    XSD SCHEMA = XSDDocument.make(
+    XML SCHEMA = XMLDocument.make(
         Talk.class.getResource("profile.xsd")
     );
 

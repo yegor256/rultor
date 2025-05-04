@@ -222,8 +222,8 @@ final class DockerRun {
      */
     private static Collection<String> lines(final XML node) {
         final Collection<String> lines = new LinkedList<>();
-        if (node.node().hasChildNodes()) {
-            final List<String> src = new ListOf<>(
+        if (node.inner().hasChildNodes()) {
+            final List<String> src = new ListOf<String>(
                 new Mapped<>(
                     t -> new Trimmed(t).asString(),
                     new Split(node.xpath("text()").get(0), "\n")

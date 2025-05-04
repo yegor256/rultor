@@ -108,7 +108,7 @@ public final class ProfileDeprecations {
             empty = false;
         } else {
             for (final XML image : images) {
-                if (def.equals(image.node().getTextContent())) {
+                if (def.equals(image.inner().getTextContent())) {
                     empty = false;
                     break;
                 }

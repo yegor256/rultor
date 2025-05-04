@@ -101,7 +101,7 @@ public final class DyTalk implements Talk {
     public void modify(final Iterable<Directive> dirs) throws IOException {
         if (!new ListOf<>(dirs).isEmpty()) {
             final XML xml = this.read();
-            final Node node = xml.node();
+            final Node node = xml.inner();
             try {
                 new Xembler(dirs).apply(node);
             } catch (final ImpossibleModificationException ex) {
