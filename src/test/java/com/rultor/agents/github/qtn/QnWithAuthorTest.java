@@ -59,7 +59,7 @@ final class QnWithAuthorTest {
      * @throws Exception In case of error.
      */
     @Test
-    void doesntAddAuthorToEmptyReq() throws Exception {
+    void doesNotAddAuthorToEmptyReq() throws Exception {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("the title", "the body");

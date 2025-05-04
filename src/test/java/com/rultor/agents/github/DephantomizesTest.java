@@ -42,7 +42,7 @@ final class DephantomizesTest {
      * @throws IOException In case of error
      */
     @Test
-    void doesntTouchRequestAndWire() throws IOException {
+    void doesNotTouchRequestAndWire() throws IOException {
         final MkGithub github = new MkGithub();
         final Repo repo = github.randomRepo();
         repo.issues().create("title", "desc");
