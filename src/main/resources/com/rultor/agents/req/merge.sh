@@ -37,16 +37,11 @@ if [ "${rebase}" == "true" ]; then
   git checkout "${head_branch}"
 fi
 
-before=$(git config --global --default= user.signingkey)
-git config --global user.signingkey 3FD3FA7E9AF0FA4C
 if [ "${squash}" == "true" ]; then
   git merge "${args[@]}" --squash "${BRANCH}"
-  git commit -m "${pull_title}"
+  git commit --gpg-sign=3FD3FA7E9AF0FA4C -m "${pull_title}"
 else
-  git merge "${args[@]}" "${BRANCH}"
-fi
-if [ -n "${before}" ]; then
-  git config --global user.signingkey "${before}"
+  git merge --gpg-sign=3FD3FA7E9AF0FA4C "${args[@]}" "${BRANCH}"
 fi
 
 docker_when_possible
