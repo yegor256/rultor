@@ -10,15 +10,15 @@ set -ex -o pipefail
 cd repo
 git remote add fork "${fork}"
 git remote update
-args=""
+args=()
 if [ "${ff}" == "default" ]; then
-  args="${args} --ff"
+  args+=(--ff)
 fi
 if [ "${ff}" == "no" ]; then
-  args="${args} --no-ff"
+  args+=(--no-ff)
 fi
 if [ "${ff}" == "only" ]; then
-  args="${args} --ff-only"
+  args+=(--ff-only)
 fi
 
 export BRANCH=__rultor
@@ -38,10 +38,10 @@ if [ "${rebase}" == "true" ]; then
 fi
 
 if [ "${squash}" == "true" ]; then
-  git merge "${args}" --squash "${BRANCH}"
+  git merge "${args[@]}" --squash "${BRANCH}"
   git commit -m "${pull_title}"
 else
-  git merge "${args}" "${BRANCH}"
+  git merge "${args[@]}" "${BRANCH}"
 fi
 
 docker_when_possible
