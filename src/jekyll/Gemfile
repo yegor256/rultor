@@ -3,10 +3,10 @@
 
 source 'https://rubygems.org'
 
-gem 'jekyll', '4.3.4'
-gem 'jekyll-plantuml', '1.4.2'
-gem 'jekyll-press', '0.2.1'
-gem 'jgd', '1.14.0'
-gem 'kramdown', '2.5.1'
-gem 'nokogiri', '1.18.0'
-gem 'uuidtools', '2.2.0'
+gem 'jekyll', '~>4.3.4'
+gem 'jekyll-plantuml', '~>1.4.2'
+gem 'jekyll-press', '~>0.2.1'
+gem 'jgd', '~>1.14.0'
+gem 'kramdown', '~>2.5.1'
+gem 'nokogiri', '~>1.18.0'
+gem 'uuidtools', '~>2.2.0'
