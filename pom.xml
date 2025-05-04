@@ -77,7 +77,7 @@
     <dependency>
       <groupId>io.sentry</groupId>
       <artifactId>sentry</artifactId>
-      <version>7.19.1</version>
+      <version>7.22.5</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
