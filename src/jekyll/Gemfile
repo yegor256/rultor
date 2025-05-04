@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+
 source 'https://rubygems.org'
-# ruby '2.2.4'
+
 gem 'jekyll', '4.3.4'
 gem 'jekyll-plantuml', '1.4.2'
 gem 'jekyll-press', '0.2.1'

@@ -4,6 +4,19 @@
 version = 1
 [[annotations]]
 path = [
+    "src/jekyll/favicon.ico",
+    "src/main/resources/META-INF/services/javax.xml.transform.TransformerFactory",
+    "src/main/resources/META-INF/services/javax.xml.xpath.XPathFactory",
+    "src/main/resources/com/rultor/agents/daemons/pubring.gpg.base64",
+    "src/main/resources/com/rultor/agents/daemons/secring.gpg.base64",
+    "src/main/resources/com/rultor/agents/rultor.key",
+    "src/test/resources/com/rultor/agents/req/pubring.gpg.base64",
+    "src/test/resources/com/rultor/agents/req/secring.gpg.base64",
+    "src/test/resources/com/rultor/agents/rultor.key",
+    "src/test/resources/com/rultor/agents/shells/authorized_keys",
+    "src/test/resources/com/rultor/agents/shells/id_rsa",
+    "src/test/resources/com/rultor/agents/shells/private.key",
+    "src/test/resources/com/rultor/agents/shells/ssh_host_rsa_key",
     "**.json",
     "**.md",
     "**.pdf",
