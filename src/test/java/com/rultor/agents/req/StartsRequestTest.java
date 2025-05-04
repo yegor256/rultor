@@ -514,9 +514,7 @@ final class StartsRequestTest {
         final String cmd = new UncheckedText(
             new Joined(
                 ";",
-                "set -x",
-                "set -e",
-                "set -o pipefail",
+                "set -ex -o pipefail",
                 "git init .",
                 "git config user.email test@rultor.com",
                 "git config user.name test",
@@ -526,10 +524,10 @@ final class StartsRequestTest {
                 ),
                 "echo 'hello, world!' > hello.txt",
                 "git add .",
-                "git -c commit.gpgsign=false commit -am 'first file'",
+                "git -c commit.gpgsign=false commit --no-verify -am 'first file'",
                 "git checkout -b frk",
                 "echo 'good bye!' > hello.txt",
-                "git -c commit.gpgsign=false commit -am 'modified file'",
+                "git -c commit.gpgsign=false commit --no-verify -am 'modified file'",
                 String.format(
                     "git checkout %s",
                     StartsRequestTest.HEAD_BRANCH

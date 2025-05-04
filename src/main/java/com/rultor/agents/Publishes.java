@@ -19,7 +19,7 @@ import org.xembly.Directives;
 /**
  * Publishes if it's public.
  *
-* @since 1.32.7
+ * @since 1.32.7
  */
 @Immutable
 @ToString
