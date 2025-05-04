@@ -11,3 +11,4 @@ _site
 ajcore*
 node_modules/
 target/
+.claude/

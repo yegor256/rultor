@@ -37,6 +37,8 @@ if [ "${rebase}" == "true" ]; then
   git checkout "${head_branch}"
 fi
 
+git config --global user.signingkey 3FD3FA7E9AF0FA4C
+
 if [ "${squash}" == "true" ]; then
   git merge "${args[@]}" --squash "${BRANCH}"
   git commit -m "${pull_title}"
