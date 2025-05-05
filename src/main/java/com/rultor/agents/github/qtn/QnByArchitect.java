@@ -26,7 +26,7 @@ import org.cactoos.list.ListOf;
  *
  * @since 1.45
  * @todo #1246:30min PR by ARC merge shouldn't require confirmation by ARC.
- *  Implement the asked in #1246. The tests have already benn implemented in
+ *  Implement the asked in #1246. The tests have already been implemented in
  *  QnByArchitectTest.acceptsIfMergeArchitectPull. After resolving this
  *  issue, uncomment the test.
  */

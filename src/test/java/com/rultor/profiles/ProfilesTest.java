@@ -165,7 +165,7 @@ final class ProfilesTest {
     void validationFailsOnCommandersMix() throws Exception {
         final String architect = "Yegor8192";
         final String first = "Commander Keen";
-        final String second = "Commander Shepard";
+        final String second = "Commander Sheperd";
         final Profile master = new Profile.Fixed(
             new XMLDocument(
                 String.format(

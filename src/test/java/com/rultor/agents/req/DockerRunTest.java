@@ -51,7 +51,7 @@ final class DockerRunTest {
             Matchers.hasItems("A=5", "B=f e")
         );
         MatcherAssert.assertThat(
-            "Single evn item should be saved",
+            "Single even item should be saved",
             new DockerRun(profile, "/p/entry[@key='b']").envs(
                 new ArrayMap<>()
             ),
@@ -236,7 +236,7 @@ final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
-            "mulitline script should be place in script as two commands",
+            "multiline script should be place in script as two commands",
             new Brackets(
                 new DockerRun(profile, "/p").script()
             ).toString(),

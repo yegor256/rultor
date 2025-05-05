@@ -59,7 +59,7 @@ final class YamlXMLTest {
      */
     @ParameterizedTest
     @ValueSource(strings = {
-        "thre\n\t\\/\u0000",
+        "there\n\t\\/\u0000",
         "first: \"привет \\/\t\r\""
     })
     void parsesBrokenConfigsAndThrows(final String yaml) {
