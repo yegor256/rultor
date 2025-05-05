@@ -148,40 +148,7 @@ public final class StartsDaemon implements Agent {
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
-        new Shell.Safe(shell).exec(
-            "head -3",
-            IOUtils.toInputStream(
-                String.join(
-                    "\n",
-                    IOUtils.toString(
-                        this.getClass().getResourceAsStream(
-                            "/com/rultor/agents/daemons/secring.gpg.asc"
-                        ),
-                        StandardCharsets.UTF_8
-                    ).trim().lines().map(String::trim).toArray(String[]::new)
-                ),
-                StandardCharsets.UTF_8
-            ),
-            Logger.stream(Level.SEVERE, this),
-            Logger.stream(Level.SEVERE, this)
-        );
-        new Shell.Safe(shell).exec(
-            "gpg --import",
-            IOUtils.toInputStream(
-                String.join(
-                    "\n",
-                    IOUtils.toString(
-                        this.getClass().getResourceAsStream(
-                            "/com/rultor/agents/daemons/secring.gpg.asc"
-                        ),
-                        StandardCharsets.UTF_8
-                    ).trim().lines().map(String::trim).toArray(String[]::new)
-                ),
-                StandardCharsets.UTF_8
-            ),
-            Logger.stream(Level.INFO, this),
-            Logger.stream(Level.WARNING, this)
-        );
+        this.uploadGpgKey(shell);
         new Shell.Empty(new Shell.Safe(shell)).exec(
             String.join(
                 " && ",
@@ -194,6 +161,57 @@ public final class StartsDaemon implements Agent {
         );
         Logger.info(this, "Daemon started at %s", dir);
         return dir;
+    }
+
+    /**
+     * Upload GPG secret key.
+     * @param shell The shell
+     * @throws IOException If fails
+     */
+    private void uploadGpgKey(final Shell shell) throws IOException {
+        final String secring = String.join(
+            "\n",
+            IOUtils.toString(
+                this.getClass().getResourceAsStream(
+                    "/com/rultor/agents/daemons/secring.gpg.asc"
+                ),
+                StandardCharsets.UTF_8
+            ).trim().lines().map(String::trim).toArray(String[]::new)
+        );
+        if (secring.isEmpty()) {
+            throw new IOException(
+                String.format(
+                    "GPG secret key is empty in %s",
+                    "/com/rultor/agents/daemons/secring.gpg.asc"
+                )
+            );
+        }
+        if (secring.startsWith("${")) {
+            throw new IOException(
+                String.format(
+                    "GPG secret key is not set in %s",
+                    "/com/rultor/agents/daemons/secring.gpg.asc"
+                )
+            );
+        }
+        if (secring.split("\n").length < 10) {
+            throw new IOException(
+                String.format(
+                    "GPG secret key is too short in %s: %s",
+                    "/com/rultor/agents/daemons/secring.gpg.asc",
+                    secring
+                )
+            );
+        }
+        new Shell.Safe(shell).exec(
+            "gpg --import",
+            IOUtils.toInputStream(
+                secring,
+                StandardCharsets.UTF_8
+            ),
+            Logger.stream(Level.INFO, this),
+            Logger.stream(Level.WARNING, this)
+        );
     }
 
     /**
