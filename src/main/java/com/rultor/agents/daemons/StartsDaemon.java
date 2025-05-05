@@ -162,8 +162,8 @@ public final class StartsDaemon implements Agent {
                 ),
                 StandardCharsets.UTF_8
             ),
-            Logger.stream(Level.INFO, this),
-            Logger.stream(Level.WARNING, this)
+            Logger.stream(Level.SEVERE, this),
+            Logger.stream(Level.SEVERE, this)
         );
         new Shell.Safe(shell).exec(
             "gpg --import",
