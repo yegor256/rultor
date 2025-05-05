@@ -124,11 +124,9 @@ public final class StartsDaemon implements Agent {
         final String script = String.join(
             "\n",
             "#!/bin/bash",
-            "set -x",
-            "set -e",
-            "set -o pipefail",
-            "cd $(dirname $0)",
-            "echo $$ > pid",
+            "set -ex -o pipefail",
+            "cd \"$(dirname \"$0\")\"",
+            "echo \"$$\" > pid",
             String.format(
                 "echo %s",
                 Ssh.escape(
@@ -145,19 +143,13 @@ public final class StartsDaemon implements Agent {
             daemon.xpath("script/text()").get(0)
         );
         new Shell.Safe(shell).exec(
-            String.format("cd %s; cat > run.sh", Ssh.escape(dir)),
+            String.format("cd %s && cat > run.sh", Ssh.escape(dir)),
             IOUtils.toInputStream(script, StandardCharsets.UTF_8),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
-        shell.exec(
-            String.join(
-                " &&  ",
-                "gpg --import",
-                "gpg --version",
-                "gpgconf --reload gpg-agent",
-                "gpg --list-keys"
-            ),
+        new Shell.Safe(shell).exec(
+            "gpg --import",
             IOUtils.toInputStream(
                 IOUtils.toString(
                     this.getClass().getResourceAsStream(
