@@ -156,7 +156,7 @@ public final class StartsDaemon implements Agent {
                         "/com/rultor/agents/daemons/secring.gpg.asc"
                     ),
                     StandardCharsets.UTF_8
-                ).trim(),
+                ).trim().replaceAll("\n +", "\n"),
                 StandardCharsets.UTF_8
             ),
             Logger.stream(Level.INFO, this),
