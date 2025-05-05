@@ -34,7 +34,6 @@
     <artifactId>jcabi-maven-skin</artifactId>
     <version>1.7.1</version>
   </skin>
-  <googleAnalyticsAccountId>UA-1963507-28</googleAnalyticsAccountId>
   <bannerLeft>
     <name>rultor</name>
     <src>https://doc.rultor.com/images/logo.svg</src>
