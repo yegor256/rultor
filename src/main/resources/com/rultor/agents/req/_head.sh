@@ -16,8 +16,8 @@ echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 chmod 600 ~/.ssh/config
 git clone "${head}" repo
 cd repo || exit 1
-git config user.email "me@rultor.com"
-git config user.name "rultor"
+git config user.email "gpg@rultor.com"
+git config user.name "Rultor.com"
 
 if [ -z "${scripts}" ]; then
   if [ -e "pom.xml" ]; then
