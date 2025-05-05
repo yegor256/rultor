@@ -20,6 +20,9 @@ fi
 if [ "${ff}" == "only" ]; then
   args+=(--ff-only)
 fi
+if [ "${squash}" == "true" ]; then
+  args+=(--squash)
+fi
 
 BRANCH=__rultor
 while [ "$(git show-branch "${BRANCH}" 2>/dev/null | wc -l)" -gt 0 ]; do
@@ -39,13 +42,7 @@ fi
 
 # GPG key of Rultor, used to sign commits:
 KEY=3FD3FA7E9AF0FA4C
-
-if [ "${squash}" == "true" ]; then
-  git merge "${args[@]}" --squash "${BRANCH}"
-  git commit "--gpg-sign=${KEY}" -m "${pull_title}"
-else
-  git merge "--gpg-sign=${KEY}" --signoff "${args[@]}" "${BRANCH}"
-fi
+git merge "--gpg-sign=${KEY}" -m "${pull_title}" "${args[@]}" "${BRANCH}"
 
 docker_when_possible
 
