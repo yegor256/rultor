@@ -37,13 +37,14 @@ if [ "${rebase}" == "true" ]; then
   git checkout "${head_branch}"
 fi
 
-gpg --list-keys
+# GPG key of Rultor, used to sign commits:
+KEY=3FD3FA7E9AF0FA4C
 
 if [ "${squash}" == "true" ]; then
   git merge "${args[@]}" --squash "${BRANCH}"
-  git commit --gpg-sign=3FD3FA7E9AF0FA4C -m "${pull_title}"
+  git commit "--gpg-sign=${KEY}" -m "${pull_title}"
 else
-  git merge --gpg-sign=3FD3FA7E9AF0FA4C "${args[@]}" "${BRANCH}"
+  git merge "--gpg-sign=${KEY}" --signoff "${args[@]}" "${BRANCH}"
 fi
 
 docker_when_possible
