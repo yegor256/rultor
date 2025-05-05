@@ -5,7 +5,6 @@ version = 1
 [[annotations]]
 path = [
     "src/jekyll/favicon.ico",
-    "system.properties",
     "src/main/resources/META-INF/services/javax.xml.transform.TransformerFactory",
     "src/main/resources/META-INF/services/javax.xml.xpath.XPathFactory",
     "src/main/resources/com/rultor/agents/daemons/secring.gpg.asc",
