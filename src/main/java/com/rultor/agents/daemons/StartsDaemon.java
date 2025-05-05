@@ -149,6 +149,23 @@ public final class StartsDaemon implements Agent {
             Logger.stream(Level.WARNING, this)
         );
         new Shell.Safe(shell).exec(
+            "head -3",
+            IOUtils.toInputStream(
+                String.join(
+                    "\n",
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream(
+                            "/com/rultor/agents/daemons/secring.gpg.asc"
+                        ),
+                        StandardCharsets.UTF_8
+                    ).trim().lines().map(String::trim).toArray(String[]::new)
+                ),
+                StandardCharsets.UTF_8
+            ),
+            Logger.stream(Level.INFO, this),
+            Logger.stream(Level.WARNING, this)
+        );
+        new Shell.Safe(shell).exec(
             "gpg --import",
             IOUtils.toInputStream(
                 String.join(
@@ -158,9 +175,7 @@ public final class StartsDaemon implements Agent {
                             "/com/rultor/agents/daemons/secring.gpg.asc"
                         ),
                         StandardCharsets.UTF_8
-                    ).trim().lines()
-                    .map(String::trim)
-                    .toArray(String[]::new)
+                    ).trim().lines().map(String::trim).toArray(String[]::new)
                 ),
                 StandardCharsets.UTF_8
             ),
