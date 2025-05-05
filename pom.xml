@@ -15,7 +15,7 @@
   <version>2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>rultor</name>
-  <description>Rultor.com, Coding Team Assistant</description>
+  <description>Rultor.com, Coding Team DevOps Assistant</description>
   <url>https://www.rultor.com</url>
   <inceptionYear>2009</inceptionYear>
   <organization>
@@ -53,8 +53,8 @@
     <url>https://github.com/yegor256/rultor</url>
   </scm>
   <ciManagement>
-    <system>travis</system>
-    <url>https://travis-ci.org/yegor256/rultor</url>
+    <system>github</system>
+    <url>https://github.com/yegor256/rultor</url>
   </ciManagement>
   <distributionManagement>
     <site>
@@ -69,7 +69,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <gpg.secring>placeholder</gpg.secring>
   </properties>
   <dependencies>
     <dependency>

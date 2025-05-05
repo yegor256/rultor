@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
 import org.hamcrest.MatcherAssert;
@@ -61,19 +60,15 @@ final class DecryptTest {
             new FakePGP().asString(),
             StandardCharsets.UTF_8
         );
-        final String gpg = IOUtils.toString(
-            this.getClass().getResourceAsStream(
-                "/com/rultor/agents/daemons/secring.gpg.asc"
-            ),
-            StandardCharsets.UTF_8
-        );
-        Assumptions.assumeFalse(gpg.startsWith("placeholder"));
+        final String secring = System.getenv("GPG_SECRING");
+        Assumptions.assumeFalse(secring == null);
+        Assumptions.assumeTrue(secring.startsWith("---"));
         FileUtils.writeByteArrayToFile(
             new File(
                 dir,
                 String.format("%s/secring.gpg.asc", StartsDaemon.GPG_HOME)
             ),
-            gpg.getBytes(StandardCharsets.UTF_8)
+            secring.getBytes(StandardCharsets.UTF_8)
         );
         new VerboseProcess(
             new ProcessBuilder().command(

@@ -169,36 +169,11 @@ public final class StartsDaemon implements Agent {
      * @throws IOException If fails
      */
     private void uploadGpgKey(final Shell shell) throws IOException {
-        final String secring = String.join(
-            "\n",
-            IOUtils.toString(
-                this.getClass().getResourceAsStream(
-                    "/com/rultor/agents/daemons/secring.gpg.asc"
-                ),
-                StandardCharsets.UTF_8
-            ).trim().lines().map(String::trim).toArray(String[]::new)
-        );
-        if (secring.isEmpty()) {
-            throw new IOException(
-                String.format(
-                    "GPG secret key is empty in %s",
-                    "/com/rultor/agents/daemons/secring.gpg.asc"
-                )
-            );
-        }
-        if (secring.startsWith("${")) {
-            throw new IOException(
-                String.format(
-                    "GPG secret key is not set in %s (maybe resource filtering is not enabled in pom.xml)",
-                    "/com/rultor/agents/daemons/secring.gpg.asc"
-                )
-            );
-        }
+        final String secring = System.getenv("GPG_SECRING");
         if (secring.split("\n").length < 10) {
             throw new IOException(
                 String.format(
-                    "GPG secret key is too short in %s: %s",
-                    "/com/rultor/agents/daemons/secring.gpg.asc",
+                    "GPG secret key is too short in the GPG_SECRING environment variable: %s",
                     secring
                 )
             );
