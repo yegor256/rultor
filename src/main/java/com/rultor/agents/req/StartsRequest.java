@@ -42,21 +42,6 @@ import org.xembly.Directives;
 public final class StartsRequest extends AbstractAgent {
 
     /**
-     * Default port value to be used with Decrypt.
-     */
-    private static final String DEFAULT_PORT = "80";
-
-    /**
-     * HTTP proxy port system property key.
-     */
-    private static final String PORT_KEY = "http.proxyPort";
-
-    /**
-     * HTTP proxy host system property key.
-     */
-    private static final String HOST_KEY = "http.proxyHost";
-
-    /**
      * Profile.
      */
     private final transient Profile profile;
@@ -136,7 +121,7 @@ public final class StartsRequest extends AbstractAgent {
                     )
                 ),
                 Collections.singleton(this.sensitive()),
-                this.decryptor().commands(),
+                new Decrypt(this.profile).commands(),
                 Collections.singleton(
                     IOUtils.toString(
                         this.getClass().getResource(
@@ -144,23 +129,6 @@ public final class StartsRequest extends AbstractAgent {
                         ),
                         StandardCharsets.UTF_8
                     )
-                )
-            )
-        );
-    }
-
-    /**
-     * Obtain proxy settings and create a Decrypt instance.
-     * @return Decrypt instance.
-     */
-    private Decrypt decryptor() {
-        return new Decrypt(
-            this.profile,
-            System.getProperty(StartsRequest.HOST_KEY, ""),
-            Integer.parseInt(
-                System.getProperty(
-                    StartsRequest.PORT_KEY,
-                    StartsRequest.DEFAULT_PORT
                 )
             )
         );

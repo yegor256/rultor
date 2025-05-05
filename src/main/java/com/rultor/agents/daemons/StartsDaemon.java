@@ -24,7 +24,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -153,6 +152,18 @@ public final class StartsDaemon implements Agent {
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
+        shell.exec(
+            String.join(
+                " &&  ",
+                "gpg --import",
+                "gpg --version",
+                "gpgconf --reload gpg-agent",
+                "gpg --list-keys"
+            ),
+            this.secring(),
+            Logger.stream(Level.INFO, this),
+            Logger.stream(Level.WARNING, this)
+        );
         new Shell.Empty(new Shell.Safe(shell)).exec(
             String.join(
                 " && ",
@@ -198,7 +209,6 @@ public final class StartsDaemon implements Agent {
                     );
                 }
             }
-            this.gpg(shell, dir);
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
                 "cat << EOT\n%s\nEOT\nexit -1",
@@ -209,54 +219,16 @@ public final class StartsDaemon implements Agent {
     }
 
     /**
-     * Upload GPG keys.
-     * @param shell Shell
-     * @param dir Dir
-     * @throws IOException If fails
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private void gpg(final Shell shell, final String dir) throws IOException {
-        final Collection<XML> entries = this.profile.read().nodes(
-            "/p/entry[@key='decrypt']/entry"
-        );
-        if (!entries.isEmpty()) {
-            final String[] names = {"pubring.gpg", "secring.gpg"};
-            for (final String name : names) {
-                shell.exec(
-                    String.join(
-                        " &&  ",
-                        String.format("cd %s  ", Ssh.escape(dir)),
-                        String.format("mkdir -p %s", StartsDaemon.GPG_HOME),
-                        String.format(
-                            "cat > \"%s/%s\"",
-                            StartsDaemon.GPG_HOME, name
-                        )
-                    ),
-                    this.ring(name),
-                    Logger.stream(Level.INFO, true),
-                    Logger.stream(Level.WARNING, true)
-                );
-            }
-            Logger.info(
-                this,
-                "GPG keys uploaded to %s/%s",
-                dir, StartsDaemon.GPG_HOME
-            );
-        }
-    }
-
-    /**
-     * Get contents of ring.
-     * @param name Name
+     * Get contents of secret GPG secring.
      * @return Content
      * @throws IOException If fails
      */
-    private InputStream ring(final String name) throws IOException {
+    private InputStream secring() throws IOException {
         return new ByteArrayInputStream(
             Base64.decodeBase64(
                 IOUtils.toByteArray(
                     this.getClass().getResource(
-                        String.format("%s.base64", name)
+                        "gpg.secring.base64"
                     )
                 )
             )

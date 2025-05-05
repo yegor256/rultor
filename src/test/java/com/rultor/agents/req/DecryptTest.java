@@ -9,7 +9,6 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.spi.Profile;
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.logging.Level;
@@ -34,12 +33,6 @@ final class DecryptTest {
      * Newline.
      */
     private static final String NEWLINE = "\n";
-
-    /**
-     * Test port for proxy settings test.
-     * @see #testHttpProxyHandling()
-     */
-    private static final int PORT = 8080;
 
     /**
      * StartsRequest can take decryption instructions into account.
@@ -101,31 +94,6 @@ final class DecryptTest {
                 StandardCharsets.UTF_8
             ),
             Matchers.startsWith("hello, world!")
-        );
-    }
-
-    /**
-     * This test reproduces issue #635 and validates that Decrypt uses HTTP
-     * proxy server settings when running gpg, if they are provided.
-     * @throws IOException Thrown in case of XML parsing error
-     */
-    @Test
-    void testHttpProxyHandling() throws IOException {
-        MatcherAssert.assertThat(
-            "proxy should be added to commands",
-            new Decrypt(
-                new Profile.Fixed(
-                    this.createTestProfileXML(),
-                    "test1/test1"
-                ),
-                "http://someserver.com",
-                DecryptTest.PORT
-            ).commands(),
-            Matchers.hasItem(
-                Matchers.containsString(
-                    " http-proxy=http://someserver.com:8080 "
-                )
-            )
         );
     }
 

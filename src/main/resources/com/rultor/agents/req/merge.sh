@@ -37,8 +37,6 @@ if [ "${rebase}" == "true" ]; then
   git checkout "${head_branch}"
 fi
 
-gpg --version
-
 if [ "${squash}" == "true" ]; then
   git merge "${args[@]}" --squash "${BRANCH}"
   git commit --gpg-sign=3FD3FA7E9AF0FA4C -m "${pull_title}"

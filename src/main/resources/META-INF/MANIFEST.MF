@@ -23,6 +23,4 @@ Rultor-TwitterSecret: ${twitter.secret}
 Rultor-TwitterToken: ${twitter.token}
 Rultor-TwitterTokenSecret: ${twitter.tsecret}
 Rultor-SentryDsn: ${sentry.dsn}
-Rultor-GpgPublic: ${gpg.public}
-Rultor-GpgSecret: ${gpg.secret}
 Rultor-Test: ${test}

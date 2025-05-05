@@ -8,9 +8,7 @@ readers:
   - "urn:github:526301"
 assets:
   netrc: yegor256/home#assets/heroku-netrc
-  secring.gpg: yegor256/home#assets/secring.gpg
   settings.xml: yegor256/home#assets/rultor/settings.xml
-  pubring.gpg: yegor256/home#assets/pubring.gpg
   id_rsa: yegor256/home#assets/heroku-key
   id_rsa.pub: yegor256/home#assets/heroku-key.pub
 install: |-
