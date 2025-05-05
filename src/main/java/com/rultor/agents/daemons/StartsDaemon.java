@@ -189,7 +189,7 @@ public final class StartsDaemon implements Agent {
         if (secring.startsWith("${")) {
             throw new IOException(
                 String.format(
-                    "GPG secret key is not set in %s",
+                    "GPG secret key is not set in %s (maybe resource filtering is not enabled in pom.xml)",
                     "/com/rultor/agents/daemons/secring.gpg.asc"
                 )
             );
