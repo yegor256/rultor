@@ -3,6 +3,7 @@
 
 [files]
 extend-exclude = [
+    "src/test/java/com/rultor/agents/req/FakePGP.java"
 ]
 
 [default.extend-identifiers]
@@ -11,4 +12,3 @@ extend-exclude = [
 "scrpt" = "scrpt"
 "MIIEowIBAAKCAQEAzDKK1b2dXgXepTvgpy2klfTZ6BVZCwg09eoyOtAWUnX64xQs" = "MIIEowIBAAKCAQEAzDKK1b2dXgXepTvgpy2klfTZ6BVZCwg09eoyOtAWUnX64xQs"
 "KgDKCNskCGoV0TAjYzdGfiABX17HcGePaL8GaItzWkakpWFoJGAXOGTmiKHqd49o" = "KgDKCNskCGoV0TAjYzdGfiABX17HcGePaL8GaItzWkakpWFoJGAXOGTmiKHqd49o"
-"OtGng5zHLx5cV+BrbpFt1m2ja4BjacYMU" = "OtGng5zHLx5cV+BrbpFt1m2ja4BjacYMU"
