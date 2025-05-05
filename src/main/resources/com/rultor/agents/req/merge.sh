@@ -42,7 +42,8 @@ fi
 
 # GPG key of Rultor, used to sign commits:
 KEY=3FD3FA7E9AF0FA4C
-git merge "--gpg-sign=${KEY}" -m "${pull_title}" "${args[@]}" "${BRANCH}"
+git merge "--gpg-sign=${KEY}" --no-edit -m "${pull_title}" "${args[@]}" "${BRANCH}"
+git log -1 --show-signature
 
 docker_when_possible
 
