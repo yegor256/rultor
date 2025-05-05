@@ -50,9 +50,7 @@ final class DecryptTest {
         ).commands();
         final String script = new Joined(
             DecryptTest.NEWLINE,
-            "set -x",
-            "set -e",
-            "set -o pipefail",
+            "set -ex -o pipefail",
             new Joined(
                 DecryptTest.NEWLINE,
                 commands
@@ -64,23 +62,20 @@ final class DecryptTest {
             new FakePGP().asString(),
             StandardCharsets.UTF_8
         );
-        final String[] keys = {"secring"};
-        for (final String key : keys) {
-            final String gpg = IOUtils.toString(
-                this.getClass().getResource(
-                    String.format("%s.gpg.base64", key)
-                ),
-                StandardCharsets.UTF_8
-            );
-            Assumptions.assumeFalse(gpg.startsWith("${"));
-            FileUtils.writeByteArrayToFile(
-                new File(
-                    dir,
-                    String.format("%s/%s.gpg", StartsDaemon.GPG_HOME, key)
-                ),
-                Base64.decodeBase64(gpg)
-            );
-        }
+        final String gpg = IOUtils.toString(
+            this.getClass().getResourceAsStream(
+                "/com/rultor/agents/daemons/secring.gpg.base64"
+            ),
+            StandardCharsets.UTF_8
+        );
+        Assumptions.assumeFalse(gpg.startsWith("${"));
+        FileUtils.writeByteArrayToFile(
+            new File(
+                dir,
+                String.format("%s/secring.gpg", StartsDaemon.GPG_HOME)
+            ),
+            Base64.decodeBase64(gpg)
+        );
         new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash", "-c", script

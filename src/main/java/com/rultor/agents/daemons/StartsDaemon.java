@@ -20,7 +20,6 @@ import com.rultor.profiles.ProfileDeprecations;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -29,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -160,7 +158,9 @@ public final class StartsDaemon implements Agent {
                 "gpgconf --reload gpg-agent",
                 "gpg --list-keys"
             ),
-            this.secring(),
+            this.getClass().getResourceAsStream(
+                "/com/rultor/agents/daemons/secring.gpg.base64"
+            ),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
@@ -216,23 +216,6 @@ public final class StartsDaemon implements Agent {
             );
         }
         return script;
-    }
-
-    /**
-     * Get contents of secret GPG secring.
-     * @return Content
-     * @throws IOException If fails
-     */
-    private InputStream secring() throws IOException {
-        return new ByteArrayInputStream(
-            Base64.decodeBase64(
-                IOUtils.toByteArray(
-                    this.getClass().getResource(
-                        "gpg.secring.base64"
-                    )
-                )
-            )
-        );
     }
 
 }
