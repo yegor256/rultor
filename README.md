@@ -15,7 +15,7 @@
 [Rultor](https://www.rultor.com) is a DevOps team assistant. It helps your programmers and
 release managers automate routine operations (merge, deploy, and release)
 with an easy-to-use intuitive chat-bot interface. Just say `@rultor hello` in
-any of your GitHub issue and the conversation will start.
+any of your GitHub issues and the conversation will start.
 
 Full documentation is at [doc.rultor.com](https://doc.rultor.com)
 
@@ -58,21 +58,21 @@ and makes errors more easily reproducible.
 
 Additionally, because of the way Rultor integrates with modern issue trackers,
 all the logs are stored and published to the ticket on which Rultor was
-mentioned. Making vital information easily accessible to all developers.
+mentioned, making vital information easily accessible to all developers.
 
 Rultor performs pre-flight builds. Instead of merging into master and then
 seeing if your changes broke the build or not, Rultor checks out the master
-branch, apply your changes to it, then runs everything it was set up to run.
+branch, applies your changes to it, then runs everything it was set up to run.
 If, and only if, everything goes well, Rultor merges the changes into master.
 This programmatically prevents the master from being broken by developers. Not
 having to worry about breaking the build for everyone else has a very positive
-impact in the way developers write code, increasing their productivity and
+impact on the way developers write code, increasing their productivity and
 mitigating their fear of making mistakes.
 
 Lastly, Rultor provides an integrated and humanized interface to DevOps tools,
 as a human-readable sentence suffices to trigger a merge or a release.
 
-## How Rultor Works?
+## How Does Rultor Work?
 
 Once Rultor finds a [merge command](https://doc.rultor.com/basics.html)
 in one of your GitHub pull requests, it does exactly this:
@@ -108,5 +108,5 @@ $ chown rultor:rultor -R /home/rultor/.ssh
 $ chmod 600 /home/rultor/.ssh/authorized_keys
 ```
 
-Make sure the `b4.rultor.com` is pointing to the server. At the moment the hosted
+Make sure that `b4.rultor.com` is pointing to the server. At the moment, the hosted
 app is working with a single server only, by this particular domain name.
