@@ -159,7 +159,7 @@ public final class StartsDaemon implements Agent {
                 "gpg --list-keys"
             ),
             this.getClass().getResourceAsStream(
-                "/com/rultor/agents/daemons/secring.gpg.base64"
+                "/com/rultor/agents/daemons/secring.gpg.asc"
             ),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)

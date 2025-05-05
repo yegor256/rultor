@@ -12,7 +12,6 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.logging.Level;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cactoos.text.Joined;
@@ -64,7 +63,7 @@ final class DecryptTest {
         );
         final String gpg = IOUtils.toString(
             this.getClass().getResourceAsStream(
-                "/com/rultor/agents/daemons/secring.gpg.base64"
+                "/com/rultor/agents/daemons/secring.gpg.asc"
             ),
             StandardCharsets.UTF_8
         );
@@ -72,9 +71,9 @@ final class DecryptTest {
         FileUtils.writeByteArrayToFile(
             new File(
                 dir,
-                String.format("%s/secring.gpg", StartsDaemon.GPG_HOME)
+                String.format("%s/secring.gpg.asc", StartsDaemon.GPG_HOME)
             ),
-            Base64.decodeBase64(gpg)
+            gpg.getBytes(StandardCharsets.UTF_8)
         );
         new VerboseProcess(
             new ProcessBuilder().command(
