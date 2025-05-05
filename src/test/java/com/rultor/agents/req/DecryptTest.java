@@ -67,7 +67,7 @@ final class DecryptTest {
             ),
             StandardCharsets.UTF_8
         );
-        Assumptions.assumeFalse(gpg.startsWith("${"));
+        Assumptions.assumeFalse(gpg.startsWith("placeholder"));
         FileUtils.writeByteArrayToFile(
             new File(
                 dir,
