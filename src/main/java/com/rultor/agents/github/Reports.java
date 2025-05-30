@@ -89,7 +89,7 @@ public final class Reports extends AbstractAgent {
             )
         ).append(Reports.highlights(req));
         if (!success) {
-            message.append(Reports.tail(req));
+            message.append(Reports.tail(req).replaceAll("```", "'''"));
         }
         new Answer(comment).post(success, message.toString());
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
