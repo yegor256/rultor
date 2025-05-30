@@ -92,7 +92,6 @@ for example `bundle test`.
 You can see it in action, for example, in this pull request:
 [jcabi/jcabi-github#878](https://github.com/jcabi/jcabi-github/pull/878).
 
-
 [1]: http://www.yegor256.com/2014/07/24/rultor-automated-merging.html
 [2]: http://www.yegor256.com/2014/07/29/docker-in-rultor.html
 [3]: http://www.yegor256.com/2014/07/21/read-only-master-branch.html
