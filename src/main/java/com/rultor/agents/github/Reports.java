@@ -89,7 +89,7 @@ public final class Reports extends AbstractAgent {
             )
         ).append(Reports.highlights(req));
         if (!success) {
-            message.append(Reports.tail(req).replaceAll("```", "'''"));
+            message.append(Reports.tail(req));
         }
         new Answer(comment).post(success, message.toString());
         Logger.info(this, "issue #%d reported: %B", issue.number(), success);
@@ -125,7 +125,10 @@ public final class Reports extends AbstractAgent {
         if (tail.isEmpty()) {
             text = "";
         } else {
-            text = String.format("\n\n```\n%s\n```", tail.get(0));
+            text = String.format(
+                "\n\n```\n%s\n```",
+                tail.get(0).replaceAll("```", "'''")
+            );
         }
         return text;
     }
