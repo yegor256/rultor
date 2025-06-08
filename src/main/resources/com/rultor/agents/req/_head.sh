@@ -5,6 +5,8 @@
 
 # shellcheck disable=SC2154
 
+set -e -o pipefail
+
 hostname
 pwd
 
@@ -15,7 +17,7 @@ mkdir -p ~/.ssh
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 chmod 600 ~/.ssh/config
 git clone "${head}" repo
-cd repo || exit 1
+cd repo
 git config user.email "gpg@rultor.com"
 git config user.name "Rultor.com"
 
@@ -38,7 +40,7 @@ if [ -z "${scripts}" ]; then
   fi
 fi
 
-cd .. || exit 1
+cd ..
 cat <<EOT > entry.sh
 #!/bin/bash
 set -x
@@ -97,7 +99,7 @@ function docker_when_possible {
       break
     fi
   done
-  cd .. || exit 1
+  cd ..
   if [ -n "${directory}" ]; then
     use_image="yegor256/rultor-$(dd if=/dev/urandom bs=10k count=1 2>/dev/null | tr -cd 'a-z0-9' | head -c 8)"
     docker build "${directory}" -t "${use_image}"
@@ -129,5 +131,5 @@ function docker_when_possible {
     docker rmi "${use_image}"
   fi
   sudo chown -R "$(whoami)" repo
-  cd repo || exit 1
+  cd repo
 }

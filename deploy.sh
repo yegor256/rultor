@@ -5,7 +5,7 @@
 
 set -ex -o pipefail
 
-cd "$(dirname "$0")" || exit 1
+cd "$(dirname "$0")"
 cp /code/home/assets/rultor/settings.xml .
 git add settings.xml
 git commit -m 'settings.xml for heroku'
