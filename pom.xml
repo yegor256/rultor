@@ -389,7 +389,7 @@
     <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java-api</artifactId>
-      <version>3.5.0</version>
+      <version>3.5.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
