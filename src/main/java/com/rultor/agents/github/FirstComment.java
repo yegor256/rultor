@@ -82,13 +82,11 @@ final class FirstComment implements Comment {
                 "login", this.home.author().login()
             )
         );
-        final String body;
         if (this.home.hasBody()) {
-            body = this.home.body();
+            json.add("body", this.home.body());
         } else {
-            body = "";
+            json.add("body", "");
         }
-        json.add("body", body);
         return json.build();
     }
 }

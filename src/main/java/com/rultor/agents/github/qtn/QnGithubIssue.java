@@ -37,11 +37,11 @@ public final class QnGithubIssue implements Question {
     @Override
     public Req understand(final Comment.Smart comment, final URI home)
         throws IOException {
-        Req req = this.origin.understand(comment, home);
+        final Req req = this.origin.understand(comment, home);
         final List<Directive> additions = new ListOf<>(req.dirs());
         if (!additions.isEmpty()) {
             final Directives dirs = new Directives().append(additions);
-            req = () -> dirs.addIf("args")
+            return () -> dirs.addIf("args")
                 .add("arg").attr("name", "github_issue")
                 .set(String.valueOf(comment.issue().number()))
                 .up().up();
