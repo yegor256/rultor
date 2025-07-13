@@ -58,6 +58,11 @@ public final class ReleaseBinaries extends AbstractAgent {
      */
     private final transient Profile profile;
 
+    /**
+     * Ctor.
+     * @param ghub Github client
+     * @param prof Profile
+     */
     public ReleaseBinaries(final Github ghub, final Profile prof) {
         super(
             "/talk/wire[github-repo and github-issue]",
