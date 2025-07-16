@@ -50,7 +50,6 @@ final class ReleaseBinariesTest {
                 temp.toFile().getAbsolutePath(), "repo", target
             )
         );
-        dir.mkdirs();
         final File bin = new File(dir.getAbsolutePath(), name.replace("${tag}", tag));
         final byte[] content = SecureRandom.getSeed(100);
         new LengthOf(new TeeInput(content, bin)).value();
@@ -74,6 +73,76 @@ final class ReleaseBinariesTest {
             "Asset url should be in the release",
             new Releases.Smart(repo.releases()).find(tag)
                 .assets().get(0),
+            Matchers.notNullValue()
+        );
+    }
+
+    /**
+     * ReleaseBinaries should attach binaries from a directory to the release.
+     * @param temp Temporary folder for talk
+     * @throws Exception In case of error
+     */
+    @Test
+    void attachesBinariesFromDirectory(@TempDir final Path temp) throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final String tag = "v1.0";
+        final Talk reltalk = ReleaseBinariesTest.talk(issue, tag, temp.toFile());
+        new CommentsTag(repo.github()).execute(reltalk);
+        final File work = temp.resolve("repo").resolve("target").toFile();
+        final String filename = String.format("artifact-%s.jar", tag);
+        final File artifact = new File(work, filename);
+        final byte[] data = SecureRandom.getSeed(32);
+        new LengthOf(new TeeInput(data, artifact)).value();
+        final Profile prof = new Profile.Fixed(
+            new XMLDocument(
+                new Joined(
+                    "",
+                    "<p><entry key='artifacts'>target</entry></p>"
+                ).asString()
+            )
+        );
+        final Talk dirtalk = ReleaseBinariesTest.talk(issue, tag, temp.toFile());
+        new ReleaseBinaries(repo.github(), prof).execute(dirtalk);
+        MatcherAssert.assertThat(
+            "Asset should be attached",
+            new Releases.Smart(repo.releases()).find(tag).assets().get(0),
+            Matchers.notNullValue()
+        );
+    }
+
+    /**
+     * ReleaseBinaries should attach a single artifact file to the release.
+     * @param temp Temporary folder for talk
+     * @throws Exception In case of error
+     */
+    @Test
+    void attachesSingleBinaryFile(@TempDir final Path temp) throws Exception {
+        final Repo repo = new MkGithub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final String tag = "v2.0";
+        final Talk inittalk = ReleaseBinariesTest.talk(issue, tag, temp.toFile());
+        new CommentsTag(repo.github()).execute(inittalk);
+        final File file = temp.resolve(
+            String.format("release-%s.zip", tag)
+        ).toFile();
+        final byte[] data = SecureRandom.getSeed(16);
+        new LengthOf(new TeeInput(data, file)).value();
+        final Profile prof = new Profile.Fixed(
+            new XMLDocument(
+                new Joined(
+                    "",
+                    "<p><entry key='artifacts'>",
+                    file.getAbsolutePath(),
+                    "</entry></p>"
+                ).asString()
+            )
+        );
+        final Talk singtalk = ReleaseBinariesTest.talk(issue, tag, temp.toFile());
+        new ReleaseBinaries(repo.github(), prof).execute(singtalk);
+        MatcherAssert.assertThat(
+            "Asset should be attached",
+            new Releases.Smart(repo.releases()).find(tag).assets().get(0),
             Matchers.notNullValue()
         );
     }
