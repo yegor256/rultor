@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
-
 import org.apache.commons.io.FileUtils;
 import org.cactoos.text.Joined;
 import org.w3c.dom.Node;
@@ -54,14 +53,14 @@ public interface Talk {
     XSL UPGRADE = new XSLChain(
         Arrays.asList(
             XSLDocument.make(
-                Objects.requireNonNull(Talk.class.getResource(
-                        "upgrade/001-talks.xsl"
-                ))
+                Objects.requireNonNull(
+                    Talk.class.getResource("upgrade/001-talks.xsl")
+                )
             ),
             XSLDocument.make(
-                Objects.requireNonNull(Talk.class.getResource(
-                        "upgrade/002-public-attribute.xsl"
-                ))
+                Objects.requireNonNull(
+                    Talk.class.getResource("upgrade/002-public-attribute.xsl")
+                )
             )
         )
     );

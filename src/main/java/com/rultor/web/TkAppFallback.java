@@ -10,7 +10,6 @@ import io.sentry.Sentry;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Objects;
-
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.fallback.FbChain;

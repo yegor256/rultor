@@ -13,8 +13,12 @@ import com.rultor.agents.daemons.Container;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
@@ -121,9 +125,9 @@ public final class StartsRequest extends AbstractAgent {
                 new Decrypt(this.profile).commands(),
                 Collections.singleton(
                     IOUtils.toString(
-                        Objects.requireNonNull(this.getClass().getResource(
-                                String.format("%s.sh", type)
-                        )),
+                        Objects.requireNonNull(
+                            this.getClass().getResource(String.format("%s.sh", type))
+                        ),
                         StandardCharsets.UTF_8
                     )
                 )
