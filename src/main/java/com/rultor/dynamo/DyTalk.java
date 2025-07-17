@@ -179,7 +179,7 @@ public final class DyTalk implements Talk {
             new GZIPInputStream(new ByteArrayInputStream(bytes)),
             baos
         );
-        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+        return baos.toString(StandardCharsets.UTF_8);
     }
 
 }

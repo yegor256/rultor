@@ -41,14 +41,9 @@ final class QnParametrizedTest {
         final Question origin = new Question() {
             @Override
             public Req understand(final Comment.Smart comment, final URI home) {
-                return new Req() {
-                    @Override
-                    public Iterable<Directive> dirs() {
-                        return new Directives()
-                            .add("args").add("arg").set("hello, all").up().up()
-                            .add("type").set("xxx").up();
-                    }
-                };
+                return () -> new Directives()
+                    .add("args").add("arg").set("hello, all").up().up()
+                    .add("type").set("xxx").up();
             }
         };
         MatcherAssert.assertThat(
@@ -115,12 +110,7 @@ final class QnParametrizedTest {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("");
-        final Question question = new Question() {
-            @Override
-            public Req understand(final Comment.Smart comment, final URI home) {
-                return Req.LATER;
-            }
-        };
+        final Question question = (comment, home) -> Req.LATER;
         MatcherAssert.assertThat(
             "Later request should be in the result",
             new QnParametrized(question).understand(

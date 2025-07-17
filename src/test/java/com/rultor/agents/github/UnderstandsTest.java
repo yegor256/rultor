@@ -87,13 +87,7 @@ final class UnderstandsTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hey you");
         final Agent agent = new Understands(
-            repo.github(),
-            new Question() {
-                @Override
-                public Req understand(final Comment.Smart cmt, final URI home) {
-                    return Req.LATER;
-                }
-            }
+            repo.github(), (cmt, home) -> Req.LATER
         );
         final Talk talk = UnderstandsTest.talk(issue);
         agent.execute(talk);

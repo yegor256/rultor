@@ -130,7 +130,7 @@ public final class Profiles {
             path.append(String.format("/entry[@key='%s']", element));
         }
         final List<String> result = profile.read().xpath(
-            String.format("/%s/item/text()", path.toString())
+            String.format("/%s/item/text()", path)
         );
         return result.toArray(new String[0]);
     }
@@ -139,9 +139,8 @@ public final class Profiles {
      * Fetch a profile from an XML.
      * @param xml The XML
      * @return Profile found
-     * @throws IOException If fails
      */
-    private Profile fetch(final XML xml) throws IOException {
+    private Profile fetch(final XML xml) {
         final Profile profile;
         final List<String> type = xml.xpath("//request/type/text()");
         if (type.isEmpty() || !Profiles.MERGE.equals(type.get(0))) {
