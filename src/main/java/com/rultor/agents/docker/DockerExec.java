@@ -10,6 +10,7 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
@@ -45,7 +46,7 @@ public final class DockerExec implements SuperAgent {
     public void execute(final Talks talks) throws IOException {
         new Shell.Safe(this.shell).exec(
             IOUtils.toString(
-                this.getClass().getResource(this.script),
+                Objects.requireNonNull(this.getClass().getResource(this.script)),
                 StandardCharsets.UTF_8
             ),
             new NullInputStream(0L),

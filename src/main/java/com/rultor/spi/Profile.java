@@ -12,6 +12,7 @@ import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Profile.
@@ -25,7 +26,7 @@ public interface Profile {
      * Schema.
      */
     XML SCHEMA = XMLDocument.make(
-        Talk.class.getResource("profile.xsd")
+        Objects.requireNonNull(Talk.class.getResource("profile.xsd"))
     );
 
     /**

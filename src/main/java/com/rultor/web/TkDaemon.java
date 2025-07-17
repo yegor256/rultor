@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.AutoCloseInputStream;
@@ -105,7 +106,7 @@ final class TkDaemon implements TkRegex {
         throws IOException {
         final Talk talk = this.talks.get(number);
         final String head = IOUtils.toString(
-            this.getClass().getResource("daemon/head.html"),
+            Objects.requireNonNull(this.getClass().getResource("daemon/head.html")),
             StandardCharsets.UTF_8
         ).trim();
         return new SequenceInputStream(

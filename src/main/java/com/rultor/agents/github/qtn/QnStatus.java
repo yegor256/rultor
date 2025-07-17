@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -48,7 +49,7 @@ public final class QnStatus implements Question {
      * XSL to generate report.
      */
     private static final XSL REPORT = XSLDocument.make(
-        QnStatus.class.getResource("status.xsl")
+        Objects.requireNonNull(QnStatus.class.getResource("status.xsl"))
     );
 
     /**
