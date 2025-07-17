@@ -17,7 +17,6 @@ import com.rultor.spi.Talk;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -38,7 +37,7 @@ final class QnGithubIssueTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("test comment.");
         final Question origin = (comment, home) ->
-                (Req) () -> new Directives().add("type").set("xxx").up();
+            (Req) () -> new Directives().add("type").set("xxx").up();
         MatcherAssert.assertThat(
             "request should save issue data",
             new StrictXML(

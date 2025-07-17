@@ -15,7 +15,6 @@ import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 

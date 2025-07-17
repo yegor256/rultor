@@ -25,7 +25,6 @@ import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
 import org.hamcrest.MatcherAssert;
