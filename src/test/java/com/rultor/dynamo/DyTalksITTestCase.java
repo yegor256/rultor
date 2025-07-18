@@ -14,6 +14,7 @@ import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Description;
@@ -192,7 +193,7 @@ final class DyTalksITTestCase {
         Assumptions.assumingThat(key != null, () -> { });
         MatcherAssert.assertThat(
             "Key should be valid",
-            key.startsWith("AAAA"),
+            Objects.requireNonNull(key).startsWith("AAAA"),
             Matchers.is(true)
         );
         return new Region.Prefixed(

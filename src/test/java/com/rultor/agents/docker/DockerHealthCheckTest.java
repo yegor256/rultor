@@ -9,6 +9,7 @@ import com.rultor.spi.Talks;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,7 +32,7 @@ final class DockerHealthCheckTest {
         Mockito.verify(shell).exec(
             Mockito.eq(
                 IOUtils.toString(
-                    DockerHealthCheck.class.getResource("checkhost.sh"),
+                    Objects.requireNonNull(DockerHealthCheck.class.getResource("checkhost.sh")),
                     StandardCharsets.UTF_8
                 )
             ),

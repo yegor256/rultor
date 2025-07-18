@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.io.IOUtils;
 
@@ -117,7 +118,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
      */
     private String build() {
         return this.client.buildImageCmd(
-            new File(this.getClass().getResource("image").getPath())
+            new File(Objects.requireNonNull(this.getClass().getResource("image")).getPath())
         ).exec(new BuildImageResultCallback()).awaitImageId();
     }
 

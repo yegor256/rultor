@@ -9,6 +9,7 @@ import com.rultor.Env;
 import io.sentry.Sentry;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Objects;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.fallback.FbChain;
@@ -77,7 +78,7 @@ final class TkAppFallback extends TkWrap {
         return new RsWithStatus(
             new RsWithType(
                 new RsVelocity(
-                    TkAppFallback.class.getResource("error.html.vm"),
+                    Objects.requireNonNull(TkAppFallback.class.getResource("error.html.vm")),
                     new RsVelocity.Pair(
                         "err",
                         Logger.format("%[exception]s", req.throwable())

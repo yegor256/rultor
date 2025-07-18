@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
@@ -116,7 +117,7 @@ public final class StartsRequest extends AbstractAgent {
                 Collections.singleton(this.asRoot()),
                 Collections.singleton(
                     IOUtils.toString(
-                        this.getClass().getResource("_head.sh"),
+                        Objects.requireNonNull(this.getClass().getResource("_head.sh")),
                         StandardCharsets.UTF_8
                     )
                 ),
@@ -124,8 +125,8 @@ public final class StartsRequest extends AbstractAgent {
                 new Decrypt(this.profile).commands(),
                 Collections.singleton(
                     IOUtils.toString(
-                        this.getClass().getResource(
-                            String.format("%s.sh", type)
+                        Objects.requireNonNull(
+                            this.getClass().getResource(String.format("%s.sh", type))
                         ),
                         StandardCharsets.UTF_8
                     )
