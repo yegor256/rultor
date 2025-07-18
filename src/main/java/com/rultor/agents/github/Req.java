@@ -22,32 +22,17 @@ public interface Req {
     /**
      * Empty, nothing found.
      */
-    Req EMPTY = new Req() {
-        @Override
-        public Iterable<Directive> dirs() {
-            return Collections.emptyList();
-        }
-    };
+    Req EMPTY = Collections::emptyList;
 
     /**
      * Come back later to the same question.
      */
-    Req LATER = new Req() {
-        @Override
-        public Iterable<Directive> dirs() {
-            return Collections.emptyList();
-        }
-    };
+    Req LATER = Collections::emptyList;
 
     /**
      * Done, but nothing special.
      */
-    Req DONE = new Req() {
-        @Override
-        public Iterable<Directive> dirs() {
-            return Collections.emptyList();
-        }
-    };
+    Req DONE = Collections::emptyList;
 
     /**
      * Directives.

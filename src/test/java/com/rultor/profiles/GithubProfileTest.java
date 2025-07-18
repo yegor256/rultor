@@ -266,7 +266,7 @@ final class GithubProfileTest {
         final Profile profile = new GithubProfile(repo);
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> profile.assets()
+                profile::assets
         );
     }
 

@@ -48,7 +48,7 @@ public final class MkdirDaemon extends AbstractAgent {
             new NullInputStream(0L),
             baos, baos
         );
-        final String dir = baos.toString(StandardCharsets.UTF_8.name()).trim();
+        final String dir = baos.toString(StandardCharsets.UTF_8).trim();
         Logger.info(
             this, "directory %s created for %s",
             dir, xml.xpath("/talk/@name").get(0)

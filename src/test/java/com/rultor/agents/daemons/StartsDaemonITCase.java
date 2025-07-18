@@ -72,7 +72,7 @@ final class StartsDaemonITCase {
             );
             MatcherAssert.assertThat(
                 "Start script should be send to daemon",
-                baos.toString(StandardCharsets.UTF_8.name()),
+                baos.toString(StandardCharsets.UTF_8),
                 Matchers.allOf(
                     Matchers.containsString("+ set -o pipefail"),
                     Matchers.containsString("+ date"),

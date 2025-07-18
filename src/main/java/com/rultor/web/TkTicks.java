@@ -69,9 +69,7 @@ final class TkTicks implements Take {
      */
     private byte[] png() throws IOException {
         final TranscoderInput input = new TranscoderInput(
-            Document.class.cast(
-                TkTicks.PULSE.transform(this.dirs()).inner()
-            )
+            (Document) TkTicks.PULSE.transform(this.dirs()).inner()
         );
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final TranscoderOutput output = new TranscoderOutput(baos);

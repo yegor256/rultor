@@ -47,7 +47,7 @@ final class AnswerTest {
     @Test
     void preventsSpam() throws Exception {
         final Issue issue = AnswerTest.issue();
-        MkGithub.class.cast(issue.repo().github()).relogin("walter")
+        ((MkGithub) issue.repo().github()).relogin("walter")
             .repos().get(issue.repo().coordinates())
             .issues().get(1).comments().post("hello, how are you?");
         final Comment.Smart comment = new Comment.Smart(

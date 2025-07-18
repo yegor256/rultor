@@ -25,7 +25,6 @@ import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
 import org.hamcrest.MatcherAssert;
@@ -87,13 +86,7 @@ final class UnderstandsTest {
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hey you");
         final Agent agent = new Understands(
-            repo.github(),
-            new Question() {
-                @Override
-                public Req understand(final Comment.Smart cmt, final URI home) {
-                    return Req.LATER;
-                }
-            }
+            repo.github(), (cmt, home) -> Req.LATER
         );
         final Talk talk = UnderstandsTest.talk(issue);
         agent.execute(talk);

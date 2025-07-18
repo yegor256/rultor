@@ -4,7 +4,6 @@
  */
 package com.rultor.agents.req;
 
-import java.io.IOException;
 import org.cactoos.list.ListOf;
 import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
@@ -21,10 +20,9 @@ final class FakePGP {
      * Returns FakePGP string.
      *
      * @return String
-     * @throws IOException ex
      * @checkstyle NonStaticMethodCheck (35 lines)
      */
-    public String asString() throws IOException {
+    public String asString() {
         return new UncheckedText(
             new Joined(
                 "\n",

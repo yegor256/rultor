@@ -20,12 +20,7 @@ public interface Question {
     /**
      * Empty always.
      */
-    Question EMPTY = new Question() {
-        @Override
-        public Req understand(final Comment.Smart comment, final URI home) {
-            return Req.EMPTY;
-        }
-    };
+    Question EMPTY = (comment, home) -> Req.EMPTY;
 
     /**
      * Understand it and return the request.

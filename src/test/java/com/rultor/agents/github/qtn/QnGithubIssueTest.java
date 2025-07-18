@@ -17,7 +17,6 @@ import com.rultor.spi.Talk;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -37,17 +36,8 @@ final class QnGithubIssueTest {
         final Repo repo = new MkGithub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("test comment.");
-        final Question origin = new Question() {
-            @Override
-            public Req understand(final Comment.Smart comment, final URI home) {
-                return new Req() {
-                    @Override
-                    public Iterable<Directive> dirs() {
-                        return new Directives().add("type").set("xxx").up();
-                    }
-                };
-            }
-        };
+        final Question origin = (comment, home) ->
+            (Req) () -> new Directives().add("type").set("xxx").up();
         MatcherAssert.assertThat(
             "request should save issue data",
             new StrictXML(
