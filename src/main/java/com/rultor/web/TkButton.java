@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Objects;
-
 import org.takes.Response;
 import org.takes.facets.fork.RqRegex;
 import org.takes.facets.fork.TkRegex;
