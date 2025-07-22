@@ -126,7 +126,9 @@ final class TkDaemon implements TkRegex {
                     TkDaemon.escape(new Tail(talk.read(), hash).read()),
                     AutoCloseInputStream.builder()
                         .setInputStream(
-                            this.getClass().getResourceAsStream("daemon/tail.html")
+                            Objects.requireNonNull(
+                                this.getClass().getResourceAsStream("daemon/tail.html")
+                            )
                         ).get()
                 )
             )

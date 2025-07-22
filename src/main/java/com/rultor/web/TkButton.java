@@ -7,6 +7,8 @@ package com.rultor.web;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Objects;
+
 import org.takes.Response;
 import org.takes.facets.fork.RqRegex;
 import org.takes.facets.fork.TkRegex;
@@ -33,8 +35,10 @@ final class TkButton implements TkRegex {
         return new RsWithType(
             new RsWithHeaders(
                 new RsWithBody(
-                    this.getClass().getResource(
-                        String.format("button-%s.svg", suffix)
+                    Objects.requireNonNull(
+                        this.getClass().getResource(
+                            String.format("button-%s.svg", suffix)
+                        )
                     )
                 ),
                 "Cache-Control: no-cache"
