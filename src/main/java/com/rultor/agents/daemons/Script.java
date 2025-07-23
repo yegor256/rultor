@@ -11,6 +11,7 @@ import com.jcabi.ssh.Ssh;
 import com.jcabi.xml.XML;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -55,7 +56,9 @@ final class Script {
             ),
             AutoCloseInputStream.builder()
                 .setInputStream(
-                    this.getClass().getResourceAsStream(this.name)
+                    Objects.requireNonNull(
+                        this.getClass().getResourceAsStream(this.name)
+                    )
                 ).get(),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
