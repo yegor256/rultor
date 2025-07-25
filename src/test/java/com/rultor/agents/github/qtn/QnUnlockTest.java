@@ -41,7 +41,7 @@ final class QnUnlockTest {
             "Message about missing lock file should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString(
-                "File `.rultor.lock` doesn't exist in `master` branch"
+                "File `.rultor.lock` doesn't exist in the `master` branch"
             )
         );
     }

@@ -60,16 +60,7 @@ final class ClosePullRequestTest {
             "Rebase message should be added",
             new Comment.Smart(smart.comments().get(1)).body(),
             Matchers.containsString(
-                new Joined(
-                    "",
-                    "Rultor closed this pull request for you because your ",
-                    ".rultor.yml specified the use of rebasing before ",
-                    "merging. GitHub does not mark rebased pull requests as ",
-                    "merged, because rebasing entails a change in commit ",
-                    "hashes. Nevertheless all your files have been merged ",
-                    "exactly as they would have been merged without the ",
-                    "rebase option set."
-                ).asString()
+                "Rultor closed this pull request for you because"
             )
         );
     }

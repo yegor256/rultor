@@ -1,4 +1,4 @@
-# DevOps Assistant in Github
+# DevOps Assistant in GitHub
 
 ![logo](https://doc.rultor.com/images/logo.svg)
 
@@ -23,7 +23,7 @@ Just say `@rultor hello` in any of your GitHub issues and
 
 Full documentation is at [doc.rultor.com](https://doc.rultor.com)
 
-[Schema](rultor_schema.json) for .rultor.yml file
+[Schema](rultor_schema.json) for .rultor.yml file.
 
 Need help online? Try our [Telegram group](https://t.me/zerocracy).
 
@@ -84,7 +84,7 @@ YAML configuration file from the root directory of your repository.
 1. Gets automated build execution command from it, for example `bundle test`.
 1. Checks out your repository into a temporary directory on one of its servers.
 1. Merges pull request into `master` branch.
-1. Starts a new Docker container and runs the build execution command in it,
+1. Starts a new Docker container and runs the build execution command,
 for example `bundle test`.
 1. If everything is fine, pushes modified `master` branch to GitHub.
 1. Reports back to you, in the GitHub pull request.
