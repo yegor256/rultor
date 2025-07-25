@@ -12,7 +12,6 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Objects;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
