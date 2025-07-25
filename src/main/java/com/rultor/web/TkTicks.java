@@ -95,14 +95,12 @@ final class TkTicks implements Take {
     private XML dirs() {
         final long now = System.currentTimeMillis();
         final Directives dirs = new Directives().add("pulse");
-        final Iterator<Tick> iterator = this.pulse.ticks().iterator();
-        while (iterator.hasNext()) {
-            final Tick tick = iterator.next();
+        for (Tick tick : this.pulse.ticks()) {
             dirs.add("tick")
-                .attr("total", Integer.toString(tick.total()))
-                .attr("start", Long.toString(tick.start() - now))
-                .attr("msec", Long.toString(tick.duration()))
-                .up();
+                    .attr("total", Integer.toString(tick.total()))
+                    .attr("start", Long.toString(tick.start() - now))
+                    .attr("msec", Long.toString(tick.duration()))
+                    .up();
         }
         return new XMLDocument(new Xembler(dirs).xmlQuietly());
     }

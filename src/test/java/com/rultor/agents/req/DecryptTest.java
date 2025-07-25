@@ -70,12 +70,17 @@ final class DecryptTest {
             ),
             secring.getBytes(StandardCharsets.UTF_8)
         );
-        new VerboseProcess(
-            new ProcessBuilder().command(
-                "/bin/bash", "-c", script
-            ).directory(dir).redirectErrorStream(true),
-            Level.WARNING, Level.WARNING
-        ).stdout();
+        try (
+            final VerboseProcess proc = new VerboseProcess(
+                new ProcessBuilder()
+                    .command("/bin/bash", "-c", script)
+                    .directory(dir)
+                    .redirectErrorStream(true),
+                Level.WARNING, Level.WARNING
+            )
+        ) {
+            proc.stdout();
+        }
         MatcherAssert.assertThat(
             "File should be decrypted",
             FileUtils.readFileToString(

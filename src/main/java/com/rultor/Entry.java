@@ -168,7 +168,7 @@ public final class Entry {
                 System.getProperty("failsafe.ddl.port")
             );
             creds = new Credentials.Direct(
-                Credentials.Simple.class.cast(creds), port
+                (Credentials.Simple) creds, port
             );
             Logger.warn(this, "test DynamoDB at port #%d", port);
         }
