@@ -16,7 +16,7 @@ docker --version
 mkdir -p ~/.ssh
 echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 chmod 600 ~/.ssh/config
-git clone "${head}" repo
+git clone --recurse-submodules "${head}" repo
 cd repo
 git config user.email "gpg@rultor.com"
 git config user.name "Rultor.com"
