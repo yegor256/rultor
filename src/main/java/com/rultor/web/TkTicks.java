@@ -12,7 +12,6 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Tick;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Objects;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -95,9 +94,7 @@ final class TkTicks implements Take {
     private XML dirs() {
         final long now = System.currentTimeMillis();
         final Directives dirs = new Directives().add("pulse");
-        final Iterator<Tick> iterator = this.pulse.ticks().iterator();
-        while (iterator.hasNext()) {
-            final Tick tick = iterator.next();
+        for (final Tick tick : this.pulse.ticks()) {
             dirs.add("tick")
                 .attr("total", Integer.toString(tick.total()))
                 .attr("start", Long.toString(tick.start() - now))
