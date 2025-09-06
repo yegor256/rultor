@@ -5,6 +5,7 @@
 package com.rultor.web;
 
 import com.jcabi.xml.XML;
+import com.rultor.agents.github.qtn.DefaultBranch;
 import com.rultor.profiles.Profiles;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
@@ -66,7 +67,7 @@ final class RqUser extends RqWrap {
         final XML xml;
         try {
             xml = new Profiles().fetch(talk).read();
-        } catch (final Profile.ConfigException ex) {
+        } catch (final Profile.ConfigException | DefaultBranch.RepoNotFoundException ex) {
             throw new RsForward(new RsFlash(ex), "/");
         }
         final boolean granted;
