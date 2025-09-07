@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
@@ -42,7 +42,7 @@ fi
 
 cd ..
 cat <<EOT > entry.sh
-#!/bin/bash
+#!/usr/bin/env bash
 set -x
 set -e
 set -o pipefail
@@ -76,7 +76,7 @@ EOT
 fi
 chmod a+x entry.sh
 cat <<EOT > script.sh
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 set -o pipefail
 if [ -e /home/r/.profile ]; then source /home/r/.profile; fi

@@ -123,7 +123,7 @@ public final class StartsDaemon implements Agent {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final String script = String.join(
             "\n",
-            "#!/bin/bash",
+            "#!/usr/bin/env bash",
             "set -ex -o pipefail",
             "cd \"$(dirname \"$0\")\"",
             "echo \"$$\" > pid",
