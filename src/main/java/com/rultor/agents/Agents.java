@@ -7,7 +7,7 @@ package com.rultor.agents;
 import co.stateful.Locks;
 import co.stateful.Sttc;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.immutable.Array;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
@@ -120,9 +120,9 @@ public final class Agents {
     private static final String LOGIN = "rultor";
 
     /**
-     * Github client.
+     * GitHub client.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Sttc client.
@@ -131,10 +131,10 @@ public final class Agents {
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      * @param stc Sttc client
      */
-    public Agents(final Github ghub, final Sttc stc) {
+    public Agents(final GitHub ghub, final Sttc stc) {
         this.github = ghub;
         this.sttc = stc;
     }

@@ -63,7 +63,7 @@
         "image": {
           "description": "Docker url for the image, default value is yegor256/rultor-image.",
           "examples": [
-            "yegor256/rultor-image:1.24.0
+            "yegor256/rultor-image:1.24.0"
           ],
           "type": "string"
         }
@@ -153,7 +153,7 @@
       "type": "object"
     },
     "readers": {
-      "description": "Github user allowed to read logs (should be defined for private repos).",
+      "description": "GitHub user allowed to read logs (should be defined for private repos).",
       "examples": [
         "urn:github:8086956"
       ],

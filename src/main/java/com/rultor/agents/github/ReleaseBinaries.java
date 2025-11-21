@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
@@ -28,11 +28,11 @@ import org.xembly.Directives;
 public final class ReleaseBinaries extends AbstractAgent {
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      * @param prof Profile
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
-    public ReleaseBinaries(final Github ghub, final Profile prof) {
+    public ReleaseBinaries(final GitHub ghub, final Profile prof) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"

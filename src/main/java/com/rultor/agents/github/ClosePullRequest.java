@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
@@ -39,16 +39,16 @@ public final class ClosePullRequest extends AbstractAgent {
     private final transient Profile.Defaults profile;
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Constructor.
      * @param prof Profile
-     * @param ghub Github
+     * @param ghub GitHub
      */
-    public ClosePullRequest(final Profile prof, final Github ghub) {
+    public ClosePullRequest(final Profile prof, final GitHub ghub) {
         super("/talk/wire[github-repo and github-issue]");
         this.profile = new Profile.Defaults(prof);
         this.github = ghub;

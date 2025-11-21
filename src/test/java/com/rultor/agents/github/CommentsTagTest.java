@@ -8,7 +8,7 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
@@ -32,7 +32,7 @@ final class CommentsTagTest {
      */
     @Test
     void createsRelease() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(
             repo.github()
@@ -53,7 +53,7 @@ final class CommentsTagTest {
      */
     @Test
     void duplicatesRelease() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v5.0";
@@ -73,7 +73,7 @@ final class CommentsTagTest {
      */
     @Test
     void createsReleaseMessage() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v1.5";
@@ -101,7 +101,7 @@ final class CommentsTagTest {
      */
     @Test
     void createsReleaseTitleFromIssue() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("Issue title", "");
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v1.6";
@@ -121,7 +121,7 @@ final class CommentsTagTest {
      */
     @Test
     void createsReleaseTitleFromTalk() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("Title from issue", "");
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v1.7";
@@ -149,7 +149,7 @@ final class CommentsTagTest {
      */
     @Test
     void createsLatestRelease() throws IOException {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues()
             .create(
                 "Latest Release",
@@ -190,7 +190,7 @@ final class CommentsTagTest {
      */
     @Test
     void createsLatestReleaseFromTalk() throws IOException {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues()
             .create(
                 "Latest Release",
@@ -225,7 +225,7 @@ final class CommentsTagTest {
      */
     @Test
     void createsPreReleaseByDefault() throws IOException {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues()
             .create(
                 "Pre Release",

@@ -5,7 +5,7 @@
 package com.rultor;
 
 import co.stateful.RtSttc;
-import com.jcabi.github.RtGithub;
+import com.jcabi.github.RtGitHub;
 import com.jcabi.urn.URN;
 import com.yegor256.WeAreOnline;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +41,7 @@ final class EntryTest {
     }
 
     /**
-     * RtGithub can work in production mode.
+     * RtGitHub can work in production mode.
      *
      * <p>This test is actually checking not how RtGithug works, but
      * whether it can work in current environment, with full list
@@ -52,7 +52,7 @@ final class EntryTest {
     void githubConnects() {
         Assertions.assertThrows(
             AssertionError.class,
-            () -> new RtGithub("intentionally-invalid-token")
+            () -> new RtGitHub("intentionally-invalid-token")
                 .users().self().login()
         );
     }

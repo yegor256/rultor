@@ -8,7 +8,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Check;
 import com.jcabi.github.Pull;
 import java.io.IOException;
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

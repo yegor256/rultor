@@ -6,7 +6,7 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -47,7 +47,7 @@ final class QnSafeTest {
     @Test
     void understandsWithThrowable()
         throws URISyntaxException, IOException {
-        final Issue issue = new MkGithub().randomRepo()
+        final Issue issue = new MkGitHub().randomRepo()
             .issues()
             .create("", "");
         final Comment post = issue.comments().post("Hello, world!");

@@ -6,9 +6,9 @@ package com.rultor.profiles;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Repo;
-import com.jcabi.github.RtGithub;
+import com.jcabi.github.RtGitHub;
 import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.xml.XML;
 import com.rultor.Env;
@@ -167,12 +167,12 @@ public final class Profiles {
 
     /**
      * Make github.
-     * @return Github
+     * @return GitHub
      */
     @Cacheable(forever = true)
-    private static Github github() {
-        return new RtGithub(
-            new RtGithub(
+    private static GitHub github() {
+        return new RtGitHub(
+            new RtGitHub(
                 Env.read("Rultor-GithubToken")
             ).entry().through(
                 RetryCarefulWire.class,

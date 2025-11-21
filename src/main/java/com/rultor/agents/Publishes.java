@@ -6,7 +6,7 @@ package com.rultor.agents;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
@@ -32,16 +32,16 @@ public final class Publishes extends AbstractAgent {
     private final transient Profile profile;
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Ctor.
      * @param prf Profile
      * @param ghub GitHub
      */
-    public Publishes(final Profile prf, final Github ghub) {
+    public Publishes(final Profile prf, final GitHub ghub) {
         super(
             "/talk[@public!='false']",
             "/talk/archive/log"

@@ -4,7 +4,7 @@
  */
 
 /**
- * Github, tests.
+ * GitHub, tests.
  *
  * @since 1.0
  */

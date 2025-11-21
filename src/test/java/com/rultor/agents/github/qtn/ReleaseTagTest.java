@@ -5,7 +5,7 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ final class ReleaseTagTest {
      */
     @Test
     void validatesReleaseVersion() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         repo.releases().create("1.74");
         MatcherAssert.assertThat(
             "Greater tag should be allowed",
@@ -54,7 +54,7 @@ final class ReleaseTagTest {
      */
     @Test
     void getsReferenceVersion() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final String latest = "2.2.1";
         repo.releases().create("1.0");
         repo.releases().create(latest);

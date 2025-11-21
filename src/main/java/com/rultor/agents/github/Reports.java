@@ -6,7 +6,7 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.safe.SfComment;
 import com.jcabi.log.Logger;
@@ -23,7 +23,7 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Posts merge results to Github pull request.
+ * Posts merge results to GitHub pull request.
  *
  * @since 1.0
  */
@@ -39,15 +39,15 @@ public final class Reports extends AbstractAgent {
         ResourceBundle.getBundle("phrases");
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      */
-    public Reports(final Github ghub) {
+    public Reports(final GitHub ghub) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and success]"

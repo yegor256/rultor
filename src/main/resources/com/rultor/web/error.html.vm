@@ -65,7 +65,7 @@
                 thrown by
                 <a href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>.
                 If you want to help us, please post this text as a new issue to
-                <a href="https://github.com/rultor/rultor/issues/new">Github</a>.
+                <a href="https://github.com/rultor/rultor/issues/new">GitHub</a>.
             </p>
             <pre>${err}</pre>
         </article>

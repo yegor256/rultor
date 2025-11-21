@@ -7,7 +7,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Req;
 import java.net.URI;
@@ -97,7 +97,7 @@ final class QnReferredToTest {
      */
     @Test
     void answerWhenMentioned() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final String login = "xx";
         issue.comments().post(String.format("hello @%s deploy", login));
@@ -127,13 +127,13 @@ final class QnReferredToTest {
      * Return the Req for a comment.
      *
      * @param comment String comment to read
-     * @param login String Rultor Github user login
+     * @param login String Rultor GitHub user login
      * @return Req
      * @throws Exception In case of error.
      */
     private Req reqFromComment(final String comment, final String login)
         throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post(comment);
         return new QnReferredTo(login, new QnDeploy()).understand(
@@ -149,7 +149,7 @@ final class QnReferredToTest {
      * @throws Exception In case of error.
      */
     private String xemblerXml(final String comment) throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post(comment);
         return new Xembler(

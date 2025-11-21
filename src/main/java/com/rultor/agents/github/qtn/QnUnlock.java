@@ -17,7 +17,7 @@ import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
-import javax.json.Json;
+import jakarta.json.Json;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directives;

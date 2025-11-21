@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
@@ -19,15 +19,15 @@ import org.xembly.Directives;
  */
 public final class Stars extends AbstractAgent {
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      */
-    public Stars(final Github ghub) {
+    public Stars(final GitHub ghub) {
         super("/talk/wire[github-repo]");
         this.github = ghub;
     }

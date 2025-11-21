@@ -14,9 +14,9 @@ import com.jcabi.aspects.LogExceptions;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
-import com.jcabi.github.Github;
-import com.jcabi.github.RtGithub;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.GitHub;
+import com.jcabi.github.RtGitHub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.github.wire.RetryCarefulWire;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
@@ -101,19 +101,19 @@ public final class Entry {
 
     /**
      * Make github.
-     * @return Github
+     * @return GitHub
      * @throws IOException If fails
      */
     @Cacheable(forever = true)
-    private Github github() throws IOException {
+    private GitHub github() throws IOException {
         Logger.info(this, "Connecting GitHub...");
         final String token = Env.read("Rultor-GithubToken");
-        final Github github;
+        final GitHub github;
         if (token.startsWith("${")) {
-            github = new MkGithub();
+            github = new MkGitHub();
         } else {
-            github = new RtGithub(
-                new RtGithub(token).entry().through(
+            github = new RtGitHub(
+                new RtGitHub(token).entry().through(
                     RetryCarefulWire.class,
                     100
                 )

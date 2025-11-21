@@ -7,7 +7,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Req;
 import java.net.URI;
@@ -31,7 +31,7 @@ final class QnReleaseTest {
      */
     @Test
     void buildsRequest() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("release");
         MatcherAssert.assertThat(
@@ -59,7 +59,7 @@ final class QnReleaseTest {
      */
     @Test
     void allowsNewerTag() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         repo.releases().create("1.5");
         issue.comments().post("release, title `1.7`");
@@ -87,7 +87,7 @@ final class QnReleaseTest {
      */
     @Test
     void denyOutdatedTag() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         repo.releases().create("1.7");
         issue.comments().post("release `1.6`");
@@ -111,7 +111,7 @@ final class QnReleaseTest {
      */
     @Test
     void allowsToSetReleaseTitle() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("release `1.8`, title `Version 1.8.0`");
         MatcherAssert.assertThat(

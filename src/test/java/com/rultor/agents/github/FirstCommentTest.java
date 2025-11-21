@@ -6,7 +6,7 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -23,8 +23,8 @@ final class FirstCommentTest {
      * @throws Exception In case of error.
      */
     @Test
-    void parsesGithubIssue() throws Exception {
-        final Issue issue = new MkGithub().randomRepo().issues().create("", "");
+    void parsesGitHubIssue() throws Exception {
+        final Issue issue = new MkGitHub().randomRepo().issues().create("", "");
         final Comment.Smart cmt = new Comment.Smart(
             new FirstComment(new Issue.Smart(issue))
         );

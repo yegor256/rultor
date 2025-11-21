@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talk;
 import java.io.IOException;
@@ -26,7 +26,7 @@ final class DephantomizesTest {
      */
     @Test
     void removesRequestAndWire() throws IOException {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         final Talk talk = DephantomizesTest.talk(repo, 0);
         new Dephantomizes(github).execute(talk);
@@ -43,7 +43,7 @@ final class DephantomizesTest {
      */
     @Test
     void doesNotTouchRequestAndWire() throws IOException {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         repo.issues().create("title", "desc");
         final Talk talk = DephantomizesTest.talk(repo, 1);

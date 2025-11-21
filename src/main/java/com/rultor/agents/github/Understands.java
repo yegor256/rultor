@@ -7,7 +7,7 @@ package com.rultor.agents.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Bulk;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
 import com.jcabi.log.Logger;
@@ -50,9 +50,9 @@ public final class Understands extends AbstractAgent {
         ResourceBundle.getBundle("phrases");
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Question.
@@ -61,10 +61,10 @@ public final class Understands extends AbstractAgent {
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      * @param qtn Question
      */
-    public Understands(final Github ghub, final Question qtn) {
+    public Understands(final GitHub ghub, final Question qtn) {
         super(
             "/talk[@later='true']",
             "/talk/wire[github-repo and github-issue]"

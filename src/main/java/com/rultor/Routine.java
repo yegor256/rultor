@@ -7,7 +7,7 @@ package com.rultor;
 import co.stateful.Sttc;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Timeable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.log.Logger;
 import com.rultor.agents.Agents;
 import com.rultor.agents.github.qtn.DefaultBranch;
@@ -83,12 +83,12 @@ final class Routine implements Runnable, Closeable {
      * Ctor.
      * @param tlks Talks
      * @param pls Pulse
-     * @param github Github client
+     * @param github GitHub client
      * @param sttc Sttc client
      * @checkstyle ParameterNumberCheck (4 lines)
      */
     Routine(@NotNull final Talks tlks, final Pulse pls,
-        final Github github, final Sttc sttc) {
+        final GitHub github, final Sttc sttc) {
         this.talks = tlks;
         this.pulse = pls;
         this.agents = new Agents(github, sttc);

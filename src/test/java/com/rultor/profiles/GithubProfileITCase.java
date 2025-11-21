@@ -5,7 +5,7 @@
 package com.rultor.profiles;
 
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.RtGithub;
+import com.jcabi.github.RtGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import com.yegor256.WeAreOnline;
@@ -33,7 +33,7 @@ final class GithubProfileITCase {
     @Disabled
     void fetchesYamlConfig() throws Exception {
         final Profile profile = new GithubProfile(
-            new RtGithub().repos().get(
+            new RtGitHub().repos().get(
                 new Coordinates.Simple("yegor256/rultor")
             )
         );

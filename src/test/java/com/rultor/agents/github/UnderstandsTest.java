@@ -13,7 +13,7 @@ import com.jcabi.github.Pull;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkChecks;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnFirstOf;
@@ -46,7 +46,7 @@ final class UnderstandsTest {
      */
     @Test
     void understandsMessage() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hello");
         issue.comments().post("@jeff deploy");
@@ -82,7 +82,7 @@ final class UnderstandsTest {
      */
     @Test
     void ignoresLaterReq() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("@jeff hey you");
         final Agent agent = new Understands(
@@ -103,7 +103,7 @@ final class UnderstandsTest {
      */
     @Test
     void understandsIssueBody() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("test", "@test hello");
         final Agent agent = new Understands(
             repo.github(),
@@ -126,7 +126,7 @@ final class UnderstandsTest {
      */
     @Test
     void understandsMergeMessageWithFailedCheck() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final MkBranches branches = (MkBranches) repo.branches();
         branches.create("head", "abcdef4");
         branches.create("base", "abcdef5");

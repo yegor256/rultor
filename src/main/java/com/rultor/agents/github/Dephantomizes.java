@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -17,7 +17,7 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Removes request, if Github issue is gone.
+ * Removes request, if GitHub issue is gone.
  *
  * @since 1.59.7
  */
@@ -27,15 +27,15 @@ import org.xembly.Directives;
 public final class Dephantomizes extends AbstractAgent {
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      */
-    public Dephantomizes(final Github ghub) {
+    public Dephantomizes(final GitHub ghub) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id]"

@@ -6,7 +6,7 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
@@ -28,7 +28,7 @@ final class StartsTalksTest {
     @Test
     @Disabled
     void startsTalks() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, do it");
         final SuperAgent agent = new StartsTalks(repo.github());

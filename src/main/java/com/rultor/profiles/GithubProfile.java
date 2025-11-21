@@ -37,11 +37,11 @@ import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
 
 /**
- * Github Profile.
+ * GitHub Profile.
  *
  * <p>An instance of this class is created by {@link Profiles}, when
  * it is obvious that the configuration of the repository is stored
- * in Github.
+ * in GitHub.
  *
  * @since 1.0
  * @checkstyle AvoidInstantiatingObjectsInLoops
@@ -315,7 +315,7 @@ final class GithubProfile implements Profile {
      * @return Validation result message, empty list means validation succeeded.
      * @todo #570:30min Implement validation using Kwalify library in separate
      *  class called ValidYaml, move this method to that class and move tests
-     *  from GitHubProfileValidationTest to ValidYamlTest. Remember about
+     *  from GithubProfileValidationTest to ValidYamlTest. Remember about
      *  removing PMD suppress below.
      * @checkstyle NonStaticMethodCheck (5 lines)
      */

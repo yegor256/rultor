@@ -6,7 +6,7 @@ package com.rultor.agents.github;
 
 import co.stateful.Locks;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -43,16 +43,16 @@ public final class UnlocksRepo implements SuperAgent {
     private final transient Locks locks;
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Ctor.
      * @param lcks Locks
-     * @param ghub Github client
+     * @param ghub GitHub client
      */
-    public UnlocksRepo(final Locks lcks, final Github ghub) {
+    public UnlocksRepo(final Locks lcks, final GitHub ghub) {
         this.locks = lcks;
         this.github = ghub;
     }

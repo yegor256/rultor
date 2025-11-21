@@ -6,7 +6,7 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.log.Logger;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Agent;
@@ -47,7 +47,7 @@ final class ReportsTest {
      */
     @Test
     void reportsRequestResult() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Talk talk = ReportsTest.example(
             repo, repo.issues().create("", "")
         );
@@ -68,7 +68,7 @@ final class ReportsTest {
     void reportsRequestResultWhenStopFails() throws Exception {
         final String user = "john";
         final String stop = "stop it please";
-        final Repo repo = new MkGithub(user).randomRepo();
+        final Repo repo = new MkGitHub(user).randomRepo();
         final Talk talk = ReportsTest.example(
             repo, repo.issues().create("Bug", stop)
         );

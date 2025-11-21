@@ -7,7 +7,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
@@ -31,7 +31,7 @@ final class QnAskedByTest {
      */
     @Test
     void excludesRultorFromListOfCommanders() throws Exception {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         repo.collaborators().add("testuser1");
         final Issue issue = repo.issues().create("title", "body");
@@ -62,7 +62,7 @@ final class QnAskedByTest {
      */
     @Test
     void includesArchitectsInListOfCommanders() throws Exception {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         repo.collaborators().add("testuser2");
         final Issue issue = repo.issues().create("needs", "deployment");

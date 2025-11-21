@@ -7,7 +7,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -30,7 +30,7 @@ final class QnWithAuthorTest {
      */
     @Test
     void addsAuthor() throws Exception {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("title", "body");
         issue.comments().post("comment");
@@ -60,7 +60,7 @@ final class QnWithAuthorTest {
      */
     @Test
     void doesNotAddAuthorToEmptyReq() throws Exception {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("the title", "the body");
         issue.comments().post("the comment");

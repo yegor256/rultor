@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Github crew.
+ * GitHub crew.
  *
  * @since 1.40.7
  */
@@ -24,13 +24,13 @@ import lombok.ToString;
 final class Crew {
 
     /**
-     * Github.
+     * GitHub.
      */
     private final transient Repo repo;
 
     /**
      * Ctor.
-     * @param rpo Github repo
+     * @param rpo GitHub repo
      */
     Crew(final Repo rpo) {
         this.repo = rpo;

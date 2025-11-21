@@ -6,7 +6,7 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.RtPagination;
 import com.jcabi.http.Request;
@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.LinkedList;
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directives;
 
 /**
- * Starts talk when I'm mentioned in a Github issue.
+ * Starts talk when I'm mentioned in a GitHub issue.
  *
  * @since 1.0
  * @todo #1074:1h Current implementation can answer only for
@@ -42,15 +42,15 @@ import org.xembly.Directives;
 public final class StartsTalks implements SuperAgent {
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      */
-    public StartsTalks(final Github ghub) {
+    public StartsTalks(final GitHub ghub) {
         this.github = ghub;
     }
 

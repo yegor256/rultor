@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import org.hamcrest.MatcherAssert;
@@ -25,7 +25,7 @@ final class StarsTest {
      */
     @Test
     void starsNewRepo() throws IOException {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         final Talk talk = this.talk(repo);
         new Stars(github).execute(talk);
@@ -42,7 +42,7 @@ final class StarsTest {
      */
     @Test
     void leavesStarredRepo() throws IOException {
-        final MkGithub github = new MkGithub();
+        final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
         final Talk talk = this.talk(repo);
         repo.stars().star();

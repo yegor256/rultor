@@ -7,7 +7,7 @@ package com.rultor.agents.twitter;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.Repos;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.UUID;
@@ -31,7 +31,7 @@ final class TweetsTest {
      */
     @Test
     void postsTweet() throws Exception {
-        final Repo repo = new MkGithub().repos().create(
+        final Repo repo = new MkGitHub().repos().create(
             new Repos.RepoCreate(
                 UUID.randomUUID().toString().replace("-", ""), false
             )
@@ -50,7 +50,7 @@ final class TweetsTest {
      */
     @Test
     void postsTweetWithLanguages() throws Exception {
-        final Repo repo = new MkGithub().repos().create(
+        final Repo repo = new MkGitHub().repos().create(
             new Repos.RepoCreate(
                 UUID.randomUUID().toString().replace("-", ""), false
             )

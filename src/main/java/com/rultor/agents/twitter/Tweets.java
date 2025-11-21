@@ -5,7 +5,7 @@
 package com.rultor.agents.twitter;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Language;
 import com.jcabi.github.Repo;
@@ -30,9 +30,9 @@ import org.xembly.Directives;
 public final class Tweets extends AbstractAgent {
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Twitter.
@@ -41,10 +41,10 @@ public final class Tweets extends AbstractAgent {
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      * @param twt Twitter client
      */
-    public Tweets(final Github ghub, final Twitter twt) {
+    public Tweets(final GitHub ghub, final Twitter twt) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"

@@ -6,7 +6,7 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
@@ -24,9 +24,9 @@ import lombok.ToString;
 public final class TalkIssues {
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * XML.
@@ -35,10 +35,10 @@ public final class TalkIssues {
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      * @param talk Talk XML
      */
-    public TalkIssues(final Github ghub, final XML talk) {
+    public TalkIssues(final GitHub ghub, final XML talk) {
         this.github = ghub;
         this.xml = talk;
     }

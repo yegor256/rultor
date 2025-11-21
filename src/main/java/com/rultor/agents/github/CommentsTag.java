@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Release;
 import com.jcabi.github.Releases;
@@ -29,7 +29,7 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Comments a new tag in Github.
+ * Comments a new tag in GitHub.
  *
  * @since 1.31
  */
@@ -46,9 +46,9 @@ public final class CommentsTag extends AbstractAgent {
         ResourceBundle.getBundle("phrases");
 
     /**
-     * Github.
+     * GitHub.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Profile.
@@ -57,19 +57,19 @@ public final class CommentsTag extends AbstractAgent {
 
     /**
      * Ctor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      */
-    public CommentsTag(final Github ghub) {
+    public CommentsTag(final GitHub ghub) {
         this(ghub, Profile.EMPTY);
     }
 
     /**
      * Constructor.
-     * @param ghub Github client
+     * @param ghub GitHub client
      * @param config Profile
      */
     public CommentsTag(
-        final Github ghub,
+        final GitHub ghub,
         final Profile config
     ) {
         super(

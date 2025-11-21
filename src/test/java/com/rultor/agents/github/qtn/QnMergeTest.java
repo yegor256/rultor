@@ -11,7 +11,7 @@ import com.jcabi.github.Pull;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkChecks;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
 import java.net.URI;
@@ -19,8 +19,8 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.json.Json;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +64,7 @@ final class QnMergeTest {
      */
     @BeforeEach
     void setUp() throws IOException {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final MkBranches branches = (MkBranches) repo.branches();
         final String head = "head";
         final String base = "base";

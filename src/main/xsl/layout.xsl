@@ -33,7 +33,7 @@
     <html lang="en">
       <head>
         <meta charset="UTF-8"/>
-        <meta name="description" content="DevOps team assistant that helps to automate merge, deploy and release operations, mostly for Github projects"/>
+        <meta name="description" content="DevOps team assistant that helps to automate merge, deploy and release operations, mostly for GitHub projects"/>
         <meta name="keywords" content="continuous integration, continuous delivery, DevOps"/>
         <meta name="author" content="rultor.com"/>
         <meta property="twitter:account_id" content="4503599630178231"/>
@@ -65,7 +65,7 @@
           <nav role="navigation" class="menu">
             <xsl:if test="not(identity)">
               <span>
-                <a href="{links/link[@rel='takes:github']/@href}" title="login via Github">
+                <a href="{links/link[@rel='takes:github']/@href}" title="login via GitHub">
                   <xsl:text>login</xsl:text>
                 </a>
               </span>
@@ -112,7 +112,7 @@
     </span>
     <xsl:if test="revision != 'BUILD'">
       <span>
-        <a href="https://github.com/yegor256/rultor/commit/{revision}" title="Github revision deployed is {revision}">
+        <a href="https://github.com/yegor256/rultor/commit/{revision}" title="GitHub revision deployed is {revision}">
           <xsl:value-of select="substring(revision,1,3)"/>
         </a>
       </span>
@@ -184,7 +184,7 @@
     </div>
   </xsl:template>
   <xsl:template match="identity">
-    <span title="Github account logged in: {urn}">
+    <span title="GitHub account logged in: {urn}">
       <xsl:value-of select="login"/>
     </span>
     <span>

@@ -5,15 +5,15 @@
 package com.rultor.profiles;
 
 import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Repo;
 import com.jcabi.github.Repos;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Base64;
-import javax.json.Json;
+import jakarta.json.Json;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -165,7 +165,7 @@ final class GithubProfileTest {
      */
     @Test
     void acceptsAssetsFromDotRepo() throws Exception {
-        final Github github = new MkGithub("jeff");
+        final GitHub github = new MkGitHub("jeff");
         final String name = "te.st";
         final Repo repo = github.repos().create(
             new Repos.RepoCreate(name, false)
@@ -277,7 +277,7 @@ final class GithubProfileTest {
      * @throws IOException If fails
      */
     private static Repo repo(final String yaml) throws IOException {
-        final Github github = new MkGithub("jeff");
+        final GitHub github = new MkGitHub("jeff");
         github.repos()
             .create(new Repos.RepoCreate("test1", false))
             .contents()

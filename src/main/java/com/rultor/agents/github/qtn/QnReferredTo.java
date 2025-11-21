@@ -29,7 +29,7 @@ import lombok.ToString;
 public final class QnReferredTo implements Question {
 
     /**
-     * Regex that matches the @ and Rultor user login in Github comments.
+     * Regex that matches the @ and Rultor user login in GitHub comments.
      * Matches the login when at the beginning of the comment string or when
      * preceded by a space or comma.
      * Login has to be bound by a word boundary to the right.

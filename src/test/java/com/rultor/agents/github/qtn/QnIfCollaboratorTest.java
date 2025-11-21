@@ -7,7 +7,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
@@ -28,7 +28,7 @@ final class QnIfCollaboratorTest {
      */
     @Test
     void blocksRequest() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         repo.collaborators().add("friend");
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("deploy");

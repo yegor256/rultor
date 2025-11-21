@@ -7,7 +7,7 @@ package com.rultor.agents.github;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import java.io.IOException;
 import java.util.Date;
 import org.cactoos.list.ListOf;
@@ -27,7 +27,7 @@ final class AnswerTest {
      * @throws Exception In case of error.
      */
     @Test
-    void postsGithubComment() throws Exception {
+    void postsGitHubComment() throws Exception {
         final Issue issue = AnswerTest.issue();
         issue.comments().post("hey, do it");
         new Answer(new Comment.Smart(issue.comments().get(1))).post(
@@ -47,7 +47,7 @@ final class AnswerTest {
     @Test
     void preventsSpam() throws Exception {
         final Issue issue = AnswerTest.issue();
-        ((MkGithub) issue.repo().github()).relogin("walter")
+        ((MkGitHub) issue.repo().github()).relogin("walter")
             .repos().get(issue.repo().coordinates())
             .issues().get(1).comments().post("hello, how are you?");
         final Comment.Smart comment = new Comment.Smart(
@@ -70,7 +70,7 @@ final class AnswerTest {
      * @throws IOException If fails
      */
     private static Issue issue() throws IOException {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         return repo.issues().create("", "");
     }
 

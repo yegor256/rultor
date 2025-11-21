@@ -4,16 +4,16 @@
  */
 package com.rultor.profiles;
 
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Repo;
 import com.jcabi.github.Repos;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.Map;
-import javax.json.Json;
+import jakarta.json.Json;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -299,7 +299,7 @@ final class GithubProfileValidationTest {
      * @throws IOException In case of error.
      */
     private static Repo repo(final String yaml) throws IOException {
-        final Github github = new MkGithub("jeff");
+        final GitHub github = new MkGitHub("jeff");
         final Repo repo = github.repos().create(
             new Repos.RepoCreate("test", false)
         );

@@ -4,11 +4,11 @@ title: ".rultor.yml Reference"
 date: 2014-07-13
 description:
   Rultor is configured by the .rultor.yml,
-  YAML configuration file in root directory of your Github repository
+  YAML configuration file in root directory of your GitHub repository
 ---
 
 Rultor is configured solely through the YAML `.rultor.yml` file stored in the
-root directory of your Github repository. There is no control or management
+root directory of your GitHub repository. There is no control or management
 panel. Everything you want to say to Rultor is placed into your `.rultor.yml`
 file. The file is mandatory, but all content is optional.
 
@@ -39,7 +39,7 @@ deployed to production. You don't want to keep this file in the main repository
 since it contains sensitive information, not intended to be accessible by all
 programmers.
 
-Put it into another *private* Github repository and inform Rultor that he has to
+Put it into another *private* GitHub repository and inform Rultor that he has to
 fetch it from there:
 
 {% highlight yaml %}
@@ -108,7 +108,7 @@ $ gem install rultor
 $ rultor encrypt -p me/test secret.txt
 {% endhighlight %}
 
-Here `me/test` is the name of your Github project.
+Here `me/test` is the name of your GitHub project.
 
 This code encrypts `secret.txt` file. You will get a new file `secret.txt.asc`.
 Commit this file to your repository &mdash; nobody will be able
@@ -215,8 +215,8 @@ readers:
   - ...
 {% endhighlight %}
 
-Every user is specified as a URN, where his Github account number
-stays right after `urn:github:`. You can get your Github account number
+Every user is specified as a URN, where his GitHub account number
+stays right after `urn:github:`. You can get your GitHub account number
 by logging into [www.rultor.com](https://www.rultor.com)
 and moving mouse over your name, at the
 top of the page.
@@ -275,10 +275,10 @@ of variables as keys, in the `env` property.
 Executable script is configured as a list of texts. They will be executed one by
 one. If any of them fails, execution stops.
 
-The list of Github accounts able to give commands to Rultor is specified in
-`commanders`. By default, only Github repository collaborators can give
+The list of GitHub accounts able to give commands to Rultor is specified in
+`commanders`. By default, only GitHub repository collaborators can give
 commands. Configured commanders don't replace collaborators. In other words,
-Github collaborators *and* accounts mentioned here are allowed to give commands.
+GitHub collaborators *and* accounts mentioned here are allowed to give commands.
 
 ### Release
 

@@ -7,7 +7,7 @@ package com.rultor.agents.github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Releases;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
@@ -40,7 +40,7 @@ final class ReleaseBinariesTest {
     void attachesBinaryToRelease(
         @TempDir final Path temp
     ) throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final String tag = "v1.0";
         final String target = "target";
         final String name = "name-${tag}.jar";

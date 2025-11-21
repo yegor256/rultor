@@ -4,7 +4,7 @@
  */
 package com.rultor.agents.github;
 
-import com.jcabi.github.Github;
+import com.jcabi.github.GitHub;
 import com.jcabi.github.RtPagination;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
@@ -13,7 +13,7 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 /**
  * GitHub invitations.
@@ -23,15 +23,15 @@ import javax.json.JsonObject;
 public final class Invitations implements SuperAgent {
 
     /**
-     * Github client.
+     * GitHub client.
      */
-    private final transient Github github;
+    private final transient GitHub github;
 
     /**
      * Ctor.
-     * @param ghb Github client
+     * @param ghb GitHub client
      */
-    public Invitations(final Github ghb) {
+    public Invitations(final GitHub ghb) {
         this.github = ghb;
     }
 

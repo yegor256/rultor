@@ -7,7 +7,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
-import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkGitHub;
 import com.rultor.Env;
 import com.rultor.agents.github.Req;
 import java.net.URI;
@@ -28,8 +28,8 @@ final class QnVersionTest {
      * @throws Exception In case of error.
      */
     @Test
-    void repliesInGithub() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+    void repliesInGitHub() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("version");
         MatcherAssert.assertThat(
@@ -52,7 +52,7 @@ final class QnVersionTest {
      */
     @Test
     void repliesWithLinkToRevision() throws Exception {
-        final Repo repo = new MkGithub().randomRepo();
+        final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("version");
         MatcherAssert.assertThat(

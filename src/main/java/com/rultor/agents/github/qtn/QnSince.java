@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Question asked after given Github message number.
+ * Question asked after given GitHub message number.
  *
  * @since 1.6.5
  */

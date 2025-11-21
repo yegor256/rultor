@@ -68,7 +68,7 @@
         <br/>
         <xsl:text> Say </xsl:text>
         <code>@rultor hello</code>
-        <xsl:text> in a Github issue and start from there.</xsl:text>
+        <xsl:text> in a GitHub issue and start from there.</xsl:text>
       </p>
       <div id="pulse" data-href="{links/link[@rel='ticks']/@href}">
         <a href="{links/link[@rel='status']/@href}">
@@ -77,7 +77,7 @@
       </div>
       <xsl:if test="recent/talk">
         <p>
-          <xsl:text>See recent conversations in Github:</xsl:text>
+          <xsl:text>See recent conversations in GitHub:</xsl:text>
         </p>
         <ul class="recent">
           <xsl:apply-templates select="recent/talk"/>
@@ -108,7 +108,7 @@
         <div>
           <span>operates at</span>
           <br/>
-          <a href="http://www.github.com" title="Github">
+          <a href="http://www.github.com" title="GitHub">
             <img src="//doc.rultor.com/images/github-logo.png" style="width:96px" alt="github logo"/>
           </a>
         </div>

@@ -28,7 +28,7 @@ final class ReleaseTag {
         Pattern.compile("^(\\d+\\.)*(\\d+)$");
 
     /**
-     * Github.
+     * GitHub.
      */
     private final transient Repo repo;
 
@@ -39,7 +39,7 @@ final class ReleaseTag {
 
     /**
      * Ctor.
-     * @param rpo Github repo
+     * @param rpo GitHub repo
      * @param version String release tag name
      */
     ReleaseTag(final Repo rpo, final String version) {
