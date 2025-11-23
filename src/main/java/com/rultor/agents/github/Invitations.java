@@ -11,9 +11,9 @@ import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.Logger;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
+import jakarta.json.JsonObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import jakarta.json.JsonObject;
 
 /**
  * GitHub invitations.

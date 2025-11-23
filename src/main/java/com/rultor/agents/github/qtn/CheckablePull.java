@@ -7,8 +7,8 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Check;
 import com.jcabi.github.Pull;
-import java.io.IOException;
 import jakarta.json.JsonObject;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
