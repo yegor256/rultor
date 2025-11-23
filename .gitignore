@@ -1,13 +1,14 @@
-_site
+*.iml
+*.log
 .claude/
 .DS_Store
 .idea/
 .jekyll-cache/
 .sass-cache
 .settings
-*.iml
 /.classpath
 /.project
+_site
 ajcore*
 Gemfile.lock
 node_modules/
