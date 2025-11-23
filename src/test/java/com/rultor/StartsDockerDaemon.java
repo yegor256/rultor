@@ -9,13 +9,16 @@ import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.spi.Profile;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -48,9 +51,20 @@ public final class StartsDockerDaemon implements AutoCloseable {
      * Ctor.
      * @param prof Current Profile
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public StartsDockerDaemon(final Profile prof) {
         this.profile = prof;
-        this.client = DockerClientBuilder.getInstance().build();
+        final DefaultDockerClientConfig config =
+            DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+        this.client = DockerClientBuilder.getInstance(config)
+            .withDockerHttpClient(
+                new ApacheDockerHttpClient.Builder()
+                    .dockerHost(config.getDockerHost())
+                    .connectionTimeout(Duration.ofSeconds(30))
+                    .responseTimeout(Duration.ofSeconds(45))
+                    .build()
+            )
+            .build();
         this.containers = Collections.newSetFromMap(
             // @checkstyle MagicNumber (1 line)
             new ConcurrentHashMap<>(1, 0.9f, 1)
