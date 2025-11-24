@@ -115,7 +115,7 @@
     <dependency>
       <groupId>io.sentry</groupId>
       <artifactId>sentry</artifactId>
-      <version>8.27.0</version>
+      <version>8.27.1</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
