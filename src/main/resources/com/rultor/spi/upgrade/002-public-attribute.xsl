@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
+ * SPDX-FileCopyrightText: Copyright (c) 2009-2026 Yegor Bugayenko
  * SPDX-License-Identifier: MIT
  *
  * Redistribution and use in source and binary forms, with or without

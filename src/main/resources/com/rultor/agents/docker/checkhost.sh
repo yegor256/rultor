@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# SPDX-FileCopyrightText: Copyright (c) 2009-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2009-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 command -v git >/dev/null 2>&1 || { echo "Rultor requires Git to be installed on the SSH host, but the git command was not found. Aborting ..."; exit 1; }
