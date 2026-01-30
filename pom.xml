@@ -109,7 +109,7 @@
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-common</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.2</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
