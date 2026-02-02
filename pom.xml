@@ -612,7 +612,7 @@
       <plugin>
         <groupId>com.github.blutorange</groupId>
         <artifactId>closure-compiler-maven-plugin</artifactId>
-        <version>2.32.0</version>
+        <version>3.0.1</version>
         <configuration>
           <!-- Base configuration for all executions (bundles) -->
           <baseTargetDir>${project.build.outputDirectory}</baseTargetDir>
