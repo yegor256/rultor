@@ -4,7 +4,6 @@
  */
 package com.rultor.agents.daemons;
 
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.s3.Bucket;
@@ -27,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 
 /**
  * Marks the daemon as done.
@@ -103,10 +103,11 @@ public final class ArchivesDaemon extends AbstractAgent {
      * @throws IOException If fails
      */
     private URI upload(final File file, final String hash) throws IOException {
-        final ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentType("text/plain");
-        meta.setContentEncoding(StandardCharsets.UTF_8.name());
-        meta.setContentLength(file.length());
+        final HeadObjectResponse meta = HeadObjectResponse.builder()
+            .contentType("text/plain")
+            .contentEncoding(StandardCharsets.UTF_8.name())
+            .contentLength(file.length())
+            .build();
         final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);
         this.bucket.ocket(key).write(Files.newInputStream(file.toPath()), meta);
         return URI.create(String.format("s3://%s/%s", this.bucket.name(), key));

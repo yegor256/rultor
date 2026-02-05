@@ -5,10 +5,6 @@
 package com.rultor.dynamo;
 
 import co.stateful.Counter;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Attributes;
@@ -24,6 +20,10 @@ import lombok.ToString;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.HeadOf;
 import org.cactoos.iterable.Mapped;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.ComparisonOperator;
+import software.amazon.awssdk.services.dynamodb.model.Condition;
+import software.amazon.awssdk.services.dynamodb.model.Select;
 
 /**
  * Talks in Dynamo.
@@ -274,13 +274,14 @@ public final class DyTalks implements Talks {
                 .where(DyTalks.ATTR_REPO, repo)
                 .where(
                     DyTalks.ATTR_UPDATED,
-                    new Condition()
-                        .withComparisonOperator(ComparisonOperator.LT)
-                        .withAttributeValueList(
-                            new AttributeValue().withN(
-                                Long.toString(since.getTime())
-                            )
+                    Condition.builder()
+                        .comparisonOperator(ComparisonOperator.LT)
+                        .attributeValueList(
+                            AttributeValue.builder()
+                                .n(Long.toString(since.getTime()))
+                                .build()
                         )
+                        .build()
                 )
         );
     }
