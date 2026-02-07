@@ -218,17 +218,17 @@
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>dynamodb</artifactId>
-      <version>2.31.1</version>
+      <version>2.41.24</version>
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>sdk-core</artifactId>
-      <version>2.31.1</version>
+      <version>2.41.24</version>
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
-      <version>2.30.9</version>
+      <version>2.41.24</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
