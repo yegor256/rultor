@@ -12,10 +12,10 @@ import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.Arrays;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -68,15 +68,27 @@ final class MailsTest {
     /**
      * Mails can send a mail to recipients.
      * @throws Exception In case of error.
-     * @todo #748 Implement method sendsToRecipients. It must check that
-     *  mail is sent to all recipients. Recipients are defined in Profile.
      */
     @Test
     @Disabled
-    void sendsToRecipients() {
-        Assertions.assertDoesNotThrow(
-            () ->
-                !"test".equalsIgnoreCase("implemented")
+    void sendsToRecipients() throws Exception {
+        final Postman postman = Mockito.spy(Postman.CONSOLE);
+        final Agent agent = new Mails(
+            this.profile(),
+            postman
+        );
+        agent.execute(MailsTest.talk());
+        final ArgumentCaptor<Envelope> captor =
+            ArgumentCaptor.forClass(Envelope.class);
+        Mockito.verify(postman).send(captor.capture());
+        final Envelope envelope = captor.getValue();
+        MatcherAssert.assertThat(
+            "Mail should be sent to all recipients",
+            Arrays.toString(envelope.unwrap().getAllRecipients()),
+            Matchers.allOf(
+                Matchers.containsString("test1@localhost"),
+                Matchers.containsString("test2@localhost")
+            )
         );
     }
 
@@ -111,9 +123,9 @@ final class MailsTest {
             new Directives().xpath("/talk")
                 .attr("number", "123")
                 .add("wire")
-                .add("github-issue").set("456")
-                .add("github-repo").set("user/repo")
-                .up()
+                .add("href").set("https://www.rultor.com/t/123-abcdef").up()
+                .add("github-issue").set("456").up()
+                .add("github-repo").set("user/repo").up()
                 .up()
                 .add("request").attr("id", "abcdef")
                 .add("type").set("release").up()
