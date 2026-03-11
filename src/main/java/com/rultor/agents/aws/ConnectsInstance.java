@@ -4,8 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.ssh.Shell;
@@ -17,6 +15,8 @@ import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
 
 /**
  * Connects a running EC2 instance: detects its IP.
@@ -76,16 +76,19 @@ public final class ConnectsInstance extends AbstractAgent {
         } else {
             final long age = new Date().getTime() - this.api.aws()
                 .describeInstances(
-                    new DescribeInstancesRequest().withInstanceIds(instance)
+                    DescribeInstancesRequest.builder()
+                        .instanceIds(instance)
+                        .build()
                 )
-                .getReservations().get(0)
-                .getInstances().get(0)
-                .getLaunchTime().getTime();
+                .reservations().get(0)
+                .instances().get(0)
+                .launchTime().toEpochMilli();
             final String status = this.api.aws().describeInstanceStatus(
-                new DescribeInstanceStatusRequest()
-                    .withIncludeAllInstances(true)
-                    .withInstanceIds(instance)
-            ).getInstanceStatuses().get(0).getInstanceState().getName();
+                DescribeInstanceStatusRequest.builder()
+                    .includeAllInstances(true)
+                    .instanceIds(instance)
+                    .build()
+            ).instanceStatuses().get(0).instanceState().nameAsString();
             Logger.warn(
                 this, "Can't connect %s to AWS instance %s at %s (%[ms]s old, \"%s\")",
                 name, instance, host, age, status

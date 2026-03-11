@@ -4,8 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -14,6 +12,8 @@ import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
 
 /**
  * Deletes the "ec2" XML element if the instance doesn't exist in EC2 --
@@ -43,12 +43,13 @@ public final class DropsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final DescribeInstancesResult res = this.api.aws().describeInstances(
-            new DescribeInstancesRequest()
-                .withInstanceIds(instance)
+        final DescribeInstancesResponse res = this.api.aws().describeInstances(
+            DescribeInstancesRequest.builder()
+                .instanceIds(instance)
+                .build()
         );
         final Directives dirs = new Directives();
-        if (res.getReservations().isEmpty()) {
+        if (res.reservations().isEmpty()) {
             dirs.xpath("/talk/ec2").strict(1).remove();
             Logger.warn(
                 this, "AWS instance %s is absent, deleting the link from %s",

@@ -4,12 +4,12 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.jcabi.aspects.Immutable;
 import lombok.ToString;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.ec2.Ec2Client;
 
 /**
  * Amazon EC2 client.
@@ -20,40 +20,53 @@ import lombok.ToString;
 @ToString
 public final class AwsEc2 {
     /**
-     * Builder to get client.
+     * Access key.
      */
-    private final transient AmazonEC2ClientBuilder client;
+    private final transient String key;
+
+    /**
+     * Secret key.
+     */
+    private final transient String secret;
+
+    /**
+     * AWS region.
+     */
+    private final transient String region;
 
     /**
      * Ctor.
-     * @param key Key to ise api
-     * @param secret Secret to use api
+     * @param akey Key to use api
+     * @param asecret Secret to use api
      */
-    public AwsEc2(final String key, final String secret) {
-        this(key, secret, "us-east-1");
+    public AwsEc2(final String akey, final String asecret) {
+        this(akey, asecret, "us-east-1");
     }
 
     /**
      * Ctor.
-     * @param key Key to use api
-     * @param secret Secret to use api
-     * @param region Region for instance run
+     * @param akey Key to use api
+     * @param asecret Secret to use api
+     * @param reg Region for instance run
      */
-    public AwsEc2(final String key, final String secret, final String region) {
-        this.client = AmazonEC2ClientBuilder.standard()
-            .withRegion(region)
-            .withCredentials(
-                new AWSStaticCredentialsProvider(
-                    new BasicAWSCredentials(key, secret)
-                )
-            );
+    public AwsEc2(final String akey, final String asecret, final String reg) {
+        this.key = akey;
+        this.secret = asecret;
+        this.region = reg;
     }
 
     /**
      * AWS EC2 client instance.
      * @return AWS EC2 client
      */
-    public AmazonEC2 aws() {
-        return this.client.build();
+    public Ec2Client aws() {
+        return Ec2Client.builder()
+            .region(Region.of(this.region))
+            .credentialsProvider(
+                StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(this.key, this.secret)
+                )
+            )
+            .build();
     }
 }

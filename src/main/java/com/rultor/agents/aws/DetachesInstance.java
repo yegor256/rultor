@@ -4,9 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
-import com.amazonaws.services.ec2.model.InstanceState;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -15,6 +12,9 @@ import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
+import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusResponse;
+import software.amazon.awssdk.services.ec2.model.InstanceState;
 
 /**
  * Removes "EC2" element if instance is already "terminated".
@@ -42,14 +42,15 @@ public final class DetachesInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final DescribeInstanceStatusResult res = this.api.aws().describeInstanceStatus(
-            new DescribeInstanceStatusRequest()
-                .withIncludeAllInstances(true)
-                .withInstanceIds(instance)
+        final DescribeInstanceStatusResponse res = this.api.aws().describeInstanceStatus(
+            DescribeInstanceStatusRequest.builder()
+                .includeAllInstances(true)
+                .instanceIds(instance)
+                .build()
         );
-        final InstanceState state = res.getInstanceStatuses().get(0).getInstanceState();
+        final InstanceState state = res.instanceStatuses().get(0).instanceState();
         final Directives dirs = new Directives();
-        if ("terminated".equals(state.getName())) {
+        if ("terminated".equals(state.nameAsString())) {
             dirs.xpath("/talk/ec2").strict(1).remove();
             Logger.info(this, "AWS instance %s is already terminated, detaching", instance);
         }

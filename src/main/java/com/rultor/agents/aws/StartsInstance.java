@@ -4,12 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.ResourceType;
-import com.amazonaws.services.ec2.model.RunInstancesRequest;
-import com.amazonaws.services.ec2.model.RunInstancesResult;
-import com.amazonaws.services.ec2.model.Tag;
-import com.amazonaws.services.ec2.model.TagSpecification;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -20,6 +14,12 @@ import java.util.Arrays;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.model.Instance;
+import software.amazon.awssdk.services.ec2.model.ResourceType;
+import software.amazon.awssdk.services.ec2.model.RunInstancesRequest;
+import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
+import software.amazon.awssdk.services.ec2.model.Tag;
+import software.amazon.awssdk.services.ec2.model.TagSpecification;
 
 /**
  * Starts EC2 instance.
@@ -110,12 +110,12 @@ public final class StartsInstance extends AbstractAgent {
             final Instance instance = this.run(xml.xpath("/talk/@name").get(0), xml);
             Logger.info(
                 this, "EC2 instance %s started for %s",
-                instance.getInstanceId(),
+                instance.instanceId(),
                 xml.xpath("/talk/@name").get(0)
             );
             dirs.xpath("/talk")
                 .add("ec2")
-                .add("instance").set(instance.getInstanceId());
+                .add("instance").set(instance.instanceId());
         } catch (final Profile.ConfigException ex) {
             dirs.xpath("/talk/daemon/script").set(
                 String.format(
@@ -135,34 +135,36 @@ public final class StartsInstance extends AbstractAgent {
      */
     private Instance run(final String talk, final XML xml) throws IOException {
         final String itype = this.instanceType(xml);
-        final RunInstancesRequest request = new RunInstancesRequest()
-            .withSecurityGroupIds(this.sgroup)
-            .withSubnetId(this.subnet)
-            .withImageId(this.image)
-            .withInstanceType(itype)
-            .withMaxCount(1)
-            .withMinCount(1)
-            .withTagSpecifications(
-                new TagSpecification()
-                    .withResourceType(ResourceType.Instance)
-                    .withTags(
-                        new Tag().withKey("Name").withValue(talk),
-                        new Tag().withKey("rultor").withValue("yes"),
-                        new Tag().withKey("rultor-talk").withValue(talk)
+        final RunInstancesRequest request = RunInstancesRequest.builder()
+            .securityGroupIds(this.sgroup)
+            .subnetId(this.subnet)
+            .imageId(this.image)
+            .instanceType(itype)
+            .maxCount(1)
+            .minCount(1)
+            .tagSpecifications(
+                TagSpecification.builder()
+                    .resourceType(ResourceType.INSTANCE)
+                    .tags(
+                        Tag.builder().key("Name").value(talk).build(),
+                        Tag.builder().key("rultor").value("yes").build(),
+                        Tag.builder().key("rultor-talk").value(talk).build()
                     )
-            );
+                    .build()
+            )
+            .build();
         Logger.info(
             this,
             "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
             talk, this.image, itype, this.sgroup, this.subnet
         );
-        final RunInstancesResult response =
+        final RunInstancesResponse response =
             this.api.aws().runInstances(request);
-        final Instance instance = response.getReservation().getInstances().get(0);
+        final Instance instance = response.instances().get(0);
         Logger.info(
             this,
             "Started a new AWS instance %s for '%s'",
-            instance.getInstanceId(), talk
+            instance.instanceId(), talk
         );
         return instance;
     }

@@ -4,7 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -13,6 +12,7 @@ import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 
 /**
  * Stops EC2 instance, when the "daemon" is gone (the job has
@@ -45,8 +45,9 @@ public final class TerminatesInstance extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         this.api.aws().terminateInstances(
-            new TerminateInstancesRequest()
-                .withInstanceIds(instance)
+            TerminateInstancesRequest.builder()
+                .instanceIds(instance)
+                .build()
         );
         Logger.info(
             this, "Successfully terminated %s instance of %s",

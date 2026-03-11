@@ -4,13 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.Filter;
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.Reservation;
-import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.SuperAgent;
@@ -20,6 +13,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import lombok.ToString;
+import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
+import software.amazon.awssdk.services.ec2.model.Filter;
+import software.amazon.awssdk.services.ec2.model.Instance;
+import software.amazon.awssdk.services.ec2.model.Reservation;
+import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 
 /**
  * Terminates all instances that are very old.
@@ -52,23 +52,30 @@ public final class PrunesInstances implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        final DescribeInstancesResult res = this.api.aws().describeInstances(
-            new DescribeInstancesRequest()
-                .withFilters(new Filter().withName("tag:rultor").withValues("yes"))
+        final DescribeInstancesResponse res = this.api.aws().describeInstances(
+            DescribeInstancesRequest.builder()
+                .filters(
+                    Filter.builder()
+                        .name("tag:rultor")
+                        .values("yes")
+                        .build()
+                )
+                .build()
         );
         final Collection<String> seen = new LinkedList<>();
-        for (final Reservation rsrv : res.getReservations()) {
-            final Instance instance = rsrv.getInstances().get(0);
+        for (final Reservation rsrv : res.reservations()) {
+            final Instance instance = rsrv.instances().get(0);
             final String status = this.api.aws().describeInstanceStatus(
-                new DescribeInstanceStatusRequest()
-                    .withIncludeAllInstances(true)
-                    .withInstanceIds(instance.getInstanceId())
-            ).getInstanceStatuses().get(0).getInstanceState().getName();
-            final long age = new Date().getTime() - instance.getLaunchTime().getTime();
+                DescribeInstanceStatusRequest.builder()
+                    .includeAllInstances(true)
+                    .instanceIds(instance.instanceId())
+                    .build()
+            ).instanceStatuses().get(0).instanceState().nameAsString();
+            final long age = new Date().getTime() - instance.launchTime().toEpochMilli();
             final String label = Logger.format(
                 "%s/%s/%s/%[ms]s",
-                instance.getInstanceId(),
-                instance.getInstanceType(),
+                instance.instanceId(),
+                instance.instanceTypeAsString(),
                 status, age
             );
             if ("terminated".equals(status)) {
@@ -79,8 +86,9 @@ public final class PrunesInstances implements SuperAgent {
                 continue;
             }
             this.api.aws().terminateInstances(
-                new TerminateInstancesRequest()
-                    .withInstanceIds(instance.getInstanceId())
+                TerminateInstancesRequest.builder()
+                    .instanceIds(instance.instanceId())
+                    .build()
             );
             Logger.warn(
                 this, "AWS instance %s is too old, terminated",

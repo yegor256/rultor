@@ -4,8 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -15,6 +13,8 @@ import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
+import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 
 /**
  * Terminates EC2 instance if it's older than X hours, but
@@ -56,15 +56,18 @@ public final class ShootsInstance extends AbstractAgent {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         final long age = new Date().getTime() - this.api.aws()
             .describeInstances(
-                new DescribeInstancesRequest().withInstanceIds(instance)
+                DescribeInstancesRequest.builder()
+                    .instanceIds(instance)
+                    .build()
             )
-            .getReservations().get(0)
-            .getInstances().get(0)
-            .getLaunchTime().getTime();
+            .reservations().get(0)
+            .instances().get(0)
+            .launchTime().toEpochMilli();
         if (age > this.max) {
             this.api.aws().terminateInstances(
-                new TerminateInstancesRequest()
-                    .withInstanceIds(instance)
+                TerminateInstancesRequest.builder()
+                    .instanceIds(instance)
+                    .build()
             );
             Logger.warn(
                 this,

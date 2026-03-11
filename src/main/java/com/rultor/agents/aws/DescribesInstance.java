@@ -4,9 +4,6 @@
  */
 package com.rultor.agents.aws;
 
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.Instance;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -15,6 +12,9 @@ import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
+import software.amazon.awssdk.services.ec2.model.Instance;
 
 /**
  * Finds IP of a running EC2 instance.
@@ -47,18 +47,20 @@ public final class DescribesInstance extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
         final String state = this.api.aws().describeInstanceStatus(
-            new DescribeInstanceStatusRequest()
-                .withIncludeAllInstances(true)
-                .withInstanceIds(instance)
-        ).getInstanceStatuses().get(0).getInstanceState().getName();
+            DescribeInstanceStatusRequest.builder()
+                .includeAllInstances(true)
+                .instanceIds(instance)
+                .build()
+        ).instanceStatuses().get(0).instanceState().nameAsString();
         Logger.info(this, "AWS instance %s state: %s", instance, state);
         final Directives dirs = new Directives();
         if ("running".equals(state)) {
             final Instance ready = this.api.aws().describeInstances(
-                new DescribeInstancesRequest()
-                    .withInstanceIds(instance)
-            ).getReservations().get(0).getInstances().get(0);
-            final String host = ready.getPublicIpAddress();
+                DescribeInstancesRequest.builder()
+                    .instanceIds(instance)
+                    .build()
+            ).reservations().get(0).instances().get(0);
+            final String host = ready.publicIpAddress();
             dirs.xpath("/talk/ec2").add("host").set(host);
             Logger.info(this, "AWS instance %s is at %s", instance, host);
         }
