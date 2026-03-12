@@ -128,8 +128,8 @@ public final class Understands extends AbstractAgent {
             );
         } else if (req.equals(Req.LATER)) {
             Logger.info(
-                this, "temporary pause in %s#%d, at message #%d",
-                issue.repo().coordinates(), issue.number(), next
+                this, "temporary pause in %s#%d, at message #%d (seen=%d)",
+                issue.repo().coordinates(), issue.number(), next, seen
             );
         } else if (xml.xpath(String.format("//archive/log[@id='%d']", next))
             .isEmpty()) {
