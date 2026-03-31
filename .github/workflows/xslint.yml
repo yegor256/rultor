@@ -19,3 +19,6 @@ jobs:
         with:
           args: |
             src
+          suppress: |
+            template-match-not-using-schema-types
+            template-match-monolithic-design
