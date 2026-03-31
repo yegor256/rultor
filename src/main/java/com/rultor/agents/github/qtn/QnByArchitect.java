@@ -6,6 +6,7 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
@@ -25,15 +26,16 @@ import org.cactoos.list.ListOf;
  * Question by architect only (if configured).
  *
  * @since 1.45
- * @todo #1246:30min PR by ARC merge shouldn't require confirmation by ARC.
- *  Implement the asked in #1246. The tests have already been implemented in
- *  QnByArchitectTest.acceptsIfMergeArchitectPull. After resolving this
- *  issue, uncomment the test.
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "profile", "xpath", "origin" })
 public final class QnByArchitect implements Question {
+
+    /**
+     * Mention prefix in command.
+     */
+    private static final String MENTION = "^@[^\\s,:]+[\\s,:]*";
 
     /**
      * Message bundle.
@@ -82,7 +84,10 @@ public final class QnByArchitect implements Question {
         final String author = comment.author()
             .login()
             .toLowerCase(Locale.ENGLISH);
-        if (logins.contains(author)) {
+        if (
+            logins.contains(author)
+                || QnByArchitect.isMergeByArchitectPull(comment, logins)
+        ) {
             req = this.origin.understand(comment, home);
         } else if (logins.isEmpty()) {
             if (QnByArchitect.allowed(comment.issue().repo(), author)) {
@@ -107,6 +112,43 @@ public final class QnByArchitect implements Question {
             req = Req.DONE;
         }
         return req;
+    }
+
+    /**
+     * Is this a merge command in a pull request created by architect.
+     * @param comment Comment
+     * @param logins Configured architect logins
+     * @return TRUE if command can pass for non-architect
+     * @throws IOException If fails
+     */
+    private static boolean isMergeByArchitectPull(final Comment.Smart comment,
+        final List<String> logins) throws IOException {
+        final Issue issue = comment.issue();
+        final Issue.Smart smart;
+        if (issue instanceof Issue.Smart) {
+            smart = (Issue.Smart) issue;
+        } else {
+            smart = new Issue.Smart(issue);
+        }
+        return !logins.isEmpty()
+            && smart.isPull()
+            && logins.contains(
+                smart.author().login().toLowerCase(Locale.ENGLISH)
+            )
+            && QnByArchitect.isMerge(comment.body());
+    }
+
+    /**
+     * Is this text a merge command.
+     * @param body Body of comment
+     * @return TRUE if it starts with merge command
+     */
+    private static boolean isMerge(final String body) {
+        final String text = body.trim().toLowerCase(Locale.ENGLISH);
+        return text.startsWith("merge")
+            || text.replaceFirst(QnByArchitect.MENTION, "")
+                .trim()
+                .startsWith("merge");
     }
 
     /**
