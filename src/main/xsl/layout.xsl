@@ -83,7 +83,7 @@
   <xsl:template match="toggles">
     <xsl:variable name="label">
       <xsl:choose>
-        <xsl:when test="string(read-only) = 'true'">
+        <xsl:when test="read-only='true'">
           <span style="color:red" title="read-only inactive mode">
             <xsl:text>ro</xsl:text>
           </span>

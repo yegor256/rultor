@@ -43,7 +43,7 @@
           <img style="width:128px;height:128px;" alt="rultor logo" itemprop="image">
             <xsl:attribute name="src">
               <xsl:text>//doc.rultor.com/images/logo</xsl:text>
-              <xsl:if test="string(toggles/read-only) = 'true'">
+              <xsl:if test="toggles/read-only='true'">
                 <xsl:text>-stripes</xsl:text>
               </xsl:if>
               <xsl:text>.svg</xsl:text>

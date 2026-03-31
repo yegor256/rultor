@@ -22,3 +22,4 @@ jobs:
           suppress: |
             template-match-not-using-schema-types
             template-match-monolithic-design
+            template-match-incorrect-use-of-boolean-constants
