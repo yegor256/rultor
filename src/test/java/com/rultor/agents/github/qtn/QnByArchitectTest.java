@@ -97,21 +97,17 @@ final class QnByArchitectTest {
      */
     @Test
     void acceptsIfMergeArchitectPull() throws Exception {
-        final Repo repo = new MkGitHub().randomRepo();
         final User author = Mockito.mock(User.class);
-        Mockito.when(author.login()).thenReturn(
-            repo.github().users().self().login().toUpperCase(
-                Locale.ENGLISH
-            )
-        );
+        Mockito.when(author.login()).thenReturn("alfred");
         final Issue.Smart issue = Mockito.mock(Issue.Smart.class);
         Mockito.when(issue.author()).thenReturn(author);
         Mockito.when(issue.isPull()).thenReturn(true);
         final User reviewer = Mockito.mock(User.class);
-        Mockito.when(reviewer.login()).thenReturn("alfred");
+        Mockito.when(reviewer.login()).thenReturn("bob");
         final Comment.Smart comment = Mockito.mock(Comment.Smart.class);
         Mockito.when(comment.body()).thenReturn("merge");
         Mockito.when(comment.author()).thenReturn(reviewer);
+        Mockito.when(comment.issue()).thenReturn(issue);
         final Question question = Mockito.mock(Question.class);
         final URI home = new URI("#2");
         new QnByArchitect(
@@ -121,6 +117,37 @@ final class QnByArchitectTest {
             "/p/entry[@key='c']/text()", question
         ).understand(comment, home);
         Mockito.verify(question).understand(comment, home);
+    }
+
+    /**
+     * QnByArchitect rejects non-merge commands from non-architects
+     * even if the PR was created by an architect.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void rejectsNonMergeOnArchitectPull() throws Exception {
+        final User author = Mockito.mock(User.class);
+        Mockito.when(author.login()).thenReturn("alfred");
+        final Issue.Smart issue = Mockito.mock(
+            Issue.Smart.class, Mockito.RETURNS_DEEP_STUBS
+        );
+        Mockito.when(issue.author()).thenReturn(author);
+        Mockito.when(issue.isPull()).thenReturn(true);
+        final User reviewer = Mockito.mock(User.class);
+        Mockito.when(reviewer.login()).thenReturn("bob");
+        final Comment.Smart comment = Mockito.mock(Comment.Smart.class);
+        Mockito.when(comment.body()).thenReturn("deploy");
+        Mockito.when(comment.author()).thenReturn(reviewer);
+        Mockito.when(comment.issue()).thenReturn(issue);
+        final Question question = Mockito.mock(Question.class);
+        final URI home = new URI("#3");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument("<p><entry key='d'>alfred</entry></p>")
+            ),
+            "/p/entry[@key='d']/text()", question
+        ).understand(comment, home);
+        Mockito.verify(question, Mockito.never()).understand(comment, home);
     }
 
 }
