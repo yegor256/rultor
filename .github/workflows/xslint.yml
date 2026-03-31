@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: Copyright (c) 2009-2026 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+---
+name: xslint
+'on':
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  xslint:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: maxonfjvipon/xslint-action@0.0.3
+        with:
+          args: |
+            src
