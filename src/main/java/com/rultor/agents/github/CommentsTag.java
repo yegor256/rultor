@@ -16,6 +16,7 @@ import com.jcabi.xml.XML;
 import com.rultor.Env;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
+import com.rultor.agents.github.qtn.ReleaseTag;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
@@ -87,6 +88,7 @@ public final class CommentsTag extends AbstractAgent {
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
         final URI home = new Home(xml).uri();
+        final ReleaseTag release = new ReleaseTag(issue.repo(), tag);
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
@@ -102,6 +104,14 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
+        } else if (!release.allowed()) {
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.outdated"),
+                    tag, release.reference()
+                )
+            );
+            Logger.info(this, "outdated tag %s commented", tag);
         } else {
             final Repo repo = issue.repo();
             final Date prev = CommentsTag.previous(repo);

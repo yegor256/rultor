@@ -68,6 +68,27 @@ final class CommentsTagTest {
     }
 
     /**
+     * CommentsTag refuses a release whose tag is older than the newest
+     * existing release, using SemVer ordering.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void denyOutdatedRelease() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Agent agent = new CommentsTag(repo.github());
+        repo.releases().create("2.3.1");
+        final String tag = "1.9";
+        final Talk talk = CommentsTagTest.talk(issue, tag);
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            "Outdated release must not be created",
+            new Releases.Smart(repo.releases()).exists(tag),
+            Matchers.is(false)
+        );
+    }
+
+    /**
      * CommentsTag can create a proper release message.
      * @throws Exception In case of error.
      */

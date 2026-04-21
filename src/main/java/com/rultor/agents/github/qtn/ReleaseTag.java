@@ -18,7 +18,7 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
  * @since 1.62
  */
 @Immutable
-final class ReleaseTag {
+public final class ReleaseTag {
 
     /**
      * Pattern to match semantically valid versions, that consist only of
@@ -42,7 +42,7 @@ final class ReleaseTag {
      * @param rpo GitHub repo
      * @param version String release tag name
      */
-    ReleaseTag(final Repo rpo, final String version) {
+    public ReleaseTag(final Repo rpo, final String version) {
         this.repo = rpo;
         this.name = version;
     }
