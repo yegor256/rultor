@@ -26,7 +26,7 @@ release:
     mv ../netrc ~/.netrc
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
     echo "Author of the request: ${author}"
-    mvn versions:set "-DnewVersion=${tag}" --quiet
+    mvn -ntp versions:set "-DnewVersion=${tag}" --quiet
     git commit -am "${tag}"
     cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Prultor --errors --batch-mode --quiet
