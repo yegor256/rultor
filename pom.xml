@@ -330,7 +330,7 @@
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-github</artifactId>
-      <version>1.10.0</version>
+      <version>1.11.1</version>
       <exclusions>
         <exclusion>
           <groupId>jakarta.ws.rs</groupId>

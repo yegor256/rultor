@@ -171,6 +171,31 @@ final class QnMergeTest {
     }
 
     /**
+     * QnMerge can build a request when some CI checks are skipped.
+     *
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void continuesBecauseSomeChecksAreSkipped()
+        throws IOException, URISyntaxException {
+        final MkChecks checks = (MkChecks) this.pull.checks();
+        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        checks.create(Check.Status.COMPLETED, Check.Conclusion.SKIPPED);
+        this.mergeRequest();
+        MatcherAssert.assertThat(
+            "Merge should proceed when some checks are skipped",
+            new Comment.Smart(this.comments.get(2)).body(),
+            Matchers.containsString(
+                String.format(
+                    QnMergeTest.PHRASES.getString("QnMerge.start"),
+                    "#"
+                )
+            )
+        );
+    }
+
+    /**
      * QnMerge can not build a request because .rultor file is changed.
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error

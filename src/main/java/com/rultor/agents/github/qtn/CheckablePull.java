@@ -42,7 +42,7 @@ final class CheckablePull {
     public boolean allChecksSuccessful() throws IOException {
         boolean result = true;
         for (final Check check : this.pull.checks().all()) {
-            if (!check.successful()) {
+            if (!check.successful() && !check.skipped()) {
                 result = false;
                 break;
             }
