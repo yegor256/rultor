@@ -104,15 +104,7 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "duplicate tag %s commented", tag);
-        } else if (!release.allowed()) {
-            issue.comments().post(
-                String.format(
-                    CommentsTag.PHRASES.getString("CommentsTag.outdated"),
-                    tag, release.reference()
-                )
-            );
-            Logger.info(this, "outdated tag %s commented", tag);
-        } else {
+        } else if (release.allowed()) {
             final Repo repo = issue.repo();
             final Date prev = CommentsTag.previous(repo);
             final Release.Smart rel = new Release.Smart(
@@ -130,6 +122,14 @@ public final class CommentsTag extends AbstractAgent {
                 )
             );
             Logger.info(this, "tag %s created and commented", tag);
+        } else {
+            issue.comments().post(
+                String.format(
+                    CommentsTag.PHRASES.getString("CommentsTag.outdated"),
+                    tag, release.reference()
+                )
+            );
+            Logger.info(this, "outdated tag %s commented", tag);
         }
         return new Directives();
     }
