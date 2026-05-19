@@ -13,3 +13,4 @@ ajcore*
 Gemfile.lock
 node_modules/
 target/
+.aidy/
