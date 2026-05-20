@@ -93,12 +93,11 @@ final class IssueUrlTest {
 
     @Test
     void commitIdShouldNotBeReturned() {
-        final IssueUrl issue = new IssueUrl(
-            "https://api.github.com/repos/USER/REPO/commit/2a4f8"
-        );
         Assertions.assertThrows(
             IllegalStateException.class,
-            issue::uid,
+            () -> new IssueUrl(
+                "https://api.github.com/repos/USER/REPO/commit/2a4f8"
+            ).uid(),
             "Id should not be parsed from commit url"
         );
     }

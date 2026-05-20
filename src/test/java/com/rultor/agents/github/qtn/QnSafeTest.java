@@ -69,7 +69,7 @@ final class QnSafeTest {
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.allOf(
                 Matchers.containsString("We failed, sorry"),
-                Matchers.containsString("```\n")
+                Matchers.containsString(String.format("```%n"))
             )
         );
     }

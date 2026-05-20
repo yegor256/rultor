@@ -45,7 +45,7 @@ final class EndsDaemonITCase {
                 start,
                 talk,
                 String.format(
-                    "some random\n%s%s\nother",
+                    "some random%n%s%s%nother",
                     EndsDaemon.HIGHLIGHTS_PREFIX,
                     "text output"
                 )

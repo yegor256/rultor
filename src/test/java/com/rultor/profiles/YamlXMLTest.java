@@ -76,7 +76,7 @@ final class YamlXMLTest {
     private static java.util.stream.Stream<String> brokenYamls() {
         return java.util.stream.Stream.of(
             String.format("there%n\t\\/%c", '\u0000'),
-            String.format("first: \"%s \\/\t\r\"", "привет")
+            String.format("first: \"%s \\/\t%c\"", "привет", '\r')
         );
     }
 }

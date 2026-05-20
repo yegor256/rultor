@@ -35,7 +35,7 @@ final class AnswerTest {
         MatcherAssert.assertThat(
             "Answer with source comment should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("> hey, do it\n\n")
+            Matchers.containsString(String.format("> hey, do it%n%n"))
         );
     }
 

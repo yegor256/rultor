@@ -9,7 +9,6 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.agents.github.Question;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;

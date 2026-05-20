@@ -57,7 +57,7 @@ final class GithubProfileTest {
                     .add("message", "rultor config").add(
                         "content",
                         Base64.getEncoder().encodeToString(
-                            "friends:\n  - jeff/test2".getBytes(StandardCharsets.UTF_8)
+                            String.format("friends:%n  - jeff/test2").getBytes(StandardCharsets.UTF_8)
                         )
                     )
                     .build()
@@ -95,7 +95,7 @@ final class GithubProfileTest {
         Assertions.assertThrows(
             Profile.ConfigException.class,
             () -> GithubProfile.fromRepo(
-                GithubProfileTest.repo("&*(fds:[[\nfd\n")
+                GithubProfileTest.repo(String.format("&*(fds:[[%nfd%n"))
             ).read()
         );
     }
@@ -262,7 +262,7 @@ final class GithubProfileTest {
                     .add("message", "rultor config").add(
                         "content",
                         Base64.getEncoder().encodeToString(
-                            "friends:\n  - jeff/test2".getBytes(StandardCharsets.UTF_8)
+                            String.format("friends:%n  - jeff/test2").getBytes(StandardCharsets.UTF_8)
                         )
                     )
                     .build()

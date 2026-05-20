@@ -124,18 +124,18 @@ final class StartsRequestTest {
             Matchers.allOf(
                 new Array<Matcher<? super String>>().with(
                     Matchers.containsString(
-                        "image=yegor256/rultor-image\n"
+                        String.format("image=yegor256/rultor-image%n")
                     )
                     ).with(
                         Matchers.containsString(
                             String.format(
-                                "container=%s\n",
+                                "container=%s%n",
                                 Talk.TEST_NAME
                             )
                         )
                     )
-                    .with(Matchers.containsString("Cloning into 'repo'...\n"))
-                    .with(Matchers.containsString("docker_when_possible\n"))
+                    .with(Matchers.containsString(String.format("Cloning into 'repo'...%n")))
+                    .with(Matchers.containsString(String.format("docker_when_possible%n")))
                     .with(Matchers.containsString("load average is "))
                     .with(Matchers.containsString("low enough to run a"))
                     .with(Matchers.containsString("DOCKER-2: -t")).with(

@@ -243,7 +243,7 @@ final class DockerRunTest {
                 DockerRun.byXpath(
                     new Profile.Fixed(
                         new XMLDocument(
-                            "<p><entry key='script'>How are you,\ndude</entry></p>"
+                            String.format("<p><entry key='script'>How are you,%ndude</entry></p>")
                         )
                     ),
                     "/p"
@@ -266,7 +266,7 @@ final class DockerRunTest {
                 DockerRun.byXpath(
                     new Profile.Fixed(
                         new XMLDocument(
-                            "<p><entry key='script'>echo 1\necho 2\n\n\necho 3</entry></p>"
+                            String.format("<p><entry key='script'>echo 1%necho 2%n%n%necho 3</entry></p>")
                         )
                     ),
                     "/p"
