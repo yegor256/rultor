@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEntry;
@@ -65,14 +64,15 @@ final class CommitsLog {
         );
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         final Collection<String> lines = new LinkedList<>();
-        // @checkstyle DiamondOperatorCheck (2 lines)
-        final Map<String, String> params = new MapOf<String, String>(
-            new MapEntry<>("since", format.format(prev)),
-            new MapEntry<>("until", format.format(current))
-        );
         final List<Smart> commits = new ListOf<>(
             new Smarts<>(
-                this.repo.commits().iterate(params)
+                this.repo.commits().iterate(
+                    // @checkstyle DiamondOperatorCheck (1 line)
+                    new MapOf<String, String>(
+                        new MapEntry<>("since", format.format(prev)),
+                        new MapEntry<>("until", format.format(current))
+                    )
+                )
             )
         );
         int count = 0;

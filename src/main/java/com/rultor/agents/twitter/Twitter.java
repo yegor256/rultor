@@ -12,6 +12,7 @@ import java.io.IOException;
  * @since 1.30
  */
 @Immutable
+@FunctionalInterface
 public interface Twitter {
 
     /**

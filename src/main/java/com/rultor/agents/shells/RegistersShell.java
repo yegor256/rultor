@@ -32,21 +32,30 @@ public final class RegistersShell extends AbstractAgent {
 
     /**
      * Constructor.
+     * @param shll Pre-built shell
+     */
+    public RegistersShell(final PfShell shll) {
+        super(
+            "/talk[daemon and not(shell)]",
+            "/talk[not(ec2/instance)]"
+        );
+        this.shell = shll;
+    }
+
+    /**
+     * Factory.
      * @param profile Profile
      * @param host Default IP address or host name
      * @param port Default Port of server
      * @param user Default Login
      * @param key Default Private SSH key
+     * @return Configured registers-shell agent
      * @throws UnknownHostException in case of host is not resolved
      * @checkstyle ParameterNumberCheck (6 lines)
      */
-    public RegistersShell(final Profile profile, final String host,
+    public static RegistersShell make(final Profile profile, final String host,
         final int port, final String user, final String key)
         throws UnknownHostException {
-        super(
-            "/talk[daemon and not(shell)]",
-            "/talk[not(ec2/instance)]"
-        );
         if (user.isEmpty()) {
             throw new IllegalArgumentException(
                 "User name is mandatory"
@@ -57,12 +66,14 @@ public final class RegistersShell extends AbstractAgent {
                 "SSH key is mandatory"
             );
         }
-        this.shell = new PfShell(
-            profile,
-            new SmartHost(host).ip(),
-            port,
-            user,
-            key
+        return new RegistersShell(
+            new PfShell(
+                profile,
+                SmartHost.create(host).ip(),
+                port,
+                user,
+                key
+            )
         );
     }
 

@@ -161,9 +161,9 @@ final class GithubProfile implements Profile {
                 ).get().xpath("/p/entry[@key='friends']/item/text()")
             )
         );
-        final String coords = this.repo.coordinates()
-            .toString().toLowerCase(Locale.ENGLISH);
-        if (!friends.contains(coords)) {
+        if (!friends.contains(
+            this.repo.coordinates().toString().toLowerCase(Locale.ENGLISH)
+        )) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)

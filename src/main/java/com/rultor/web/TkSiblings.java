@@ -94,12 +94,11 @@ final class TkSiblings implements TkRegex {
         throws IOException {
         final XeSource src;
         if (siblings.size() == 20) {
-            final Talk last = siblings.get(siblings.size() - 1);
             src = new XeLink(
                 "more",
                 String.format(
                     "/p/%s?s=%s",
-                    repo, last.updated().getTime()
+                    repo, siblings.get(siblings.size() - 1).updated().getTime()
                 )
             );
         } else {

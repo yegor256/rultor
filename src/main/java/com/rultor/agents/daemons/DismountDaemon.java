@@ -28,11 +28,16 @@ import org.xembly.Directives;
 public final class DismountDaemon extends AbstractAgent {
 
     /**
+     * Default max minutes (10 days).
+     * @checkstyle MagicNumber (2 lines)
+     */
+    private static final long DEFAULT_MAX = TimeUnit.DAYS.toMinutes(10L);
+
+    /**
      * Ctor.
      */
     public DismountDaemon() {
-        // @checkstyle MagicNumber (1 line)
-        this(TimeUnit.DAYS.toMinutes(10L));
+        this(DismountDaemon.DEFAULT_MAX);
     }
 
     /**
@@ -42,11 +47,8 @@ public final class DismountDaemon extends AbstractAgent {
     public DismountDaemon(final long mins) {
         super(
             "/talk/daemon[started and dir]",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-            ),
+            // @checkstyle LineLength (1 line)
+            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > " + mins + "]",
             "/talk/shell[host and port and login and key]"
         );
     }

@@ -118,31 +118,32 @@ public final class StartsDaemon implements Agent {
         final Shell shell = new TalkShells(xml).get();
         new ProfileDeprecations(this.profile).print(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final XML daemon = xml.nodes("/talk/daemon").get(0);
-        final String script = String.join(
-            System.lineSeparator(),
-            "#!/usr/bin/env bash",
-            "set -ex -o pipefail",
-            "cd \"$(dirname \"$0\")\"",
-            "echo \"$$\" > pid",
-            String.format(
-                "echo %s",
-                Ssh.escape(
-                    String.format(
-                        "%s %s",
-                        Env.read("Rultor-Version"),
-                        Env.read("Rultor-Revision")
-                    )
-                )
-            ),
-            "date",
-            "uptime",
-            this.upload(shell, dir),
-            daemon.xpath("script/text()").get(0)
-        );
         new Shell.Safe(shell).exec(
             String.format("cd %s && cat > run.sh", Ssh.escape(dir)),
-            IOUtils.toInputStream(script, StandardCharsets.UTF_8),
+            IOUtils.toInputStream(
+                String.join(
+                    System.lineSeparator(),
+                    "#!/usr/bin/env bash",
+                    "set -ex -o pipefail",
+                    "cd \"$(dirname \"$0\")\"",
+                    "echo \"$$\" > pid",
+                    String.format(
+                        "echo %s",
+                        Ssh.escape(
+                            String.format(
+                                "%s %s",
+                                Env.read("Rultor-Version"),
+                                Env.read("Rultor-Revision")
+                            )
+                        )
+                    ),
+                    "date",
+                    "uptime",
+                    this.upload(shell, dir),
+                    xml.nodes("/talk/daemon").get(0).xpath("script/text()").get(0)
+                ),
+                StandardCharsets.UTF_8
+            ),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );

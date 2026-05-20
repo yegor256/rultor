@@ -104,15 +104,14 @@ final class TkDaemon implements TkRegex {
     private InputStream html(final long number, final String hash)
         throws IOException {
         final Talk talk = this.talks.get(number);
-        final String head = IOUtils.toString(
-            Objects.requireNonNull(this.getClass().getResource("daemon/head.html")),
-            StandardCharsets.UTF_8
-        ).trim();
         return new SequenceInputStream(
             Collections.enumeration(
                 Arrays.asList(
                     IOUtils.toInputStream(
-                        head.replace("TALK_NAME", talk.name())
+                        IOUtils.toString(
+                            Objects.requireNonNull(this.getClass().getResource("daemon/head.html")),
+                            StandardCharsets.UTF_8
+                        ).trim().replace("TALK_NAME", talk.name())
                             .replace(
                                 "TALK_LINK",
                                 StringEscapeUtils.escapeHtml4(

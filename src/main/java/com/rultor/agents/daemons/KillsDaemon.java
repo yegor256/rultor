@@ -25,10 +25,15 @@ import org.xembly.Directives;
 public final class KillsDaemon extends AbstractAgent {
 
     /**
+     * Default max minutes (1 hour).
+     */
+    private static final long DEFAULT_MAX = TimeUnit.HOURS.toMinutes(1L);
+
+    /**
      * Ctor.
      */
     public KillsDaemon() {
-        this(TimeUnit.HOURS.toMinutes(1L));
+        this(KillsDaemon.DEFAULT_MAX);
     }
 
     /**
@@ -39,11 +44,8 @@ public final class KillsDaemon extends AbstractAgent {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
             "/talk/daemon/dir",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-        )
+            // @checkstyle LineLength (1 line)
+            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > " + mins + "]"
         );
     }
 

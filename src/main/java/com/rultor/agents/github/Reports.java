@@ -61,17 +61,15 @@ public final class Reports extends AbstractAgent {
         final boolean success = Boolean.parseBoolean(
             req.xpath("success/text()").get(0)
         );
-        final URI home = new Home(xml).uri();
         final String pattern;
         if (success) {
             pattern = "Reports.success";
         } else {
             pattern = "Reports.failure";
         }
-        final long number = Long.parseLong(req.xpath("@id").get(0));
         final Comment.Smart comment = new Comment.Smart(
             new SfComment(
-                Reports.origin(issue, number)
+                Reports.origin(issue, Long.parseLong(req.xpath("@id").get(0)))
             )
         );
         final StringBuilder message = new StringBuilder();
@@ -82,7 +80,9 @@ public final class Reports extends AbstractAgent {
         message.append(
             Logger.format(
                 Reports.PHRASES.getString(pattern),
-                home.toASCIIString(),
+                new Home(
+                    xml, xml.xpath("/talk/request/@id").get(0)
+                ).uri().toASCIIString(),
                 Long.parseLong(req.xpath("msec/text()").get(0))
             )
         ).append(Reports.highlights(req));

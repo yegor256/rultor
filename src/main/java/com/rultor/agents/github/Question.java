@@ -14,6 +14,7 @@ import java.net.URI;
  * @since 1.3
  */
 @Immutable
+@FunctionalInterface
 public interface Question {
 
     /**

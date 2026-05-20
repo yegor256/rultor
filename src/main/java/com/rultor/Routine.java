@@ -109,12 +109,11 @@ final class Routine implements Runnable, Closeable {
                     active
                 )
             );
-            final int processed = this.unsafe(active);
             if (Logger.isInfoEnabled(this)) {
                 Logger.info(
                     this,
                     "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
-                    processed,
+                    this.unsafe(active),
                     System.currentTimeMillis() - begin,
                     System.currentTimeMillis() - this.start,
                     System.currentTimeMillis()

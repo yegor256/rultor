@@ -123,6 +123,7 @@ public final class Tail {
      * @since 1.1
      */
     @Immutable
+    @FunctionalInterface
     private interface Connect {
 
         /**
@@ -162,18 +163,17 @@ public final class Tail {
 
         @Override
         public InputStream read() throws IOException {
-            final URI uri = URI.create(
-                this.xml.xpath(
-                    String.format(
-                        "/talk/archive/log[@id='%s']/text()",
-                        this.hash
-                    )
-                ).get(0)
-            );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Tail.S3Connect.bucket().ocket(uri.getPath().substring(1)).read(
-                baos
-            );
+            Tail.S3Connect.bucket().ocket(
+                URI.create(
+                    this.xml.xpath(
+                        String.format(
+                            "/talk/archive/log[@id='%s']/text()",
+                            this.hash
+                        )
+                    ).get(0)
+                ).getPath().substring(1)
+            ).read(baos);
             return new ByteArrayInputStream(baos.toByteArray());
         }
 

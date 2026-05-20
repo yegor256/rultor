@@ -86,7 +86,7 @@ final class ReportsTest {
             ),
             Matchers.is(
                 String.format(
-                    "> %s\n\n@%s %s %s",
+                    "> %s%n%n@%s %s %s",
                     stop,
                     user,
                     ReportsTest.PHRASES.getString("Reports.stop-fails"),

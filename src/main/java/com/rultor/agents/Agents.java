@@ -4,7 +4,6 @@
  */
 package com.rultor.agents;
 
-import co.stateful.Locks;
 import co.stateful.Sttc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.GitHub;
@@ -143,10 +142,6 @@ public final class Agents {
      * @throws IOException If fails
      */
     public SuperAgent starter() throws IOException {
-        final AwsEc2 aws = new AwsEc2(
-            Env.read("Rultor-EC2Key"),
-            Env.read("Rultor-EC2Secret")
-        );
         return new SuperAgent.Iterative(
             new Array<>(
                 new StartsTalks(this.github),
@@ -154,7 +149,11 @@ public final class Agents {
                 new IndexesRequests(),
                 new SuperAgent.Quiet(
                     new PrunesInstances(
-                        aws, TimeUnit.HOURS.toMillis(3L)
+                        new AwsEc2(
+                            Env.read("Rultor-EC2Key"),
+                            Env.read("Rultor-EC2Secret")
+                        ),
+                        TimeUnit.HOURS.toMillis(3L)
                     )
                 ),
                 new SuperAgent.Disabled(
@@ -194,56 +193,6 @@ public final class Agents {
      */
     public Agent agent(final Talk talk, final Profile profile)
         throws IOException {
-        final Locks locks = this.sttc.locks();
-        final Question question = new QnSince(
-            // @checkstyle MagicNumber (1 line)
-            49_092_213,
-            new QnNotSelf(
-                new QnReferredTo(
-                    this.github.users().self().login(),
-                    new QnReaction(
-                        new QnParametrized(
-                            new QnWithAuthor(
-                                new QnFollow(
-                                    new QnFirstOf(
-                                        new QnIfContains(
-                                            "config", new QnConfig(profile)
-                                        ),
-                                        new QnIfContains(
-                                            "status", new QnStatus(talk)
-                                        ),
-                                        new QnIfContains(
-                                            "version", new QnVersion()
-                                        ),
-                                        new QnIfContains(
-                                            "hello", new QnHello()
-                                        ),
-                                        new QnIfContains(
-                                            "ping", new QnHello()
-                                        ),
-                                        new QnIfContains(
-                                            "stop",
-                                            new QnAskedBy(
-                                                profile,
-                                                Agents.commanders("stop"),
-                                                new QnStop()
-                                            )
-                                        ),
-                                        new QnIfCollaborator(
-                                            new QnAlone(
-                                                talk, locks,
-                                                Agents.commands(profile)
-                                            )
-                                        ),
-                                        new QnIamLost()
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        );
         final AwsEc2 aws = new AwsEc2(
             Env.read("Rultor-EC2Key"),
             Env.read("Rultor-EC2Secret")
@@ -255,7 +204,57 @@ public final class Agents {
                 new DropsTalk(),
                 new Understands(
                     this.github,
-                    new QnSafe(question)
+                    new QnSafe(
+                        new QnSince(
+                            // @checkstyle MagicNumber (1 line)
+                            49_092_213,
+                            new QnNotSelf(
+                                new QnReferredTo(
+                                    this.github.users().self().login(),
+                                    new QnReaction(
+                                        new QnParametrized(
+                                            new QnWithAuthor(
+                                                new QnFollow(
+                                                    new QnFirstOf(
+                                                        new QnIfContains(
+                                                            "config", new QnConfig(profile)
+                                                        ),
+                                                        new QnIfContains(
+                                                            "status", new QnStatus(talk)
+                                                        ),
+                                                        new QnIfContains(
+                                                            "version", new QnVersion()
+                                                        ),
+                                                        new QnIfContains(
+                                                            "hello", new QnHello()
+                                                        ),
+                                                        new QnIfContains(
+                                                            "ping", new QnHello()
+                                                        ),
+                                                        new QnIfContains(
+                                                            "stop",
+                                                            new QnAskedBy(
+                                                                profile,
+                                                                Agents.commanders("stop"),
+                                                                new QnStop()
+                                                            )
+                                                        ),
+                                                        new QnIfCollaborator(
+                                                            new QnAlone(
+                                                                talk, this.sttc.locks(),
+                                                                Agents.commands(profile)
+                                                            )
+                                                        ),
+                                                        new QnIamLost()
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
                 ),
                 new StartsRequest(profile),
                 new Agent.Quiet(
@@ -285,7 +284,7 @@ public final class Agents {
                     )
                 ),
                 new Agent.Disabled(
-                    new RegistersShell(
+                    RegistersShell.make(
                         profile,
                         Agents.HOST, Agents.PORT, Agents.LOGIN,
                         Agents.priv()

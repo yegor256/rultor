@@ -23,10 +23,11 @@ final class FakePGP {
     String asString() {
         return new UncheckedText(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 new ListOf<>(
                     "-----BEGIN PGP MESSAGE-----",
-                    "Version: GnuPG v1\n",
+                    "Version: GnuPG v1",
+                    "",
                     "hQEMA5qETcGag5w6AQgAvm/P0JUlQAd",
                     "OtGng5zHLx5cV+BrbpFt1m2ja4BjacYMU",
                     "wcubtJSh+n0XNLk6zMMCsrDnTfzvi/F",

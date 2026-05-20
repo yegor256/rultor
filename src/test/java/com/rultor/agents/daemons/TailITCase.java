@@ -68,7 +68,7 @@ final class TailITCase {
                     new Tail(talk.read(), hash).read(),
                     StandardCharsets.UTF_8
                 ),
-                Matchers.is(String.format("%sê\n", clean))
+                Matchers.is(String.format("%sê%n", clean))
             );
         }
     }

@@ -55,10 +55,9 @@ public final class DropsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final Shell shell = new TalkShells(xml).get();
         final String talk = xml.xpath("/talk/@name").get(0);
         final String container = new Container(talk).toString();
-        final int exit = new Shell.Empty(shell).exec(
+        final int exit = new Shell.Empty(new TalkShells(xml).get()).exec(
             String.format(
                 "docker ps | grep %s",
                 Ssh.escape(container)

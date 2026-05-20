@@ -54,13 +54,14 @@ public final class Tweets extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Repo.Smart repo = new Repo.Smart(issue.repo());
         if (!repo.isPrivate()) {
             this.twitter.post(
                 Tweets.tweet(
-                    repo, req.xpath("args/arg[@name='tag']/text()").get(0)
+                    repo,
+                    xml.nodes("/talk/request").get(0)
+                        .xpath("args/arg[@name='tag']/text()").get(0)
                 )
             );
             Logger.info(

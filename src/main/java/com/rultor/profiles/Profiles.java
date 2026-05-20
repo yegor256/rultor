@@ -128,10 +128,9 @@ public final class Profiles {
         for (final String element : section) {
             path.append(String.format("/entry[@key='%s']", element));
         }
-        final List<String> result = profile.read().xpath(
+        return profile.read().xpath(
             String.format("/%s/item/text()", path)
-        );
-        return result.toArray(new String[0]);
+        ).toArray(new String[0]);
     }
 
     /**

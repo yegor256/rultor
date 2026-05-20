@@ -85,7 +85,9 @@ public final class CommentsTag extends AbstractAgent {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
-        final URI home = new Home(xml).uri();
+        final URI home = new Home(
+            xml, xml.xpath("/talk/request/@id").get(0)
+        ).uri();
         final ReleaseTag release = new ReleaseTag(issue.repo(), tag);
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
@@ -104,7 +106,6 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "duplicate tag %s commented", tag);
         } else if (release.allowed()) {
             final Repo repo = issue.repo();
-            final Date prev = CommentsTag.previous(repo);
             final Release.Smart rel = new Release.Smart(
                 rels.create(tag.trim())
             );
@@ -115,7 +116,7 @@ public final class CommentsTag extends AbstractAgent {
                     // @checkstyle LineLength (1 line)
                     "See #%d, release log:%n%n%s%n%nReleased by Rultor %s, see [build log](%s)",
                     issue.number(),
-                    new CommitsLog(repo).build(prev, rel.publishedAt()),
+                    new CommitsLog(repo).build(CommentsTag.previous(repo), rel.publishedAt()),
                     Env.read("Rultor-Version"), home
                 )
             );

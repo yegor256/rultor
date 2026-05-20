@@ -10,7 +10,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for ${@link YamlXML}.
@@ -26,7 +26,9 @@ final class YamlXMLTest {
     void parsesYamlConfig() {
         MatcherAssert.assertThat(
             "yml should be parsed to xml",
-            new YamlXML("a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e").get(),
+            new YamlXML(
+                String.format("a: test%nb: 'hello'%nc:%n  - one%nd:%n  f: e")
+            ).get(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='a' and .='test']",
                 "/p/entry[@key='b' and .='hello']",
@@ -43,7 +45,9 @@ final class YamlXMLTest {
     void parsesYamlConfigWhenBroken() {
         MatcherAssert.assertThat(
             "empty values should be kept",
-            new YamlXML("a: alpha\nb:\nc:\n  - beta").get(),
+            new YamlXML(
+                String.format("a: alpha%nb:%nc:%n  - beta")
+            ).get(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='a' and .='alpha']",
                 "/p/entry[@key='b' and .='']",
@@ -57,14 +61,22 @@ final class YamlXMLTest {
      * @param yaml Test yaml string
      */
     @ParameterizedTest
-    @ValueSource(strings = {
-        "there\n\t\\/\u0000",
-        "first: \"привет \\/\t\r\""
-    })
+    @MethodSource("brokenYamls")
     void parsesBrokenConfigsAndThrows(final String yaml) {
         Assertions.assertThrows(
             Profile.ConfigException.class,
             () -> new YamlXML(yaml).get()
+        );
+    }
+
+    /**
+     * Sources of broken YAML strings.
+     * @return Stream of broken yaml inputs
+     */
+    private static java.util.stream.Stream<String> brokenYamls() {
+        return java.util.stream.Stream.of(
+            String.format("there%n\t\\/%c", '\u0000'),
+            String.format("first: \"%s \\/\t\r\"", "привет")
         );
     }
 }

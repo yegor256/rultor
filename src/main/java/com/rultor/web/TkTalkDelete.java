@@ -44,8 +44,7 @@ final class TkTalkDelete implements TkRegex {
                 )
             );
         }
-        final Talk talk = this.talks.get(number);
-        this.talks.delete(talk.name());
+        this.talks.delete(this.talks.get(number).name());
         return new RsForward(
             new RsFlash(String.format("talk #%d deleted", number))
         );

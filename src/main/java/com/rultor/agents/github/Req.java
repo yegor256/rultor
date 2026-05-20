@@ -16,6 +16,7 @@ import org.xembly.Directives;
  * @since 1.3
  */
 @Immutable
+@FunctionalInterface
 public interface Req {
 
     /**

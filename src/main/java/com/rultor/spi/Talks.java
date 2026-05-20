@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
@@ -193,15 +192,14 @@ public interface Talks {
             final Collection<File> files = FileUtils.listFiles(
                 new File(this.path), null, false
             );
-            final List<File> list = new ListOf<>(
-                new Sorted<>(
-                    files
-                )
-            );
             Logger.info(this, "%d files in %s", files.size(), this.path);
             return new Mapped<>(
                 Talk.InFile::new,
-                list
+                new ListOf<>(
+                    new Sorted<>(
+                        files
+                    )
+                )
             );
         }
 

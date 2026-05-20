@@ -38,12 +38,15 @@ public final class EndsRequest extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final int code = Integer.parseInt(daemon.xpath("code/text()").get(0));
-        final long msec = new Time(daemon.xpath("ended/text()").get(0)).msec()
-            - new Time(daemon.xpath("started/text()").get(0)).msec();
         final boolean success = code == 0;
         Logger.info(this, "request finished: %b", success);
         final Directives dirs = new Directives().xpath("/talk/request")
-            .add("msec").set(Long.toString(msec)).up()
+            .add("msec").set(
+                Long.toString(
+                    new Time(daemon.xpath("ended/text()").get(0)).msec()
+                        - new Time(daemon.xpath("started/text()").get(0)).msec()
+                )
+            ).up()
             .add("success").set(Boolean.toString(success)).up();
         final List<String> highlights = daemon.xpath("highlights/text()");
         if (!highlights.isEmpty()) {

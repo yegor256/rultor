@@ -72,24 +72,24 @@ public final class ConnectsInstance extends AbstractAgent {
                 instance, name, host
             );
         } else {
-            final long age = System.currentTimeMillis() - this.api.aws()
-                .describeInstances(
-                    DescribeInstancesRequest.builder()
-                        .instanceIds(instance)
-                        .build()
-                )
-                .reservations().get(0)
-                .instances().get(0)
-                .launchTime().toEpochMilli();
-            final String status = this.api.aws().describeInstanceStatus(
-                DescribeInstanceStatusRequest.builder()
-                    .includeAllInstances(true)
-                    .instanceIds(instance)
-                    .build()
-            ).instanceStatuses().get(0).instanceState().nameAsString();
             Logger.warn(
                 this, "Can't connect %s to AWS instance %s at %s (%[ms]s old, \"%s\")",
-                name, instance, host, age, status
+                name, instance, host,
+                System.currentTimeMillis() - this.api.aws()
+                    .describeInstances(
+                        DescribeInstancesRequest.builder()
+                            .instanceIds(instance)
+                            .build()
+                    )
+                    .reservations().get(0)
+                    .instances().get(0)
+                    .launchTime().toEpochMilli(),
+                this.api.aws().describeInstanceStatus(
+                    DescribeInstanceStatusRequest.builder()
+                        .includeAllInstances(true)
+                        .instanceIds(instance)
+                        .build()
+                ).instanceStatuses().get(0).instanceState().nameAsString()
             );
         }
         return dirs;

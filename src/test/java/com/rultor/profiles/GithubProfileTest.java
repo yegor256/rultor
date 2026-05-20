@@ -13,6 +13,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import jakarta.json.Json;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
@@ -57,7 +58,7 @@ final class GithubProfileTest {
                     .add("message", "rultor config")
                     .add(
                         "content",
-                        Base64.getEncoder().encodeToString(yaml.getBytes())
+                        Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                     )
                     .build()
             );
@@ -184,7 +185,7 @@ final class GithubProfileTest {
                                 "  something.xml: jeff/%s#.rultor.yml", name
                             ),
                             "friends:", String.format("  - jeff/%s", name)
-                        ).asString().getBytes()
+                        ).asString().getBytes(StandardCharsets.UTF_8)
                     )
                 ).build()
         );
@@ -259,7 +260,7 @@ final class GithubProfileTest {
                     .add("message", "rultor config")
                     .add(
                         "content",
-                        Base64.getEncoder().encodeToString(yaml.getBytes())
+                        Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                     )
                     .build()
             );
@@ -287,7 +288,7 @@ final class GithubProfileTest {
                     .add("message", "just test msg")
                     .add(
                         "content",
-                        Base64.getEncoder().encodeToString("hey".getBytes())
+                        Base64.getEncoder().encodeToString("hey".getBytes(StandardCharsets.UTF_8))
                     )
                     .build()
             );
@@ -300,7 +301,7 @@ final class GithubProfileTest {
                 .add("message", "just test")
                 .add(
                     "content",
-                    Base64.getEncoder().encodeToString(yaml.getBytes())
+                    Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                 )
                 .build()
         );

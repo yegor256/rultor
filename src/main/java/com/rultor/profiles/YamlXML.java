@@ -46,11 +46,10 @@ final class YamlXML {
      * @return XML
      */
     XML get() {
-        final Yaml parser = new Yaml();
         final Directives dirs = new Directives().add("p");
         if (!this.yaml.isEmpty()) {
             try {
-                dirs.append(YamlXML.dirs(parser.load(this.yaml)));
+                dirs.append(YamlXML.dirs(new Yaml().load(this.yaml)));
             } catch (final YAMLException ex) {
                 throw new Profile.ConfigException(ex);
             }

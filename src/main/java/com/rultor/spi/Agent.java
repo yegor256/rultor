@@ -18,6 +18,7 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
+@FunctionalInterface
 public interface Agent {
 
     /**
@@ -184,8 +185,9 @@ public interface Agent {
 
         @Override
         public void execute(final Talk talk) throws IOException {
-            final String name = talk.read().xpath("/talk/@name").get(0);
-            if (!this.pattern.matcher(name).matches()) {
+            if (!this.pattern.matcher(
+                talk.read().xpath("/talk/@name").get(0)
+            ).matches()) {
                 this.agent.execute(talk);
             }
         }

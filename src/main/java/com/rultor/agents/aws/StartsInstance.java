@@ -134,31 +134,32 @@ public final class StartsInstance extends AbstractAgent {
      */
     private Instance run(final String talk, final XML xml) throws IOException {
         final String itype = this.instanceType(xml);
-        final RunInstancesRequest request = RunInstancesRequest.builder()
-            .securityGroupIds(this.sgroup)
-            .subnetId(this.subnet)
-            .imageId(this.image)
-            .instanceType(itype)
-            .maxCount(1)
-            .minCount(1)
-            .tagSpecifications(
-                TagSpecification.builder()
-                    .resourceType(ResourceType.INSTANCE)
-                    .tags(
-                        Tag.builder().key("Name").value(talk).build(),
-                        Tag.builder().key("rultor").value("yes").build(),
-                        Tag.builder().key("rultor-talk").value(talk).build()
-                    )
-                    .build()
-            )
-            .build();
         Logger.info(
             this,
             "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
             talk, this.image, itype, this.sgroup, this.subnet
         );
         final RunInstancesResponse response =
-            this.api.aws().runInstances(request);
+            this.api.aws().runInstances(
+                RunInstancesRequest.builder()
+                    .securityGroupIds(this.sgroup)
+                    .subnetId(this.subnet)
+                    .imageId(this.image)
+                    .instanceType(itype)
+                    .maxCount(1)
+                    .minCount(1)
+                    .tagSpecifications(
+                        TagSpecification.builder()
+                            .resourceType(ResourceType.INSTANCE)
+                            .tags(
+                                Tag.builder().key("Name").value(talk).build(),
+                                Tag.builder().key("rultor").value("yes").build(),
+                                Tag.builder().key("rultor-talk").value(talk).build()
+                            )
+                            .build()
+                    )
+                    .build()
+            );
         final Instance instance = response.instances().get(0);
         Logger.info(
             this,
@@ -189,8 +190,9 @@ public final class StartsInstance extends AbstractAgent {
             );
         }
         if (Arrays.asList(StartsInstance.ELITE_TYPES).contains(required)) {
-            final String org = xml.xpath("/talk/wire/github-repo/text()").get(0).split("/")[0];
-            if (!Arrays.asList(StartsInstance.ELITE_ORGS).contains(org)) {
+            if (!Arrays.asList(StartsInstance.ELITE_ORGS).contains(
+                xml.xpath("/talk/wire/github-repo/text()").get(0).split("/")[0]
+            )) {
                 throw new Profile.ConfigException(
                     Logger.format(
                         "You are not allowed to use EC2 instance type '%s', use one of %[list]s",

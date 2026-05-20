@@ -102,13 +102,15 @@ public final class ArchivesDaemon extends AbstractAgent {
      * @throws IOException If fails
      */
     private URI upload(final File file, final String hash) throws IOException {
-        final HeadObjectResponse meta = HeadObjectResponse.builder()
-            .contentType("text/plain")
-            .contentEncoding(StandardCharsets.UTF_8.name())
-            .contentLength(file.length())
-            .build();
         final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);
-        this.bucket.ocket(key).write(Files.newInputStream(file.toPath()), meta);
+        this.bucket.ocket(key).write(
+            Files.newInputStream(file.toPath()),
+            HeadObjectResponse.builder()
+                .contentType("text/plain")
+                .contentEncoding(StandardCharsets.UTF_8.name())
+                .contentLength(file.length())
+                .build()
+        );
         return URI.create(String.format("s3://%s/%s", this.bucket.name(), key));
     }
 

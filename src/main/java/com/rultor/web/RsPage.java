@@ -61,31 +61,33 @@ final class RsPage extends RsWrap {
     private static Response make(final String xsl, final Request req,
         final XeSource... src
     ) throws IOException {
-        final Response raw = new RsXembly(
-            new XeStylesheet(xsl),
-            new XeAppend(
-                "page",
-                new XeMillis(false),
-                new XeChain(src),
-                new XeLinkHome(req),
-                new XeLinkSelf(req),
-                new XeMillis(true),
-                new XeDate(),
-                new XeSla(),
-                new XeLocalhost(),
-                new XeIdentity(req),
-                new XeFlash(req),
-                new XeGithubLink(req, Env.read("Rultor-GithubId")),
-                new XeLogoutLink(req),
+        return RsPage.typedResponse(
+            new RsXembly(
+                new XeStylesheet(xsl),
                 new XeAppend(
-                    "version",
-                    new XeAppend("name", Env.read("Rultor-Version")),
-                    new XeAppend("revision", Env.read("Rultor-Revision")),
-                    new XeAppend("date", Env.read("Rultor-Date"))
+                    "page",
+                    new XeMillis(false),
+                    new XeChain(src),
+                    new XeLinkHome(req),
+                    new XeLinkSelf(req),
+                    new XeMillis(true),
+                    new XeDate(),
+                    new XeSla(),
+                    new XeLocalhost(),
+                    new XeIdentity(req),
+                    new XeFlash(req),
+                    new XeGithubLink(req, Env.read("Rultor-GithubId")),
+                    new XeLogoutLink(req),
+                    new XeAppend(
+                        "version",
+                        new XeAppend("name", Env.read("Rultor-Version")),
+                        new XeAppend("revision", Env.read("Rultor-Revision")),
+                        new XeAppend("date", Env.read("Rultor-Date"))
+                    )
                 )
-            )
+            ),
+            req
         );
-        return RsPage.typedResponse(raw, req);
     }
 
     /**

@@ -33,7 +33,7 @@ final class RegistersShellTest {
         final int port = 221;
         final String key = "";
         final String login = "john";
-        final Agent agent = new RegistersShell(
+        final Agent agent = RegistersShell.make(
             new Profile.Fixed(
                 new XMLDocument(
                     new Joined(
@@ -80,7 +80,7 @@ final class RegistersShellTest {
         final String key = "";
         final String login = "john";
         Assertions.assertDoesNotThrow(
-            () -> new RegistersShell(
+            () -> RegistersShell.make(
                 new Profile.Fixed(
                     new XMLDocument(
                         new Joined(
@@ -107,7 +107,7 @@ final class RegistersShellTest {
     void handlesBrokenProfileGracefully() throws Exception {
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doThrow(new Profile.ConfigException("")).when(profile).read();
-        final Agent agent = new RegistersShell(
+        final Agent agent = RegistersShell.make(
             profile, "localhost", 1, "test-user", "test-key"
         );
         final Talk talk = new Talk.InFile();

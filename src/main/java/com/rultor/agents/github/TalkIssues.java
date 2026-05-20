@@ -8,7 +8,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
-import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -48,12 +47,12 @@ public final class TalkIssues {
      */
     public Issue.Smart get() {
         final XML wire = this.xml.nodes("/talk/wire").get(0);
-        final Coordinates coords = new Coordinates.Simple(
-            wire.xpath("github-repo/text()").get(0)
-        );
-        final Repo repo = this.github.repos().get(coords);
         return new Issue.Smart(
-            repo.issues().get(
+            this.github.repos().get(
+                new Coordinates.Simple(
+                    wire.xpath("github-repo/text()").get(0)
+                )
+            ).issues().get(
                 Integer.parseInt(
                     wire.xpath("github-issue/text()").get(0)
                 )

@@ -36,7 +36,9 @@ final class CommitsLogTest {
         Mockito.doReturn(
             Collections.singleton(
                 this.commit(
-                    "hi\u20ac\t\n this is a very long commit message"
+                    String.format(
+                        "hi\u20ac\t%n this is a very long commit message"
+                    )
                 )
             )
         ).when(commits).iterate(Mockito.any(Map.class));

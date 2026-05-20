@@ -12,6 +12,7 @@ import com.rultor.spi.Profile;
 import jakarta.json.Json;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 import org.cactoos.text.Joined;
@@ -308,7 +309,7 @@ final class GithubProfileValidationTest {
                 .add("message", "just test")
                 .add(
                     "content",
-                    Base64.getEncoder().encodeToString(yaml.getBytes())
+                    Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                 )
                 .build()
         );

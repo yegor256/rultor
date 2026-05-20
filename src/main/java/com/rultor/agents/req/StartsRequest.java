@@ -288,8 +288,9 @@ public final class StartsRequest extends AbstractAgent {
      * @throws IOException If fails
      */
     private DockerRun docker(final String type) throws IOException {
-        final String xpath = String.format("/p/entry[@key='%s']", type);
-        final Collection<XML> nodes = this.profile.read().nodes(xpath);
+        final Collection<XML> nodes = this.profile.read().nodes(
+            String.format("/p/entry[@key='%s']", type)
+        );
         if (nodes.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(

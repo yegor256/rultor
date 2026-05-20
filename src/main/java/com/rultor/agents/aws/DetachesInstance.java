@@ -14,7 +14,6 @@ import org.xembly.Directive;
 import org.xembly.Directives;
 import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
 import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusResponse;
-import software.amazon.awssdk.services.ec2.model.InstanceState;
 
 /**
  * Removes "EC2" element if instance is already "terminated".
@@ -47,9 +46,8 @@ public final class DetachesInstance extends AbstractAgent {
                 .instanceIds(instance)
                 .build()
         );
-        final InstanceState state = res.instanceStatuses().get(0).instanceState();
         final Directives dirs = new Directives();
-        if ("terminated".equals(state.nameAsString())) {
+        if ("terminated".equals(res.instanceStatuses().get(0).instanceState().nameAsString())) {
             dirs.xpath("/talk/ec2").strict(1).remove();
             Logger.info(this, "AWS instance %s is already terminated, detaching", instance);
         }

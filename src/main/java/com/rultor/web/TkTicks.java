@@ -66,11 +66,7 @@ final class TkTicks implements Take {
      * @throws IOException If fails
      */
     private byte[] png() throws IOException {
-        final TranscoderInput input = new TranscoderInput(
-            (Document) TkTicks.PULSE.transform(this.dirs()).inner()
-        );
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final TranscoderOutput output = new TranscoderOutput(baos);
         final PNGTranscoder transcoder = new PNGTranscoder();
         transcoder.addTranscodingHint(
             PNGTranscoder.KEY_WIDTH, 1_000f
@@ -79,7 +75,12 @@ final class TkTicks implements Take {
             PNGTranscoder.KEY_HEIGHT, 100f
         );
         try {
-            transcoder.transcode(input, output);
+            transcoder.transcode(
+                new TranscoderInput(
+                    (Document) TkTicks.PULSE.transform(this.dirs()).inner()
+                ),
+                new TranscoderOutput(baos)
+            );
         } catch (final TranscoderException ex) {
             throw new IOException(ex);
         }
