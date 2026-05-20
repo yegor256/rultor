@@ -6,6 +6,7 @@ package com.rultor;
 
 import co.stateful.RtSttc;
 import com.jcabi.github.RtGitHub;
+import com.jcabi.github.UnexpectedHttpStatus;
 import com.jcabi.urn.URN;
 import com.yegor256.WeAreOnline;
 import org.junit.jupiter.api.Assertions;
@@ -51,7 +52,7 @@ final class EntryTest {
     @Test
     void githubConnects() {
         Assertions.assertThrows(
-            AssertionError.class,
+            UnexpectedHttpStatus.class,
             () -> new RtGitHub("intentionally-invalid-token")
                 .users().self().login()
         );

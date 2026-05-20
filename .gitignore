@@ -1,4 +1,5 @@
 *.iml
+.factorypath
 *.log
 .claude/
 .DS_Store
@@ -13,3 +14,4 @@ ajcore*
 Gemfile.lock
 node_modules/
 target/
+.aidy/
