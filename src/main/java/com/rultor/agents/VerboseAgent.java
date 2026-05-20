@@ -28,6 +28,7 @@ public final class VerboseAgent implements Agent {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void execute(final Talk talk) throws IOException {
         try {
             this.origin.execute(talk);

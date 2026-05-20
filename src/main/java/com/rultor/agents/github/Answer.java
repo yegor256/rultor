@@ -104,6 +104,7 @@ public final class Answer {
      * @param text The text
      * @return Text to post
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private String msg(final boolean success, final String text) {
         final StringBuilder msg = new StringBuilder(100);
         try {

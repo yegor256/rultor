@@ -39,6 +39,7 @@ final class Crew {
      * Get all collaborators.
      * @return List of their login names
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     Collection<String> names() {
         final Collection<String> names = new LinkedList<>();
         try {

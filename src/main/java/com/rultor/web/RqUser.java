@@ -61,6 +61,7 @@ final class RqUser extends RqWrap {
      * @return TRUE if I can see it
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     boolean canSee(final Talk talk) throws IOException {
         final XML xml;
         try {

@@ -97,6 +97,7 @@ final class Routine implements Runnable, Closeable {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void run() {
         final long begin = System.currentTimeMillis();
         try {
