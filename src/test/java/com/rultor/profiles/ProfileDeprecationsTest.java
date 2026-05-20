@@ -64,19 +64,18 @@ final class ProfileDeprecationsTest {
      */
     @Test
     void identifiesValidProfile() throws Exception {
-        final ProfileDeprecations deprecations = new ProfileDeprecations(
-            new Profile.Fixed(
-                new XMLDocument(
-                    String.format(
-                        ProfileDeprecationsTest.PROFILE_FORMAT,
-                        "foo"
-                    )
-                )
-            )
-        );
         MatcherAssert.assertThat(
             "Deprecation list should be empty",
-            deprecations.empty(),
+            new ProfileDeprecations(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            ProfileDeprecationsTest.PROFILE_FORMAT,
+                            "foo"
+                        )
+                    )
+                )
+            ).empty(),
             Matchers.is(true)
         );
     }

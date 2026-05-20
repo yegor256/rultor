@@ -37,6 +37,20 @@ final class QnConfigTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnConfig posts the XML view of the rultor.yml as a comment.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsRultorYmlAsComment() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("hello");
+        new QnConfig(new Profile.Fixed()).understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        );
         MatcherAssert.assertThat(
             "Xml view of rultor.yml should be added to the comment",
             new Comment.Smart(issue.comments().get(2)).body(),

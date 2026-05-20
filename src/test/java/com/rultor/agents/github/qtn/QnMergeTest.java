@@ -76,7 +76,7 @@ final class QnMergeTest {
     }
 
     /**
-     * QnMerge can build a request.
+     * QnMerge creates a merge request with the expected XML structure.
      * @throws Exception In case of error
      */
     @Test
@@ -94,11 +94,29 @@ final class QnMergeTest {
                 )
             )
         );
+    }
+
+    /**
+     * QnMerge keeps the initiator command as the first comment.
+     * @throws Exception In case of error
+     */
+    @Test
+    void preservesInitiatorComment() throws Exception {
+        this.mergeRequest();
         MatcherAssert.assertThat(
             "Merge comment should be initiator",
             new Comment.Smart(this.comments.get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
         );
+    }
+
+    /**
+     * QnMerge posts the merge start comment.
+     * @throws Exception In case of error
+     */
+    @Test
+    void postsMergeStartComment() throws Exception {
+        this.mergeRequest();
         MatcherAssert.assertThat(
             "Comment about staring merge should be posted",
             new Comment.Smart(this.comments.get(2)).body(),
@@ -108,6 +126,24 @@ final class QnMergeTest {
                     "#"
                 )
             )
+        );
+    }
+
+    /**
+     * QnMerge keeps the initiator comment when CI checks fail.
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void preservesInitiatorWhenCiChecksFailed()
+        throws IOException, URISyntaxException {
+        final MkChecks checks = (MkChecks) this.pull.checks();
+        checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
+        this.mergeRequest();
+        MatcherAssert.assertThat(
+            "Merge comment should be initiator",
+            new Comment.Smart(this.comments.get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
         );
     }
 
@@ -123,16 +159,29 @@ final class QnMergeTest {
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
         this.mergeRequest();
         MatcherAssert.assertThat(
-            "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
-            Matchers.is(QnMergeTest.COMMAND)
-        );
-        MatcherAssert.assertThat(
             "Merge should be stopped if checks are not successful",
             new Comment.Smart(this.comments.get(2)).body(),
             Matchers.containsString(
                 QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
             )
+        );
+    }
+
+    /**
+     * QnMerge keeps the initiator comment when CI checks pass.
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void preservesInitiatorWhenCiChecksSuccessful()
+        throws IOException, URISyntaxException {
+        final MkChecks checks = (MkChecks) this.pull.checks();
+        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        this.mergeRequest();
+        MatcherAssert.assertThat(
+            "Merge comment should be initiator",
+            new Comment.Smart(this.comments.get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
         );
     }
 
@@ -147,11 +196,6 @@ final class QnMergeTest {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         this.mergeRequest();
-        MatcherAssert.assertThat(
-            "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
-            Matchers.is(QnMergeTest.COMMAND)
-        );
         MatcherAssert.assertThat(
             "Merge start info comment should be posted",
             new Comment.Smart(this.comments.get(2)).body(),

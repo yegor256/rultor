@@ -30,6 +30,17 @@ public final class KillsDaemon extends AbstractAgent {
     private static final long DEFAULT_MAX = TimeUnit.HOURS.toMinutes(1L);
 
     /**
+     * Xpath prefix for the daemon age check.
+     */
+    private static final String XPATH_PREFIX =
+        "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > ";
+
+    /**
+     * Xpath suffix.
+     */
+    private static final String XPATH_SUFFIX = "]";
+
+    /**
      * Ctor.
      */
     public KillsDaemon() {
@@ -44,8 +55,7 @@ public final class KillsDaemon extends AbstractAgent {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
             "/talk/daemon/dir",
-            // @checkstyle LineLength (1 line)
-            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > " + mins + "]"
+            KillsDaemon.XPATH_PREFIX + mins + KillsDaemon.XPATH_SUFFIX
         );
     }
 

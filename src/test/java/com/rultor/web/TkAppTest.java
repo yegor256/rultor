@@ -52,13 +52,12 @@ final class TkAppTest {
      */
     @Test
     void rendersHomePage() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         final String page = new TextOf(
             new RsPrint(
-                take.act(
+                new TkApp(
+                    new Talks.InDir(), Pulse.EMPTY,
+                    new Toggles.InFile()
+                ).act(
                     new RqWithHeader(
                         new RqFake("GET", "/"),
                         "Accept",
@@ -88,12 +87,13 @@ final class TkAppTest {
      */
     @Test
     void rendersHomePageViaHttp() throws Exception {
-        final Take app = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         Assertions.assertDoesNotThrow(
-            () -> new FtRemote(app).exec(
+            () -> new FtRemote(
+                new TkApp(
+                    new Talks.InDir(), Pulse.EMPTY,
+                    new Toggles.InFile()
+                )
+            ).exec(
                 home -> {
                     new JdkRequest(home)
                         .fetch()
@@ -121,10 +121,6 @@ final class TkAppTest {
      */
     @Test
     void rendersHomeJs() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         Assertions.assertEquals(
             new StringBuilder()
                 .append("$(document).ready(function(){var a=$(\"#pulse\");")
@@ -135,7 +131,10 @@ final class TkAppTest {
                 .toString(),
             new TextOf(
                 new RsPrint(
-                    take.act(
+                    new TkApp(
+                        new Talks.InDir(), Pulse.EMPTY,
+                        new Toggles.InFile()
+                    ).act(
                         new RqWithHeader(
                             new RqFake("GET", "/js/home.js?{version/revision}"),
                             "Accept",

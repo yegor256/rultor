@@ -34,6 +34,17 @@ public final class DismountDaemon extends AbstractAgent {
     private static final long DEFAULT_MAX = TimeUnit.DAYS.toMinutes(10L);
 
     /**
+     * Xpath prefix for the daemon age check.
+     */
+    private static final String XPATH_PREFIX =
+        "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > ";
+
+    /**
+     * Xpath suffix.
+     */
+    private static final String XPATH_SUFFIX = "]";
+
+    /**
      * Ctor.
      */
     public DismountDaemon() {
@@ -47,8 +58,7 @@ public final class DismountDaemon extends AbstractAgent {
     public DismountDaemon(final long mins) {
         super(
             "/talk/daemon[started and dir]",
-            // @checkstyle LineLength (1 line)
-            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > " + mins + "]",
+            DismountDaemon.XPATH_PREFIX + mins + DismountDaemon.XPATH_SUFFIX,
             "/talk/shell[host and port and login and key]"
         );
     }

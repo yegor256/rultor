@@ -52,6 +52,27 @@ final class QnByArchitectTest {
             issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(2)
         );
+    }
+
+    /**
+     * QnByArchitect posts confirmation request when not an architect.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsConfirmationRequestIfNotArchitect() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().post("deploy")
+        );
+        final Question question = Mockito.mock(Question.class);
+        final URI home = new URI("#");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument("<p><entry key='a'>johnny</entry></p>")
+            ),
+            "/p/entry[@key='a']/text()", question
+        ).understand(comment, home);
         MatcherAssert.assertThat(
             "Confirmation request comment should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),

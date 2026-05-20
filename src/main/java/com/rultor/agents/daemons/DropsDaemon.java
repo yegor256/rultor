@@ -35,6 +35,17 @@ public final class DropsDaemon extends AbstractAgent {
     private static final long DEFAULT_MAX = TimeUnit.DAYS.toMinutes(10L);
 
     /**
+     * Xpath prefix for the daemon age check.
+     */
+    private static final String XPATH_PREFIX =
+        "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > ";
+
+    /**
+     * Xpath suffix.
+     */
+    private static final String XPATH_SUFFIX = "]";
+
+    /**
      * Ctor.
      */
     public DropsDaemon() {
@@ -48,8 +59,7 @@ public final class DropsDaemon extends AbstractAgent {
     public DropsDaemon(final long mins) {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
-            // @checkstyle LineLength (1 line)
-            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > " + mins + "]",
+            DropsDaemon.XPATH_PREFIX + mins + DropsDaemon.XPATH_SUFFIX,
             "/talk/shell[host and port and login and key]"
         );
     }

@@ -56,13 +56,15 @@ final class TimeTest {
     @Test
     void isoValidFormat() {
         final Instant instant = Instant.now();
-        final DateTimeFormatter format = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-            .withZone(ZoneOffset.UTC);
         MatcherAssert.assertThat(
             "ISO value should be for the GMT timezone",
             new Time(instant).iso(),
-            Matchers.equalTo(format.format(instant))
+            Matchers.equalTo(
+                DateTimeFormatter
+                    .ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+                    .withZone(ZoneOffset.UTC)
+                    .format(instant)
+            )
         );
     }
 

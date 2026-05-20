@@ -266,7 +266,9 @@ final class DockerRunTest {
                 DockerRun.byXpath(
                     new Profile.Fixed(
                         new XMLDocument(
-                            String.format("<p><entry key='script'>echo 1%necho 2%n%n%necho 3</entry></p>")
+                            String.format(
+                                "<p><entry key='script'>echo 1%necho 2%n%n%necho 3</entry></p>"
+                            )
                         )
                     ),
                     "/p"

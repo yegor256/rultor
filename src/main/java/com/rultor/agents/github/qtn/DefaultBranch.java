@@ -52,12 +52,27 @@ public final class DefaultBranch {
         private static final long serialVersionUID = -3860028281726793188L;
 
         /**
+         * Message prefix.
+         */
+        private static final String PREFIX = "Most probably the repo ";
+
+        /**
+         * Message suffix.
+         */
+        private static final String SUFFIX = " doesn't exist";
+
+        /**
          * Ctor.
          * @param name Name of repo
          * @param exp Original problem
          */
         public RepoNotFoundException(final String name, final Throwable exp) {
-            super("Most probably the repo " + name + " doesn't exist", exp);
+            super(
+                DefaultBranch.RepoNotFoundException.PREFIX
+                + name
+                + DefaultBranch.RepoNotFoundException.SUFFIX,
+                exp
+            );
         }
     }
 }

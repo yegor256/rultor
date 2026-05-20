@@ -57,7 +57,8 @@ final class GithubProfileTest {
                     .add("message", "rultor config").add(
                         "content",
                         Base64.getEncoder().encodeToString(
-                            String.format("friends:%n  - jeff/test2").getBytes(StandardCharsets.UTF_8)
+                            String.format("friends:%n  - jeff/test2")
+                                .getBytes(StandardCharsets.UTF_8)
                         )
                     )
                     .build()
@@ -262,7 +263,8 @@ final class GithubProfileTest {
                     .add("message", "rultor config").add(
                         "content",
                         Base64.getEncoder().encodeToString(
-                            String.format("friends:%n  - jeff/test2").getBytes(StandardCharsets.UTF_8)
+                            String.format("friends:%n  - jeff/test2")
+                                .getBytes(StandardCharsets.UTF_8)
                         )
                     )
                     .build()
