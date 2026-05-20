@@ -21,7 +21,6 @@ import org.xembly.Directives;
 
 /**
  * Tweets.
- *
  * @since 1.30
  */
 @Immutable
@@ -55,13 +54,14 @@ public final class Tweets extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Repo.Smart repo = new Repo.Smart(issue.repo());
         if (!repo.isPrivate()) {
             this.twitter.post(
                 Tweets.tweet(
-                    repo, req.xpath("args/arg[@name='tag']/text()").get(0)
+                    repo,
+                    xml.nodes("/talk/request").get(0)
+                        .xpath("args/arg[@name='tag']/text()").get(0)
                 )
             );
             Logger.info(
@@ -79,7 +79,6 @@ public final class Tweets extends AbstractAgent {
      * @return Tweet text
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.InsufficientStringBufferDeclaration")
     private static String tweet(final Repo.Smart repo, final String tag)
         throws IOException {
         final StringBuilder text = new StringBuilder(200);
@@ -100,5 +99,4 @@ public final class Tweets extends AbstractAgent {
         }
         return text.toString();
     }
-
 }

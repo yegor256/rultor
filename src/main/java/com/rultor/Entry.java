@@ -40,10 +40,8 @@ import org.takes.http.FtCli;
 
 /**
  * Command line entry.
- *
  * @since 1.50
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class Entry {
 
     /**
@@ -55,8 +53,17 @@ public final class Entry {
      * Ctor.
      * @param args Command line args
      */
-    public Entry(final String... args) {
-        this.arguments = Arrays.asList(args);
+    public Entry(final Iterable<String> args) {
+        this.arguments = args;
+    }
+
+    /**
+     * Build from varargs.
+     * @param args Command line args
+     * @return New entry
+     */
+    public static Entry build(final String... args) {
+        return new Entry(Arrays.asList(args));
     }
 
     /**
@@ -67,7 +74,7 @@ public final class Entry {
     @LogExceptions
     public static void main(final String... args) throws IOException {
         Logger.info(Entry.class, "Starting Rultor on the command line...");
-        new Entry(args).exec();
+        Entry.build(args).exec();
     }
 
     /**
@@ -216,5 +223,4 @@ public final class Entry {
             }
         };
     }
-
 }

@@ -21,42 +21,65 @@ import org.junit.jupiter.api.Test;
 final class StartsDockerDaemonTest {
 
     /**
-     * StartsDockerDaemon can provide a working PfShell.
+     * StartsDockerDaemon can provide a PfShell that logs in as root.
      * @throws Exception In case of failure
      */
     @Test
-    void providesPfShell() throws Exception {
+    void providesPfShellLoginAsRoot() throws Exception {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
-            final PfShell shell = start.shell();
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "Should login as root",
-                shell.login(),
+                start.shell().login(),
                 Matchers.is("root")
             );
-            final String key = shell.key();
+        }
+    }
+
+    /**
+     * StartsDockerDaemon can provide a PfShell with RSA key.
+     * @throws Exception In case of failure
+     */
+    @Test
+    void providesPfShellWithRsaKey() throws Exception {
+        Assumptions.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "Should be RSA key",
-                key,
+                start.shell().key(),
                 Matchers.allOf(
                     Matchers.startsWith("-----BEGIN RSA PRIVATE KEY-----"),
                     Matchers.endsWith("-----END RSA PRIVATE KEY-----")
                 )
             );
-            final Shell.Plain ssh = new Shell.Plain(
-                new Ssh(shell.host(), shell.port(), shell.login(), shell.key())
-            );
-            MatcherAssert.assertThat(
-                "Key should be placed in /root/.ssh/id_rsa",
-                ssh.exec("cat /root/.ssh/id_rsa"),
-                Matchers.containsString(key)
-            );
         }
     }
 
+    /**
+     * StartsDockerDaemon places the key in /root/.ssh/id_rsa.
+     * @throws Exception In case of failure
+     */
+    @Test
+    void placesKeyInRootSsh() throws Exception {
+        Assumptions.assumeTrue(
+            "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
+        );
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
+            final PfShell shell = start.shell();
+            MatcherAssert.assertThat(
+                "Key should be placed in /root/.ssh/id_rsa",
+                new Shell.Plain(
+                    new Ssh(shell.host(), shell.port(), shell.login(), shell.key())
+                ).exec("cat /root/.ssh/id_rsa"),
+                Matchers.containsString(shell.key())
+            );
+        }
+    }
 }

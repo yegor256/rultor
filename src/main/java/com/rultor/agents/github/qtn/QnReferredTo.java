@@ -20,7 +20,6 @@ import lombok.ToString;
 
 /**
  * Question.
- *
  * @since 1.3
  */
 @Immutable

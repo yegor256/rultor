@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
  * Integration case for {@link SiblingsRs}.
  * @since 1.23
  */
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkSiblingsITCase {
 
     /**
@@ -45,10 +44,34 @@ final class TkSiblingsITCase {
             .method(Request.GET)
             .fetch()
             .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .as(XmlResponse.class)
-            .assertXPath("/page[repo='test/me']")
-            .assertXPath("/page/siblings[count(talk)=0]");
+            .assertStatus(HttpURLConnection.HTTP_OK);
     }
 
+    /**
+     * SiblingsRs renders the repository name on the siblings page.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void rendersRepoName() throws Exception {
+        new JdkRequest(TkSiblingsITCase.HOME).uri().path("/p/test/me").back()
+            .header("Accept", "application/xml")
+            .method(Request.GET)
+            .fetch()
+            .as(XmlResponse.class)
+            .assertXPath("/page[repo='test/me']");
+    }
+
+    /**
+     * SiblingsRs starts with an empty list of talks for a fresh repo.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void rendersEmptyTalksList() throws Exception {
+        new JdkRequest(TkSiblingsITCase.HOME).uri().path("/p/test/me").back()
+            .header("Accept", "application/xml")
+            .method(Request.GET)
+            .fetch()
+            .as(XmlResponse.class)
+            .assertXPath("/page/siblings[count(talk)=0]");
+    }
 }

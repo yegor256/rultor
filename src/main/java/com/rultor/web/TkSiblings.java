@@ -9,7 +9,9 @@ import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.logging.Level;
 import org.cactoos.iterable.HeadOf;
@@ -30,7 +32,6 @@ import org.xembly.Directives;
 
 /**
  * Siblings.
- *
  * @since 1.50
  */
 final class TkSiblings implements TkRegex {
@@ -50,7 +51,7 @@ final class TkSiblings implements TkRegex {
 
     @Override
     public Response act(final RqRegex req) throws IOException {
-        final Date since = new Date(
+        final Instant since = Instant.ofEpochMilli(
             Long.parseLong(
                 new RqHref.Smart(new RqHref.Base(req)).single(
                     "s", Long.toString(Long.MAX_VALUE)
@@ -77,7 +78,7 @@ final class TkSiblings implements TkRegex {
             "/xsl/siblings.xsl",
             req,
             new XeAppend("repo", repo),
-            new XeAppend("since", Long.toString(since.getTime())),
+            new XeAppend("since", Long.toString(since.toEpochMilli())),
             this.more(repo, siblings),
             new XeDirectives(this.list(siblings))
         );
@@ -95,12 +96,11 @@ final class TkSiblings implements TkRegex {
         throws IOException {
         final XeSource src;
         if (siblings.size() == 20) {
-            final Talk last = siblings.get(siblings.size() - 1);
             src = new XeLink(
                 "more",
                 String.format(
                     "/p/%s?s=%s",
-                    repo, last.updated().getTime()
+                    repo, siblings.get(siblings.size() - 1).updated().toEpochMilli()
                 )
             );
         } else {
@@ -139,8 +139,12 @@ final class TkSiblings implements TkRegex {
         }
         return dirs.up().add("name").set(talk.name()).up()
             .add("href").set(xml.xpath("/talk/wire/href/text()").get(0)).up()
-            .add("updated").set(Long.toString(talk.updated().getTime())).up()
-            .add("timeago").set(new PrettyTime().format(talk.updated())).up()
+            .add("updated").set(Long.toString(talk.updated().toEpochMilli())).up()
+            .add("timeago").set(
+                new PrettyTime().format(
+                    LocalDateTime.ofInstant(talk.updated(), ZoneId.systemDefault())
+                )
+            ).up()
             .up();
     }
 
@@ -158,5 +162,4 @@ final class TkSiblings implements TkRegex {
             .add("title").set(log.xpath("@title").get(0)).up()
             .up();
     }
-
 }

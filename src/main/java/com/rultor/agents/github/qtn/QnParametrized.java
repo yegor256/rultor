@@ -26,7 +26,6 @@ import org.xembly.Directives;
 
 /**
  * Parametrized question.
- *
  * @since 1.3.6
  */
 @Immutable
@@ -87,7 +86,6 @@ public final class QnParametrized implements Question {
      * @return Map of params
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private static Map<String, String> params(final Comment.Smart comment)
         throws IOException {
         final List<Entry<String, String>> entries = new LinkedList<>();
@@ -101,5 +99,4 @@ public final class QnParametrized implements Question {
         }
         return new MapOf<>(new ListOf<>(entries));
     }
-
 }

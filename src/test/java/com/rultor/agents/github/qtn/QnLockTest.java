@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnLock}.
- *
  * @since 1.53
  */
 final class QnLockTest {
@@ -37,6 +36,20 @@ final class QnLockTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnLock posts a message about the lock action.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsLockMessage() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("lock users=`@test1, test2`");
+        new QnLock().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        );
         MatcherAssert.assertThat(
             "Message about action should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
@@ -48,5 +61,4 @@ final class QnLockTest {
             )
         );
     }
-
 }

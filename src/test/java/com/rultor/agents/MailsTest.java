@@ -24,7 +24,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Mails}.
- *
  * @since 2.0
  */
 final class MailsTest {
@@ -36,19 +35,9 @@ final class MailsTest {
     @Test
     @Disabled
     void sendsMail() throws Exception {
-        final Postman postman = Mockito.spy(Postman.CONSOLE);
-        final Agent agent = new Mails(
-            this.profile(),
-            postman
-        );
-        agent.execute(MailsTest.talk());
-        final ArgumentCaptor<Envelope> captor =
-            ArgumentCaptor.forClass(Envelope.class);
-        Mockito.verify(postman).send(captor.capture());
-        final Envelope envelope = captor.getValue();
         MatcherAssert.assertThat(
             "Mail text should contain some data",
-            envelope.unwrap().getContent().toString(),
+            this.capturedEnvelope().unwrap().getContent().toString(),
             Matchers.allOf(
                 Matchers.containsString("See #456, release log:"),
                 Matchers.containsString("Released by Rultor"),
@@ -58,16 +47,42 @@ final class MailsTest {
                 )
             )
         );
+    }
+
+    /**
+     * Mails sets the subject of the sent mail to indicate a release.
+     * @throws Exception In case of error.
+     */
+    @Test
+    @Disabled
+    void sendsMailWithReleaseSubject() throws Exception {
         MatcherAssert.assertThat(
             "Mail subject should be about release",
-            envelope.unwrap().getSubject(),
+            this.capturedEnvelope().unwrap().getSubject(),
             Matchers.equalTo("user/repo v2.0 released!")
         );
     }
 
     /**
+     * Execute the Mails agent and capture the envelope sent through Postman.
+     * @return The envelope captured during agent execution
+     * @throws Exception In case of error
+     */
+    private Envelope capturedEnvelope() throws Exception {
+        final Postman postman = Mockito.spy(Postman.CONSOLE);
+        final Agent agent = new Mails(
+            this.profile(),
+            postman
+        );
+        agent.execute(MailsTest.talk());
+        final ArgumentCaptor<Envelope> captor =
+            ArgumentCaptor.forClass(Envelope.class);
+        Mockito.verify(postman).send(captor.capture());
+        return captor.getValue();
+    }
+
+    /**
      * Mails can send a mail to recipients.
-     * @throws Exception In case of error.
      * @todo #748 Implement method sendsToRecipients. It must check that
      *  mail is sent to all recipients. Recipients are defined in Profile.
      */

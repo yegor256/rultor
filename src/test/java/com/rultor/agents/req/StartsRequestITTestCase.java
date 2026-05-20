@@ -19,11 +19,11 @@ import org.xembly.Directives;
 
 /**
  * Integration tests for ${@link StartsRequest}.
- *
  * @since 1.24.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class StartsRequestITTestCase {
+
     /**
      * Docker server address.
      */
@@ -80,7 +80,7 @@ final class StartsRequestITTestCase {
             new Profile.Fixed(
                 new XMLDocument(
                     new Joined(
-                        "\n",
+                        System.lineSeparator(),
                         "<p><entry key='deploy'><entry key='script'>",
                         "echo 'Hello, world!'",
                         "echo 'I am' $(id -u -n)",
@@ -103,7 +103,7 @@ final class StartsRequestITTestCase {
         final String dir = String.format("/tmp/test-%d", System.nanoTime());
         final String stdout = new Shell.Plain(shell).exec(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 String.format("mkdir %s", dir),
                 String.format("cd %s", dir),
                 talk.read().xpath("//script/text()").get(0)
@@ -111,7 +111,7 @@ final class StartsRequestITTestCase {
         );
         new Shell.Plain(new Shell.Safe(shell)).exec(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 String.format("rm -rf %s", repo),
                 String.format("sudo rm -rf %s", dir)
             ).asString()
@@ -125,5 +125,4 @@ final class StartsRequestITTestCase {
             )
         );
     }
-
 }

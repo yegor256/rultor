@@ -19,7 +19,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnRelease}.
- *
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -98,6 +97,21 @@ final class QnReleaseTest {
             ),
             Matchers.is(Req.EMPTY)
         );
+    }
+
+    /**
+     * QnRelease posts a comment about the existing release when tag is outdated.
+     * @throws Exception In case of error
+     */
+    @Test
+    void postsCommentForOutdatedTag() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        repo.releases().create("1.7");
+        issue.comments().post("release `1.6`");
+        new QnRelease().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        );
         MatcherAssert.assertThat(
             " Comment about existing release should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
@@ -131,5 +145,4 @@ final class QnReleaseTest {
             )
         );
     }
-
 }

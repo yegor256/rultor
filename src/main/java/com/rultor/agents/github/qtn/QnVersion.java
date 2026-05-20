@@ -19,7 +19,6 @@ import lombok.ToString;
 
 /**
  * Show my current version.
- *
  * @since 1.3.1
  */
 @Immutable
@@ -47,5 +46,4 @@ public final class QnVersion implements Question {
         Logger.info(this, "version request in #%d", comment.issue().number());
         return Req.DONE;
     }
-
 }

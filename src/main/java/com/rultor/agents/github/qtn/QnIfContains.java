@@ -16,7 +16,6 @@ import lombok.ToString;
 
 /**
  * If contains text.
- *
  * @since 1.3
  */
 @Immutable
@@ -40,7 +39,7 @@ public final class QnIfContains implements Question {
      * @param qtn Original question
      */
     public QnIfContains(final String ptn, final Question qtn) {
-        this.pattern = ptn.toLowerCase(Locale.ENGLISH);
+        this.pattern = ptn;
         this.origin = qtn;
     }
 
@@ -50,7 +49,7 @@ public final class QnIfContains implements Question {
         final Req req;
         if (comment.body().toLowerCase(Locale.ENGLISH)
             .replaceAll("`[^`]*`", "")
-            .contains(this.pattern)
+            .contains(this.pattern.toLowerCase(Locale.ENGLISH))
         ) {
             req = this.origin.understand(comment, home);
         } else {

@@ -31,7 +31,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Show current status.
- *
  * @since 1.5
  */
 @Immutable
@@ -115,12 +114,11 @@ public final class QnStatus implements Question {
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
                 new UncheckedText(
-                    new Joined("\n", lines)
+                    new Joined(System.lineSeparator(), lines)
                 ).asString()
             )
         );
         Logger.info(this, "status request in #%d", comment.issue().number());
         return Req.DONE;
     }
-
 }

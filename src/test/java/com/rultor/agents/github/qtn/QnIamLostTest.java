@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnIamLost}.
- *
  * @since 1.60
  */
 final class QnIamLostTest {
@@ -38,11 +37,25 @@ final class QnIamLostTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnIamLost posts a comment about the unknown command.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsCommentAboutUnknownCommand() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("boom");
+        new QnIamLost().understand(
+            new Comment.Smart(issue.comments().get(1)),
+            new URI("#")
+        );
         MatcherAssert.assertThat(
             "Comment about not found command should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("don't understand you")
         );
     }
-
 }

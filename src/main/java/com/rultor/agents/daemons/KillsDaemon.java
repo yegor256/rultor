@@ -17,7 +17,6 @@ import org.xembly.Directives;
 
 /**
  * Kills daemon if too old.
- *
  * @since 1.0
  */
 @Immutable
@@ -26,10 +25,26 @@ import org.xembly.Directives;
 public final class KillsDaemon extends AbstractAgent {
 
     /**
+     * Default max minutes (1 hour).
+     */
+    private static final long DEFAULT_MAX = TimeUnit.HOURS.toMinutes(1L);
+
+    /**
+     * Xpath prefix for the daemon age check.
+     */
+    private static final String XPATH_PREFIX =
+        "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > ";
+
+    /**
+     * Xpath suffix.
+     */
+    private static final String XPATH_SUFFIX = "]";
+
+    /**
      * Ctor.
      */
     public KillsDaemon() {
-        this(TimeUnit.HOURS.toMinutes(1L));
+        this(KillsDaemon.DEFAULT_MAX);
     }
 
     /**
@@ -40,11 +55,7 @@ public final class KillsDaemon extends AbstractAgent {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
             "/talk/daemon/dir",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-        )
+            KillsDaemon.XPATH_PREFIX + mins + KillsDaemon.XPATH_SUFFIX
         );
     }
 
@@ -64,5 +75,4 @@ public final class KillsDaemon extends AbstractAgent {
         }
         return new Directives().xpath("/talk/request").remove();
     }
-
 }

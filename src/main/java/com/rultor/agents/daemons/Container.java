@@ -10,7 +10,6 @@ import lombok.EqualsAndHashCode;
 
 /**
  * Turn talk name into Docker container name.
- *
  * @since 1.72
  */
 @Immutable
@@ -35,5 +34,4 @@ public final class Container {
         return this.name.replaceAll("[^a-zA-Z0-9_.-]", "_")
             .toLowerCase(Locale.ENGLISH);
     }
-
 }

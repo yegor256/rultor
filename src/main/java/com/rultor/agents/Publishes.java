@@ -18,7 +18,6 @@ import org.xembly.Directives;
 
 /**
  * Publishes if it's public.
- *
  * @since 1.32.7
  */
 @Immutable
@@ -51,7 +50,6 @@ public final class Publishes extends AbstractAgent {
     }
 
     @Override
-    @SuppressWarnings("PMD.BooleanInversion")
     public Iterable<Directive> process(final XML xml) throws IOException {
         boolean pub;
         try {
@@ -74,5 +72,4 @@ public final class Publishes extends AbstractAgent {
             .xpath("/talk")
             .attr("public", Boolean.toString(pub));
     }
-
 }

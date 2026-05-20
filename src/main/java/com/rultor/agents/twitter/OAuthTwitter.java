@@ -13,7 +13,6 @@ import twitter4j.TwitterException;
 
 /**
  * Twitter via OAuth2.
- *
  * @since 1.30
  */
 @Immutable

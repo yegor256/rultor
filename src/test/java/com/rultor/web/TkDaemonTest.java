@@ -13,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.takes.Take;
 import org.takes.facets.auth.PsFake;
 import org.takes.facets.auth.TkAuth;
 import org.takes.facets.fork.RqRegex;
@@ -48,17 +47,16 @@ final class TkDaemonTest {
                 .add("script").set("no script").up()
                 .add("title").set("no title")
         );
-        final Take take = new TkAuth(
-            request -> new TkDaemon(talks).act(
-                new RqRegex.Fake("(.*)-(.*)", "1-abcd")
-            ),
-            new PsFake(true)
-        );
         MatcherAssert.assertThat(
             "Talk answer should contain data from tail",
             XhtmlMatchers.xhtml(
                 IOUtils.toString(
-                    take.act(new RqFake()).body(),
+                    new TkAuth(
+                        request -> new TkDaemon(talks).act(
+                            new RqRegex.Fake("(.*)-(.*)", "1-abcd")
+                        ),
+                        new PsFake(true)
+                    ).act(new RqFake()).body(),
                     StandardCharsets.UTF_8
                 )
             ),
@@ -69,5 +67,4 @@ final class TkDaemonTest {
             )
         );
     }
-
 }

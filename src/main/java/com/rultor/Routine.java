@@ -21,7 +21,6 @@ import io.sentry.Sentry;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +30,6 @@ import org.cactoos.list.ListOf;
 
 /**
  * Routine.
- *
  * @since 1.50
  * @todo #1125:30min Routine should be delegate execution to separate threads.
  *  Currently com.rultor.Routine#process() is sequentially processing all Talks
@@ -45,8 +43,7 @@ import org.cactoos.list.ListOf;
  *  removed.
  */
 @ScheduleWithFixedDelay
-@SuppressWarnings({"PMD.DoNotUseThreads",
-    "PMD.ConstructorShouldDoInitialization"})
+@SuppressWarnings("PMD.ConstructorShouldDoInitialization")
 final class Routine implements Runnable, Closeable {
 
     /**
@@ -100,7 +97,6 @@ final class Routine implements Runnable, Closeable {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void run() {
         final long begin = System.currentTimeMillis();
         try {
@@ -112,15 +108,14 @@ final class Routine implements Runnable, Closeable {
                     active
                 )
             );
-            final int processed = this.unsafe(active);
             if (Logger.isInfoEnabled(this)) {
                 Logger.info(
                     this,
                     "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
-                    processed,
+                    this.unsafe(active),
                     System.currentTimeMillis() - begin,
                     System.currentTimeMillis() - this.start,
-                    new Date()
+                    System.currentTimeMillis()
                 );
             }
             this.pulse.error(Collections.emptyList());
@@ -187,5 +182,4 @@ final class Routine implements Runnable, Closeable {
         this.agents.closer().execute(this.talks);
         return total;
     }
-
 }

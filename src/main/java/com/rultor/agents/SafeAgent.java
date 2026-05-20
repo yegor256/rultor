@@ -29,7 +29,6 @@ public final class SafeAgent implements Agent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void execute(final Talk talk) {
         try {
             this.origin.execute(talk);

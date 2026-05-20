@@ -20,10 +20,10 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Reports}.
- *
  * @since 1.3
  */
 final class ReportsTest {
+
     /**
      * Message bundle.
      */
@@ -66,11 +66,9 @@ final class ReportsTest {
      */
     @Test
     void reportsRequestResultWhenStopFails() throws Exception {
-        final String user = "john";
-        final String stop = "stop it please";
-        final Repo repo = new MkGitHub(user).randomRepo();
+        final Repo repo = new MkGitHub("john").randomRepo();
         final Talk talk = ReportsTest.example(
-            repo, repo.issues().create("Bug", stop)
+            repo, repo.issues().create("Bug", "stop it please")
         );
         final Agent agent = new Reports(repo.github());
         agent.execute(talk);
@@ -79,6 +77,22 @@ final class ReportsTest {
             talk.read(),
             XhtmlMatchers.hasXPath(ReportsTest.XPATH)
         );
+    }
+
+    /**
+     * Reports posts a comment containing a warning about a failed stop
+     * request.
+     * @throws Exception In case of error
+     */
+    @Test
+    void postsStopFailsComment() throws Exception {
+        final String user = "john";
+        final String stop = "stop it please";
+        final Repo repo = new MkGitHub(user).randomRepo();
+        final Agent agent = new Reports(repo.github());
+        agent.execute(
+            ReportsTest.example(repo, repo.issues().create("Bug", stop))
+        );
         MatcherAssert.assertThat(
             "Comment contains warning about stop request",
             repo.issues().get(1).comments().get(1).json().getString(
@@ -86,7 +100,7 @@ final class ReportsTest {
             ),
             Matchers.is(
                 String.format(
-                    "> %s\n\n@%s %s %s",
+                    "> %s%n%n@%s %s %s",
                     stop,
                     user,
                     ReportsTest.PHRASES.getString("Reports.stop-fails"),

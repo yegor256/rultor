@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Date;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -30,7 +29,6 @@ import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 
 /**
  * Marks the daemon as done.
- *
  * @since 1.0
  */
 @Immutable
@@ -103,13 +101,17 @@ public final class ArchivesDaemon extends AbstractAgent {
      * @throws IOException If fails
      */
     private URI upload(final File file, final String hash) throws IOException {
-        final HeadObjectResponse meta = HeadObjectResponse.builder()
-            .contentType("text/plain")
-            .contentEncoding(StandardCharsets.UTF_8.name())
-            .contentLength(file.length())
-            .build();
-        final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);
-        this.bucket.ocket(key).write(Files.newInputStream(file.toPath()), meta);
+        final String key = String.format(
+            "%tY/%1$tm/%s.txt", System.currentTimeMillis(), hash
+        );
+        this.bucket.ocket(key).write(
+            Files.newInputStream(file.toPath()),
+            HeadObjectResponse.builder()
+                .contentType("text/plain")
+                .contentEncoding(StandardCharsets.UTF_8.name())
+                .contentLength(file.length())
+                .build()
+        );
         return URI.create(String.format("s3://%s/%s", this.bucket.name(), key));
     }
 
@@ -141,5 +143,4 @@ public final class ArchivesDaemon extends AbstractAgent {
             FileUtils.readLines(file, StandardCharsets.UTF_8).size()
         );
     }
-
 }

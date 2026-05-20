@@ -23,7 +23,6 @@ import org.cactoos.map.MapOf;
 
 /**
  * Release request.
- *
  * @since 1.3.6
  */
 @Immutable
@@ -108,5 +107,4 @@ public final class QnRelease implements Question {
             )
         );
     }
-
 }

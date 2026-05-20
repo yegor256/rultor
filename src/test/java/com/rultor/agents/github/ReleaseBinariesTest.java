@@ -26,7 +26,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link ReleaseBinaries}.
- *
  * @since 1.1
  */
 final class ReleaseBinariesTest {
@@ -51,9 +50,12 @@ final class ReleaseBinariesTest {
             )
         );
         dir.mkdirs();
-        final File bin = new File(dir.getAbsolutePath(), name.replace("${tag}", tag));
-        final byte[] content = SecureRandom.getSeed(100);
-        new LengthOf(new TeeInput(content, bin)).value();
+        new LengthOf(
+            new TeeInput(
+                SecureRandom.getSeed(100),
+                new File(dir.getAbsolutePath(), name.replace("${tag}", tag))
+            )
+        ).value();
         final Talk talk = ReleaseBinariesTest
             .talk(repo.issues().create("", ""), tag, dir);
         new CommentsTag(repo.github()).execute(talk);

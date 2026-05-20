@@ -31,7 +31,6 @@ import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done.
- *
  * @since 1.0
  */
 @Immutable
@@ -56,7 +55,6 @@ public final class EndsDaemon extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Script("end.sh").exec(xml);
         final Directives dirs = new Directives();
@@ -66,7 +64,7 @@ public final class EndsDaemon extends AbstractAgent {
                 dir, xml.xpath("/talk/@name").get(0)
             );
         } else {
-            dirs.append(this.end(shell, dir));
+            dirs.append(this.end(new TalkShells(xml).get(), dir));
         }
         return dirs;
     }
@@ -93,31 +91,33 @@ public final class EndsDaemon extends AbstractAgent {
                 System.lineSeparator()
             )
         );
-        final String highlights = new Joined(
-            "\n",
-            new Mapped<>(
-                s -> new Sub(
-                    s,
-                    EndsDaemon.HIGHLIGHTS_PREFIX.length()
-                ).asString(),
-                new Filtered<>(
-                    input -> new StartsWith(
-                        input,
-                        new TextOf(EndsDaemon.HIGHLIGHTS_PREFIX)
-                    ).value(),
-                    lines
-                )
-            )
-        ).toString();
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives()
             .xpath("/talk/daemon")
             .strict(1)
             .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit)).up()
-            .add("highlights").set(Xembler.escape(highlights)).up()
-            .add("tail")
-            .set(
+            .add("highlights").set(
+                Xembler.escape(
+                    new Joined(
+                        System.lineSeparator(),
+                        new Mapped<>(
+                            s -> new Sub(
+                                s,
+                                EndsDaemon.HIGHLIGHTS_PREFIX.length()
+                            ).asString(),
+                            new Filtered<>(
+                                input -> new StartsWith(
+                                    input,
+                                    new TextOf(EndsDaemon.HIGHLIGHTS_PREFIX)
+                                ).value(),
+                                lines
+                            )
+                        )
+                    ).toString()
+                )
+            ).up()
+            .add("tail").set(
                 Xembler.escape(
                     new Sub(
                         new Joined(
@@ -187,5 +187,4 @@ public final class EndsDaemon extends AbstractAgent {
             )
         ).exec();
     }
-
 }

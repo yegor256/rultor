@@ -35,7 +35,6 @@ import org.cactoos.text.Joined;
 
 /**
  * Tail daemon output.
- *
  * @since 1.0
  */
 @Immutable
@@ -99,7 +98,7 @@ public final class Tail {
                             Env.read("Rultor-Version"),
                             "/",
                             Env.read("Rultor-Version"),
-                            "\n",
+                            System.lineSeparator(),
                             "nothing yet, try again in 15 seconds"
                         ),
                         StandardCharsets.UTF_8
@@ -124,7 +123,9 @@ public final class Tail {
      * @since 1.1
      */
     @Immutable
+    @FunctionalInterface
     private interface Connect {
+
         /**
          * Read it.
          * @return Stream
@@ -139,6 +140,7 @@ public final class Tail {
      */
     @Immutable
     private static final class S3Connect implements Tail.Connect {
+
         /**
          * XML of the talk.
          */
@@ -161,18 +163,17 @@ public final class Tail {
 
         @Override
         public InputStream read() throws IOException {
-            final URI uri = URI.create(
-                this.xml.xpath(
-                    String.format(
-                        "/talk/archive/log[@id='%s']/text()",
-                        this.hash
-                    )
-                ).get(0)
-            );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Tail.S3Connect.bucket().ocket(uri.getPath().substring(1)).read(
-                baos
-            );
+            Tail.S3Connect.bucket().ocket(
+                URI.create(
+                    this.xml.xpath(
+                        String.format(
+                            "/talk/archive/log[@id='%s']/text()",
+                            this.hash
+                        )
+                    ).get(0)
+                ).getPath().substring(1)
+            ).read(baos);
             return new ByteArrayInputStream(baos.toByteArray());
         }
 
@@ -197,6 +198,7 @@ public final class Tail {
      */
     @Immutable
     private static final class SSHConnect implements Tail.Connect {
+
         /**
          * XML of the talk.
          */
@@ -240,6 +242,7 @@ public final class Tail {
      */
     @Immutable
     private static final class FakeConnect implements Tail.Connect {
+
         /**
          * XML of the talk.
          */
@@ -260,5 +263,4 @@ public final class Tail {
             );
         }
     }
-
 }

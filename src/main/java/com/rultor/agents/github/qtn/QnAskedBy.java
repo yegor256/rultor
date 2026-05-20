@@ -25,7 +25,6 @@ import org.cactoos.text.Joined;
 
 /**
  * Question asked by one of them.
- *
  * @since 1.3
  */
 @Immutable
@@ -127,5 +126,4 @@ public final class QnAskedBy implements Question {
         logins.addAll(xml.xpath("/p/entry[@key='architect']/item/text()"));
         return logins;
     }
-
 }

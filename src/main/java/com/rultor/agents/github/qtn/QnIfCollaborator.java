@@ -19,7 +19,6 @@ import lombok.ToString;
 
 /**
  * If rultor is in the list of collaborators.
- *
  * @since 1.7
  */
 @Immutable
@@ -51,9 +50,8 @@ public final class QnIfCollaborator implements Question {
         final URI home) throws IOException {
         final Req req;
         final Repo repo = comment.issue().repo();
-        final String self = repo.github().users().self().login();
         final Collection<String> crew = new Crew(repo).names();
-        if (crew.isEmpty() || crew.contains(self)) {
+        if (crew.isEmpty() || crew.contains(repo.github().users().self().login())) {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
@@ -64,5 +62,4 @@ public final class QnIfCollaborator implements Question {
         }
         return req;
     }
-
 }

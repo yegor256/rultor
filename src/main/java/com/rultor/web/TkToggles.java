@@ -14,7 +14,6 @@ import org.takes.facets.forward.RsForward;
 
 /**
  * Toggles.
- *
  * @since 1.0
  */
 final class TkToggles implements Take {
@@ -43,5 +42,4 @@ final class TkToggles implements Take {
             )
         );
     }
-
 }

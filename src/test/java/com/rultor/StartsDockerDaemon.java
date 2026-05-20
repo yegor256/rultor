@@ -27,7 +27,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Starts a Docker Container containing a Docker daemon and SSHD.
- *
  * @since 1.63
  */
 public final class StartsDockerDaemon implements AutoCloseable {
@@ -56,13 +55,12 @@ public final class StartsDockerDaemon implements AutoCloseable {
         this.profile = prof;
         final DefaultDockerClientConfig config =
             DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-        this.client = DockerClientBuilder.getInstance(config)
-            .withDockerHttpClient(
-                new ApacheDockerHttpClient.Builder()
-                    .dockerHost(config.getDockerHost())
-                    .connectionTimeout(Duration.ofSeconds(30))
-                    .responseTimeout(Duration.ofSeconds(45))
-                    .build()
+        this.client = DockerClientBuilder.getInstance(config).withDockerHttpClient(
+            new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .connectionTimeout(Duration.ofSeconds(30))
+                .responseTimeout(Duration.ofSeconds(45))
+                .build()
             )
             .build();
         this.containers = Collections.newSetFromMap(
@@ -135,5 +133,4 @@ public final class StartsDockerDaemon implements AutoCloseable {
             new File(Objects.requireNonNull(this.getClass().getResource("image")).getPath())
         ).exec(new BuildImageResultCallback()).awaitImageId();
     }
-
 }

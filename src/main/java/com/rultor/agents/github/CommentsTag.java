@@ -20,7 +20,7 @@ import com.rultor.agents.github.qtn.ReleaseTag;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -31,13 +31,11 @@ import org.xembly.Directives;
 
 /**
  * Comments a new tag in GitHub.
- *
  * @since 1.31
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "github")
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class CommentsTag extends AbstractAgent {
 
     /**
@@ -69,10 +67,7 @@ public final class CommentsTag extends AbstractAgent {
      * @param ghub GitHub client
      * @param config Profile
      */
-    public CommentsTag(
-        final GitHub ghub,
-        final Profile config
-    ) {
+    public CommentsTag(final GitHub ghub, final Profile config) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"
@@ -87,13 +82,15 @@ public final class CommentsTag extends AbstractAgent {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final String tag = req.xpath("args/arg[@name='tag']/text()").get(0);
         final Releases.Smart rels = new Releases.Smart(issue.repo().releases());
-        final URI home = new Home(xml).uri();
+        final URI home = new Home(
+            xml, xml.xpath("/talk/request/@id").get(0)
+        ).uri();
         final ReleaseTag release = new ReleaseTag(issue.repo(), tag);
         if (rels.exists(tag)) {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
                 String.format(
-                    "%s\n\nSee also #%d and [build log](%s)",
+                    "%s%n%nSee also #%d and [build log](%s)",
                     rel.body(), issue.number(), home
                 )
             );
@@ -106,7 +103,6 @@ public final class CommentsTag extends AbstractAgent {
             Logger.info(this, "duplicate tag %s commented", tag);
         } else if (release.allowed()) {
             final Repo repo = issue.repo();
-            final Date prev = CommentsTag.previous(repo);
             final Release.Smart rel = new Release.Smart(
                 rels.create(tag.trim())
             );
@@ -115,9 +111,11 @@ public final class CommentsTag extends AbstractAgent {
             rel.body(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
+                    "See #%d, release log:%n%n%s%n%nReleased by Rultor %s, see [build log](%s)",
                     issue.number(),
-                    new CommitsLog(repo).build(prev, rel.publishedAt()),
+                    new CommitsLog(repo).build(
+                        CommentsTag.previous(repo), rel.publishedAt().toInstant()
+                    ),
                     Env.read("Rultor-Version"), home
                 )
             );
@@ -138,7 +136,7 @@ public final class CommentsTag extends AbstractAgent {
      * Check if release is prerelease.
      * True if profile does not specify release.pre=false.
      * @param req Comment's xml
-     * @return True if prerelease, false otherwise.
+     * @return True if prerelease, false otherwise
      */
     private boolean isPrerelease(final XML req) {
         try {
@@ -193,20 +191,21 @@ public final class CommentsTag extends AbstractAgent {
 
     /**
      * Get previous release time.
-     * @param repo Repo in which to find the releases.
-     * @return Previous release time or start of epoch.
-     * @throws IOException In case of problem communicating with repo.
+     * @param repo Repo in which to find the releases
+     * @return Previous release time or start of epoch
+     * @throws IOException In case of problem communicating with repo
      */
-    private static Date previous(final Repo repo) throws IOException {
-        Date prev = new Date(0L);
+    private static Instant previous(final Repo repo) throws IOException {
+        Instant prev = Instant.EPOCH;
         final Iterable<Release.Smart> releases =
             new Smarts<>(repo.releases().iterate());
         for (final Release.Smart rel : releases) {
             if (rel.json().isNull("published_at")) {
                 continue;
             }
-            if (prev.before(rel.publishedAt())) {
-                prev = rel.publishedAt();
+            final Instant when = rel.publishedAt().toInstant();
+            if (prev.isBefore(when)) {
+                prev = when;
             }
         }
         return prev;

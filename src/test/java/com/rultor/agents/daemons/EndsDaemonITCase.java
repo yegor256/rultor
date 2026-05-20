@@ -26,7 +26,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link EndsDaemon}.
- *
  * @since 1.2
  */
 final class EndsDaemonITCase {
@@ -37,16 +36,14 @@ final class EndsDaemonITCase {
      */
     @Test
     void parsesHighlightedStdout() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             this.start(
                 start,
                 talk,
                 String.format(
-                    "some random\n%s%s\nother",
+                    "some random%n%s%s%nother",
                     EndsDaemon.HIGHLIGHTS_PREFIX,
                     "text output"
                 )
@@ -70,10 +67,8 @@ final class EndsDaemonITCase {
      */
     @Test
     void readsExitCodeCorrectly() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             final PfShell sshd = this.start(start, talk, "");
             new Shell.Plain(
@@ -95,19 +90,15 @@ final class EndsDaemonITCase {
      */
     @Test
     void exitsWhenProfileBroken() throws Exception {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             final PfShell sshd = this.start(start, talk, "");
             new Shell.Plain(
                 new Ssh(sshd.host(), sshd.port(), sshd.login(), sshd.key())
             ).exec("echo '154' > /tmp/status");
-            final Profile prof = Mockito.mock(Profile.class);
-            final String exception = "This profile was broken!";
-            Mockito.when(prof.read())
-                .thenThrow(new Profile.ConfigException(exception));
+            Mockito.when(Mockito.mock(Profile.class).read())
+                .thenThrow(new Profile.ConfigException("This profile was broken!"));
             final Agent agent = new EndsDaemon();
             agent.execute(talk);
             MatcherAssert.assertThat(
@@ -128,10 +119,8 @@ final class EndsDaemonITCase {
     @Test
     @Disabled
     void deprecatesDefaultImage() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             this.start(start, talk, "");
             new EndsDaemon().execute(talk);

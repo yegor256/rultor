@@ -15,7 +15,6 @@ import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 /**
  * Test case for {@link Env}.
- *
  * @since 1.58
  */
 @ExtendWith(SystemStubsExtension.class)
@@ -73,6 +72,19 @@ final class EnvTest {
             "has the right XML in env",
             System.getenv(Env.SETTINGS_XML),
             Matchers.not(Matchers.nullValue())
+        );
+    }
+
+    @Test
+    void readsValueFromSettingsXml() {
+        this.environment.set(
+            Env.SETTINGS_XML,
+            String.join(
+                "",
+                "<settings><profiles><profile><properties>",
+                "<test>hello</test>",
+                "</properties></profile></profiles></settings>"
+            )
         );
         MatcherAssert.assertThat(
             "takes the right value",

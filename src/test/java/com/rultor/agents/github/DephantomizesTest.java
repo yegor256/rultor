@@ -15,7 +15,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Dephantomizes}.
- *
  * @since 1.59.7
  */
 final class DephantomizesTest {
@@ -27,8 +26,7 @@ final class DephantomizesTest {
     @Test
     void removesRequestAndWire() throws IOException {
         final MkGitHub github = new MkGitHub();
-        final Repo repo = github.randomRepo();
-        final Talk talk = DephantomizesTest.talk(repo, 0);
+        final Talk talk = DephantomizesTest.talk(github.randomRepo(), 0);
         new Dephantomizes(github).execute(talk);
         MatcherAssert.assertThat(
             "Request and wire should be removed",
@@ -77,5 +75,4 @@ final class DephantomizesTest {
         );
         return talk;
     }
-
 }

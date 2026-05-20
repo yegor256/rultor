@@ -33,7 +33,6 @@ import org.takes.rs.xe.XeStylesheet;
 
 /**
  * Index resource, front page of the website.
- *
  * @since 1.50
  */
 @EqualsAndHashCode(callSuper = true)
@@ -62,41 +61,42 @@ final class RsPage extends RsWrap {
     private static Response make(final String xsl, final Request req,
         final XeSource... src
     ) throws IOException {
-        final Response raw = new RsXembly(
-            new XeStylesheet(xsl),
-            new XeAppend(
-                "page",
-                new XeMillis(false),
-                new XeChain(src),
-                new XeLinkHome(req),
-                new XeLinkSelf(req),
-                new XeMillis(true),
-                new XeDate(),
-                new XeSla(),
-                new XeLocalhost(),
-                new XeIdentity(req),
-                new XeFlash(req),
-                new XeGithubLink(req, Env.read("Rultor-GithubId")),
-                new XeLogoutLink(req),
+        return RsPage.typedResponse(
+            new RsXembly(
+                new XeStylesheet(xsl),
                 new XeAppend(
-                    "version",
-                    new XeAppend("name", Env.read("Rultor-Version")),
-                    new XeAppend("revision", Env.read("Rultor-Revision")),
-                    new XeAppend("date", Env.read("Rultor-Date"))
+                    "page",
+                    new XeMillis(false),
+                    new XeChain(src),
+                    new XeLinkHome(req),
+                    new XeLinkSelf(req),
+                    new XeMillis(true),
+                    new XeDate(),
+                    new XeSla(),
+                    new XeLocalhost(),
+                    new XeIdentity(req),
+                    new XeFlash(req),
+                    new XeGithubLink(req, Env.read("Rultor-GithubId")),
+                    new XeLogoutLink(req),
+                    new XeAppend(
+                        "version",
+                        new XeAppend("name", Env.read("Rultor-Version")),
+                        new XeAppend("revision", Env.read("Rultor-Revision")),
+                        new XeAppend("date", Env.read("Rultor-Date"))
+                    )
                 )
-            )
+            ),
+            req
         );
-        return RsPage.typedResponse(raw, req);
     }
 
     /**
      * Build correct response by requested header 'Accept'.
-     *
-     * @param raw Prepared raw response.
-     * @param req Request.
-     * @return Correct response according to 'Accept' header.
-     * @throws IOException If fails.
-     * @todo #1633:90min Replace typedResponse static method with RsFork.
+     * @param raw Prepared raw response
+     * @param req Request
+     * @return Correct response according to 'Accept' header
+     * @throws IOException If fails
+     * @todo #1633:90min Replace typedResponse static method with RsFork
      *  The current solution with typedResponse method is crutch, actually.
      *  The previous solution with {@link org.takes.facets.fork.RsFork} was
      *  broken after the Maven 3.9.0 release. The proper solution would be

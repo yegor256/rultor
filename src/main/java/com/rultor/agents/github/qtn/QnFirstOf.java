@@ -11,13 +11,11 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * First of.
- *
  * @since 1.3
  */
 @Immutable
@@ -29,14 +27,6 @@ public final class QnFirstOf implements Question {
      * Original questions.
      */
     private final transient Array<Question> questions;
-
-    /**
-     * Ctor.
-     * @param qtns Original questions
-     */
-    public QnFirstOf(final Question... qtns) {
-        this(Arrays.asList(qtns));
-    }
 
     /**
      * Ctor.

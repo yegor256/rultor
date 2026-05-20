@@ -52,5 +52,4 @@ public final class QnStop implements Question {
             "stop", Collections.emptyMap()
         );
     }
-
 }

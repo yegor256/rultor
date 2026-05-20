@@ -25,14 +25,12 @@ import org.cactoos.text.Trimmed;
 
 /**
  * Docker run command.
- *
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "profile", "command" })
-@SuppressWarnings("PMD.TooManyMethods")
 final class DockerRun {
 
     /**
@@ -48,16 +46,6 @@ final class DockerRun {
     /**
      * Ctor.
      * @param prof Profile
-     * @param xpath XPath of the XML element inside .rultor.yml
-     * @throws IOException If fails
-     */
-    DockerRun(final Profile prof, final String xpath) throws IOException {
-        this(prof, prof.read().nodes(xpath).iterator().next());
-    }
-
-    /**
-     * Ctor.
-     * @param prof Profile
      * @param node XML element inside ".rultor.yml" with the command
      */
     DockerRun(final Profile prof, final XML node) {
@@ -66,12 +54,24 @@ final class DockerRun {
     }
 
     /**
+     * Factory: build by xpath into the profile.
+     * @param prof Profile
+     * @param xpath XPath of the XML element inside .rultor.yml
+     * @return DockerRun instance
+     * @throws IOException If fails
+     */
+    static DockerRun byXpath(final Profile prof, final String xpath)
+        throws IOException {
+        return new DockerRun(prof, prof.read().nodes(xpath).iterator().next());
+    }
+
+    /**
      * Make a script to run.
      * @return Script
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    public Iterable<String> script() throws IOException {
+    Iterable<String> script() throws IOException {
         final Iterable<String> trap;
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
             trap = Collections.emptyList();
@@ -101,8 +101,7 @@ final class DockerRun {
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    public Iterable<String> envs(final Map<String, String> extra)
-        throws IOException {
+    Iterable<String> envs(final Map<String, String> extra) throws IOException {
         final List<String> entries = new LinkedList<>();
         for (final Entry<String, String> ent : extra.entrySet()) {
             entries.add(
@@ -146,9 +145,9 @@ final class DockerRun {
 
     /**
      * Is hash character inside double or single quotes.
-     * @param item String to check.
-     * @param pos Position of the hash.
-     * @return If hash is in quotes.
+     * @param item String to check
+     * @param pos Position of the hash
+     * @return If hash is in quotes
      */
     private static boolean inquotes(final String item, final int pos) {
         final String sub = item.substring(0, pos);
@@ -158,7 +157,7 @@ final class DockerRun {
 
     /**
      * Neutralize comment contained in the script line.
-     * @param item Script element.
+     * @param item Script element
      * @return Script element with invisible comment
      */
     private static String neutralize(final String item) {
@@ -226,7 +225,7 @@ final class DockerRun {
             final List<String> src = new ListOf<String>(
                 new Mapped<>(
                     t -> new Trimmed(t).asString(),
-                    new Split(node.xpath("text()").get(0), "\n")
+                    new Split(node.xpath("text()").get(0), System.lineSeparator())
                 )
             );
             for (final String str : src) {
@@ -237,5 +236,4 @@ final class DockerRun {
         }
         return lines;
     }
-
 }

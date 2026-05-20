@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnUnlock}.
- *
  * @since 1.53
  */
 final class QnUnlockTest {
@@ -37,6 +36,20 @@ final class QnUnlockTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnUnlock posts a comment about the missing lock file.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsMissingLockFileComment() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("lock");
+        new QnUnlock().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        );
         MatcherAssert.assertThat(
             "Message about missing lock file should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
@@ -45,5 +58,4 @@ final class QnUnlockTest {
             )
         );
     }
-
 }

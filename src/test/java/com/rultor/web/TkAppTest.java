@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqWithHeader;
@@ -52,28 +51,21 @@ final class TkAppTest {
      */
     @Test
     void rendersHomePage() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
-        final String page = new TextOf(
-            new RsPrint(
-                take.act(
-                    new RqWithHeader(
-                        new RqFake("GET", "/"),
-                        "Accept",
-                        "text/xml"
-                    )
-                )
-            ).body()
-        ).asString();
         MatcherAssert.assertThat(
             "Page should be xml document",
-            page, Matchers.startsWith("<?xml ")
+            TkAppTest.homePage(), Matchers.startsWith("<?xml ")
         );
+    }
+
+    /**
+     * App home page contains required XML elements.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void rendersHomePageWithXmlContent() throws Exception {
         MatcherAssert.assertThat(
             "Xml document should contain some data",
-            XhtmlMatchers.xhtml(page),
+            XhtmlMatchers.xhtml(TkAppTest.homePage()),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
                 "/page/links/link[@rel='ticks']",
@@ -82,18 +74,20 @@ final class TkAppTest {
         );
     }
 
+
     /**
      * App can render front page.
      * @throws Exception If some problem inside
      */
     @Test
     void rendersHomePageViaHttp() throws Exception {
-        final Take app = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         Assertions.assertDoesNotThrow(
-            () -> new FtRemote(app).exec(
+            () -> new FtRemote(
+                new TkApp(
+                    new Talks.InDir(), Pulse.EMPTY,
+                    new Toggles.InFile()
+                )
+            ).exec(
                 home -> {
                     new JdkRequest(home)
                         .fetch()
@@ -121,10 +115,6 @@ final class TkAppTest {
      */
     @Test
     void rendersHomeJs() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         Assertions.assertEquals(
             new StringBuilder()
                 .append("$(document).ready(function(){var a=$(\"#pulse\");")
@@ -135,7 +125,10 @@ final class TkAppTest {
                 .toString(),
             new TextOf(
                 new RsPrint(
-                    take.act(
+                    new TkApp(
+                        new Talks.InDir(), Pulse.EMPTY,
+                        new Toggles.InFile()
+                    ).act(
                         new RqWithHeader(
                             new RqFake("GET", "/js/home.js?{version/revision}"),
                             "Accept",
@@ -154,16 +147,15 @@ final class TkAppTest {
     @Test
     @Disabled
     void rendersGzipHomePage() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         MatcherAssert.assertThat(
             "Page can be gzip compressed",
             new TextOf(
                 new GZIPInputStream(
                     new RsPrint(
-                        take.act(
+                        new TkApp(
+                            new Talks.InDir(), Pulse.EMPTY,
+                            new Toggles.InFile()
+                        ).act(
                             new RqWithHeaders(
                                 new RqFake("GET", "/"),
                                 "Accept: plain/html",
@@ -175,5 +167,27 @@ final class TkAppTest {
             ).asString(),
             Matchers.startsWith("<!DOCTYPE html")
         );
+    }
+
+    /**
+     * Render the home page body.
+     * @return Rendered body
+     * @throws Exception If some problem inside
+     */
+    private static String homePage() throws Exception {
+        return new TextOf(
+            new RsPrint(
+                new TkApp(
+                    new Talks.InDir(), Pulse.EMPTY,
+                    new Toggles.InFile()
+                ).act(
+                    new RqWithHeader(
+                        new RqFake("GET", "/"),
+                        "Accept",
+                        "text/xml"
+                    )
+                )
+            ).body()
+        ).asString();
     }
 }

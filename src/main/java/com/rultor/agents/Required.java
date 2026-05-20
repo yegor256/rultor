@@ -14,7 +14,6 @@ import lombok.ToString;
 
 /**
  * The agent is required for this talk?
- *
  * @since 1.74
  */
 @Immutable
@@ -52,5 +51,4 @@ public final class Required {
         }
         return good;
     }
-
 }

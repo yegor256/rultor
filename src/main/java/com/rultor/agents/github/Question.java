@@ -11,10 +11,10 @@ import java.net.URI;
 
 /**
  * Question.
- *
  * @since 1.3
  */
 @Immutable
+@FunctionalInterface
 public interface Question {
 
     /**
@@ -30,5 +30,4 @@ public interface Question {
      * @throws IOException If fails
      */
     Req understand(Comment.Smart comment, URI home) throws IOException;
-
 }

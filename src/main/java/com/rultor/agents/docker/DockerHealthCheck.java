@@ -51,5 +51,4 @@ public final class DockerHealthCheck implements SuperAgent {
             Logger.stream(Level.WARNING, this)
         );
     }
-
 }

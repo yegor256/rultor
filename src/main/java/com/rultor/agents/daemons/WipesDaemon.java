@@ -15,7 +15,6 @@ import org.xembly.Directives;
 
 /**
  * Wipe the daemon as broken.
- *
  * @since 1.53
  */
 @Immutable
@@ -37,5 +36,4 @@ public final class WipesDaemon extends AbstractAgent {
             .xpath("/talk/daemon")
             .remove();
     }
-
 }

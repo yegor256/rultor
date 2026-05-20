@@ -22,7 +22,6 @@ import org.xembly.Xembler;
 
 /**
  * If the daemon is too old and the Docker container is already gone.
- *
  * @since 1.72
  */
 @Immutable
@@ -31,11 +30,26 @@ import org.xembly.Xembler;
 public final class DropsDaemon extends AbstractAgent {
 
     /**
+     * Default max minutes (10 days).
+     */
+    private static final long DEFAULT_MAX = TimeUnit.DAYS.toMinutes(10L);
+
+    /**
+     * Xpath prefix for the daemon age check.
+     */
+    private static final String XPATH_PREFIX =
+        "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > ";
+
+    /**
+     * Xpath suffix.
+     */
+    private static final String XPATH_SUFFIX = "]";
+
+    /**
      * Ctor.
      */
     public DropsDaemon() {
-        // @checkstyle MagicNumber (1 line)
-        this(TimeUnit.DAYS.toMinutes(10L));
+        this(DropsDaemon.DEFAULT_MAX);
     }
 
     /**
@@ -45,21 +59,16 @@ public final class DropsDaemon extends AbstractAgent {
     public DropsDaemon(final long mins) {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-            ),
+            DropsDaemon.XPATH_PREFIX + mins + DropsDaemon.XPATH_SUFFIX,
             "/talk/shell[host and port and login and key]"
         );
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final Shell shell = new TalkShells(xml).get();
         final String talk = xml.xpath("/talk/@name").get(0);
         final String container = new Container(talk).toString();
-        final int exit = new Shell.Empty(shell).exec(
+        final int exit = new Shell.Empty(new TalkShells(xml).get()).exec(
             String.format(
                 "docker ps | grep %s",
                 Ssh.escape(container)
@@ -90,5 +99,4 @@ public final class DropsDaemon extends AbstractAgent {
         }
         return dirs;
     }
-
 }

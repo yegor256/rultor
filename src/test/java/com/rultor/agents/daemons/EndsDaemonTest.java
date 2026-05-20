@@ -5,7 +5,6 @@
 package com.rultor.agents.daemons;
 
 import com.rultor.Time;
-import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -15,7 +14,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link EndsDaemon}.
- *
  * @since 1.2
  * @checkstyle MultipleStringLiterals (500 lines)
  */
@@ -43,11 +41,9 @@ final class EndsDaemonTest {
                 .add("login").set("test").up()
                 .add("key").set("test")
         );
-        final Agent agent = new EndsDaemon();
         Assertions.assertThrows(
             UnknownHostException.class,
-            () -> agent.execute(talk)
+            () -> new EndsDaemon().execute(talk)
         );
     }
-
 }

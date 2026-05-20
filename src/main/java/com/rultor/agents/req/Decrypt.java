@@ -16,13 +16,11 @@ import lombok.ToString;
 
 /**
  * Decrypt.
- *
  * @since 1.37.4
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "profile")
-@SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
 final class Decrypt {
 
     /**
@@ -48,8 +46,7 @@ final class Decrypt {
      * @return Instructions
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Iterable<String> commands() throws IOException {
+    Iterable<String> commands() throws IOException {
         final Collection<XML> assets =
             this.profile.read().nodes("/p/entry[@key='decrypt']/entry");
         final Collection<String> commands = new LinkedList<>();

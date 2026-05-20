@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.time.Instant;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import lombok.EqualsAndHashCode;
@@ -35,7 +35,6 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 
 /**
  * Talk in Dynamo.
- *
  * @since 1.0
  */
 @Immutable
@@ -75,8 +74,8 @@ public final class DyTalk implements Talk {
     }
 
     @Override
-    public Date updated() throws IOException {
-        return new Date(
+    public Instant updated() throws IOException {
+        return Instant.ofEpochMilli(
             Long.parseLong(this.item.get(DyTalks.ATTR_UPDATED).n())
         );
     }
@@ -128,16 +127,15 @@ public final class DyTalk implements Talk {
                     )
                 );
             }
-            final AttributeValue value = AttributeValue.builder()
-                .b(SdkBytes.fromByteArray(body))
-                .build();
             this.item.put(
                 new AttributeUpdates()
-                    .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
-                    .with(
+                    .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis()).with(
                         DyTalks.ATTR_XML_ZIP,
-                        AttributeValueUpdate.builder()
-                            .value(value)
+                        AttributeValueUpdate.builder().value(
+                            AttributeValue.builder()
+                                .b(SdkBytes.fromByteArray(body))
+                                .build()
+                            )
                             .action(AttributeAction.PUT)
                             .build()
                     )
@@ -185,5 +183,4 @@ public final class DyTalk implements Talk {
         );
         return baos.toString(StandardCharsets.UTF_8);
     }
-
 }

@@ -13,12 +13,9 @@ import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
 import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
-import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusResponse;
-import software.amazon.awssdk.services.ec2.model.InstanceState;
 
 /**
  * Removes "EC2" element if instance is already "terminated".
- *
  * @since 1.77
  */
 @Immutable
@@ -42,19 +39,18 @@ public final class DetachesInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final DescribeInstanceStatusResponse res = this.api.aws().describeInstanceStatus(
-            DescribeInstanceStatusRequest.builder()
-                .includeAllInstances(true)
-                .instanceIds(instance)
-                .build()
-        );
-        final InstanceState state = res.instanceStatuses().get(0).instanceState();
         final Directives dirs = new Directives();
-        if ("terminated".equals(state.nameAsString())) {
+        if ("terminated".equals(
+            this.api.aws().describeInstanceStatus(
+                DescribeInstanceStatusRequest.builder()
+                    .includeAllInstances(true)
+                    .instanceIds(instance)
+                    .build()
+            ).instanceStatuses().get(0).instanceState().nameAsString()
+        )) {
             dirs.xpath("/talk/ec2").strict(1).remove();
             Logger.info(this, "AWS instance %s is already terminated, detaching", instance);
         }
         return dirs;
     }
-
 }

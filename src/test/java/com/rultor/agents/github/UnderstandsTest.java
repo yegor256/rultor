@@ -6,7 +6,6 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Check;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Comments;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
@@ -25,6 +24,7 @@ import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import org.hamcrest.MatcherAssert;
@@ -34,7 +34,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Understands}.
- *
  * @since 1.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -105,15 +104,13 @@ final class UnderstandsTest {
     void understandsIssueBody() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("test", "@test hello");
-        final Agent agent = new Understands(
+        new Understands(
             repo.github(),
             new QnIfContains("hello", new QnHello())
-        );
-        final Talk talk = UnderstandsTest.talk(issue);
-        agent.execute(talk);
+        ).execute(UnderstandsTest.talk(issue));
         MatcherAssert.assertThat(
             "Reply comment should be created for hello",
-            issue.comments().iterate(new Date(0L)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
     }
@@ -127,6 +124,53 @@ final class UnderstandsTest {
     @Test
     void understandsMergeMessageWithFailedCheck() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
+        new Understands(
+            repo.github(),
+            new QnFirstOf(
+                Arrays.asList(
+                    new QnMerge(),
+                    new QnIamLost()
+                )
+            )
+        ).execute(UnderstandsTest.talk(UnderstandsTest.failingPull(repo)));
+        MatcherAssert.assertThat(
+            "Reply comment should be created",
+            repo.issues().get(1).comments().iterate(Date.from(Instant.EPOCH)),
+            Matchers.iterableWithSize(1)
+        );
+    }
+
+    /**
+     * Understands posts a single 'Can't merge' message when there is a
+     * failed check.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsCantMergeOnFailedCheck() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        new Understands(
+            repo.github(),
+            new QnFirstOf(
+                Arrays.asList(
+                    new QnMerge(),
+                    new QnIamLost()
+                )
+            )
+        ).execute(UnderstandsTest.talk(UnderstandsTest.failingPull(repo)));
+        MatcherAssert.assertThat(
+            "Message about not possible merge should be created",
+            new Comment.Smart(repo.issues().get(1).comments().get(1)).body(),
+            Matchers.containsString("Can't merge")
+        );
+    }
+
+    /**
+     * Build a pull request with a failed CI conclusion attached.
+     * @param repo Repo to create the pull in
+     * @return The pull request
+     * @throws IOException In case of error.
+     */
+    private static Pull failingPull(final Repo repo) throws IOException {
         final MkBranches branches = (MkBranches) repo.branches();
         branches.create("head", "abcdef4");
         branches.create("base", "abcdef5");
@@ -135,24 +179,7 @@ final class UnderstandsTest {
             Check.Status.COMPLETED,
             Check.Conclusion.FAILURE
         );
-        new Understands(
-            repo.github(),
-            new QnFirstOf(
-                new QnMerge(),
-                new QnIamLost()
-            )
-        ).execute(UnderstandsTest.talk(pull));
-        final Comments comments = repo.issues().get(1).comments();
-        MatcherAssert.assertThat(
-            "Reply comment should be created",
-            comments.iterate(new Date(0)),
-            Matchers.iterableWithSize(1)
-        );
-        MatcherAssert.assertThat(
-            "Message about not possible merge should be created",
-            new Comment.Smart(comments.get(1)).body(),
-            Matchers.containsString("Can't merge")
-        );
+        return pull;
     }
 
     /**
@@ -201,5 +228,4 @@ final class UnderstandsTest {
         );
         return talk;
     }
-
 }

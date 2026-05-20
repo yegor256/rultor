@@ -11,7 +11,6 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.PfShell;
 import java.io.IOException;
-import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -20,7 +19,6 @@ import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
 
 /**
  * Connects a running EC2 instance: detects its IP.
- *
  * @since 1.77
  */
 @Immutable
@@ -74,24 +72,23 @@ public final class ConnectsInstance extends AbstractAgent {
                 instance, name, host
             );
         } else {
-            final long age = new Date().getTime() - this.api.aws()
-                .describeInstances(
+            Logger.warn(
+                this, "Can't connect %s to AWS instance %s at %s (%[ms]s old, \"%s\")",
+                name, instance, host,
+                System.currentTimeMillis() - this.api.aws().describeInstances(
                     DescribeInstancesRequest.builder()
                         .instanceIds(instance)
                         .build()
-                )
-                .reservations().get(0)
-                .instances().get(0)
-                .launchTime().toEpochMilli();
-            final String status = this.api.aws().describeInstanceStatus(
-                DescribeInstanceStatusRequest.builder()
-                    .includeAllInstances(true)
-                    .instanceIds(instance)
-                    .build()
-            ).instanceStatuses().get(0).instanceState().nameAsString();
-            Logger.warn(
-                this, "Can't connect %s to AWS instance %s at %s (%[ms]s old, \"%s\")",
-                name, instance, host, age, status
+                    )
+                    .reservations().get(0)
+                    .instances().get(0)
+                    .launchTime().toEpochMilli(),
+                this.api.aws().describeInstanceStatus(
+                    DescribeInstanceStatusRequest.builder()
+                        .includeAllInstances(true)
+                        .instanceIds(instance)
+                        .build()
+                ).instanceStatuses().get(0).instanceState().nameAsString()
             );
         }
         return dirs;
