@@ -30,11 +30,58 @@ import org.junit.jupiter.api.Test;
 final class GithubProfileTest {
 
     /**
-     * GithubProfile can fetch a YAML config.
+     * GithubProfile can fetch a YAML config (entries).
      * @throws Exception In case of error.
      */
     @Test
-    void fetchesYamlConfig() throws Exception {
+    void fetchesYamlConfigEntries() throws Exception {
+        MatcherAssert.assertThat(
+            "Profile should have all info",
+            GithubProfile.fromRepo(GithubProfileTest.yamlConfigRepo()).read(),
+            XhtmlMatchers.hasXPaths(
+                "/p/entry[@key='merge']/entry[@key='script']",
+                "/p/entry[@key='assets']/entry[@key='test.xml']",
+                "/p/entry[@key='assets']/entry[@key='beta']"
+            )
+        );
+    }
+
+    /**
+     * GithubProfile can fetch a YAML config (architect).
+     * @throws Exception In case of error.
+     */
+    @Test
+    void fetchesYamlConfigArchitect() throws Exception {
+        MatcherAssert.assertThat(
+            "Architect should be saved",
+            GithubProfile.fromRepo(GithubProfileTest.yamlConfigRepo())
+                .read().xpath("/p/entry[@key='architect']/item/text()"),
+            Matchers.contains("jeff", "donald")
+        );
+    }
+
+    /**
+     * GithubProfile can fetch a YAML config (assets).
+     * @throws Exception In case of error.
+     */
+    @Test
+    void fetchesYamlConfigAssets() throws Exception {
+        MatcherAssert.assertThat(
+            "Asset should be saved",
+            GithubProfile.fromRepo(GithubProfileTest.yamlConfigRepo()).assets(),
+            Matchers.hasEntry(
+                Matchers.equalTo("test.xml"),
+                Matchers.notNullValue()
+            )
+        );
+    }
+
+    /**
+     * Make a repo with the standard YAML config used by fetch tests.
+     * @return Repo
+     * @throws Exception If fails
+     */
+    private static Repo yamlConfigRepo() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 System.lineSeparator(),
@@ -63,29 +110,7 @@ final class GithubProfileTest {
                     )
                     .build()
             );
-        final Profile profile = GithubProfile.fromRepo(repo);
-        MatcherAssert.assertThat(
-            "Profile should have all info",
-            profile.read(),
-            XhtmlMatchers.hasXPaths(
-                "/p/entry[@key='merge']/entry[@key='script']",
-                "/p/entry[@key='assets']/entry[@key='test.xml']",
-                "/p/entry[@key='assets']/entry[@key='beta']"
-            )
-        );
-        MatcherAssert.assertThat(
-            "Architect should be saved",
-            profile.read().xpath("/p/entry[@key='architect']/item/text()"),
-            Matchers.contains("jeff", "donald")
-        );
-        MatcherAssert.assertThat(
-            "Asset should be saved",
-            profile.assets(),
-            Matchers.hasEntry(
-                Matchers.equalTo("test.xml"),
-                Matchers.notNullValue()
-            )
-        );
+        return repo;
     }
 
     /**

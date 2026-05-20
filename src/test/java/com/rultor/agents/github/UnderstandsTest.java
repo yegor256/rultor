@@ -124,7 +124,6 @@ final class UnderstandsTest {
     @Test
     void understandsMergeMessageWithFailedCheck() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
-        final Pull pull = UnderstandsTest.failingPull(repo);
         new Understands(
             repo.github(),
             new QnFirstOf(
@@ -133,7 +132,7 @@ final class UnderstandsTest {
                     new QnIamLost()
                 )
             )
-        ).execute(UnderstandsTest.talk(pull));
+        ).execute(UnderstandsTest.talk(UnderstandsTest.failingPull(repo)));
         MatcherAssert.assertThat(
             "Reply comment should be created",
             repo.issues().get(1).comments().iterate(Date.from(Instant.EPOCH)),
@@ -149,7 +148,6 @@ final class UnderstandsTest {
     @Test
     void postsCantMergeOnFailedCheck() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
-        final Pull pull = UnderstandsTest.failingPull(repo);
         new Understands(
             repo.github(),
             new QnFirstOf(
@@ -158,7 +156,7 @@ final class UnderstandsTest {
                     new QnIamLost()
                 )
             )
-        ).execute(UnderstandsTest.talk(pull));
+        ).execute(UnderstandsTest.talk(UnderstandsTest.failingPull(repo)));
         MatcherAssert.assertThat(
             "Message about not possible merge should be created",
             new Comment.Smart(repo.issues().get(1).comments().get(1)).body(),

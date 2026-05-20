@@ -28,32 +28,36 @@ final class ProfileDeprecationsTest {
     ).toString();
 
     /**
-     * ProfileDeprecations can identify a deprecated profile.
+     * ProfileDeprecations can identify a deprecated profile by missing config.
      * @throws Exception In case of error
      */
     @Test
-    void identifiesDeprecatedProfile() throws Exception {
-        ProfileDeprecations deprecations = new ProfileDeprecations(
-            new Profile.Fixed()
-        );
+    void identifiesDeprecatedProfileByMissingConfig() throws Exception {
         MatcherAssert.assertThat(
             "Deprecated merge, release, deploy should be in the list",
-            deprecations.empty(),
+            new ProfileDeprecations(new Profile.Fixed()).empty(),
             Matchers.is(false)
         );
-        deprecations = new ProfileDeprecations(
-            new Profile.Fixed(
-                new XMLDocument(
-                    String.format(
-                        ProfileDeprecationsTest.PROFILE_FORMAT,
-                        "yegor256/rultor-image"
-                    )
-                )
-            )
-        );
+    }
+
+    /**
+     * ProfileDeprecations can identify a deprecated profile by docker image.
+     * @throws Exception In case of error
+     */
+    @Test
+    void identifiesDeprecatedProfileByDockerImage() throws Exception {
         MatcherAssert.assertThat(
             "Deprecated image should be in the list",
-            deprecations.empty(),
+            new ProfileDeprecations(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            ProfileDeprecationsTest.PROFILE_FORMAT,
+                            "yegor256/rultor-image"
+                        )
+                    )
+                )
+            ).empty(),
             Matchers.is(false)
         );
     }

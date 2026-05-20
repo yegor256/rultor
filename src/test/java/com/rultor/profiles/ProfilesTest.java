@@ -64,8 +64,9 @@ final class ProfilesTest {
     @Test
     void validationFailsOnArchitectsMismatch() throws Exception {
         final String commander = "Yegor1024";
-        try {
-            new Profiles().validated(
+        MatcherAssert.assertThat(
+            "Message should be with a reason for merge error",
+            ProfilesTest.failureMessage(
                 new Profile.Fixed(
                     new XMLDocument(
                         String.format(
@@ -90,20 +91,14 @@ final class ProfilesTest {
                         )
                     )
                 )
-            );
-            Assertions.fail("Code above must throw an exception");
-        } catch (final Profile.ConfigException exception) {
-            MatcherAssert.assertThat(
-                "Message should be with a reason for merge error",
-                exception.getMessage(),
-                Matchers.is(
-                    String.format(
-                        ProfilesTest.MESSAGE,
-                        "[architect]"
-                    )
+            ),
+            Matchers.is(
+                String.format(
+                    ProfilesTest.MESSAGE,
+                    "[architect]"
                 )
-            );
-        }
+            )
+        );
     }
 
     /**
@@ -114,8 +109,9 @@ final class ProfilesTest {
     void validationFailsOnCommandersMismatch() throws Exception {
         final String architect = "Yegor2048";
         final String commander = "Yegor4096";
-        try {
-            new Profiles().validated(
+        MatcherAssert.assertThat(
+            "Message should be with a reason for merge error",
+            ProfilesTest.failureMessage(
                 new Profile.Fixed(
                     new XMLDocument(
                         String.format(
@@ -140,20 +136,14 @@ final class ProfilesTest {
                         )
                     )
                 )
-            );
-            Assertions.fail("Method above must throw an exception");
-        } catch (final Profile.ConfigException exception) {
-            MatcherAssert.assertThat(
-                "Message should be with a reason for merge error",
-                exception.getMessage(),
-                Matchers.is(
-                    String.format(
-                        ProfilesTest.MESSAGE,
-                        ProfilesTest.MERGE_COMMANDERS
-                    )
+            ),
+            Matchers.is(
+                String.format(
+                    ProfilesTest.MESSAGE,
+                    ProfilesTest.MERGE_COMMANDERS
                 )
-            );
-        }
+            )
+        );
     }
 
     /**
@@ -167,8 +157,9 @@ final class ProfilesTest {
         final String architect = "Yegor8192";
         final String first = "Commander Keen";
         final String second = "Commander Sheperd";
-        try {
-            new Profiles().validated(
+        MatcherAssert.assertThat(
+            "Message should be with a reason for merge error",
+            ProfilesTest.failureMessage(
                 new Profile.Fixed(
                     new XMLDocument(
                         String.format(
@@ -204,35 +195,113 @@ final class ProfilesTest {
                         )
                     )
                 )
-            );
-            Assertions.fail("Line above must throw an exception");
-        } catch (final Profile.ConfigException exception) {
-            MatcherAssert.assertThat(
-                "Message should be with a reason for merge error",
-                exception.getMessage(),
-                Matchers.is(
-                    String.format(
-                        ProfilesTest.MESSAGE,
-                        ProfilesTest.MERGE_COMMANDERS
-                    )
+            ),
+            Matchers.is(
+                String.format(
+                    ProfilesTest.MESSAGE,
+                    ProfilesTest.MERGE_COMMANDERS
                 )
-            );
-        }
+            )
+        );
     }
 
     /**
      * Profiles can validate merged profile without changes in restricted
-     * sections.
+     * sections (architect taken from master).
      * @throws Exception In case of error.
      */
     @Test
-    void validationReturnsMerged() throws Exception {
+    void validationReturnsMergedArchitect() throws Exception {
         final String architect = "Yegor512";
+        MatcherAssert.assertThat(
+            "Architect is taken from master",
+            ProfilesTest.mergedProfile(architect, "do_another3").read().xpath(
+                "//entry[@key='architect']/item/text()"
+            ),
+            Matchers.contains(architect)
+        );
+    }
+
+    /**
+     * Profiles can validate merged profile without changes in restricted
+     * sections (merge commander taken from master).
+     * @throws Exception In case of error.
+     */
+    @Test
+    void validationReturnsMergedMergeCommander() throws Exception {
+        MatcherAssert.assertThat(
+            "Merge commander is taken from master",
+            ProfilesTest.mergedProfile("Yegor512", "do_another3").read().xpath(
+                "//entry[@key='merge']/entry[@key='commanders']/item/text()"
+            ),
+            Matchers.contains("Total Commander")
+        );
+    }
+
+    /**
+     * Profiles can validate merged profile without changes in restricted
+     * sections (deploy commander taken from master).
+     * @throws Exception In case of error.
+     */
+    @Test
+    void validationReturnsMergedDeployCommander() throws Exception {
+        MatcherAssert.assertThat(
+            "Deploy commander is taken from master",
+            ProfilesTest.mergedProfile("Yegor512", "do_another3").read().xpath(
+                "//entry[@key='deploy']/entry[@key='commanders']/item/text()"
+            ),
+            Matchers.contains("Midnight Commander")
+        );
+    }
+
+    /**
+     * Profiles can validate merged profile without changes in restricted
+     * sections (release commander taken from master).
+     * @throws Exception In case of error.
+     */
+    @Test
+    void validationReturnsMergedReleaseCommander() throws Exception {
+        MatcherAssert.assertThat(
+            "Release commander is taken from master",
+            ProfilesTest.mergedProfile("Yegor512", "do_another3").read().xpath(
+                "//entry[@key='release']/entry[@key='commanders']/item/text()"
+            ),
+            Matchers.contains("Norton Commander")
+        );
+    }
+
+    /**
+     * Profiles can validate merged profile without changes in restricted
+     * sections (script taken from fork).
+     * @throws Exception In case of error.
+     */
+    @Test
+    void validationReturnsMergedScript() throws Exception {
+        final String script = "do_another3";
+        MatcherAssert.assertThat(
+            "Script is taken from fork",
+            ProfilesTest.mergedProfile("Yegor512", script).read().xpath(
+                "//entry[@key='merge']/entry[@key='script']/item/text()"
+            ),
+            Matchers.contains(script)
+        );
+    }
+
+    /**
+     * Build a validated merged profile from master and fork profiles
+     * using shared constants for commanders.
+     * @param architect Architect login
+     * @param script Script taken from fork
+     * @return Validated merged profile
+     * @throws Exception In case of error.
+     */
+    private static Profile mergedProfile(
+        final String architect, final String script
+    ) throws Exception {
         final String first = "Total Commander";
         final String second = "Midnight Commander";
         final String third = "Norton Commander";
-        final String script = "do_another3";
-        final Profile validated = new Profiles().validated(
+        return new Profiles().validated(
             new Profile.Fixed(
                 new XMLDocument(
                     String.format(
@@ -258,42 +327,24 @@ final class ProfilesTest {
                 )
             )
         );
-        MatcherAssert.assertThat(
-            "Architect is taken from master",
-            validated.read().xpath(
-                "//entry[@key='architect']/item/text()"
-            ),
-            Matchers.contains(architect)
-        );
-        final String path =
-            "//entry[@key='%s']/entry[@key='commanders']/item/text()";
-        MatcherAssert.assertThat(
-            "Merge commander is taken from master",
-            validated.read().xpath(
-                String.format(path, "merge")
-            ),
-            Matchers.contains(first)
-        );
-        MatcherAssert.assertThat(
-            "Deploy commander is taken from master",
-            validated.read().xpath(
-                String.format(path, "deploy")
-            ),
-            Matchers.contains(second)
-        );
-        MatcherAssert.assertThat(
-            "Release commander is taken from master",
-            validated.read().xpath(
-                String.format(path, "release")
-            ),
-            Matchers.contains(third)
-        );
-        MatcherAssert.assertThat(
-            "Script is taken from fork",
-            validated.read().xpath(
-                "//entry[@key='merge']/entry[@key='script']/item/text()"
-            ),
-            Matchers.contains(script)
-        );
+    }
+
+    /**
+     * Run validation that is expected to fail and return the exception
+     * message. Returns null if no exception was thrown.
+     * @param master Master profile
+     * @param fork Fork profile
+     * @return Exception message
+     */
+    private static String failureMessage(
+        final Profile master, final Profile fork
+    ) throws java.io.IOException {
+        String message = null;
+        try {
+            new Profiles().validated(master, fork);
+        } catch (final Profile.ConfigException exception) {
+            message = exception.getMessage();
+        }
+        return message;
     }
 }
