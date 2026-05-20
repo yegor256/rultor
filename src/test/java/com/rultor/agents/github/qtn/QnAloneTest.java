@@ -4,7 +4,6 @@
  */
 package com.rultor.agents.github.qtn;
 
-import co.stateful.Locks;
 import co.stateful.mock.MkSttc;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
@@ -34,13 +33,15 @@ final class QnAloneTest {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("deploy");
-        final Talk talk = new Talk.InFile();
-        final Locks locks = new MkSttc().locks();
         MatcherAssert.assertThat(
             "Deploy request should be created",
             new Xembler(
                 new Directives().add("request").append(
-                    new QnAlone(talk, locks, new QnDeploy()).understand(
+                    new QnAlone(
+                        new Talk.InFile(),
+                        new MkSttc().locks(),
+                        new QnDeploy()
+                    ).understand(
                         new Comment.Smart(issue.comments().get(1)), new URI("#")
                     ).dirs()
                 )

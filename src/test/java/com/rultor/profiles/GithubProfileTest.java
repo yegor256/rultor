@@ -62,7 +62,7 @@ final class GithubProfileTest {
                     )
                     .build()
             );
-        final Profile profile = new GithubProfile(repo);
+        final Profile profile = GithubProfile.fromRepo(repo);
         MatcherAssert.assertThat(
             "Profile should have all info",
             profile.read(),
@@ -94,7 +94,7 @@ final class GithubProfileTest {
     void throwsWhenYamlIsBroken() {
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(
+            () -> GithubProfile.fromRepo(
                 GithubProfileTest.repo("&*(fds:[[\nfd\n")
             ).read()
         );
@@ -116,7 +116,7 @@ final class GithubProfileTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -135,7 +135,7 @@ final class GithubProfileTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -156,7 +156,7 @@ final class GithubProfileTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -191,7 +191,7 @@ final class GithubProfileTest {
         );
         MatcherAssert.assertThat(
             "Assets should be created",
-            new GithubProfile(repo).assets().entrySet(),
+            GithubProfile.fromRepo(repo).assets().entrySet(),
             Matchers.not(Matchers.emptyIterable())
         );
     }
@@ -211,7 +211,7 @@ final class GithubProfileTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -230,7 +230,7 @@ final class GithubProfileTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -264,7 +264,7 @@ final class GithubProfileTest {
                     )
                     .build()
             );
-        final Profile profile = new GithubProfile(repo);
+        final Profile profile = GithubProfile.fromRepo(repo);
         Assertions.assertThrows(
             Profile.ConfigException.class,
                 profile::assets

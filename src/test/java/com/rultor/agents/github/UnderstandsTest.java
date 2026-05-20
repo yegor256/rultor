@@ -136,7 +136,7 @@ final class UnderstandsTest {
         );
         new Understands(
             repo.github(),
-            new QnFirstOf(
+            QnFirstOf.of(
                 new QnMerge(),
                 new QnIamLost()
             )

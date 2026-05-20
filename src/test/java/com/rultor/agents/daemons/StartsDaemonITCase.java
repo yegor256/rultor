@@ -100,7 +100,6 @@ final class StartsDaemonITCase {
         ) {
             final Talk talk = StartsDaemonITCase.talk(start);
             final XML xml = talk.read();
-            final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
             final List<String> repos = xml.xpath("/wire/github-repo/text()");
             final String notice = "#### Deprecation Notice ####";
             final Matcher<String> matcher;
@@ -116,7 +115,7 @@ final class StartsDaemonITCase {
             }
             MatcherAssert.assertThat(
                 "Deprecation message in case of default image should be printed",
-                dir,
+                xml.xpath("/talk/daemon/dir/text()").get(0),
                 matcher
             );
         }

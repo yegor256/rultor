@@ -48,12 +48,11 @@ final class StartsDockerDaemonTest {
                     Matchers.endsWith("-----END RSA PRIVATE KEY-----")
                 )
             );
-            final Shell.Plain ssh = new Shell.Plain(
-                new Ssh(shell.host(), shell.port(), shell.login(), shell.key())
-            );
             MatcherAssert.assertThat(
                 "Key should be placed in /root/.ssh/id_rsa",
-                ssh.exec("cat /root/.ssh/id_rsa"),
+                new Shell.Plain(
+                    new Ssh(shell.host(), shell.port(), shell.login(), shell.key())
+                ).exec("cat /root/.ssh/id_rsa"),
                 Matchers.containsString(key)
             );
         }

@@ -215,7 +215,7 @@ public final class Agents {
                                         new QnParametrized(
                                             new QnWithAuthor(
                                                 new QnFollow(
-                                                    new QnFirstOf(
+                                                    QnFirstOf.of(
                                                         new QnIfContains(
                                                             "config", new QnConfig(profile)
                                                         ),
@@ -353,7 +353,7 @@ public final class Agents {
         return new QnByArchitect(
             profile,
             "/p/entry[@key='architect']/item/text()",
-            new QnFirstOf(
+            QnFirstOf.of(
                 new QnIfContains(
                     "unlock",
                     new QnUnlock()

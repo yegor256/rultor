@@ -35,20 +35,19 @@ final class QnAskedByTest {
         repo.collaborators().add("testuser1");
         final Issue issue = repo.issues().create("title", "body");
         issue.comments().post("comment");
-        final Comment.Smart comment = new Comment.Smart(
-            issue.comments().get(1)
-        );
         final QnAskedBy qab = new QnAskedBy(
             new Profile.Fixed(),
             "//test",
             Mockito.mock(Question.class)
         );
         github.relogin("rultor");
-        qab.understand(comment, new URI("http://localhost"));
-        final Comment.Smart reply = new Comment.Smart(issue.comments().get(2));
+        qab.understand(
+            new Comment.Smart(issue.comments().get(1)),
+            new URI("http://localhost")
+        );
         MatcherAssert.assertThat(
             "Rultor should not be included in the message",
-            reply.body(),
+            new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.not(
                 Matchers.containsString("@rultor")
             )

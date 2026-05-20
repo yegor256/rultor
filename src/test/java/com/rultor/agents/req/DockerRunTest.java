@@ -44,21 +44,21 @@ final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             "Multiple env items should be saved",
-            new DockerRun(profile, "/p/entry[@key='a']").envs(
+            DockerRun.byXpath(profile, "/p/entry[@key='a']").envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("A=5", "B=f e")
         );
         MatcherAssert.assertThat(
             "Single even item should be saved",
-            new DockerRun(profile, "/p/entry[@key='b']").envs(
+            DockerRun.byXpath(profile, "/p/entry[@key='b']").envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("HELLO='1'")
         );
         MatcherAssert.assertThat(
             "Additional value should be saved from envs parameter",
-            new DockerRun(profile, "/p/entry[@key='c']").envs(
+            DockerRun.byXpath(profile, "/p/entry[@key='c']").envs(
                 new ArrayMap<String, String>().with("X", "a\"'b")
             ),
             Matchers.hasItems("MVN=works", "X=a\"'b")
@@ -84,12 +84,12 @@ final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             "Script should be read from profile",
-            new DockerRun(profile, "/p/entry[@key='x']").script(),
+            DockerRun.byXpath(profile, "/p/entry[@key='x']").script(),
             Matchers.hasItems("mvn clean", ";")
         );
         MatcherAssert.assertThat(
             "Script should be read from several items with ;",
-            new DockerRun(profile, "/p/entry[@key='y']").script(),
+            DockerRun.byXpath(profile, "/p/entry[@key='y']").script(),
             Matchers.hasItems("pw", ";", "ls", ";")
         );
     }
@@ -120,7 +120,7 @@ final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             "All items from xpath should be in the script even with comment",
-            new DockerRun(profile, "/p/entry[@key='z']").script(),
+            DockerRun.byXpath(profile, "/p/entry[@key='z']").script(),
             Matchers.hasItems(
                 "echo \"first\"",
                 ";",
@@ -159,7 +159,7 @@ final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             "install should be also in the script",
-            new DockerRun(profile, "/p/entry[@key='f']").script(),
+            DockerRun.byXpath(profile, "/p/entry[@key='f']").script(),
             Matchers.hasItems("one", ";", "two", ";", "hi", ";")
         );
     }
@@ -188,7 +188,7 @@ final class DockerRunTest {
             "uninstall should be placed in the script",
             // @checkstyle MultipleStringLiterals (1 line)
             new Brackets(
-                new DockerRun(profile, "/p/entry[@key='f']").script()
+                DockerRun.byXpath(profile, "/p/entry[@key='f']").script()
             ).toString(),
             // @checkstyle LineLengthCheck (3 line)
             Matchers.equalTo(
@@ -215,7 +215,7 @@ final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             "Env variables should be read from the xpath",
-            new DockerRun(profile, "/p/entry[@key='o']").envs(
+            DockerRun.byXpath(profile, "/p/entry[@key='o']").envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("ALPHA=909", "A=123")
@@ -237,7 +237,7 @@ final class DockerRunTest {
         MatcherAssert.assertThat(
             "multiline script should be place in script as two commands",
             new Brackets(
-                new DockerRun(profile, "/p").script()
+                DockerRun.byXpath(profile, "/p").script()
             ).toString(),
             Matchers.equalTo("( 'How are you,' ';' 'dude' ';' )")
         );
@@ -258,7 +258,7 @@ final class DockerRunTest {
         MatcherAssert.assertThat(
             "empty lines should be skipped",
             new Brackets(
-                new DockerRun(profile, "/p").script()
+                DockerRun.byXpath(profile, "/p").script()
             ).toString(),
             Matchers.equalTo("( 'echo 1' ';' 'echo 2' ';' 'echo 3' ';' )")
         );
@@ -278,7 +278,7 @@ final class DockerRunTest {
         MatcherAssert.assertThat(
             "Empty env variables are allowed",
             new Brackets(
-                new DockerRun(profile, "/p/entry[@key='ooo']").envs(
+                DockerRun.byXpath(profile, "/p/entry[@key='ooo']").envs(
                     new ArrayMap<>()
                 )
             ).toString(),

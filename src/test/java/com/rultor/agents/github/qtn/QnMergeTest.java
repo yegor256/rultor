@@ -81,10 +81,9 @@ final class QnMergeTest {
      */
     @Test
     void buildsRequest() throws Exception {
-        final String request = new Xembler(this.mergeRequest()).xml();
         MatcherAssert.assertThat(
             "Merge request should be created",
-            request,
+            new Xembler(this.mergeRequest()).xml(),
             Matchers.allOf(
                 XhtmlMatchers.hasXPath("/request/type[text()='merge']"),
                 XhtmlMatchers.hasXPath(

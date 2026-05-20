@@ -5,7 +5,6 @@
 package com.rultor.agents;
 
 import com.jcabi.xml.XMLDocument;
-import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.util.Collections;
@@ -25,16 +24,18 @@ final class DeactivatesTalksTest {
      */
     @Test
     void deactivatesTalk() throws Exception {
-        final SuperAgent agent = new DeactivatesTalks();
-        final Talk talk = new Talk.InFile(
-            new XMLDocument(
-                "<talk later='false' name='a' number='1'/>"
-            )
-        );
         final Talks talks = Mockito.mock(Talks.class);
-        Mockito.doReturn(Collections.singleton(talk)).when(talks).active();
+        Mockito.doReturn(
+            Collections.singleton(
+                new Talk.InFile(
+                    new XMLDocument(
+                        "<talk later='false' name='a' number='1'/>"
+                    )
+                )
+            )
+        ).when(talks).active();
         Assertions.assertDoesNotThrow(
-            () -> agent.execute(talks)
+            () -> new DeactivatesTalks().execute(talks)
         );
     }
 }

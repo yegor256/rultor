@@ -57,7 +57,7 @@ public final class DefaultBranch {
          * @param exp Original problem
          */
         public RepoNotFoundException(final String name, final Throwable exp) {
-            super(String.format("Most probably the repo %s doesn't exist", name), exp);
+            super("Most probably the repo " + name + " doesn't exist", exp);
         }
     }
 }

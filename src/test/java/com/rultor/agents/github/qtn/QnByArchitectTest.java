@@ -67,9 +67,8 @@ final class QnByArchitectTest {
     @Test
     void acceptsIfArchitect() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
         final Comment.Smart comment = new Comment.Smart(
-            issue.comments().post("release")
+            repo.issues().create("", "").comments().post("release")
         );
         final Question question = Mockito.mock(Question.class);
         final URI home = new URI("#1");

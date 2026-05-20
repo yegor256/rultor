@@ -76,20 +76,21 @@ final class GithubProfile implements Profile {
     /**
      * Ctor.
      * @param rpo Repo
-     */
-    GithubProfile(final Repo rpo) {
-        this(rpo, new DefaultBranch(rpo).toString());
-    }
-
-    /**
-     * Ctor.
-     * @param rpo Repo
      * @param brnch Branch
      * @since 1.51
      */
     GithubProfile(final Repo rpo, final String brnch) {
         this.repo = rpo;
         this.branch = brnch;
+    }
+
+    /**
+     * Make from a Repo (uses default branch).
+     * @param rpo Repo
+     * @return Profile
+     */
+    static GithubProfile fromRepo(final Repo rpo) {
+        return new GithubProfile(rpo, new DefaultBranch(rpo).toString());
     }
 
     @Override

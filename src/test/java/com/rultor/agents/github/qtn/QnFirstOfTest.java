@@ -30,7 +30,6 @@ final class QnFirstOfTest {
     void getsFirstReq() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        final Comment comment = issue.comments().post("deploy");
         MatcherAssert.assertThat(
             "First not empty question should be taken",
             new QnFirstOf(
@@ -39,7 +38,10 @@ final class QnFirstOfTest {
                     new QnDeploy(),
                     Question.EMPTY
                 )
-            ).understand(new Comment.Smart(comment), new URI("#")),
+            ).understand(
+                new Comment.Smart(issue.comments().post("deploy")),
+                new URI("#")
+            ),
             Matchers.not(Matchers.equalTo(Req.EMPTY))
         );
     }

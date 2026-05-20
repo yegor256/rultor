@@ -30,10 +30,9 @@ final class QnConfigTest {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");
-        final Profile profile = new Profile.Fixed();
         MatcherAssert.assertThat(
             "hello command should be recognized",
-            new QnConfig(profile).understand(
+            new QnConfig(new Profile.Fixed()).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)

@@ -6,7 +6,6 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
-import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import java.io.IOException;
 import java.util.Date;
@@ -49,10 +48,11 @@ final class AnswerTest {
         ((MkGitHub) issue.repo().github()).relogin("walter")
             .repos().get(issue.repo().coordinates())
             .issues().get(1).comments().post("hello, how are you?");
-        final Comment.Smart comment = new Comment.Smart(
-            issue.comments().get(1)
+        final Answer answer = new Answer(
+            new Comment.Smart(
+                issue.comments().get(1)
+            )
         );
-        final Answer answer = new Answer(comment);
         for (int idx = 0; idx < 10; ++idx) {
             answer.post(true, "oops");
         }
@@ -69,7 +69,6 @@ final class AnswerTest {
      * @throws IOException If fails
      */
     private static Issue issue() throws IOException {
-        final Repo repo = new MkGitHub().randomRepo();
-        return repo.issues().create("", "");
+        return new MkGitHub().randomRepo().issues().create("", "");
     }
 }

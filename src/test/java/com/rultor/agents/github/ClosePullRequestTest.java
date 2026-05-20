@@ -38,18 +38,19 @@ final class ClosePullRequestTest {
     void closesPullRequestForRebaseMode() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    "",
-                    "<p><entry key='merge'>",
-                    "<entry key='rebase'>true</entry>",
-                    "</entry></p>"
-                ).asString()
-            )
-        );
-        final Talk talk = ClosePullRequestTest.talk(repo, issue);
-        new ClosePullRequest(profile, repo.github()).execute(talk);
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='merge'>",
+                        "<entry key='rebase'>true</entry>",
+                        "</entry></p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
         final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "PR should be closed",
@@ -72,18 +73,19 @@ final class ClosePullRequestTest {
     void leavesPullRequestOpenWhenNoRebaseMode() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    "",
-                    "<p> <entry key='merge'>",
-                    "  <entry key='rebase'>false</entry>",
-                    "</entry> </p>"
-                ).asString()
-            )
-        );
-        final Talk talk = ClosePullRequestTest.talk(repo, issue);
-        new ClosePullRequest(profile, repo.github()).execute(talk);
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p> <entry key='merge'>",
+                        "  <entry key='rebase'>false</entry>",
+                        "</entry> </p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
         final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "Issue should be open",

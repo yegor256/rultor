@@ -53,8 +53,17 @@ public final class Entry {
      * Ctor.
      * @param args Command line args
      */
-    public Entry(final String... args) {
-        this.arguments = Arrays.asList(args);
+    public Entry(final Iterable<String> args) {
+        this.arguments = args;
+    }
+
+    /**
+     * Make from varargs.
+     * @param args Command line args
+     * @return New entry
+     */
+    public static Entry of(final String... args) {
+        return new Entry(Arrays.asList(args));
     }
 
     /**
@@ -65,7 +74,7 @@ public final class Entry {
     @LogExceptions
     public static void main(final String... args) throws IOException {
         Logger.info(Entry.class, "Starting Rultor on the command line...");
-        new Entry(args).exec();
+        Entry.of(args).exec();
     }
 
     /**

@@ -103,10 +103,8 @@ final class EndsDaemonITCase {
             new Shell.Plain(
                 new Ssh(sshd.host(), sshd.port(), sshd.login(), sshd.key())
             ).exec("echo '154' > /tmp/status");
-            final Profile prof = Mockito.mock(Profile.class);
-            final String exception = "This profile was broken!";
-            Mockito.when(prof.read())
-                .thenThrow(new Profile.ConfigException(exception));
+            Mockito.when(Mockito.mock(Profile.class).read())
+                .thenThrow(new Profile.ConfigException("This profile was broken!"));
             final Agent agent = new EndsDaemon();
             agent.execute(talk);
             MatcherAssert.assertThat(

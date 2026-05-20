@@ -42,7 +42,7 @@ final class GithubProfileValidationTest {
     @Test
     void acceptsEmptyYaml() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo("");
-        new GithubProfile(repo).read();
+        GithubProfile.fromRepo(repo).read();
     }
 
     /**
@@ -61,7 +61,7 @@ final class GithubProfileValidationTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).read()
+            () -> GithubProfile.fromRepo(repo).read()
         );
     }
 
@@ -81,7 +81,7 @@ final class GithubProfileValidationTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).read()
+            () -> GithubProfile.fromRepo(repo).read()
         );
     }
 
@@ -101,7 +101,7 @@ final class GithubProfileValidationTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).read()
+            () -> GithubProfile.fromRepo(repo).read()
         );
     }
 
@@ -120,7 +120,7 @@ final class GithubProfileValidationTest {
             ).asString()
         );
         Assertions.assertDoesNotThrow(
-            () -> new GithubProfile(repo).read()
+            () -> GithubProfile.fromRepo(repo).read()
         );
     }
 
@@ -139,7 +139,7 @@ final class GithubProfileValidationTest {
             ).asString()
         );
         Assertions.assertDoesNotThrow(
-            () -> new GithubProfile(repo).read()
+            () -> GithubProfile.fromRepo(repo).read()
         );
     }
 
@@ -158,7 +158,7 @@ final class GithubProfileValidationTest {
             ).asString()
         );
         Assertions.assertDoesNotThrow(
-            () -> new GithubProfile(repo).read()
+            () -> GithubProfile.fromRepo(repo).read()
         );
     }
 
@@ -183,7 +183,7 @@ final class GithubProfileValidationTest {
             ).asString()
         );
         Assertions.assertDoesNotThrow(
-            () -> new GithubProfile(repo).read()
+            () -> GithubProfile.fromRepo(repo).read()
         );
     }
 
@@ -202,7 +202,7 @@ final class GithubProfileValidationTest {
                 " settings.xml: \"jeff/test#exist.txt\""
             ).asString()
         );
-        final Map<String, InputStream> map = new GithubProfile(repo).assets();
+        final Map<String, InputStream> map = GithubProfile.fromRepo(repo).assets();
         MatcherAssert.assertThat(
             "Asset should be added from profile",
             map.keySet(),
@@ -227,7 +227,7 @@ final class GithubProfileValidationTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -248,7 +248,7 @@ final class GithubProfileValidationTest {
         );
         Assertions.assertThrows(
             IllegalArgumentException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -269,7 +269,7 @@ final class GithubProfileValidationTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 
@@ -288,7 +288,7 @@ final class GithubProfileValidationTest {
         );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(repo).assets()
         );
     }
 

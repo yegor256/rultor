@@ -33,16 +33,17 @@ public final class QnFirstOf implements Question {
      * Ctor.
      * @param qtns Original questions
      */
-    public QnFirstOf(final Question... qtns) {
-        this(Arrays.asList(qtns));
+    public QnFirstOf(final Iterable<Question> qtns) {
+        this.questions = new Array<>(qtns);
     }
 
     /**
-     * Ctor.
+     * Make from varargs.
      * @param qtns Original questions
+     * @return New instance
      */
-    public QnFirstOf(final Iterable<Question> qtns) {
-        this.questions = new Array<>(qtns);
+    public static QnFirstOf of(final Question... qtns) {
+        return new QnFirstOf(Arrays.asList(qtns));
     }
 
     @Override

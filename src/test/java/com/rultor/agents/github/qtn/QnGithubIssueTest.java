@@ -11,7 +11,6 @@ import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XMLDocument;
-import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import com.rultor.spi.Talk;
 import java.net.URI;
@@ -35,8 +34,6 @@ final class QnGithubIssueTest {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("test comment.");
-        final Question origin = (comment, home) ->
-            (Req) () -> new Directives().add("type").set("xxx").up();
         MatcherAssert.assertThat(
             "request should save issue data",
             new StrictXML(
@@ -50,7 +47,11 @@ final class QnGithubIssueTest {
                             .attr("id", "a1b2c3")
                             .add("author").set("yegor256").up()
                             .append(
-                                new QnGithubIssue(origin).understand(
+                                new QnGithubIssue(
+                                    (comment, home) ->
+                                        (Req) () -> new Directives()
+                                            .add("type").set("xxx").up()
+                                ).understand(
                                     new Comment.Smart(
                                         issue.comments().get(1)
                                     ),

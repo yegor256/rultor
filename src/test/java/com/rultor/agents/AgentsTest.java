@@ -4,9 +4,7 @@
  */
 package com.rultor.agents;
 
-import co.stateful.Sttc;
 import co.stateful.mock.MkSttc;
-import com.jcabi.github.GitHub;
 import com.jcabi.github.mock.MkGitHub;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
@@ -29,12 +27,9 @@ final class AgentsTest {
     @ExtendWith(WeAreOnline.class)
     void processesTalk() throws Exception {
         final Talk talk = new Talk.InFile();
-        final GitHub github = new MkGitHub();
-        final Sttc sttc = new MkSttc();
-        final Profile profile = new Profile.Fixed();
         Assertions.assertDoesNotThrow(
-            () -> new Agents(github, sttc)
-                .agent(talk, profile).execute(talk)
+            () -> new Agents(new MkGitHub(), new MkSttc())
+                .agent(talk, new Profile.Fixed()).execute(talk)
         );
     }
 }

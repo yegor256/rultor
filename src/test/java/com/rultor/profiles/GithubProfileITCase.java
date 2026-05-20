@@ -30,7 +30,7 @@ final class GithubProfileITCase {
     @Test
     @Disabled
     void fetchesYamlConfig() throws Exception {
-        final Profile profile = new GithubProfile(
+        final Profile profile = GithubProfile.fromRepo(
             new RtGitHub().repos().get(
                 new Coordinates.Simple("yegor256/rultor")
             )

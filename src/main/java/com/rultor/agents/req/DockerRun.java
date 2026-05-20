@@ -46,21 +46,23 @@ final class DockerRun {
     /**
      * Ctor.
      * @param prof Profile
-     * @param xpath XPath of the XML element inside .rultor.yml
-     * @throws IOException If fails
-     */
-    DockerRun(final Profile prof, final String xpath) throws IOException {
-        this(prof, prof.read().nodes(xpath).iterator().next());
-    }
-
-    /**
-     * Ctor.
-     * @param prof Profile
      * @param node XML element inside ".rultor.yml" with the command
      */
     DockerRun(final Profile prof, final XML node) {
         this.profile = prof;
         this.command = node;
+    }
+
+    /**
+     * Factory: build by xpath into the profile.
+     * @param prof Profile
+     * @param xpath XPath of the XML element inside .rultor.yml
+     * @return DockerRun instance
+     * @throws IOException If fails
+     */
+    static DockerRun byXpath(final Profile prof, final String xpath)
+        throws IOException {
+        return new DockerRun(prof, prof.read().nodes(xpath).iterator().next());
     }
 
     /**
