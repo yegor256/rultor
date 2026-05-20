@@ -46,10 +46,8 @@ final class StartsDaemonITCase {
      */
     @Test
     void startsDaemon() throws Exception {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "started tag should be added with start time",
                 StartsDaemonITCase.talk(start).read(),
@@ -68,10 +66,8 @@ final class StartsDaemonITCase {
      */
     @Test
     void sendsStartScriptToDaemon() throws Exception {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = StartsDaemonITCase.talk(start);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             TimeUnit.SECONDS.sleep(2L);
@@ -102,10 +98,8 @@ final class StartsDaemonITCase {
      */
     @Test
     void doesNotCreateStatusFile() throws Exception {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "status file should not be created",
                 new File(
@@ -125,10 +119,8 @@ final class StartsDaemonITCase {
      */
     @Test
     void deprecatesDefaultImage() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = StartsDaemonITCase.talk(start);
             final XML xml = talk.read();
             final List<String> repos = xml.xpath("/wire/github-repo/text()");

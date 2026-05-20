@@ -67,10 +67,8 @@ final class EndsDaemonITCase {
      */
     @Test
     void readsExitCodeCorrectly() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             final PfShell sshd = this.start(start, talk, "");
             new Shell.Plain(
@@ -92,10 +90,8 @@ final class EndsDaemonITCase {
      */
     @Test
     void exitsWhenProfileBroken() throws Exception {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             final PfShell sshd = this.start(start, talk, "");
             new Shell.Plain(
@@ -123,10 +119,8 @@ final class EndsDaemonITCase {
     @Test
     @Disabled
     void deprecatesDefaultImage() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             this.start(start, talk, "");
             new EndsDaemon().execute(talk);

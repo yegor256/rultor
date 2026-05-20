@@ -29,10 +29,8 @@ final class StartsDockerDaemonTest {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "Should login as root",
                 start.shell().login(),
@@ -50,10 +48,8 @@ final class StartsDockerDaemonTest {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "Should be RSA key",
                 start.shell().key(),
@@ -74,10 +70,8 @@ final class StartsDockerDaemonTest {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final PfShell shell = start.shell();
             MatcherAssert.assertThat(
                 "Key should be placed in /root/.ssh/id_rsa",

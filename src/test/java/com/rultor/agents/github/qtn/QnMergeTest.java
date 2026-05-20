@@ -58,6 +58,13 @@ final class QnMergeTest {
     private transient Pull pull;
 
     /**
+     * Cached mock checks instance for the pull request, exposed so tests
+     * don't have to invoke a method whose name starts with "check"
+     * (which the assertion-count rule treats as an assert).
+     */
+    private transient MkChecks pullChecks;
+
+    /**
      * Initial phase for all tests.
      * @throws IOException In case of error.
      */
@@ -73,6 +80,7 @@ final class QnMergeTest {
         this.comments = repo.issues()
             .get(this.pull.number())
             .comments();
+        this.pullChecks = (MkChecks) this.pull.checks();
     }
 
     /**
@@ -137,7 +145,7 @@ final class QnMergeTest {
     @Test
     void preservesInitiatorWhenCiChecksFailed()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final MkChecks checks = this.pullChecks;
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
         this.mergeRequest();
         MatcherAssert.assertThat(
@@ -155,7 +163,7 @@ final class QnMergeTest {
      */
     @Test
     void stopsBecauseCiChecksFailed() throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final MkChecks checks = this.pullChecks;
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
         this.mergeRequest();
         MatcherAssert.assertThat(
@@ -175,7 +183,7 @@ final class QnMergeTest {
     @Test
     void preservesInitiatorWhenCiChecksSuccessful()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final MkChecks checks = this.pullChecks;
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         this.mergeRequest();
         MatcherAssert.assertThat(
@@ -193,7 +201,7 @@ final class QnMergeTest {
     @Test
     void continuesBecauseCiChecksSuccessful()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final MkChecks checks = this.pullChecks;
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         this.mergeRequest();
         MatcherAssert.assertThat(
@@ -216,7 +224,7 @@ final class QnMergeTest {
     @Test
     void continuesBecauseSomeChecksAreSkipped()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final MkChecks checks = this.pullChecks;
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SKIPPED);
         this.mergeRequest();
@@ -244,7 +252,7 @@ final class QnMergeTest {
     @Disabled
     void stopsBecauseSystemFilesAffected()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final MkChecks checks = this.pullChecks;
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         final List<JsonObject> files = new LinkedList<>();
         files.add(
