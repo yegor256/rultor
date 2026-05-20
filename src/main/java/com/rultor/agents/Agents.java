@@ -83,6 +83,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -198,7 +199,7 @@ public final class Agents {
             Env.read("Rultor-EC2Secret")
         );
         return new VerboseAgent(
-            new Agent.Iterative(
+            new Agent.Iterative(Arrays.asList(
                 new Agent.Quiet(new SanitizesDaemon()),
                 new WipesDaemon(),
                 new DropsTalk(),
@@ -215,7 +216,7 @@ public final class Agents {
                                         new QnParametrized(
                                             new QnWithAuthor(
                                                 new QnFollow(
-                                                    QnFirstOf.of(
+                                                    new QnFirstOf(Arrays.asList(
                                                         new QnIfContains(
                                                             "config", new QnConfig(profile)
                                                         ),
@@ -246,7 +247,7 @@ public final class Agents {
                                                             )
                                                         ),
                                                         new QnIamLost()
-                                                    )
+                                                    ))
                                                 )
                                             )
                                         )
@@ -340,7 +341,7 @@ public final class Agents {
                 ),
                 new Publishes(profile, this.github),
                 new SafeAgent(new Stars(this.github))
-            )
+            ))
         );
     }
 
@@ -353,7 +354,7 @@ public final class Agents {
         return new QnByArchitect(
             profile,
             "/p/entry[@key='architect']/item/text()",
-            QnFirstOf.of(
+            new QnFirstOf(Arrays.asList(
                 new QnIfContains(
                     "unlock",
                     new QnUnlock()
@@ -386,7 +387,7 @@ public final class Agents {
                         new QnRelease()
                     )
                 )
-            )
+            ))
         );
     }
 

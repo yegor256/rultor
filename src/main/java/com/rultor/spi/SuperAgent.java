@@ -100,7 +100,6 @@ public interface SuperAgent {
          */
         private final transient SuperAgent agent;
 
-
         /**
          * Ctor.
          * @param agt The agent

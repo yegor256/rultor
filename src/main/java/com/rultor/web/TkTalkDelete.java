@@ -4,7 +4,6 @@
  */
 package com.rultor.web;
 
-import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.logging.Level;

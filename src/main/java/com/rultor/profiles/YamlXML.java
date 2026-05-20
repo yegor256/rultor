@@ -38,7 +38,7 @@ final class YamlXML {
      * @param yml YAML
      */
     YamlXML(final String yml) {
-        this.yaml = yml.trim();
+        this.yaml = yml;
     }
 
     /**
@@ -46,10 +46,11 @@ final class YamlXML {
      * @return XML
      */
     XML get() {
+        final String trimmed = this.yaml.trim();
         final Directives dirs = new Directives().add("p");
-        if (!this.yaml.isEmpty()) {
+        if (!trimmed.isEmpty()) {
             try {
-                dirs.append(YamlXML.dirs(new Yaml().load(this.yaml)));
+                dirs.append(YamlXML.dirs(new Yaml().load(trimmed)));
             } catch (final YAMLException ex) {
                 throw new Profile.ConfigException(ex);
             }

@@ -30,11 +30,15 @@ import org.xembly.Xembler;
 public final class DropsDaemon extends AbstractAgent {
 
     /**
+     * Default max minutes (10 days).
+     */
+    private static final long DEFAULT_MAX = TimeUnit.DAYS.toMinutes(10L);
+
+    /**
      * Ctor.
      */
     public DropsDaemon() {
-        // @checkstyle MagicNumber (1 line)
-        this(TimeUnit.DAYS.toMinutes(10L));
+        this(DropsDaemon.DEFAULT_MAX);
     }
 
     /**
@@ -44,11 +48,8 @@ public final class DropsDaemon extends AbstractAgent {
     public DropsDaemon(final long mins) {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-            ),
+            // @checkstyle LineLength (1 line)
+            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > " + mins + "]",
             "/talk/shell[host and port and login and key]"
         );
     }

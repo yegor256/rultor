@@ -8,7 +8,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -42,14 +41,6 @@ public interface Agent {
 
          */
         private final transient Array<Agent> children;
-
-        /**
-         * Ctor.
-         * @param list List of them
-         */
-        public Iterative(final Agent... list) {
-            this(Arrays.asList(list));
-        }
 
         /**
          * Ctor.
@@ -129,7 +120,6 @@ public interface Agent {
          * Agent to defend.
          */
         private final transient Agent agent;
-
 
         /**
          * Ctor.

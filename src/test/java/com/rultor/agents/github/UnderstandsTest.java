@@ -134,10 +134,10 @@ final class UnderstandsTest {
         );
         new Understands(
             repo.github(),
-            QnFirstOf.of(
+            new QnFirstOf(Arrays.asList(
                 new QnMerge(),
                 new QnIamLost()
-            )
+            ))
         ).execute(UnderstandsTest.talk(pull));
         final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(

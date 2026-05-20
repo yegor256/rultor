@@ -14,7 +14,6 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;

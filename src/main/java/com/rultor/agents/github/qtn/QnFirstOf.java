@@ -11,7 +11,6 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -35,15 +34,6 @@ public final class QnFirstOf implements Question {
      */
     public QnFirstOf(final Iterable<Question> qtns) {
         this.questions = new Array<>(qtns);
-    }
-
-    /**
-     * Make from varargs.
-     * @param qtns Original questions
-     * @return New instance
-     */
-    public static QnFirstOf of(final Question... qtns) {
-        return new QnFirstOf(Arrays.asList(qtns));
     }
 
     @Override

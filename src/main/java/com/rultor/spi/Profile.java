@@ -103,7 +103,6 @@ public interface Profile {
          */
         private final transient Profile origin;
 
-
         /**
          * Ctor.
          * @param profile The profile
