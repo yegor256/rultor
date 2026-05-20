@@ -21,15 +21,14 @@ final class BracketsTest {
      */
     @Test
     void escapesInput() {
-        final Brackets brackets = new Brackets(
-            new ListOf<>(
-                "Elegant",
-                "Objects"
-            )
-        );
         MatcherAssert.assertThat(
             "Each element should be wrapped in ''",
-            brackets.toString(),
+            new Brackets(
+                new ListOf<>(
+                    "Elegant",
+                    "Objects"
+                )
+            ).toString(),
             Matchers.equalTo("( 'Elegant' 'Objects' )")
         );
     }

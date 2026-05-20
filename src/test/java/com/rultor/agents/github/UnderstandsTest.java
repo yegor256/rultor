@@ -104,12 +104,10 @@ final class UnderstandsTest {
     void understandsIssueBody() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("test", "@test hello");
-        final Agent agent = new Understands(
+        new Understands(
             repo.github(),
             new QnIfContains("hello", new QnHello())
-        );
-        final Talk talk = UnderstandsTest.talk(issue);
-        agent.execute(talk);
+        ).execute(UnderstandsTest.talk(issue));
         MatcherAssert.assertThat(
             "Reply comment should be created for hello",
             issue.comments().iterate(new Date(0L)),

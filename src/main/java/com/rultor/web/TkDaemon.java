@@ -111,19 +111,19 @@ final class TkDaemon implements TkRegex {
                             Objects.requireNonNull(this.getClass().getResource("daemon/head.html")),
                             StandardCharsets.UTF_8
                         ).trim().replace("TALK_NAME", talk.name()).replace(
-                                "TALK_LINK",
-                                StringEscapeUtils.escapeHtml4(
-                                    talk.read()
-                                        .xpath("/talk/wire/href/text()").get(0)
-                                )
+                            "TALK_LINK",
+                            StringEscapeUtils.escapeHtml4(
+                                talk.read()
+                                    .xpath("/talk/wire/href/text()").get(0)
+                            )
                             ),
                         StandardCharsets.UTF_8
                     ),
                     TkDaemon.escape(new Tail(talk.read(), hash).read()),
                     AutoCloseInputStream.builder().setInputStream(
-                            Objects.requireNonNull(
-                                this.getClass().getResourceAsStream("daemon/tail.html")
-                            )
+                        Objects.requireNonNull(
+                            this.getClass().getResourceAsStream("daemon/tail.html")
+                        )
                         ).get()
                 )
             )

@@ -39,20 +39,6 @@ final class DecryptTest {
      */
     @Test
     void decryptsAssets(@TempDir final Path temp) throws Exception {
-        final Iterable<String> commands = new Decrypt(
-            new Profile.Fixed(
-                this.createTestProfileXML(),
-                "test/test"
-            )
-        ).commands();
-        final String script = new Joined(
-            DecryptTest.NEWLINE,
-            "set -ex -o pipefail",
-            new Joined(
-                DecryptTest.NEWLINE,
-                commands
-            ).asString()
-        ).asString();
         final File dir = temp.toFile();
         FileUtils.write(
             new File(dir, "a.txt.asc"),
@@ -72,7 +58,23 @@ final class DecryptTest {
         try (
             VerboseProcess proc = new VerboseProcess(
                 new ProcessBuilder()
-                    .command("/bin/bash", "-c", script)
+                    .command(
+                        "/bin/bash",
+                        "-c",
+                        new Joined(
+                            DecryptTest.NEWLINE,
+                            "set -ex -o pipefail",
+                            new Joined(
+                                DecryptTest.NEWLINE,
+                                new Decrypt(
+                                    new Profile.Fixed(
+                                        this.createTestProfileXML(),
+                                        "test/test"
+                                    )
+                                ).commands()
+                            ).asString()
+                        ).asString()
+                    )
                     .directory(dir)
                     .redirectErrorStream(true),
                 Level.WARNING, Level.WARNING

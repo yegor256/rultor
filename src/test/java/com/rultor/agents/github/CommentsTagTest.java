@@ -176,8 +176,8 @@ final class CommentsTagTest {
         final String tag = "v1.1.latest";
         final Talk talk = CommentsTagTest.talk(
             repo.issues().create(
-                    "Latest Release",
-                    "This issue is created for latest release"
+                "Latest Release",
+                "This issue is created for latest release"
                 ),
             tag
         );
@@ -218,8 +218,8 @@ final class CommentsTagTest {
         ).execute(
             CommentsTagTest.talk(
                 repo.issues().create(
-                        "Latest Release",
-                        "This issue is created for latest release"
+                    "Latest Release",
+                    "This issue is created for latest release"
                     ),
                 tag
             )
@@ -245,8 +245,8 @@ final class CommentsTagTest {
         new CommentsTag(repo.github()).execute(
             CommentsTagTest.talk(
                 repo.issues().create(
-                        "Pre Release",
-                        "This issue is created for pre release"
+                    "Pre Release",
+                    "This issue is created for pre release"
                     ),
                 tag
             )

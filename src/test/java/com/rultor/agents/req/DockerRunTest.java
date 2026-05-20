@@ -100,27 +100,29 @@ final class DockerRunTest {
      */
     @Test
     void executesWithComment() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    DockerRunTest.SPACE,
-                    "<p><entry key='z'><entry key='script'>",
-                    "<item>echo \"first\"</item>",
-                    "<item># some comment</item>",
-                    "<item>echo \"# some comment\" more</item>",
-                    "<item>echo '# some comment' more</item>",
-                    "<item>echo \"second\" # some comment</item>",
-                    "<item>echo \"third\" \\# some comment</item>",
-                    "<item>echo \"last\"</item>",
-                    "</entry></entry>",
-                    // @checkstyle MultipleStringLiterals (1 line)
-                    "</p>"
-                ).asString()
-            )
-        );
         MatcherAssert.assertThat(
             "All items from xpath should be in the script even with comment",
-            DockerRun.byXpath(profile, "/p/entry[@key='z']").script(),
+            DockerRun.byXpath(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            DockerRunTest.SPACE,
+                            "<p><entry key='z'><entry key='script'>",
+                            "<item>echo \"first\"</item>",
+                            "<item># some comment</item>",
+                            "<item>echo \"# some comment\" more</item>",
+                            "<item>echo '# some comment' more</item>",
+                            "<item>echo \"second\" # some comment</item>",
+                            "<item>echo \"third\" \\# some comment</item>",
+                            "<item>echo \"last\"</item>",
+                            "</entry></entry>",
+                            // @checkstyle MultipleStringLiterals (1 line)
+                            "</p>"
+                        ).asString()
+                    )
+                ),
+                "/p/entry[@key='z']"
+            ).script(),
             Matchers.hasItems(
                 "echo \"first\"",
                 ";",
@@ -147,19 +149,21 @@ final class DockerRunTest {
      */
     @Test
     void fetchesInstallScript() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    DockerRunTest.SPACE,
-                    "<p><entry key='f'><entry key='script'>hi</entry></entry>",
-                    "<entry key='install'><item>one</item><item>two</item>",
-                    "</entry></p>"
-                ).asString()
-            )
-        );
         MatcherAssert.assertThat(
             "install should be also in the script",
-            DockerRun.byXpath(profile, "/p/entry[@key='f']").script(),
+            DockerRun.byXpath(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            DockerRunTest.SPACE,
+                            "<p><entry key='f'><entry key='script'>hi</entry></entry>",
+                            "<entry key='install'><item>one</item><item>two</item>",
+                            "</entry></p>"
+                        ).asString()
+                    )
+                ),
+                "/p/entry[@key='f']"
+            ).script(),
             Matchers.hasItems("one", ";", "two", ";", "hi", ";")
         );
     }

@@ -54,9 +54,9 @@ final class Script {
                 Ssh.escape(dir), Ssh.escape(this.name)
             ),
             AutoCloseInputStream.builder().setInputStream(
-                    Objects.requireNonNull(
-                        this.getClass().getResourceAsStream(this.name)
-                    )
+                Objects.requireNonNull(
+                    this.getClass().getResourceAsStream(this.name)
+                )
                 ).get(),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)

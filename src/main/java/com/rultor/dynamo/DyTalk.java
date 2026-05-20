@@ -132,9 +132,9 @@ public final class DyTalk implements Talk {
                     .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis()).with(
                         DyTalks.ATTR_XML_ZIP,
                         AttributeValueUpdate.builder().value(
-                                AttributeValue.builder()
-                                    .b(SdkBytes.fromByteArray(body))
-                                    .build()
+                            AttributeValue.builder()
+                                .b(SdkBytes.fromByteArray(body))
+                                .build()
                             )
                             .action(AttributeAction.PUT)
                             .build()

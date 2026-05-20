@@ -27,8 +27,7 @@ final class StarsTest {
     void starsNewRepo() throws IOException {
         final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
-        final Talk talk = this.talk(repo);
-        new Stars(github).execute(talk);
+        new Stars(github).execute(this.talk(repo));
         MatcherAssert.assertThat(
             "Star should be added to the repo",
             repo.stars().starred(),
@@ -44,9 +43,8 @@ final class StarsTest {
     void leavesStarredRepo() throws IOException {
         final MkGitHub github = new MkGitHub();
         final Repo repo = github.randomRepo();
-        final Talk talk = this.talk(repo);
         repo.stars().star();
-        new Stars(github).execute(talk);
+        new Stars(github).execute(this.talk(repo));
         MatcherAssert.assertThat(
             "Star should be kept if already stared",
             repo.stars().starred(),

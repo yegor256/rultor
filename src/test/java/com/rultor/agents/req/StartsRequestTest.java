@@ -124,9 +124,9 @@ final class StartsRequestTest {
             this.exec(talk, jobtemp),
             Matchers.allOf(
                 new Array<Matcher<? super String>>().with(
-                        Matchers.containsString(
-                            "image=yegor256/rultor-image\n"
-                        )
+                    Matchers.containsString(
+                        "image=yegor256/rultor-image\n"
+                    )
                     ).with(
                         Matchers.containsString(
                             String.format(
@@ -335,11 +335,11 @@ final class StartsRequestTest {
             this.execQuietly(talk, jobtemp),
             Matchers.allOf(
                 new Array<Matcher<? super String>>().with(
-                        Matchers.containsString(
-                            String.format(
-                                "directory=%s", dir
-                            )
+                    Matchers.containsString(
+                        String.format(
+                            "directory=%s", dir
                         )
+                    )
                     )
                     .with(Matchers.containsString("docker_when_possible"))
                     .with(Matchers.containsString("enough to run a new Docker"))
