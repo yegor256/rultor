@@ -10,7 +10,6 @@ import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import lombok.ToString;
 import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
@@ -70,7 +69,7 @@ public final class PrunesInstances implements SuperAgent {
                     .instanceIds(instance.instanceId())
                     .build()
             ).instanceStatuses().get(0).instanceState().nameAsString();
-            final long age = new Date().getTime() - instance.launchTime().toEpochMilli();
+            final long age = System.currentTimeMillis() - instance.launchTime().toEpochMilli();
             final String label = Logger.format(
                 "%s/%s/%s/%[ms]s",
                 instance.instanceId(),

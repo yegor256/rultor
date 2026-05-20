@@ -45,7 +45,7 @@ final class YamlXML {
      * Get XML.
      * @return XML
      */
-    public XML get() {
+    XML get() {
         final Yaml parser = new Yaml();
         final Directives dirs = new Directives().add("p");
         if (!this.yaml.isEmpty()) {

@@ -20,7 +20,7 @@ final class FakePGP {
      * @return String
      * @checkstyle NonStaticMethodCheck (35 lines)
      */
-    public String asString() {
+    String asString() {
         return new UncheckedText(
             new Joined(
                 "\n",

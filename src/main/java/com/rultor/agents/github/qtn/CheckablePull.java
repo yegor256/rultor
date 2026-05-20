@@ -39,7 +39,7 @@ final class CheckablePull {
      * @return True if all checks are successful
      * @throws IOException If fails
      */
-    public boolean allChecksSuccessful() throws IOException {
+    boolean allChecksSuccessful() throws IOException {
         boolean result = true;
         for (final Check check : this.pull.checks().all()) {
             if (!check.successful() && !check.skipped()) {
@@ -56,7 +56,7 @@ final class CheckablePull {
      * @return True if all checks are successful
      * @throws IOException If fails
      */
-    public boolean containsFile(final String file) throws IOException {
+    boolean containsFile(final String file) throws IOException {
         boolean result = false;
         for (final JsonObject pullfile : this.pull.files()) {
             if (pullfile.getString("filename").equalsIgnoreCase(file)) {

@@ -45,7 +45,7 @@ final class Script {
      * @return Exit code
      * @throws IOException If fails
      */
-    public int exec(final XML xml) throws IOException {
+    int exec(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(

@@ -11,7 +11,6 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.PfShell;
 import java.io.IOException;
-import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -73,7 +72,7 @@ public final class ConnectsInstance extends AbstractAgent {
                 instance, name, host
             );
         } else {
-            final long age = new Date().getTime() - this.api.aws()
+            final long age = System.currentTimeMillis() - this.api.aws()
                 .describeInstances(
                     DescribeInstancesRequest.builder()
                         .instanceIds(instance)

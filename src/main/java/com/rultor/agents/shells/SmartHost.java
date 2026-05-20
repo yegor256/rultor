@@ -43,7 +43,7 @@ final class SmartHost {
      * @return Ip address
      * @checkstyle MethodNameCheck (3 lines)
      */
-    public String ip() {
+    String ip() {
         return this.host.getHostAddress();
     }
 }

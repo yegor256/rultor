@@ -53,7 +53,7 @@ final class ShellCommand {
      * @return Stdout
      * @throws IOException If fails
      */
-    public String exec() throws IOException {
+    String exec() throws IOException {
         return new Shell.Plain(new Shell.Safe(this.shell)).exec(
             String.join(
                 ShellCommand.SHELL_JOINER,

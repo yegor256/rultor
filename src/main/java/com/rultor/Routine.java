@@ -21,7 +21,6 @@ import io.sentry.Sentry;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -118,7 +117,7 @@ final class Routine implements Runnable, Closeable {
                     processed,
                     System.currentTimeMillis() - begin,
                     System.currentTimeMillis() - this.start,
-                    new Date()
+                    System.currentTimeMillis()
                 );
             }
             this.pulse.error(Collections.emptyList());

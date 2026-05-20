@@ -43,7 +43,7 @@ final class IssueUrl {
      * @return Issue id
      * @checkstyle MethodNameCheck (10 lines)
      */
-    public int uid() {
+    int uid() {
         final Matcher matcher = IssueUrl.CORRECT.matcher(this.url);
         if (matcher.matches()) {
             return Integer.parseInt(matcher.group(1));
@@ -57,7 +57,7 @@ final class IssueUrl {
      * Check if url is a valid url for Issue.
      * @return True if valid
      */
-    public boolean valid() {
+    boolean valid() {
         if (this.url == null || this.url.isEmpty()) {
             throw new IllegalArgumentException(
                 "URL should not be empty"

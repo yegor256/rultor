@@ -69,7 +69,7 @@ final class DockerRun {
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    public Iterable<String> script() throws IOException {
+    Iterable<String> script() throws IOException {
         final Iterable<String> trap;
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
             trap = Collections.emptyList();
@@ -99,7 +99,7 @@ final class DockerRun {
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    public Iterable<String> envs(final Map<String, String> extra)
+    Iterable<String> envs(final Map<String, String> extra)
         throws IOException {
         final List<String> entries = new LinkedList<>();
         for (final Entry<String, String> ent : extra.entrySet()) {

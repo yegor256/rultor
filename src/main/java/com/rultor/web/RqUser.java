@@ -51,7 +51,7 @@ final class RqUser extends RqWrap {
      * @return TRUE if I'm anonymous
      * @throws IOException If fails
      */
-    public boolean anonymous() throws IOException {
+    boolean anonymous() throws IOException {
         return this.identity().equals(Identity.ANONYMOUS);
     }
 
@@ -61,7 +61,7 @@ final class RqUser extends RqWrap {
      * @return TRUE if I can see it
      * @throws IOException If fails
      */
-    public boolean canSee(final Talk talk) throws IOException {
+    boolean canSee(final Talk talk) throws IOException {
         final XML xml;
         try {
             xml = new Profiles().fetch(talk).read();

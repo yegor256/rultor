@@ -39,7 +39,7 @@ final class Crew {
      * Get all collaborators.
      * @return List of their login names
      */
-    public Collection<String> names() {
+    Collection<String> names() {
         final Collection<String> names = new LinkedList<>();
         try {
             for (final User user : this.repo.collaborators().iterate()) {

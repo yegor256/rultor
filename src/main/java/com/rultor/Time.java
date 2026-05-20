@@ -5,11 +5,11 @@
 package com.rultor;
 
 import com.jcabi.aspects.Immutable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
-import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -21,6 +21,20 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "millis")
 public final class Time {
+
+    /**
+     * ISO format with trailing Z for output.
+     */
+    private static final DateTimeFormatter ISO_OUT = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        .withZone(ZoneOffset.UTC);
+
+    /**
+     * ISO format for input parsing.
+     */
+    private static final DateTimeFormatter ISO_IN = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        .withZone(ZoneOffset.UTC);
 
     /**
      * The time.
@@ -36,10 +50,10 @@ public final class Time {
 
     /**
      * Ctor.
-     * @param date Date
+     * @param instant Instant
      */
-    public Time(final Date date) {
-        this(date.getTime());
+    public Time(final Instant instant) {
+        this(instant.toEpochMilli());
     }
 
     /**
@@ -63,10 +77,7 @@ public final class Time {
      * @return Text
      */
     public String iso() {
-        final SimpleDateFormat format =
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return format.format(new Date(this.millis));
+        return Time.ISO_OUT.format(Instant.ofEpochMilli(this.millis));
     }
 
     /**
@@ -80,13 +91,12 @@ public final class Time {
     /**
      * Parse text.
      * @param date Date
-     * @return Date
+     * @return Epoch millis
      */
-    private static Date parse(final String date) {
+    private static long parse(final String date) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-                .parse(date);
-        } catch (final ParseException ex) {
+            return Instant.from(Time.ISO_IN.parse(date)).toEpochMilli();
+        } catch (final DateTimeParseException ex) {
             throw new IllegalStateException(ex);
         }
     }
