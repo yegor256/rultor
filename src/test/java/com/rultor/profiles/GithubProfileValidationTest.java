@@ -306,8 +306,7 @@ final class GithubProfileValidationTest {
         repo.contents().create(
             Json.createObjectBuilder()
                 .add("path", ".rultor.yml")
-                .add("message", "just test")
-                .add(
+                .add("message", "just test").add(
                     "content",
                     Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                 )

@@ -79,8 +79,7 @@ final class TkDaemon implements TkRegex {
             return new RsFluent()
                 .withStatus(HttpURLConnection.HTTP_OK)
                 .withBody(this.html(number, hash))
-                .withType("text/html; charset=utf-8")
-                .withHeader(
+                .withType("text/html; charset=utf-8").withHeader(
                     "X-Rultor-Daemon",
                     String.format("%s-%s", number, hash)
                 );
@@ -111,8 +110,7 @@ final class TkDaemon implements TkRegex {
                         IOUtils.toString(
                             Objects.requireNonNull(this.getClass().getResource("daemon/head.html")),
                             StandardCharsets.UTF_8
-                        ).trim().replace("TALK_NAME", talk.name())
-                            .replace(
+                        ).trim().replace("TALK_NAME", talk.name()).replace(
                                 "TALK_LINK",
                                 StringEscapeUtils.escapeHtml4(
                                     talk.read()
@@ -122,8 +120,7 @@ final class TkDaemon implements TkRegex {
                         StandardCharsets.UTF_8
                     ),
                     TkDaemon.escape(new Tail(talk.read(), hash).read()),
-                    AutoCloseInputStream.builder()
-                        .setInputStream(
+                    AutoCloseInputStream.builder().setInputStream(
                             Objects.requireNonNull(
                                 this.getClass().getResourceAsStream("daemon/tail.html")
                             )
@@ -147,8 +144,7 @@ final class TkDaemon implements TkRegex {
             100_000
         );
         return ReaderInputStream.builder()
-            .setCharset(StandardCharsets.UTF_8)
-            .setReader(
+            .setCharset(StandardCharsets.UTF_8).setReader(
                 // @checkstyle AnonInnerLengthCheck (30 lines)
                 new ProxyReader(src) {
                     @Override

@@ -95,8 +95,7 @@ public final class QnLock implements Question {
         } else {
             contents.create(
                 Json.createObjectBuilder()
-                    .add("path", QnLock.PATH)
-                    .add(
+                    .add("path", QnLock.PATH).add(
                         "message",
                         String.format(
                             "#%d: branch \"%s\" locked by request of @%s",
@@ -104,8 +103,7 @@ public final class QnLock implements Question {
                             branch,
                             comment.author().login()
                         )
-                    )
-                    .add(
+                    ).add(
                         "content",
                         Base64.encodeBase64String(
                             new UncheckedText(

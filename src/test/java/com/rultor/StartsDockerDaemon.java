@@ -55,8 +55,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
         this.profile = prof;
         final DefaultDockerClientConfig config =
             DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-        this.client = DockerClientBuilder.getInstance(config)
-            .withDockerHttpClient(
+        this.client = DockerClientBuilder.getInstance(config).withDockerHttpClient(
                 new ApacheDockerHttpClient.Builder()
                     .dockerHost(config.getDockerHost())
                     .connectionTimeout(Duration.ofSeconds(30))

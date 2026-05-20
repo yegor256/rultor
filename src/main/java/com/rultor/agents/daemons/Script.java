@@ -53,8 +53,7 @@ final class Script {
                 "cd %s && cat > %s && chmod a+x %1$s/%2$s",
                 Ssh.escape(dir), Ssh.escape(this.name)
             ),
-            AutoCloseInputStream.builder()
-                .setInputStream(
+            AutoCloseInputStream.builder().setInputStream(
                     Objects.requireNonNull(
                         this.getClass().getResourceAsStream(this.name)
                     )

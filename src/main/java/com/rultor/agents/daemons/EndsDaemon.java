@@ -117,8 +117,7 @@ public final class EndsDaemon extends AbstractAgent {
                     ).toString()
                 )
             ).up()
-            .add("tail")
-            .set(
+            .add("tail").set(
                 Xembler.escape(
                     new Sub(
                         new Joined(

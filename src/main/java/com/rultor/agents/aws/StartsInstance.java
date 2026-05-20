@@ -147,11 +147,9 @@ public final class StartsInstance extends AbstractAgent {
                     .imageId(this.image)
                     .instanceType(itype)
                     .maxCount(1)
-                    .minCount(1)
-                    .tagSpecifications(
+                    .minCount(1).tagSpecifications(
                         TagSpecification.builder()
-                            .resourceType(ResourceType.INSTANCE)
-                            .tags(
+                            .resourceType(ResourceType.INSTANCE).tags(
                                 Tag.builder().key("Name").value(talk).build(),
                                 Tag.builder().key("rultor").value("yes").build(),
                                 Tag.builder().key("rultor-talk").value(talk).build()

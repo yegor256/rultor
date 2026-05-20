@@ -61,8 +61,7 @@ public final class AwsEc2 {
      */
     public Ec2Client aws() {
         return Ec2Client.builder()
-            .region(Region.of(this.region))
-            .credentialsProvider(
+            .region(Region.of(this.region)).credentialsProvider(
                 StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(this.key, this.secret)
                 )

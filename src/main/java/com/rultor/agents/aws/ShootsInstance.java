@@ -52,8 +52,7 @@ public final class ShootsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final long age = System.currentTimeMillis() - this.api.aws()
-            .describeInstances(
+        final long age = System.currentTimeMillis() - this.api.aws().describeInstances(
                 DescribeInstancesRequest.builder()
                     .instanceIds(instance)
                     .build()

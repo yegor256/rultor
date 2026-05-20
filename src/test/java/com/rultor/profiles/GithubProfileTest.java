@@ -55,8 +55,7 @@ final class GithubProfileTest {
             .contents().create(
                 Json.createObjectBuilder()
                     .add("path", ".rultor.yml")
-                    .add("message", "rultor config")
-                    .add(
+                    .add("message", "rultor config").add(
                         "content",
                         Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                     )
@@ -174,8 +173,7 @@ final class GithubProfileTest {
         repo.contents().create(
             Json.createObjectBuilder()
                 .add("path", ".rultor.yml")
-                .add("message", "just test")
-                .add(
+                .add("message", "just test").add(
                     "content",
                     Base64.getEncoder().encodeToString(
                         new Joined(
@@ -257,8 +255,7 @@ final class GithubProfileTest {
             .contents().create(
                 Json.createObjectBuilder()
                     .add("path", ".rultor.yml")
-                    .add("message", "rultor config")
-                    .add(
+                    .add("message", "rultor config").add(
                         "content",
                         Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                     )
@@ -281,12 +278,10 @@ final class GithubProfileTest {
         final GitHub github = new MkGitHub("jeff");
         github.repos()
             .create(new Repos.RepoCreate("test1", false))
-            .contents()
-            .create(
+            .contents().create(
                 Json.createObjectBuilder()
                     .add("path", "test.xml")
-                    .add("message", "just test msg")
-                    .add(
+                    .add("message", "just test msg").add(
                         "content",
                         Base64.getEncoder().encodeToString("hey".getBytes(StandardCharsets.UTF_8))
                     )
@@ -298,8 +293,7 @@ final class GithubProfileTest {
         repo.contents().create(
             Json.createObjectBuilder()
                 .add("path", ".rultor.yml")
-                .add("message", "just test")
-                .add(
+                .add("message", "just test").add(
                     "content",
                     Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                 )

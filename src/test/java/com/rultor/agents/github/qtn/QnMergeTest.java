@@ -237,8 +237,7 @@ final class QnMergeTest {
     private Directives mergeRequest() throws IOException,
         URISyntaxException {
         return new Directives()
-            .add("request")
-            .append(
+            .add("request").append(
                 new QnMerge().understand(
                     new Comment.Smart(
                         this.comments.post(QnMergeTest.COMMAND)

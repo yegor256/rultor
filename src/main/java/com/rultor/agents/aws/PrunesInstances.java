@@ -51,8 +51,7 @@ public final class PrunesInstances implements SuperAgent {
     @Override
     public void execute(final Talks talks) throws IOException {
         final DescribeInstancesResponse res = this.api.aws().describeInstances(
-            DescribeInstancesRequest.builder()
-                .filters(
+            DescribeInstancesRequest.builder().filters(
                     Filter.builder()
                         .name("tag:rultor")
                         .values("yes")

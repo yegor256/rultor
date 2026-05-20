@@ -48,7 +48,6 @@ final class QnSafeTest {
         final Issue issue = new MkGitHub().randomRepo()
             .issues()
             .create("", "");
-        final Comment post = issue.comments().post("Hello, world!");
         new QnSafe(
             (comment, home) -> {
                 throw new IllegalArgumentException(
@@ -58,7 +57,7 @@ final class QnSafeTest {
             }
         )
             .understand(
-                new Comment.Smart(post),
+                new Comment.Smart(issue.comments().post("Hello, world!")),
                 new URI("http://www.example.com")
         );
         MatcherAssert.assertThat(
@@ -66,10 +65,10 @@ final class QnSafeTest {
             issue.comments().iterate(new Date(0)),
             Matchers.iterableWithSize(2)
         );
-        final String body = new Comment.Smart(issue.comments().get(2)).body();
         MatcherAssert.assertThat(
             "Failed comment should be posted with part of the log",
-            body, Matchers.allOf(
+            new Comment.Smart(issue.comments().get(2)).body(),
+            Matchers.allOf(
                 Matchers.containsString("We failed, sorry"),
                 Matchers.containsString("```\n")
             )

@@ -75,8 +75,7 @@ public final class ConnectsInstance extends AbstractAgent {
             Logger.warn(
                 this, "Can't connect %s to AWS instance %s at %s (%[ms]s old, \"%s\")",
                 name, instance, host,
-                System.currentTimeMillis() - this.api.aws()
-                    .describeInstances(
+                System.currentTimeMillis() - this.api.aws().describeInstances(
                         DescribeInstancesRequest.builder()
                             .instanceIds(instance)
                             .build()

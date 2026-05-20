@@ -123,13 +123,11 @@ final class StartsRequestTest {
             "Exec run should contain run commands",
             this.exec(talk, jobtemp),
             Matchers.allOf(
-                new Array<Matcher<? super String>>()
-                    .with(
+                new Array<Matcher<? super String>>().with(
                         Matchers.containsString(
                             "image=yegor256/rultor-image\n"
                         )
-                    )
-                    .with(
+                    ).with(
                         Matchers.containsString(
                             String.format(
                                 "container=%s\n",
@@ -141,8 +139,7 @@ final class StartsRequestTest {
                     .with(Matchers.containsString("docker_when_possible\n"))
                     .with(Matchers.containsString("load average is "))
                     .with(Matchers.containsString("low enough to run a"))
-                    .with(Matchers.containsString("DOCKER-2: -t"))
-                    .with(
+                    .with(Matchers.containsString("DOCKER-2: -t")).with(
                         Matchers.containsString(
                             "DOCKER-6: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
                         )
@@ -337,8 +334,7 @@ final class StartsRequestTest {
             "Docker should be run if possible",
             this.execQuietly(talk, jobtemp),
             Matchers.allOf(
-                new Array<Matcher<? super String>>()
-                    .with(
+                new Array<Matcher<? super String>>().with(
                         Matchers.containsString(
                             String.format(
                                 "directory=%s", dir

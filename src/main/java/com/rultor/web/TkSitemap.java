@@ -74,8 +74,7 @@ final class TkSitemap implements Take {
     private static String toXML(final Talk talk, final XML xml,
         final String hash) throws IOException {
         return new StringBuilder(100)
-            .append("<url><loc>")
-            .append(
+            .append("<url><loc>").append(
                 StringEscapeUtils.escapeXml11(
                     new Home(xml, hash).uri().toString()
                 )
