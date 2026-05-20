@@ -264,6 +264,43 @@ final class GithubProfileTest {
     }
 
     /**
+     * Make a repo with the standard YAML config used by fetch tests.
+     * @return Repo
+     * @throws Exception If fails
+     */
+    private static Repo yamlConfigRepo() throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            new Joined(
+                System.lineSeparator(),
+                "assets:",
+                "  test.xml: jeff/test1#test.xml",
+                "  beta: jeff/test1#test.xml",
+                "architect:",
+                " - jeff",
+                " - donald",
+                "merge:",
+                "  script: hello!"
+            ).asString()
+        );
+        repo.github()
+            .repos()
+            .get(new Coordinates.Simple("jeff/test1"))
+            .contents().create(
+                Json.createObjectBuilder()
+                    .add("path", ".rultor.yml")
+                    .add("message", "rultor config").add(
+                        "content",
+                        Base64.getEncoder().encodeToString(
+                            String.format("friends:%n  - jeff/test2")
+                                .getBytes(StandardCharsets.UTF_8)
+                        )
+                    )
+                    .build()
+            );
+        return repo;
+    }
+
+    /**
      * Make a repo with YAML inside.
      * @param yaml YAML config
      * @return Repo
