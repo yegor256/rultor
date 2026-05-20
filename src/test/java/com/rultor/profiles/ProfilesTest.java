@@ -6,10 +6,10 @@ package com.rultor.profiles;
 
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
+import java.io.IOException;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -338,7 +338,7 @@ final class ProfilesTest {
      */
     private static String failureMessage(
         final Profile master, final Profile fork
-    ) throws java.io.IOException {
+    ) throws IOException {
         String message = null;
         try {
             new Profiles().validated(master, fork);
