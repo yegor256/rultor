@@ -58,9 +58,9 @@ final class QnByArchitectTest {
      */
     @Test
     void doesNotForwardWhenNotArchitect() throws Exception {
-        final Repo repo = new MkGitHub().randomRepo();
         final Comment.Smart comment = new Comment.Smart(
-            repo.issues().create("", "").comments().post("deploy")
+            new MkGitHub().randomRepo()
+                .issues().create("", "").comments().post("deploy")
         );
         final Question question = Mockito.mock(Question.class);
         final URI home = new URI("#");

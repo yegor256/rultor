@@ -36,10 +36,8 @@ final class EndsDaemonITCase {
      */
     @Test
     void parsesHighlightedStdout() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = new Talk.InFile();
             this.start(
                 start,

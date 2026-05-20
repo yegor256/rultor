@@ -81,10 +81,11 @@ final class DockerRunTest {
      */
     @Test
     void fetchesScript() throws Exception {
-        final Profile profile = DockerRunTest.scriptProfile();
         MatcherAssert.assertThat(
             "Script should be read from profile",
-            DockerRun.byXpath(profile, "/p/entry[@key='x']").script(),
+            DockerRun.byXpath(
+                DockerRunTest.scriptProfile(), "/p/entry[@key='x']"
+            ).script(),
             Matchers.hasItems("mvn clean", ";")
         );
     }
@@ -95,10 +96,11 @@ final class DockerRunTest {
      */
     @Test
     void fetchesScriptWithMultipleItems() throws Exception {
-        final Profile profile = DockerRunTest.scriptProfile();
         MatcherAssert.assertThat(
             "Script should be read from several items with ;",
-            DockerRun.byXpath(profile, "/p/entry[@key='y']").script(),
+            DockerRun.byXpath(
+                DockerRunTest.scriptProfile(), "/p/entry[@key='y']"
+            ).script(),
             Matchers.hasItems("pw", ";", "ls", ";")
         );
     }
