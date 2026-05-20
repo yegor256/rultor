@@ -30,48 +30,48 @@ import org.junit.jupiter.api.Test;
 final class GithubProfileTest {
 
     /**
-     * GithubProfile can fetch a YAML config (entries).
+     * GithubProfile can fetch a YAML config.
      * @throws Exception In case of error.
      */
     @Test
-    void fetchesYamlConfigEntries() throws Exception {
+    void fetchesYamlConfig() throws Exception {
+        final Repo repo = GithubProfileTest.repo(
+            new Joined(
+                System.lineSeparator(),
+                "assets:",
+                "  test.xml: jeff/test1#test.xml",
+                "  beta: jeff/test1#test.xml",
+                "architect:",
+                " - jeff",
+                " - donald",
+                "merge:",
+                "  script: hello!"
+            ).asString()
+        );
+        repo.github()
+            .repos()
+            .get(new Coordinates.Simple("jeff/test1"))
+            .contents().create(
+                Json.createObjectBuilder()
+                    .add("path", ".rultor.yml")
+                    .add("message", "rultor config").add(
+                        "content",
+                        Base64.getEncoder().encodeToString(
+                            String.format("friends:%n  - jeff/test2")
+                                .getBytes(StandardCharsets.UTF_8)
+                        )
+                    )
+                    .build()
+            );
         MatcherAssert.assertThat(
-            "Profile should have all info",
-            GithubProfile.fromRepo(GithubProfileTest.yamlConfigRepo()).read(),
+            "Profile should expose all entries, architect items, and assets",
+            GithubProfile.fromRepo(repo).read(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='merge']/entry[@key='script']",
                 "/p/entry[@key='assets']/entry[@key='test.xml']",
-                "/p/entry[@key='assets']/entry[@key='beta']"
-            )
-        );
-    }
-
-    /**
-     * GithubProfile can fetch a YAML config (architect).
-     * @throws Exception In case of error.
-     */
-    @Test
-    void fetchesYamlConfigArchitect() throws Exception {
-        MatcherAssert.assertThat(
-            "Architect should be saved",
-            GithubProfile.fromRepo(GithubProfileTest.yamlConfigRepo())
-                .read().xpath("/p/entry[@key='architect']/item/text()"),
-            Matchers.contains("jeff", "donald")
-        );
-    }
-
-    /**
-     * GithubProfile can fetch a YAML config (assets).
-     * @throws Exception In case of error.
-     */
-    @Test
-    void fetchesYamlConfigAssets() throws Exception {
-        MatcherAssert.assertThat(
-            "Asset should be saved",
-            GithubProfile.fromRepo(GithubProfileTest.yamlConfigRepo()).assets(),
-            Matchers.hasEntry(
-                Matchers.equalTo("test.xml"),
-                Matchers.notNullValue()
+                "/p/entry[@key='assets']/entry[@key='beta']",
+                "/p/entry[@key='architect']/item[text()='jeff']",
+                "/p/entry[@key='architect']/item[text()='donald']"
             )
         );
     }
@@ -261,43 +261,6 @@ final class GithubProfileTest {
             Profile.ConfigException.class,
                 GithubProfile.fromRepo(repo)::assets
         );
-    }
-
-    /**
-     * Make a repo with the standard YAML config used by fetch tests.
-     * @return Repo
-     * @throws Exception If fails
-     */
-    private static Repo yamlConfigRepo() throws Exception {
-        final Repo repo = GithubProfileTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "assets:",
-                "  test.xml: jeff/test1#test.xml",
-                "  beta: jeff/test1#test.xml",
-                "architect:",
-                " - jeff",
-                " - donald",
-                "merge:",
-                "  script: hello!"
-            ).asString()
-        );
-        repo.github()
-            .repos()
-            .get(new Coordinates.Simple("jeff/test1"))
-            .contents().create(
-                Json.createObjectBuilder()
-                    .add("path", ".rultor.yml")
-                    .add("message", "rultor config").add(
-                        "content",
-                        Base64.getEncoder().encodeToString(
-                            String.format("friends:%n  - jeff/test2")
-                                .getBytes(StandardCharsets.UTF_8)
-                        )
-                    )
-                    .build()
-            );
-        return repo;
     }
 
     /**

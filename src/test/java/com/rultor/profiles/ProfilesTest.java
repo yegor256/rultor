@@ -58,6 +58,16 @@ final class ProfilesTest {
         "You cannot change `%s` section for security reasons";
 
     /**
+     * Architect used by the merged profile fixture.
+     */
+    private static final String MERGED_ARCHITECT = "Yegor512";
+
+    /**
+     * Script (taken from fork) used by the merged profile fixture.
+     */
+    private static final String MERGED_SCRIPT = "do_another3";
+
+    /**
      * Profiles can restrict changes in architect section.
      * @throws Exception In case of error.
      */
@@ -212,13 +222,12 @@ final class ProfilesTest {
      */
     @Test
     void validationReturnsMergedArchitect() throws Exception {
-        final String architect = "Yegor512";
         MatcherAssert.assertThat(
             "Architect is taken from master",
-            ProfilesTest.mergedProfile(architect, "do_another3").read().xpath(
+            ProfilesTest.mergedProfile().read().xpath(
                 "//entry[@key='architect']/item/text()"
             ),
-            Matchers.contains(architect)
+            Matchers.contains(ProfilesTest.MERGED_ARCHITECT)
         );
     }
 
@@ -231,7 +240,7 @@ final class ProfilesTest {
     void validationReturnsMergedMergeCommander() throws Exception {
         MatcherAssert.assertThat(
             "Merge commander is taken from master",
-            ProfilesTest.mergedProfile("Yegor512", "do_another3").read().xpath(
+            ProfilesTest.mergedProfile().read().xpath(
                 "//entry[@key='merge']/entry[@key='commanders']/item/text()"
             ),
             Matchers.contains("Total Commander")
@@ -247,7 +256,7 @@ final class ProfilesTest {
     void validationReturnsMergedDeployCommander() throws Exception {
         MatcherAssert.assertThat(
             "Deploy commander is taken from master",
-            ProfilesTest.mergedProfile("Yegor512", "do_another3").read().xpath(
+            ProfilesTest.mergedProfile().read().xpath(
                 "//entry[@key='deploy']/entry[@key='commanders']/item/text()"
             ),
             Matchers.contains("Midnight Commander")
@@ -263,7 +272,7 @@ final class ProfilesTest {
     void validationReturnsMergedReleaseCommander() throws Exception {
         MatcherAssert.assertThat(
             "Release commander is taken from master",
-            ProfilesTest.mergedProfile("Yegor512", "do_another3").read().xpath(
+            ProfilesTest.mergedProfile().read().xpath(
                 "//entry[@key='release']/entry[@key='commanders']/item/text()"
             ),
             Matchers.contains("Norton Commander")
@@ -277,27 +286,22 @@ final class ProfilesTest {
      */
     @Test
     void validationReturnsMergedScript() throws Exception {
-        final String script = "do_another3";
         MatcherAssert.assertThat(
             "Script is taken from fork",
-            ProfilesTest.mergedProfile("Yegor512", script).read().xpath(
+            ProfilesTest.mergedProfile().read().xpath(
                 "//entry[@key='merge']/entry[@key='script']/item/text()"
             ),
-            Matchers.contains(script)
+            Matchers.contains(ProfilesTest.MERGED_SCRIPT)
         );
     }
 
     /**
      * Build a validated merged profile from master and fork profiles
      * using shared constants for commanders.
-     * @param architect Architect login
-     * @param script Script taken from fork
      * @return Validated merged profile
      * @throws Exception In case of error.
      */
-    private static Profile mergedProfile(
-        final String architect, final String script
-    ) throws Exception {
+    private static Profile mergedProfile() throws Exception {
         final String first = "Total Commander";
         final String second = "Midnight Commander";
         final String third = "Norton Commander";
@@ -306,7 +310,7 @@ final class ProfilesTest {
                 new XMLDocument(
                     String.format(
                         ProfilesTest.PROFILE,
-                        architect,
+                        ProfilesTest.MERGED_ARCHITECT,
                         first,
                         "do_something3",
                         second,
@@ -318,9 +322,9 @@ final class ProfilesTest {
                 new XMLDocument(
                     String.format(
                         ProfilesTest.PROFILE,
-                        architect,
+                        ProfilesTest.MERGED_ARCHITECT,
                         first,
-                        script,
+                        ProfilesTest.MERGED_SCRIPT,
                         second,
                         third
                     )
