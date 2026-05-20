@@ -5,7 +5,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Comment;
-import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -27,7 +26,6 @@ final class QnLastOfTest {
      */
     @Test
     void getsLastReq() throws Exception {
-        final Repo repo = new MkGitHub().randomRepo();
         MatcherAssert.assertThat(
             "Deploy request should be created",
             new QnLastOf(
@@ -38,7 +36,8 @@ final class QnLastOfTest {
                 )
             ).understand(
                 new Comment.Smart(
-                    repo.issues().create("", "").comments().post("deploy")
+                    new MkGitHub().randomRepo()
+                        .issues().create("", "").comments().post("deploy")
                 ),
                 new URI("#")
             ),

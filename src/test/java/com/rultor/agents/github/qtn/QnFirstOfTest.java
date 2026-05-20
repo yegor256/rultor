@@ -5,7 +5,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Comment;
-import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;

@@ -29,8 +29,84 @@ final class DockerRunTest {
      * @throws Exception In case of error.
      */
     @Test
-    void fetchesEnvVars() throws Exception {
-        final Profile profile = new Profile.Fixed(
+    void fetchesEnvVarsMultiple() throws Exception {
+        final Profile profile = DockerRunTest.envsProfile();
+        MatcherAssert.assertThat(
+            "Multiple env items should be saved",
+            DockerRun.byXpath(profile, "/p/entry[@key='a']").envs(
+                new ArrayMap<>()
+            ),
+            Matchers.hasItems("A=5", "B=f e")
+        );
+    }
+
+    /**
+     * DockerRun can fetch a single env item.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void fetchesEnvVarsSingle() throws Exception {
+        final Profile profile = DockerRunTest.envsProfile();
+        MatcherAssert.assertThat(
+            "Single even item should be saved",
+            DockerRun.byXpath(profile, "/p/entry[@key='b']").envs(
+                new ArrayMap<>()
+            ),
+            Matchers.hasItems("HELLO='1'")
+        );
+    }
+
+    /**
+     * DockerRun can append extra env vars from the envs parameter.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void fetchesEnvVarsWithExtras() throws Exception {
+        final Profile profile = DockerRunTest.envsProfile();
+        MatcherAssert.assertThat(
+            "Additional value should be saved from envs parameter",
+            DockerRun.byXpath(profile, "/p/entry[@key='c']").envs(
+                new ArrayMap<String, String>().with("X", "a\"'b")
+            ),
+            Matchers.hasItems("MVN=works", "X=a\"'b")
+        );
+    }
+
+    /**
+     * DockerRun can fetch a single-line script from a profile.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void fetchesScript() throws Exception {
+        final Profile profile = DockerRunTest.scriptProfile();
+        MatcherAssert.assertThat(
+            "Script should be read from profile",
+            DockerRun.byXpath(profile, "/p/entry[@key='x']").script(),
+            Matchers.hasItems("mvn clean", ";")
+        );
+    }
+
+    /**
+     * DockerRun can fetch a multi-item script with separators.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void fetchesScriptWithMultipleItems() throws Exception {
+        final Profile profile = DockerRunTest.scriptProfile();
+        MatcherAssert.assertThat(
+            "Script should be read from several items with ;",
+            DockerRun.byXpath(profile, "/p/entry[@key='y']").script(),
+            Matchers.hasItems("pw", ";", "ls", ";")
+        );
+    }
+
+    /**
+     * Build a fixed profile with env-related entries.
+     * @return Profile
+     * @throws Exception In case of error.
+     */
+    private static Profile envsProfile() throws Exception {
+        return new Profile.Fixed(
             new XMLDocument(
                 new Joined(
                     DockerRunTest.SPACE,
@@ -42,36 +118,15 @@ final class DockerRunTest {
                 ).asString()
             )
         );
-        MatcherAssert.assertThat(
-            "Multiple env items should be saved",
-            DockerRun.byXpath(profile, "/p/entry[@key='a']").envs(
-                new ArrayMap<>()
-            ),
-            Matchers.hasItems("A=5", "B=f e")
-        );
-        MatcherAssert.assertThat(
-            "Single even item should be saved",
-            DockerRun.byXpath(profile, "/p/entry[@key='b']").envs(
-                new ArrayMap<>()
-            ),
-            Matchers.hasItems("HELLO='1'")
-        );
-        MatcherAssert.assertThat(
-            "Additional value should be saved from envs parameter",
-            DockerRun.byXpath(profile, "/p/entry[@key='c']").envs(
-                new ArrayMap<String, String>().with("X", "a\"'b")
-            ),
-            Matchers.hasItems("MVN=works", "X=a\"'b")
-        );
     }
 
     /**
-     * DockerRun can fetch script.
+     * Build a fixed profile with script-related entries.
+     * @return Profile
      * @throws Exception In case of error.
      */
-    @Test
-    void fetchesScript() throws Exception {
-        final Profile profile = new Profile.Fixed(
+    private static Profile scriptProfile() throws Exception {
+        return new Profile.Fixed(
             new XMLDocument(
                 new Joined(
                     DockerRunTest.SPACE,
@@ -81,16 +136,6 @@ final class DockerRunTest {
                     "<item>pw</item><item>ls</item></entry></entry></p>"
                 ).asString()
             )
-        );
-        MatcherAssert.assertThat(
-            "Script should be read from profile",
-            DockerRun.byXpath(profile, "/p/entry[@key='x']").script(),
-            Matchers.hasItems("mvn clean", ";")
-        );
-        MatcherAssert.assertThat(
-            "Script should be read from several items with ;",
-            DockerRun.byXpath(profile, "/p/entry[@key='y']").script(),
-            Matchers.hasItems("pw", ";", "ls", ";")
         );
     }
 

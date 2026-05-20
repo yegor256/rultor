@@ -123,12 +123,12 @@ final class TkHomeITCase {
      */
     @Test
     void rendersValidPngTick() throws Exception {
-        final Request request = new JdkRequest(TkHomeITCase.HOME);
         MatcherAssert.assertThat(
             "Tick HTTP GET response should return valid png image",
             ImageIO.read(
                 new ByteArrayInputStream(
-                    request.uri().path("/ticks").back()
+                    new JdkRequest(TkHomeITCase.HOME)
+                        .uri().path("/ticks").back()
                         .method(Request.GET)
                         .fetch()
                         .as(RestResponse.class)

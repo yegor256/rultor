@@ -33,10 +33,9 @@ final class StartsDockerDaemonTest {
             StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            final PfShell shell = start.shell();
             MatcherAssert.assertThat(
                 "Should login as root",
-                shell.login(),
+                start.shell().login(),
                 Matchers.is("root")
             );
         }
@@ -55,10 +54,9 @@ final class StartsDockerDaemonTest {
             StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            final PfShell shell = start.shell();
             MatcherAssert.assertThat(
                 "Should be RSA key",
-                shell.key(),
+                start.shell().key(),
                 Matchers.allOf(
                     Matchers.startsWith("-----BEGIN RSA PRIVATE KEY-----"),
                     Matchers.endsWith("-----END RSA PRIVATE KEY-----")
@@ -81,13 +79,12 @@ final class StartsDockerDaemonTest {
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final PfShell shell = start.shell();
-            final String key = shell.key();
             MatcherAssert.assertThat(
                 "Key should be placed in /root/.ssh/id_rsa",
                 new Shell.Plain(
                     new Ssh(shell.host(), shell.port(), shell.login(), shell.key())
                 ).exec("cat /root/.ssh/id_rsa"),
-                Matchers.containsString(key)
+                Matchers.containsString(shell.key())
             );
         }
     }
