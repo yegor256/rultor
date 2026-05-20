@@ -124,14 +124,7 @@ final class UnderstandsTest {
     @Test
     void understandsMergeMessageWithFailedCheck() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
-        final MkBranches branches = (MkBranches) repo.branches();
-        branches.create("head", "abcdef4");
-        branches.create("base", "abcdef5");
-        final Pull pull = repo.pulls().create("", "head", "base");
-        ((MkChecks) pull.checks()).create(
-            Check.Status.COMPLETED,
-            Check.Conclusion.FAILURE
-        );
+        final Pull pull = UnderstandsTest.failingPull(repo);
         new Understands(
             repo.github(),
             new QnFirstOf(
@@ -156,14 +149,7 @@ final class UnderstandsTest {
     @Test
     void postsCantMergeOnFailedCheck() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
-        final MkBranches branches = (MkBranches) repo.branches();
-        branches.create("head", "abcdef4");
-        branches.create("base", "abcdef5");
-        final Pull pull = repo.pulls().create("", "head", "base");
-        ((MkChecks) pull.checks()).create(
-            Check.Status.COMPLETED,
-            Check.Conclusion.FAILURE
-        );
+        final Pull pull = UnderstandsTest.failingPull(repo);
         new Understands(
             repo.github(),
             new QnFirstOf(
@@ -178,6 +164,24 @@ final class UnderstandsTest {
             new Comment.Smart(repo.issues().get(1).comments().get(1)).body(),
             Matchers.containsString("Can't merge")
         );
+    }
+
+    /**
+     * Build a pull request with a failed CI conclusion attached.
+     * @param repo Repo to create the pull in
+     * @return The pull request
+     * @throws IOException In case of error.
+     */
+    private static Pull failingPull(final Repo repo) throws IOException {
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        ((MkChecks) pull.checks()).create(
+            Check.Status.COMPLETED,
+            Check.Conclusion.FAILURE
+        );
+        return pull;
     }
 
     /**

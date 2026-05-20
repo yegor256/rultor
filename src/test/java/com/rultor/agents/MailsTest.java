@@ -35,18 +35,9 @@ final class MailsTest {
     @Test
     @Disabled
     void sendsMail() throws Exception {
-        final Postman postman = Mockito.spy(Postman.CONSOLE);
-        final Agent agent = new Mails(
-            this.profile(),
-            postman
-        );
-        agent.execute(MailsTest.talk());
-        final ArgumentCaptor<Envelope> captor =
-            ArgumentCaptor.forClass(Envelope.class);
-        Mockito.verify(postman).send(captor.capture());
         MatcherAssert.assertThat(
             "Mail text should contain some data",
-            captor.getValue().unwrap().getContent().toString(),
+            this.capturedEnvelope().unwrap().getContent().toString(),
             Matchers.allOf(
                 Matchers.containsString("See #456, release log:"),
                 Matchers.containsString("Released by Rultor"),
@@ -65,6 +56,19 @@ final class MailsTest {
     @Test
     @Disabled
     void sendsMailWithReleaseSubject() throws Exception {
+        MatcherAssert.assertThat(
+            "Mail subject should be about release",
+            this.capturedEnvelope().unwrap().getSubject(),
+            Matchers.equalTo("user/repo v2.0 released!")
+        );
+    }
+
+    /**
+     * Execute the Mails agent and capture the envelope sent through Postman.
+     * @return The envelope captured during agent execution
+     * @throws Exception In case of error
+     */
+    private Envelope capturedEnvelope() throws Exception {
         final Postman postman = Mockito.spy(Postman.CONSOLE);
         final Agent agent = new Mails(
             this.profile(),
@@ -74,11 +78,7 @@ final class MailsTest {
         final ArgumentCaptor<Envelope> captor =
             ArgumentCaptor.forClass(Envelope.class);
         Mockito.verify(postman).send(captor.capture());
-        MatcherAssert.assertThat(
-            "Mail subject should be about release",
-            captor.getValue().unwrap().getSubject(),
-            Matchers.equalTo("user/repo v2.0 released!")
-        );
+        return captor.getValue();
     }
 
     /**
