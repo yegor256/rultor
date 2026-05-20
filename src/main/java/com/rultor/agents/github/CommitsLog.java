@@ -6,8 +6,8 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Repo;
-import com.jcabi.github.RepoCommit;
 import com.jcabi.github.RepoCommit.Smart;
+import com.jcabi.github.RepoCommit;
 import com.jcabi.github.Smarts;
 import jakarta.json.JsonObject;
 import java.io.IOException;

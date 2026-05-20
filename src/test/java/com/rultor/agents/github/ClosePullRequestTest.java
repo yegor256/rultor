@@ -12,6 +12,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
@@ -93,7 +94,7 @@ final class ClosePullRequestTest {
         );
         MatcherAssert.assertThat(
             "No comments should be added",
-            smart.comments().iterate(new Date(0L)),
+            smart.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.is(Matchers.emptyIterable())
         );
     }

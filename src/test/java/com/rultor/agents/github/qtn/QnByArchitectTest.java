@@ -13,6 +13,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import org.hamcrest.MatcherAssert;
@@ -48,7 +49,7 @@ final class QnByArchitectTest {
         Mockito.verify(question, Mockito.never()).understand(comment, home);
         MatcherAssert.assertThat(
             "Two comments should be posted",
-            issue.comments().iterate(new Date(0L)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(2)
         );
         MatcherAssert.assertThat(

@@ -25,6 +25,7 @@ import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import org.hamcrest.MatcherAssert;
@@ -110,7 +111,7 @@ final class UnderstandsTest {
         ).execute(UnderstandsTest.talk(issue));
         MatcherAssert.assertThat(
             "Reply comment should be created for hello",
-            issue.comments().iterate(new Date(0L)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
     }
@@ -144,7 +145,7 @@ final class UnderstandsTest {
         final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(
             "Reply comment should be created",
-            comments.iterate(new Date(0)),
+            comments.iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
         MatcherAssert.assertThat(

@@ -99,8 +99,8 @@ final class Routine implements Runnable, Closeable {
 
     @Override
     public void run() {
-        final long begin = System.currentTimeMillis();
         try {
+            final long begin = System.currentTimeMillis();
             final List<Talk> active = new ListOf<>(this.talks.active());
             Logger.info(
                 this, "Start processing active talks %s...",

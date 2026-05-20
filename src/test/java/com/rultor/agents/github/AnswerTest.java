@@ -8,6 +8,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.mock.MkGitHub;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import org.cactoos.list.ListOf;
 import org.hamcrest.MatcherAssert;
@@ -58,7 +59,7 @@ final class AnswerTest {
         }
         MatcherAssert.assertThat(
             "Only 5 answers should be posted",
-            new ListOf<>(issue.comments().iterate(new Date(0L))).size(),
+            new ListOf<>(issue.comments().iterate(Date.from(Instant.EPOCH))).size(),
             Matchers.is(6)
         );
     }

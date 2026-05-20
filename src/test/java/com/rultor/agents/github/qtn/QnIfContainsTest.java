@@ -9,6 +9,7 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Date;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -34,7 +35,7 @@ final class QnIfContainsTest {
         ).dirs();
         MatcherAssert.assertThat(
             "No message should be posted",
-            issue.comments().iterate(new Date(0L)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
     }
@@ -53,7 +54,7 @@ final class QnIfContainsTest {
         ).dirs();
         MatcherAssert.assertThat(
             "Hello message should be posted",
-            issue.comments().iterate(new Date(0L)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(2)
         );
     }
@@ -72,7 +73,7 @@ final class QnIfContainsTest {
         ).dirs();
         MatcherAssert.assertThat(
             "No comments should be posted",
-            issue.comments().iterate(new Date(0L)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
     }

@@ -5,15 +5,15 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Comment;
 import com.jcabi.github.Comment.Smart;
+import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
 import com.jcabi.github.safe.SfComments;
 import com.jcabi.log.Logger;
 import java.io.IOException;
-import java.util.Collection;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;

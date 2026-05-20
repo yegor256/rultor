@@ -10,6 +10,7 @@ import com.jcabi.github.mock.MkGitHub;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.Date;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -61,7 +62,7 @@ final class QnSafeTest {
         );
         MatcherAssert.assertThat(
             "Two comments should be posted",
-            issue.comments().iterate(new Date(0)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(2)
         );
         MatcherAssert.assertThat(
