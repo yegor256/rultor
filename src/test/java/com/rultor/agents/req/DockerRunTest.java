@@ -175,24 +175,26 @@ final class DockerRunTest {
      */
     @Test
     void fetchesUninstallScript() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    DockerRunTest.SPACE,
-                    "<p>",
-                    "<entry key='uninstall'>",
-                    "<item>one</item><item>two</item>",
-                    "</entry>",
-                    "<entry key='f'><entry key='script'>hi</entry></entry>",
-                    "</p>"
-                ).asString()
-            )
-        );
         MatcherAssert.assertThat(
             "uninstall should be placed in the script",
             // @checkstyle MultipleStringLiterals (1 line)
             new Brackets(
-                DockerRun.byXpath(profile, "/p/entry[@key='f']").script()
+                DockerRun.byXpath(
+                    new Profile.Fixed(
+                        new XMLDocument(
+                            new Joined(
+                                DockerRunTest.SPACE,
+                                "<p>",
+                                "<entry key='uninstall'>",
+                                "<item>one</item><item>two</item>",
+                                "</entry>",
+                                "<entry key='f'><entry key='script'>hi</entry></entry>",
+                                "</p>"
+                            ).asString()
+                        )
+                    ),
+                    "/p/entry[@key='f']"
+                ).script()
             ).toString(),
             // @checkstyle LineLengthCheck (3 line)
             Matchers.equalTo(
@@ -208,18 +210,20 @@ final class DockerRunTest {
      */
     @Test
     void fetchesEnvVarsDefaults() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    DockerRunTest.SPACE,
-                    "<p><entry key='o'><entry key='env'>A=123</entry></entry>",
-                    "<entry key='env'>ALPHA=909</entry></p>"
-                ).asString()
-            )
-        );
         MatcherAssert.assertThat(
             "Env variables should be read from the xpath",
-            DockerRun.byXpath(profile, "/p/entry[@key='o']").envs(
+            DockerRun.byXpath(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            DockerRunTest.SPACE,
+                            "<p><entry key='o'><entry key='env'>A=123</entry></entry>",
+                            "<entry key='env'>ALPHA=909</entry></p>"
+                        ).asString()
+                    )
+                ),
+                "/p/entry[@key='o']"
+            ).envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("ALPHA=909", "A=123")
@@ -233,15 +237,17 @@ final class DockerRunTest {
      */
     @Test
     void fetchesMultiLineScript() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                "<p><entry key='script'>How are you,\ndude</entry></p>"
-            )
-        );
         MatcherAssert.assertThat(
             "multiline script should be place in script as two commands",
             new Brackets(
-                DockerRun.byXpath(profile, "/p").script()
+                DockerRun.byXpath(
+                    new Profile.Fixed(
+                        new XMLDocument(
+                            "<p><entry key='script'>How are you,\ndude</entry></p>"
+                        )
+                    ),
+                    "/p"
+                ).script()
             ).toString(),
             Matchers.equalTo("( 'How are you,' ';' 'dude' ';' )")
         );
@@ -254,15 +260,17 @@ final class DockerRunTest {
      */
     @Test
     void skipsEmptyLinesInMultiLineScript() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                "<p><entry key='script'>echo 1\necho 2\n\n\necho 3</entry></p>"
-            )
-        );
         MatcherAssert.assertThat(
             "empty lines should be skipped",
             new Brackets(
-                DockerRun.byXpath(profile, "/p").script()
+                DockerRun.byXpath(
+                    new Profile.Fixed(
+                        new XMLDocument(
+                            "<p><entry key='script'>echo 1\necho 2\n\n\necho 3</entry></p>"
+                        )
+                    ),
+                    "/p"
+                ).script()
             ).toString(),
             Matchers.equalTo("( 'echo 1' ';' 'echo 2' ';' 'echo 3' ';' )")
         );
@@ -274,15 +282,17 @@ final class DockerRunTest {
      */
     @Test
     void fetchesEnvVarsFromEmptyList() throws Exception {
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                "<p><entry key='ooo'><entry key='env'/></entry></p>"
-            )
-        );
         MatcherAssert.assertThat(
             "Empty env variables are allowed",
             new Brackets(
-                DockerRun.byXpath(profile, "/p/entry[@key='ooo']").envs(
+                DockerRun.byXpath(
+                    new Profile.Fixed(
+                        new XMLDocument(
+                            "<p><entry key='ooo'><entry key='env'/></entry></p>"
+                        )
+                    ),
+                    "/p/entry[@key='ooo']"
+                ).envs(
                     new ArrayMap<>()
                 )
             ).toString(),

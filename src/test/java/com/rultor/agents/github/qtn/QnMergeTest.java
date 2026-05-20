@@ -118,8 +118,7 @@ final class QnMergeTest {
      * @throws URISyntaxException In case of URI error
      */
     @Test
-    void stopsBecauseCiChecksFailed()
-        throws IOException, URISyntaxException {
+    void stopsBecauseCiChecksFailed() throws IOException, URISyntaxException {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
         this.mergeRequest();
@@ -234,8 +233,7 @@ final class QnMergeTest {
      * @throws IOException In case of error
      * @throws URISyntaxException In case of error
      */
-    private Directives mergeRequest() throws IOException,
-        URISyntaxException {
+    private Directives mergeRequest() throws IOException, URISyntaxException {
         return new Directives()
             .add("request").append(
                 new QnMerge().understand(

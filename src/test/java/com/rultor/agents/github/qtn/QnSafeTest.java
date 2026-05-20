@@ -43,8 +43,7 @@ final class QnSafeTest {
      * @throws IOException if I/O fails.
      */
     @Test
-    void understandsWithThrowable()
-        throws URISyntaxException, IOException {
+    void understandsWithThrowable() throws URISyntaxException, IOException {
         final Issue issue = new MkGitHub().randomRepo()
             .issues()
             .create("", "");

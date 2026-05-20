@@ -144,8 +144,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    void throwsWhenAssetsUsernameStartsWithUnderscore()
-        throws Exception {
+    void throwsWhenAssetsUsernameStartsWithUnderscore() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 System.lineSeparator(),

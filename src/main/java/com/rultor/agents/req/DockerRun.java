@@ -101,8 +101,7 @@ final class DockerRun {
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    Iterable<String> envs(final Map<String, String> extra)
-        throws IOException {
+    Iterable<String> envs(final Map<String, String> extra) throws IOException {
         final List<String> entries = new LinkedList<>();
         for (final Entry<String, String> ent : extra.entrySet()) {
             entries.add(

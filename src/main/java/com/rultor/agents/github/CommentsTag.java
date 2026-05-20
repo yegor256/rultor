@@ -67,10 +67,7 @@ public final class CommentsTag extends AbstractAgent {
      * @param ghub GitHub client
      * @param config Profile
      */
-    public CommentsTag(
-        final GitHub ghub,
-        final Profile config
-    ) {
+    public CommentsTag(final GitHub ghub, final Profile config) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"

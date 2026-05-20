@@ -34,8 +34,7 @@ public final class Tick {
      * @param duration Duration in msec
      * @param total Total processed or negative if failed
      */
-    public Tick(final long date, final long duration,
-        final int total) {
+    public Tick(final long date, final long duration, final int total) {
         this.when = date;
         this.msec = duration;
         this.talks = total;

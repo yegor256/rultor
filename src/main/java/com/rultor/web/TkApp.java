@@ -40,8 +40,7 @@ public final class TkApp extends TkWrap {
      * @param pulse Pulse
      * @param toggles Toggles
      */
-    public TkApp(final Talks talks, final Pulse pulse,
-        final Toggles toggles) {
+    public TkApp(final Talks talks, final Pulse pulse, final Toggles toggles) {
         super(TkApp.make(talks, pulse, toggles));
     }
 

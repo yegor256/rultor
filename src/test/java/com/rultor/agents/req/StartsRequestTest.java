@@ -82,7 +82,6 @@ final class StartsRequestTest {
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
-        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
