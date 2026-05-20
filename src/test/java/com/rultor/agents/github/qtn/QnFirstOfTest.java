@@ -5,7 +5,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import com.rultor.agents.github.Question;
@@ -29,7 +28,6 @@ final class QnFirstOfTest {
     @Test
     void getsFirstReq() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
         MatcherAssert.assertThat(
             "First not empty question should be taken",
             new QnFirstOf(
@@ -39,7 +37,9 @@ final class QnFirstOfTest {
                     Question.EMPTY
                 )
             ).understand(
-                new Comment.Smart(issue.comments().post("deploy")),
+                new Comment.Smart(
+                    repo.issues().create("", "").comments().post("deploy")
+                ),
                 new URI("#")
             ),
             Matchers.not(Matchers.equalTo(Req.EMPTY))

@@ -6,7 +6,6 @@ package com.rultor.profiles;
 
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
-import java.util.List;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -65,32 +64,33 @@ final class ProfilesTest {
     @Test
     void validationFailsOnArchitectsMismatch() throws Exception {
         final String commander = "Yegor1024";
-        final Profile master = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfilesTest.PROFILE,
-                    "Yegor64",
-                    commander,
-                    "do_something",
-                    commander,
-                    commander
-                )
-            )
-        );
-        final Profile merged = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfilesTest.PROFILE,
-                    "Bobby",
-                    commander,
-                    "do_another",
-                    commander,
-                    commander
-                )
-            )
-        );
         try {
-            new Profiles().validated(master, merged);
+            new Profiles().validated(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            ProfilesTest.PROFILE,
+                            "Yegor64",
+                            commander,
+                            "do_something",
+                            commander,
+                            commander
+                        )
+                    )
+                ),
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            ProfilesTest.PROFILE,
+                            "Bobby",
+                            commander,
+                            "do_another",
+                            commander,
+                            commander
+                        )
+                    )
+                )
+            );
             Assertions.fail("Code above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
@@ -114,32 +114,33 @@ final class ProfilesTest {
     void validationFailsOnCommandersMismatch() throws Exception {
         final String architect = "Yegor2048";
         final String commander = "Yegor4096";
-        final Profile master = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfilesTest.PROFILE,
-                    architect,
-                    "Yegor32",
-                    "do_something2",
-                    "Yegor16",
-                    commander
-                )
-            )
-        );
-        final Profile merged = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfilesTest.PROFILE,
-                    architect,
-                    "Bob",
-                    "do_another2",
-                    "Marley",
-                    commander
-                )
-            )
-        );
         try {
-            new Profiles().validated(master, merged);
+            new Profiles().validated(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            ProfilesTest.PROFILE,
+                            architect,
+                            "Yegor32",
+                            "do_something2",
+                            "Yegor16",
+                            commander
+                        )
+                    )
+                ),
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            ProfilesTest.PROFILE,
+                            architect,
+                            "Bob",
+                            "do_another2",
+                            "Marley",
+                            commander
+                        )
+                    )
+                )
+            );
             Assertions.fail("Method above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
@@ -166,43 +167,44 @@ final class ProfilesTest {
         final String architect = "Yegor8192";
         final String first = "Commander Keen";
         final String second = "Commander Sheperd";
-        final Profile master = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfilesTest.PROFILE,
-                    architect,
-                    first,
-                    "do_something4",
-                    second,
-                    second
-                )
-            )
-        );
-        final Profile merged = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    new Joined(
-                        "",
-                        "<p><entry key='architect'><item>",
-                        architect, "</item>",
-                        "</entry><entry key='merge'>",
-                        "<entry key='commanders'>",
-                        "<item>", first,
-                        "</item><item>",
-                        second,
-                        "</item><item>",
-                        second,
-                        "</item>",
-                        "</entry>",
-                        ProfilesTest.SCRIPT,
-                        "</entry> </p>"
-                    ).asString(),
-                    "do_another4"
-                )
-            )
-        );
         try {
-            new Profiles().validated(master, merged);
+            new Profiles().validated(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            ProfilesTest.PROFILE,
+                            architect,
+                            first,
+                            "do_something4",
+                            second,
+                            second
+                        )
+                    )
+                ),
+                new Profile.Fixed(
+                    new XMLDocument(
+                        String.format(
+                            new Joined(
+                                "",
+                                "<p><entry key='architect'><item>",
+                                architect, "</item>",
+                                "</entry><entry key='merge'>",
+                                "<entry key='commanders'>",
+                                "<item>", first,
+                                "</item><item>",
+                                second,
+                                "</item><item>",
+                                second,
+                                "</item>",
+                                "</entry>",
+                                ProfilesTest.SCRIPT,
+                                "</entry> </p>"
+                            ).asString(),
+                            "do_another4"
+                        )
+                    )
+                )
+            );
             Assertions.fail("Line above must throw an exception");
         } catch (final Profile.ConfigException exception) {
             MatcherAssert.assertThat(
@@ -230,71 +232,67 @@ final class ProfilesTest {
         final String second = "Midnight Commander";
         final String third = "Norton Commander";
         final String script = "do_another3";
-        final Profile master = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfilesTest.PROFILE,
-                    architect,
-                    first,
-                    "do_something3",
-                    second,
-                    third
+        final Profile validated = new Profiles().validated(
+            new Profile.Fixed(
+                new XMLDocument(
+                    String.format(
+                        ProfilesTest.PROFILE,
+                        architect,
+                        first,
+                        "do_something3",
+                        second,
+                        third
+                    )
+                )
+            ),
+            new Profile.Fixed(
+                new XMLDocument(
+                    String.format(
+                        ProfilesTest.PROFILE,
+                        architect,
+                        first,
+                        script,
+                        second,
+                        third
+                    )
                 )
             )
-        );
-        final Profile fork = new Profile.Fixed(
-            new XMLDocument(
-                String.format(
-                    ProfilesTest.PROFILE,
-                    architect,
-                    first,
-                    script,
-                    second,
-                    third
-                )
-            )
-        );
-        final Profile validated = new Profiles().validated(master, fork);
-        final List<String> architects = validated.read().xpath(
-            "//entry[@key='architect']/item/text()"
         );
         MatcherAssert.assertThat(
             "Architect is taken from master",
-            architects,
+            validated.read().xpath(
+                "//entry[@key='architect']/item/text()"
+            ),
             Matchers.contains(architect)
         );
         final String path =
             "//entry[@key='%s']/entry[@key='commanders']/item/text()";
-        final List<String> merge = validated.read().xpath(
-            String.format(path, "merge")
-        );
         MatcherAssert.assertThat(
             "Merge commander is taken from master",
-            merge,
+            validated.read().xpath(
+                String.format(path, "merge")
+            ),
             Matchers.contains(first)
-        );
-        final List<String> deploy = validated.read().xpath(
-            String.format(path, "deploy")
         );
         MatcherAssert.assertThat(
             "Deploy commander is taken from master",
-            deploy,
+            validated.read().xpath(
+                String.format(path, "deploy")
+            ),
             Matchers.contains(second)
-        );
-        final List<String> release = validated.read().xpath(
-            String.format(path, "release")
         );
         MatcherAssert.assertThat(
             "Release commander is taken from master",
-            release,
+            validated.read().xpath(
+                String.format(path, "release")
+            ),
             Matchers.contains(third)
-        );
-        final List<String> scripts = validated.read().xpath(
-            "//entry[@key='merge']/entry[@key='script']/item/text()"
         );
         MatcherAssert.assertThat(
             "Script is taken from fork",
-            scripts,
+            validated.read().xpath(
+                "//entry[@key='merge']/entry[@key='script']/item/text()"
+            ),
             Matchers.contains(script)
         );
     }

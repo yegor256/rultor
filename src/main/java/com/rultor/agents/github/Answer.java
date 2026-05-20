@@ -5,8 +5,8 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Comment.Smart;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Comment.Smart;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
 import com.jcabi.github.safe.SfComments;
