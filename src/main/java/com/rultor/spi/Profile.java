@@ -16,7 +16,6 @@ import java.util.Objects;
 
 /**
  * Profile.
- *
  * @since 1.0
  */
 @Immutable
@@ -51,7 +50,6 @@ public interface Profile {
     /**
      * Get it in XML format (throws
      * {@link Profile.ConfigException}, if fails).
-     *
      * @return XML
      * @throws IOException If fails
      */
@@ -66,13 +64,14 @@ public interface Profile {
 
     /**
      * If can't read profile due to syntax error.
-     *
      * @since 1.0
      */
     final class ConfigException extends RuntimeException {
+
         /**
          * Serialization marker.
          */
+
         private static final long serialVersionUID = -3860028281726793988L;
 
         /**
@@ -94,15 +93,16 @@ public interface Profile {
 
     /**
      * Defaults.
-     *
      * @since 1.0
      */
     @Immutable
     final class Defaults {
+
         /**
          * Original profile.
          */
         private final transient Profile origin;
+
 
         /**
          * Ctor.
@@ -145,11 +145,11 @@ public interface Profile {
 
     /**
      * Fixed.
-     *
      * @since 1.0
      */
     @Immutable
     final class Fixed implements Profile {
+
         /**
          * XML document.
          */

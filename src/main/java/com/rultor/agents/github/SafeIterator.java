@@ -34,7 +34,6 @@ final class SafeIterator<T> implements Iterator<T> {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public boolean hasNext() {
         boolean has;
         try {

@@ -22,7 +22,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnGithubIssue}.
- *
  * @since 2.0
  */
 final class QnGithubIssueTest {

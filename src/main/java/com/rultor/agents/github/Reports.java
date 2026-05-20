@@ -24,7 +24,6 @@ import org.xembly.Directives;
 
 /**
  * Posts merge results to GitHub pull request.
- *
  * @since 1.0
  */
 @Immutable
@@ -56,7 +55,6 @@ public final class Reports extends AbstractAgent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
@@ -109,7 +107,7 @@ public final class Reports extends AbstractAgent {
         if (highlights.isEmpty()) {
             text = "";
         } else {
-            text = String.format("\n\n%s", highlights.get(0));
+            text = String.format("%n%n%s", highlights.get(0));
         }
         return text;
     }
@@ -126,7 +124,7 @@ public final class Reports extends AbstractAgent {
             text = "";
         } else {
             text = String.format(
-                "\n\n```\n%s\n```",
+                "%n%n```%n%s%n```",
                 tail.get(0).replaceAll("```", "'''")
             );
         }
@@ -149,5 +147,4 @@ public final class Reports extends AbstractAgent {
         }
         return new Comment.Smart(comment);
     }
-
 }

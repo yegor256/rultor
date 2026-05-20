@@ -19,7 +19,6 @@ import org.apache.commons.io.input.AutoCloseInputStream;
 
 /**
  * Script to run.
- *
  * @since 1.53
  */
 @Immutable
@@ -75,5 +74,4 @@ final class Script {
             )
         );
     }
-
 }

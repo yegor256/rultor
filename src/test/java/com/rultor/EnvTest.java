@@ -15,7 +15,6 @@ import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 /**
  * Test case for {@link Env}.
- *
  * @since 1.58
  */
 @ExtendWith(SystemStubsExtension.class)

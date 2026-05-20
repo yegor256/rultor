@@ -13,12 +13,12 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link IndexesRequests}.
- *
  * @since 1.2
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class IndexesRequestsTest {
+
     /**
      * IndexesRequests should store index when it doesn't exist.
      * @throws Exception In case of error.

@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnLastOf}.
- *
  * @since 1.6.5
  */
 final class QnLastOfTest {
@@ -44,5 +43,4 @@ final class QnLastOfTest {
             Matchers.not(Matchers.equalTo(Req.EMPTY))
         );
     }
-
 }

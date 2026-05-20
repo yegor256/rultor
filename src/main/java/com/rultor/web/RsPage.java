@@ -33,7 +33,6 @@ import org.takes.rs.xe.XeStylesheet;
 
 /**
  * Index resource, front page of the website.
- *
  * @since 1.50
  */
 @EqualsAndHashCode(callSuper = true)
@@ -91,12 +90,11 @@ final class RsPage extends RsWrap {
 
     /**
      * Build correct response by requested header 'Accept'.
-     *
-     * @param raw Prepared raw response.
-     * @param req Request.
-     * @return Correct response according to 'Accept' header.
-     * @throws IOException If fails.
-     * @todo #1633:90min Replace typedResponse static method with RsFork.
+     * @param raw Prepared raw response
+     * @param req Request
+     * @return Correct response according to 'Accept' header
+     * @throws IOException If fails
+     * @todo #1633:90min Replace typedResponse static method with RsFork
      *  The current solution with typedResponse method is crutch, actually.
      *  The previous solution with {@link org.takes.facets.fork.RsFork} was
      *  broken after the Maven 3.9.0 release. The proper solution would be

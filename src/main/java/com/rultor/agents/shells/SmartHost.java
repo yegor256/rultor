@@ -12,15 +12,13 @@ import lombok.ToString;
 
 /**
  * Host.
- *
  * @since 1.77.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "host")
-@SuppressWarnings({"PMD.ShortMethodName",
-    "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"})
 final class SmartHost {
+
     /**
      * Server address.
      */
@@ -42,7 +40,6 @@ final class SmartHost {
 
     /**
      * Host's IP.
-     *
      * @return Ip address
      * @checkstyle MethodNameCheck (3 lines)
      */

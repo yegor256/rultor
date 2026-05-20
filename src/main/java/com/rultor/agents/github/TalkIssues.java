@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * Issues referenced from Talks.
- *
  * @since 1.0
  */
 @Immutable

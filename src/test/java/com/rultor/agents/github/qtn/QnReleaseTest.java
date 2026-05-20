@@ -19,7 +19,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnRelease}.
- *
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -131,5 +130,4 @@ final class QnReleaseTest {
             )
         );
     }
-
 }

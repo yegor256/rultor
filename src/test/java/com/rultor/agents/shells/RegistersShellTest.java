@@ -18,7 +18,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link RegistersShell}.
- *
  * @since 1.0
  */
 @SuppressWarnings("PMD.AvoidUsingHardCodedIP")

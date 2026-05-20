@@ -20,7 +20,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link CommentsTag}.
- *
  * @since 1.41.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */

@@ -30,7 +30,6 @@ import org.xembly.Directives;
 
 /**
  * Siblings.
- *
  * @since 1.50
  */
 final class TkSiblings implements TkRegex {
@@ -158,5 +157,4 @@ final class TkSiblings implements TkRegex {
             .add("title").set(log.xpath("@title").get(0)).up()
             .up();
     }
-
 }

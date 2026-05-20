@@ -16,7 +16,6 @@ import org.takes.facets.forward.RsForward;
 
 /**
  * Front page of a talk.
- *
  * @since 1.50
  */
 final class TkTalkDelete implements TkRegex {
@@ -51,5 +50,4 @@ final class TkTalkDelete implements TkRegex {
             new RsFlash(String.format("talk #%d deleted", number))
         );
     }
-
 }

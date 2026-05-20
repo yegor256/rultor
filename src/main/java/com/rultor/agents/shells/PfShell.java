@@ -16,7 +16,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Shell in profile.
- *
  * @since 1.48
  */
 @Immutable
@@ -150,5 +149,4 @@ public final class PfShell {
     public Ssh toSsh() throws UnknownHostException {
         return new Ssh(this.addr, this.prt, this.user, this.pvt);
     }
-
 }

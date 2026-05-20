@@ -38,7 +38,6 @@ import org.xembly.Directives;
  * @since 1.3.8
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 final class StartsDaemonITCase {
 
     /**

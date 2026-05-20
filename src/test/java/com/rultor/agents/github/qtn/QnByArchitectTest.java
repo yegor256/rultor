@@ -22,7 +22,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for {@link QnByArchitect}.
- *
  * @since 1.45
  */
 final class QnByArchitectTest {
@@ -149,5 +148,4 @@ final class QnByArchitectTest {
         ).understand(comment, home);
         Mockito.verify(question, Mockito.never()).understand(comment, home);
     }
-
 }

@@ -25,14 +25,12 @@ import org.cactoos.text.Trimmed;
 
 /**
  * Docker run command.
- *
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "profile", "command" })
-@SuppressWarnings("PMD.TooManyMethods")
 final class DockerRun {
 
     /**
@@ -146,9 +144,9 @@ final class DockerRun {
 
     /**
      * Is hash character inside double or single quotes.
-     * @param item String to check.
-     * @param pos Position of the hash.
-     * @return If hash is in quotes.
+     * @param item String to check
+     * @param pos Position of the hash
+     * @return If hash is in quotes
      */
     private static boolean inquotes(final String item, final int pos) {
         final String sub = item.substring(0, pos);
@@ -158,7 +156,7 @@ final class DockerRun {
 
     /**
      * Neutralize comment contained in the script line.
-     * @param item Script element.
+     * @param item Script element
      * @return Script element with invisible comment
      */
     private static String neutralize(final String item) {
@@ -226,7 +224,7 @@ final class DockerRun {
             final List<String> src = new ListOf<String>(
                 new Mapped<>(
                     t -> new Trimmed(t).asString(),
-                    new Split(node.xpath("text()").get(0), "\n")
+                    new Split(node.xpath("text()").get(0), System.lineSeparator())
                 )
             );
             for (final String str : src) {
@@ -237,5 +235,4 @@ final class DockerRun {
         }
         return lines;
     }
-
 }

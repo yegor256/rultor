@@ -34,13 +34,11 @@ import org.xembly.Directives;
 
 /**
  * Starts daemon.
- *
  * @since 1.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class StartsDaemon implements Agent {
 
     /**
@@ -90,7 +88,7 @@ public final class StartsDaemon implements Agent {
      * future. We need it because the SSH shell is not dropping the connection
      * when the command is in the background.
      *
-     * @param xml The XML to process.
+     * @param xml The XML to process
      * @return List of directives
      */
     @Timeable(limit = 1, unit = TimeUnit.MINUTES)
@@ -122,7 +120,7 @@ public final class StartsDaemon implements Agent {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final XML daemon = xml.nodes("/talk/daemon").get(0);
         final String script = String.join(
-            "\n",
+            System.lineSeparator(),
             "#!/usr/bin/env bash",
             "set -ex -o pipefail",
             "cd \"$(dirname \"$0\")\"",
@@ -170,7 +168,7 @@ public final class StartsDaemon implements Agent {
      */
     private void uploadGpgKey(final Shell shell) throws IOException {
         final String secring = System.getenv("GPG_SECRING");
-        if (secring.split("\n").length < 10) {
+        if (secring.split(System.lineSeparator()).length < 10) {
             throw new IOException(
                 String.format(
                     "GPG secret key is too short in the GPG_SECRING environment variable: %s",
@@ -222,11 +220,10 @@ public final class StartsDaemon implements Agent {
             }
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
-                "cat << EOT\n%s\nEOT\nexit -1",
+                "cat << EOT%n%s%nEOT%nexit -1",
                 ex.getLocalizedMessage()
             );
         }
         return script;
     }
-
 }

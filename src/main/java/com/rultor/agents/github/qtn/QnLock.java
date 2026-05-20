@@ -36,7 +36,6 @@ import org.xembly.Xembler;
 
 /**
  * Lock branch.
- *
  * @since 1.53
  */
 @Immutable
@@ -111,7 +110,7 @@ public final class QnLock implements Question {
                         Base64.encodeBase64String(
                             new UncheckedText(
                                 new Joined(
-                                    "\n",
+                                    System.lineSeparator(),
                                     users
                                 )
                             ).asString().getBytes(StandardCharsets.UTF_8)
@@ -160,5 +159,4 @@ public final class QnLock implements Question {
             ).xmlQuietly()
         );
     }
-
 }

@@ -23,7 +23,6 @@ import software.amazon.awssdk.services.ec2.model.TagSpecification;
 
 /**
  * Starts EC2 instance.
- *
  * @since 1.77
  */
 @Immutable

@@ -23,11 +23,11 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link ArchivesDaemon}.
- *
  * @since 1.23
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class ArchivesDaemonITCase {
+
     /**
      * ArchivesDaemon can archive a daemon.
      * @param temp Temporary directory
@@ -80,5 +80,4 @@ final class ArchivesDaemonITCase {
             );
         }
     }
-
 }

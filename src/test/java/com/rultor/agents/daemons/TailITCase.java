@@ -21,7 +21,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Tail}.
- *
  * @since 1.62
  */
 final class TailITCase {
@@ -73,5 +72,4 @@ final class TailITCase {
             );
         }
     }
-
 }

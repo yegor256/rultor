@@ -17,10 +17,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for {@link Time}.
- *
  * @since 2.0
  */
 final class TimeTest {
+
     /**
      * Date can be parsed from string.
      */

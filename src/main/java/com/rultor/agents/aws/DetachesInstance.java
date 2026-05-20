@@ -18,7 +18,6 @@ import software.amazon.awssdk.services.ec2.model.InstanceState;
 
 /**
  * Removes "EC2" element if instance is already "terminated".
- *
  * @since 1.77
  */
 @Immutable
@@ -56,5 +55,4 @@ public final class DetachesInstance extends AbstractAgent {
         }
         return dirs;
     }
-
 }

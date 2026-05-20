@@ -27,7 +27,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Starts a Docker Container containing a Docker daemon and SSHD.
- *
  * @since 1.63
  */
 public final class StartsDockerDaemon implements AutoCloseable {
@@ -135,5 +134,4 @@ public final class StartsDockerDaemon implements AutoCloseable {
             new File(Objects.requireNonNull(this.getClass().getResource("image")).getPath())
         ).exec(new BuildImageResultCallback()).awaitImageId();
     }
-
 }

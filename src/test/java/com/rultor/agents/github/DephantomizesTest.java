@@ -15,7 +15,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Dephantomizes}.
- *
  * @since 1.59.7
  */
 final class DephantomizesTest {
@@ -77,5 +76,4 @@ final class DephantomizesTest {
         );
         return talk;
     }
-
 }

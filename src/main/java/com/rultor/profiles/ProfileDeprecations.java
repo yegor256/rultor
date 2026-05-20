@@ -24,18 +24,20 @@ public final class ProfileDeprecations {
     /**
      * The content of the notice.
      */
-    private static final String CONTENT = new Joined(
-        "",
-        "#### Deprecation Notice #### \n",
-        "You are using the Rultor default Docker image in your build.",
-        "The Rultor has to:\n",
-        "1. Provide the sudo package/command and not stop doing so ",
-        "whenever a change to the Dockerfile is made, even if Rultor ",
-        "itself does not need the sudo command.\n",
-        "2. Not install any gems to the global scope that interfere ",
-        "with pdd or est\n",
-        "#####################################\n"
-    ).toString();
+    private static final String CONTENT = String.format(
+        new Joined(
+            "",
+            "#### Deprecation Notice #### %n",
+            "You are using the Rultor default Docker image in your build.",
+            "The Rultor has to:%n",
+            "1. Provide the sudo package/command and not stop doing so ",
+            "whenever a change to the Dockerfile is made, even if Rultor ",
+            "itself does not need the sudo command.%n",
+            "2. Not install any gems to the global scope that interfere ",
+            "with pdd or est%n",
+            "#####################################%n"
+        ).toString()
+    );
 
     /**
      * The underlying profile.

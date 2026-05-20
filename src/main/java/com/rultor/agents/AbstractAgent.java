@@ -16,7 +16,6 @@ import org.xembly.Directive;
 
 /**
  * Abstract agent.
- *
  * @since 1.0
  */
 @Immutable
@@ -57,5 +56,4 @@ public abstract class AbstractAgent implements Agent {
      */
     protected abstract Iterable<Directive> process(XML xml)
         throws IOException;
-
 }

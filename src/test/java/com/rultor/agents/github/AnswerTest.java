@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Answer}.
- *
  * @since 1.8.16
  */
 final class AnswerTest {
@@ -73,5 +72,4 @@ final class AnswerTest {
         final Repo repo = new MkGitHub().randomRepo();
         return repo.issues().create("", "");
     }
-
 }

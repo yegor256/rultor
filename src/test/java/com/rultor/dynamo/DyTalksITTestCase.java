@@ -29,7 +29,6 @@ import org.xembly.Directives;
 
 /**
  * Integration case for {@link DyTalks}.
- *
  * @since 1.1
  * @checkstyle NonStaticMethodCheck (500 lines)
  */
@@ -217,6 +216,7 @@ final class DyTalksITTestCase {
      * @since 1.1
      */
     private static final class TalkMatcher extends TypeSafeMatcher<Talk> {
+
         /**
          * Name of the talk.
          */
@@ -224,7 +224,7 @@ final class DyTalksITTestCase {
 
         /**
          * Constructor.
-         * @param nam Name of the talk.
+         * @param nam Name of the talk
          */
         TalkMatcher(final String nam) {
             super();

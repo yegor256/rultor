@@ -17,13 +17,11 @@ import org.cactoos.iterable.Mapped;
 
 /**
  * Cached talks.
- *
  * @since 1.51
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
-@SuppressWarnings("PMD.TooManyMethods")
 public final class CdTalks implements Talks {
 
     /**

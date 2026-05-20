@@ -20,7 +20,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnAlone}.
- *
  * @since 1.6.1
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -51,5 +50,4 @@ final class QnAloneTest {
             )
         );
     }
-
 }

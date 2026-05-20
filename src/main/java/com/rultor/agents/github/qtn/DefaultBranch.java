@@ -9,7 +9,6 @@ import java.io.IOException;
 
 /**
  * Default branch of a repo.
- *
  * @since 2.1
  */
 public final class DefaultBranch {
@@ -21,7 +20,7 @@ public final class DefaultBranch {
 
     /**
      * Ctor.
-     * @param repository GitHub Repo.
+     * @param repository GitHub Repo
      */
     public DefaultBranch(final Repo repository) {
         this.repo = repository;
@@ -46,6 +45,7 @@ public final class DefaultBranch {
      * @since 2.1
      */
     public static class RepoNotFoundException extends RuntimeException {
+
         /**
          * Serialization marker.
          */

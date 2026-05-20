@@ -20,7 +20,6 @@ import org.xembly.Directives;
 /**
  * Marks the daemon as done when the host is not reachable and the
  * daemon is older than a few days.
- *
  * @since 1.0
  */
 @Immutable
@@ -94,5 +93,4 @@ public final class DismountDaemon extends AbstractAgent {
             talk.xpath("/talk/@name").get(0)
         );
     }
-
 }

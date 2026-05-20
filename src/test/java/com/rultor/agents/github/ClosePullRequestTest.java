@@ -21,7 +21,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link ClosePullRequest}.
- *
  * @since 1.63
  */
 final class ClosePullRequestTest {

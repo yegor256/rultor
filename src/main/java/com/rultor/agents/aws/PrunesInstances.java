@@ -23,7 +23,6 @@ import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 
 /**
  * Terminates all instances that are very old.
- *
  * @since 1.77
  */
 @Immutable
@@ -100,5 +99,4 @@ public final class PrunesInstances implements SuperAgent {
             seen.size(), seen
         );
     }
-
 }

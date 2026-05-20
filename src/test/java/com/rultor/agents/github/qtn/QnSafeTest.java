@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link QnSafe}.
- *
  * @since 1.76
  */
 final class QnSafeTest {
@@ -40,7 +39,6 @@ final class QnSafeTest {
      * The first example will print empty message to GitHub comment because it
      * will be treated as unknown language:
      * 'java.lang.IllegalArgumentException: Illegal argument exception'
-     *
      * @throws URISyntaxException if URI is invalid
      * @throws IOException if I/O fails.
      */

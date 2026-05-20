@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
  * Integration case for {@link SiblingsRs}.
  * @since 1.23
  */
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkSiblingsITCase {
 
     /**
@@ -50,5 +49,4 @@ final class TkSiblingsITCase {
             .assertXPath("/page[repo='test/me']")
             .assertXPath("/page/siblings[count(talk)=0]");
     }
-
 }

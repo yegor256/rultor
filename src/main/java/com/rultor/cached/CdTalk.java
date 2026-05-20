@@ -16,13 +16,13 @@ import org.xembly.Directive;
 
 /**
  * Cached talk.
- *
  * @since 1.51
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
 public final class CdTalk implements Talk {
+
     /**
      * Origin talk.
      */
@@ -71,5 +71,4 @@ public final class CdTalk implements Talk {
     public void active(final boolean yes) throws IOException {
         this.origin.active(yes);
     }
-
 }

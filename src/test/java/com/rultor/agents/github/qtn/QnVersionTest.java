@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnVersion}.
- *
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -73,5 +72,4 @@ final class QnVersionTest {
             )
         );
     }
-
 }

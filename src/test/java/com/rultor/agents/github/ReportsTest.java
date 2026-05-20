@@ -20,10 +20,10 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Reports}.
- *
  * @since 1.3
  */
 final class ReportsTest {
+
     /**
      * Message bundle.
      */

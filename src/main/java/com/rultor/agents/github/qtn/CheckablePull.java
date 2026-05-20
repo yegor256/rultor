@@ -14,13 +14,13 @@ import lombok.ToString;
 
 /**
  * Checkable pull request.
- *
  * @since 2.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode
 final class CheckablePull {
+
     /**
      * Pull request.
      */

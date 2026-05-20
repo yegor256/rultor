@@ -8,7 +8,6 @@ import java.util.Collections;
 
 /**
  * Pulse.
- *
  * @since 1.20
  */
 public interface Pulse {
@@ -62,5 +61,4 @@ public interface Pulse {
      * @param errors Errors or empty if none
      */
     void error(Iterable<Throwable> errors);
-
 }

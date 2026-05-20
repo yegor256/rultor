@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for ${@link DeactivatesTalks}.
- *
  * @since 1.3
  */
 final class DeactivatesTalksTest {
@@ -38,5 +37,4 @@ final class DeactivatesTalksTest {
             () -> agent.execute(talks)
         );
     }
-
 }

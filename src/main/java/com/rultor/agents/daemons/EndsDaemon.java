@@ -31,7 +31,6 @@ import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done.
- *
  * @since 1.0
  */
 @Immutable
@@ -94,7 +93,7 @@ public final class EndsDaemon extends AbstractAgent {
             )
         );
         final String highlights = new Joined(
-            "\n",
+            System.lineSeparator(),
             new Mapped<>(
                 s -> new Sub(
                     s,
@@ -187,5 +186,4 @@ public final class EndsDaemon extends AbstractAgent {
             )
         ).exec();
     }
-
 }

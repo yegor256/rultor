@@ -30,7 +30,6 @@ import org.xembly.Xembler;
 
 /**
  * Answer to post.
- *
  * @since 1.0
  */
 @Immutable
@@ -104,13 +103,12 @@ public final class Answer {
      * @param text The text
      * @return Text to post
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private String msg(final boolean success, final String text) {
         final StringBuilder msg = new StringBuilder(100);
         try {
             msg.append(
                 new FormattedText(
-                    "> %s\n\n",
+                    "> %s%n%n",
                     new Abbreviated(
                         this.comment.body().replaceAll(
                             "\\p{Space}",
@@ -147,5 +145,4 @@ public final class Answer {
         }
         return Xembler.escape(msg.toString());
     }
-
 }

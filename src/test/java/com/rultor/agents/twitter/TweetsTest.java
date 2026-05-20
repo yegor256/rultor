@@ -20,7 +20,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Tweets}.
- *
  * @since 1.30
  */
 final class TweetsTest {

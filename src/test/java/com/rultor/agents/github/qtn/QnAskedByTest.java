@@ -20,7 +20,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for {@link QnAskedBy}.
- *
  * @since 1.1
  */
 final class QnAskedByTest {

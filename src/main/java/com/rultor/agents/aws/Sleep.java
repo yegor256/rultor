@@ -11,7 +11,6 @@ import lombok.ToString;
 
 /**
  * Sleep.
- *
  * @since 1.77
  */
 @Immutable
@@ -43,5 +42,4 @@ final class Sleep {
             throw new IllegalStateException(ex);
         }
     }
-
 }

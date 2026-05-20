@@ -24,7 +24,6 @@ import lombok.ToString;
 
 /**
  * Profiles.
- *
  * @since 1.0
  */
 @Immutable
@@ -180,5 +179,4 @@ public final class Profiles {
             )
         );
     }
-
 }

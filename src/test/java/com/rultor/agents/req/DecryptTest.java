@@ -23,14 +23,14 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Tests for {@link Decrypt}.
- *
  * @since 1.37.4
  */
 final class DecryptTest {
+
     /**
      * Newline.
      */
-    private static final String NEWLINE = "\n";
+    private static final String NEWLINE = System.lineSeparator();
 
     /**
      * StartsRequest can take decryption instructions into account.
@@ -38,7 +38,6 @@ final class DecryptTest {
      * @throws Exception In case of error.
      */
     @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     void decryptsAssets(@TempDir final Path temp) throws Exception {
         final Iterable<String> commands = new Decrypt(
             new Profile.Fixed(
@@ -93,7 +92,6 @@ final class DecryptTest {
 
     /**
      * Creates a profile XML for testing purposes.
-     *
      * @return XML document
      * @checkstyle AbbreviationAsWordInNameCheck (15 lines)
      */

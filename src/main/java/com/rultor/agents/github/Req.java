@@ -13,7 +13,6 @@ import org.xembly.Directives;
 
 /**
  * Request.
- *
  * @since 1.3
  */
 @Immutable
@@ -42,13 +41,14 @@ public interface Req {
 
     /**
      * Simple impl.
-     *
      * @since 1.3
      */
     @Immutable
     final class Simple implements Req {
+
         /**
          * Type.
+
          */
         private final transient String type;
 
@@ -80,5 +80,4 @@ public interface Req {
             return dirs.up();
         }
     }
-
 }

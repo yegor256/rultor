@@ -28,19 +28,11 @@ import org.xembly.Directives;
 
 /**
  * Understands request.
- *
  * @since 1.3
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "github", "question" })
-@SuppressWarnings(
-    {
-    "PMD.CyclomaticComplexity",
-    "PMD.StdCyclomaticComplexity",
-    "PMD.ModifiedCyclomaticComplexity"
-    }
-)
 public final class Understands extends AbstractAgent {
 
     /**

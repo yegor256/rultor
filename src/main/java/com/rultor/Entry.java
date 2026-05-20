@@ -40,10 +40,8 @@ import org.takes.http.FtCli;
 
 /**
  * Command line entry.
- *
  * @since 1.50
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class Entry {
 
     /**
@@ -216,5 +214,4 @@ public final class Entry {
             }
         };
     }
-
 }

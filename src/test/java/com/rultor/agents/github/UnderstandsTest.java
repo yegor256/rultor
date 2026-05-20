@@ -34,7 +34,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Understands}.
- *
  * @since 1.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -201,5 +200,4 @@ final class UnderstandsTest {
         );
         return talk;
     }
-
 }

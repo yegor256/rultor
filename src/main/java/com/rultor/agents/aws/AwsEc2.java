@@ -13,12 +13,12 @@ import software.amazon.awssdk.services.ec2.Ec2Client;
 
 /**
  * Amazon EC2 client.
- *
  * @since 1.77
  */
 @Immutable
 @ToString
 public final class AwsEc2 {
+
     /**
      * Access key.
      */

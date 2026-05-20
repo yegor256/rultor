@@ -27,13 +27,11 @@ import software.amazon.awssdk.services.dynamodb.model.Select;
 
 /**
  * Talks in Dynamo.
- *
  * @since 1.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "region")
-@SuppressWarnings({"PMD.TooManyMethods", "PMD.DataClass"})
 public final class DyTalks implements Talks {
 
     /**

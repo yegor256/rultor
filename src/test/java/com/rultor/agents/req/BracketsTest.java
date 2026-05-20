@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link Brackets}.
- *
  * @since 1.2
  */
 final class BracketsTest {
+
     /**
      * Brackets can fetch environment vars.
      * @throws Exception In case of error.

@@ -31,7 +31,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnMerge}.
- *
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -78,7 +77,6 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request.
-     *
      * @throws Exception In case of error
      */
     @Test
@@ -117,7 +115,6 @@ final class QnMergeTest {
     /**
      * QnMerge can not build a request because some GitHub checks
      *  were failed.
-     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
@@ -143,7 +140,6 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request because GitHub checks finished successfully.
-     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
@@ -172,7 +168,6 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request when some CI checks are skipped.
-     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */

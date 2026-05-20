@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnStatus}.
- *
  * @since 1.5
  */
 final class QnStatusTest {
@@ -60,5 +59,4 @@ final class QnStatusTest {
             )
         );
     }
-
 }

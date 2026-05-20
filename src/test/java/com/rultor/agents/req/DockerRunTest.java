@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link DockerRun}.
- *
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -286,5 +285,4 @@ final class DockerRunTest {
             Matchers.startsWith("(  ")
         );
     }
-
 }

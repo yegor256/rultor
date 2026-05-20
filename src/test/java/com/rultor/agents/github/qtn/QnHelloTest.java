@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnHello}.
- *
  * @since 1.6
  */
 final class QnHelloTest {
@@ -43,5 +42,4 @@ final class QnHelloTest {
             Matchers.containsString("Have fun :)")
         );
     }
-
 }

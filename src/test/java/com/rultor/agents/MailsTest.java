@@ -24,7 +24,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Mails}.
- *
  * @since 2.0
  */
 final class MailsTest {

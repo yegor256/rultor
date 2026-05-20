@@ -13,7 +13,6 @@ import lombok.ToString;
 
 /**
  * Super Agent.
- *
  * @since 1.0
  */
 @Immutable
@@ -28,15 +27,16 @@ public interface SuperAgent {
 
     /**
      * Iterative.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "children")
     final class Iterative implements SuperAgent {
+
         /**
          * Agents to run.
+
          */
         private final transient Array<SuperAgent> children;
 
@@ -58,16 +58,17 @@ public interface SuperAgent {
 
     /**
      * Disabled.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Disabled implements SuperAgent {
+
         /**
          * Agent to disable.
          */
+
         private final transient SuperAgent agent;
 
         /**
@@ -86,17 +87,18 @@ public interface SuperAgent {
 
     /**
      * Quiet.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Quiet implements SuperAgent {
+
         /**
          * Agent to disable.
          */
         private final transient SuperAgent agent;
+
 
         /**
          * Ctor.
@@ -117,5 +119,4 @@ public interface SuperAgent {
             }
         }
     }
-
 }

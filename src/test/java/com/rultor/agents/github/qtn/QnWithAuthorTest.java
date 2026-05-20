@@ -19,7 +19,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for {@link QnWithAuthor}.
- *
  * @since 1.65
  */
 final class QnWithAuthorTest {
@@ -77,5 +76,4 @@ final class QnWithAuthorTest {
             XhtmlMatchers.hasXPaths("/r[not(author)]")
         );
     }
-
 }

@@ -49,7 +49,6 @@ import org.cactoos.text.UncheckedText;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "repo")
-@SuppressWarnings("PMD.ExcessiveImports")
 final class GithubProfile implements Profile {
 
     /**
@@ -108,7 +107,6 @@ final class GithubProfile implements Profile {
         return new YamlXML(this.yml()).get();
     }
 
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Override
     public Map<String, InputStream> assets() throws IOException {
         final XML xml = this.read();
@@ -244,9 +242,9 @@ final class GithubProfile implements Profile {
     /**
      * Build the InputStream for the given filename in the given Repository,
      * dealing with errors.
-     * @param rpo Repository where the file is.
-     * @param filename Name of the file.
-     * @return An InputStream with the Base64 contents of the file.
+     * @param rpo Repository where the file is
+     * @param filename Name of the file
+     * @return An InputStream with the Base64 contents of the file
      * @throws IOException If something goes wrong.
      */
     private InputStream buildAssetStream(final Repo rpo, final String filename)
@@ -295,11 +293,11 @@ final class GithubProfile implements Profile {
         if (!msg.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
-                    "%s is not valid according to schema:\n``%s``",
+                    "%s is not valid according to schema:%n``%s``",
                     GithubProfile.FILE,
                     new UncheckedText(
                         new Joined(
-                            "\n",
+                            System.lineSeparator(),
                             msg
                         )
                     ).asString()
@@ -312,7 +310,7 @@ final class GithubProfile implements Profile {
     /**
      * Validate rultor config YAML according to schema.
      * @param yml Rultor YAML config
-     * @return Validation result message, empty list means validation succeeded.
+     * @return Validation result message, empty list means validation succeeded
      * @todo #570:30min Implement validation using Kwalify library in separate
      *  class called ValidYaml, move this method to that class and move tests
      *  from GithubProfileValidationTest to ValidYamlTest. Remember about

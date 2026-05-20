@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link FirstComment}.
- *
  * @since 1.51
  */
 final class FirstCommentTest {
@@ -34,5 +33,4 @@ final class FirstCommentTest {
             Matchers.equalTo("jeff")
         );
     }
-
 }

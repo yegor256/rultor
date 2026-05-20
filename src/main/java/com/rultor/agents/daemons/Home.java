@@ -12,7 +12,6 @@ import lombok.ToString;
 
 /**
  * Home page of a daemon.
- *
  * @since 1.0
  */
 @Immutable
@@ -61,5 +60,4 @@ public final class Home {
             )
         );
     }
-
 }

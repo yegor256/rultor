@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * Date and time in ISO 8601.
- *
  * @since 1.8.12
  */
 @Immutable
@@ -91,5 +90,4 @@ public final class Time {
             throw new IllegalStateException(ex);
         }
     }
-
 }

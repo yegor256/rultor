@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
  * Integration case for {@link TkHome}.
  * @since 0.5
  */
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkHomeITCase {
 
     /**
@@ -137,5 +136,4 @@ final class TkHomeITCase {
             Matchers.equalTo(1_000)
         );
     }
-
 }

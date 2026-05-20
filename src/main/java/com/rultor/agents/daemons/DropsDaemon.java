@@ -22,7 +22,6 @@ import org.xembly.Xembler;
 
 /**
  * If the daemon is too old and the Docker container is already gone.
- *
  * @since 1.72
  */
 @Immutable
@@ -90,5 +89,4 @@ public final class DropsDaemon extends AbstractAgent {
         }
         return dirs;
     }
-
 }

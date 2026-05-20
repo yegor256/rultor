@@ -22,12 +22,12 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile}.
- *
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class GithubProfileTest {
+
     /**
      * GithubProfile can fetch a YAML config.
      * @throws Exception In case of error.
@@ -36,7 +36,7 @@ final class GithubProfileTest {
     void fetchesYamlConfig() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets:",
                 "  test.xml: jeff/test1#test.xml",
                 "  beta: jeff/test1#test.xml",
@@ -108,7 +108,7 @@ final class GithubProfileTest {
     void throwsWhenAssetIsMisconfigured() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets: ",
                 "  something.xml: -invalid.user.name/test1#test.xml"
             ).asString()
@@ -127,7 +127,7 @@ final class GithubProfileTest {
     void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets: ",
                 "  something.xml: invalid_username/test1#test.xml"
             ).asString()
@@ -148,7 +148,7 @@ final class GithubProfileTest {
         throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets: ",
                 "  something.xml: _invalidusername/test1#test.xml"
             ).asString()
@@ -178,7 +178,7 @@ final class GithubProfileTest {
                     "content",
                     Base64.getEncoder().encodeToString(
                         new Joined(
-                            "\n",
+                            System.lineSeparator(),
                             "assets: ",
                             String.format(
                                 "  something.xml: jeff/%s#.rultor.yml", name
@@ -203,7 +203,7 @@ final class GithubProfileTest {
     void throwsWhenRultorConfigIsAbsent() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets:   ",
                 "  something.xml: jeff/test2#.rultor.yml"
             ).asString()
@@ -222,7 +222,7 @@ final class GithubProfileTest {
     void throwsWhenFriendNotDefined() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets:    ",
                 "  a.xml: jeff/test1#test.xml"
             ).asString()
@@ -242,7 +242,7 @@ final class GithubProfileTest {
     void testAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets:",
                 "  test.xml: jeff/test1#test.xmls",
                 "merge:",

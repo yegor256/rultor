@@ -28,12 +28,12 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link StartsRequest}.
- *
  * @since 1.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
 final class StartsRequestTest {
+
     /**
      * Default head_branch value.
      */
@@ -113,7 +113,7 @@ final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
                 new Joined(
-                    "\n",
+                    System.lineSeparator(),
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh; cat script.sh"
                 ).asString()
@@ -428,7 +428,7 @@ final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
                 new Joined(
-                    "\n",
+                    System.lineSeparator(),
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh"
                 ).asString()
@@ -479,7 +479,7 @@ final class StartsRequestTest {
     ) throws IOException {
         final String script = new UncheckedText(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "set -x",
                 "set -e",
                 "set -o pipefail",
@@ -544,5 +544,4 @@ final class StartsRequestTest {
         ).stdout();
         return repo;
     }
-
 }

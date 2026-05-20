@@ -17,12 +17,12 @@ import org.xembly.Directives;
 
 /**
  * Adds index to all the requests received.
- *
  * @since 1.0
  */
-@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 public final class IndexesRequests implements SuperAgent {
+
     @Override
+
     public void execute(final Talks talks) throws IOException {
         int idx = this.index(talks);
         for (final Talk talk : talks.active()) {
@@ -60,7 +60,6 @@ public final class IndexesRequests implements SuperAgent {
      *  read
      * @checkstyle NonStaticMethodCheck (15 lines)
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     private int index(final Talk talk) throws IOException {
         final List<Number> indexes = new ListOf<>(
             new Mapped<>(

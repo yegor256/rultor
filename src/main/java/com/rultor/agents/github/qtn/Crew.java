@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * GitHub crew.
- *
  * @since 1.40.7
  */
 @Immutable
@@ -40,7 +39,6 @@ final class Crew {
      * Get all collaborators.
      * @return List of their login names
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public Collection<String> names() {
         final Collection<String> names = new LinkedList<>();
         try {
@@ -56,5 +54,4 @@ final class Crew {
         }
         return names;
     }
-
 }

@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * Agent.
- *
  * @since 1.0
  */
 @Immutable
@@ -30,15 +29,16 @@ public interface Agent {
 
     /**
      * Iterative.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "children")
     final class Iterative implements Agent {
+
         /**
          * Agents to run.
+
          */
         private final transient Array<Agent> children;
 
@@ -71,16 +71,17 @@ public interface Agent {
 
     /**
      * Disabled.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Disabled implements Agent {
+
         /**
          * Agent to disable.
          */
+
         private final transient Agent agent;
 
         /**
@@ -116,17 +117,18 @@ public interface Agent {
 
     /**
      * Swallows all exceptions.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Quiet implements Agent {
+
         /**
          * Agent to defend.
          */
         private final transient Agent agent;
+
 
         /**
          * Ctor.
@@ -153,13 +155,13 @@ public interface Agent {
 
     /**
      * Only if the name of the talk DOESN'T match the regular expression.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = {"agent", "pattern"})
     final class SkipIfName implements Agent {
+
         /**
          * Agent to defend.
          */

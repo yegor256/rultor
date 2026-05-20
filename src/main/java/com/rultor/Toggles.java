@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 
 /**
  * Feature toggles.
- *
  * @since 1.0
  */
 @Immutable
@@ -34,7 +33,6 @@ public interface Toggles {
 
     /**
      * Inner file.
-     *
      * @since 1.0
      */
     @Immutable
@@ -84,5 +82,4 @@ public interface Toggles {
             return file;
         }
     }
-
 }

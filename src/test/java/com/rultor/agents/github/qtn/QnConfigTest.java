@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnConfig}.
- *
  * @since 1.8
  */
 final class QnConfigTest {
@@ -45,5 +44,4 @@ final class QnConfigTest {
             Matchers.containsString("</p>")
         );
     }
-
 }

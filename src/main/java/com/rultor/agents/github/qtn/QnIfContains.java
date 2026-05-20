@@ -16,7 +16,6 @@ import lombok.ToString;
 
 /**
  * If contains text.
- *
  * @since 1.3
  */
 @Immutable

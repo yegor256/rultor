@@ -19,7 +19,6 @@ import org.takes.rs.RsWithStatus;
 
 /**
  * Status (OK or not OK).
- *
  * @since 1.52
  */
 final class TkStatus implements Take {
@@ -49,7 +48,7 @@ final class TkStatus implements Take {
         final StringBuilder msg = new StringBuilder(1_000);
         msg.append(
             Logger.format(
-                "Up for %[ms]s already\n",
+                "Up for %[ms]s already%n",
                 System.currentTimeMillis() - this.start
             )
         );
@@ -71,7 +70,9 @@ final class TkStatus implements Take {
                     )
                 );
                 msg.append(
-                    "\n\nPlease, email this page to bug@rultor.com"
+                    String.format(
+                        "%n%nPlease, email this page to bug@rultor.com"
+                    )
                 );
             } else {
                 response = new RsWithStatus(HttpURLConnection.HTTP_OK);
@@ -84,9 +85,8 @@ final class TkStatus implements Take {
             }
         }
         for (final Throwable error : this.pulse.error()) {
-            msg.append(Logger.format("\n\n%[exception]s", error));
+            msg.append(Logger.format("%n%n%[exception]s", error));
         }
         return new RsWithBody(response, msg.toString());
     }
-
 }

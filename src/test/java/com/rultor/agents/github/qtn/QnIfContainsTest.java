@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnIfContains}.
- *
  * @since 1.50
  */
 final class QnIfContainsTest {

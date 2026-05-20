@@ -21,7 +21,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for ${@link CommitsLog}.
- *
  * @since 1.51
  */
 final class CommitsLogTest {
@@ -91,5 +90,4 @@ final class CommitsLogTest {
         ).when(commit).json();
         return commit;
     }
-
 }

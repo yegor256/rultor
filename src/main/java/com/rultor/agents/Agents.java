@@ -93,7 +93,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Agents.
- *
  * @since 1.0
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -101,7 +100,6 @@ import org.cactoos.text.UncheckedText;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = {"github", "sttc"})
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
 
     /**
@@ -194,7 +192,6 @@ public final class Agents {
      * @throws IOException If fails
      * @checkstyle MethodLengthCheck (500 lines)
      */
-    @SuppressWarnings("PMD.ExcessiveMethodLength")
     public Agent agent(final Talk talk, final Profile profile)
         throws IOException {
         final Locks locks = this.sttc.locks();
@@ -351,7 +348,7 @@ public final class Agents {
     /**
      * Handle main commands.
      * @param profile Profile to uuse
-     * @return Array of questions.
+     * @return Array of questions
      */
     private static Question commands(final Profile profile) {
         return new QnByArchitect(
@@ -421,5 +418,4 @@ public final class Agents {
         }
         return priv;
     }
-
 }

@@ -17,7 +17,6 @@ import org.apache.commons.io.input.NullInputStream;
 
 /**
  * Remove old images from Docker.
- *
  * @since 1.57
  */
 public final class DockerExec implements SuperAgent {
@@ -54,5 +53,4 @@ public final class DockerExec implements SuperAgent {
             Logger.stream(Level.WARNING, this)
         );
     }
-
 }

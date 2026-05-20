@@ -20,7 +20,6 @@ import org.xembly.Directives;
 
 /**
  * Index resource, front page of the website.
- *
  * @since 1.50
  */
 final class TkHome implements Take {
@@ -97,5 +96,4 @@ final class TkHome implements Take {
         }
         return dirs;
     }
-
 }

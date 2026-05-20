@@ -14,7 +14,6 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 /**
  * Release Tag validator, ensures not releasing already outdated tags.
- *
  * @since 1.62
  */
 @Immutable
@@ -98,5 +97,4 @@ public final class ReleaseTag {
     private static boolean valid(final String identifier) {
         return ReleaseTag.VERSION_PATTERN.matcher(identifier).matches();
     }
-
 }

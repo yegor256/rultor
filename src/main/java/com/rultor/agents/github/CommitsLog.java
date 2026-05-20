@@ -28,7 +28,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Log of commits.
- *
  * @since 1.51
  */
 @Immutable
@@ -54,12 +53,11 @@ final class CommitsLog {
 
     /**
      * Release body text.
-     * @param prev Previous release date.
-     * @param current Current release date.
-     * @return Release body text.
-     * @throws IOException In case of problem communicating with git.
+     * @param prev Previous release date
+     * @param current Current release date
+     * @return Release body text
+     * @throws IOException In case of problem communicating with git
      */
-    @SuppressWarnings({"PMD.UseConcurrentHashMap", "PMD.UseDiamondOperator"})
     public String build(final Date prev, final Date current)
         throws IOException {
         final DateFormat format = new SimpleDateFormat(
@@ -93,7 +91,7 @@ final class CommitsLog {
         }
         return new UncheckedText(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 lines
             )
         ).asString();
@@ -130,5 +128,4 @@ final class CommitsLog {
         }
         return line.toString();
     }
-
 }

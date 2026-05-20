@@ -19,7 +19,6 @@ import org.xembly.Directives;
 
 /**
  * Sanitizes the daemon, if it's broken.
- *
  * @since 1.54
  */
 @Immutable
@@ -52,5 +51,4 @@ public final class SanitizesDaemon extends AbstractAgent {
         }
         return dirs;
     }
-
 }

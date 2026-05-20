@@ -20,7 +20,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnParametrized}.
- *
  * @since 1.3.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -118,5 +117,4 @@ final class QnParametrizedTest {
             Matchers.is(Req.LATER)
         );
     }
-
 }

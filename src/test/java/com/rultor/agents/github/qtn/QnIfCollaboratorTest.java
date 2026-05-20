@@ -17,7 +17,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnIfCollaborator}.
- *
  * @since 1.40.4
  */
 final class QnIfCollaboratorTest {
@@ -44,5 +43,4 @@ final class QnIfCollaboratorTest {
             XhtmlMatchers.hasXPaths("/request[not(type)]")
         );
     }
-
 }

@@ -31,13 +31,11 @@ import org.xembly.Directives;
 
 /**
  * Comments a new tag in GitHub.
- *
  * @since 1.31
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "github")
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class CommentsTag extends AbstractAgent {
 
     /**
@@ -93,7 +91,7 @@ public final class CommentsTag extends AbstractAgent {
             final Release.Smart rel = new Release.Smart(rels.find(tag));
             rel.body(
                 String.format(
-                    "%s\n\nSee also #%d and [build log](%s)",
+                    "%s%n%nSee also #%d and [build log](%s)",
                     rel.body(), issue.number(), home
                 )
             );
@@ -115,7 +113,7 @@ public final class CommentsTag extends AbstractAgent {
             rel.body(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "See #%d, release log:\n\n%s\n\nReleased by Rultor %s, see [build log](%s)",
+                    "See #%d, release log:%n%n%s%n%nReleased by Rultor %s, see [build log](%s)",
                     issue.number(),
                     new CommitsLog(repo).build(prev, rel.publishedAt()),
                     Env.read("Rultor-Version"), home
@@ -138,7 +136,7 @@ public final class CommentsTag extends AbstractAgent {
      * Check if release is prerelease.
      * True if profile does not specify release.pre=false.
      * @param req Comment's xml
-     * @return True if prerelease, false otherwise.
+     * @return True if prerelease, false otherwise
      */
     private boolean isPrerelease(final XML req) {
         try {
@@ -193,9 +191,9 @@ public final class CommentsTag extends AbstractAgent {
 
     /**
      * Get previous release time.
-     * @param repo Repo in which to find the releases.
-     * @return Previous release time or start of epoch.
-     * @throws IOException In case of problem communicating with repo.
+     * @param repo Repo in which to find the releases
+     * @return Previous release time or start of epoch
+     * @throws IOException In case of problem communicating with repo
      */
     private static Date previous(final Repo repo) throws IOException {
         Date prev = new Date(0L);

@@ -17,10 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Tests for {@link GithubProfile}.
- *
  * @since 1.0
  */
-@SuppressWarnings("PMD.UseUtilityClass")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(WeAreOnline.class)
 final class GithubProfileITCase {

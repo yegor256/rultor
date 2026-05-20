@@ -17,7 +17,6 @@ import org.xembly.Directives;
 
 /**
  * Finishes and reports merge results.
- *
  * @since 1.0
  */
 @Immutable
@@ -56,5 +55,4 @@ public final class EndsRequest extends AbstractAgent {
         }
         return dirs;
     }
-
 }

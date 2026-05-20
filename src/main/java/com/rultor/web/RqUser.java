@@ -21,7 +21,6 @@ import org.takes.rq.RqWrap;
 
 /**
  * Web user.
- *
  * @since 1.50
  */
 final class RqUser extends RqWrap {
@@ -62,7 +61,6 @@ final class RqUser extends RqWrap {
      * @return TRUE if I can see it
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public boolean canSee(final Talk talk) throws IOException {
         final XML xml;
         try {
@@ -100,5 +98,4 @@ final class RqUser extends RqWrap {
     private Identity identity() throws IOException {
         return new RqAuth(this).identity();
     }
-
 }

@@ -14,7 +14,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for ${@link YamlXML}.
- *
  * @since 1.0
  * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
  */
@@ -68,5 +67,4 @@ final class YamlXMLTest {
             () -> new YamlXML(yaml).get()
         );
     }
-
 }

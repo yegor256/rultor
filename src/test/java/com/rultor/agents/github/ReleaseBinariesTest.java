@@ -26,7 +26,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link ReleaseBinaries}.
- *
  * @since 1.1
  */
 final class ReleaseBinariesTest {

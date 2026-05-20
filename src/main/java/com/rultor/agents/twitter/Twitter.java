@@ -9,7 +9,6 @@ import java.io.IOException;
 
 /**
  * Twitter abstraction.
- *
  * @since 1.30
  */
 @Immutable
@@ -21,5 +20,4 @@ public interface Twitter {
      * @throws IOException If it fails
      */
     void post(String msg) throws IOException;
-
 }

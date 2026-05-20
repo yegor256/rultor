@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnLock}.
- *
  * @since 1.53
  */
 final class QnLockTest {
@@ -48,5 +47,4 @@ final class QnLockTest {
             )
         );
     }
-
 }

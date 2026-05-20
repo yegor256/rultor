@@ -18,13 +18,11 @@ import org.xembly.Directives;
 
 /**
  * Registers shell.
- *
  * @since 1.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "shell")
-@SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
 public final class RegistersShell extends AbstractAgent {
 
     /**

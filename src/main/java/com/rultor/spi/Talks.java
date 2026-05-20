@@ -23,11 +23,9 @@ import org.cactoos.list.ListOf;
 
 /**
  * Talks in a repo.
- *
  * @since 1.0
  */
 @Immutable
-@SuppressWarnings("PMD.TooManyMethods")
 public interface Talks {
 
     /**
@@ -100,6 +98,7 @@ public interface Talks {
      */
     @Immutable
     final class InDir implements Talks {
+
         /**
          * Dir.
          */

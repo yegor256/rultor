@@ -5,7 +5,6 @@
 
 /**
  * Rultor, tests.
- *
  * @since 1.58
  */
 package com.rultor;

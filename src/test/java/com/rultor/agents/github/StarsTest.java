@@ -15,10 +15,10 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Stars}.
- *
  * @since 1.1
  */
 final class StarsTest {
+
     /**
      * Stars can star a new repo.
      * @throws IOException In case of error
@@ -57,8 +57,8 @@ final class StarsTest {
     /**
      * Create a test talk.
      * @param repo Repo to use
-     * @return Test Talk.
-     * @throws IOException In case of error.
+     * @return Test Talk
+     * @throws IOException In case of error
      */
     private Talk talk(final Repo repo) throws IOException {
         final Talk talk = new Talk.InFile();

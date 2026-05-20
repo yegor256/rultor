@@ -33,7 +33,6 @@ import org.takes.rs.RsFluent;
 
 /**
  * Single daemon.
- *
  * @since 1.50
  */
 final class TkDaemon implements TkRegex {
@@ -177,5 +176,4 @@ final class TkDaemon implements TkRegex {
                 }
             ).get();
     }
-
 }

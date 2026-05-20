@@ -26,11 +26,10 @@ import org.xembly.Xembler;
 
 /**
  * Talk.
- *
  * @since 1.0
  */
 @Immutable
-@SuppressWarnings({"PMD.TooManyMethods",
+@SuppressWarnings({
     "PMD.OnlyOneConstructorShouldDoInitialization",
     "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"})
 public interface Talk {
@@ -110,13 +109,14 @@ public interface Talk {
 
     /**
      * In file.
-     *
      * @since 1.0
      */
     @Immutable
     final class InFile implements Talk {
+
         /**
          * File.
+
          */
         private final transient String path;
 
@@ -214,5 +214,4 @@ public interface Talk {
             // nothing
         }
     }
-
 }

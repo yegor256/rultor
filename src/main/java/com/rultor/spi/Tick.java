@@ -8,7 +8,6 @@ import com.jcabi.aspects.Immutable;
 
 /**
  * Tick.
- *
  * @since 1.52
  */
 @Immutable
@@ -65,5 +64,4 @@ public final class Tick {
     public int total() {
         return this.talks;
     }
-
 }

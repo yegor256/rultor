@@ -16,7 +16,6 @@ import org.xembly.Directives;
 
 /**
  * Stops daemon if STOP request is present.
- *
  * @since 1.50
  */
 @Immutable
@@ -44,5 +43,4 @@ public final class StopsDaemon extends AbstractAgent {
         );
         return new Directives();
     }
-
 }

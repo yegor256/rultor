@@ -35,7 +35,6 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 
 /**
  * Talk in Dynamo.
- *
  * @since 1.0
  */
 @Immutable
@@ -185,5 +184,4 @@ public final class DyTalk implements Talk {
         );
         return baos.toString(StandardCharsets.UTF_8);
     }
-
 }

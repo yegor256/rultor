@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnIamLost}.
- *
  * @since 1.60
  */
 final class QnIamLostTest {
@@ -44,5 +43,4 @@ final class QnIamLostTest {
             Matchers.containsString("don't understand you")
         );
     }
-
 }

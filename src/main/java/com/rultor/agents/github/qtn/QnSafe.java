@@ -17,20 +17,18 @@ import lombok.ToString;
 
 /**
  * It never fails.
- *
  * @since 1.57
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
-@SuppressWarnings("PMD.AvoidCatchingThrowable")
 public final class QnSafe implements Question {
 
     /**
      * Default error message format.
      */
     private static final String DEFAULT_FORMAT =
-        "We failed, sorry, try again:\n\n```\n%[exception]s\n```";
+        "We failed, sorry, try again:%n%n```%n%[exception]s%n```";
 
     /**
      * Original question.
@@ -86,5 +84,4 @@ public final class QnSafe implements Question {
         }
         return valid;
     }
-
 }

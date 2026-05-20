@@ -20,7 +20,6 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 /**
  * YAML into XML.
- *
  * @since 1.0
  * @checkstyle AbbreviationAsWordInNameCheck (50 lines)
  */
@@ -86,5 +85,4 @@ final class YamlXML {
         }
         return dirs;
     }
-
 }

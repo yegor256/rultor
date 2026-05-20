@@ -30,7 +30,6 @@ import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 
 /**
  * Marks the daemon as done.
- *
  * @since 1.0
  */
 @Immutable
@@ -141,5 +140,4 @@ public final class ArchivesDaemon extends AbstractAgent {
             FileUtils.readLines(file, StandardCharsets.UTF_8).size()
         );
     }
-
 }

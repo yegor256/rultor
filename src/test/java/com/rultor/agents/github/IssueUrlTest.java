@@ -11,11 +11,12 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link IssueUrl}.
- *
  * @since 2.0
  */
 final class IssueUrlTest {
+
     @Test
+
     void pullRequestUrlShouldBeValid() {
         final IssueUrl issue =
             new IssueUrl("https://api.github.com/repos/USER/REPO/pulls/5086");

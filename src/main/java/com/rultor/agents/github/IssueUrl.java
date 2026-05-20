@@ -12,7 +12,6 @@ import lombok.ToString;
 
 /**
  * GitHub URL for Issue.
- *
  * @since 2.0
  */
 @Immutable
@@ -33,7 +32,7 @@ final class IssueUrl {
 
     /**
      * Ctor.
-     * @param url Issue url.
+     * @param url Issue url
      */
     IssueUrl(final String url) {
         this.url = url;

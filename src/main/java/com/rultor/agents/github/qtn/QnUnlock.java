@@ -25,7 +25,6 @@ import org.xembly.Xembler;
 
 /**
  * Unlock branch.
- *
  * @since 1.53
  */
 @Immutable
@@ -116,5 +115,4 @@ public final class QnUnlock implements Question {
             ).xmlQuietly()
         );
     }
-
 }

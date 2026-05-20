@@ -31,7 +31,6 @@ import org.cactoos.list.ListOf;
 
 /**
  * Routine.
- *
  * @since 1.50
  * @todo #1125:30min Routine should be delegate execution to separate threads.
  *  Currently com.rultor.Routine#process() is sequentially processing all Talks
@@ -45,7 +44,7 @@ import org.cactoos.list.ListOf;
  *  removed.
  */
 @ScheduleWithFixedDelay
-@SuppressWarnings({"PMD.DoNotUseThreads",
+@SuppressWarnings({
     "PMD.ConstructorShouldDoInitialization"})
 final class Routine implements Runnable, Closeable {
 
@@ -100,7 +99,6 @@ final class Routine implements Runnable, Closeable {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void run() {
         final long begin = System.currentTimeMillis();
         try {
@@ -187,5 +185,4 @@ final class Routine implements Runnable, Closeable {
         this.agents.closer().execute(this.talks);
         return total;
     }
-
 }

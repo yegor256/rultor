@@ -16,7 +16,6 @@ import org.xembly.Directives;
 
 /**
  * Question that passes github_issue as env variable.
- *
  * @since 2.0
  */
 public final class QnGithubIssue implements Question {

@@ -20,7 +20,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnReferredTo}.
- *
  * @since 1.20.3
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -125,7 +124,6 @@ final class QnReferredToTest {
 
     /**
      * Return the Req for a comment.
-     *
      * @param comment String comment to read
      * @param login String Rultor GitHub user login
      * @return Req
@@ -143,7 +141,6 @@ final class QnReferredToTest {
 
     /**
      * Return the Xembler xml output for a comment.
-     *
      * @param comment String comment to read
      * @return String
      * @throws Exception In case of error.
