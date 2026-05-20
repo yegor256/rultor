@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.time.Instant;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import lombok.EqualsAndHashCode;
@@ -74,8 +74,8 @@ public final class DyTalk implements Talk {
     }
 
     @Override
-    public Date updated() throws IOException {
-        return new Date(
+    public Instant updated() throws IOException {
+        return Instant.ofEpochMilli(
             Long.parseLong(this.item.get(DyTalks.ATTR_UPDATED).n())
         );
     }

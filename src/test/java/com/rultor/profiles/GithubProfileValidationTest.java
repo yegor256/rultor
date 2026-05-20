@@ -41,8 +41,7 @@ final class GithubProfileValidationTest {
      */
     @Test
     void acceptsEmptyYaml() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo("");
-        GithubProfile.fromRepo(repo).read();
+        GithubProfile.fromRepo(GithubProfileValidationTest.repo("")).read();
     }
 
     /**
@@ -52,16 +51,17 @@ final class GithubProfileValidationTest {
     @Disabled
     @Test
     void rejectsYamlWithoutMergeScript() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "merge:",
-                "  - pwd"
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> GithubProfile.fromRepo(repo).read()
+            () -> GithubProfile.fromRepo(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "merge:",
+                        "  - pwd"
+                    ).asString()
+                )
+            ).read()
         );
     }
 
@@ -72,16 +72,17 @@ final class GithubProfileValidationTest {
     @Disabled
     @Test
     void rejectsYamlWithoutDeployScript() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "deploy:",
-                "  - pwd"
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> GithubProfile.fromRepo(repo).read()
+            () -> GithubProfile.fromRepo(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "deploy:",
+                        "  - pwd"
+                    ).asString()
+                )
+            ).read()
         );
     }
 
@@ -92,16 +93,17 @@ final class GithubProfileValidationTest {
     @Disabled
     @Test
     void rejectsYamlWithoutReleaseScript() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "release:",
-                "  - pwd"
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> GithubProfile.fromRepo(repo).read()
+            () -> GithubProfile.fromRepo(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "release:",
+                        "  - pwd"
+                    ).asString()
+                )
+            ).read()
         );
     }
 

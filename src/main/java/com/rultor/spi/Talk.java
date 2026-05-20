@@ -14,8 +14,8 @@ import com.jcabi.xml.XSLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 import org.cactoos.text.Joined;
@@ -84,7 +84,7 @@ public interface Talk {
      * @return When
      * @throws IOException If fails
      */
-    Date updated() throws IOException;
+    Instant updated() throws IOException;
 
     /**
      * Read its content.
@@ -175,8 +175,8 @@ public interface Talk {
         }
 
         @Override
-        public Date updated() {
-            return new Date(new File(this.path).lastModified());
+        public Instant updated() {
+            return Instant.ofEpochMilli(new File(this.path).lastModified());
         }
 
         @Override

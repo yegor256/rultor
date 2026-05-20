@@ -31,7 +31,6 @@ final class RegistersShellTest {
     void registersShell() throws Exception {
         final String host = "local";
         final int port = 221;
-        final String key = "";
         final String login = "john";
         final Agent agent = RegistersShell.make(
             new Profile.Fixed(
@@ -41,7 +40,7 @@ final class RegistersShellTest {
                         "<p><entry key='ssh'>",
                         String.format("<entry key='host'>%s</entry>", host),
                         String.format("<entry key='port'>%d</entry>", port),
-                        String.format("<entry key='key'>%s</entry>", key),
+                        String.format("<entry key='key'>%s</entry>", ""),
                         String.format("<entry key='login'>%s</entry>", login),
                         "</entry></p>"
                     ).asString()
@@ -76,9 +75,6 @@ final class RegistersShellTest {
     @Test
     void registerShellWithIP() {
         final String host = "192.168.5.49";
-        final int port = 221;
-        final String key = "";
-        final String login = "john";
         Assertions.assertDoesNotThrow(
             () -> RegistersShell.make(
                 new Profile.Fixed(
@@ -87,9 +83,9 @@ final class RegistersShellTest {
                             " ",
                             "<p><entry key='ssh'>",
                             String.format("<entry key='host'>%s</entry>", host),
-                            String.format("<entry key='port'>%d</entry>", port),
-                            String.format("<entry key='key'>%s</entry>", key),
-                            String.format("<entry key='login'>%s</entry>", login),
+                            String.format("<entry key='port'>%d</entry>", 221),
+                            String.format("<entry key='key'>%s</entry>", ""),
+                            String.format("<entry key='login'>%s</entry>", "john"),
                             "</entry></p>"
                         ).asString()
                     )
@@ -107,12 +103,10 @@ final class RegistersShellTest {
     void handlesBrokenProfileGracefully() throws Exception {
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doThrow(new Profile.ConfigException("")).when(profile).read();
-        final Agent agent = RegistersShell.make(
-            profile, "localhost", 1, "test-user", "test-key"
-        );
-        final Talk talk = new Talk.InFile();
         Assertions.assertDoesNotThrow(
-            () -> agent.execute(talk)
+            () -> RegistersShell.make(
+                profile, "localhost", 1, "test-user", "test-key"
+            ).execute(new Talk.InFile())
         );
     }
 }

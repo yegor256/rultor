@@ -7,7 +7,6 @@ package com.rultor.profiles;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.RtGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.spi.Profile;
 import com.yegor256.WeAreOnline;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Disabled;
@@ -30,14 +29,13 @@ final class GithubProfileITCase {
     @Test
     @Disabled
     void fetchesYamlConfig() throws Exception {
-        final Profile profile = GithubProfile.fromRepo(
-            new RtGitHub().repos().get(
-                new Coordinates.Simple("yegor256/rultor")
-            )
-        );
         MatcherAssert.assertThat(
             "script for merge should be read",
-            profile.read(),
+            GithubProfile.fromRepo(
+                new RtGitHub().repos().get(
+                    new Coordinates.Simple("yegor256/rultor")
+                )
+            ).read(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='merge']/entry[@key='script']"
             )

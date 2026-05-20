@@ -9,6 +9,8 @@ import com.rultor.Toggles;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.cactoos.iterable.HeadOf;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.takes.Request;
@@ -66,7 +68,14 @@ final class TkHome implements Take {
         final PrettyTime pretty = new PrettyTime();
         for (final Talk talk : new HeadOf<>(5, this.talks.recent())) {
             dirs.add("talk").set(talk.name())
-                .attr("timeago", pretty.format(talk.updated()));
+                .attr(
+                    "timeago",
+                    pretty.format(
+                        LocalDateTime.ofInstant(
+                            talk.updated(), ZoneId.systemDefault()
+                        )
+                    )
+                );
             final XML xml = talk.read();
             if (!xml.nodes("/talk/wire/href").isEmpty()) {
                 dirs.attr(

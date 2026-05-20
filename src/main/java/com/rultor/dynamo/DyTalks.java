@@ -14,7 +14,7 @@ import com.jcabi.dynamo.Region;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.cactoos.iterable.Filtered;
@@ -248,7 +248,7 @@ public final class DyTalks implements Talks {
     }
 
     @Override
-    public Iterable<Talk> siblings(final String repo, final Date since) {
+    public Iterable<Talk> siblings(final String repo, final Instant since) {
         return new Mapped<>(
             DyTalk::new,
             this.region.table(DyTalks.TBL)
@@ -265,7 +265,7 @@ public final class DyTalks implements Talks {
                     Condition.builder()
                         .comparisonOperator(ComparisonOperator.LT).attributeValueList(
                             AttributeValue.builder()
-                                .n(Long.toString(since.getTime()))
+                                .n(Long.toString(since.toEpochMilli()))
                                 .build()
                         )
                         .build()

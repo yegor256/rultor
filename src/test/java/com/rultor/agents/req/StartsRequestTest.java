@@ -103,7 +103,7 @@ final class StartsRequestTest {
                 .add("author").set("yegor256").up()
                 .add("type").set("deploy").up()
                 .add("args")
-                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head").set(this.repo(temp).toString()).up()
                 .add("arg").attr("name", "head_branch")
                 .set(StartsRequestTest.HEAD_BRANCH)
                 .up()
@@ -159,7 +159,6 @@ final class StartsRequestTest {
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
-        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -180,7 +179,7 @@ final class StartsRequestTest {
                 .add("author").set("yegor256").up()
                 .add("type").set("release").up()
                 .add("args")
-                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head").set(this.repo(temp).toString()).up()
                 .add("arg").attr("name", "head_branch")
                 .set(StartsRequestTest.HEAD_BRANCH).up()
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
@@ -296,7 +295,6 @@ final class StartsRequestTest {
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
-        final File repo = this.repo(temp);
         final File dir = temp.toFile();
         FileUtils.write(
             new File(dir, "Dockerfile"),
@@ -323,7 +321,7 @@ final class StartsRequestTest {
                 .add("author").set("yegor256").up()
                 .add("type").set("release").up()
                 .add("args")
-                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head").set(this.repo(temp).toString()).up()
                 .add("arg").attr("name", "head_branch")
                 .set(StartsRequestTest.HEAD_BRANCH).up()
                 .add("arg").attr("name", "tag").set("1.0-beta").up()
@@ -393,7 +391,6 @@ final class StartsRequestTest {
         @TempDir final Path temp,
         @TempDir final Path jobtemp
     ) throws Exception {
-        final File repo = this.repo(temp);
         final Agent agent = new StartsRequest(
             new Profile.Fixed(
                 new XMLDocument(
@@ -414,7 +411,7 @@ final class StartsRequestTest {
                 .add("author").set("yegor256").up()
                 .add("type").set("deploy").up()
                 .add("args")
-                .add("arg").attr("name", "head").set(repo.toString()).up()
+                .add("arg").attr("name", "head").set(this.repo(temp).toString()).up()
                 .add("arg").attr("name", "head_branch")
                 .set(StartsRequestTest.HEAD_BRANCH)
                 .up()
@@ -472,28 +469,28 @@ final class StartsRequestTest {
         final Talk talk,
         final Path wdir
     ) throws IOException {
-        final String script = new UncheckedText(
-            new Joined(
-                System.lineSeparator(),
-                "set -x",
-                "set -e",
-                "set -o pipefail",
-                "function docker {",
-                "  for (( i=1; i<=$#; i++ )); do",
-                "    echo \"DOCKER-$i: ${!i}\"",
-                "  done",
-                "}",
-                "function sudo {",
-                "  for (( i=1; i<=$#; i++ )); do ",
-                "    echo \"SUDO-$i: ${!i}\"",
-                "  done",
-                "} ",
-                talk.read().xpath("//script/text()").get(0)
-            )
-        ).asString();
         return new VerboseProcess(
             new ProcessBuilder().command(
-                "/bin/bash", "-c", script
+                "/bin/bash", "-c",
+                new UncheckedText(
+                    new Joined(
+                        System.lineSeparator(),
+                        "set -x",
+                        "set -e",
+                        "set -o pipefail",
+                        "function docker {",
+                        "  for (( i=1; i<=$#; i++ )); do",
+                        "    echo \"DOCKER-$i: ${!i}\"",
+                        "  done",
+                        "}",
+                        "function sudo {",
+                        "  for (( i=1; i<=$#; i++ )); do ",
+                        "    echo \"SUDO-$i: ${!i}\"",
+                        "  done",
+                        "} ",
+                        talk.read().xpath("//script/text()").get(0)
+                    )
+                ).asString()
             ).directory(wdir.toFile()).redirectErrorStream(true),
             Level.WARNING, Level.WARNING
         );
@@ -506,35 +503,34 @@ final class StartsRequestTest {
      */
     private File repo(final Path temp) {
         final File repo = temp.toFile();
-        final String cmd = new UncheckedText(
-            new Joined(
-                ";",
-                "set -ex -o pipefail",
-                "git init .",
-                "git config user.email test@rultor.com",
-                "git config user.name test",
-                String.format(
-                    "git checkout -b %s",
-                    StartsRequestTest.HEAD_BRANCH
-                ),
-                "echo 'hello, world!' > hello.txt",
-                "git add .",
-                "git -c commit.gpgsign=false commit --no-verify -am 'first file'",
-                "git checkout -b frk",
-                "echo 'good bye!' > hello.txt",
-                "git -c commit.gpgsign=false commit --no-verify -am 'modified file'",
-                String.format(
-                    "git checkout %s",
-                    StartsRequestTest.HEAD_BRANCH
-                ),
-                "git config receive.denyCurrentBranch ignore"
-            )
-        ).asString();
         new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash",
                 "-c",
-                cmd
+                new UncheckedText(
+                    new Joined(
+                        ";",
+                        "set -ex -o pipefail",
+                        "git init .",
+                        "git config user.email test@rultor.com",
+                        "git config user.name test",
+                        String.format(
+                            "git checkout -b %s",
+                            StartsRequestTest.HEAD_BRANCH
+                        ),
+                        "echo 'hello, world!' > hello.txt",
+                        "git add .",
+                        "git -c commit.gpgsign=false commit --no-verify -am 'first file'",
+                        "git checkout -b frk",
+                        "echo 'good bye!' > hello.txt",
+                        "git -c commit.gpgsign=false commit --no-verify -am 'modified file'",
+                        String.format(
+                            "git checkout %s",
+                            StartsRequestTest.HEAD_BRANCH
+                        ),
+                        "git config receive.denyCurrentBranch ignore"
+                    )
+                ).asString()
             ).directory(repo)
         ).stdout();
         return repo;

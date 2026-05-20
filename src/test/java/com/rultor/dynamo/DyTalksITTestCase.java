@@ -13,7 +13,7 @@ import com.rultor.Env;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.CustomMatcher;
@@ -132,18 +132,18 @@ final class DyTalksITTestCase {
         );
         final String repo = "repo1";
         talks.create(repo, "yegor256/rultor#9");
-        final Date date = new Date();
+        final Instant moment = Instant.now();
         TimeUnit.SECONDS.sleep(2L);
         talks.create(repo, "yegor256/rultor#10");
         TimeUnit.SECONDS.sleep(2L);
         MatcherAssert.assertThat(
             "All talks should be returned",
-            talks.siblings(repo, new Date()),
+            talks.siblings(repo, Instant.now()),
             Matchers.iterableWithSize(2)
         );
         MatcherAssert.assertThat(
             "Only one talk should be returned",
-            talks.siblings(repo, date),
+            talks.siblings(repo, moment),
             Matchers.iterableWithSize(1)
         );
     }
@@ -170,9 +170,8 @@ final class DyTalksITTestCase {
                     new CustomMatcher<Talk>("private talk") {
                         @Override
                         public boolean matches(final Object item) {
-                            final Talk tlk = Talk.class.cast(item);
                             try {
-                                return name.equals(tlk.name());
+                                return name.equals(Talk.class.cast(item).name());
                             } catch (final IOException ex) {
                                 throw new IllegalStateException(ex);
                             }

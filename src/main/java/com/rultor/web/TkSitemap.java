@@ -80,7 +80,7 @@ final class TkSitemap implements Take {
                 )
             )
             .append("</loc><lastmod>")
-            .append(new Time(talk.updated().getTime()).iso())
+            .append(new Time(talk.updated()).iso())
             .append("</lastmod></url>")
             .toString();
     }
