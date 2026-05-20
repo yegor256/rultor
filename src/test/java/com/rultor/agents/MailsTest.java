@@ -44,10 +44,9 @@ final class MailsTest {
         final ArgumentCaptor<Envelope> captor =
             ArgumentCaptor.forClass(Envelope.class);
         Mockito.verify(postman).send(captor.capture());
-        final Envelope envelope = captor.getValue();
         MatcherAssert.assertThat(
             "Mail text should contain some data",
-            envelope.unwrap().getContent().toString(),
+            captor.getValue().unwrap().getContent().toString(),
             Matchers.allOf(
                 Matchers.containsString("See #456, release log:"),
                 Matchers.containsString("Released by Rultor"),
@@ -75,10 +74,9 @@ final class MailsTest {
         final ArgumentCaptor<Envelope> captor =
             ArgumentCaptor.forClass(Envelope.class);
         Mockito.verify(postman).send(captor.capture());
-        final Envelope envelope = captor.getValue();
         MatcherAssert.assertThat(
             "Mail subject should be about release",
-            envelope.unwrap().getSubject(),
+            captor.getValue().unwrap().getSubject(),
             Matchers.equalTo("user/repo v2.0 released!")
         );
     }

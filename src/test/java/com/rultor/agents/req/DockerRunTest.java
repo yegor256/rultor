@@ -30,10 +30,11 @@ final class DockerRunTest {
      */
     @Test
     void fetchesEnvVarsMultiple() throws Exception {
-        final Profile profile = DockerRunTest.envsProfile();
         MatcherAssert.assertThat(
             "Multiple env items should be saved",
-            DockerRun.byXpath(profile, "/p/entry[@key='a']").envs(
+            DockerRun.byXpath(
+                DockerRunTest.envsProfile(), "/p/entry[@key='a']"
+            ).envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("A=5", "B=f e")
@@ -46,10 +47,11 @@ final class DockerRunTest {
      */
     @Test
     void fetchesEnvVarsSingle() throws Exception {
-        final Profile profile = DockerRunTest.envsProfile();
         MatcherAssert.assertThat(
             "Single even item should be saved",
-            DockerRun.byXpath(profile, "/p/entry[@key='b']").envs(
+            DockerRun.byXpath(
+                DockerRunTest.envsProfile(), "/p/entry[@key='b']"
+            ).envs(
                 new ArrayMap<>()
             ),
             Matchers.hasItems("HELLO='1'")
@@ -62,10 +64,11 @@ final class DockerRunTest {
      */
     @Test
     void fetchesEnvVarsWithExtras() throws Exception {
-        final Profile profile = DockerRunTest.envsProfile();
         MatcherAssert.assertThat(
             "Additional value should be saved from envs parameter",
-            DockerRun.byXpath(profile, "/p/entry[@key='c']").envs(
+            DockerRun.byXpath(
+                DockerRunTest.envsProfile(), "/p/entry[@key='c']"
+            ).envs(
                 new ArrayMap<String, String>().with("X", "a\"'b")
             ),
             Matchers.hasItems("MVN=works", "X=a\"'b")

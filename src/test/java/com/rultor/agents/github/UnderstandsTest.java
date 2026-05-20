@@ -6,7 +6,6 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Check;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Comments;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
@@ -142,10 +141,9 @@ final class UnderstandsTest {
                 )
             )
         ).execute(UnderstandsTest.talk(pull));
-        final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(
             "Reply comment should be created",
-            comments.iterate(Date.from(Instant.EPOCH)),
+            repo.issues().get(1).comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
     }
@@ -175,10 +173,9 @@ final class UnderstandsTest {
                 )
             )
         ).execute(UnderstandsTest.talk(pull));
-        final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(
             "Message about not possible merge should be created",
-            new Comment.Smart(comments.get(1)).body(),
+            new Comment.Smart(repo.issues().get(1).comments().get(1)).body(),
             Matchers.containsString("Can't merge")
         );
     }

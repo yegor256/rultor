@@ -99,8 +99,7 @@ final class DyTalksITTestCase {
             DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
         final String first = "krzyk1/rultor#562";
-        final String repo = "some/other";
-        talks.create(repo, first);
+        talks.create("some/other", first);
         final Talk talk = talks.get(first);
         talk.active(false);
         MatcherAssert.assertThat(
