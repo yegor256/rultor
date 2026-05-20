@@ -75,7 +75,7 @@ final class TkHome implements Take {
                             talk.updated(), ZoneId.systemDefault()
                         )
                     )
-                );
+            );
             final XML xml = talk.read();
             if (!xml.nodes("/talk/wire/href").isEmpty()) {
                 dirs.attr(

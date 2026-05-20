@@ -32,14 +32,11 @@ final class QnWithAuthorTest {
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("title", "body");
         issue.comments().post("comment");
-        final Question question = new QnWithAuthor(
-            new QnStop()
-        );
         MatcherAssert.assertThat(
             "stop request should be created",
             new Xembler(
                 new Directives().add("request").append(
-                    question.understand(
+                    new QnWithAuthor(new QnStop()).understand(
                         new Comment.Smart(issue.comments().get(1)),
                         new URI("#")
                     ).dirs()
@@ -63,12 +60,11 @@ final class QnWithAuthorTest {
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("the title", "the body");
         issue.comments().post("the comment");
-        final Question question = new QnWithAuthor(new QnHello());
         MatcherAssert.assertThat(
             "Author should not be added to request",
             new Xembler(
                 new Directives().add("r").append(
-                    question.understand(
+                    new QnWithAuthor(new QnHello()).understand(
                         new Comment.Smart(issue.comments().get(1)),
                         new URI("#url")
                     ).dirs()

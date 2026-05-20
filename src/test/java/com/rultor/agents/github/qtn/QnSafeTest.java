@@ -55,10 +55,9 @@ final class QnSafeTest {
                     new IOException("Artificial cause")
                 );
             }
-        )
-            .understand(
-                new Comment.Smart(issue.comments().post("Hello, world!")),
-                new URI("http://www.example.com")
+        ).understand(
+            new Comment.Smart(issue.comments().post("Hello, world!")),
+            new URI("http://www.example.com")
         );
         MatcherAssert.assertThat(
             "Two comments should be posted",

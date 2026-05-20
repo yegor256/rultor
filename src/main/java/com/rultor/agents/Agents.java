@@ -219,36 +219,36 @@ public final class Agents {
                                                     new QnFollow(
                                                         new QnFirstOf(
                                                             Arrays.asList(
-                                                            new QnIfContains(
-                                                                "config", new QnConfig(profile)
-                                                            ),
-                                                            new QnIfContains(
-                                                                "status", new QnStatus(talk)
-                                                            ),
-                                                            new QnIfContains(
-                                                                "version", new QnVersion()
-                                                            ),
-                                                            new QnIfContains(
-                                                                "hello", new QnHello()
-                                                            ),
-                                                            new QnIfContains(
-                                                                "ping", new QnHello()
-                                                            ),
-                                                            new QnIfContains(
-                                                                "stop",
-                                                                new QnAskedBy(
-                                                                    profile,
-                                                                    Agents.commanders("stop"),
-                                                                    new QnStop()
-                                                                )
-                                                            ),
-                                                            new QnIfCollaborator(
-                                                                new QnAlone(
-                                                                    talk, this.sttc.locks(),
-                                                                    Agents.commands(profile)
-                                                                )
-                                                            ),
-                                                            new QnIamLost()
+                                                                new QnIfContains(
+                                                                    "config", new QnConfig(profile)
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "status", new QnStatus(talk)
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "version", new QnVersion()
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "hello", new QnHello()
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "ping", new QnHello()
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "stop",
+                                                                    new QnAskedBy(
+                                                                        profile,
+                                                                        Agents.commanders("stop"),
+                                                                        new QnStop()
+                                                                    )
+                                                                ),
+                                                                new QnIfCollaborator(
+                                                                    new QnAlone(
+                                                                        talk, this.sttc.locks(),
+                                                                        Agents.commands(profile)
+                                                                    )
+                                                                ),
+                                                                new QnIamLost()
                                                             )
                                                         )
                                                     )
