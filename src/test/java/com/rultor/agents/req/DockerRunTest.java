@@ -100,7 +100,6 @@ final class DockerRunTest {
         );
     }
 
-
     /**
      * DockerRun can create script with comment inside.
      * @throws Exception In case of error.
@@ -346,5 +345,4 @@ final class DockerRunTest {
             )
         );
     }
-
 }

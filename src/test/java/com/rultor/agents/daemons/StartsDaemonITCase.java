@@ -106,12 +106,13 @@ final class StartsDaemonITCase {
             StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            final Talk talk = StartsDaemonITCase.talk(start);
-            final String dir = talk.read().xpath("/talk/daemon/dir/text()")
-                .get(0);
             MatcherAssert.assertThat(
                 "status file should not be created",
-                new File(dir, "status").exists(),
+                new File(
+                    StartsDaemonITCase.talk(start).read()
+                        .xpath("/talk/daemon/dir/text()").get(0),
+                    "status"
+                ).exists(),
                 Matchers.is(false)
             );
         }

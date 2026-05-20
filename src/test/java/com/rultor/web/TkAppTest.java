@@ -74,27 +74,6 @@ final class TkAppTest {
         );
     }
 
-    /**
-     * Render the home page body.
-     * @return Rendered body
-     * @throws Exception If some problem inside
-     */
-    private static String homePage() throws Exception {
-        return new TextOf(
-            new RsPrint(
-                new TkApp(
-                    new Talks.InDir(), Pulse.EMPTY,
-                    new Toggles.InFile()
-                ).act(
-                    new RqWithHeader(
-                        new RqFake("GET", "/"),
-                        "Accept",
-                        "text/xml"
-                    )
-                )
-            ).body()
-        ).asString();
-    }
 
     /**
      * App can render front page.
@@ -188,5 +167,27 @@ final class TkAppTest {
             ).asString(),
             Matchers.startsWith("<!DOCTYPE html")
         );
+    }
+
+    /**
+     * Render the home page body.
+     * @return Rendered body
+     * @throws Exception If some problem inside
+     */
+    private static String homePage() throws Exception {
+        return new TextOf(
+            new RsPrint(
+                new TkApp(
+                    new Talks.InDir(), Pulse.EMPTY,
+                    new Toggles.InFile()
+                ).act(
+                    new RqWithHeader(
+                        new RqFake("GET", "/"),
+                        "Accept",
+                        "text/xml"
+                    )
+                )
+            ).body()
+        ).asString();
     }
 }
