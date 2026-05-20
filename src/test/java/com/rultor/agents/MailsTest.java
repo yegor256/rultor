@@ -66,7 +66,6 @@ final class MailsTest {
 
     /**
      * Mails can send a mail to recipients.
-     * @throws Exception In case of error.
      * @todo #748 Implement method sendsToRecipients. It must check that
      *  mail is sent to all recipients. Recipients are defined in Profile.
      */

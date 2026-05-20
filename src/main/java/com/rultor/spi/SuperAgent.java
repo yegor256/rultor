@@ -69,7 +69,6 @@ public interface SuperAgent {
         /**
          * Agent to disable.
          */
-
         private final transient SuperAgent agent;
 
         /**

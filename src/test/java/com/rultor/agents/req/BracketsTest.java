@@ -17,7 +17,6 @@ final class BracketsTest {
 
     /**
      * Brackets can fetch environment vars.
-     * @throws Exception In case of error.
      */
     @Test
     void escapesInput() {

@@ -58,18 +58,18 @@ public final class Time {
 
     /**
      * Ctor.
-     * @param msec Milliseconds
-     */
-    public Time(final long msec) {
-        this.millis = msec;
-    }
-
-    /**
-     * Ctor.
      * @param date Date
      */
     public Time(final String date) {
         this(Time.parse(date));
+    }
+
+    /**
+     * Ctor.
+     * @param msec Milliseconds
+     */
+    public Time(final long msec) {
+        this.millis = msec;
     }
 
     /**

@@ -199,7 +199,8 @@ public final class Agents {
             Env.read("Rultor-EC2Secret")
         );
         return new VerboseAgent(
-            new Agent.Iterative(Arrays.asList(
+            new Agent.Iterative(
+                Arrays.asList(
                 new Agent.Quiet(new SanitizesDaemon()),
                 new WipesDaemon(),
                 new DropsTalk(),
@@ -216,7 +217,8 @@ public final class Agents {
                                         new QnParametrized(
                                             new QnWithAuthor(
                                                 new QnFollow(
-                                                    new QnFirstOf(Arrays.asList(
+                                                    new QnFirstOf(
+                                                        Arrays.asList(
                                                         new QnIfContains(
                                                             "config", new QnConfig(profile)
                                                         ),
@@ -247,7 +249,8 @@ public final class Agents {
                                                             )
                                                         ),
                                                         new QnIamLost()
-                                                    ))
+                                                        )
+                                                    )
                                                 )
                                             )
                                         )
@@ -341,7 +344,8 @@ public final class Agents {
                 ),
                 new Publishes(profile, this.github),
                 new SafeAgent(new Stars(this.github))
-            ))
+                )
+            )
         );
     }
 
@@ -354,7 +358,8 @@ public final class Agents {
         return new QnByArchitect(
             profile,
             "/p/entry[@key='architect']/item/text()",
-            new QnFirstOf(Arrays.asList(
+            new QnFirstOf(
+                Arrays.asList(
                 new QnIfContains(
                     "unlock",
                     new QnUnlock()
@@ -387,7 +392,8 @@ public final class Agents {
                         new QnRelease()
                     )
                 )
-            ))
+                )
+            )
         );
     }
 

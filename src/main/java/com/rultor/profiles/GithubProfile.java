@@ -84,15 +84,6 @@ final class GithubProfile implements Profile {
         this.branch = brnch;
     }
 
-    /**
-     * Make from a Repo (uses default branch).
-     * @param rpo Repo
-     * @return Profile
-     */
-    static GithubProfile fromRepo(final Repo rpo) {
-        return new GithubProfile(rpo, new DefaultBranch(rpo).toString());
-    }
-
     @Override
     public String name() {
         return this.repo.coordinates().toString();
@@ -321,5 +312,14 @@ final class GithubProfile implements Profile {
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private List<String> validate(final String yml) {
         return Collections.emptyList();
+    }
+
+    /**
+     * Make from a Repo (uses default branch).
+     * @param rpo Repo
+     * @return Profile
+     */
+    static GithubProfile fromRepo(final Repo rpo) {
+        return new GithubProfile(rpo, new DefaultBranch(rpo).toString());
     }
 }

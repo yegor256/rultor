@@ -73,7 +73,6 @@ public interface Agent {
         /**
          * Agent to disable.
          */
-
         private final transient Agent agent;
 
         /**

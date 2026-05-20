@@ -243,7 +243,7 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    void testAssetNotFound() throws Exception {
+    void throwsWhenAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
                 System.lineSeparator(),

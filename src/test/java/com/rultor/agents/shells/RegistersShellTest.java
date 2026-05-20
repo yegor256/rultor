@@ -70,7 +70,6 @@ final class RegistersShellTest {
 
     /**
      * RegistersShell can register shell by IP.
-     * @throws Exception In case of error.
      */
     @Test
     void registerShellWithIP() {

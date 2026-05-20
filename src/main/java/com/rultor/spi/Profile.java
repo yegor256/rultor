@@ -71,14 +71,13 @@ public interface Profile {
         /**
          * Serialization marker.
          */
-
         private static final long serialVersionUID = -3860028281726793988L;
 
         /**
          * Ctor.
          * @param cause Cause of it
          */
-        public ConfigException(final String cause) {
+        public ConfigException(final Exception cause) {
             super(cause);
         }
 
@@ -86,7 +85,7 @@ public interface Profile {
          * Ctor.
          * @param cause Cause of it
          */
-        public ConfigException(final Exception cause) {
+        public ConfigException(final String cause) {
             super(cause);
         }
     }
