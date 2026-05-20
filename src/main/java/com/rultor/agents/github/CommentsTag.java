@@ -20,7 +20,7 @@ import com.rultor.agents.github.qtn.ReleaseTag;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -113,7 +113,9 @@ public final class CommentsTag extends AbstractAgent {
                     // @checkstyle LineLength (1 line)
                     "See #%d, release log:%n%n%s%n%nReleased by Rultor %s, see [build log](%s)",
                     issue.number(),
-                    new CommitsLog(repo).build(CommentsTag.previous(repo), rel.publishedAt()),
+                    new CommitsLog(repo).build(
+                        CommentsTag.previous(repo), rel.publishedAt().toInstant()
+                    ),
                     Env.read("Rultor-Version"), home
                 )
             );
@@ -193,16 +195,17 @@ public final class CommentsTag extends AbstractAgent {
      * @return Previous release time or start of epoch
      * @throws IOException In case of problem communicating with repo
      */
-    private static Date previous(final Repo repo) throws IOException {
-        Date prev = new Date(0L);
+    private static Instant previous(final Repo repo) throws IOException {
+        Instant prev = Instant.EPOCH;
         final Iterable<Release.Smart> releases =
             new Smarts<>(repo.releases().iterate());
         for (final Release.Smart rel : releases) {
             if (rel.json().isNull("published_at")) {
                 continue;
             }
-            if (prev.before(rel.publishedAt())) {
-                prev = rel.publishedAt();
+            final Instant when = rel.publishedAt().toInstant();
+            if (prev.isBefore(when)) {
+                prev = when;
             }
         }
         return prev;

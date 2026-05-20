@@ -9,9 +9,9 @@ import com.jcabi.github.RepoCommit;
 import com.jcabi.github.RepoCommits;
 import jakarta.json.Json;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
@@ -46,7 +46,7 @@ final class CommitsLogTest {
         Mockito.doReturn(commits).when(repo).commits();
         MatcherAssert.assertThat(
             "Message should be shorter",
-            new CommitsLog(repo).build(new Date(), new Date()),
+            new CommitsLog(repo).build(Instant.now(), Instant.now()),
             Matchers.equalTo(
                 " * a1b2c3 by @jeff: hi\u20ac this is a very long commit..."
             )
@@ -70,7 +70,7 @@ final class CommitsLogTest {
         Mockito.doReturn(commits).when(repo).commits();
         MatcherAssert.assertThat(
             "Only 20 commits should be mentioned directly",
-            new CommitsLog(repo).build(new Date(), new Date()),
+            new CommitsLog(repo).build(Instant.now(), Instant.now()),
             Matchers.containsString("* and 80 more..")
         );
     }

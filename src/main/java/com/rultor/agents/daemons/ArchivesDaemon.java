@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Date;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -102,7 +101,9 @@ public final class ArchivesDaemon extends AbstractAgent {
      * @throws IOException If fails
      */
     private URI upload(final File file, final String hash) throws IOException {
-        final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);
+        final String key = String.format(
+            "%tY/%1$tm/%s.txt", System.currentTimeMillis(), hash
+        );
         this.bucket.ocket(key).write(
             Files.newInputStream(file.toPath()),
             HeadObjectResponse.builder()

@@ -16,6 +16,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -74,7 +75,7 @@ public final class Understands extends AbstractAgent {
             new Smarts<Comment.Smart>(
                 new Joined<Comment>(
                     Collections.singleton(new FirstComment(issue)),
-                    new Bulk<>(issue.comments().iterate(new Date(0L)))
+                    new Bulk<>(issue.comments().iterate(Date.from(Instant.EPOCH)))
                 )
             ).iterator()
         );

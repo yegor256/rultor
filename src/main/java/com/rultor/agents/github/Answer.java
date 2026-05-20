@@ -13,6 +13,7 @@ import com.jcabi.github.safe.SfComments;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collection;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -73,7 +74,7 @@ public final class Answer {
         final List<Smart> comments = new ListOf<>(
             new Reversed<>(
                 new Smarts<>(
-                    issue.comments().iterate(new Date(0L))
+                    issue.comments().iterate(Date.from(Instant.EPOCH))
                 )
             )
         );

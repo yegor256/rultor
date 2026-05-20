@@ -11,14 +11,13 @@ import com.jcabi.github.RepoCommit.Smart;
 import com.jcabi.github.Smarts;
 import jakarta.json.JsonObject;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapOf;
@@ -57,11 +56,10 @@ final class CommitsLog {
      * @return Release body text
      * @throws IOException In case of problem communicating with git
      */
-    String build(final Date prev, final Date current) throws IOException {
-        final DateFormat format = new SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH
-        );
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+    String build(final Instant prev, final Instant current) throws IOException {
+        final DateTimeFormatter format = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH)
+            .withZone(ZoneOffset.UTC);
         final Collection<String> lines = new LinkedList<>();
         final List<Smart> commits = new ListOf<>(
             new Smarts<>(
