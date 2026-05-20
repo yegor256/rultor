@@ -64,6 +64,31 @@ final class QnSafeTest {
             issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(2)
         );
+    }
+
+    /**
+     * QnSafe posts a failure comment with part of the log when an exception
+     * is thrown.
+     * @throws URISyntaxException if URI is invalid
+     * @throws IOException if I/O fails.
+     */
+    @Test
+    void postsFailedCommentWhenThrowable()
+        throws URISyntaxException, IOException {
+        final Issue issue = new MkGitHub().randomRepo()
+            .issues()
+            .create("", "");
+        new QnSafe(
+            (comment, home) -> {
+                throw new IllegalArgumentException(
+                    "Illegal argument exception",
+                    new IOException("Artificial cause")
+                );
+            }
+        ).understand(
+            new Comment.Smart(issue.comments().post("Hello, world!")),
+            new URI("http://www.example.com")
+        );
         MatcherAssert.assertThat(
             "Failed comment should be posted with part of the log",
             new Comment.Smart(issue.comments().get(2)).body(),

@@ -9,7 +9,6 @@ import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.takes.facets.fork.RqRegex;
-import org.takes.facets.fork.TkRegex;
 import org.takes.rs.RsPrint;
 
 /**
@@ -24,13 +23,12 @@ final class TkButtonTest {
      */
     @Test
     void rendersSvg() throws Exception {
-        final TkRegex take = new TkButton();
         MatcherAssert.assertThat(
             "Button in svg format should be generated",
             XhtmlMatchers.xhtml(
                 new TextOf(
                     new RsPrint(
-                        take.act(new RqRegex.Fake("(.*)", "hey"))
+                        new TkButton().act(new RqRegex.Fake("(.*)", "hey"))
                     ).body()
                 ).asString()
             ),

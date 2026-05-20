@@ -57,8 +57,7 @@ final class DecryptTest {
         );
         try (
             VerboseProcess proc = new VerboseProcess(
-                new ProcessBuilder()
-                    .command(
+                new ProcessBuilder().command(
                         "/bin/bash",
                         "-c",
                         new Joined(

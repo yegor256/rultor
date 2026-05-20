@@ -30,12 +30,20 @@ final class QnReferredToTest {
      * @throws Exception In case of error.
      */
     @Test
-    void buildsRequest() throws Exception {
+    void buildsRequestWithSpaceDelimiter() throws Exception {
         MatcherAssert.assertThat(
             "deploy request should be created",
             this.xemblerXml("  @xx deploy"),
             XhtmlMatchers.hasXPath("/request/type[text()='deploy']")
         );
+    }
+
+    /**
+     * QnReferredTo can build a request with mention followed by a comma.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void buildsRequestWithCommaDelimiter() throws Exception {
         MatcherAssert.assertThat(
             "deploy request should be created",
             this.xemblerXml("  @xx, deploy"),
@@ -44,11 +52,11 @@ final class QnReferredToTest {
     }
 
     /**
-     * QnReferredTo can recognize mentions delimited by a comma.
+     * QnReferredTo recognizes deploy command when comma is after mention.
      * @throws Exception In case of error.
      */
     @Test
-    void recognizesCommaAsDelimiter() throws Exception {
+    void recognizesCommaAfterMention() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
             "deploy command should be recognized",
@@ -57,6 +65,15 @@ final class QnReferredToTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnReferredTo recognizes deploy command when comma is before mention.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void recognizesCommaBeforeMention() throws Exception {
+        final String login = "xx";
         MatcherAssert.assertThat(
             "deploy command should be recognized",
             this.reqFromComment(
@@ -67,12 +84,11 @@ final class QnReferredToTest {
     }
 
     /**
-     * QnReferredTo can recognize mention as invalid when login is
-     * bounded by non-boundary char.
+     * QnReferredTo ignores comment when text follows the login mention.
      * @throws Exception In case of error.
      */
     @Test
-    void recognizesInvalidBoundary() throws Exception {
+    void ignoresMentionWithTrailingChar() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
             "Comment should be ignored without mention",
@@ -81,6 +97,15 @@ final class QnReferredToTest {
             ),
             Matchers.is(Req.EMPTY)
         );
+    }
+
+    /**
+     * QnReferredTo ignores comment when text precedes the login mention.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void ignoresMentionWithLeadingChar() throws Exception {
+        final String login = "xx";
         MatcherAssert.assertThat(
             "Comment should be ignored without mention",
             this.reqFromComment(
@@ -91,11 +116,11 @@ final class QnReferredToTest {
     }
 
     /**
-     * QnReferredTo can answer when mention.
+     * QnReferredTo recognizes the deploy command when mentioned.
      * @throws Exception In case of error.
      */
     @Test
-    void answerWhenMentioned() throws Exception {
+    void recognizesDeployWhenMentioned() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final String login = "xx";
@@ -106,6 +131,21 @@ final class QnReferredToTest {
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnReferredTo posts an instruction comment when mentioned.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsAnswerWhenMentioned() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final String login = "xx";
+        issue.comments().post(String.format("hello @%s deploy", login));
+        new QnReferredTo(login, new QnDeploy()).understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
         );
         MatcherAssert.assertThat(
             "Answer comment should be posted with instruction",

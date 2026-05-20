@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqWithHeader;
@@ -153,16 +152,15 @@ final class TkAppTest {
     @Test
     @Disabled
     void rendersGzipHomePage() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         MatcherAssert.assertThat(
             "Page can be gzip compressed",
             new TextOf(
                 new GZIPInputStream(
                     new RsPrint(
-                        take.act(
+                        new TkApp(
+                            new Talks.InDir(), Pulse.EMPTY,
+                            new Toggles.InFile()
+                        ).act(
                             new RqWithHeaders(
                                 new RqFake("GET", "/"),
                                 "Accept: plain/html",

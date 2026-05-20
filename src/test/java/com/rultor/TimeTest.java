@@ -37,11 +37,13 @@ final class TimeTest {
      * @param date Date to check
      */
     @ParameterizedTest
-    @ValueSource(strings = {
-        "2005-10-0815:48:28",
-        "2005-10-08",
-        "15:48:28"
-    })
+    @ValueSource(
+        strings = {
+            "2005-10-0815:48:28",
+            "2005-10-08",
+            "15:48:28"
+        }
+    )
     void exceptionParseInvalidTime(final String date) {
         Assertions.assertThrows(
             IllegalStateException.class,
