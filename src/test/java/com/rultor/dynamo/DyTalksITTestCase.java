@@ -108,6 +108,23 @@ final class DyTalksITTestCase {
             talks.recent(),
             Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(first))
         );
+    }
+
+    /**
+     * DyTalks does not surface a second talk while caching the first.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @Disabled
+    void cachesRecentTalksAndHidesSecond() throws Exception {
+        final Talks talks = new DyTalks(
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
+        );
+        final String first = "krzyk1/rultor#562";
+        final String repo = "some/other";
+        talks.create(repo, first);
+        final Talk talk = talks.get(first);
+        talk.active(false);
         final String second = "krzyk2/rultor#562#2";
         talks.create(repo, second);
         final Talk talking = talks.get(second);
@@ -132,7 +149,6 @@ final class DyTalksITTestCase {
         );
         final String repo = "repo1";
         talks.create(repo, "yegor256/rultor#9");
-        final Instant moment = Instant.now();
         TimeUnit.SECONDS.sleep(2L);
         talks.create(repo, "yegor256/rultor#10");
         TimeUnit.SECONDS.sleep(2L);
@@ -141,6 +157,23 @@ final class DyTalksITTestCase {
             talks.siblings(repo, Instant.now()),
             Matchers.iterableWithSize(2)
         );
+    }
+
+    /**
+     * DyTalks can list siblings limited by the supplied timestamp.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void listsSiblingsBeforeMoment() throws Exception {
+        final Talks talks = new DyTalks(
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
+        );
+        final String repo = "repo1";
+        talks.create(repo, "yegor256/rultor#9");
+        final Instant moment = Instant.now();
+        TimeUnit.SECONDS.sleep(2L);
+        talks.create(repo, "yegor256/rultor#10");
+        TimeUnit.SECONDS.sleep(2L);
         MatcherAssert.assertThat(
             "Only one talk should be returned",
             talks.siblings(repo, moment),

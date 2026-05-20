@@ -66,11 +66,9 @@ final class ReportsTest {
      */
     @Test
     void reportsRequestResultWhenStopFails() throws Exception {
-        final String user = "john";
-        final String stop = "stop it please";
-        final Repo repo = new MkGitHub(user).randomRepo();
+        final Repo repo = new MkGitHub("john").randomRepo();
         final Talk talk = ReportsTest.example(
-            repo, repo.issues().create("Bug", stop)
+            repo, repo.issues().create("Bug", "stop it please")
         );
         final Agent agent = new Reports(repo.github());
         agent.execute(talk);
@@ -91,11 +89,10 @@ final class ReportsTest {
         final String user = "john";
         final String stop = "stop it please";
         final Repo repo = new MkGitHub(user).randomRepo();
-        final Talk talk = ReportsTest.example(
-            repo, repo.issues().create("Bug", stop)
-        );
         final Agent agent = new Reports(repo.github());
-        agent.execute(talk);
+        agent.execute(
+            ReportsTest.example(repo, repo.issues().create("Bug", stop))
+        );
         MatcherAssert.assertThat(
             "Comment contains warning about stop request",
             repo.issues().get(1).comments().get(1).json().getString(

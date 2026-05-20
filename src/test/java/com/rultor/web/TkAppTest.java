@@ -51,7 +51,36 @@ final class TkAppTest {
      */
     @Test
     void rendersHomePage() throws Exception {
-        final String page = new TextOf(
+        MatcherAssert.assertThat(
+            "Page should be xml document",
+            TkAppTest.homePage(), Matchers.startsWith("<?xml ")
+        );
+    }
+
+    /**
+     * App home page contains required XML elements.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void rendersHomePageWithXmlContent() throws Exception {
+        MatcherAssert.assertThat(
+            "Xml document should contain some data",
+            XhtmlMatchers.xhtml(TkAppTest.homePage()),
+            XhtmlMatchers.hasXPaths(
+                "/page/millis",
+                "/page/links/link[@rel='ticks']",
+                "/page/toggles[read-only='false']"
+            )
+        );
+    }
+
+    /**
+     * Render the home page body.
+     * @return Rendered body
+     * @throws Exception If some problem inside
+     */
+    private static String homePage() throws Exception {
+        return new TextOf(
             new RsPrint(
                 new TkApp(
                     new Talks.InDir(), Pulse.EMPTY,
@@ -65,19 +94,6 @@ final class TkAppTest {
                 )
             ).body()
         ).asString();
-        MatcherAssert.assertThat(
-            "Page should be xml document",
-            page, Matchers.startsWith("<?xml ")
-        );
-        MatcherAssert.assertThat(
-            "Xml document should contain some data",
-            XhtmlMatchers.xhtml(page),
-            XhtmlMatchers.hasXPaths(
-                "/page/millis",
-                "/page/links/link[@rel='ticks']",
-                "/page/toggles[read-only='false']"
-            )
-        );
     }
 
     /**

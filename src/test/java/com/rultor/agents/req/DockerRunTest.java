@@ -100,44 +100,6 @@ final class DockerRunTest {
         );
     }
 
-    /**
-     * Build a fixed profile with env-related entries.
-     * @return Profile
-     * @throws Exception In case of error.
-     */
-    private static Profile envsProfile() throws Exception {
-        return new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    DockerRunTest.SPACE,
-                    "<p><entry key='a'><entry key='env'>",
-                    "<item>A=5</item><item>B=f e</item></entry></entry>",
-                    "<entry key='b'><entry key='env'>HELLO='1'</entry></entry>",
-                    "<entry key='c'><entry key='env'>",
-                    "<entry key='MVN'>works</entry></entry></entry></p>"
-                ).asString()
-            )
-        );
-    }
-
-    /**
-     * Build a fixed profile with script-related entries.
-     * @return Profile
-     * @throws Exception In case of error.
-     */
-    private static Profile scriptProfile() throws Exception {
-        return new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    DockerRunTest.SPACE,
-                    "<p><entry key='x'><entry key='script'>",
-                    "mvn clean</entry></entry>",
-                    "<entry key='y'><entry key='script'>",
-                    "<item>pw</item><item>ls</item></entry></entry></p>"
-                ).asString()
-            )
-        );
-    }
 
     /**
      * DockerRun can create script with comment inside.
@@ -346,4 +308,43 @@ final class DockerRunTest {
             Matchers.startsWith("(  ")
         );
     }
+    /**
+     * Build a fixed profile with env-related entries.
+     * @return Profile
+     * @throws Exception In case of error.
+     */
+    private static Profile envsProfile() throws Exception {
+        return new Profile.Fixed(
+            new XMLDocument(
+                new Joined(
+                    DockerRunTest.SPACE,
+                    "<p><entry key='a'><entry key='env'>",
+                    "<item>A=5</item><item>B=f e</item></entry></entry>",
+                    "<entry key='b'><entry key='env'>HELLO='1'</entry></entry>",
+                    "<entry key='c'><entry key='env'>",
+                    "<entry key='MVN'>works</entry></entry></entry></p>"
+                ).asString()
+            )
+        );
+    }
+
+    /**
+     * Build a fixed profile with script-related entries.
+     * @return Profile
+     * @throws Exception In case of error.
+     */
+    private static Profile scriptProfile() throws Exception {
+        return new Profile.Fixed(
+            new XMLDocument(
+                new Joined(
+                    DockerRunTest.SPACE,
+                    "<p><entry key='x'><entry key='script'>",
+                    "mvn clean</entry></entry>",
+                    "<entry key='y'><entry key='script'>",
+                    "<item>pw</item><item>ls</item></entry></entry></p>"
+                ).asString()
+            )
+        );
+    }
+
 }

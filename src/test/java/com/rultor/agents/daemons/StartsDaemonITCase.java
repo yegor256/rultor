@@ -50,10 +50,9 @@ final class StartsDaemonITCase {
             StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            final Talk talk = StartsDaemonITCase.talk(start);
             MatcherAssert.assertThat(
                 "started tag should be added with start time",
-                talk.read(),
+                StartsDaemonITCase.talk(start).read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk/daemon[started and dir]",
                     "/talk/daemon[ends-with(started,'Z')]"
@@ -74,12 +73,13 @@ final class StartsDaemonITCase {
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
             final Talk talk = StartsDaemonITCase.talk(start);
-            final String dir = talk.read().xpath("/talk/daemon/dir/text()")
-                .get(0);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             TimeUnit.SECONDS.sleep(2L);
             new Shell.Safe(new TalkShells(talk.read()).get()).exec(
-                String.format("cat %s/stdout", dir),
+                String.format(
+                    "cat %s/stdout",
+                    talk.read().xpath("/talk/daemon/dir/text()").get(0)
+                ),
                 new NullInputStream(0L),
                 baos, baos
             );

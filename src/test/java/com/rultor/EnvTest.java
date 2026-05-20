@@ -73,6 +73,19 @@ final class EnvTest {
             System.getenv(Env.SETTINGS_XML),
             Matchers.not(Matchers.nullValue())
         );
+    }
+
+    @Test
+    void readsValueFromSettingsXml() {
+        this.environment.set(
+            Env.SETTINGS_XML,
+            String.join(
+                "",
+                "<settings><profiles><profile><properties>",
+                "<test>hello</test>",
+                "</properties></profile></profiles></settings>"
+            )
+        );
         MatcherAssert.assertThat(
             "takes the right value",
             Env.read("Rultor-Test"),

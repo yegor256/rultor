@@ -52,10 +52,9 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(ClosePullRequestTest.talk(repo, issue));
-        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "PR should be closed",
-            smart.state(), Matchers.is("closed")
+            new Issue.Smart(issue).state(), Matchers.is("closed")
         );
     }
 
@@ -80,10 +79,11 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(ClosePullRequestTest.talk(repo, issue));
-        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "Rebase message should be added",
-            new Comment.Smart(smart.comments().get(1)).body(),
+            new Comment.Smart(
+                new Issue.Smart(issue).comments().get(1)
+            ).body(),
             Matchers.containsString(
                 "Rultor closed this pull request for you because"
             )
@@ -111,10 +111,9 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(ClosePullRequestTest.talk(repo, issue));
-        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "Issue should be open",
-            smart.state(), Matchers.is("open")
+            new Issue.Smart(issue).state(), Matchers.is("open")
         );
     }
 
@@ -139,10 +138,9 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(ClosePullRequestTest.talk(repo, issue));
-        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "No comments should be added",
-            smart.comments().iterate(Date.from(Instant.EPOCH)),
+            new Issue.Smart(issue).comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.is(Matchers.emptyIterable())
         );
     }
