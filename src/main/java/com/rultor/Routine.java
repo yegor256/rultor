@@ -43,8 +43,7 @@ import org.cactoos.list.ListOf;
  *  removed.
  */
 @ScheduleWithFixedDelay
-@SuppressWarnings({
-    "PMD.ConstructorShouldDoInitialization"})
+@SuppressWarnings("PMD.ConstructorShouldDoInitialization")
 final class Routine implements Runnable, Closeable {
 
     /**

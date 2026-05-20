@@ -31,7 +31,8 @@ import org.xembly.Xembler;
 @Immutable
 @SuppressWarnings({
     "PMD.OnlyOneConstructorShouldDoInitialization",
-    "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"})
+    "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"
+})
 public interface Talk {
 
     /**

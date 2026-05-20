@@ -146,6 +146,7 @@ final class DyTalksITTestCase {
             talks.siblings(repo, moment),
             Matchers.iterableWithSize(1)
         );
+        // CHECKSTYLE_OFF
     }
 
     /**

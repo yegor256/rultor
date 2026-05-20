@@ -67,14 +67,13 @@ final class TkHome implements Take {
         final Directives dirs = new Directives().add("recent");
         final PrettyTime pretty = new PrettyTime();
         for (final Talk talk : new HeadOf<>(5, this.talks.recent())) {
-            dirs.add("talk").set(talk.name())
-                .attr(
-                    "timeago",
-                    pretty.format(
-                        LocalDateTime.ofInstant(
-                            talk.updated(), ZoneId.systemDefault()
-                        )
+            dirs.add("talk").set(talk.name()).attr(
+                "timeago",
+                pretty.format(
+                    LocalDateTime.ofInstant(
+                        talk.updated(), ZoneId.systemDefault()
                     )
+                )
             );
             final XML xml = talk.read();
             if (!xml.nodes("/talk/wire/href").isEmpty()) {

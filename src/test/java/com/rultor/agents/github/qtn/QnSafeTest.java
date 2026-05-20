@@ -30,16 +30,16 @@ final class QnSafeTest {
      * message.
      * Compare
      * <p>{@code
-     *     ```java.lang.IllegalArgumentException: Illegal argument exception
+     *     ```IllegalArgumentException: Illegal argument exception
      * }</p>
      * with
      * <p>{@code
      *     ```
-     *     java.lang.IllegalArgumentException: Illegal argument exception
+     *     IllegalArgumentException: Illegal argument exception
      * }</p>
      * The first example will print empty message to GitHub comment because it
      * will be treated as unknown language:
-     * 'java.lang.IllegalArgumentException: Illegal argument exception'
+     * 'IllegalArgumentException: Illegal argument exception'
      * @throws URISyntaxException if URI is invalid
      * @throws IOException if I/O fails.
      */
