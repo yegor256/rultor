@@ -41,9 +41,8 @@ import org.xembly.Directives;
 final class StartsDaemonITCase {
 
     /**
-     * StartsDaemon can start a daemon.
+     * StartsDaemon can start a daemon and add the started tag with start time.
      * @throws Exception In case of error.
-     * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
     void startsDaemon() throws Exception {
@@ -60,6 +59,21 @@ final class StartsDaemonITCase {
                     "/talk/daemon[ends-with(started,'Z')]"
                 )
             );
+        }
+    }
+
+    /**
+     * StartsDaemon sends the start script to the daemon.
+     * @throws Exception In case of error.
+     * @checkstyle ExecutableStatementCountCheck (50 lines)
+     */
+    @Test
+    void sendsStartScriptToDaemon() throws Exception {
+        try (
+            StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = StartsDaemonITCase.talk(start);
             final String dir = talk.read().xpath("/talk/daemon/dir/text()")
                 .get(0);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -79,6 +93,22 @@ final class StartsDaemonITCase {
                     Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
                 )
             );
+        }
+    }
+
+    /**
+     * StartsDaemon does not create a status file.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void doesNotCreateStatusFile() throws Exception {
+        try (
+            StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = StartsDaemonITCase.talk(start);
+            final String dir = talk.read().xpath("/talk/daemon/dir/text()")
+                .get(0);
             MatcherAssert.assertThat(
                 "status file should not be created",
                 new File(dir, "status").exists(),

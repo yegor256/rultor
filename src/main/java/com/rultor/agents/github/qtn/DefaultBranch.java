@@ -36,7 +36,7 @@ public final class DefaultBranch {
                 ex
             );
         } catch (final AssertionError ex) {
-            throw new RepoNotFoundException(this.repo.coordinates().toString(), ex);
+            throw new DefaultBranch.RepoNotFoundException(this.repo.coordinates().toString(), ex);
         }
     }
 

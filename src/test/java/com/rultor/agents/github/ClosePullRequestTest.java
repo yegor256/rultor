@@ -57,6 +57,30 @@ final class ClosePullRequestTest {
             "PR should be closed",
             smart.state(), Matchers.is("closed")
         );
+    }
+
+    /**
+     * ClosePullRequest adds rebase message when in rebase mode.
+     * @throws Exception If error
+     */
+    @Test
+    void addsRebaseMessageForRebaseMode() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='merge'>",
+                        "<entry key='rebase'>true</entry>",
+                        "</entry></p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
+        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "Rebase message should be added",
             new Comment.Smart(smart.comments().get(1)).body(),
@@ -92,6 +116,30 @@ final class ClosePullRequestTest {
             "Issue should be open",
             smart.state(), Matchers.is("open")
         );
+    }
+
+    /**
+     * ClosePullRequest adds no comments when not in rebase mode.
+     * @throws Exception If error
+     */
+    @Test
+    void addsNoCommentsWhenNoRebaseMode() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p> <entry key='merge'>",
+                        "  <entry key='rebase'>false</entry>",
+                        "</entry> </p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
+        final Issue.Smart smart = new Issue.Smart(issue);
         MatcherAssert.assertThat(
             "No comments should be added",
             smart.comments().iterate(Date.from(Instant.EPOCH)),

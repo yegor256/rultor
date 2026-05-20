@@ -220,18 +220,19 @@ final class GithubProfileValidationTest {
      */
     @Test
     void rejectGetAssetWithNotExistFile() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "friends:",
-                " - jeff/test",
-                "assets:",
-                " settings.xml: \"jeff/test#something.txt\""
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> GithubProfile.fromRepo(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "friends:",
+                        " - jeff/test",
+                        "assets:",
+                        " settings.xml: \"jeff/test#something.txt\""
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -241,18 +242,19 @@ final class GithubProfileValidationTest {
      */
     @Test
     void rejectGetAssetWithWrongRepo() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "friends:",
-                " - jeff/test",
-                "assets:",
-                " settings.xml: \"jeff/fail#exist.txt\""
-            ).asString()
-        );
         Assertions.assertThrows(
             IllegalArgumentException.class,
-            () -> GithubProfile.fromRepo(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "friends:",
+                        " - jeff/test",
+                        "assets:",
+                        " settings.xml: \"jeff/fail#exist.txt\""
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -262,18 +264,19 @@ final class GithubProfileValidationTest {
      */
     @Test
     void rejectGetAssetWithNoFriendUser() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "friends:",
-                " - zheus/test",
-                "assets:",
-                " settings.xml: \"jeff/test#exist.txt\""
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> GithubProfile.fromRepo(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "friends:",
+                        " - zheus/test",
+                        "assets:",
+                        " settings.xml: \"jeff/test#exist.txt\""
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -283,16 +286,17 @@ final class GithubProfileValidationTest {
      */
     @Test
     void rejectGetAssetWithNoFriends() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                System.lineSeparator(),
-                "assets:",
-                " settings.xml: \"jeff/test#exist.txt\""
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> GithubProfile.fromRepo(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "assets:",
+                        " settings.xml: \"jeff/test#exist.txt\""
+                    ).asString()
+                )
+            ).assets()
         );
     }
 

@@ -68,8 +68,7 @@ final class TkStatus implements Take {
                         "Unfortunately, the system is down, for %[ms]s already",
                         age
                     )
-                );
-                msg.append(
+                ).append(
                     String.format(
                         "%n%nPlease, email this page to bug@rultor.com"
                     )

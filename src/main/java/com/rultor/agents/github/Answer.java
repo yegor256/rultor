@@ -138,8 +138,7 @@ public final class Answer {
                         )
                     )
                 ).asString()
-            );
-            msg.append(' ').append(text);
+            ).append(' ').append(text);
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {
             msg.append(text);
