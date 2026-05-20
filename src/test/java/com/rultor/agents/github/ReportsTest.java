@@ -79,6 +79,23 @@ final class ReportsTest {
             talk.read(),
             XhtmlMatchers.hasXPath(ReportsTest.XPATH)
         );
+    }
+
+    /**
+     * Reports posts a comment containing a warning about a failed stop
+     * request.
+     * @throws Exception In case of error
+     */
+    @Test
+    void postsStopFailsComment() throws Exception {
+        final String user = "john";
+        final String stop = "stop it please";
+        final Repo repo = new MkGitHub(user).randomRepo();
+        final Talk talk = ReportsTest.example(
+            repo, repo.issues().create("Bug", stop)
+        );
+        final Agent agent = new Reports(repo.github());
+        agent.execute(talk);
         MatcherAssert.assertThat(
             "Comment contains warning about stop request",
             repo.issues().get(1).comments().get(1).json().getString(

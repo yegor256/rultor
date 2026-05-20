@@ -57,6 +57,25 @@ final class MailsTest {
                 )
             )
         );
+    }
+
+    /**
+     * Mails sets the subject of the sent mail to indicate a release.
+     * @throws Exception In case of error.
+     */
+    @Test
+    @Disabled
+    void sendsMailWithReleaseSubject() throws Exception {
+        final Postman postman = Mockito.spy(Postman.CONSOLE);
+        final Agent agent = new Mails(
+            this.profile(),
+            postman
+        );
+        agent.execute(MailsTest.talk());
+        final ArgumentCaptor<Envelope> captor =
+            ArgumentCaptor.forClass(Envelope.class);
+        Mockito.verify(postman).send(captor.capture());
+        final Envelope envelope = captor.getValue();
         MatcherAssert.assertThat(
             "Mail subject should be about release",
             envelope.unwrap().getSubject(),

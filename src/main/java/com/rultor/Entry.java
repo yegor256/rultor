@@ -58,11 +58,11 @@ public final class Entry {
     }
 
     /**
-     * Make from varargs.
+     * Build from varargs.
      * @param args Command line args
      * @return New entry
      */
-    public static Entry of(final String... args) {
+    public static Entry build(final String... args) {
         return new Entry(Arrays.asList(args));
     }
 
@@ -74,7 +74,7 @@ public final class Entry {
     @LogExceptions
     public static void main(final String... args) throws IOException {
         Logger.info(Entry.class, "Starting Rultor on the command line...");
-        Entry.of(args).exec();
+        Entry.build(args).exec();
     }
 
     /**

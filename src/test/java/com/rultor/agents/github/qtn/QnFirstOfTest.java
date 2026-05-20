@@ -27,7 +27,6 @@ final class QnFirstOfTest {
      */
     @Test
     void getsFirstReq() throws Exception {
-        final Repo repo = new MkGitHub().randomRepo();
         MatcherAssert.assertThat(
             "First not empty question should be taken",
             new QnFirstOf(
@@ -38,7 +37,8 @@ final class QnFirstOfTest {
                 )
             ).understand(
                 new Comment.Smart(
-                    repo.issues().create("", "").comments().post("deploy")
+                    new MkGitHub().randomRepo()
+                        .issues().create("", "").comments().post("deploy")
                 ),
                 new URI("#")
             ),

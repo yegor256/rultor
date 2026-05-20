@@ -247,17 +247,19 @@ final class QnMergeTest {
         final MkChecks checks = (MkChecks) this.pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         final List<JsonObject> files = new LinkedList<>();
-        files.add(Json.createObjectBuilder()
-            .add("sha", "ef36558cbd")
-            .add("filename", "README.md")
-            .add("status", "modified")
-            .build()
+        files.add(
+            Json.createObjectBuilder()
+                .add("sha", "ef36558cbd")
+                .add("filename", "README.md")
+                .add("status", "modified")
+                .build()
         );
-        files.add(Json.createObjectBuilder()
-            .add("sha", "ef3857cad")
-            .add("filename", ".rultor.yml")
-            .add("status", "modified")
-            .build()
+        files.add(
+            Json.createObjectBuilder()
+                .add("sha", "ef3857cad")
+                .add("filename", ".rultor.yml")
+                .add("status", "modified")
+                .build()
         );
         this.mergeRequest();
         MatcherAssert.assertThat(

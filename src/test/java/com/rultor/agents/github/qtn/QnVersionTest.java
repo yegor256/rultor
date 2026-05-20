@@ -38,6 +38,20 @@ final class QnVersionTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnVersion prints the version.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void printsVersion() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("version");
+        new QnVersion().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        );
         MatcherAssert.assertThat(
             "Version should be printed",
             new Comment.Smart(issue.comments().get(2)).body(),
@@ -46,7 +60,7 @@ final class QnVersionTest {
     }
 
     /**
-     * QnVersion reply contains link to revision.
+     * QnVersion reply marks the request as done with link to revision.
      * @throws Exception In case of error.
      */
     @Test
@@ -60,6 +74,20 @@ final class QnVersionTest {
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnVersion posts a link to the revision in the reply.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsLinkToRevision() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("version");
+        new QnVersion().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
         );
         MatcherAssert.assertThat(
             "Link to the revision should be posted",

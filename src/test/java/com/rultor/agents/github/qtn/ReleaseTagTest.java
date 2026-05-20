@@ -23,7 +23,7 @@ final class ReleaseTagTest {
      * @throws Exception In case of error
      */
     @Test
-    void validatesReleaseVersion() throws Exception {
+    void allowsGreaterTag() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         repo.releases().create("1.74");
         MatcherAssert.assertThat(
@@ -31,16 +31,46 @@ final class ReleaseTagTest {
             new ReleaseTag(repo, "1.87.15").allowed(),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * ReleaseTag can allow a tag containing a non-semantic suffix.
+     * @throws Exception In case of error
+     */
+    @Test
+    void allowsBarTag() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        repo.releases().create("1.74");
         MatcherAssert.assertThat(
             "bar tag should be allowed",
             new ReleaseTag(repo, "1.5-bar").allowed(),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * ReleaseTag can allow a beta version tag.
+     * @throws Exception In case of error
+     */
+    @Test
+    void allowsBetaTag() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        repo.releases().create("1.74");
         MatcherAssert.assertThat(
             "beta tag should be allowed",
             new ReleaseTag(repo, "1.9-beta").allowed(),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * ReleaseTag denies a tag lower than the latest release.
+     * @throws Exception In case of error
+     */
+    @Test
+    void deniesLowerTag() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        repo.releases().create("1.74");
         MatcherAssert.assertThat(
             "Lower tag should be allowed",
             new ReleaseTag(repo, "1.62").allowed(),

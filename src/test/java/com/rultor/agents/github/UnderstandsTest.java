@@ -148,6 +148,34 @@ final class UnderstandsTest {
             comments.iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
+    }
+
+    /**
+     * Understands posts a single 'Can't merge' message when there is a
+     * failed check.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsCantMergeOnFailedCheck() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        ((MkChecks) pull.checks()).create(
+            Check.Status.COMPLETED,
+            Check.Conclusion.FAILURE
+        );
+        new Understands(
+            repo.github(),
+            new QnFirstOf(
+                Arrays.asList(
+                    new QnMerge(),
+                    new QnIamLost()
+                )
+            )
+        ).execute(UnderstandsTest.talk(pull));
+        final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(
             "Message about not possible merge should be created",
             new Comment.Smart(comments.get(1)).body(),

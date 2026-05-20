@@ -11,7 +11,6 @@ import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.takes.facets.fork.RqRegex;
-import org.takes.facets.fork.TkRegex;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqWithHeader;
 import org.takes.rs.RsPrint;

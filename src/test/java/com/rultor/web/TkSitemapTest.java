@@ -10,7 +10,6 @@ import com.rultor.spi.Talks;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.takes.Take;
 import org.takes.rq.RqFake;
 import org.takes.rs.RsPrint;
 import org.xembly.Directives;
@@ -29,7 +28,6 @@ final class TkSitemapTest {
     @Test
     void rendersListOfTalks() throws Exception {
         final Talks talks = new Talks.InDir();
-        final Take take = new TkSitemap(talks);
         talks.create("repo1", Talk.TEST_NAME);
         talks.get(Talk.TEST_NAME).modify(
             new Directives()
@@ -44,7 +42,7 @@ final class TkSitemapTest {
             "Sitemap should be generated",
             XhtmlMatchers.xhtml(
                 new TextOf(
-                    new RsPrint(take.act(new RqFake())).body()
+                    new RsPrint(new TkSitemap(talks).act(new RqFake())).body()
                 ).asString()
             ),
             XhtmlMatchers.hasXPath(
