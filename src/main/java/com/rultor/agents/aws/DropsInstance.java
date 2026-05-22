@@ -12,6 +12,7 @@ import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
 import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
 
@@ -43,11 +44,14 @@ public final class DropsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final DescribeInstancesResponse res = this.api.aws().describeInstances(
-            DescribeInstancesRequest.builder()
-                .instanceIds(instance)
-                .build()
-        );
+        final DescribeInstancesResponse res;
+        try (Ec2Client client = this.api.aws()) {
+            res = client.describeInstances(
+                DescribeInstancesRequest.builder()
+                    .instanceIds(instance)
+                    .build()
+            );
+        }
         final Directives dirs = new Directives();
         if (res.reservations().isEmpty()) {
             dirs.xpath("/talk/ec2").strict(1).remove();

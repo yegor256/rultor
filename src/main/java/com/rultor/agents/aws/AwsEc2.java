@@ -56,7 +56,9 @@ public final class AwsEc2 {
     }
 
     /**
-     * AWS EC2 client instance.
+     * AWS EC2 client instance. The returned client owns an HTTP client,
+     * a thread pool, and a connection pool; the caller must close it
+     * (typically via try-with-resources) to release those resources.
      * @return AWS EC2 client
      */
     public Ec2Client aws() {
