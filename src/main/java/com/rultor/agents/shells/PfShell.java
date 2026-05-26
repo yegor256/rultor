@@ -8,6 +8,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.ssh.Ssh;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import lombok.EqualsAndHashCode;
@@ -125,14 +126,14 @@ public final class PfShell {
         if (path.isEmpty()) {
             key = this.pvt;
         } else {
-            if (this.profile.assets().get(path) == null) {
-                throw new Profile.ConfigException(
-                    String.format("Private SSH key not found at %s", path)
-                );
-            }
-            try {
+            try (InputStream stream = this.profile.assets().get(path)) {
+                if (stream == null) {
+                    throw new Profile.ConfigException(
+                        String.format("Private SSH key not found at %s", path)
+                    );
+                }
                 key = IOUtils.toString(
-                    this.profile.assets().get(path),
+                    stream,
                     StandardCharsets.UTF_8
                 );
             } catch (final IOException ex) {
