@@ -18,7 +18,6 @@ import lombok.ToString;
 import org.cactoos.Text;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
-import org.cactoos.iterable.Skipped;
 import org.cactoos.list.ListOf;
 import org.cactoos.text.Joined;
 import org.cactoos.text.Split;
@@ -45,9 +44,9 @@ public final class EndsDaemon extends AbstractAgent {
     public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
 
     /**
-     * Tail length limit.
+     * Maximum daemon tail length.
      */
-    static final int TAIL_LIMIT = 10_000;
+    private static final int MAX_TAIL = 10_000;
 
     /**
      * Ctor.
@@ -77,26 +76,21 @@ public final class EndsDaemon extends AbstractAgent {
     }
 
     /**
-     * Build tail text.
+     * Build daemon tail.
      * @param lines Output lines
-     * @return Tail text
+     * @return Tail
      */
-    static String tail(final List<Text> lines) {
+    static String tail(final Iterable<Text> lines) {
+        final String out = new Joined(
+            System.lineSeparator(),
+            new Mapped<>(
+                Text::asString,
+                lines
+            )
+        ).toString();
         return new Sub(
-            new Joined(
-                System.lineSeparator(),
-                new Skipped<>(
-                    Math.max(lines.size() - 60, 0),
-                    new ListOf<>(
-                        new Mapped<>(
-                            Text::asString,
-                            lines
-                        )
-                    )
-                )
-            ),
-            0,
-            EndsDaemon.TAIL_LIMIT
+            out,
+            Math.max(out.length() - EndsDaemon.MAX_TAIL, 0)
         ).toString();
     }
 
@@ -143,9 +137,7 @@ public final class EndsDaemon extends AbstractAgent {
             .add("highlights").set(Xembler.escape(highlights)).up()
             .add("tail")
             .set(
-                Xembler.escape(
-                    EndsDaemon.tail(lines)
-                )
+                Xembler.escape(EndsDaemon.tail(lines))
             );
     }
 

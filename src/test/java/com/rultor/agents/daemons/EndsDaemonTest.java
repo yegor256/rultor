@@ -9,7 +9,6 @@ import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import org.cactoos.Text;
 import org.cactoos.list.ListOf;
 import org.cactoos.text.TextOf;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +19,7 @@ import org.xembly.Directives;
  * Tests for {@link EndsDaemon}.
  *
  * @since 1.2
+ * @checkstyle MagicNumber (500 lines)
  * @checkstyle MultipleStringLiterals (500 lines)
  */
 final class EndsDaemonTest {
@@ -54,19 +54,29 @@ final class EndsDaemonTest {
     }
 
     /**
-     * EndsDaemon should limit tail text.
+     * EndsDaemon limits tail by its final length.
      */
     @Test
-    void limitsTailLength() {
+    void limitsTailByLength() {
+        final String end = "tail-end";
         final String tail = EndsDaemon.tail(
-            new ListOf<Text>(
-                new TextOf("x".repeat(EndsDaemon.TAIL_LIMIT + 1))
+            new ListOf<>(
+                new TextOf(String.format("tail-start-%s", "x".repeat(12_000))),
+                new TextOf(end)
             )
         );
         Assertions.assertEquals(
-            EndsDaemon.TAIL_LIMIT,
+            10_000,
             tail.length(),
-            "Tail text must be limited"
+            "Tail should be capped by length"
+        );
+        Assertions.assertTrue(
+            tail.endsWith(end),
+            "Tail should preserve the end of stdout"
+        );
+        Assertions.assertFalse(
+            tail.contains("tail-start"),
+            "Tail should not keep the beginning when stdout is too long"
         );
     }
 
