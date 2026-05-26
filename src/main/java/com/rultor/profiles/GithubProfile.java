@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -291,7 +290,7 @@ final class GithubProfile implements Profile {
             );
             yml = "";
         }
-        final List<String> msg = this.validate(yml);
+        final List<String> msg = new ValidYaml(yml).errors();
         if (!msg.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
@@ -307,20 +306,5 @@ final class GithubProfile implements Profile {
             );
         }
         return yml;
-    }
-
-    /**
-     * Validate rultor config YAML according to schema.
-     * @param yml Rultor YAML config
-     * @return Validation result message, empty list means validation succeeded.
-     * @todo #570:30min Implement validation using Kwalify library in separate
-     *  class called ValidYaml, move this method to that class and move tests
-     *  from GithubProfileValidationTest to ValidYamlTest. Remember about
-     *  removing PMD suppress below.
-     * @checkstyle NonStaticMethodCheck (5 lines)
-     */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private List<String> validate(final String yml) {
-        return Collections.emptyList();
     }
 }
