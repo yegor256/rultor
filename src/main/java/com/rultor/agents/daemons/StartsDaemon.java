@@ -49,6 +49,11 @@ public final class StartsDaemon implements Agent {
     public static final String GPG_HOME = ".gnupg";
 
     /**
+     * GPG secring environment variable.
+     */
+    private static final String GPG_SECRING = "GPG_SECRING";
+
+    /**
      * Paths to match.
      */
     private static final Array<String> PATHS = new Array<>(
@@ -164,20 +169,33 @@ public final class StartsDaemon implements Agent {
     }
 
     /**
+     * Check GPG secret key.
+     * @param key Secret key
+     * @return Secret key
+     * @throws IOException If the key is missing or too short
+     */
+    static String checkedSecring(final String key) throws IOException {
+        if (key == null || key.split("\n").length < 10) {
+            throw new IOException(
+                String.format(
+                    "GPG secret key is missing or too short in the %s environment variable: %s",
+                    StartsDaemon.GPG_SECRING,
+                    key
+                )
+            );
+        }
+        return key;
+    }
+
+    /**
      * Upload GPG secret key.
      * @param shell The shell
      * @throws IOException If fails
      */
     private void uploadGpgKey(final Shell shell) throws IOException {
-        final String secring = System.getenv("GPG_SECRING");
-        if (secring.split("\n").length < 10) {
-            throw new IOException(
-                String.format(
-                    "GPG secret key is too short in the GPG_SECRING environment variable: %s",
-                    secring
-                )
-            );
-        }
+        final String secring = StartsDaemon.checkedSecring(
+            System.getenv(StartsDaemon.GPG_SECRING)
+        );
         new Shell.Safe(shell).exec(
             "gpg --import",
             IOUtils.toInputStream(
