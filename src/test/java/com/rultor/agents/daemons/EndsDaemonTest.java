@@ -9,6 +9,9 @@ import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import org.cactoos.Text;
+import org.cactoos.list.ListOf;
+import org.cactoos.text.TextOf;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
@@ -47,6 +50,23 @@ final class EndsDaemonTest {
         Assertions.assertThrows(
             UnknownHostException.class,
             () -> agent.execute(talk)
+        );
+    }
+
+    /**
+     * EndsDaemon should limit tail text.
+     */
+    @Test
+    void limitsTailLength() {
+        final String tail = EndsDaemon.tail(
+            new ListOf<Text>(
+                new TextOf("x".repeat(EndsDaemon.TAIL_LIMIT + 1))
+            )
+        );
+        Assertions.assertEquals(
+            EndsDaemon.TAIL_LIMIT,
+            tail.length(),
+            "Tail text must be limited"
         );
     }
 

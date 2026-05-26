@@ -45,6 +45,11 @@ public final class EndsDaemon extends AbstractAgent {
     public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
 
     /**
+     * Tail length limit.
+     */
+    static final int TAIL_LIMIT = 10_000;
+
+    /**
      * Ctor.
      */
     public EndsDaemon() {
@@ -72,15 +77,35 @@ public final class EndsDaemon extends AbstractAgent {
     }
 
     /**
+     * Build tail text.
+     * @param lines Output lines
+     * @return Tail text
+     */
+    static String tail(final List<Text> lines) {
+        return new Sub(
+            new Joined(
+                System.lineSeparator(),
+                new Skipped<>(
+                    Math.max(lines.size() - 60, 0),
+                    new ListOf<>(
+                        new Mapped<>(
+                            Text::asString,
+                            lines
+                        )
+                    )
+                )
+            ),
+            0,
+            EndsDaemon.TAIL_LIMIT
+        ).toString();
+    }
+
+    /**
      * End this daemon.
      * @param shell Shell
      * @param dir The dir
      * @return Directives
      * @throws IOException If fails
-     * @todo #1207:1h There is no limit of tail message (only shifting to
-     *  100_000 symbols), but TkDaemon has a limit of 100_000 symbols in buffer
-     *  It is better to have a restriction for the tail length, not about start
-     *  position.
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
@@ -119,22 +144,7 @@ public final class EndsDaemon extends AbstractAgent {
             .add("tail")
             .set(
                 Xembler.escape(
-                    new Sub(
-                        new Joined(
-                            System.lineSeparator(),
-                            new Skipped<>(
-                                Math.max(lines.size() - 60, 0),
-                                new ListOf<>(
-                                    new Mapped<>(
-                                        Text::asString,
-                                        lines
-                                    )
-                                )
-                            )
-                        ),
-                        0,
-                        10_000
-                    ).toString()
+                    EndsDaemon.tail(lines)
                 )
             );
     }
