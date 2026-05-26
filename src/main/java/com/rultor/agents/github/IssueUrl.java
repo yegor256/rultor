@@ -59,11 +59,8 @@ final class IssueUrl {
      * @return True if valid
      */
     public boolean valid() {
-        if (this.url == null || this.url.isEmpty()) {
-            throw new IllegalArgumentException(
-                "URL should not be empty"
-            );
-        }
-        return IssueUrl.CORRECT.matcher(this.url).matches();
+        return this.url != null
+            && !this.url.isEmpty()
+            && IssueUrl.CORRECT.matcher(this.url).matches();
     }
 }

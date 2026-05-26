@@ -63,6 +63,24 @@ final class IssueUrlTest {
     }
 
     @Test
+    void emptyUrlShouldBeNotValid() {
+        MatcherAssert.assertThat(
+            "Empty url is not a valid github issue url",
+            new IssueUrl("").valid(),
+            Matchers.is(false)
+        );
+    }
+
+    @Test
+    void nullUrlShouldBeNotValid() {
+        MatcherAssert.assertThat(
+            "Null url is not a valid github issue url",
+            new IssueUrl(null).valid(),
+            Matchers.is(false)
+        );
+    }
+
+    @Test
     void pullRequestIdShouldBeReturned() {
         final IssueUrl issue = new IssueUrl(
             "https://api.github.com/repos/USER/REPO/pulls/5186"
