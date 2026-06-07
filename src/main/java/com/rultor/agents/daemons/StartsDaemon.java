@@ -203,15 +203,19 @@ public final class StartsDaemon implements Agent {
         try {
             for (final Map.Entry<String, InputStream> asset
                 : this.profile.assets().entrySet()) {
-                shell.exec(
-                    String.format(
-                        "cat > %s",
-                        Ssh.escape(String.format("%s/%s", dir, asset.getKey()))
-                    ),
-                    asset.getValue(),
-                    Logger.stream(Level.INFO, true),
-                    Logger.stream(Level.WARNING, true)
-                );
+                try (InputStream input = asset.getValue()) {
+                    shell.exec(
+                        String.format(
+                            "cat > %s",
+                            Ssh.escape(
+                                String.format("%s/%s", dir, asset.getKey())
+                            )
+                        ),
+                        input,
+                        Logger.stream(Level.INFO, true),
+                        Logger.stream(Level.WARNING, true)
+                    );
+                }
                 if (Logger.isInfoEnabled(this)) {
                     Logger.info(
                         this, "\"%s\" uploaded into %s in %[ms]s",
