@@ -67,13 +67,15 @@ final class Decrypt {
                     )
                 )
             );
+            commands.add("set +x");
             commands.add(
                 String.format(
                     String.join(
                         Decrypt.SPACE,
+                        "printf '%%s' %s |",
                         "gpg --no-tty --batch --verbose --decrypt",
                         "--ignore-mdc-error",
-                        "--passphrase %s %s > %s"
+                        "--passphrase-fd 0 %s > %s"
                     ),
                     Ssh.escape(
                         String.format("rultor-key:%s", this.profile.name())
@@ -82,6 +84,7 @@ final class Decrypt {
                     Ssh.escape(key)
                 )
             );
+            commands.add("set -x");
             commands.add(String.format("rm -rf %s ", Ssh.escape(enc)));
         }
         return commands;
