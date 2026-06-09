@@ -38,35 +38,44 @@ import org.xembly.Directives;
  * @since 1.3.8
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 final class StartsDaemonITCase {
 
     /**
-     * StartsDaemon can start a daemon.
+     * StartsDaemon can start a daemon and add the started tag with start time.
      * @throws Exception In case of error.
-     * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
     void startsDaemon() throws Exception {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
-            final Talk talk = StartsDaemonITCase.talk(start);
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "started tag should be added with start time",
-                talk.read(),
+                StartsDaemonITCase.talk(start).read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk/daemon[started and dir]",
                     "/talk/daemon[ends-with(started,'Z')]"
                 )
             );
-            final String dir = talk.read().xpath("/talk/daemon/dir/text()")
-                .get(0);
+        }
+    }
+
+    /**
+     * StartsDaemon sends the start script to the daemon.
+     * @throws Exception In case of error.
+     * @checkstyle ExecutableStatementCountCheck (50 lines)
+     */
+    @Test
+    void sendsStartScriptToDaemon() throws Exception {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
+            final Talk talk = StartsDaemonITCase.talk(start);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             TimeUnit.SECONDS.sleep(2L);
             new Shell.Safe(new TalkShells(talk.read()).get()).exec(
-                String.format("cat %s/stdout", dir),
+                String.format(
+                    "cat %s/stdout",
+                    talk.read().xpath("/talk/daemon/dir/text()").get(0)
+                ),
                 new NullInputStream(0L),
                 baos, baos
             );
@@ -80,9 +89,24 @@ final class StartsDaemonITCase {
                     Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
                 )
             );
+        }
+    }
+
+    /**
+     * StartsDaemon does not create a status file.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void doesNotCreateStatusFile() throws Exception {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             MatcherAssert.assertThat(
                 "status file should not be created",
-                new File(dir, "status").exists(),
+                new File(
+                    StartsDaemonITCase.talk(start).read()
+                        .xpath("/talk/daemon/dir/text()").get(0),
+                    "status"
+                ).exists(),
                 Matchers.is(false)
             );
         }
@@ -95,13 +119,10 @@ final class StartsDaemonITCase {
      */
     @Test
     void deprecatesDefaultImage() throws IOException {
-        try (
-            StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
-        ) {
+        final StartsDockerDaemon start = new StartsDockerDaemon(Profile.EMPTY);
+        try (start) {
             final Talk talk = StartsDaemonITCase.talk(start);
             final XML xml = talk.read();
-            final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
             final List<String> repos = xml.xpath("/wire/github-repo/text()");
             final String notice = "#### Deprecation Notice ####";
             final Matcher<String> matcher;
@@ -117,7 +138,7 @@ final class StartsDaemonITCase {
             }
             MatcherAssert.assertThat(
                 "Deprecation message in case of default image should be printed",
-                dir,
+                xml.xpath("/talk/daemon/dir/text()").get(0),
                 matcher
             );
         }

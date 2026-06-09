@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * GitHub crew.
- *
  * @since 1.40.7
  */
 @Immutable
@@ -40,8 +39,8 @@ final class Crew {
      * Get all collaborators.
      * @return List of their login names
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    public Collection<String> names() {
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    Collection<String> names() {
         final Collection<String> names = new LinkedList<>();
         try {
             for (final User user : this.repo.collaborators().iterate()) {
@@ -56,5 +55,4 @@ final class Crew {
         }
         return names;
     }
-
 }

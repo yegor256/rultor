@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnStatus}.
- *
  * @since 1.5
  */
 final class QnStatusTest {
@@ -31,23 +30,54 @@ final class QnStatusTest {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("status");
-        final Talk talk = new Talk.InFile(
-            "<talk name='test' number='45' later='false'>",
-            "<request id='454'><type>merge</type><args/>",
-            "<author>yegor256</author></request>",
-            "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
-            "<script>test</script><title>something</title>",
-            "<code>3</code><dir>/tmp/abc</dir>",
-            "</daemon>",
-            "</talk>"
-        );
         MatcherAssert.assertThat(
             "Request should have done status",
-            new QnWithAuthor(new QnStatus(talk)).understand(
+            new QnWithAuthor(
+                new QnStatus(
+                    new Talk.InFile(
+                        "<talk name='test' number='45' later='false'>",
+                        "<request id='454'><type>merge</type><args/>",
+                        "<author>yegor256</author></request>",
+                        "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
+                        "<script>test</script><title>something</title>",
+                        "<code>3</code><dir>/tmp/abc</dir>",
+                        "</daemon>",
+                        "</talk>"
+                    )
+                )
+            ).understand(
                 new Comment.Smart(issue.comments().get(1)),
                 new URI("#")
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnStatus posts the current status as a comment.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsStatusComment() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("status");
+        new QnWithAuthor(
+            new QnStatus(
+                new Talk.InFile(
+                    "<talk name='test' number='45' later='false'>",
+                    "<request id='454'><type>merge</type><args/>",
+                    "<author>yegor256</author></request>",
+                    "<daemon id='454'><started>2014-07-08T12:09:09Z</started>",
+                    "<script>test</script><title>something</title>",
+                    "<code>3</code><dir>/tmp/abc</dir>",
+                    "</daemon>",
+                    "</talk>"
+                )
+            )
+        ).understand(
+            new Comment.Smart(issue.comments().get(1)),
+            new URI("#")
         );
         MatcherAssert.assertThat(
             "Current status should be posted in the comment",
@@ -60,5 +90,4 @@ final class QnStatusTest {
             )
         );
     }
-
 }

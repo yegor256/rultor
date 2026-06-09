@@ -20,7 +20,6 @@ import org.xembly.Directives;
 /**
  * Marks the daemon as done when the host is not reachable and the
  * daemon is older than a few days.
- *
  * @since 1.0
  */
 @Immutable
@@ -29,11 +28,27 @@ import org.xembly.Directives;
 public final class DismountDaemon extends AbstractAgent {
 
     /**
+     * Default max minutes (10 days).
+     * @checkstyle MagicNumber (2 lines)
+     */
+    private static final long DEFAULT_MAX = TimeUnit.DAYS.toMinutes(10L);
+
+    /**
+     * Xpath prefix for the daemon age check.
+     */
+    private static final String XPATH_PREFIX =
+        "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > ";
+
+    /**
+     * Xpath suffix.
+     */
+    private static final String XPATH_SUFFIX = "]";
+
+    /**
      * Ctor.
      */
     public DismountDaemon() {
-        // @checkstyle MagicNumber (1 line)
-        this(TimeUnit.DAYS.toMinutes(10L));
+        this(DismountDaemon.DEFAULT_MAX);
     }
 
     /**
@@ -43,11 +58,7 @@ public final class DismountDaemon extends AbstractAgent {
     public DismountDaemon(final long mins) {
         super(
             "/talk/daemon[started and dir]",
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
-                mins
-            ),
+            DismountDaemon.XPATH_PREFIX + mins + DismountDaemon.XPATH_SUFFIX,
             "/talk/shell[host and port and login and key]"
         );
     }
@@ -94,5 +105,4 @@ public final class DismountDaemon extends AbstractAgent {
             talk.xpath("/talk/@name").get(0)
         );
     }
-
 }

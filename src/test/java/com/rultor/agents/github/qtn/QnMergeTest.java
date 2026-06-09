@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
@@ -31,7 +30,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnMerge}.
- *
  * @since 1.6
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -49,44 +47,15 @@ final class QnMergeTest {
         ResourceBundle.getBundle("phrases");
 
     /**
-     * All pull request comments.
-     */
-    private transient Comments comments;
-
-    /**
-     * Pull request.
-     */
-    private transient Pull pull;
-
-    /**
-     * Initial phase for all tests.
-     * @throws IOException In case of error.
-     */
-    @BeforeEach
-    void setUp() throws IOException {
-        final Repo repo = new MkGitHub().randomRepo();
-        final MkBranches branches = (MkBranches) repo.branches();
-        final String head = "head";
-        final String base = "base";
-        branches.create(head, "abcdef4");
-        branches.create(base, "abcdef5");
-        this.pull = repo.pulls().create("", head, base);
-        this.comments = repo.issues()
-            .get(this.pull.number())
-            .comments();
-    }
-
-    /**
-     * QnMerge can build a request.
-     *
+     * QnMerge creates a merge request with the expected XML structure.
      * @throws Exception In case of error
      */
     @Test
     void buildsRequest() throws Exception {
-        final String request = new Xembler(this.mergeRequest()).xml();
+        final Pull pull = QnMergeTest.pull();
         MatcherAssert.assertThat(
             "Merge request should be created",
-            request,
+            new Xembler(QnMergeTest.mergeRequest(pull)).xml(),
             Matchers.allOf(
                 XhtmlMatchers.hasXPath("/request/type[text()='merge']"),
                 XhtmlMatchers.hasXPath(
@@ -97,14 +66,34 @@ final class QnMergeTest {
                 )
             )
         );
+    }
+
+    /**
+     * QnMerge keeps the initiator command as the first comment.
+     * @throws Exception In case of error
+     */
+    @Test
+    void preservesInitiatorComment() throws Exception {
+        final Pull pull = QnMergeTest.pull();
+        QnMergeTest.mergeRequest(pull);
         MatcherAssert.assertThat(
             "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
         );
+    }
+
+    /**
+     * QnMerge posts the merge start comment.
+     * @throws Exception In case of error
+     */
+    @Test
+    void postsMergeStartComment() throws Exception {
+        final Pull pull = QnMergeTest.pull();
+        QnMergeTest.mergeRequest(pull);
         MatcherAssert.assertThat(
             "Comment about staring merge should be posted",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(2)).body(),
             Matchers.containsString(
                 String.format(
                     QnMergeTest.PHRASES.getString("QnMerge.start"),
@@ -115,26 +104,41 @@ final class QnMergeTest {
     }
 
     /**
-     * QnMerge can not build a request because some GitHub checks
-     *  were failed.
-     *
+     * QnMerge keeps the initiator comment when CI checks fail.
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
     @Test
-    void stopsBecauseCiChecksFailed()
+    void preservesInitiatorWhenCiChecksFailed()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
-        checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
-        this.mergeRequest();
+        final Pull pull = QnMergeTest.pull();
+        QnMergeTest.statusesOf(pull).create(
+            Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS
+        );
+        QnMergeTest.mergeRequest(pull);
         MatcherAssert.assertThat(
             "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
         );
+    }
+
+    /**
+     * QnMerge can not build a request because some GitHub checks
+     *  were failed.
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void stopsBecauseCiChecksFailed() throws IOException, URISyntaxException {
+        final Pull pull = QnMergeTest.pull();
+        QnMergeTest.statusesOf(pull).create(
+            Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS
+        );
+        QnMergeTest.mergeRequest(pull);
         MatcherAssert.assertThat(
             "Merge should be stopped if checks are not successful",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(2)).body(),
             Matchers.containsString(
                 QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
             )
@@ -142,25 +146,41 @@ final class QnMergeTest {
     }
 
     /**
+     * QnMerge keeps the initiator comment when CI checks pass.
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void preservesInitiatorWhenCiChecksSuccessful()
+        throws IOException, URISyntaxException {
+        final Pull pull = QnMergeTest.pull();
+        QnMergeTest.statusesOf(pull).create(
+            Check.Status.COMPLETED, Check.Conclusion.SUCCESS
+        );
+        QnMergeTest.mergeRequest(pull);
+        MatcherAssert.assertThat(
+            "Merge comment should be initiator",
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
+        );
+    }
+
+    /**
      * QnMerge can build a request because GitHub checks finished successfully.
-     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
     @Test
     void continuesBecauseCiChecksSuccessful()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
-        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
-        this.mergeRequest();
-        MatcherAssert.assertThat(
-            "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
-            Matchers.is(QnMergeTest.COMMAND)
+        final Pull pull = QnMergeTest.pull();
+        QnMergeTest.statusesOf(pull).create(
+            Check.Status.COMPLETED, Check.Conclusion.SUCCESS
         );
+        QnMergeTest.mergeRequest(pull);
         MatcherAssert.assertThat(
             "Merge start info comment should be posted",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(2)).body(),
             Matchers.containsString(
                 String.format(
                     QnMergeTest.PHRASES.getString("QnMerge.start"),
@@ -172,20 +192,20 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request when some CI checks are skipped.
-     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
     @Test
     void continuesBecauseSomeChecksAreSkipped()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
-        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
-        checks.create(Check.Status.COMPLETED, Check.Conclusion.SKIPPED);
-        this.mergeRequest();
+        final Pull pull = QnMergeTest.pull();
+        final MkChecks statuses = QnMergeTest.statusesOf(pull);
+        statuses.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        statuses.create(Check.Status.COMPLETED, Check.Conclusion.SKIPPED);
+        QnMergeTest.mergeRequest(pull);
         MatcherAssert.assertThat(
             "Merge should proceed when some checks are skipped",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(2)).body(),
             Matchers.containsString(
                 String.format(
                     QnMergeTest.PHRASES.getString("QnMerge.start"),
@@ -207,25 +227,29 @@ final class QnMergeTest {
     @Disabled
     void stopsBecauseSystemFilesAffected()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
-        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        final Pull pull = QnMergeTest.pull();
+        QnMergeTest.statusesOf(pull).create(
+            Check.Status.COMPLETED, Check.Conclusion.SUCCESS
+        );
         final List<JsonObject> files = new LinkedList<>();
-        files.add(Json.createObjectBuilder()
-            .add("sha", "ef36558cbd")
-            .add("filename", "README.md")
-            .add("status", "modified")
-            .build()
+        files.add(
+            Json.createObjectBuilder()
+                .add("sha", "ef36558cbd")
+                .add("filename", "README.md")
+                .add("status", "modified")
+                .build()
         );
-        files.add(Json.createObjectBuilder()
-            .add("sha", "ef3857cad")
-            .add("filename", ".rultor.yml")
-            .add("status", "modified")
-            .build()
+        files.add(
+            Json.createObjectBuilder()
+                .add("sha", "ef3857cad")
+                .add("filename", ".rultor.yml")
+                .add("status", "modified")
+                .build()
         );
-        this.mergeRequest();
+        QnMergeTest.mergeRequest(pull);
         MatcherAssert.assertThat(
             "Comment should be posted about affected system file",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(QnMergeTest.commentsOf(pull).get(2)).body(),
             Matchers.containsString(
                 QnMergeTest.PHRASES.getString(
                     "QnMerge.system-files-affected"
@@ -235,19 +259,52 @@ final class QnMergeTest {
     }
 
     /**
-     * Merge request directives.
+     * Create a fresh pull request in a new mock repo with head/base branches.
+     * @return Pull request
+     * @throws IOException If fails
+     */
+    private static Pull pull() throws IOException {
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        return repo.pulls().create("", "head", "base");
+    }
+
+    /**
+     * Get the comments collection for the given pull request.
+     * @param pull Pull request
+     * @return Comments
+     * @throws IOException If fails
+     */
+    private static Comments commentsOf(final Pull pull) throws IOException {
+        return pull.repo().issues().get(pull.number()).comments();
+    }
+
+    /**
+     * Get the (mock) CI statuses collection for the given pull request.
+     * @param pull Pull request
+     * @return Mock statuses
+     * @throws IOException If fails
+     */
+    private static MkChecks statusesOf(final Pull pull) throws IOException {
+        return (MkChecks) pull.checks();
+    }
+
+    /**
+     * Merge request directives for the given pull.
+     * @param pull Pull request
      * @return Directives
      * @throws IOException In case of error
      * @throws URISyntaxException In case of error
      */
-    private Directives mergeRequest() throws IOException,
-        URISyntaxException {
+    private static Directives mergeRequest(final Pull pull)
+        throws IOException, URISyntaxException {
         return new Directives()
-            .add("request")
-            .append(
+            .add("request").append(
                 new QnMerge().understand(
                     new Comment.Smart(
-                        this.comments.post(QnMergeTest.COMMAND)
+                        QnMergeTest.commentsOf(pull).post(QnMergeTest.COMMAND)
                     ),
                     new URI("#")
                 ).dirs()

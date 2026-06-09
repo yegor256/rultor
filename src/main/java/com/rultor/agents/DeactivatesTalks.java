@@ -17,7 +17,6 @@ import org.cactoos.text.Joined;
 
 /**
  * Deactivates empty talks.
- *
  * @since 1.3
  */
 @Immutable
@@ -44,5 +43,4 @@ public final class DeactivatesTalks implements SuperAgent {
             }
         }
     }
-
 }

@@ -23,14 +23,14 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Tests for {@link Decrypt}.
- *
  * @since 1.37.4
  */
 final class DecryptTest {
+
     /**
      * Newline.
      */
-    private static final String NEWLINE = "\n";
+    private static final String NEWLINE = System.lineSeparator();
 
     /**
      * StartsRequest can take decryption instructions into account.
@@ -38,22 +38,7 @@ final class DecryptTest {
      * @throws Exception In case of error.
      */
     @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     void decryptsAssets(@TempDir final Path temp) throws Exception {
-        final Iterable<String> commands = new Decrypt(
-            new Profile.Fixed(
-                this.createTestProfileXML(),
-                "test/test"
-            )
-        ).commands();
-        final String script = new Joined(
-            DecryptTest.NEWLINE,
-            "set -ex -o pipefail",
-            new Joined(
-                DecryptTest.NEWLINE,
-                commands
-            ).asString()
-        ).asString();
         final File dir = temp.toFile();
         FileUtils.write(
             new File(dir, "a.txt.asc"),
@@ -72,8 +57,23 @@ final class DecryptTest {
         );
         try (
             VerboseProcess proc = new VerboseProcess(
-                new ProcessBuilder()
-                    .command("/bin/bash", "-c", script)
+                new ProcessBuilder().command(
+                        "/bin/bash",
+                        "-c",
+                        new Joined(
+                            DecryptTest.NEWLINE,
+                            "set -ex -o pipefail",
+                            new Joined(
+                                DecryptTest.NEWLINE,
+                                new Decrypt(
+                                    new Profile.Fixed(
+                                        this.createTestProfileXML(),
+                                        "test/test"
+                                    )
+                                ).commands()
+                            ).asString()
+                        ).asString()
+                    )
                     .directory(dir)
                     .redirectErrorStream(true),
                 Level.WARNING, Level.WARNING
@@ -93,7 +93,6 @@ final class DecryptTest {
 
     /**
      * Creates a profile XML for testing purposes.
-     *
      * @return XML document
      * @checkstyle AbbreviationAsWordInNameCheck (15 lines)
      */

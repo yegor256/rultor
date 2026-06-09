@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link FirstComment}.
- *
  * @since 1.51
  */
 final class FirstCommentTest {
@@ -24,15 +23,16 @@ final class FirstCommentTest {
      */
     @Test
     void parsesGitHubIssue() throws Exception {
-        final Issue issue = new MkGitHub().randomRepo().issues().create("", "");
-        final Comment.Smart cmt = new Comment.Smart(
-            new FirstComment(new Issue.Smart(issue))
-        );
         MatcherAssert.assertThat(
             "Author should be added",
-            cmt.author().login(),
+            new Comment.Smart(
+                new FirstComment(
+                    new Issue.Smart(
+                        new MkGitHub().randomRepo().issues().create("", "")
+                    )
+                )
+            ).author().login(),
             Matchers.equalTo("jeff")
         );
     }
-
 }

@@ -13,6 +13,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import jakarta.json.Json;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
@@ -22,12 +23,12 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile}.
- *
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class GithubProfileTest {
+
     /**
      * GithubProfile can fetch a YAML config.
      * @throws Exception In case of error.
@@ -36,7 +37,7 @@ final class GithubProfileTest {
     void fetchesYamlConfig() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets:",
                 "  test.xml: jeff/test1#test.xml",
                 "  beta: jeff/test1#test.xml",
@@ -47,41 +48,30 @@ final class GithubProfileTest {
                 "  script: hello!"
             ).asString()
         );
-        final String yaml = "friends:\n  - jeff/test2";
         repo.github()
             .repos()
             .get(new Coordinates.Simple("jeff/test1"))
             .contents().create(
                 Json.createObjectBuilder()
                     .add("path", ".rultor.yml")
-                    .add("message", "rultor config")
-                    .add(
+                    .add("message", "rultor config").add(
                         "content",
-                        Base64.getEncoder().encodeToString(yaml.getBytes())
+                        Base64.getEncoder().encodeToString(
+                            String.format("friends:%n  - jeff/test2")
+                                .getBytes(StandardCharsets.UTF_8)
+                        )
                     )
                     .build()
             );
-        final Profile profile = new GithubProfile(repo);
         MatcherAssert.assertThat(
-            "Profile should have all info",
-            profile.read(),
+            "Profile should expose all entries, architect items, and assets",
+            GithubProfile.fromRepo(repo).read(),
             XhtmlMatchers.hasXPaths(
                 "/p/entry[@key='merge']/entry[@key='script']",
                 "/p/entry[@key='assets']/entry[@key='test.xml']",
-                "/p/entry[@key='assets']/entry[@key='beta']"
-            )
-        );
-        MatcherAssert.assertThat(
-            "Architect should be saved",
-            profile.read().xpath("/p/entry[@key='architect']/item/text()"),
-            Matchers.contains("jeff", "donald")
-        );
-        MatcherAssert.assertThat(
-            "Asset should be saved",
-            profile.assets(),
-            Matchers.hasEntry(
-                Matchers.equalTo("test.xml"),
-                Matchers.notNullValue()
+                "/p/entry[@key='assets']/entry[@key='beta']",
+                "/p/entry[@key='architect']/item[text()='jeff']",
+                "/p/entry[@key='architect']/item[text()='donald']"
             )
         );
     }
@@ -93,8 +83,8 @@ final class GithubProfileTest {
     void throwsWhenYamlIsBroken() {
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(
-                GithubProfileTest.repo("&*(fds:[[\nfd\n")
+            () -> GithubProfile.fromRepo(
+                GithubProfileTest.repo(String.format("&*(fds:[[%nfd%n"))
             ).read()
         );
     }
@@ -106,16 +96,17 @@ final class GithubProfileTest {
      */
     @Test
     void throwsWhenAssetIsMisconfigured() throws Exception {
-        final Repo repo = GithubProfileTest.repo(
-            new Joined(
-                "\n",
-                "assets: ",
-                "  something.xml: -invalid.user.name/test1#test.xml"
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "assets: ",
+                        "  something.xml: -invalid.user.name/test1#test.xml"
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -125,16 +116,17 @@ final class GithubProfileTest {
      */
     @Test
     void throwsWhenAssetsUsernameContainsUnderscore() throws Exception {
-        final Repo repo = GithubProfileTest.repo(
-            new Joined(
-                "\n",
-                "assets: ",
-                "  something.xml: invalid_username/test1#test.xml"
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "assets: ",
+                        "  something.xml: invalid_username/test1#test.xml"
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -144,18 +136,18 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    void throwsWhenAssetsUsernameStartsWithUnderscore()
-        throws Exception {
-        final Repo repo = GithubProfileTest.repo(
-            new Joined(
-                "\n",
-                "assets: ",
-                "  something.xml: _invalidusername/test1#test.xml"
-            ).asString()
-        );
+    void throwsWhenAssetsUsernameStartsWithUnderscore() throws Exception {
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "assets: ",
+                        "  something.xml: _invalidusername/test1#test.xml"
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -173,24 +165,23 @@ final class GithubProfileTest {
         repo.contents().create(
             Json.createObjectBuilder()
                 .add("path", ".rultor.yml")
-                .add("message", "just test")
-                .add(
+                .add("message", "just test").add(
                     "content",
                     Base64.getEncoder().encodeToString(
                         new Joined(
-                            "\n",
+                            System.lineSeparator(),
                             "assets: ",
                             String.format(
                                 "  something.xml: jeff/%s#.rultor.yml", name
                             ),
                             "friends:", String.format("  - jeff/%s", name)
-                        ).asString().getBytes()
+                        ).asString().getBytes(StandardCharsets.UTF_8)
                     )
                 ).build()
         );
         MatcherAssert.assertThat(
             "Assets should be created",
-            new GithubProfile(repo).assets().entrySet(),
+            GithubProfile.fromRepo(repo).assets().entrySet(),
             Matchers.not(Matchers.emptyIterable())
         );
     }
@@ -201,16 +192,17 @@ final class GithubProfileTest {
      */
     @Test
     void throwsWhenRultorConfigIsAbsent() throws Exception {
-        final Repo repo = GithubProfileTest.repo(
-            new Joined(
-                "\n",
-                "assets:   ",
-                "  something.xml: jeff/test2#.rultor.yml"
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "assets:   ",
+                        "  something.xml: jeff/test2#.rultor.yml"
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -220,16 +212,17 @@ final class GithubProfileTest {
      */
     @Test
     void throwsWhenFriendNotDefined() throws Exception {
-        final Repo repo = GithubProfileTest.repo(
-            new Joined(
-                "\n",
-                "assets:    ",
-                "  a.xml: jeff/test1#test.xml"
-            ).asString()
-        );
         Assertions.assertThrows(
             Profile.ConfigException.class,
-            () -> new GithubProfile(repo).assets()
+            () -> GithubProfile.fromRepo(
+                GithubProfileTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "assets:    ",
+                        "  a.xml: jeff/test1#test.xml"
+                    ).asString()
+                )
+            ).assets()
         );
     }
 
@@ -239,34 +232,34 @@ final class GithubProfileTest {
      * @throws Exception In case of error.
      */
     @Test
-    void testAssetNotFound() throws Exception {
+    void throwsWhenAssetNotFound() throws Exception {
         final Repo repo = GithubProfileTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets:",
                 "  test.xml: jeff/test1#test.xmls",
                 "merge:",
                 "  script: hello!"
             ).asString()
         );
-        final String yaml = "friends:\n  - jeff/test2";
         repo.github()
             .repos()
             .get(new Coordinates.Simple("jeff/test1"))
             .contents().create(
                 Json.createObjectBuilder()
                     .add("path", ".rultor.yml")
-                    .add("message", "rultor config")
-                    .add(
+                    .add("message", "rultor config").add(
                         "content",
-                        Base64.getEncoder().encodeToString(yaml.getBytes())
+                        Base64.getEncoder().encodeToString(
+                            String.format("friends:%n  - jeff/test2")
+                                .getBytes(StandardCharsets.UTF_8)
+                        )
                     )
                     .build()
             );
-        final Profile profile = new GithubProfile(repo);
         Assertions.assertThrows(
             Profile.ConfigException.class,
-                profile::assets
+                GithubProfile.fromRepo(repo)::assets
         );
     }
 
@@ -280,14 +273,12 @@ final class GithubProfileTest {
         final GitHub github = new MkGitHub("jeff");
         github.repos()
             .create(new Repos.RepoCreate("test1", false))
-            .contents()
-            .create(
+            .contents().create(
                 Json.createObjectBuilder()
                     .add("path", "test.xml")
-                    .add("message", "just test msg")
-                    .add(
+                    .add("message", "just test msg").add(
                         "content",
-                        Base64.getEncoder().encodeToString("hey".getBytes())
+                        Base64.getEncoder().encodeToString("hey".getBytes(StandardCharsets.UTF_8))
                     )
                     .build()
             );
@@ -297,10 +288,9 @@ final class GithubProfileTest {
         repo.contents().create(
             Json.createObjectBuilder()
                 .add("path", ".rultor.yml")
-                .add("message", "just test")
-                .add(
+                .add("message", "just test").add(
                     "content",
-                    Base64.getEncoder().encodeToString(yaml.getBytes())
+                    Base64.getEncoder().encodeToString(yaml.getBytes(StandardCharsets.UTF_8))
                 )
                 .build()
         );

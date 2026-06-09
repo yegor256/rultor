@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnConfig}.
- *
  * @since 1.8
  */
 final class QnConfigTest {
@@ -31,13 +30,26 @@ final class QnConfigTest {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");
-        final Profile profile = new Profile.Fixed();
         MatcherAssert.assertThat(
             "hello command should be recognized",
-            new QnConfig(profile).understand(
+            new QnConfig(new Profile.Fixed()).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnConfig posts the XML view of the rultor.yml as a comment.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsRultorYmlAsComment() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("hello");
+        new QnConfig(new Profile.Fixed()).understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
         );
         MatcherAssert.assertThat(
             "Xml view of rultor.yml should be added to the comment",
@@ -45,5 +57,4 @@ final class QnConfigTest {
             Matchers.containsString("</p>")
         );
     }
-
 }

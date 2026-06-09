@@ -5,8 +5,6 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Comment;
-import com.jcabi.github.Issue;
-import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnFirstOf}.
- *
  * @since 1.6.5
  */
 final class QnFirstOfTest {
@@ -29,9 +26,6 @@ final class QnFirstOfTest {
      */
     @Test
     void getsFirstReq() throws Exception {
-        final Repo repo = new MkGitHub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
-        final Comment comment = issue.comments().post("deploy");
         MatcherAssert.assertThat(
             "First not empty question should be taken",
             new QnFirstOf(
@@ -40,9 +34,14 @@ final class QnFirstOfTest {
                     new QnDeploy(),
                     Question.EMPTY
                 )
-            ).understand(new Comment.Smart(comment), new URI("#")),
+            ).understand(
+                new Comment.Smart(
+                    new MkGitHub().randomRepo()
+                        .issues().create("", "").comments().post("deploy")
+                ),
+                new URI("#")
+            ),
             Matchers.not(Matchers.equalTo(Req.EMPTY))
         );
     }
-
 }

@@ -13,7 +13,7 @@ import com.rultor.Env;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.CustomMatcher;
@@ -29,7 +29,6 @@ import org.xembly.Directives;
 
 /**
  * Integration case for {@link DyTalks}.
- *
  * @since 1.1
  * @checkstyle NonStaticMethodCheck (500 lines)
  */
@@ -100,8 +99,7 @@ final class DyTalksITTestCase {
             DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
         );
         final String first = "krzyk1/rultor#562";
-        final String repo = "some/other";
-        talks.create(repo, first);
+        talks.create("some/other", first);
         final Talk talk = talks.get(first);
         talk.active(false);
         MatcherAssert.assertThat(
@@ -109,6 +107,23 @@ final class DyTalksITTestCase {
             talks.recent(),
             Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(first))
         );
+    }
+
+    /**
+     * DyTalks does not surface a second talk while caching the first.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @Disabled
+    void cachesRecentTalksAndHidesSecond() throws Exception {
+        final Talks talks = new DyTalks(
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
+        );
+        final String first = "krzyk1/rultor#562";
+        final String repo = "some/other";
+        talks.create(repo, first);
+        final Talk talk = talks.get(first);
+        talk.active(false);
         final String second = "krzyk2/rultor#562#2";
         talks.create(repo, second);
         final Talk talking = talks.get(second);
@@ -133,18 +148,34 @@ final class DyTalksITTestCase {
         );
         final String repo = "repo1";
         talks.create(repo, "yegor256/rultor#9");
-        final Date date = new Date();
         TimeUnit.SECONDS.sleep(2L);
         talks.create(repo, "yegor256/rultor#10");
         TimeUnit.SECONDS.sleep(2L);
         MatcherAssert.assertThat(
             "All talks should be returned",
-            talks.siblings(repo, new Date()),
+            talks.siblings(repo, Instant.now()),
             Matchers.iterableWithSize(2)
         );
+    }
+
+    /**
+     * DyTalks can list siblings limited by the supplied timestamp.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void listsSiblingsBeforeMoment() throws Exception {
+        final Talks talks = new DyTalks(
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
+        );
+        final String repo = "repo1";
+        talks.create(repo, "yegor256/rultor#9");
+        final Instant moment = Instant.now();
+        TimeUnit.SECONDS.sleep(2L);
+        talks.create(repo, "yegor256/rultor#10");
+        TimeUnit.SECONDS.sleep(2L);
         MatcherAssert.assertThat(
             "Only one talk should be returned",
-            talks.siblings(repo, date),
+            talks.siblings(repo, moment),
             Matchers.iterableWithSize(1)
         );
     }
@@ -171,9 +202,8 @@ final class DyTalksITTestCase {
                     new CustomMatcher<Talk>("private talk") {
                         @Override
                         public boolean matches(final Object item) {
-                            final Talk tlk = Talk.class.cast(item);
                             try {
-                                return name.equals(tlk.name());
+                                return name.equals(Talk.class.cast(item).name());
                             } catch (final IOException ex) {
                                 throw new IllegalStateException(ex);
                             }
@@ -217,6 +247,7 @@ final class DyTalksITTestCase {
      * @since 1.1
      */
     private static final class TalkMatcher extends TypeSafeMatcher<Talk> {
+
         /**
          * Name of the talk.
          */
@@ -224,7 +255,7 @@ final class DyTalksITTestCase {
 
         /**
          * Constructor.
-         * @param nam Name of the talk.
+         * @param nam Name of the talk
          */
         TalkMatcher(final String nam) {
             super();

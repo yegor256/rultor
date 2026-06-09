@@ -10,7 +10,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Fake PGP Signature.
- *
  * @since 1.67.1
  * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
  */
@@ -18,17 +17,17 @@ final class FakePGP {
 
     /**
      * Returns FakePGP string.
-     *
      * @return String
      * @checkstyle NonStaticMethodCheck (35 lines)
      */
-    public String asString() {
+    String asString() {
         return new UncheckedText(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 new ListOf<>(
                     "-----BEGIN PGP MESSAGE-----",
-                    "Version: GnuPG v1\n",
+                    "Version: GnuPG v1",
+                    "",
                     "hQEMA5qETcGag5w6AQgAvm/P0JUlQAd",
                     "OtGng5zHLx5cV+BrbpFt1m2ja4BjacYMU",
                     "wcubtJSh+n0XNLk6zMMCsrDnTfzvi/F",
@@ -55,5 +54,4 @@ final class FakePGP {
             )
         ).asString();
     }
-
 }

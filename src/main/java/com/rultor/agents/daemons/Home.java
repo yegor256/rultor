@@ -12,7 +12,6 @@ import lombok.ToString;
 
 /**
  * Home page of a daemon.
- *
  * @since 1.0
  */
 @Immutable
@@ -29,14 +28,6 @@ public final class Home {
      * Hash.
      */
     private final transient String hash;
-
-    /**
-     * Ctor.
-     * @param talk Talk
-     */
-    public Home(final XML talk) {
-        this(talk, talk.xpath("/talk/request/@id").get(0));
-    }
 
     /**
      * Ctor.
@@ -61,5 +52,4 @@ public final class Home {
             )
         );
     }
-
 }

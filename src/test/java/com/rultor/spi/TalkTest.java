@@ -11,7 +11,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Talk}.
- *
  * @since 1.41.3
  */
 final class TalkTest {
@@ -40,5 +39,4 @@ final class TalkTest {
             XhtmlMatchers.hasXPath("/talk/wire")
         );
     }
-
 }

@@ -8,13 +8,14 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 
 /**
  * Feature toggles.
- *
  * @since 1.0
  */
 @Immutable
@@ -34,7 +35,6 @@ public interface Toggles {
 
     /**
      * Inner file.
-     *
      * @since 1.0
      */
     @Immutable
@@ -49,10 +49,16 @@ public interface Toggles {
             "/tmp/rultor-%s", Env.read("Rultor-Revision")
         );
 
+        /**
+         * Lock for guarding the toggle file.
+         */
+        private static final Lock LOCK = new ReentrantLock();
+
         @Override
         public void toggle() throws IOException {
             final File file = this.file();
-            synchronized (Toggles.class) {
+            Toggles.InFile.LOCK.lock();
+            try {
                 if (this.readOnly()) {
                     if (!file.delete()) {
                         throw new IllegalStateException(
@@ -62,13 +68,18 @@ public interface Toggles {
                 } else {
                     FileUtils.touch(file);
                 }
+            } finally {
+                Toggles.InFile.LOCK.unlock();
             }
         }
 
         @Override
         public boolean readOnly() {
-            synchronized (Toggles.class) {
+            Toggles.InFile.LOCK.lock();
+            try {
                 return this.file().exists();
+            } finally {
+                Toggles.InFile.LOCK.unlock();
             }
         }
 
@@ -84,5 +95,4 @@ public interface Toggles {
             return file;
         }
     }
-
 }

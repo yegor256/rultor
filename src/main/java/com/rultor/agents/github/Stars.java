@@ -18,6 +18,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 public final class Stars extends AbstractAgent {
+
     /**
      * GitHub.
      */

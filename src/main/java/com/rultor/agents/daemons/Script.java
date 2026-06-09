@@ -19,7 +19,6 @@ import org.apache.commons.io.input.AutoCloseInputStream;
 
 /**
  * Script to run.
- *
  * @since 1.53
  */
 @Immutable
@@ -46,7 +45,7 @@ final class Script {
      * @return Exit code
      * @throws IOException If fails
      */
-    public int exec(final XML xml) throws IOException {
+    int exec(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
@@ -54,11 +53,10 @@ final class Script {
                 "cd %s && cat > %s && chmod a+x %1$s/%2$s",
                 Ssh.escape(dir), Ssh.escape(this.name)
             ),
-            AutoCloseInputStream.builder()
-                .setInputStream(
-                    Objects.requireNonNull(
-                        this.getClass().getResourceAsStream(this.name)
-                    )
+            AutoCloseInputStream.builder().setInputStream(
+                Objects.requireNonNull(
+                    this.getClass().getResourceAsStream(this.name)
+                )
                 ).get(),
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
@@ -75,5 +73,4 @@ final class Script {
             )
         );
     }
-
 }

@@ -33,7 +33,6 @@ import org.takes.rs.RsFluent;
 
 /**
  * Single daemon.
- *
  * @since 1.50
  */
 final class TkDaemon implements TkRegex {
@@ -80,8 +79,7 @@ final class TkDaemon implements TkRegex {
             return new RsFluent()
                 .withStatus(HttpURLConnection.HTTP_OK)
                 .withBody(this.html(number, hash))
-                .withType("text/html; charset=utf-8")
-                .withHeader(
+                .withType("text/html; charset=utf-8").withHeader(
                     "X-Rultor-Daemon",
                     String.format("%s-%s", number, hash)
                 );
@@ -105,30 +103,27 @@ final class TkDaemon implements TkRegex {
     private InputStream html(final long number, final String hash)
         throws IOException {
         final Talk talk = this.talks.get(number);
-        final String head = IOUtils.toString(
-            Objects.requireNonNull(this.getClass().getResource("daemon/head.html")),
-            StandardCharsets.UTF_8
-        ).trim();
         return new SequenceInputStream(
             Collections.enumeration(
                 Arrays.asList(
                     IOUtils.toInputStream(
-                        head.replace("TALK_NAME", talk.name())
-                            .replace(
-                                "TALK_LINK",
-                                StringEscapeUtils.escapeHtml4(
-                                    talk.read()
-                                        .xpath("/talk/wire/href/text()").get(0)
-                                )
+                        IOUtils.toString(
+                            Objects.requireNonNull(this.getClass().getResource("daemon/head.html")),
+                            StandardCharsets.UTF_8
+                        ).trim().replace("TALK_NAME", talk.name()).replace(
+                            "TALK_LINK",
+                            StringEscapeUtils.escapeHtml4(
+                                talk.read()
+                                    .xpath("/talk/wire/href/text()").get(0)
+                            )
                             ),
                         StandardCharsets.UTF_8
                     ),
                     TkDaemon.escape(new Tail(talk.read(), hash).read()),
-                    AutoCloseInputStream.builder()
-                        .setInputStream(
-                            Objects.requireNonNull(
-                                this.getClass().getResourceAsStream("daemon/tail.html")
-                            )
+                    AutoCloseInputStream.builder().setInputStream(
+                        Objects.requireNonNull(
+                            this.getClass().getResourceAsStream("daemon/tail.html")
+                        )
                         ).get()
                 )
             )
@@ -149,8 +144,7 @@ final class TkDaemon implements TkRegex {
             100_000
         );
         return ReaderInputStream.builder()
-            .setCharset(StandardCharsets.UTF_8)
-            .setReader(
+            .setCharset(StandardCharsets.UTF_8).setReader(
                 // @checkstyle AnonInnerLengthCheck (30 lines)
                 new ProxyReader(src) {
                     @Override
@@ -177,5 +171,4 @@ final class TkDaemon implements TkRegex {
                 }
             ).get();
     }
-
 }

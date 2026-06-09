@@ -18,7 +18,6 @@ import org.xembly.Directives;
 
 /**
  * Ping EC2 instance and deletes "daemon" if it doesn't reply.
- *
  * @since 1.77
  */
 @Immutable

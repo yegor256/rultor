@@ -24,7 +24,6 @@ import lombok.ToString;
 
 /**
  * Profiles.
- *
  * @since 1.0
  */
 @Immutable
@@ -129,10 +128,9 @@ public final class Profiles {
         for (final String element : section) {
             path.append(String.format("/entry[@key='%s']", element));
         }
-        final List<String> result = profile.read().xpath(
+        return profile.read().xpath(
             String.format("/%s/item/text()", path)
-        );
-        return result.toArray(new String[0]);
+        ).toArray(new String[0]);
     }
 
     /**
@@ -153,7 +151,7 @@ public final class Profiles {
             );
         } else {
             profile = this.merged(
-                new GithubProfile(
+                GithubProfile.fromRepo(
                     new TalkIssues(Profiles.github(), xml).get().repo()
                 ),
                 xml.xpath("//request/args/arg[@name='fork']/text()").get(0),
@@ -180,5 +178,4 @@ public final class Profiles {
             )
         );
     }
-
 }

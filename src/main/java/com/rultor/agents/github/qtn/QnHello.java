@@ -18,7 +18,6 @@ import lombok.ToString;
 
 /**
  * Hello.
- *
  * @since 1.3
  */
 @Immutable
@@ -41,5 +40,4 @@ public final class QnHello implements Question {
         Logger.info(this, "hello found in #%d", comment.issue().number());
         return Req.DONE;
     }
-
 }

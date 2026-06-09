@@ -19,7 +19,6 @@ import org.xembly.Directives;
 
 /**
  * Sanitizes the daemon, if it's broken.
- *
  * @since 1.54
  */
 @Immutable
@@ -37,8 +36,7 @@ public final class SanitizesDaemon extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final Shell shell = new TalkShells(xml).get();
-        final int exit = new Shell.Empty(shell).exec(
+        final int exit = new Shell.Empty(new TalkShells(xml).get()).exec(
             String.format("ls %s", Ssh.escape(dir))
         );
         final Directives dirs = new Directives();
@@ -52,5 +50,4 @@ public final class SanitizesDaemon extends AbstractAgent {
         }
         return dirs;
     }
-
 }

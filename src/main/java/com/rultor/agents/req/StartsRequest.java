@@ -32,14 +32,12 @@ import org.xembly.Directives;
 
 /**
  * Merges.
- *
  * @since 1.0
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "profile")
-@SuppressWarnings("PMD.ExcessiveMethodLength")
 public final class StartsRequest extends AbstractAgent {
 
     /**
@@ -75,7 +73,7 @@ public final class StartsRequest extends AbstractAgent {
             );
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
-                "cat <<EOT\n%[exception]s\nEOT\nexit -1", ex
+                "cat <<EOT%n%[exception]s%nEOT%nexit -1", ex
             );
         }
         return new Directives().xpath("/talk")
@@ -97,7 +95,7 @@ public final class StartsRequest extends AbstractAgent {
     private String script(final XML req, final String type, final String name)
         throws IOException {
         return String.join(
-            "\n",
+            System.lineSeparator(),
             new Joined<>(
                 new Mapped<>(
                     input -> String.format(
@@ -144,7 +142,7 @@ public final class StartsRequest extends AbstractAgent {
         String script = "";
         if (!this.profile.read().nodes("/p/entry[@key='release']").isEmpty()) {
             script = String.format(
-                "sensitive=(%s)\n",
+                "sensitive=(%s)%n",
                 String.join(
                     " ",
                     new Mapped<>(
@@ -224,7 +222,7 @@ public final class StartsRequest extends AbstractAgent {
                     new Mapped<>(
                         input -> String.format(
                             "--env=%s",
-                            input.replace("\n", " ")
+                            input.replace(System.lineSeparator(), " ")
                         ),
                         docker.envs(
                             new MapOf<>(
@@ -290,8 +288,9 @@ public final class StartsRequest extends AbstractAgent {
      * @throws IOException If fails
      */
     private DockerRun docker(final String type) throws IOException {
-        final String xpath = String.format("/p/entry[@key='%s']", type);
-        final Collection<XML> nodes = this.profile.read().nodes(xpath);
+        final Collection<XML> nodes = this.profile.read().nodes(
+            String.format("/p/entry[@key='%s']", type)
+        );
         if (nodes.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(

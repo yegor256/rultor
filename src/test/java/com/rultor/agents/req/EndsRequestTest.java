@@ -13,7 +13,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link EndsRequest}.
- *
  * @since 1.3
  */
 final class EndsRequestTest {
@@ -46,5 +45,4 @@ final class EndsRequestTest {
             XhtmlMatchers.hasXPath("/talk/request[success='false']")
         );
     }
-
 }

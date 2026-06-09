@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
  * Integration case for {@link TkHome}.
  * @since 0.5
  */
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 final class TkHomeITCase {
 
     /**
@@ -112,10 +111,22 @@ final class TkHomeITCase {
             .uri().path("/").back()
             .header("Accept", "application/xml")
             .fetch()
-            .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_OK)
             .as(XmlResponse.class)
             .assertXPath("/page/version/name");
+    }
+
+    /**
+     * IndexRs returns HTTP OK status when showing the version.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void showsVersionWithOkStatus() throws Exception {
+        new JdkRequest(TkHomeITCase.HOME)
+            .uri().path("/").back()
+            .header("Accept", "application/xml")
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_OK);
     }
 
     /**
@@ -124,18 +135,33 @@ final class TkHomeITCase {
      */
     @Test
     void rendersValidPngTick() throws Exception {
-        final Request request = new JdkRequest(TkHomeITCase.HOME);
-        final byte[] data = request.uri().path("/ticks").back()
-            .method(Request.GET)
-            .fetch()
-            .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .binary();
         MatcherAssert.assertThat(
             "Tick HTTP GET response should return valid png image",
-            ImageIO.read(new ByteArrayInputStream(data)).getWidth(),
+            ImageIO.read(
+                new ByteArrayInputStream(
+                    new JdkRequest(TkHomeITCase.HOME)
+                        .uri().path("/ticks").back()
+                        .method(Request.GET)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .binary()
+                )
+            ).getWidth(),
             Matchers.equalTo(1_000)
         );
     }
 
+    /**
+     * Tick endpoint returns HTTP OK status.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void tickReturnsOkStatus() throws Exception {
+        new JdkRequest(TkHomeITCase.HOME)
+            .uri().path("/ticks").back()
+            .method(Request.GET)
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_OK);
+    }
 }

@@ -14,7 +14,7 @@ import com.jcabi.dynamo.Region;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.cactoos.iterable.Filtered;
@@ -27,13 +27,11 @@ import software.amazon.awssdk.services.dynamodb.model.Select;
 
 /**
  * Talks in Dynamo.
- *
  * @since 1.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "region")
-@SuppressWarnings({"PMD.TooManyMethods", "PMD.DataClass"})
 public final class DyTalks implements Talks {
 
     /**
@@ -119,8 +117,7 @@ public final class DyTalks implements Talks {
     @Override
     public boolean exists(final long number) {
         return this.region.table(DyTalks.TBL)
-            .frame()
-            .through(
+            .frame().through(
                 new QueryValve()
                     .withLimit(1)
                     .withIndexName(DyTalks.IDX_NUMBERS)
@@ -134,8 +131,7 @@ public final class DyTalks implements Talks {
     public Talk get(final long number) {
         return new DyTalk(
             this.region.table(DyTalks.TBL)
-                .frame()
-                .through(
+                .frame().through(
                     new QueryValve()
                         .withLimit(1)
                         .withIndexName(DyTalks.IDX_NUMBERS)
@@ -161,8 +157,7 @@ public final class DyTalks implements Talks {
     public Talk get(final String name) {
         return new DyTalk(
             this.region.table(DyTalks.TBL)
-                .frame()
-                .through(
+                .frame().through(
                     new QueryValve()
                         .withLimit(1)
                         .withAttributesToGet(DyTalks.ATTR_NUMBER)
@@ -193,8 +188,7 @@ public final class DyTalks implements Talks {
                 .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
                 .with(DyTalks.ATTR_REPO, repo)
                 .with(DyTalks.ATTR_NUMBER, number)
-                .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
-                .with(
+                .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis()).with(
                     DyTalks.ATTR_XML,
                     String.format("<talk name='%s' number='%d'/>", name, number)
                 )
@@ -208,13 +202,11 @@ public final class DyTalks implements Talks {
             new HeadOf<>(
                 10,
                 this.region.table(DyTalks.TBL)
-                    .frame()
-                    .through(
+                    .frame().through(
                         new QueryValve()
                             .withIndexName(DyTalks.IDX_ACTIVE)
                             .withConsistentRead(false)
-                            .withSelect(Select.SPECIFIC_ATTRIBUTES)
-                            .withAttributesToGet(
+                            .withSelect(Select.SPECIFIC_ATTRIBUTES).withAttributesToGet(
                                 DyTalks.HASH, DyTalks.ATTR_NUMBER
                             )
                     )
@@ -240,16 +232,14 @@ public final class DyTalks implements Talks {
                 new Mapped<>(
                     DyTalk::new,
                     this.region.table(DyTalks.TBL)
-                        .frame()
-                        .through(
+                        .frame().through(
                             new QueryValve()
                                 .withIndexName(DyTalks.IDX_ACTIVE)
                                 .withScanIndexForward(false)
                                 .withConsistentRead(false)
                                 .withLimit(5)
                                 .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
-                        )
-                        .where(
+                        ).where(
                             DyTalks.ATTR_ACTIVE, Boolean.toString(false)
                         )
                 )
@@ -258,12 +248,11 @@ public final class DyTalks implements Talks {
     }
 
     @Override
-    public Iterable<Talk> siblings(final String repo, final Date since) {
+    public Iterable<Talk> siblings(final String repo, final Instant since) {
         return new Mapped<>(
             DyTalk::new,
             this.region.table(DyTalks.TBL)
-                .frame()
-                .through(
+                .frame().through(
                     new QueryValve()
                         .withIndexName(DyTalks.IDX_SIBLINGS)
                         .withScanIndexForward(false)
@@ -271,14 +260,12 @@ public final class DyTalks implements Talks {
                         .withLimit(20)
                         .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                 )
-                .where(DyTalks.ATTR_REPO, repo)
-                .where(
+                .where(DyTalks.ATTR_REPO, repo).where(
                     DyTalks.ATTR_UPDATED,
                     Condition.builder()
-                        .comparisonOperator(ComparisonOperator.LT)
-                        .attributeValueList(
+                        .comparisonOperator(ComparisonOperator.LT).attributeValueList(
                             AttributeValue.builder()
-                                .n(Long.toString(since.getTime()))
+                                .n(Long.toString(since.toEpochMilli()))
                                 .build()
                         )
                         .build()

@@ -10,7 +10,6 @@ import com.rultor.spi.Talks;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.takes.Take;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqWithHeader;
 import org.takes.rs.RsPrint;
@@ -28,7 +27,6 @@ final class TkHomeTest {
     @Test
     void rendersHomePage() throws Exception {
         final Talks talks = new Talks.InDir();
-        final Take take = new TkHome(talks, new Toggles.InFile());
         talks.create("repo1", "test1");
         talks.create("repo2", "test2");
         MatcherAssert.assertThat(
@@ -36,7 +34,7 @@ final class TkHomeTest {
             XhtmlMatchers.xhtml(
                 new TextOf(
                     new RsPrint(
-                        take.act(
+                        new TkHome(talks, new Toggles.InFile()).act(
                             new RqWithHeader(new RqFake(), "Accept", "text/xml")
                         )
                     ).body()
@@ -51,5 +49,4 @@ final class TkHomeTest {
             )
         );
     }
-
 }

@@ -12,6 +12,7 @@ import com.jcabi.github.Smarts;
 import com.jcabi.github.safe.SfComments;
 import com.jcabi.log.Logger;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,6 @@ import org.xembly.Xembler;
 
 /**
  * Answer to post.
- *
  * @since 1.0
  */
 @Immutable
@@ -74,7 +74,7 @@ public final class Answer {
         final List<Smart> comments = new ListOf<>(
             new Reversed<>(
                 new Smarts<>(
-                    issue.comments().iterate(new Date(0L))
+                    issue.comments().iterate(Date.from(Instant.EPOCH))
                 )
             )
         );
@@ -104,13 +104,13 @@ public final class Answer {
      * @param text The text
      * @return Text to post
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private String msg(final boolean success, final String text) {
         final StringBuilder msg = new StringBuilder(100);
         try {
             msg.append(
                 new FormattedText(
-                    "> %s\n\n",
+                    "> %s%n%n",
                     new Abbreviated(
                         this.comment.body().replaceAll(
                             "\\p{Space}",
@@ -139,13 +139,11 @@ public final class Answer {
                         )
                     )
                 ).asString()
-            );
-            msg.append(' ').append(text);
+            ).append(' ').append(text);
             // @checkstyle IllegalCatchCheck (1 line)
         } catch (final Throwable ex) {
             msg.append(text);
         }
         return Xembler.escape(msg.toString());
     }
-
 }

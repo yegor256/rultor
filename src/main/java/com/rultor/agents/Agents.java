@@ -4,7 +4,6 @@
  */
 package com.rultor.agents;
 
-import co.stateful.Locks;
 import co.stateful.Sttc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.GitHub;
@@ -84,6 +83,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -93,7 +93,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Agents.
- *
  * @since 1.0
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
@@ -101,7 +100,6 @@ import org.cactoos.text.UncheckedText;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = {"github", "sttc"})
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
 
     /**
@@ -145,10 +143,6 @@ public final class Agents {
      * @throws IOException If fails
      */
     public SuperAgent starter() throws IOException {
-        final AwsEc2 aws = new AwsEc2(
-            Env.read("Rultor-EC2Key"),
-            Env.read("Rultor-EC2Secret")
-        );
         return new SuperAgent.Iterative(
             new Array<>(
                 new StartsTalks(this.github),
@@ -156,7 +150,11 @@ public final class Agents {
                 new IndexesRequests(),
                 new SuperAgent.Quiet(
                     new PrunesInstances(
-                        aws, TimeUnit.HOURS.toMillis(3L)
+                        new AwsEc2(
+                            Env.read("Rultor-EC2Key"),
+                            Env.read("Rultor-EC2Secret")
+                        ),
+                        TimeUnit.HOURS.toMillis(3L)
                     )
                 ),
                 new SuperAgent.Disabled(
@@ -194,156 +192,159 @@ public final class Agents {
      * @throws IOException If fails
      * @checkstyle MethodLengthCheck (500 lines)
      */
-    @SuppressWarnings("PMD.ExcessiveMethodLength")
     public Agent agent(final Talk talk, final Profile profile)
         throws IOException {
-        final Locks locks = this.sttc.locks();
-        final Question question = new QnSince(
-            // @checkstyle MagicNumber (1 line)
-            49_092_213,
-            new QnNotSelf(
-                new QnReferredTo(
-                    this.github.users().self().login(),
-                    new QnReaction(
-                        new QnParametrized(
-                            new QnWithAuthor(
-                                new QnFollow(
-                                    new QnFirstOf(
-                                        new QnIfContains(
-                                            "config", new QnConfig(profile)
-                                        ),
-                                        new QnIfContains(
-                                            "status", new QnStatus(talk)
-                                        ),
-                                        new QnIfContains(
-                                            "version", new QnVersion()
-                                        ),
-                                        new QnIfContains(
-                                            "hello", new QnHello()
-                                        ),
-                                        new QnIfContains(
-                                            "ping", new QnHello()
-                                        ),
-                                        new QnIfContains(
-                                            "stop",
-                                            new QnAskedBy(
-                                                profile,
-                                                Agents.commanders("stop"),
-                                                new QnStop()
-                                            )
-                                        ),
-                                        new QnIfCollaborator(
-                                            new QnAlone(
-                                                talk, locks,
-                                                Agents.commands(profile)
-                                            )
-                                        ),
-                                        new QnIamLost()
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        );
         final AwsEc2 aws = new AwsEc2(
             Env.read("Rultor-EC2Key"),
             Env.read("Rultor-EC2Secret")
         );
         return new VerboseAgent(
             new Agent.Iterative(
-                new Agent.Quiet(new SanitizesDaemon()),
-                new WipesDaemon(),
-                new DropsTalk(),
-                new Understands(
-                    this.github,
-                    new QnSafe(question)
-                ),
-                new StartsRequest(profile),
-                new Agent.Quiet(
-                    new Agent.Disabled(
-                        new StartsInstance(
-                            profile,
-                            aws,
-                            Env.read("Rultor-EC2Image"),
-                            Env.read("Rultor-EC2Type"),
-                            Env.read("Rultor-EC2Group"),
-                            Env.read("Rultor-EC2Subnet")
-                        ),
-                        false
-                    )
-                ),
-                new Agent.Quiet(new DescribesInstance(aws)),
-                new Agent.Quiet(
-                    new ConnectsInstance(
-                        aws,
-                        new PfShell(
-                            profile,
-                            "none",
-                            Agents.PORT,
-                            "ubuntu",
-                            Agents.priv()
-                        )
-                    )
-                ),
-                new Agent.Disabled(
-                    new RegistersShell(
-                        profile,
-                        Agents.HOST, Agents.PORT, Agents.LOGIN,
-                        Agents.priv()
-                    ),
-                    true
-                ),
-                // @checkstyle MagicNumber (1 line)
-                new DismountDaemon(TimeUnit.HOURS.toMinutes(5L)),
-                new Agent.Quiet(
-                    new DropsDaemon(TimeUnit.HOURS.toMinutes(1L))
-                ),
-                new Agent.Quiet(new MkdirDaemon()),
-                new TimedAgent(new StartsDaemon(profile)),
-                // @checkstyle MagicNumber (1 line)
-                new Agent.SkipIfName(
-                    new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(1L))),
-                    "^(objectionary|yegor256|zerocracy)/.*$"
-                ),
-                new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(5L))),
-                new TimedAgent(new StopsDaemon()),
-                new TimedAgent(new Agent.Quiet(new EndsDaemon())),
-                new EndsRequest(),
-                new SafeAgent(
-                    new Tweets(
+                Arrays.asList(
+                    new Agent.Quiet(new SanitizesDaemon()),
+                    new WipesDaemon(),
+                    new DropsTalk(),
+                    new Understands(
                         this.github,
-                        new OAuthTwitter(
-                            Env.read("Rultor-TwitterKey"),
-                            Env.read("Rultor-TwitterSecret"),
-                            Env.read("Rultor-TwitterToken"),
-                            Env.read("Rultor-TwitterTokenSecret")
-                        )
-                    )
-                ),
-                new CommentsTag(this.github, profile),
-                new ReleaseBinaries(this.github, profile),
-                new Dephantomizes(this.github),
-                new Reports(this.github),
-                new Agent.Quiet(new TerminatesInstance(aws)),
-                new Agent.Quiet(new PingsInstance()),
-                new Agent.Quiet(new DropsInstance(aws)),
-                new Agent.Quiet(new DetachesInstance(aws)),
-                new Agent.Quiet(new ShootsInstance(aws, TimeUnit.MINUTES.toMillis(15L))),
-                new RemovesShell(),
-                new Agent.Quiet(
-                    new ArchivesDaemon(
-                        new ReRegion(
-                            new Region.Simple(
-                                Env.read("Rultor-S3Key"),
-                                Env.read("Rultor-S3Secret")
+                        new QnSafe(
+                            new QnSince(
+                                // @checkstyle MagicNumber (1 line)
+                                49_092_213,
+                                new QnNotSelf(
+                                    new QnReferredTo(
+                                        this.github.users().self().login(),
+                                        new QnReaction(
+                                            new QnParametrized(
+                                                new QnWithAuthor(
+                                                    new QnFollow(
+                                                        new QnFirstOf(
+                                                            Arrays.asList(
+                                                                new QnIfContains(
+                                                                    "config", new QnConfig(profile)
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "status", new QnStatus(talk)
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "version", new QnVersion()
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "hello", new QnHello()
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "ping", new QnHello()
+                                                                ),
+                                                                new QnIfContains(
+                                                                    "stop",
+                                                                    new QnAskedBy(
+                                                                        profile,
+                                                                        Agents.commanders("stop"),
+                                                                        new QnStop()
+                                                                    )
+                                                                ),
+                                                                new QnIfCollaborator(
+                                                                    new QnAlone(
+                                                                        talk, this.sttc.locks(),
+                                                                        Agents.commands(profile)
+                                                                    )
+                                                                ),
+                                                                new QnIamLost()
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
                             )
-                        ).bucket(Env.read("Rultor-S3Bucket"))
-                    )
-                ),
-                new Publishes(profile, this.github),
-                new SafeAgent(new Stars(this.github))
+                        )
+                    ),
+                    new StartsRequest(profile),
+                    new Agent.Quiet(
+                        new Agent.Disabled(
+                            new StartsInstance(
+                                profile,
+                                aws,
+                                Env.read("Rultor-EC2Image"),
+                                Env.read("Rultor-EC2Type"),
+                                Env.read("Rultor-EC2Group"),
+                                Env.read("Rultor-EC2Subnet")
+                            ),
+                            false
+                        )
+                    ),
+                    new Agent.Quiet(new DescribesInstance(aws)),
+                    new Agent.Quiet(
+                        new ConnectsInstance(
+                            aws,
+                            new PfShell(
+                                profile,
+                                "none",
+                                Agents.PORT,
+                                "ubuntu",
+                                Agents.priv()
+                            )
+                        )
+                    ),
+                    new Agent.Disabled(
+                        RegistersShell.make(
+                            profile,
+                            Agents.HOST, Agents.PORT, Agents.LOGIN,
+                            Agents.priv()
+                        ),
+                        true
+                    ),
+                    // @checkstyle MagicNumber (1 line)
+                    new DismountDaemon(TimeUnit.HOURS.toMinutes(5L)),
+                    new Agent.Quiet(
+                        new DropsDaemon(TimeUnit.HOURS.toMinutes(1L))
+                    ),
+                    new Agent.Quiet(new MkdirDaemon()),
+                    new TimedAgent(new StartsDaemon(profile)),
+                    // @checkstyle MagicNumber (1 line)
+                    new Agent.SkipIfName(
+                        new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(1L))),
+                        "^(objectionary|yegor256|zerocracy)/.*$"
+                    ),
+                    new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(5L))),
+                    new TimedAgent(new StopsDaemon()),
+                    new TimedAgent(new Agent.Quiet(new EndsDaemon())),
+                    new EndsRequest(),
+                    new SafeAgent(
+                        new Tweets(
+                            this.github,
+                            new OAuthTwitter(
+                                Env.read("Rultor-TwitterKey"),
+                                Env.read("Rultor-TwitterSecret"),
+                                Env.read("Rultor-TwitterToken"),
+                                Env.read("Rultor-TwitterTokenSecret")
+                            )
+                        )
+                    ),
+                    new CommentsTag(this.github, profile),
+                    new ReleaseBinaries(this.github, profile),
+                    new Dephantomizes(this.github),
+                    new Reports(this.github),
+                    new Agent.Quiet(new TerminatesInstance(aws)),
+                    new Agent.Quiet(new PingsInstance()),
+                    new Agent.Quiet(new DropsInstance(aws)),
+                    new Agent.Quiet(new DetachesInstance(aws)),
+                    new Agent.Quiet(new ShootsInstance(aws, TimeUnit.MINUTES.toMillis(15L))),
+                    new RemovesShell(),
+                    new Agent.Quiet(
+                        new ArchivesDaemon(
+                            new ReRegion(
+                                new Region.Simple(
+                                    Env.read("Rultor-S3Key"),
+                                    Env.read("Rultor-S3Secret")
+                                )
+                            ).bucket(Env.read("Rultor-S3Bucket"))
+                        )
+                    ),
+                    new Publishes(profile, this.github),
+                    new SafeAgent(new Stars(this.github))
+                )
             )
         );
     }
@@ -351,43 +352,45 @@ public final class Agents {
     /**
      * Handle main commands.
      * @param profile Profile to uuse
-     * @return Array of questions.
+     * @return Array of questions
      */
     private static Question commands(final Profile profile) {
         return new QnByArchitect(
             profile,
             "/p/entry[@key='architect']/item/text()",
             new QnFirstOf(
-                new QnIfContains(
-                    "unlock",
-                    new QnUnlock()
-                ),
-                new QnIfContains(
-                    "lock",
-                    new QnLock()
-                ),
-                new QnIfContains(
-                    "merge",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("merge"),
-                        new QnIfPull(new QnIfUnlocked(new QnMerge()))
-                    )
-                ),
-                new QnIfContains(
-                    "deploy",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("deploy"),
-                        new QnDeploy()
-                    )
-                ),
-                new QnIfContains(
-                    "release",
-                    new QnAskedBy(
-                        profile,
-                        Agents.commanders("release"),
-                        new QnRelease()
+                Arrays.asList(
+                    new QnIfContains(
+                        "unlock",
+                        new QnUnlock()
+                    ),
+                    new QnIfContains(
+                        "lock",
+                        new QnLock()
+                    ),
+                    new QnIfContains(
+                        "merge",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("merge"),
+                            new QnIfPull(new QnIfUnlocked(new QnMerge()))
+                        )
+                    ),
+                    new QnIfContains(
+                        "deploy",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("deploy"),
+                            new QnDeploy()
+                        )
+                    ),
+                    new QnIfContains(
+                        "release",
+                        new QnAskedBy(
+                            profile,
+                            Agents.commanders("release"),
+                            new QnRelease()
+                        )
                     )
                 )
             )
@@ -421,5 +424,4 @@ public final class Agents {
         }
         return priv;
     }
-
 }

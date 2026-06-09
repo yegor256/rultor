@@ -9,7 +9,6 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import java.io.IOException;
-import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -19,7 +18,6 @@ import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 /**
  * Terminates EC2 instance if it's older than X hours, but
  * the work hasn't been started yet and the shell is not registered.
- *
  * @since 1.77
  */
 @Immutable
@@ -54,11 +52,10 @@ public final class ShootsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final long age = new Date().getTime() - this.api.aws()
-            .describeInstances(
-                DescribeInstancesRequest.builder()
-                    .instanceIds(instance)
-                    .build()
+        final long age = System.currentTimeMillis() - this.api.aws().describeInstances(
+            DescribeInstancesRequest.builder()
+                .instanceIds(instance)
+                .build()
             )
             .reservations().get(0)
             .instances().get(0)

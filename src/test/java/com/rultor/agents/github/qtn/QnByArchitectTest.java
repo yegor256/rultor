@@ -13,6 +13,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import org.hamcrest.MatcherAssert;
@@ -22,7 +23,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for {@link QnByArchitect}.
- *
  * @since 1.45
  */
 final class QnByArchitectTest {
@@ -35,8 +35,32 @@ final class QnByArchitectTest {
     void rejectsIfNotArchitect() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument("<p><entry key='a'>johnny</entry></p>")
+            ),
+            "/p/entry[@key='a']/text()", Mockito.mock(Question.class)
+        ).understand(
+            new Comment.Smart(issue.comments().post("deploy")),
+            new URI("#")
+        );
+        MatcherAssert.assertThat(
+            "Two comments should be posted",
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
+            Matchers.iterableWithSize(2)
+        );
+    }
+
+    /**
+     * QnByArchitect does not forward the request to the inner Question
+     * when the comment author is not an architect.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void doesNotForwardWhenNotArchitect() throws Exception {
         final Comment.Smart comment = new Comment.Smart(
-            issue.comments().post("deploy")
+            new MkGitHub().randomRepo()
+                .issues().create("", "").comments().post("deploy")
         );
         final Question question = Mockito.mock(Question.class);
         final URI home = new URI("#");
@@ -47,10 +71,24 @@ final class QnByArchitectTest {
             "/p/entry[@key='a']/text()", question
         ).understand(comment, home);
         Mockito.verify(question, Mockito.never()).understand(comment, home);
-        MatcherAssert.assertThat(
-            "Two comments should be posted",
-            issue.comments().iterate(new Date(0L)),
-            Matchers.iterableWithSize(2)
+    }
+
+    /**
+     * QnByArchitect posts confirmation request when not an architect.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsConfirmationRequestIfNotArchitect() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new QnByArchitect(
+            new Profile.Fixed(
+                new XMLDocument("<p><entry key='a'>johnny</entry></p>")
+            ),
+            "/p/entry[@key='a']/text()", Mockito.mock(Question.class)
+        ).understand(
+            new Comment.Smart(issue.comments().post("deploy")),
+            new URI("#")
         );
         MatcherAssert.assertThat(
             "Confirmation request comment should be posted",
@@ -68,9 +106,8 @@ final class QnByArchitectTest {
     @Test
     void acceptsIfArchitect() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
-        final Issue issue = repo.issues().create("", "");
         final Comment.Smart comment = new Comment.Smart(
-            issue.comments().post("release")
+            repo.issues().create("", "").comments().post("release")
         );
         final Question question = Mockito.mock(Question.class);
         final URI home = new URI("#1");
@@ -149,5 +186,4 @@ final class QnByArchitectTest {
         ).understand(comment, home);
         Mockito.verify(question, Mockito.never()).understand(comment, home);
     }
-
 }

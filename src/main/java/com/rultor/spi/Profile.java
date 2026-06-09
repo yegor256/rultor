@@ -16,7 +16,6 @@ import java.util.Objects;
 
 /**
  * Profile.
- *
  * @since 1.0
  */
 @Immutable
@@ -51,7 +50,6 @@ public interface Profile {
     /**
      * Get it in XML format (throws
      * {@link Profile.ConfigException}, if fails).
-     *
      * @return XML
      * @throws IOException If fails
      */
@@ -66,10 +64,10 @@ public interface Profile {
 
     /**
      * If can't read profile due to syntax error.
-     *
      * @since 1.0
      */
     final class ConfigException extends RuntimeException {
+
         /**
          * Serialization marker.
          */
@@ -79,7 +77,7 @@ public interface Profile {
          * Ctor.
          * @param cause Cause of it
          */
-        public ConfigException(final String cause) {
+        public ConfigException(final Exception cause) {
             super(cause);
         }
 
@@ -87,18 +85,18 @@ public interface Profile {
          * Ctor.
          * @param cause Cause of it
          */
-        public ConfigException(final Exception cause) {
+        public ConfigException(final String cause) {
             super(cause);
         }
     }
 
     /**
      * Defaults.
-     *
      * @since 1.0
      */
     @Immutable
     final class Defaults {
+
         /**
          * Original profile.
          */
@@ -145,11 +143,11 @@ public interface Profile {
 
     /**
      * Fixed.
-     *
      * @since 1.0
      */
     @Immutable
     final class Fixed implements Profile {
+
         /**
          * XML document.
          */

@@ -11,7 +11,6 @@ import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.takes.facets.fork.RqRegex;
-import org.takes.facets.fork.TkRegex;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqWithHeader;
 import org.takes.rs.RsPrint;
@@ -31,7 +30,6 @@ final class TkSiblingsTest {
     @Test
     void rendersListOfTalks() throws Exception {
         final Talks talks = new Talks.InDir();
-        final TkRegex take = new TkSiblings(talks);
         talks.create("repo1", Talk.TEST_NAME);
         talks.get(Talk.TEST_NAME).modify(
             new Directives()
@@ -48,7 +46,7 @@ final class TkSiblingsTest {
             XhtmlMatchers.xhtml(
                 new TextOf(
                     new RsPrint(
-                        take.act(
+                        new TkSiblings(talks).act(
                             new RqRegex.Fake(
                                 new RqWithHeader(
                                     new RqFake("GET", "/aa?s=123"),
@@ -72,5 +70,4 @@ final class TkSiblingsTest {
             )
         );
     }
-
 }

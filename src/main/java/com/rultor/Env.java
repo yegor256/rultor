@@ -15,7 +15,6 @@ import org.cactoos.text.UncheckedText;
 /**
  * Environment variables either provided in the {@code MANIFEST.MF}
  * file or through shell variables.
- *
  * @since 1.50
  */
 public final class Env {
@@ -70,5 +69,4 @@ public final class Env {
         }
         return ret;
     }
-
 }

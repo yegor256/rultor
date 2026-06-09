@@ -6,9 +6,9 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
-import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import org.cactoos.list.ListOf;
 import org.hamcrest.MatcherAssert;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Answer}.
- *
  * @since 1.8.16
  */
 final class AnswerTest {
@@ -36,7 +35,7 @@ final class AnswerTest {
         MatcherAssert.assertThat(
             "Answer with source comment should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
-            Matchers.containsString("> hey, do it\n\n")
+            Matchers.containsString(String.format("> hey, do it%n%n"))
         );
     }
 
@@ -50,16 +49,17 @@ final class AnswerTest {
         ((MkGitHub) issue.repo().github()).relogin("walter")
             .repos().get(issue.repo().coordinates())
             .issues().get(1).comments().post("hello, how are you?");
-        final Comment.Smart comment = new Comment.Smart(
-            issue.comments().get(1)
+        final Answer answer = new Answer(
+            new Comment.Smart(
+                issue.comments().get(1)
+            )
         );
-        final Answer answer = new Answer(comment);
         for (int idx = 0; idx < 10; ++idx) {
             answer.post(true, "oops");
         }
         MatcherAssert.assertThat(
             "Only 5 answers should be posted",
-            new ListOf<>(issue.comments().iterate(new Date(0L))).size(),
+            new ListOf<>(issue.comments().iterate(Date.from(Instant.EPOCH))).size(),
             Matchers.is(6)
         );
     }
@@ -70,8 +70,6 @@ final class AnswerTest {
      * @throws IOException If fails
      */
     private static Issue issue() throws IOException {
-        final Repo repo = new MkGitHub().randomRepo();
-        return repo.issues().create("", "");
+        return new MkGitHub().randomRepo().issues().create("", "");
     }
-
 }

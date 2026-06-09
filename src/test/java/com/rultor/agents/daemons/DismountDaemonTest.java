@@ -15,7 +15,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link DismountDaemon}.
- *
  * @since 1.2
  * @checkstyle MultipleStringLiterals (500 lines)
  */
@@ -84,5 +83,4 @@ final class DismountDaemonTest {
             XhtmlMatchers.hasXPaths("/talk/daemon[not(ended)]")
         );
     }
-
 }

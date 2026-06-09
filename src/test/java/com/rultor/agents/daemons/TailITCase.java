@@ -21,7 +21,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Tail}.
- *
  * @since 1.62
  */
 final class TailITCase {
@@ -69,9 +68,8 @@ final class TailITCase {
                     new Tail(talk.read(), hash).read(),
                     StandardCharsets.UTF_8
                 ),
-                Matchers.is(String.format("%sê\n", clean))
+                Matchers.is(String.format("%sê%n", clean))
             );
         }
     }
-
 }

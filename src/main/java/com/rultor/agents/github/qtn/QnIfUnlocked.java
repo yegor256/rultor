@@ -29,7 +29,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * If target branch is unlocked.
- *
  * @since 1.53
  */
 @Immutable
@@ -109,11 +108,10 @@ public final class QnIfUnlocked implements Question {
                     IOUtils.toString(
                         contents.get(QnIfUnlocked.PATH, branch).raw(),
                         StandardCharsets.UTF_8
-                    ).split("\n")
+                    ).split(System.lineSeparator())
                 )
             );
         }
         return guards;
     }
-
 }

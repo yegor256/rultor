@@ -12,9 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
@@ -23,11 +22,9 @@ import org.cactoos.list.ListOf;
 
 /**
  * Talks in a repo.
- *
  * @since 1.0
  */
 @Immutable
-@SuppressWarnings("PMD.TooManyMethods")
 public interface Talks {
 
     /**
@@ -89,10 +86,10 @@ public interface Talks {
     /**
      * Get siblings, since this date (all talks will be older that this date).
      * @param repo Repo name
-     * @param since Date
+     * @param since Instant
      * @return Talks
      */
-    Iterable<Talk> siblings(String repo, Date since);
+    Iterable<Talk> siblings(String repo, Instant since);
 
     /**
      * In directory.
@@ -100,6 +97,7 @@ public interface Talks {
      */
     @Immutable
     final class InDir implements Talks {
+
         /**
          * Dir.
          */
@@ -194,15 +192,14 @@ public interface Talks {
             final Collection<File> files = FileUtils.listFiles(
                 new File(this.path), null, false
             );
-            final List<File> list = new ListOf<>(
-                new Sorted<>(
-                    files
-                )
-            );
             Logger.info(this, "%d files in %s", files.size(), this.path);
             return new Mapped<>(
                 Talk.InFile::new,
-                list
+                new ListOf<>(
+                    new Sorted<>(
+                        files
+                    )
+                )
             );
         }
 
@@ -212,7 +209,7 @@ public interface Talks {
         }
 
         @Override
-        public Iterable<Talk> siblings(final String repo, final Date since) {
+        public Iterable<Talk> siblings(final String repo, final Instant since) {
             return this.active();
         }
     }

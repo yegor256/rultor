@@ -11,15 +11,13 @@ import com.jcabi.github.RepoCommit.Smart;
 import com.jcabi.github.Smarts;
 import jakarta.json.JsonObject;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapOf;
@@ -28,7 +26,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Log of commits.
- *
  * @since 1.51
  */
 @Immutable
@@ -54,27 +51,25 @@ final class CommitsLog {
 
     /**
      * Release body text.
-     * @param prev Previous release date.
-     * @param current Current release date.
-     * @return Release body text.
-     * @throws IOException In case of problem communicating with git.
+     * @param prev Previous release date
+     * @param current Current release date
+     * @return Release body text
+     * @throws IOException In case of problem communicating with git
      */
-    @SuppressWarnings({"PMD.UseConcurrentHashMap", "PMD.UseDiamondOperator"})
-    public String build(final Date prev, final Date current)
-        throws IOException {
-        final DateFormat format = new SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH
-        );
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+    String build(final Instant prev, final Instant current) throws IOException {
+        final DateTimeFormatter format = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH)
+            .withZone(ZoneOffset.UTC);
         final Collection<String> lines = new LinkedList<>();
-        // @checkstyle DiamondOperatorCheck (2 lines)
-        final Map<String, String> params = new MapOf<String, String>(
-            new MapEntry<>("since", format.format(prev)),
-            new MapEntry<>("until", format.format(current))
-        );
         final List<Smart> commits = new ListOf<>(
             new Smarts<>(
-                this.repo.commits().iterate(params)
+                this.repo.commits().iterate(
+                    // @checkstyle DiamondOperatorCheck (1 line)
+                    new MapOf<String, String>(
+                        new MapEntry<>("since", format.format(prev)),
+                        new MapEntry<>("until", format.format(current))
+                    )
+                )
             )
         );
         int count = 0;
@@ -93,7 +88,7 @@ final class CommitsLog {
         }
         return new UncheckedText(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 lines
             )
         ).asString();
@@ -130,5 +125,4 @@ final class CommitsLog {
         }
         return line.toString();
     }
-
 }

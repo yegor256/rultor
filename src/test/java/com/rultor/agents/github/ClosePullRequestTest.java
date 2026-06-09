@@ -12,6 +12,7 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
@@ -21,7 +22,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link ClosePullRequest}.
- *
  * @since 1.63
  */
 final class ClosePullRequestTest {
@@ -39,26 +39,51 @@ final class ClosePullRequestTest {
     void closesPullRequestForRebaseMode() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    "",
-                    "<p><entry key='merge'>",
-                    "<entry key='rebase'>true</entry>",
-                    "</entry></p>"
-                ).asString()
-            )
-        );
-        final Talk talk = ClosePullRequestTest.talk(repo, issue);
-        new ClosePullRequest(profile, repo.github()).execute(talk);
-        final Issue.Smart smart = new Issue.Smart(issue);
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='merge'>",
+                        "<entry key='rebase'>true</entry>",
+                        "</entry></p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
         MatcherAssert.assertThat(
             "PR should be closed",
-            smart.state(), Matchers.is("closed")
+            new Issue.Smart(issue).state(), Matchers.is("closed")
         );
+    }
+
+    /**
+     * ClosePullRequest adds rebase message when in rebase mode.
+     * @throws Exception If error
+     */
+    @Test
+    void addsRebaseMessageForRebaseMode() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='merge'>",
+                        "<entry key='rebase'>true</entry>",
+                        "</entry></p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
         MatcherAssert.assertThat(
             "Rebase message should be added",
-            new Comment.Smart(smart.comments().get(1)).body(),
+            new Comment.Smart(
+                new Issue.Smart(issue).comments().get(1)
+            ).body(),
             Matchers.containsString(
                 "Rultor closed this pull request for you because"
             )
@@ -73,26 +98,49 @@ final class ClosePullRequestTest {
     void leavesPullRequestOpenWhenNoRebaseMode() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
-        final Profile profile = new Profile.Fixed(
-            new XMLDocument(
-                new Joined(
-                    "",
-                    "<p> <entry key='merge'>",
-                    "  <entry key='rebase'>false</entry>",
-                    "</entry> </p>"
-                ).asString()
-            )
-        );
-        final Talk talk = ClosePullRequestTest.talk(repo, issue);
-        new ClosePullRequest(profile, repo.github()).execute(talk);
-        final Issue.Smart smart = new Issue.Smart(issue);
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p> <entry key='merge'>",
+                        "  <entry key='rebase'>false</entry>",
+                        "</entry> </p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
         MatcherAssert.assertThat(
             "Issue should be open",
-            smart.state(), Matchers.is("open")
+            new Issue.Smart(issue).state(), Matchers.is("open")
         );
+    }
+
+    /**
+     * ClosePullRequest adds no comments when not in rebase mode.
+     * @throws Exception If error
+     */
+    @Test
+    void addsNoCommentsWhenNoRebaseMode() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new ClosePullRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p> <entry key='merge'>",
+                        "  <entry key='rebase'>false</entry>",
+                        "</entry> </p>"
+                    ).asString()
+                )
+            ),
+            repo.github()
+        ).execute(ClosePullRequestTest.talk(repo, issue));
         MatcherAssert.assertThat(
             "No comments should be added",
-            smart.comments().iterate(new Date(0L)),
+            new Issue.Smart(issue).comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.is(Matchers.emptyIterable())
         );
     }

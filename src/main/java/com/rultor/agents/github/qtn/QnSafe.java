@@ -17,20 +17,18 @@ import lombok.ToString;
 
 /**
  * It never fails.
- *
  * @since 1.57
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
-@SuppressWarnings("PMD.AvoidCatchingThrowable")
 public final class QnSafe implements Question {
 
     /**
      * Default error message format.
      */
     private static final String DEFAULT_FORMAT =
-        "We failed, sorry, try again:\n\n```\n%[exception]s\n```";
+        "We failed, sorry, try again:%n%n```%n%[exception]s%n```";
 
     /**
      * Original question.
@@ -46,6 +44,7 @@ public final class QnSafe implements Question {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Req understand(final Comment.Smart comment,
         final URI home
     ) throws IOException {
@@ -75,6 +74,7 @@ public final class QnSafe implements Question {
      * @param comment The comment
      * @return TRUE if valid
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private static boolean valid(final Comment.Smart comment) {
         boolean valid = true;
         try {
@@ -86,5 +86,4 @@ public final class QnSafe implements Question {
         }
         return valid;
     }
-
 }

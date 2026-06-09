@@ -11,7 +11,6 @@ import java.io.IOException;
 
 /**
  * Command to run in a given shell and working directory.
- *
  * @since 1.62
  */
 @Immutable
@@ -54,7 +53,7 @@ final class ShellCommand {
      * @return Stdout
      * @throws IOException If fails
      */
-    public String exec() throws IOException {
+    String exec() throws IOException {
         return new Shell.Plain(new Shell.Safe(this.shell)).exec(
             String.join(
                 ShellCommand.SHELL_JOINER,
@@ -63,5 +62,4 @@ final class ShellCommand {
             )
         );
     }
-
 }

@@ -11,25 +11,23 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link Brackets}.
- *
  * @since 1.2
  */
 final class BracketsTest {
+
     /**
      * Brackets can fetch environment vars.
-     * @throws Exception In case of error.
      */
     @Test
     void escapesInput() {
-        final Brackets brackets = new Brackets(
-            new ListOf<>(
-                "Elegant",
-                "Objects"
-            )
-        );
         MatcherAssert.assertThat(
             "Each element should be wrapped in ''",
-            brackets.toString(),
+            new Brackets(
+                new ListOf<>(
+                    "Elegant",
+                    "Objects"
+                )
+            ).toString(),
             Matchers.equalTo("( 'Elegant' 'Objects' )")
         );
     }

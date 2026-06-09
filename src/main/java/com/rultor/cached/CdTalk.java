@@ -9,20 +9,20 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
 
 /**
  * Cached talk.
- *
  * @since 1.51
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
 public final class CdTalk implements Talk {
+
     /**
      * Origin talk.
      */
@@ -50,7 +50,7 @@ public final class CdTalk implements Talk {
 
     @Override
     @Cacheable
-    public Date updated() throws IOException {
+    public Instant updated() throws IOException {
         return this.origin.updated();
     }
 
@@ -71,5 +71,4 @@ public final class CdTalk implements Talk {
     public void active(final boolean yes) throws IOException {
         this.origin.active(yes);
     }
-
 }

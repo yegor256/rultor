@@ -16,7 +16,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Publishes}.
- *
  * @since 1.32.7
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
@@ -65,5 +64,4 @@ final class PublishesTest {
             XhtmlMatchers.hasXPath("/talk[@public='false']")
         );
     }
-
 }

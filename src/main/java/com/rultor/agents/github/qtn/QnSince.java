@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * Question asked after given GitHub message number.
- *
  * @since 1.6.5
  */
 @Immutable
@@ -54,5 +53,4 @@ public final class QnSince implements Question {
         }
         return req;
     }
-
 }

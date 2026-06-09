@@ -27,7 +27,6 @@ import org.xembly.Directives;
 
 /**
  * Starts talk when I'm mentioned in a GitHub issue.
- *
  * @since 1.0
  * @todo #1074:1h Current implementation can answer only for
  *  issue and PR comments, mostly because of Issue structure
@@ -55,7 +54,6 @@ public final class StartsTalks implements SuperAgent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
             System.currentTimeMillis() - 180_000
@@ -152,5 +150,4 @@ public final class StartsTalks implements SuperAgent {
             event.getJsonObject("repository").getString("full_name")
         );
     }
-
 }
