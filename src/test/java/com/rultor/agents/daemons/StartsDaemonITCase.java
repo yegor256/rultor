@@ -30,8 +30,12 @@ import org.hamcrest.Matchers;
 import org.hamcrest.core.StringStartsWith;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.xembly.Directives;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 /**
  * Integration test for ${@link StartsDaemon}.
@@ -39,7 +43,14 @@ import org.xembly.Directives;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @SuppressWarnings("PMD.ExcessiveImports")
+@ExtendWith(SystemStubsExtension.class)
 final class StartsDaemonITCase {
+
+    /**
+     * Environment variables.
+     */
+    @SystemStub
+    private EnvironmentVariables environment;
 
     /**
      * StartsDaemon can start a daemon.
@@ -119,6 +130,30 @@ final class StartsDaemonITCase {
                 "Deprecation message in case of default image should be printed",
                 dir,
                 matcher
+            );
+        }
+    }
+
+    /**
+     * StartsDaemon reports a clear error when GPG secret key is absent.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void endsGracefullyWhenGpgSecringMissing() throws Exception {
+        this.environment.remove("GPG_SECRING");
+        try (
+            StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = StartsDaemonITCase.talk(start);
+            MatcherAssert.assertThat(
+                "Daemon should end gracefully when GPG_SECRING is absent",
+                talk.read(),
+                XhtmlMatchers.hasXPaths(
+                    "/talk/daemon[started and ended and code='128']",
+                    // @checkstyle LineLength (1 line)
+                    "/talk/daemon/tail[contains(., 'GPG secret key is missing or too short in the GPG_SECRING environment variable')]"
+                )
             );
         }
     }

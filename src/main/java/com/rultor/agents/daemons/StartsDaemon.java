@@ -170,10 +170,11 @@ public final class StartsDaemon implements Agent {
      */
     private void uploadGpgKey(final Shell shell) throws IOException {
         final String secring = System.getenv("GPG_SECRING");
-        if (secring.split("\n").length < 10) {
+        if (secring == null || secring.split("\n").length < 10) {
             throw new IOException(
                 String.format(
-                    "GPG secret key is too short in the GPG_SECRING environment variable: %s",
+                    // @checkstyle LineLength (1 line)
+                    "GPG secret key is missing or too short in the GPG_SECRING environment variable: %s",
                     secring
                 )
             );
