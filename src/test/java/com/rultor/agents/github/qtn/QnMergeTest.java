@@ -196,6 +196,32 @@ final class QnMergeTest {
     }
 
     /**
+     * QnMerge stops when GitHub reports a blocking mergeable state.
+     *
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void stopsBecauseMergeableStateIsBlocked()
+        throws IOException, URISyntaxException {
+        final MkChecks checks = (MkChecks) this.pull.checks();
+        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        this.pull.patch(
+            Json.createObjectBuilder()
+                .add("mergeable_state", "blocked")
+                .build()
+        );
+        this.mergeRequest();
+        MatcherAssert.assertThat(
+            "Merge should be stopped if mergeable state is blocked",
+            new Comment.Smart(this.comments.get(2)).body(),
+            Matchers.containsString(
+                QnMergeTest.PHRASES.getString("QnMerge.not-mergeable")
+            )
+        );
+    }
+
+    /**
      * QnMerge can not build a request because .rultor file is changed.
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error

@@ -62,6 +62,12 @@ public final class QnMerge implements Question {
                     )
                 );
                 req = Req.DONE;
+            } else if (pull.blocked()) {
+                new Answer(comment).post(
+                    false,
+                    QnMerge.PHRASES.getString("QnMerge.not-mergeable")
+                );
+                req = Req.DONE;
             } else
                 if (pull.allChecksSuccessful()) {
                     new Answer(comment).post(
