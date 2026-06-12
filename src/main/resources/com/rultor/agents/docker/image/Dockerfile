@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2009-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 MAINTAINER Armin Braun <me@obrown.io>
 LABEL Description="This is the image holding the Rultor build runner infrastructure."
 
