@@ -170,6 +170,11 @@ public final class StartsDaemon implements Agent {
      */
     private void uploadGpgKey(final Shell shell) throws IOException {
         final String secring = System.getenv("GPG_SECRING");
+        if (secring == null) {
+            throw new IOException(
+                "GPG_SECRING environment variable is not set"
+            );
+        }
         if (secring.split("\n").length < 10) {
             throw new IOException(
                 String.format(
