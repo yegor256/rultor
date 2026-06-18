@@ -8,7 +8,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Check;
 import com.jcabi.github.Pull;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import java.io.IOException;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -21,6 +23,14 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 final class CheckablePull {
+    /**
+     * GitHub `mergeable_state` values that prevent the merge from going
+     * through at the `git push` step.
+     */
+    private static final Set<String> BLOCKING_STATES = Set.of(
+        "blocked", "dirty", "behind", "draft"
+    );
+
     /**
      * Pull request.
      */
@@ -46,6 +56,32 @@ final class CheckablePull {
                 result = false;
                 break;
             }
+        }
+        return result;
+    }
+
+    /**
+     * Checks the GitHub `mergeable_state` of the pull request.
+     * Returns `true` when the state is one the merge cannot recover
+     * from at the `git push` step: branch protection rule violation,
+     * unresolved review conversation, out of date branch, draft, or
+     * conflict with the base. Unknown or absent state is treated as
+     * not blocking to preserve the previous behavior on hosts that
+     * do not return the field.
+     * @return True when GitHub will reject a `git push` for this PR
+     * @throws IOException If fails
+     */
+    public boolean blocked() throws IOException {
+        final JsonObject json = this.pull.json();
+        final boolean result;
+        if (!json.containsKey("mergeable_state")
+            || json.isNull("mergeable_state")
+            || json.get("mergeable_state").getValueType() != JsonValue.ValueType.STRING) {
+            result = false;
+        } else {
+            result = CheckablePull.BLOCKING_STATES.contains(
+                json.getString("mergeable_state")
+            );
         }
         return result;
     }
