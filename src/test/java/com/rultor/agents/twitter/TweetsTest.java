@@ -8,6 +8,8 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.Repos;
 import com.jcabi.github.mock.MkGitHub;
+import com.jcabi.xml.XMLDocument;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.UUID;
@@ -38,7 +40,7 @@ final class TweetsTest {
         );
         final Twitter twitter = Mockito.mock(Twitter.class);
         final Talk talk = TweetsTest.talk(repo, repo.issues().create("", ""));
-        new Tweets(repo.github(), twitter).execute(talk);
+        new Tweets(repo.github(), Profile.EMPTY, twitter).execute(talk);
         Mockito.verify(twitter).post(
             ArgumentMatchers.contains(repo.coordinates().repo())
         );
@@ -56,7 +58,7 @@ final class TweetsTest {
             )
         );
         final Twitter twitter = Mockito.mock(Twitter.class);
-        new Tweets(repo.github(), twitter).execute(
+        new Tweets(repo.github(), Profile.EMPTY, twitter).execute(
             TweetsTest.talk(repo, repo.issues().create("", ""))
         );
         Mockito.verify(twitter).post(
@@ -70,6 +72,30 @@ final class TweetsTest {
                 ).asString()
             )
         );
+    }
+
+    /**
+     * Tweets skips posting when the profile sets `release/tweet` to `false`.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void skipsTweetWhenDisabledInProfile() throws Exception {
+        final Repo repo = new MkGitHub().repos().create(
+            new Repos.RepoCreate(
+                UUID.randomUUID().toString().replace("-", ""), false
+            )
+        );
+        final Twitter twitter = Mockito.mock(Twitter.class);
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                "<p><entry key='release'><entry key='tweet'>false</entry></entry></p>"
+            )
+        );
+        new Tweets(repo.github(), profile, twitter).execute(
+            TweetsTest.talk(repo, repo.issues().create("", ""))
+        );
+        Mockito.verify(twitter, Mockito.never())
+            .post(ArgumentMatchers.anyString());
     }
 
     /**

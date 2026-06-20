@@ -314,6 +314,7 @@ public final class Agents {
                 new SafeAgent(
                     new Tweets(
                         this.github,
+                        profile,
                         new OAuthTwitter(
                             Env.read("Rultor-TwitterKey"),
                             Env.read("Rultor-TwitterSecret"),

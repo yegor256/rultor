@@ -13,6 +13,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.github.TalkIssues;
+import com.rultor.spi.Profile;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -26,13 +27,18 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = { "github", "twitter" })
+@EqualsAndHashCode(callSuper = false, of = { "github", "profile", "twitter" })
 public final class Tweets extends AbstractAgent {
 
     /**
      * GitHub.
      */
     private final transient GitHub github;
+
+    /**
+     * Profile of the project being released.
+     */
+    private final transient Profile profile;
 
     /**
      * Twitter.
@@ -42,14 +48,16 @@ public final class Tweets extends AbstractAgent {
     /**
      * Ctor.
      * @param ghub GitHub client
+     * @param prof Profile of the project being released
      * @param twt Twitter client
      */
-    public Tweets(final GitHub ghub, final Twitter twt) {
+    public Tweets(final GitHub ghub, final Profile prof, final Twitter twt) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"
         );
         this.github = ghub;
+        this.profile = prof;
         this.twitter = twt;
     }
 
@@ -58,7 +66,10 @@ public final class Tweets extends AbstractAgent {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Repo.Smart repo = new Repo.Smart(issue.repo());
-        if (!repo.isPrivate()) {
+        final String flag = new Profile.Defaults(this.profile).text(
+            "/p/entry[@key='release']/entry[@key='tweet']", "true"
+        );
+        if (!repo.isPrivate() && !"false".equalsIgnoreCase(flag)) {
             this.twitter.post(
                 Tweets.tweet(
                     repo, req.xpath("args/arg[@name='tag']/text()").get(0)
