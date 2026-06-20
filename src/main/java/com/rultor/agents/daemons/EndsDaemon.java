@@ -18,7 +18,6 @@ import lombok.ToString;
 import org.cactoos.Text;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Mapped;
-import org.cactoos.iterable.Skipped;
 import org.cactoos.list.ListOf;
 import org.cactoos.text.Joined;
 import org.cactoos.text.Split;
@@ -43,6 +42,11 @@ public final class EndsDaemon extends AbstractAgent {
      * Prefix for log highlights.
      */
     public static final String HIGHLIGHTS_PREFIX = "RULTOR: ";
+
+    /**
+     * Maximum daemon tail length.
+     */
+    private static final int MAX_TAIL = 10_000;
 
     /**
      * Ctor.
@@ -72,15 +76,30 @@ public final class EndsDaemon extends AbstractAgent {
     }
 
     /**
+     * Build daemon tail.
+     * @param lines Output lines
+     * @return Tail
+     */
+    static String tail(final Iterable<Text> lines) {
+        final String out = new Joined(
+            System.lineSeparator(),
+            new Mapped<>(
+                Text::asString,
+                lines
+            )
+        ).toString();
+        return new Sub(
+            out,
+            Math.max(out.length() - EndsDaemon.MAX_TAIL, 0)
+        ).toString();
+    }
+
+    /**
      * End this daemon.
      * @param shell Shell
      * @param dir The dir
      * @return Directives
      * @throws IOException If fails
-     * @todo #1207:1h There is no limit of tail message (only shifting to
-     *  100_000 symbols), but TkDaemon has a limit of 100_000 symbols in buffer
-     *  It is better to have a restriction for the tail length, not about start
-     *  position.
      */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
@@ -118,24 +137,7 @@ public final class EndsDaemon extends AbstractAgent {
             .add("highlights").set(Xembler.escape(highlights)).up()
             .add("tail")
             .set(
-                Xembler.escape(
-                    new Sub(
-                        new Joined(
-                            System.lineSeparator(),
-                            new Skipped<>(
-                                Math.max(lines.size() - 60, 0),
-                                new ListOf<>(
-                                    new Mapped<>(
-                                        Text::asString,
-                                        lines
-                                    )
-                                )
-                            )
-                        ),
-                        0,
-                        10_000
-                    ).toString()
-                )
+                Xembler.escape(EndsDaemon.tail(lines))
             );
     }
 
