@@ -12,6 +12,7 @@ import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
 import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusResponse;
 import software.amazon.awssdk.services.ec2.model.InstanceState;
@@ -42,12 +43,15 @@ public final class DetachesInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final DescribeInstanceStatusResponse res = this.api.aws().describeInstanceStatus(
-            DescribeInstanceStatusRequest.builder()
-                .includeAllInstances(true)
-                .instanceIds(instance)
-                .build()
-        );
+        final DescribeInstanceStatusResponse res;
+        try (Ec2Client client = this.api.aws()) {
+            res = client.describeInstanceStatus(
+                DescribeInstanceStatusRequest.builder()
+                    .includeAllInstances(true)
+                    .instanceIds(instance)
+                    .build()
+            );
+        }
         final InstanceState state = res.instanceStatuses().get(0).instanceState();
         final Directives dirs = new Directives();
         if ("terminated".equals(state.nameAsString())) {

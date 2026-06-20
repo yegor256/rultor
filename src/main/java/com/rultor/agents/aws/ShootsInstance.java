@@ -13,6 +13,7 @@ import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
 import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 
@@ -54,26 +55,28 @@ public final class ShootsInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        final long age = new Date().getTime() - this.api.aws()
-            .describeInstances(
-                DescribeInstancesRequest.builder()
-                    .instanceIds(instance)
-                    .build()
-            )
-            .reservations().get(0)
-            .instances().get(0)
-            .launchTime().toEpochMilli();
-        if (age > this.max) {
-            this.api.aws().terminateInstances(
-                TerminateInstancesRequest.builder()
-                    .instanceIds(instance)
-                    .build()
-            );
-            Logger.warn(
-                this,
-                "Terminated AWS instance %s because it's %[ms]s old (most probably dead)",
-                instance, age
-            );
+        try (Ec2Client client = this.api.aws()) {
+            final long age = new Date().getTime() - client
+                .describeInstances(
+                    DescribeInstancesRequest.builder()
+                        .instanceIds(instance)
+                        .build()
+                )
+                .reservations().get(0)
+                .instances().get(0)
+                .launchTime().toEpochMilli();
+            if (age > this.max) {
+                client.terminateInstances(
+                    TerminateInstancesRequest.builder()
+                        .instanceIds(instance)
+                        .build()
+                );
+                Logger.warn(
+                    this,
+                    "Terminated AWS instance %s because it's %[ms]s old (most probably dead)",
+                    instance, age
+                );
+            }
         }
         return new Directives();
     }
