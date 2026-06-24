@@ -67,7 +67,7 @@ public final class Publishes extends AbstractAgent {
             } catch (final Profile.ConfigException ex) {
                 pub = false;
             }
-        } catch (final AssertionError ex) {
+        } catch (final IOException | AssertionError ex) {
             pub = false;
         }
         return new Directives()

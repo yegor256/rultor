@@ -4,12 +4,16 @@
  */
 package com.rultor.agents;
 
+import com.jcabi.github.GitHub;
 import com.jcabi.github.Repos;
+import com.jcabi.github.RtGitHub;
 import com.jcabi.github.mock.MkGitHub;
+import com.jcabi.http.request.FakeRequest;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import java.net.HttpURLConnection;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
@@ -61,6 +65,31 @@ final class PublishesTest {
         agent.execute(talk);
         MatcherAssert.assertThat(
             "public attribute should be kept false",
+            talk.read(),
+            XhtmlMatchers.hasXPath("/talk[@public='false']")
+        );
+    }
+
+    /**
+     * Publishes can survive a missing repository.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void ignoresMissingRepo() throws Exception {
+        final GitHub github = new RtGitHub(
+            new FakeRequest()
+                .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
+                .withBody("{}")
+        );
+        final Agent agent = new Publishes(new Profile.Fixed(), github);
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk").add("archive")
+                .add("log").attr("id", "abc").attr("title", "hey").up()
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            "missing repo should be treated as not public",
             talk.read(),
             XhtmlMatchers.hasXPath("/talk[@public='false']")
         );
