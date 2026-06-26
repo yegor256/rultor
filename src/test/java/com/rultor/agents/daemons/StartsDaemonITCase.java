@@ -124,6 +124,27 @@ final class StartsDaemonITCase {
     }
 
     /**
+     * StartsDaemon closes the asset stream after uploading it.
+     * @throws IOException In case of error
+     */
+    @Test
+    void closesAssetStreams() throws IOException {
+        try (
+            StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final StartsDaemonITCase.CloseAwareInputStream asset =
+                new StartsDaemonITCase.CloseAwareInputStream("rultor-asset");
+            StartsDaemonITCase.talk(start, asset);
+            MatcherAssert.assertThat(
+                "asset stream should be closed after it is uploaded",
+                asset.closed(),
+                Matchers.is(true)
+            );
+        }
+    }
+
+    /**
      * Creates a Talk object with basic parameters.
      * @param start Docker daemon starter
      * @return The basic Talk object for testing
@@ -131,6 +152,24 @@ final class StartsDaemonITCase {
      */
     private static Talk talk(final StartsDockerDaemon start)
         throws IOException {
+        return StartsDaemonITCase.talk(
+            start,
+            new ByteArrayInputStream(
+                // @checkstyle MagicNumber (1 line)
+                new byte[] {0, 1, 7, 8, 9, 10, 13, 20}
+            )
+        );
+    }
+
+    /**
+     * Creates a Talk object with a single named asset.
+     * @param start Docker daemon starter
+     * @param asset Stream to expose as the "file.bin" asset
+     * @return The basic Talk object for testing
+     * @throws IOException In case of error
+     */
+    private static Talk talk(final StartsDockerDaemon start,
+        final InputStream asset) throws IOException {
         Assumptions.assumeTrue(
             "true".equalsIgnoreCase(System.getProperty("run-docker-tests"))
         );
@@ -150,16 +189,45 @@ final class StartsDaemonITCase {
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doReturn(new XMLDocument("<p/>")).when(profile).read();
         Mockito.doReturn(
-            new ArrayMap<String, InputStream>().with(
-                "file.bin",
-                new ByteArrayInputStream(
-                    // @checkstyle MagicNumber (1 line)
-                    new byte[] {0, 1, 7, 8, 9, 10, 13, 20}
-                )
-            )
+            new ArrayMap<String, InputStream>().with("file.bin", asset)
         ).when(profile).assets();
         final Agent agent = new StartsDaemon(profile);
         agent.execute(talk);
         return talk;
+    }
+
+    /**
+     * Input stream that remembers whether it was closed.
+     *
+     * @since 1.78
+     */
+    private static final class CloseAwareInputStream
+        extends ByteArrayInputStream {
+
+        /**
+         * Whether close was called.
+         */
+        private transient boolean done;
+
+        /**
+         * Ctor.
+         * @param body Stream body
+         */
+        CloseAwareInputStream(final String body) {
+            super(body.getBytes(StandardCharsets.UTF_8));
+        }
+
+        @Override
+        public void close() {
+            this.done = true;
+        }
+
+        /**
+         * Check whether close was called.
+         * @return True if closed.
+         */
+        boolean closed() {
+            return this.done;
+        }
     }
 }
