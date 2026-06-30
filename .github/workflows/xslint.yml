@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: maxonfjvipon/xslint-action@0.0.3
+      - uses: maxonfjvipon/xslint-action@0.0.4
         with:
           args: |
             src
