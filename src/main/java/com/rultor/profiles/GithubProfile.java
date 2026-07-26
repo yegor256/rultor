@@ -150,28 +150,24 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        final Collection<String> friends = new ListOf<>(
-            new Mapped<>(
-                input -> input.toLowerCase(Locale.ENGLISH),
-                new YamlXML(
-                    new String(
-                        new Content.Smart(
-                            rpo.contents().get(GithubProfile.FILE)
-                        ).decoded(),
-                        StandardCharsets.UTF_8
-                    )
-                ).get().xpath("/p/entry[@key='friends']/item/text()")
-            )
+        final Friends friends = new Friends(
+            new YamlXML(
+                new String(
+                    new Content.Smart(
+                        rpo.contents().get(GithubProfile.FILE)
+                    ).decoded(),
+                    StandardCharsets.UTF_8
+                )
+            ).get().xpath("/p/entry[@key='friends']/item/text()")
         );
-        final String coords = this.repo.coordinates()
-            .toString().toLowerCase(Locale.ENGLISH);
-        if (!friends.contains(coords)) {
+        if (!friends.allow(this.repo.coordinates().toString())) {
             throw new Profile.ConfigException(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "%s in %s doesn't allow %s to use its assets (there are %d friends), see http://doc.rultor.com/reference.html#assets",
+                    "%s in %s (branch %s) doesn't allow %s to use its assets (there are %d friends), see https://doc.rultor.com/reference.html#assets",
                     GithubProfile.FILE, rpo.coordinates(),
-                    this.repo.coordinates(), friends.size()
+                    new DefaultBranch(rpo), this.repo.coordinates(),
+                    friends.size()
                 )
             );
         }
