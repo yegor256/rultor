@@ -83,6 +83,10 @@ friends:
   - jcabi/*
 {% endhighlight %}
 
+This list is read from the **default branch** of the repository that owns
+the assets. Names are matched without case sensitivity, and a name ending
+with an asterisk permits every repository of that GitHub account.
+
 You may also add `trustee` list there, in order to specify the list
 of GitHub users who are allowed to modify the `.rultor.yml` file in the
 repository, which is requesting the assets:
