@@ -256,7 +256,7 @@ public final class Tail {
         @Override
         public InputStream read() throws IOException {
             return Files.newInputStream(
-                Paths.get(this.xml.xpath("/talk/daemon/dir/text() ").get(0))
+                Paths.get(this.xml.xpath("/talk/daemon/dir/text()").get(0))
             );
         }
     }
