@@ -45,6 +45,7 @@ public final class QnSafe implements Question {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Req understand(final Comment.Smart comment,
         final URI home
     ) throws IOException {
