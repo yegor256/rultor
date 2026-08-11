@@ -20,7 +20,6 @@ import org.xembly.Directives;
 /**
  * Marks the daemon as done when the host is not reachable and the
  * daemon is older than a few days.
- *
  * @since 1.0
  */
 @Immutable
@@ -32,7 +31,6 @@ public final class DismountDaemon extends AbstractAgent {
      * Ctor.
      */
     public DismountDaemon() {
-        // @checkstyle MagicNumber (1 line)
         this(TimeUnit.DAYS.toMinutes(10L));
     }
 
@@ -44,7 +42,6 @@ public final class DismountDaemon extends AbstractAgent {
         super(
             "/talk/daemon[started and dir]",
             String.format(
-                // @checkstyle LineLength (1 line)
                 "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
                 mins
             ),
@@ -94,5 +91,4 @@ public final class DismountDaemon extends AbstractAgent {
             talk.xpath("/talk/@name").get(0)
         );
     }
-
 }

@@ -16,7 +16,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Shell in profile.
- *
  * @since 1.48
  */
 @Immutable
@@ -56,7 +55,6 @@ public final class PfShell {
      * @param port Default Port of server
      * @param login Default Login
      * @param key Default Private SSH key
-     * @checkstyle ParameterNumberCheck (6 lines)
      */
     public PfShell(final Profile prof, final String host,
         final int port, final String login, final String key) {
@@ -150,5 +148,4 @@ public final class PfShell {
     public Ssh toSsh() throws UnknownHostException {
         return new Ssh(this.addr, this.prt, this.user, this.pvt);
     }
-
 }

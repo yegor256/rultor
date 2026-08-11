@@ -31,7 +31,6 @@ import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done.
- *
  * @since 1.0
  */
 @Immutable
@@ -94,7 +93,7 @@ public final class EndsDaemon extends AbstractAgent {
             )
         );
         final String highlights = new Joined(
-            "\n",
+            System.lineSeparator(),
             new Mapped<>(
                 s -> new Sub(
                     s,
@@ -116,8 +115,7 @@ public final class EndsDaemon extends AbstractAgent {
             .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit)).up()
             .add("highlights").set(Xembler.escape(highlights)).up()
-            .add("tail")
-            .set(
+            .add("tail").set(
                 Xembler.escape(
                     new Sub(
                         new Joined(
@@ -187,5 +185,4 @@ public final class EndsDaemon extends AbstractAgent {
             )
         ).exec();
     }
-
 }

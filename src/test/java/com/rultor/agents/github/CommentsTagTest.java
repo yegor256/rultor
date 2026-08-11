@@ -20,9 +20,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link CommentsTag}.
- *
  * @since 1.41.1
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class CommentsTagTest {
 
@@ -38,8 +36,7 @@ final class CommentsTagTest {
             repo.github()
         );
         final String tag = "v1.0";
-        final Talk talk = CommentsTagTest.talk(issue, tag);
-        agent.execute(talk);
+        agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
             "Release should be created",
             new Releases.Smart(repo.releases()).exists(tag),
@@ -58,8 +55,7 @@ final class CommentsTagTest {
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v5.0";
         repo.releases().create(tag);
-        final Talk talk = CommentsTagTest.talk(issue, tag);
-        agent.execute(talk);
+        agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
             "Release should be created",
             new Releases.Smart(repo.releases()).exists(tag),
@@ -79,8 +75,7 @@ final class CommentsTagTest {
         final Agent agent = new CommentsTag(repo.github());
         repo.releases().create("2.3.1");
         final String tag = "1.9";
-        final Talk talk = CommentsTagTest.talk(issue, tag);
-        agent.execute(talk);
+        agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
             "Outdated release must not be created",
             new Releases.Smart(repo.releases()).exists(tag),
@@ -98,15 +93,12 @@ final class CommentsTagTest {
         final Issue issue = repo.issues().create("", "");
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v1.5";
-        final Talk talk = CommentsTagTest.talk(issue, tag);
-        agent.execute(talk);
-        final Release.Smart smart = new Release.Smart(
-            new Releases.Smart(repo.releases()).find(tag)
-        );
-        final String body = smart.body();
+        agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
             "Release message should be posted",
-            body,
+            new Release.Smart(
+                new Releases.Smart(repo.releases()).find(tag)
+            ).body(),
             Matchers.allOf(
                 Matchers.containsString("Released by Rultor"),
                 Matchers.containsString(
@@ -171,11 +163,10 @@ final class CommentsTagTest {
     @Test
     void createsLatestRelease() throws IOException {
         final Repo repo = new MkGitHub().randomRepo();
-        final Issue issue = repo.issues()
-            .create(
-                "Latest Release",
-                "This issue is created for latest release"
-            );
+        final Issue issue = repo.issues().create(
+            "Latest Release",
+            "This issue is created for latest release"
+        );
         final Agent agent = new CommentsTag(
             repo.github(),
             new Profile.Fixed(
@@ -212,11 +203,10 @@ final class CommentsTagTest {
     @Test
     void createsLatestReleaseFromTalk() throws IOException {
         final Repo repo = new MkGitHub().randomRepo();
-        final Issue issue = repo.issues()
-            .create(
-                "Latest Release",
-                "This issue is created for latest release"
-            );
+        final Issue issue = repo.issues().create(
+            "Latest Release",
+            "This issue is created for latest release"
+        );
         final Agent agent = new CommentsTag(
             repo.github(),
             new Profile.Fixed(
@@ -228,8 +218,7 @@ final class CommentsTagTest {
             )
         );
         final String tag = "v1.1.latest";
-        final Talk talk = CommentsTagTest.talk(issue, tag);
-        agent.execute(talk);
+        agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
             "We expect latest release to be created (not pre)",
             new Release.Smart(
@@ -247,15 +236,13 @@ final class CommentsTagTest {
     @Test
     void createsPreReleaseByDefault() throws IOException {
         final Repo repo = new MkGitHub().randomRepo();
-        final Issue issue = repo.issues()
-            .create(
-                "Pre Release",
-                "This issue is created for pre release"
-            );
+        final Issue issue = repo.issues().create(
+            "Pre Release",
+            "This issue is created for pre release"
+        );
         final Agent agent = new CommentsTag(repo.github());
         final String tag = "v1.1.pre-release";
-        final Talk talk = CommentsTagTest.talk(issue, tag);
-        agent.execute(talk);
+        agent.execute(CommentsTagTest.talk(issue, tag));
         MatcherAssert.assertThat(
             "We expect pre-release to be created by default",
             new Release.Smart(

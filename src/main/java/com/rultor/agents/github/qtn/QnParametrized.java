@@ -10,7 +10,7 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
 import java.io.IOException;
 import java.net.URI;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,7 +26,6 @@ import org.xembly.Directives;
 
 /**
  * Parametrized question.
- *
  * @since 1.3.6
  */
 @Immutable
@@ -87,10 +86,9 @@ public final class QnParametrized implements Question {
      * @return Map of params
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private static Map<String, String> params(final Comment.Smart comment)
         throws IOException {
-        final List<Entry<String, String>> entries = new LinkedList<>();
+        final List<Entry<String, String>> entries = new ArrayList<>(0);
         final Matcher matcher = QnParametrized.PTN.matcher(comment.body());
         while (matcher.find()) {
             entries.add(
@@ -101,5 +99,4 @@ public final class QnParametrized implements Question {
         }
         return new MapOf<>(new ListOf<>(entries));
     }
-
 }

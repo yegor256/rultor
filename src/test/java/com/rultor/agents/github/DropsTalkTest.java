@@ -13,7 +13,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link DropsTalk}.
- *
  * @since 1.3
  */
 final class DropsTalkTest {
@@ -37,5 +36,4 @@ final class DropsTalkTest {
             XhtmlMatchers.hasXPaths("/talk[@later='false']")
         );
     }
-
 }

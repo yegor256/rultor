@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link StartsTalks}.
- *
  * @since 1.9
  */
 final class StartsTalksTest {
@@ -40,5 +39,4 @@ final class StartsTalksTest {
             Matchers.not(Matchers.emptyIterable())
         );
     }
-
 }

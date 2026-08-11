@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.time.Instant;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import lombok.EqualsAndHashCode;
@@ -35,7 +35,6 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 
 /**
  * Talk in Dynamo.
- *
  * @since 1.0
  */
 @Immutable
@@ -45,9 +44,7 @@ public final class DyTalk implements Talk {
 
     /**
      * Maximum amount of bytes per item in DynamoDB (400Kb).
-     * @checkstyle LineLengthCheck (1 line)
      * see <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html">link</a>
-     * @checkstyle MagicNumber (3 lines)
      */
     private static final int LIMIT = 399 << 10;
 
@@ -75,8 +72,8 @@ public final class DyTalk implements Talk {
     }
 
     @Override
-    public Date updated() throws IOException {
-        return new Date(
+    public Instant updated() throws IOException {
+        return Instant.ofEpochMilli(
             Long.parseLong(this.item.get(DyTalks.ATTR_UPDATED).n())
         );
     }
@@ -121,25 +118,21 @@ public final class DyTalk implements Talk {
             if (body.length > DyTalk.LIMIT) {
                 throw new IllegalArgumentException(
                     String.format(
-                        // @checkstyle LineLength (1 line)
                         "XML is too big (%d bytes, maximum is %d), even after ZIP, in \"%s\"",
                         body.length, DyTalk.LIMIT,
                         this.item.get(DyTalks.HASH).s()
                     )
                 );
             }
-            final AttributeValue value = AttributeValue.builder()
-                .b(SdkBytes.fromByteArray(body))
-                .build();
             this.item.put(
                 new AttributeUpdates()
-                    .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
-                    .with(
+                    .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis()).with(
                         DyTalks.ATTR_XML_ZIP,
-                        AttributeValueUpdate.builder()
-                            .value(value)
-                            .action(AttributeAction.PUT)
-                            .build()
+                        AttributeValueUpdate.builder().value(
+                            AttributeValue.builder()
+                                .b(SdkBytes.fromByteArray(body))
+                                .build()
+                        ).action(AttributeAction.PUT).build()
                     )
             );
         }
@@ -185,5 +178,4 @@ public final class DyTalk implements Talk {
         );
         return baos.toString(StandardCharsets.UTF_8);
     }
-
 }

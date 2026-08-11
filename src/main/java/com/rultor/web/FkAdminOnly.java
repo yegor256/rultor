@@ -17,7 +17,6 @@ import org.takes.misc.Opt;
 
 /**
  * Admin only.
- *
  * @since 1.50
  */
 final class FkAdminOnly implements Fork {

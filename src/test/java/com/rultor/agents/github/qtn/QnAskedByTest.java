@@ -20,7 +20,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for {@link QnAskedBy}.
- *
  * @since 1.1
  */
 final class QnAskedByTest {
@@ -46,10 +45,9 @@ final class QnAskedByTest {
         );
         github.relogin("rultor");
         qab.understand(comment, new URI("http://localhost"));
-        final Comment.Smart reply = new Comment.Smart(issue.comments().get(2));
         MatcherAssert.assertThat(
             "Rultor should not be included in the message",
-            reply.body(),
+            new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.not(
                 Matchers.containsString("@rultor")
             )

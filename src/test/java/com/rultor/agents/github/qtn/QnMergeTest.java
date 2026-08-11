@@ -13,17 +13,12 @@ import com.jcabi.github.mock.MkBranches;
 import com.jcabi.github.mock.MkChecks;
 import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.xembly.Directives;
@@ -31,9 +26,7 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnMerge}.
- *
  * @since 1.6
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class QnMergeTest {
 
@@ -49,44 +42,30 @@ final class QnMergeTest {
         ResourceBundle.getBundle("phrases");
 
     /**
-     * All pull request comments.
-     */
-    private transient Comments comments;
-
-    /**
-     * Pull request.
-     */
-    private transient Pull pull;
-
-    /**
-     * Initial phase for all tests.
-     * @throws IOException In case of error.
-     */
-    @BeforeEach
-    void setUp() throws IOException {
-        final Repo repo = new MkGitHub().randomRepo();
-        final MkBranches branches = (MkBranches) repo.branches();
-        final String head = "head";
-        final String base = "base";
-        branches.create(head, "abcdef4");
-        branches.create(base, "abcdef5");
-        this.pull = repo.pulls().create("", head, base);
-        this.comments = repo.issues()
-            .get(this.pull.number())
-            .comments();
-    }
-
-    /**
      * QnMerge can build a request.
-     *
      * @throws Exception In case of error
      */
     @Test
     void buildsRequest() throws Exception {
-        final String request = new Xembler(this.mergeRequest()).xml();
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
         MatcherAssert.assertThat(
             "Merge request should be created",
-            request,
+            new Xembler(
+                new Directives().add("request").append(
+                    new QnMerge().understand(
+                        new Comment.Smart(
+                            repo.issues().get(
+                                repo.pulls().create("", "head", "base")
+                                    .number()
+                            ).comments().post(QnMergeTest.COMMAND)
+                        ),
+                        new URI("#")
+                    ).dirs()
+                )
+            ).xml(),
             Matchers.allOf(
                 XhtmlMatchers.hasXPath("/request/type[text()='merge']"),
                 XhtmlMatchers.hasXPath(
@@ -97,14 +76,56 @@ final class QnMergeTest {
                 )
             )
         );
+    }
+
+    /**
+     * QnMerge posts the initiator command as the first comment.
+     * @throws Exception In case of error
+     */
+    @Test
+    void postsInitiatorCommentWhenMergeRequested() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Comments comments = repo.issues().get(
+            repo.pulls().create("", "head", "base").number()
+        ).comments();
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
+        );
         MatcherAssert.assertThat(
             "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
+            new Comment.Smart(comments.get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
+        );
+    }
+
+    /**
+     * QnMerge posts a comment about starting the merge.
+     * @throws Exception In case of error
+     */
+    @Test
+    void postsStartCommentWhenMergeRequested() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Comments comments = repo.issues().get(
+            repo.pulls().create("", "head", "base").number()
+        ).comments();
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
         );
         MatcherAssert.assertThat(
             "Comment about staring merge should be posted",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(comments.get(2)).body(),
             Matchers.containsString(
                 String.format(
                     QnMergeTest.PHRASES.getString("QnMerge.start"),
@@ -115,26 +136,60 @@ final class QnMergeTest {
     }
 
     /**
-     * QnMerge can not build a request because some GitHub checks
-     *  were failed.
-     *
+     * QnMerge posts the initiator comment even while a GitHub check is
+     * still in progress.
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
     @Test
-    void stopsBecauseCiChecksFailed()
+    void postsInitiatorCommentWhenChecksInProgress()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        final Comments comments = repo.issues().get(pull.number()).comments();
+        final MkChecks checks = (MkChecks) pull.checks();
         checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
-        this.mergeRequest();
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
+        );
         MatcherAssert.assertThat(
             "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
+            new Comment.Smart(comments.get(1)).body(),
             Matchers.is(QnMergeTest.COMMAND)
+        );
+    }
+
+    /**
+     * QnMerge can not build a request because some GitHub checks
+     * were failed.
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void stopsBecauseCiChecksFailed() throws IOException, URISyntaxException {
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        final Comments comments = repo.issues().get(pull.number()).comments();
+        final MkChecks checks = (MkChecks) pull.checks();
+        checks.create(Check.Status.IN_PROGRESS, Check.Conclusion.SUCCESS);
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
         );
         MatcherAssert.assertThat(
             "Merge should be stopped if checks are not successful",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(comments.get(2)).body(),
             Matchers.containsString(
                 QnMergeTest.PHRASES.getString("QnMerge.checks-are-failed")
             )
@@ -142,25 +197,60 @@ final class QnMergeTest {
     }
 
     /**
+     * QnMerge posts the initiator comment when GitHub checks finished
+     * successfully.
+     * @throws IOException In case of I/O error
+     * @throws URISyntaxException In case of URI error
+     */
+    @Test
+    void postsInitiatorCommentWhenChecksSuccessful()
+        throws IOException, URISyntaxException {
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        final Comments comments = repo.issues().get(pull.number()).comments();
+        final MkChecks checks = (MkChecks) pull.checks();
+        checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
+        );
+        MatcherAssert.assertThat(
+            "Merge comment should be initiator",
+            new Comment.Smart(comments.get(1)).body(),
+            Matchers.is(QnMergeTest.COMMAND)
+        );
+    }
+
+    /**
      * QnMerge can build a request because GitHub checks finished successfully.
-     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
     @Test
     void continuesBecauseCiChecksSuccessful()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        final Comments comments = repo.issues().get(pull.number()).comments();
+        final MkChecks checks = (MkChecks) pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
-        this.mergeRequest();
-        MatcherAssert.assertThat(
-            "Merge comment should be initiator",
-            new Comment.Smart(this.comments.get(1)).body(),
-            Matchers.is(QnMergeTest.COMMAND)
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
         );
         MatcherAssert.assertThat(
             "Merge start info comment should be posted",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(comments.get(2)).body(),
             Matchers.containsString(
                 String.format(
                     QnMergeTest.PHRASES.getString("QnMerge.start"),
@@ -172,20 +262,30 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request when some CI checks are skipped.
-     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
     @Test
     void continuesBecauseSomeChecksAreSkipped()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        final Comments comments = repo.issues().get(pull.number()).comments();
+        final MkChecks checks = (MkChecks) pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SKIPPED);
-        this.mergeRequest();
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
+        );
         MatcherAssert.assertThat(
             "Merge should proceed when some checks are skipped",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(comments.get(2)).body(),
             Matchers.containsString(
                 String.format(
                     QnMergeTest.PHRASES.getString("QnMerge.start"),
@@ -207,50 +307,28 @@ final class QnMergeTest {
     @Disabled
     void stopsBecauseSystemFilesAffected()
         throws IOException, URISyntaxException {
-        final MkChecks checks = (MkChecks) this.pull.checks();
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        final Comments comments = repo.issues().get(pull.number()).comments();
+        final MkChecks checks = (MkChecks) pull.checks();
         checks.create(Check.Status.COMPLETED, Check.Conclusion.SUCCESS);
-        final List<JsonObject> files = new LinkedList<>();
-        files.add(Json.createObjectBuilder()
-            .add("sha", "ef36558cbd")
-            .add("filename", "README.md")
-            .add("status", "modified")
-            .build()
+        new Directives().add("request").append(
+            new QnMerge().understand(
+                new Comment.Smart(comments.post(QnMergeTest.COMMAND)),
+                new URI("#")
+            ).dirs()
         );
-        files.add(Json.createObjectBuilder()
-            .add("sha", "ef3857cad")
-            .add("filename", ".rultor.yml")
-            .add("status", "modified")
-            .build()
-        );
-        this.mergeRequest();
         MatcherAssert.assertThat(
             "Comment should be posted about affected system file",
-            new Comment.Smart(this.comments.get(2)).body(),
+            new Comment.Smart(comments.get(2)).body(),
             Matchers.containsString(
                 QnMergeTest.PHRASES.getString(
                     "QnMerge.system-files-affected"
                 )
             )
         );
-    }
-
-    /**
-     * Merge request directives.
-     * @return Directives
-     * @throws IOException In case of error
-     * @throws URISyntaxException In case of error
-     */
-    private Directives mergeRequest() throws IOException,
-        URISyntaxException {
-        return new Directives()
-            .add("request")
-            .append(
-                new QnMerge().understand(
-                    new Comment.Smart(
-                        this.comments.post(QnMergeTest.COMMAND)
-                    ),
-                    new URI("#")
-                ).dirs()
-            );
     }
 }

@@ -21,12 +21,10 @@ import org.hamcrest.core.StringEndsWith;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
  * Tests for {@link EndsDaemon}.
- *
  * @since 1.2
  */
 final class EndsDaemonITCase {
@@ -46,7 +44,7 @@ final class EndsDaemonITCase {
                 start,
                 talk,
                 String.format(
-                    "some random\n%s%s\nother",
+                    "some random%n%s%s%nother",
                     EndsDaemon.HIGHLIGHTS_PREFIX,
                     "text output"
                 )
@@ -104,10 +102,6 @@ final class EndsDaemonITCase {
             new Shell.Plain(
                 new Ssh(sshd.host(), sshd.port(), sshd.login(), sshd.key())
             ).exec("echo '154' > /tmp/status");
-            final Profile prof = Mockito.mock(Profile.class);
-            final String exception = "This profile was broken!";
-            Mockito.when(prof.read())
-                .thenThrow(new Profile.ConfigException(exception));
             final Agent agent = new EndsDaemon();
             agent.execute(talk);
             MatcherAssert.assertThat(

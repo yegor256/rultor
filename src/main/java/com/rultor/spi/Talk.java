@@ -14,8 +14,8 @@ import com.jcabi.xml.XSLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 import org.cactoos.text.Joined;
@@ -26,13 +26,9 @@ import org.xembly.Xembler;
 
 /**
  * Talk.
- *
  * @since 1.0
  */
 @Immutable
-@SuppressWarnings({"PMD.TooManyMethods",
-    "PMD.OnlyOneConstructorShouldDoInitialization",
-    "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"})
 public interface Talk {
 
     /**
@@ -85,7 +81,7 @@ public interface Talk {
      * @return When
      * @throws IOException If fails
      */
-    Date updated() throws IOException;
+    Instant updated() throws IOException;
 
     /**
      * Read its content.
@@ -110,27 +106,22 @@ public interface Talk {
 
     /**
      * In file.
-     *
      * @since 1.0
      */
     @Immutable
     final class InFile implements Talk {
+
         /**
          * File.
          */
-        private final transient String path;
+        private final transient File file;
 
         /**
          * Ctor.
          * @throws IOException If fails
          */
         public InFile() throws IOException {
-            this(File.createTempFile("rultor", ".talk"));
-            FileUtils.write(
-                new File(this.path),
-                String.format("<talk name='%s' number='1'/>", Talk.TEST_NAME),
-                StandardCharsets.UTF_8
-            );
+            this(InFile.blank());
         }
 
         /**
@@ -148,12 +139,7 @@ public interface Talk {
          * @throws IOException If fails
          */
         public InFile(final XML xml) throws IOException {
-            this();
-            FileUtils.write(
-                new File(this.path),
-                new StrictXML(xml, Talk.SCHEMA).toString(),
-                StandardCharsets.UTF_8
-            );
+            this(InFile.saved(xml));
         }
 
         /**
@@ -161,7 +147,7 @@ public interface Talk {
          * @param file The file
          */
         public InFile(final File file) {
-            this.path = file.getAbsolutePath();
+            this.file = file;
         }
 
         @Override
@@ -175,8 +161,8 @@ public interface Talk {
         }
 
         @Override
-        public Date updated() {
-            return new Date(new File(this.path).lastModified());
+        public Instant updated() {
+            return Instant.ofEpochMilli(this.file.lastModified());
         }
 
         @Override
@@ -184,7 +170,7 @@ public interface Talk {
             return Talk.UPGRADE.transform(
                 new XMLDocument(
                     FileUtils.readFileToString(
-                        new File(this.path), StandardCharsets.UTF_8
+                        this.file, StandardCharsets.UTF_8
                     )
                 )
             );
@@ -200,7 +186,7 @@ public interface Talk {
                     throw new IllegalStateException(ex);
                 }
                 FileUtils.write(
-                    new File(this.path),
+                    this.file,
                     new StrictXML(
                         new XMLDocument(node), Talk.SCHEMA
                     ).toString(),
@@ -213,6 +199,36 @@ public interface Talk {
         public void active(final boolean yes) {
             // nothing
         }
-    }
 
+        /**
+         * Create a blank talk file.
+         * @return File with a blank talk XML
+         * @throws IOException If fails
+         */
+        private static File blank() throws IOException {
+            final File file = File.createTempFile("rultor", ".talk");
+            FileUtils.write(
+                file,
+                String.format("<talk name='%s' number='1'/>", Talk.TEST_NAME),
+                StandardCharsets.UTF_8
+            );
+            return file;
+        }
+
+        /**
+         * Save XML into a new temporary file.
+         * @param xml XML to save
+         * @return File with the XML content
+         * @throws IOException If fails
+         */
+        private static File saved(final XML xml) throws IOException {
+            final File file = File.createTempFile("rultor", ".talk");
+            FileUtils.write(
+                file,
+                new StrictXML(xml, Talk.SCHEMA).toString(),
+                StandardCharsets.UTF_8
+            );
+            return file;
+        }
+    }
 }

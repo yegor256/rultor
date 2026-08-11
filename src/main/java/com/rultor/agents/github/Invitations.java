@@ -17,7 +17,6 @@ import java.net.HttpURLConnection;
 
 /**
  * GitHub invitations.
- *
  * @since 1.62
  */
 public final class Invitations implements SuperAgent {
@@ -37,7 +36,6 @@ public final class Invitations implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        // @checkstyle MultipleStringLiteralsCheck (2 lines)
         final Request entry = this.github.entry().reset("Accept").header(
             "Accept", "application/vnd.github.swamp-thing-preview+json"
         );

@@ -28,7 +28,6 @@ import org.xembly.Xembler;
 
 /**
  * PNG with pulse.
- *
  * @since 1.50
  */
 final class TkTicks implements Take {
@@ -103,5 +102,4 @@ final class TkTicks implements Take {
         }
         return new XMLDocument(new Xembler(dirs).xmlQuietly());
     }
-
 }

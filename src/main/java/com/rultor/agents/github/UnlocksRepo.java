@@ -20,7 +20,6 @@ import org.cactoos.text.Joined;
 
 /**
  * Unlocks repo.
- *
  * @since 1.8.12
  */
 @Immutable
@@ -81,5 +80,4 @@ public final class UnlocksRepo implements SuperAgent {
             }
         }
     }
-
 }

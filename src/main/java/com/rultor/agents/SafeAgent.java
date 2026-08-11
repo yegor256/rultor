@@ -5,9 +5,11 @@
 package com.rultor.agents;
 
 import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseRunnable;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import io.sentry.Sentry;
+import java.io.IOException;
 
 /**
  * Safe agent.
@@ -29,17 +31,20 @@ public final class SafeAgent implements Agent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void execute(final Talk talk) {
-        try {
-            this.origin.execute(talk);
-            // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Throwable ex) {
-            Logger.error(
-                this, "execute(): %s throws %[exception]s",
-                this.origin.getClass().getCanonicalName(), ex
-            );
-            Sentry.captureException(ex);
-        }
+        new VerboseRunnable(
+            () -> {
+                try {
+                    this.origin.execute(talk);
+                } catch (final IOException ex) {
+                    Logger.error(
+                        this, "execute(): %s throws %[exception]s",
+                        this.origin.getClass().getCanonicalName(), ex
+                    );
+                    Sentry.captureException(ex);
+                }
+            },
+            true
+        ).run();
     }
 }

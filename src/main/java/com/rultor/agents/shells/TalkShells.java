@@ -14,7 +14,6 @@ import lombok.ToString;
 
 /**
  * Shells referenced from Talks.
- *
  * @since 1.0
  */
 @Immutable

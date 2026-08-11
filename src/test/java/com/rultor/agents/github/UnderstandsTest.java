@@ -6,7 +6,6 @@ package com.rultor.agents.github;
 
 import com.jcabi.github.Check;
 import com.jcabi.github.Comment;
-import com.jcabi.github.Comments;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Pull;
@@ -25,6 +24,7 @@ import com.rultor.agents.github.qtn.QnWithAuthor;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import org.hamcrest.MatcherAssert;
@@ -34,9 +34,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Understands}.
- *
  * @since 1.3
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class UnderstandsTest {
 
@@ -109,11 +107,10 @@ final class UnderstandsTest {
             repo.github(),
             new QnIfContains("hello", new QnHello())
         );
-        final Talk talk = UnderstandsTest.talk(issue);
-        agent.execute(talk);
+        agent.execute(UnderstandsTest.talk(issue));
         MatcherAssert.assertThat(
             "Reply comment should be created for hello",
-            issue.comments().iterate(new Date(0L)),
+            issue.comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
     }
@@ -125,7 +122,7 @@ final class UnderstandsTest {
      * @throws Exception In case of error.
      */
     @Test
-    void understandsMergeMessageWithFailedCheck() throws Exception {
+    void createsOneReplyWhenMergeFailsCheck() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final MkBranches branches = (MkBranches) repo.branches();
         branches.create("head", "abcdef4");
@@ -142,15 +139,42 @@ final class UnderstandsTest {
                 new QnIamLost()
             )
         ).execute(UnderstandsTest.talk(pull));
-        final Comments comments = repo.issues().get(1).comments();
         MatcherAssert.assertThat(
             "Reply comment should be created",
-            comments.iterate(new Date(0)),
+            repo.issues().get(1).comments().iterate(Date.from(Instant.EPOCH)),
             Matchers.iterableWithSize(1)
         );
+    }
+
+    /**
+     * The test that verifies that a "can't merge" message is posted if the
+     * pull request has a failed check.
+     * Test for issue #1657
+     * @throws Exception In case of error.
+     */
+    @Test
+    void createsCannotMergeMessageWhenMergeFailsCheck() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final MkBranches branches = (MkBranches) repo.branches();
+        branches.create("head", "abcdef4");
+        branches.create("base", "abcdef5");
+        final Pull pull = repo.pulls().create("", "head", "base");
+        ((MkChecks) pull.checks()).create(
+            Check.Status.COMPLETED,
+            Check.Conclusion.FAILURE
+        );
+        new Understands(
+            repo.github(),
+            new QnFirstOf(
+                new QnMerge(),
+                new QnIamLost()
+            )
+        ).execute(UnderstandsTest.talk(pull));
         MatcherAssert.assertThat(
             "Message about not possible merge should be created",
-            new Comment.Smart(comments.get(1)).body(),
+            new Comment.Smart(
+                repo.issues().get(1).comments().get(1)
+            ).body(),
             Matchers.containsString("Can't merge")
         );
     }
@@ -201,5 +225,4 @@ final class UnderstandsTest {
         );
         return talk;
     }
-
 }

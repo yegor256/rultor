@@ -16,9 +16,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link UnlocksRepo}.
- *
  * @since 1.22.1
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class UnlocksRepoTest {
 
@@ -50,5 +48,4 @@ final class UnlocksRepoTest {
             () -> agent.execute(talks)
         );
     }
-
 }

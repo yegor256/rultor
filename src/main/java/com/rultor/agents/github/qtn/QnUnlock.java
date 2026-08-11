@@ -25,7 +25,6 @@ import org.xembly.Xembler;
 
 /**
  * Unlock branch.
- *
  * @since 1.53
  */
 @Immutable
@@ -58,14 +57,12 @@ public final class QnUnlock implements Question {
         if (contents.exists(QnUnlock.PATH, branch)) {
             contents.remove(
                 Json.createObjectBuilder()
-                    .add("path", QnUnlock.PATH)
-                    .add(
+                    .add("path", QnUnlock.PATH).add(
                         "sha",
                         new Content.Smart(
                             contents.get(QnUnlock.PATH, branch)
                         ).sha()
-                    )
-                    .add(
+                    ).add(
                         "message",
                         String.format(
                             "#%d branch \"%s\" unlocked, by request of @%s",
@@ -116,5 +113,4 @@ public final class QnUnlock implements Question {
             ).xmlQuietly()
         );
     }
-
 }

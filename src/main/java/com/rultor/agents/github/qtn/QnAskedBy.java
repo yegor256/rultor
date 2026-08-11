@@ -14,8 +14,8 @@ import com.rultor.agents.github.Req;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -25,7 +25,6 @@ import org.cactoos.text.Joined;
 
 /**
  * Question asked by one of them.
- *
  * @since 1.3
  */
 @Immutable
@@ -120,12 +119,11 @@ public final class QnAskedBy implements Question {
      * @throws IOException If fails
      */
     private Collection<String> commanders(final Repo repo) throws IOException {
-        final Collection<String> logins = new LinkedList<>();
+        final Collection<String> logins = new ArrayList<>(0);
         final XML xml = this.profile.read();
         logins.addAll(new Crew(repo).names());
         logins.addAll(xml.xpath(this.xpath));
         logins.addAll(xml.xpath("/p/entry[@key='architect']/item/text()"));
         return logins;
     }
-
 }

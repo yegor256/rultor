@@ -18,7 +18,6 @@ import org.xembly.Directives;
 /**
  * Test case for {@link TkSitemap}.
  * @since 1.50
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class TkSitemapTest {
 
@@ -53,5 +52,4 @@ final class TkSitemapTest {
             )
         );
     }
-
 }

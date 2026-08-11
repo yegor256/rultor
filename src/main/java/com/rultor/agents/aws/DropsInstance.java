@@ -19,7 +19,6 @@ import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
  * Deletes the "ec2" XML element if the instance doesn't exist in EC2 --
  * this means that the instance was killed by some other mechanisms
  * and doesn't need to be connected anymore to the talk.
- *
  * @since 1.77
  */
 @Immutable
@@ -58,5 +57,4 @@ public final class DropsInstance extends AbstractAgent {
         }
         return dirs;
     }
-
 }

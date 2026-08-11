@@ -24,7 +24,6 @@ import org.cactoos.list.ListOf;
 
 /**
  * Question by architect only (if configured).
- *
  * @since 1.45
  */
 @Immutable
@@ -168,5 +167,4 @@ public final class QnByArchitect implements Question {
         }
         return "write".equals(perm) || "admin".equals(perm);
     }
-
 }

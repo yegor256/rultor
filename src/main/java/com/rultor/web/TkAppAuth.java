@@ -27,7 +27,6 @@ import org.takes.tk.TkWrap;
 
 /**
  * Authenticated app.
- *
  * @since 1.53
  */
 final class TkAppAuth extends TkWrap {
@@ -85,5 +84,4 @@ final class TkAppAuth extends TkWrap {
             )
         );
     }
-
 }

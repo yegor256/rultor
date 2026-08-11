@@ -16,7 +16,6 @@ import org.xembly.Directives;
 
 /**
  * Attach binaries to release.
- *
  * @since 1.3
  *
  * @todo #662:30min Implement attaching artifacts to release, remove PMD
@@ -26,12 +25,12 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 public final class ReleaseBinaries extends AbstractAgent {
+
     /**
      * Ctor.
      * @param ghub GitHub client
      * @param prof Profile
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     public ReleaseBinaries(final GitHub ghub, final Profile prof) {
         super(
             "/talk/wire[github-repo and github-issue]",

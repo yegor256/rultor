@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for ${@link DockerHealthCheck}.
- *
  * @since 1.63
  */
 final class DockerHealthCheckTest {
@@ -41,5 +40,4 @@ final class DockerHealthCheckTest {
             Mockito.any(OutputStream.class)
         );
     }
-
 }

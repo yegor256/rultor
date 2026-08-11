@@ -17,13 +17,11 @@ import org.junit.jupiter.api.Test;
 final class ReleaseTagTest {
 
     /**
-     * ReleaseTag can deny release for outdated, semantically correct versions.
-     * It does however allow any version number, if it contains anything
-     * other than digits and dots.
+     * ReleaseTag allows a greater, semantically correct version.
      * @throws Exception In case of error
      */
     @Test
-    void validatesReleaseVersion() throws Exception {
+    void allowsGreaterVersion() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         repo.releases().create("1.74");
         MatcherAssert.assertThat(
@@ -31,16 +29,46 @@ final class ReleaseTagTest {
             new ReleaseTag(repo, "1.87.15").allowed(),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * ReleaseTag allows a version number containing a non-numeric suffix.
+     * @throws Exception In case of error
+     */
+    @Test
+    void allowsSuffixedVersion() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        repo.releases().create("1.74");
         MatcherAssert.assertThat(
             "bar tag should be allowed",
             new ReleaseTag(repo, "1.5-bar").allowed(),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * ReleaseTag allows a beta version number.
+     * @throws Exception In case of error
+     */
+    @Test
+    void allowsBetaVersion() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        repo.releases().create("1.74");
         MatcherAssert.assertThat(
             "beta tag should be allowed",
             new ReleaseTag(repo, "1.9-beta").allowed(),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * ReleaseTag denies an outdated, semantically correct version.
+     * @throws Exception In case of error
+     */
+    @Test
+    void deniesLowerVersion() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        repo.releases().create("1.74");
         MatcherAssert.assertThat(
             "Lower tag should be allowed",
             new ReleaseTag(repo, "1.62").allowed(),

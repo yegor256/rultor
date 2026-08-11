@@ -21,7 +21,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Tail}.
- *
  * @since 1.62
  */
 final class TailITCase {
@@ -43,7 +42,7 @@ final class TailITCase {
             final String clean = "some output";
             new Shell.Plain(
                 new Ssh(sshd.host(), sshd.port(), sshd.login(), sshd.key())
-            ).exec(String.format("echo '%s\u00ea' > /tmp/stdout", clean));
+            ).exec(String.format("echo '%sê' > /tmp/stdout", clean));
             final Talk talk = new Talk.InFile();
             final String hash = "a1b5c3e3";
             final String key = "id";
@@ -69,9 +68,8 @@ final class TailITCase {
                     new Tail(talk.read(), hash).read(),
                     StandardCharsets.UTF_8
                 ),
-                Matchers.is(String.format("%sê\n", clean))
+                Matchers.is(String.format("%sê%n", clean))
             );
         }
     }
-
 }

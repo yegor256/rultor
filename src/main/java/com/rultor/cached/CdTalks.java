@@ -9,7 +9,7 @@ import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,13 +17,11 @@ import org.cactoos.iterable.Mapped;
 
 /**
  * Cached talks.
- *
  * @since 1.51
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
-@SuppressWarnings("PMD.TooManyMethods")
 public final class CdTalks implements Talks {
 
     /**
@@ -96,7 +94,7 @@ public final class CdTalks implements Talks {
 
     @Override
     @Cacheable
-    public Iterable<Talk> siblings(final String repo, final Date since) {
+    public Iterable<Talk> siblings(final String repo, final Instant since) {
         return new Mapped<>(
             CdTalk::new,
             this.origin.siblings(repo, since)

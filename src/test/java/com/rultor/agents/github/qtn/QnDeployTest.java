@@ -17,9 +17,7 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnDeploy}.
- *
  * @since 1.6
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class QnDeployTest {
 
@@ -49,5 +47,4 @@ final class QnDeployTest {
             )
         );
     }
-
 }

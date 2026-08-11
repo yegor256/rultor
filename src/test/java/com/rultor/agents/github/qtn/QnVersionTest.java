@@ -17,18 +17,16 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnVersion}.
- *
  * @since 1.6
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class QnVersionTest {
 
     /**
-     * QnVersion can reply.
+     * QnVersion marks the request as done.
      * @throws Exception In case of error.
      */
     @Test
-    void repliesInGitHub() throws Exception {
+    void marksRequestAsDone() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("version");
@@ -38,6 +36,20 @@ final class QnVersionTest {
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnVersion prints the current version.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void printsCurrentVersion() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("version");
+        new QnVersion().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
         );
         MatcherAssert.assertThat(
             "Version should be printed",
@@ -47,11 +59,11 @@ final class QnVersionTest {
     }
 
     /**
-     * QnVersion reply contains link to revision.
+     * QnVersion marks the link request as done.
      * @throws Exception In case of error.
      */
     @Test
-    void repliesWithLinkToRevision() throws Exception {
+    void marksLinkRequestAsDone() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("version");
@@ -61,6 +73,20 @@ final class QnVersionTest {
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnVersion reply contains link to revision.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsLinkToRevision() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("version");
+        new QnVersion().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
         );
         MatcherAssert.assertThat(
             "Link to the revision should be posted",
@@ -73,5 +99,4 @@ final class QnVersionTest {
             )
         );
     }
-
 }

@@ -40,7 +40,7 @@ final class Friends {
      * How many of them are there?
      * @return Total count of names in the list
      */
-    public int size() {
+    int size() {
         return this.names.size();
     }
 
@@ -49,7 +49,7 @@ final class Friends {
      * @param coords Coordinates of the repo, e.g. "yegor256/rultor"
      * @return TRUE if the repo may use the assets
      */
-    public boolean allow(final String coords) {
+    boolean allow(final String coords) {
         final String repo = coords.toLowerCase(Locale.ENGLISH);
         boolean allowed = false;
         for (final String name : this.names) {

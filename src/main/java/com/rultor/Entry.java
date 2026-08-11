@@ -40,10 +40,8 @@ import org.takes.http.FtCli;
 
 /**
  * Command line entry.
- *
  * @since 1.50
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class Entry {
 
     /**
@@ -56,7 +54,15 @@ public final class Entry {
      * @param args Command line args
      */
     public Entry(final String... args) {
-        this.arguments = Arrays.asList(args);
+        this(Arrays.asList(args));
+    }
+
+    /**
+     * Ctor.
+     * @param args Command line args
+     */
+    private Entry(final Iterable<String> args) {
+        this.arguments = args;
     }
 
     /**
@@ -216,5 +222,4 @@ public final class Entry {
             }
         };
     }
-
 }

@@ -14,7 +14,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link KillsDaemon}.
- *
  * @since 1.0
  */
 final class KillsDaemonTest {
@@ -42,5 +41,4 @@ final class KillsDaemonTest {
             XhtmlMatchers.hasXPath("/talk/daemon")
         );
     }
-
 }

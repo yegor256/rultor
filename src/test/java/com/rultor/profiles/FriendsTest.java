@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Friends}.
- *
  * @since 2.1
  */
 final class FriendsTest {

@@ -15,9 +15,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link EndsDaemon}.
- *
  * @since 1.2
- * @checkstyle MultipleStringLiterals (500 lines)
  */
 final class EndsDaemonTest {
 
@@ -49,5 +47,4 @@ final class EndsDaemonTest {
             () -> agent.execute(talk)
         );
     }
-
 }

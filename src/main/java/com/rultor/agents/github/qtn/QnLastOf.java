@@ -16,7 +16,6 @@ import lombok.ToString;
 
 /**
  * Last of.
- *
  * @since 1.6.5
  */
 @Immutable

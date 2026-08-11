@@ -20,23 +20,12 @@ import lombok.ToString;
 
 /**
  * Question.
- *
  * @since 1.3
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "login", "origin" })
 public final class QnReferredTo implements Question {
-
-    /**
-     * Regex that matches the @ and Rultor user login in GitHub comments.
-     * Matches the login when at the beginning of the comment string or when
-     * preceded by a space or comma.
-     * Login has to be bound by a word boundary to the right.
-     * Only captures the @ sign and login.
-     */
-    private static final String MENTION_MATCHER =
-        "(?:^|(?:.*?(?:\\s|,)))(%s)\\b.*?";
 
     /**
      * Message bundle.
@@ -70,7 +59,7 @@ public final class QnReferredTo implements Question {
         final String prefix = String.format("@%s", this.login);
         final Req req;
         final Matcher matcher = Pattern.compile(
-            String.format(QnReferredTo.MENTION_MATCHER, prefix)
+            String.format("(?:^|(?:.*?(?:\\s|,)))(%s)\\b.*?", prefix)
         ).matcher(comment.body().trim());
         if (matcher.matches()) {
             if (matcher.start(1) == 0) {

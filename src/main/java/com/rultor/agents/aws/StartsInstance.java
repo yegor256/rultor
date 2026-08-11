@@ -4,6 +4,7 @@
  */
 package com.rultor.agents.aws;
 
+import com.google.common.base.Splitter;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -23,7 +24,6 @@ import software.amazon.awssdk.services.ec2.model.TagSpecification;
 
 /**
  * Starts EC2 instance.
- *
  * @since 1.77
  */
 @Immutable
@@ -89,7 +89,6 @@ public final class StartsInstance extends AbstractAgent {
      * @param tpe Type of instance, like "t1.micro"
      * @param grp Security group, like "sg-38924038290"
      * @param net Subnet, like "subnet-0890890"
-     * @checkstyle ParameterNumberCheck (5 lines)
      */
     public StartsInstance(final Profile pfl, final AwsEc2 aws,
         final String image, final String tpe,
@@ -141,11 +140,9 @@ public final class StartsInstance extends AbstractAgent {
             .imageId(this.image)
             .instanceType(itype)
             .maxCount(1)
-            .minCount(1)
-            .tagSpecifications(
+            .minCount(1).tagSpecifications(
                 TagSpecification.builder()
-                    .resourceType(ResourceType.INSTANCE)
-                    .tags(
+                    .resourceType(ResourceType.INSTANCE).tags(
                         Tag.builder().key("Name").value(talk).build(),
                         Tag.builder().key("rultor").value("yes").build(),
                         Tag.builder().key("rultor-talk").value(talk).build()
@@ -189,16 +186,18 @@ public final class StartsInstance extends AbstractAgent {
                 )
             );
         }
-        if (Arrays.asList(StartsInstance.ELITE_TYPES).contains(required)) {
-            final String org = xml.xpath("/talk/wire/github-repo/text()").get(0).split("/")[0];
-            if (!Arrays.asList(StartsInstance.ELITE_ORGS).contains(org)) {
-                throw new Profile.ConfigException(
-                    Logger.format(
-                        "You are not allowed to use EC2 instance type '%s', use one of %[list]s",
-                        required, StartsInstance.ALLOWED_TYPES
-                    )
-                );
-            }
+        if (Arrays.asList(StartsInstance.ELITE_TYPES).contains(required)
+            && !Arrays.asList(StartsInstance.ELITE_ORGS).contains(
+                Splitter.on('/').splitToList(
+                    xml.xpath("/talk/wire/github-repo/text()").get(0)
+                ).get(0)
+            )) {
+            throw new Profile.ConfigException(
+                Logger.format(
+                    "You are not allowed to use EC2 instance type '%s', use one of %[list]s",
+                    required, StartsInstance.ALLOWED_TYPES
+                )
+            );
         }
         return required;
     }

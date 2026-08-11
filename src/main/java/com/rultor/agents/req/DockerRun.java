@@ -8,9 +8,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,14 +25,11 @@ import org.cactoos.text.Trimmed;
 
 /**
  * Docker run command.
- *
  * @since 1.0
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "profile", "command" })
-@SuppressWarnings("PMD.TooManyMethods")
 final class DockerRun {
 
     /**
@@ -71,7 +68,7 @@ final class DockerRun {
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    public Iterable<String> script() throws IOException {
+    Iterable<String> script() throws IOException {
         final Iterable<String> trap;
         if (this.profile.read().nodes("/p/entry[@key='uninstall']").isEmpty()) {
             trap = Collections.emptyList();
@@ -101,9 +98,8 @@ final class DockerRun {
      * @throws IOException If fails
      */
     @SuppressWarnings("unchecked")
-    public Iterable<String> envs(final Map<String, String> extra)
-        throws IOException {
-        final List<String> entries = new LinkedList<>();
+    Iterable<String> envs(final Map<String, String> extra) throws IOException {
+        final List<String> entries = new ArrayList<>(extra.size());
         for (final Entry<String, String> ent : extra.entrySet()) {
             entries.add(
                 String.format(
@@ -125,7 +121,7 @@ final class DockerRun {
      * @return Items
      */
     private static Iterable<String> scripts(final XML xml, final String path) {
-        final Collection<String> items = new LinkedList<>();
+        final Collection<String> items = new ArrayList<>(0);
         if (!xml.nodes(path).isEmpty()) {
             final XML node = xml.nodes(path).get(0);
             if (node.nodes("item").isEmpty()) {
@@ -136,7 +132,7 @@ final class DockerRun {
                 }
             }
         }
-        final Collection<String> scripts = new LinkedList<>();
+        final Collection<String> scripts = new ArrayList<>(items.size() * 2);
         for (final String item : items) {
             scripts.add(neutralize(item));
             scripts.add(";");
@@ -146,9 +142,9 @@ final class DockerRun {
 
     /**
      * Is hash character inside double or single quotes.
-     * @param item String to check.
-     * @param pos Position of the hash.
-     * @return If hash is in quotes.
+     * @param item String to check
+     * @param pos Position of the hash
+     * @return If hash is in quotes
      */
     private static boolean inquotes(final String item, final int pos) {
         final String sub = item.substring(0, pos);
@@ -158,7 +154,7 @@ final class DockerRun {
 
     /**
      * Neutralize comment contained in the script line.
-     * @param item Script element.
+     * @param item Script element
      * @return Script element with invisible comment
      */
     private static String neutralize(final String item) {
@@ -166,11 +162,8 @@ final class DockerRun {
         final String result;
         if (start == 0 || start > 0 && item.charAt(start - 1) != '\\'
             && !DockerRun.inquotes(item, start)) {
-            result = new StringBuilder(item.substring(0, start))
-                .append('`')
-                .append(item.substring(start))
-                .append('`')
-                .toString();
+            result = item.substring(0, start) + '`' + item.substring(start)
+                + '`';
         } else {
             result = item;
         }
@@ -184,14 +177,14 @@ final class DockerRun {
      * @return Items
      */
     private static Iterable<String> envs(final XML xml, final String path) {
-        final Collection<String> envs = new LinkedList<>();
+        final Collection<String> envs = new ArrayList<>(0);
         if (!xml.nodes(path).isEmpty()) {
             final XML node = xml.nodes(path).get(0);
             final Collection<String> parts;
             if (node.nodes("item").iterator().hasNext()) {
                 parts = node.xpath("item/text()");
             } else if (node.nodes("entry").iterator().hasNext()) {
-                parts = new LinkedList<>();
+                parts = new ArrayList<>(node.nodes("./entry").size());
                 for (final XML env : node.nodes("./entry")) {
                     parts.add(
                         String.format(
@@ -221,12 +214,12 @@ final class DockerRun {
      * @return Lines found
      */
     private static Collection<String> lines(final XML node) {
-        final Collection<String> lines = new LinkedList<>();
+        final Collection<String> lines = new ArrayList<>(0);
         if (node.inner().hasChildNodes()) {
-            final List<String> src = new ListOf<String>(
+            final List<String> src = new ListOf<>(
                 new Mapped<>(
                     t -> new Trimmed(t).asString(),
-                    new Split(node.xpath("text()").get(0), "\n")
+                    new Split(node.xpath("text()").get(0), System.lineSeparator())
                 )
             );
             for (final String str : src) {
@@ -237,5 +230,4 @@ final class DockerRun {
         }
         return lines;
     }
-
 }

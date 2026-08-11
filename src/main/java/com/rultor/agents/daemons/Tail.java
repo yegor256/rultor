@@ -35,7 +35,6 @@ import org.cactoos.text.Joined;
 
 /**
  * Tail daemon output.
- *
  * @since 1.0
  */
 @Immutable
@@ -99,7 +98,7 @@ public final class Tail {
                             Env.read("Rultor-Version"),
                             "/",
                             Env.read("Rultor-Version"),
-                            "\n",
+                            System.lineSeparator(),
                             "nothing yet, try again in 15 seconds"
                         ),
                         StandardCharsets.UTF_8
@@ -124,7 +123,9 @@ public final class Tail {
      * @since 1.1
      */
     @Immutable
+    @FunctionalInterface
     private interface Connect {
+
         /**
          * Read it.
          * @return Stream
@@ -139,6 +140,7 @@ public final class Tail {
      */
     @Immutable
     private static final class S3Connect implements Tail.Connect {
+
         /**
          * XML of the talk.
          */
@@ -197,6 +199,7 @@ public final class Tail {
      */
     @Immutable
     private static final class SSHConnect implements Tail.Connect {
+
         /**
          * XML of the talk.
          */
@@ -240,6 +243,7 @@ public final class Tail {
      */
     @Immutable
     private static final class FakeConnect implements Tail.Connect {
+
         /**
          * XML of the talk.
          */
@@ -260,5 +264,4 @@ public final class Tail {
             );
         }
     }
-
 }

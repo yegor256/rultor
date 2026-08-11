@@ -17,7 +17,6 @@ import lombok.ToString;
 
 /**
  * First comment in any home.
- *
  * @since 1.50.6
  */
 @Immutable

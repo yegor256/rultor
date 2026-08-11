@@ -10,7 +10,6 @@ import java.io.IOException;
 
 /**
  * An agent that rethrows an error with information about the talk.
- *
  * @since 1.59
  */
 public final class VerboseAgent implements Agent {
@@ -29,12 +28,10 @@ public final class VerboseAgent implements Agent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void execute(final Talk talk) throws IOException {
         try {
             this.origin.execute(talk);
-            // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Throwable ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(
                 String.format(
                     "In the talk at https://www.rultor.com/t/%d",

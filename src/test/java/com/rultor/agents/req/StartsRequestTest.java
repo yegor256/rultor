@@ -28,12 +28,10 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link StartsRequest}.
- *
  * @since 1.3
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
 final class StartsRequestTest {
+
     /**
      * Default head_branch value.
      */
@@ -113,7 +111,7 @@ final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
                 new Joined(
-                    "\n",
+                    System.lineSeparator(),
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh; cat script.sh"
                 ).asString()
@@ -123,26 +121,25 @@ final class StartsRequestTest {
             "Exec run should contain run commands",
             this.exec(talk, jobtemp),
             Matchers.allOf(
-                new Array<Matcher<? super String>>()
-                    .with(
-                        Matchers.containsString(
-                            "image=yegor256/rultor-image\n"
+                new Array<Matcher<? super String>>().with(
+                    Matchers.containsString(
+                        String.format("image=yegor256/rultor-image%n")
+                    )
+                ).with(
+                    Matchers.containsString(
+                        String.format(
+                            "container=%s%n",
+                            Talk.TEST_NAME
                         )
                     )
-                    .with(
-                        Matchers.containsString(
-                            String.format(
-                                "container=%s\n",
-                                Talk.TEST_NAME
-                            )
-                        )
+                ).with(
+                    Matchers.containsString(
+                        String.format("Cloning into 'repo'...%n")
                     )
-                    .with(Matchers.containsString("Cloning into 'repo'...\n"))
-                    .with(Matchers.containsString("docker_when_possible\n"))
+                ).with(Matchers.containsString(String.format("docker_when_possible%n")))
                     .with(Matchers.containsString("load average is "))
                     .with(Matchers.containsString("low enough to run a"))
-                    .with(Matchers.containsString("DOCKER-2: -t"))
-                    .with(
+                    .with(Matchers.containsString("DOCKER-2: -t")).with(
                         Matchers.containsString(
                             "DOCKER-6: --env=MAVEN_OPTS=-Xmx2g -Xms1g"
                         )
@@ -337,17 +334,16 @@ final class StartsRequestTest {
             "Docker should be run if possible",
             this.execQuietly(talk, jobtemp),
             Matchers.allOf(
-                new Array<Matcher<? super String>>()
-                    .with(
-                        Matchers.containsString(
-                            String.format(
-                                "directory=%s", dir
-                            )
+                new Array<Matcher<? super String>>().with(
+                    Matchers.containsString(
+                        String.format(
+                            "directory=%s", dir
                         )
                     )
-                    .with(Matchers.containsString("docker_when_possible"))
-                    .with(Matchers.containsString("enough to run a new Docker"))
-                    .with(Matchers.containsString("echo HEY"))
+                )
+                .with(Matchers.containsString("docker_when_possible"))
+                .with(Matchers.containsString("enough to run a new Docker"))
+                .with(Matchers.containsString("echo HEY"))
             )
         );
     }
@@ -428,7 +424,7 @@ final class StartsRequestTest {
         talk.modify(
             new Directives().xpath("/talk/daemon/script").set(
                 new Joined(
-                    "\n",
+                    System.lineSeparator(),
                     talk.read().xpath("/talk/daemon/script/text()").get(0),
                     "cd ..; cat entry.sh"
                 ).asString()
@@ -477,28 +473,28 @@ final class StartsRequestTest {
         final Talk talk,
         final Path wdir
     ) throws IOException {
-        final String script = new UncheckedText(
-            new Joined(
-                "\n",
-                "set -x",
-                "set -e",
-                "set -o pipefail",
-                "function docker {",
-                "  for (( i=1; i<=$#; i++ )); do",
-                "    echo \"DOCKER-$i: ${!i}\"",
-                "  done",
-                "}",
-                "function sudo {",
-                "  for (( i=1; i<=$#; i++ )); do ",
-                "    echo \"SUDO-$i: ${!i}\"",
-                "  done",
-                "} ",
-                talk.read().xpath("//script/text()").get(0)
-            )
-        ).asString();
         return new VerboseProcess(
             new ProcessBuilder().command(
-                "/bin/bash", "-c", script
+                "/bin/bash", "-c",
+                new UncheckedText(
+                    new Joined(
+                        System.lineSeparator(),
+                        "set -x",
+                        "set -e",
+                        "set -o pipefail",
+                        "function docker {",
+                        "  for (( i=1; i<=$#; i++ )); do",
+                        "    echo \"DOCKER-$i: ${!i}\"",
+                        "  done",
+                        "}",
+                        "function sudo {",
+                        "  for (( i=1; i<=$#; i++ )); do ",
+                        "    echo \"SUDO-$i: ${!i}\"",
+                        "  done",
+                        "} ",
+                        talk.read().xpath("//script/text()").get(0)
+                    )
+                ).asString()
             ).directory(wdir.toFile()).redirectErrorStream(true),
             Level.WARNING, Level.WARNING
         );
@@ -511,38 +507,36 @@ final class StartsRequestTest {
      */
     private File repo(final Path temp) {
         final File repo = temp.toFile();
-        final String cmd = new UncheckedText(
-            new Joined(
-                ";",
-                "set -ex -o pipefail",
-                "git init .",
-                "git config user.email test@rultor.com",
-                "git config user.name test",
-                String.format(
-                    "git checkout -b %s",
-                    StartsRequestTest.HEAD_BRANCH
-                ),
-                "echo 'hello, world!' > hello.txt",
-                "git add .",
-                "git -c commit.gpgsign=false commit --no-verify -am 'first file'",
-                "git checkout -b frk",
-                "echo 'good bye!' > hello.txt",
-                "git -c commit.gpgsign=false commit --no-verify -am 'modified file'",
-                String.format(
-                    "git checkout %s",
-                    StartsRequestTest.HEAD_BRANCH
-                ),
-                "git config receive.denyCurrentBranch ignore"
-            )
-        ).asString();
         new VerboseProcess(
             new ProcessBuilder().command(
                 "/bin/bash",
                 "-c",
-                cmd
+                new UncheckedText(
+                    new Joined(
+                        ";",
+                        "set -ex -o pipefail",
+                        "git init .",
+                        "git config user.email test@rultor.com",
+                        "git config user.name test",
+                        String.format(
+                            "git checkout -b %s",
+                            StartsRequestTest.HEAD_BRANCH
+                        ),
+                        "echo 'hello, world!' > hello.txt",
+                        "git add .",
+                        "git -c commit.gpgsign=false commit --no-verify -am 'first file'",
+                        "git checkout -b frk",
+                        "echo 'good bye!' > hello.txt",
+                        "git -c commit.gpgsign=false commit --no-verify -am 'modified file'",
+                        String.format(
+                            "git checkout %s",
+                            StartsRequestTest.HEAD_BRANCH
+                        ),
+                        "git config receive.denyCurrentBranch ignore"
+                    )
+                ).asString()
             ).directory(repo)
         ).stdout();
         return repo;
     }
-
 }

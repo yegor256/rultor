@@ -32,7 +32,6 @@ import org.takes.rs.RsPrint;
 /**
  * Test case for {@link TkApp}.
  * @since 1.50
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class TkAppTest {
 
@@ -51,29 +50,51 @@ final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-    void rendersHomePage() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
-        final String page = new TextOf(
-            new RsPrint(
-                take.act(
-                    new RqWithHeader(
-                        new RqFake("GET", "/"),
-                        "Accept",
-                        "text/xml"
-                    )
-                )
-            ).body()
-        ).asString();
+    void rendersHomePageAsXmlDocument() throws Exception {
         MatcherAssert.assertThat(
             "Page should be xml document",
-            page, Matchers.startsWith("<?xml ")
+            new TextOf(
+                new RsPrint(
+                    new TkApp(
+                        new Talks.InDir(), Pulse.EMPTY,
+                        new Toggles.InFile()
+                    ).act(
+                        new RqWithHeader(
+                            new RqFake("GET", "/"),
+                            "Accept",
+                            "text/xml"
+                        )
+                    )
+                ).body()
+            ).asString(),
+            Matchers.startsWith("<?xml ")
         );
+    }
+
+    /**
+     * App can render front page.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void rendersHomePageWithExpectedData() throws Exception {
         MatcherAssert.assertThat(
             "Xml document should contain some data",
-            XhtmlMatchers.xhtml(page),
+            XhtmlMatchers.xhtml(
+                new TextOf(
+                    new RsPrint(
+                        new TkApp(
+                            new Talks.InDir(), Pulse.EMPTY,
+                            new Toggles.InFile()
+                        ).act(
+                            new RqWithHeader(
+                                new RqFake("GET", "/"),
+                                "Accept",
+                                "text/xml"
+                            )
+                        )
+                    ).body()
+                ).asString()
+            ),
             XhtmlMatchers.hasXPaths(
                 "/page/millis",
                 "/page/links/link[@rel='ticks']",
@@ -121,21 +142,21 @@ final class TkAppTest {
      */
     @Test
     void rendersHomeJs() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         Assertions.assertEquals(
-            new StringBuilder()
-                .append("$(document).ready(function(){var a=$(\"#pulse\");")
-                .append("window.setInterval(function(){a.find(\"img\")")
-                .append(".attr(\"src\",a.attr(\"data-href\")+\"?\"")
-                .append("+Date.now())},1E3)});")
-                .append('\n')
-                .toString(),
+            String.join(
+                "",
+                "$(document).ready(function(){var a=$(\"#pulse\");",
+                "window.setInterval(function(){a.find(\"img\")",
+                ".attr(\"src\",a.attr(\"data-href\")+\"?\"",
+                "+Date.now())},1E3)});",
+                System.lineSeparator()
+            ),
             new TextOf(
                 new RsPrint(
-                    take.act(
+                    new TkApp(
+                        new Talks.InDir(), Pulse.EMPTY,
+                        new Toggles.InFile()
+                    ).act(
                         new RqWithHeader(
                             new RqFake("GET", "/js/home.js?{version/revision}"),
                             "Accept",
@@ -154,16 +175,15 @@ final class TkAppTest {
     @Test
     @Disabled
     void rendersGzipHomePage() throws Exception {
-        final Take take = new TkApp(
-            new Talks.InDir(), Pulse.EMPTY,
-            new Toggles.InFile()
-        );
         MatcherAssert.assertThat(
             "Page can be gzip compressed",
             new TextOf(
                 new GZIPInputStream(
                     new RsPrint(
-                        take.act(
+                        new TkApp(
+                            new Talks.InDir(), Pulse.EMPTY,
+                            new Toggles.InFile()
+                        ).act(
                             new RqWithHeaders(
                                 new RqFake("GET", "/"),
                                 "Accept: plain/html",

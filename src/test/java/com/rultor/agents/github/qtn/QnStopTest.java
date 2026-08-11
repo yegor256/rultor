@@ -17,10 +17,10 @@ import org.xembly.Xembler;
 
 /**
  * Tests for {@link QnStop}.
- *
  * @since 1.1
  */
 final class QnStopTest {
+
     /**
      * QnMerge can build a request.
      * @throws Exception In case of error.

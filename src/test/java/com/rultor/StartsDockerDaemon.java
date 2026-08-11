@@ -27,7 +27,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Starts a Docker Container containing a Docker daemon and SSHD.
- *
  * @since 1.63
  */
 public final class StartsDockerDaemon implements AutoCloseable {
@@ -51,24 +50,25 @@ public final class StartsDockerDaemon implements AutoCloseable {
      * Ctor.
      * @param prof Current Profile
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public StartsDockerDaemon(final Profile prof) {
-        this.profile = prof;
-        final DefaultDockerClientConfig config =
-            DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-        this.client = DockerClientBuilder.getInstance(config)
-            .withDockerHttpClient(
-                new ApacheDockerHttpClient.Builder()
-                    .dockerHost(config.getDockerHost())
-                    .connectionTimeout(Duration.ofSeconds(30))
-                    .responseTimeout(Duration.ofSeconds(45))
-                    .build()
-            )
-            .build();
-        this.containers = Collections.newSetFromMap(
-            // @checkstyle MagicNumber (1 line)
-            new ConcurrentHashMap<>(1, 0.9f, 1)
+        this(
+            prof,
+            StartsDockerDaemon.dockerClient(),
+            StartsDockerDaemon.emptyContainers()
         );
+    }
+
+    /**
+     * Ctor.
+     * @param prof Current Profile
+     * @param clnt Docker client
+     * @param ctrs Docker containers created
+     */
+    private StartsDockerDaemon(final Profile prof, final DockerClient clnt,
+        final Collection<CreateContainerResponse> ctrs) {
+        this.profile = prof;
+        this.client = clnt;
+        this.containers = ctrs;
     }
 
     /**
@@ -107,6 +107,32 @@ public final class StartsDockerDaemon implements AutoCloseable {
     }
 
     /**
+     * Builds a client connected to the local Docker daemon.
+     * @return Docker client
+     */
+    private static DockerClient dockerClient() {
+        final DefaultDockerClientConfig config =
+            DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+        return DockerClientBuilder.getInstance(config).withDockerHttpClient(
+            new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .connectionTimeout(Duration.ofSeconds(30))
+                .responseTimeout(Duration.ofSeconds(45))
+                .build()
+        ).build();
+    }
+
+    /**
+     * Empty set of created Docker containers.
+     * @return Empty collection
+     */
+    private static Collection<CreateContainerResponse> emptyContainers() {
+        return Collections.newSetFromMap(
+            new ConcurrentHashMap<>(1, 0.9f, 1)
+        );
+    }
+
+    /**
      * Retrieves SSH private key needed to connect to a given container.
      * @param container Container from which to get the SSH key
      * @return SSH private key
@@ -135,5 +161,4 @@ public final class StartsDockerDaemon implements AutoCloseable {
             new File(Objects.requireNonNull(this.getClass().getResource("image")).getPath())
         ).exec(new BuildImageResultCallback()).awaitImageId();
     }
-
 }

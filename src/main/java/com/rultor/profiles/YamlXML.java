@@ -20,7 +20,6 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 /**
  * YAML into XML.
- *
  * @since 1.0
  * @checkstyle AbbreviationAsWordInNameCheck (50 lines)
  */
@@ -39,19 +38,20 @@ final class YamlXML {
      * @param yml YAML
      */
     YamlXML(final String yml) {
-        this.yaml = yml.trim();
+        this.yaml = yml;
     }
 
     /**
      * Get XML.
      * @return XML
      */
-    public XML get() {
+    XML get() {
         final Yaml parser = new Yaml();
         final Directives dirs = new Directives().add("p");
-        if (!this.yaml.isEmpty()) {
+        final String trimmed = this.yaml.trim();
+        if (!trimmed.isEmpty()) {
             try {
-                dirs.append(YamlXML.dirs(parser.load(this.yaml)));
+                dirs.append(YamlXML.dirs(parser.load(trimmed)));
             } catch (final YAMLException ex) {
                 throw new Profile.ConfigException(ex);
             }
@@ -86,5 +86,4 @@ final class YamlXML {
         }
         return dirs;
     }
-
 }

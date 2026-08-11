@@ -17,7 +17,6 @@ import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 /**
  * Stops EC2 instance, when the "daemon" is gone (the job has
  * been completed successfully).
- *
  * @since 1.77
  */
 @Immutable
@@ -31,7 +30,7 @@ public final class TerminatesInstance extends AbstractAgent {
 
     /**
      * Ctor.
-     * @param api Aws Ec2 api.
+     * @param api Aws Ec2 api
      */
     public TerminatesInstance(final AwsEc2 api) {
         super(

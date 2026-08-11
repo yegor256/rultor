@@ -5,17 +5,18 @@
 package com.rultor;
 
 import com.jcabi.aspects.Immutable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
-import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Date and time in ISO 8601.
- *
  * @since 1.8.12
  */
 @Immutable
@@ -37,18 +38,10 @@ public final class Time {
 
     /**
      * Ctor.
-     * @param date Date
+     * @param instant Instant
      */
-    public Time(final Date date) {
-        this(date.getTime());
-    }
-
-    /**
-     * Ctor.
-     * @param msec Milliseconds
-     */
-    public Time(final long msec) {
-        this.millis = msec;
+    public Time(final Instant instant) {
+        this(instant.toEpochMilli());
     }
 
     /**
@@ -60,14 +53,21 @@ public final class Time {
     }
 
     /**
+     * Ctor.
+     * @param msec Milliseconds
+     */
+    public Time(final long msec) {
+        this.millis = msec;
+    }
+
+    /**
      * Make ISO string.
      * @return Text
      */
     public String iso() {
-        final SimpleDateFormat format =
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return format.format(new Date(this.millis));
+        return DateTimeFormatter.ofPattern(
+            "yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US
+        ).withZone(ZoneOffset.UTC).format(Instant.ofEpochMilli(this.millis));
     }
 
     /**
@@ -79,17 +79,24 @@ public final class Time {
     }
 
     /**
-     * Parse text.
+     * Parse text, produced by {@link #iso()} or in a similar format.
      * @param date Date
-     * @return Date
+     * @return Instant
      */
-    private static Date parse(final String date) {
+    private static Instant parse(final String date) {
+        final String txt;
+        if (date.endsWith("Z")) {
+            txt = date.substring(0, date.length() - 1);
+        } else {
+            txt = date;
+        }
         try {
-            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-                .parse(date);
-        } catch (final ParseException ex) {
+            return LocalDateTime.parse(
+                txt,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+            ).atZone(ZoneId.systemDefault()).toInstant();
+        } catch (final DateTimeParseException ex) {
             throw new IllegalStateException(ex);
         }
     }
-
 }

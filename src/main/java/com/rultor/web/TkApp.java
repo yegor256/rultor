@@ -25,7 +25,6 @@ import org.takes.tk.TkWrap;
 
 /**
  * App.
- *
  * @since 1.50
  */
 public final class TkApp extends TkWrap {
@@ -41,8 +40,7 @@ public final class TkApp extends TkWrap {
      * @param pulse Pulse
      * @param toggles Toggles
      */
-    public TkApp(final Talks talks, final Pulse pulse,
-        final Toggles toggles) {
+    public TkApp(final Talks talks, final Pulse pulse, final Toggles toggles) {
         super(TkApp.make(talks, pulse, toggles));
     }
 
@@ -124,5 +122,4 @@ public final class TkApp extends TkWrap {
             )
         );
     }
-
 }

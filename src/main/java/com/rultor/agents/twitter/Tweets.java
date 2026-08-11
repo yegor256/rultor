@@ -21,7 +21,6 @@ import org.xembly.Directives;
 
 /**
  * Tweets.
- *
  * @since 1.30
  */
 @Immutable
@@ -79,7 +78,6 @@ public final class Tweets extends AbstractAgent {
      * @return Tweet text
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.InsufficientStringBufferDeclaration")
     private static String tweet(final Repo.Smart repo, final String tag)
         throws IOException {
         final StringBuilder text = new StringBuilder(200);
@@ -100,5 +98,4 @@ public final class Tweets extends AbstractAgent {
         }
         return text.toString();
     }
-
 }

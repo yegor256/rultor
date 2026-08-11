@@ -7,6 +7,7 @@ package com.rultor.agents.github.qtn;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseRunnable;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -17,20 +18,18 @@ import lombok.ToString;
 
 /**
  * It never fails.
- *
  * @since 1.57
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
-@SuppressWarnings("PMD.AvoidCatchingThrowable")
 public final class QnSafe implements Question {
 
     /**
      * Default error message format.
      */
     private static final String DEFAULT_FORMAT =
-        "We failed, sorry, try again:\n\n```\n%[exception]s\n```";
+        "We failed, sorry, try again:%n%n```%n%[exception]s%n```";
 
     /**
      * Original question.
@@ -57,10 +56,7 @@ public final class QnSafe implements Question {
             } catch (final Throwable ex) {
                 new Answer(comment).post(
                     false,
-                    Logger.format(
-                        QnSafe.DEFAULT_FORMAT,
-                        ex
-                    )
+                    Logger.format(QnSafe.DEFAULT_FORMAT, ex)
                 );
                 req = Req.DONE;
             }
@@ -76,15 +72,18 @@ public final class QnSafe implements Question {
      * @return TRUE if valid
      */
     private static boolean valid(final Comment.Smart comment) {
-        boolean valid = true;
-        try {
-            comment.issue().json();
-            // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Throwable ex) {
-            valid = false;
-            Logger.warn(QnSafe.class, "%[exception]s", ex);
-        }
-        return valid;
+        final boolean[] valid = {false};
+        new VerboseRunnable(
+            () -> {
+                try {
+                    comment.issue().json();
+                    valid[0] = true;
+                } catch (final IOException ex) {
+                    Logger.warn(QnSafe.class, "%[exception]s", ex);
+                }
+            },
+            true
+        ).run();
+        return valid[0];
     }
-
 }

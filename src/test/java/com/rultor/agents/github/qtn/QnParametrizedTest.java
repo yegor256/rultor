@@ -20,9 +20,7 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnParametrized}.
- *
  * @since 1.3.6
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class QnParametrizedTest {
 
@@ -37,19 +35,23 @@ final class QnParametrizedTest {
         issue.comments().post(
             "hey, tag=`1.9` and server is `p5`, title is `Version 1.9.0`"
         );
-        final Question origin = new Question() {
-            @Override
-            public Req understand(final Comment.Smart comment, final URI home) {
-                return () -> new Directives()
-                    .add("args").add("arg").set("hello, all").up().up()
-                    .add("type").set("xxx").up();
-            }
-        };
         MatcherAssert.assertThat(
             "Parameters should be saved to the request",
             new Xembler(
                 new Directives().add("request").append(
-                    new QnParametrized(origin).understand(
+                    new QnParametrized(
+                        new Question() {
+                            @Override
+                            public Req understand(
+                                final Comment.Smart comment, final URI home
+                            ) {
+                                return () -> new Directives()
+                                    .add("args").add("arg")
+                                    .set("hello, all").up().up()
+                                    .add("type").set("xxx").up();
+                            }
+                        }
+                    ).understand(
                         new Comment.Smart(issue.comments().get(1)), new URI("#")
                     ).dirs()
                 )
@@ -109,14 +111,12 @@ final class QnParametrizedTest {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("");
-        final Question question = (comment, home) -> Req.LATER;
         MatcherAssert.assertThat(
             "Later request should be in the result",
-            new QnParametrized(question).understand(
+            new QnParametrized((comment, home) -> Req.LATER).understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#2")
             ),
             Matchers.is(Req.LATER)
         );
     }
-
 }
