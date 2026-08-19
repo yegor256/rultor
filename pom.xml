@@ -75,6 +75,16 @@
       <groupId>org.takes</groupId>
       <artifactId>takes</artifactId>
       <version>1.25.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
@@ -85,18 +95,6 @@
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
-      <version>4.0.9</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <version>4.0.9</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-core</artifactId>
       <version>4.0.9</version>
       <scope>runtime</scope>
     </dependency>
@@ -356,6 +354,14 @@
           <groupId>org.glassfish.jersey.inject</groupId>
           <artifactId>*</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -391,18 +397,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-reload4j</artifactId>
       <version>2.0.18</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>javax.el-api</artifactId>
-      <version>3.0.1-b06</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -984,8 +978,9 @@
                 <exclude>checkstyle:/src/jekyll/guard-article.pdf</exclude>
                 <exclude>checkstyle:/src/jekyll/images/.*</exclude>
                 <exclude>checkstyle:/src/jekyll/favicon.ico</exclude>
-                <exclude>findbugs:.*</exclude>
-                <exclude>duplicatefinder:.*</exclude>
+                <exclude>duplicatefinder:license/LICENSE\.dom-documentation\.txt</exclude>
+                <exclude>duplicatefinder:license/LICENSE\.dom-software\.txt</exclude>
+                <exclude>duplicatefinder:license/README\.dom\.txt</exclude>
               </excludes>
             </configuration>
           </plugin>
