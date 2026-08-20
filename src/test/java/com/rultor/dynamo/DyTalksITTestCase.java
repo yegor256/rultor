@@ -17,10 +17,8 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.CustomMatcher;
-import org.hamcrest.Description;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -84,7 +82,7 @@ final class DyTalksITTestCase {
         MatcherAssert.assertThat(
             "Recent talk should be selected",
             talks.recent(),
-            Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(name))
+            Matchers.hasItem(new TalkMatcher(name))
         );
     }
 
@@ -105,7 +103,7 @@ final class DyTalksITTestCase {
         MatcherAssert.assertThat(
             "Recent talk should be received",
             talks.recent(),
-            Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(first))
+            Matchers.hasItem(new TalkMatcher(first))
         );
     }
 
@@ -132,7 +130,7 @@ final class DyTalksITTestCase {
             "may be it is not true, as test is disabled",
             talks.recent(),
             Matchers.not(
-                Matchers.hasItem(new DyTalksITTestCase.TalkMatcher(second))
+                Matchers.hasItem(new TalkMatcher(second))
             )
         );
     }
@@ -216,10 +214,6 @@ final class DyTalksITTestCase {
         );
     }
 
-    /**
-     * DynamoDB region for tests.
-     * @return Region
-     */
     private static Region dynamo() {
         final String key = Env.read("Rultor-DynamoKey");
         Assumptions.assumingThat(key != null, () -> { });
@@ -242,42 +236,5 @@ final class DyTalksITTestCase {
             ),
             "rt-"
         );
-    }
-
-    /**
-     * Matcher for Talks.
-     * @since 1.1
-     */
-    private static final class TalkMatcher extends TypeSafeMatcher<Talk> {
-
-        /**
-         * Name of the talk.
-         */
-        private final transient String name;
-
-        /**
-         * Constructor.
-         * @param nam Name of the talk
-         */
-        TalkMatcher(final String nam) {
-            super();
-            this.name = nam;
-        }
-
-        @Override
-        public boolean matchesSafely(final Talk talk) {
-            try {
-                return talk.name().equals(this.name);
-            } catch (final IOException ex) {
-                throw new IllegalStateException(ex);
-            }
-        }
-
-        @Override
-        public void describeTo(final Description description) {
-            description.appendText(
-                String.format("Talk '%s' not found", this.name)
-            );
-        }
     }
 }

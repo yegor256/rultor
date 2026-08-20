@@ -50,12 +50,6 @@ final class SmartHost {
         return this.host.getHostAddress();
     }
 
-    /**
-     * Resolve host address.
-     * @param address Host name or IP address
-     * @return Resolved address
-     * @throws UnknownHostException in case of address is not resolved
-     */
     private static InetAddress resolved(final String address)
         throws UnknownHostException {
         if (address.isEmpty()) {

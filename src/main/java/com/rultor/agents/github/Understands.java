@@ -147,13 +147,6 @@ public final class Understands extends AbstractAgent {
             .attr("later", Boolean.toString(!req.equals(Req.EMPTY)));
     }
 
-    /**
-     * Understand.
-     * @param comment Comment
-     * @param xml XML
-     * @return Req
-     * @throws IOException If fails
-     */
     private Req parse(final Comment.Smart comment, final XML xml)
         throws IOException {
         Req req;
@@ -175,11 +168,6 @@ public final class Understands extends AbstractAgent {
         return req;
     }
 
-    /**
-     * Last seen message.
-     * @param xml XML
-     * @return Number
-     */
     private static long seen(final XML xml) {
         final long seen;
         if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
@@ -192,11 +180,6 @@ public final class Understands extends AbstractAgent {
         return seen;
     }
 
-    /**
-     * Root cause exception message.
-     * @param exception Error
-     * @return Message
-     */
     private static String rootCause(final Profile.ConfigException exception) {
         Throwable root = exception;
         while (!root.equals(root.getCause())) {

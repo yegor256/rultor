@@ -11,7 +11,7 @@ import com.jcabi.github.GitHub;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.rultor.agents.Agents;
-import com.rultor.agents.github.qtn.DefaultBranch;
+import com.rultor.agents.github.qtn.RepoNotFoundException;
 import com.rultor.profiles.Profiles;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Pulse;
@@ -105,10 +105,6 @@ final class Routine implements Runnable, Closeable {
         ).run();
     }
 
-    /**
-     * Processes one cycle, reporting any I/O failure to the pulse.
-     * @param begin When the cycle started
-     */
     private void safe(final long begin) {
         try {
             final List<Talk> active = new ListOf<>(this.talks.active());
@@ -135,11 +131,6 @@ final class Routine implements Runnable, Closeable {
         }
     }
 
-    /**
-     * Reports how many talks were processed.
-     * @param begin When the cycle started
-     * @param processed Total talks processed
-     */
     private void report(final long begin, final int processed) {
         if (Logger.isInfoEnabled(this)) {
             Logger.info(
@@ -153,12 +144,6 @@ final class Routine implements Runnable, Closeable {
         }
     }
 
-    /**
-     * Routine every-minute proc.
-     * @param active List of active talks
-     * @return Total talks processed
-     * @throws IOException If fails
-     */
     @Timeable(limit = 20, unit = TimeUnit.MINUTES)
     private int unsafe(final List<Talk> active) throws IOException {
         final long begin = System.currentTimeMillis();
@@ -174,12 +159,6 @@ final class Routine implements Runnable, Closeable {
         return total;
     }
 
-    /**
-     * Routine every-minute proc.
-     * @param active List of active talks
-     * @return Total talks processed
-     * @throws IOException If fails
-     */
     private int process(final List<Talk> active) throws IOException {
         this.agents.starter().execute(this.talks);
         final Profiles profiles = new Profiles();
@@ -193,7 +172,7 @@ final class Routine implements Runnable, Closeable {
                 if (total > Routine.MAX_TALKS) {
                     break;
                 }
-            } catch (final DefaultBranch.RepoNotFoundException ex) {
+            } catch (final RepoNotFoundException ex) {
                 Logger.warn(this, "The repo not found: %[exception]s", ex);
                 talk.active(false);
             }

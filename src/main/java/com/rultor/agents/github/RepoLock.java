@@ -73,11 +73,6 @@ public final class RepoLock {
         return done;
     }
 
-    /**
-     * Get lock.
-     * @return Lock
-     * @throws IOException If fails
-     */
     private Lock lock() throws IOException {
         return this.locks.get(
             String.format("rt-repo-%s", this.repo.coordinates()).replaceAll(
@@ -86,12 +81,6 @@ public final class RepoLock {
         );
     }
 
-    /**
-     * Get label.
-     * @param talk Talk
-     * @return Label
-     * @throws IOException If fails
-     */
     private static String label(final Talk talk) throws IOException {
         return talk.read().xpath("/talk/@name").get(0);
     }

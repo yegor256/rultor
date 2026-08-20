@@ -94,13 +94,6 @@ public final class QnUnlock implements Question {
         return Req.DONE;
     }
 
-    /**
-     * Get args.
-     * @param comment The comment
-     * @param home Home
-     * @return Args
-     * @throws IOException If fails
-     */
     private static XML args(final Comment.Smart comment, final URI home)
         throws IOException {
         return new XMLDocument(

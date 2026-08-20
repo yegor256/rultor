@@ -147,12 +147,6 @@ public final class DyTalk implements Talk {
         );
     }
 
-    /**
-     * Zip the XML.
-     * @param xml The XML content
-     * @return Zipped content
-     * @throws IOException If fails
-     */
     private static byte[] zip(final String xml) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final OutputStream output = new GZIPOutputStream(baos);
@@ -164,12 +158,6 @@ public final class DyTalk implements Talk {
         return baos.toByteArray();
     }
 
-    /**
-     * Unzip the XML.
-     * @param bytes The XML content
-     * @return Unzipped content
-     * @throws IOException If fails
-     */
     private static String unzip(final byte[] bytes) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         IOUtils.copy(

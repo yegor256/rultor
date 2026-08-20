@@ -113,13 +113,6 @@ final class ReportsTest {
         );
     }
 
-    /**
-     * Create Talk, that will be used to test Reports.
-     * @param repo Repository
-     * @param issue Issue
-     * @return Example of Talk
-     * @throws IOException In case of error
-     */
     private static Talk example(final Repo repo, final Issue issue)
         throws IOException {
         final Talk result = new Talk.InFile();

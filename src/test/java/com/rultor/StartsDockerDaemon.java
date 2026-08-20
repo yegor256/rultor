@@ -106,10 +106,6 @@ public final class StartsDockerDaemon implements AutoCloseable {
         this.client.close();
     }
 
-    /**
-     * Builds a client connected to the local Docker daemon.
-     * @return Docker client
-     */
     private static DockerClient dockerClient() {
         final DefaultDockerClientConfig config =
             DefaultDockerClientConfig.createDefaultConfigBuilder().build();
@@ -122,22 +118,12 @@ public final class StartsDockerDaemon implements AutoCloseable {
         ).build();
     }
 
-    /**
-     * Empty set of created Docker containers.
-     * @return Empty collection
-     */
     private static Collection<CreateContainerResponse> emptyContainers() {
         return Collections.newSetFromMap(
             new ConcurrentHashMap<>(1, 0.9f, 1)
         );
     }
 
-    /**
-     * Retrieves SSH private key needed to connect to a given container.
-     * @param container Container from which to get the SSH key
-     * @return SSH private key
-     * @throws IOException on failure
-     */
     private String key(final CreateContainerResponse container)
         throws IOException {
         final StringWriter writer = new StringWriter();
@@ -152,10 +138,6 @@ public final class StartsDockerDaemon implements AutoCloseable {
         return key.substring(key.indexOf('-'), key.lastIndexOf('-') + 1);
     }
 
-    /**
-     * Builds a fresh Rultor runner base image on the Docker daemon.
-     * @return Image ID of the Rultor runner base image
-     */
     private String build() {
         return this.client.buildImageCmd(
             new File(Objects.requireNonNull(this.getClass().getResource("image")).getPath())

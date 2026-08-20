@@ -152,14 +152,6 @@ final class EndsDaemonITCase {
         }
     }
 
-    /**
-     * Start a talk.
-     * @param start Docker daemon starter
-     * @param talk Talk to start
-     * @param stdout Std out
-     * @return Home
-     * @throws IOException In case of error.
-     */
     private PfShell start(final StartsDockerDaemon start, final Talk talk,
         final String stdout) throws IOException {
         Assumptions.assumeTrue(

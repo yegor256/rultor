@@ -42,7 +42,7 @@ public final class KillsDaemon extends AbstractAgent {
             String.format(
                 "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
                 mins
-        )
+            )
         );
     }
 

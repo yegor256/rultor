@@ -44,13 +44,6 @@ public final class TkApp extends TkWrap {
         super(TkApp.make(talks, pulse, toggles));
     }
 
-    /**
-     * Ctor.
-     * @param talks Talks
-     * @param pulse Pulse
-     * @param toggles Toggles
-     * @return Takes
-     */
     private static Take make(final Talks talks,
         final Pulse pulse, final Toggles toggles) {
         if (!"UTF-8".equals(Charset.defaultCharset().name())) {
@@ -81,13 +74,6 @@ public final class TkApp extends TkWrap {
         );
     }
 
-    /**
-     * Regex takes.
-     * @param talks Talks
-     * @param pulse Pulse
-     * @param toggles Toggles
-     * @return Takes
-     */
     private static Take regex(final Talks talks,
         final Pulse pulse, final Toggles toggles) {
         return new TkFork(

@@ -95,10 +95,6 @@ final class MailsTest {
         );
     }
 
-    /**
-     * Profile for test.
-     * @return Profile
-     */
     private Profile.Fixed profile() throws Exception {
         return new Profile.Fixed(
             new XMLDocument(
@@ -115,11 +111,6 @@ final class MailsTest {
         );
     }
 
-    /**
-     * Make a talk with this tag.
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk() throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(

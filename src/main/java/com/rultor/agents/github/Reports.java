@@ -95,11 +95,6 @@ public final class Reports extends AbstractAgent {
             .strict(1).remove();
     }
 
-    /**
-     * Get highlights.
-     * @param req Request
-     * @return Highlights
-     */
     private static String highlights(final XML req) {
         final List<String> highlights = req.xpath("highlights/text()");
         final String text;
@@ -111,11 +106,6 @@ public final class Reports extends AbstractAgent {
         return text;
     }
 
-    /**
-     * Get tail.
-     * @param req Request
-     * @return Tail
-     */
     private static String tail(final XML req) {
         final List<String> tail = req.xpath("tail/text()");
         final String text;
@@ -130,12 +120,6 @@ public final class Reports extends AbstractAgent {
         return text;
     }
 
-    /**
-     * Get a comment we're answering to.
-     * @param issue The issue
-     * @param number Its number
-     * @return Comment
-     */
     private static Comment.Smart origin(final Issue.Smart issue,
         final long number) {
         final Comment comment;

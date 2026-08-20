@@ -82,14 +82,6 @@ public final class StartsRequest extends AbstractAgent {
             .add("script").set(script);
     }
 
-    /**
-     * Make a script.
-     * @param req Request in XML
-     * @param type Its type, like "merge", "deploy", or "release"
-     * @param name Name of the talk
-     * @return Bash script to run on the server
-     * @throws IOException If fails
-     */
     @SuppressWarnings("unchecked")
     private String script(final XML req, final String type, final String name)
         throws IOException {
@@ -132,11 +124,6 @@ public final class StartsRequest extends AbstractAgent {
         );
     }
 
-    /**
-     * List sensitive files in a BASH variable "sensitive".
-     * @return Bash script
-     * @throws IOException If fails
-     */
     private String sensitive() throws IOException {
         String script = "";
         if (!this.profile.read().nodes("/p/entry[@key='release']").isEmpty()) {
@@ -156,12 +143,6 @@ public final class StartsRequest extends AbstractAgent {
         return script;
     }
 
-    /**
-     * Get start script for as_root config.
-     * @return Script
-     * @throws IOException If fails
-     * @since 1.37
-     */
     private String asRoot() throws IOException {
         return String.format(
             "as_root=%b",
@@ -171,13 +152,6 @@ public final class StartsRequest extends AbstractAgent {
         );
     }
 
-    /**
-     * Get variables from script.
-     * @param req Request
-     * @param type Its type, like "merge", "deploy", or "release"
-     * @return Vars
-     * @throws IOException If fails
-     */
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
         final Collection<Map.Entry<String, String>> entries =
@@ -279,12 +253,6 @@ public final class StartsRequest extends AbstractAgent {
         return new MapOf<>(new ListOf<>(entries));
     }
 
-    /**
-     * Get docker run config.
-     * @param type Type of command, like 'release' or 'merge'
-     * @return Docker run cfg
-     * @throws IOException If fails
-     */
     private DockerRun docker(final String type) throws IOException {
         final Collection<XML> nodes = this.profile.read().nodes(
             String.format("/p/entry[@key='%s']", type)
@@ -303,12 +271,6 @@ public final class StartsRequest extends AbstractAgent {
         return new DockerRun(this.profile, nodes.iterator().next());
     }
 
-    /**
-     * Escape var.
-     * @param key The name of the var
-     * @param raw The variable
-     * @return Escaped one
-     */
     private static String escape(final String key, final String raw) {
         final String esc;
         if ("scripts".equals(key) || "vars".equals(key)) {
@@ -319,11 +281,6 @@ public final class StartsRequest extends AbstractAgent {
         return esc;
     }
 
-    /**
-     * Export env vars.
-     * @param envs List of them
-     * @return Formatted lines
-     */
     private static Iterable<String> export(final Iterable<String> envs) {
         final Collection<String> lines = new ArrayList<>(4);
         for (final String env : envs) {

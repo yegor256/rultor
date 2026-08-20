@@ -164,13 +164,6 @@ final class QnReferredToTest {
         );
     }
 
-    /**
-     * Return the Req for a comment.
-     * @param comment String comment to read
-     * @param login String Rultor GitHub user login
-     * @return Req
-     * @throws Exception In case of error.
-     */
     private Req reqFromComment(final String comment, final String login)
         throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
@@ -181,12 +174,6 @@ final class QnReferredToTest {
         );
     }
 
-    /**
-     * Return the Xembler xml output for a comment.
-     * @param comment String comment to read
-     * @return String
-     * @throws Exception In case of error.
-     */
     private String xemblerXml(final String comment) throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");

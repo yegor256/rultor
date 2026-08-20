@@ -39,11 +39,6 @@ final class TkAppAuth extends TkWrap {
         super(TkAppAuth.make(take));
     }
 
-    /**
-     * Authenticated.
-     * @param take Takes
-     * @return Authenticated takes
-     */
     private static Take make(final Take take) {
         return new TkAuth(
             new TkFork(

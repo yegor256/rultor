@@ -252,13 +252,6 @@ final class CommentsTagTest {
         );
     }
 
-    /**
-     * Make a talk with this tag.
-     * @param issue The issue
-     * @param tag The tag
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk(final Issue issue, final String tag)
         throws IOException {
         final Talk talk = new Talk.InFile();

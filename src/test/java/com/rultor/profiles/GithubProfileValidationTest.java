@@ -286,12 +286,6 @@ final class GithubProfileValidationTest {
         );
     }
 
-    /**
-     * Create repo with .rultor.yml inside.
-     * @param yaml Content of .rultor.yml file
-     * @return Created repo
-     * @throws IOException In case of error.
-     */
     private static Repo repo(final String yaml) throws IOException {
         final GitHub github = new MkGitHub("jeff");
         final Repo repo = github.repos().create(

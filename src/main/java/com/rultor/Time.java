@@ -78,11 +78,6 @@ public final class Time {
         return this.millis;
     }
 
-    /**
-     * Parse text, produced by {@link #iso()} or in a similar format.
-     * @param date Date
-     * @return Instant
-     */
     private static Instant parse(final String date) {
         final String txt;
         if (date.endsWith("Z")) {

@@ -83,12 +83,6 @@ public final class ConnectsInstance extends AbstractAgent {
         return dirs;
     }
 
-    /**
-     * How long ago the instance was launched, in milliseconds.
-     * @param api AWS Client
-     * @param instance Instance ID
-     * @return Milliseconds since launch
-     */
     private static long age(final AwsEc2 api, final String instance) {
         return System.currentTimeMillis() - api.aws().describeInstances(
             DescribeInstancesRequest.builder()
@@ -98,12 +92,6 @@ public final class ConnectsInstance extends AbstractAgent {
             .launchTime().toEpochMilli();
     }
 
-    /**
-     * Current status of the instance.
-     * @param api AWS Client
-     * @param instance Instance ID
-     * @return Status name
-     */
     private static String status(final AwsEc2 api, final String instance) {
         return api.aws().describeInstanceStatus(
             DescribeInstanceStatusRequest.builder()
@@ -113,11 +101,6 @@ public final class ConnectsInstance extends AbstractAgent {
         ).instanceStatuses().get(0).instanceState().nameAsString();
     }
 
-    /**
-     * Tries to connect to it via SSH and returns TRUE if it's possible.
-     * @param host IP of the host
-     * @return TRUE if alive
-     */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private boolean alive(final String host) {
         boolean alive = false;

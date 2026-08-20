@@ -110,13 +110,6 @@ public final class RegistersShell extends AbstractAgent {
         return dirs;
     }
 
-    /**
-     * Validate user and key, passing the host through.
-     * @param host Host
-     * @param user Login
-     * @param key Private SSH key
-     * @return The host, unchanged
-     */
     private static String validated(final String host, final String user,
         final String key) {
         if (user.isEmpty()) {

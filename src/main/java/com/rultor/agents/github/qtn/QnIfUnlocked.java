@@ -91,13 +91,6 @@ public final class QnIfUnlocked implements Question {
         return req;
     }
 
-    /**
-     * Is it allowed to merge?
-     * @param pull The pull
-     * @param branch The branch
-     * @return TRUE if allowed
-     * @throws IOException If fails
-     */
     private static Collection<String> guards(final Pull pull,
         final String branch) throws IOException {
         final Contents contents = pull.repo().contents();

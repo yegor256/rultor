@@ -101,16 +101,9 @@ public final class StartsTalks implements SuperAgent {
         );
     }
 
-    /**
-     * Activate talk.
-     * @param talks Talks
-     * @param event Event
-     * @return Name of the talk activated
-     * @throws IOException If fails
-     */
     private String activate(final Talks talks, final JsonObject event)
         throws IOException {
-        final Coordinates coords = this.coords(event);
+        final Coordinates coords = StartsTalks.coords(event);
         final Issue issue = this.github.repos().get(coords).issues().get(
             new IssueUrl(event.getJsonObject("subject").getString("url")).uid()
         );
@@ -139,13 +132,7 @@ public final class StartsTalks implements SuperAgent {
         return talk.name();
     }
 
-    /**
-     * Get coordinates from JSON.
-     * @param event Event
-     * @return Coords
-     * @checkstyle NonStaticMethodCheck (5 lines)
-     */
-    private Coordinates coords(final JsonObject event) {
+    private static Coordinates coords(final JsonObject event) {
         return new Coordinates.Simple(
             event.getJsonObject("repository").getString("full_name")
         );

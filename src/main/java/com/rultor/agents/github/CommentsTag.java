@@ -130,12 +130,6 @@ public final class CommentsTag extends AbstractAgent {
         return new Directives();
     }
 
-    /**
-     * Check if release is prerelease.
-     * True if profile does not specify release.pre=false.
-     * @param req Comment's xml
-     * @return True if prerelease, false otherwise
-     */
     private boolean isPrerelease(final XML req) {
         try {
             final boolean result;
@@ -164,13 +158,6 @@ public final class CommentsTag extends AbstractAgent {
         }
     }
 
-    /**
-     * Get title.
-     * @param request Request to get title from
-     * @param issue Issue to get title from as fallback
-     * @return Title
-     * @throws IOException In case of problem communicating with repo.
-     */
     private static String title(
         final XML request,
         final Issue.Smart issue
@@ -187,12 +174,6 @@ public final class CommentsTag extends AbstractAgent {
         return res;
     }
 
-    /**
-     * Get previous release time.
-     * @param repo Repo in which to find the releases
-     * @return Previous release time or start of epoch
-     * @throws IOException In case of problem communicating with repo.
-     */
     private static Instant previous(final Repo repo) throws IOException {
         Instant prev = Instant.EPOCH;
         final Iterable<Release.Smart> releases =

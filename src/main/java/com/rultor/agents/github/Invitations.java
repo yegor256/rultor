@@ -51,13 +51,6 @@ public final class Invitations implements SuperAgent {
         }
     }
 
-    /**
-     * Accept one invitation.
-     * @param entry Entry to use
-     * @param invitation The invitation number
-     * @param repo The repo name
-     * @throws IOException If fails
-     */
     private void accept(final Request entry, final int invitation,
         final String repo) throws IOException {
         try {

@@ -62,11 +62,6 @@ final class QnStatusTest {
         );
     }
 
-    /**
-     * Sample talk with a status request.
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk() throws IOException {
         return new Talk.InFile(
             "<talk name='test' number='45' later='false'>",

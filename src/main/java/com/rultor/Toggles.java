@@ -82,10 +82,6 @@ public interface Toggles {
             }
         }
 
-        /**
-         * Get file.
-         * @return File
-         */
         private File file() {
             final File file = new File(Toggles.InFile.DIR, "read-only");
             if (file.getParentFile().mkdirs()) {

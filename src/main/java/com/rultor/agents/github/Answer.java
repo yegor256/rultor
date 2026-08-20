@@ -98,13 +98,6 @@ public final class Answer {
         }
     }
 
-    /**
-     * Make a message to post.
-     * @param success Is it a report about success?
-     * @param text The text
-     * @return Text to post
-     * @throws IOException If fails
-     */
     private String msg(final boolean success, final String text)
         throws IOException {
         final StringBuilder msg = new StringBuilder(100);

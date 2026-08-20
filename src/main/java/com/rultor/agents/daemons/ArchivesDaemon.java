@@ -95,13 +95,6 @@ public final class ArchivesDaemon extends AbstractAgent {
             .set(uri.toString());
     }
 
-    /**
-     * Upload file to S3.
-     * @param file The file
-     * @param hash Hash
-     * @return S3 URI
-     * @throws IOException If fails
-     */
     private URI upload(final File file, final String hash) throws IOException {
         final HeadObjectResponse meta = HeadObjectResponse.builder()
             .contentType("text/plain")
@@ -115,13 +108,6 @@ public final class ArchivesDaemon extends AbstractAgent {
         return URI.create(String.format("s3://%s/%s", this.bucket.name(), key));
     }
 
-    /**
-     * Make a title.
-     * @param xml XML
-     * @param file File with stdout
-     * @return Title
-     * @throws IOException If fails
-     */
     private static String title(final XML xml, final File file)
         throws IOException {
         final int code = Integer.parseInt(

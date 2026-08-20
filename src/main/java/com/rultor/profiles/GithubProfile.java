@@ -124,12 +124,6 @@ final class GithubProfile implements Profile {
         return new MapOf<>(new ListOf<>(entries));
     }
 
-    /**
-     * Convert address to input stream.
-     * @param path Path of the asset, e.g. "yegor/rultor#pom.xml"
-     * @return Stream with content
-     * @throws IOException If fails
-     */
     private InputStream asset(final String path) throws IOException {
         final Matcher matcher = GithubProfile.PATH.matcher(path);
         if (!matcher.matches()) {
@@ -172,11 +166,6 @@ final class GithubProfile implements Profile {
         return this.buildAssetStream(rpo, matcher.group(2));
     }
 
-    /**
-     * Check that everything is OK with trustees.
-     * @param rpo The repo
-     * @throws IOException If fails
-     */
     @SuppressWarnings("unchecked")
     private void checkTrustees(final Repo rpo) throws IOException {
         final Collection<String> trustees =
@@ -232,14 +221,6 @@ final class GithubProfile implements Profile {
         }
     }
 
-    /**
-     * Build the InputStream for the given filename in the given Repository,
-     * dealing with errors.
-     * @param rpo Repository where the file is
-     * @param filename Name of the file
-     * @return An InputStream with the Base64 contents of the file
-     * @throws IOException If something goes wrong.
-     */
     private InputStream buildAssetStream(final Repo rpo, final String filename)
         throws IOException {
         if (!rpo.contents().exists(filename, this.branch)) {
@@ -259,11 +240,6 @@ final class GithubProfile implements Profile {
         );
     }
 
-    /**
-     * Get .rultor.yml file.
-     * @return Its content
-     * @throws IOException If fails
-     */
     private String yml() throws IOException {
         final String yml;
         if (this.repo.contents()
@@ -282,7 +258,7 @@ final class GithubProfile implements Profile {
             );
             yml = "";
         }
-        final List<String> msg = this.validate();
+        final List<String> msg = GithubProfile.validate();
         if (!msg.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
@@ -300,15 +276,7 @@ final class GithubProfile implements Profile {
         return yml;
     }
 
-    /**
-     * Validate rultor config YAML according to schema.
-     * @return Validation result message, empty list means validation succeeded
-     * @todo #570:30min Implement validation using Kwalify library in separate
-     *  class called ValidYaml, move this method to that class and move tests
-     *  from GithubProfileValidationTest to ValidYamlTest.
-     * @checkstyle NonStaticMethodCheck (5 lines)
-     */
-    private List<String> validate() {
+    private static List<String> validate() {
         return Collections.emptyList();
     }
 }

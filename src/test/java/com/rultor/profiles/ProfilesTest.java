@@ -388,14 +388,6 @@ final class ProfilesTest {
         );
     }
 
-    /**
-     * Fork profile for the commanders-mix scenario.
-     * @param architect Architect name
-     * @param first First commander
-     * @param second Second commander
-     * @return Profile
-     * @throws Exception If fails
-     */
     private static Profile commandersMixFork(final String architect,
         final String first, final String second) throws Exception {
         return new Profile.Fixed(

@@ -50,14 +50,6 @@ final class RsPage extends RsWrap {
         super(RsPage.make(xsl, req, src));
     }
 
-    /**
-     * Make it.
-     * @param xsl XSL
-     * @param req Request
-     * @param src Source
-     * @return Response
-     * @throws IOException If fails
-     */
     private static Response make(final String xsl, final Request req,
         final XeSource... src
     ) throws IOException {
@@ -90,21 +82,6 @@ final class RsPage extends RsWrap {
         );
     }
 
-    /**
-     * Build correct response by requested header 'Accept'.
-     * @param raw Prepared raw response
-     * @param req Request
-     * @return Correct response according to 'Accept' header
-     * @throws IOException If fails.
-     * @todo #1633:90min Replace typedResponse static method with RsFork.
-     *  The current solution with typedResponse method is crutch, actually.
-     *  The previous solution with {@link org.takes.facets.fork.RsFork} was
-     *  broken after the Maven 3.9.0 release. The proper solution would be
-     *  to fix the original problem in
-     *  <a href="https://github.com/yegor256/takes">takes</a> framework and
-     *  then to return the correct solution with
-     *  {@link org.takes.facets.fork.RsFork} back.
-     */
     private static Response typedResponse(
         final Response raw,
         final Request req

@@ -155,13 +155,6 @@ final class ClosePullRequestTest {
         );
     }
 
-    /**
-     * Creates talk with href, github repository, github issue.
-     * @param repo Repository
-     * @param issue Issue
-     * @return Talk
-     * @throws IOException if errors
-     */
     private static Talk talk(final Repo repo, final Issue issue)
         throws IOException {
         final Talk talk = new Talk.InFile();

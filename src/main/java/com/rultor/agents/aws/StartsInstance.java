@@ -125,13 +125,6 @@ public final class StartsInstance extends AbstractAgent {
         return dirs;
     }
 
-    /**
-     * Run a new instance.
-     * @param talk Name of the talk
-     * @param xml Talk XML
-     * @return Instance ID
-     * @throws IOException If fails
-     */
     private Instance run(final String talk, final XML xml) throws IOException {
         final String itype = this.instanceType(xml);
         final RunInstancesRequest request = RunInstancesRequest.builder()
@@ -166,12 +159,6 @@ public final class StartsInstance extends AbstractAgent {
         return instance;
     }
 
-    /**
-     * Read one EC2 param from .rultor.xml.
-     * @param xml Talk XML
-     * @return Value
-     * @throws IOException If fails
-     */
     private String instanceType(final XML xml) throws IOException {
         final String required = new Profile.Defaults(this.profile).text(
             "/p/entry[@key='ec2']/entry[@key='type']",

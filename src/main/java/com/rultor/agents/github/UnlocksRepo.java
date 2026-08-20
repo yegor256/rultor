@@ -63,11 +63,6 @@ public final class UnlocksRepo implements SuperAgent {
         }
     }
 
-    /**
-     * Unlock.
-     * @param talk Talk
-     * @throws IOException If fails
-     */
     private void unlock(final Talk talk) throws IOException {
         final XML xml = talk.read();
         if (!xml.nodes(UnlocksRepo.XPATH).isEmpty()) {

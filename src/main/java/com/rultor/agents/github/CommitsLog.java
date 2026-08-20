@@ -93,13 +93,6 @@ final class CommitsLog {
         ).asString();
     }
 
-    /**
-     * Convert commit to text.
-     * see <a href="https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository">link</a>
-     * @param commit The commit
-     * @return Text
-     * @throws IOException If fails
-     */
     private static String asText(final RepoCommit.Smart commit)
         throws IOException {
         final StringBuilder line = new StringBuilder(100);

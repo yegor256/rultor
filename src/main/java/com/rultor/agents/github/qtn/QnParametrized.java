@@ -80,12 +80,6 @@ public final class QnParametrized implements Question {
         return req;
     }
 
-    /**
-     * Fetch params from comment.
-     * @param comment The comment
-     * @return Map of params
-     * @throws IOException If fails
-     */
     private static Map<String, String> params(final Comment.Smart comment)
         throws IOException {
         final List<Entry<String, String>> entries = new ArrayList<>(0);

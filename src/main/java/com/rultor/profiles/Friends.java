@@ -61,12 +61,6 @@ final class Friends {
         return allowed;
     }
 
-    /**
-     * Does the name with an asterisk cover this repository?
-     * @param name Name from the friends list, e.g. "jcabi/*"
-     * @param repo Coordinates of the repo, e.g. "jcabi/aspects"
-     * @return TRUE if it covers
-     */
     private static boolean matches(final String name, final String repo) {
         return name.endsWith("/*")
             && repo.startsWith(name.substring(0, name.length() - 1));

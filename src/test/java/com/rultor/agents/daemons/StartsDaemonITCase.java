@@ -156,12 +156,6 @@ final class StartsDaemonITCase {
         }
     }
 
-    /**
-     * Creates a Talk object with basic parameters.
-     * @param start Docker daemon starter
-     * @return The basic Talk object for testing
-     * @throws IOException In case of error
-     */
     private static Talk talk(final StartsDockerDaemon start)
         throws IOException {
         Assumptions.assumeTrue(

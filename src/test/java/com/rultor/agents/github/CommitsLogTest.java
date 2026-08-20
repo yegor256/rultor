@@ -73,12 +73,6 @@ final class CommitsLogTest {
         );
     }
 
-    /**
-     * Create repo commit.
-     * @param msg Message
-     * @return Commit
-     * @throws IOException In case of error.
-     */
     private RepoCommit commit(final String msg) throws IOException {
         final RepoCommit commit = Mockito.mock(RepoCommit.class);
         Mockito.doReturn("a1b2c3").when(commit).sha();

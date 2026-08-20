@@ -56,11 +56,6 @@ final class TkHome implements Take {
         );
     }
 
-    /**
-     * Turn recent talks into directives.
-     * @return Directives
-     * @throws IOException If fails
-     */
     private Directives recent() throws IOException {
         final Directives dirs = new Directives().add("recent");
         final PrettyTime pretty = new PrettyTime();
@@ -79,12 +74,6 @@ final class TkHome implements Take {
         return dirs;
     }
 
-    /**
-     * Flags/toggles to show.
-     * @param req Request
-     * @return Directives
-     * @throws IOException If fails
-     */
     private Iterable<Directive> flags(final Request req) throws IOException {
         final Directives dirs = new Directives().add("toggles");
         dirs.add("read-only")

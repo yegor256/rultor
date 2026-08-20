@@ -114,12 +114,6 @@ final class DockerRun {
         );
     }
 
-    /**
-     * Get items from XML.
-     * @param xml The XML
-     * @param path The XPath
-     * @return Items
-     */
     private static Iterable<String> scripts(final XML xml, final String path) {
         final Collection<String> items = new ArrayList<>(0);
         if (!xml.nodes(path).isEmpty()) {
@@ -140,23 +134,12 @@ final class DockerRun {
         return scripts;
     }
 
-    /**
-     * Is hash character inside double or single quotes.
-     * @param item String to check
-     * @param pos Position of the hash
-     * @return If hash is in quotes
-     */
     private static boolean inquotes(final String item, final int pos) {
         final String sub = item.substring(0, pos);
         return sub.chars().filter(c -> c == '"').count() % 2 == 1
             || sub.chars().filter(c -> c == '\'').count() % 2 == 1;
     }
 
-    /**
-     * Neutralize comment contained in the script line.
-     * @param item Script element
-     * @return Script element with invisible comment
-     */
     private static String neutralize(final String item) {
         final int start = item.indexOf('#');
         final String result;
@@ -170,12 +153,6 @@ final class DockerRun {
         return result;
     }
 
-    /**
-     * Environments from XML by XPath.
-     * @param xml The XML
-     * @param path The XPath
-     * @return Items
-     */
     private static Iterable<String> envs(final XML xml, final String path) {
         final Collection<String> envs = new ArrayList<>(0);
         if (!xml.nodes(path).isEmpty()) {
@@ -208,11 +185,6 @@ final class DockerRun {
         return envs;
     }
 
-    /**
-     * Get lines from a single XML node.
-     * @param node Node to get text() from
-     * @return Lines found
-     */
     private static Collection<String> lines(final XML node) {
         final Collection<String> lines = new ArrayList<>(0);
         if (node.inner().hasChildNodes()) {

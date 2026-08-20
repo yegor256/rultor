@@ -53,13 +53,6 @@ final class DephantomizesTest {
         );
     }
 
-    /**
-     * Make a fake talk.
-     * @param repo Repo
-     * @param issue The issue
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk(final Repo repo, final int issue)
         throws IOException {
         final Talk talk = new Talk.InFile();

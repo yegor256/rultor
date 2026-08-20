@@ -437,24 +437,10 @@ final class StartsRequestTest {
         );
     }
 
-    /**
-     * Execute script from daemon.
-     * @param talk Talk to use
-     * @param wdir Temporary work directory
-     * @return Full stdout
-     * @throws IOException If fails
-     */
     private String exec(final Talk talk, final Path wdir) throws IOException {
         return this.process(talk, wdir).stdout();
     }
 
-    /**
-     * Execute script from daemon without throwing exception if fails.
-     * @param talk Talk to use
-     * @param wdir Temporary work directory
-     * @return Full stdout
-     * @throws IOException If fails
-     */
     private String execQuietly(
         final Talk talk,
         final Path wdir
@@ -462,13 +448,6 @@ final class StartsRequestTest {
         return this.process(talk, wdir).stdoutQuietly();
     }
 
-    /**
-     * Create process to execute script from daemon.
-     * @param talk Talk to use
-     * @param wdir Temporary work directory
-     * @return Process
-     * @throws IOException If fails
-     */
     private VerboseProcess process(
         final Talk talk,
         final Path wdir
@@ -500,11 +479,6 @@ final class StartsRequestTest {
         );
     }
 
-    /**
-     * Create empty Git repo.
-     * @param temp Temporary work folder
-     * @return Its location
-     */
     private File repo(final Path temp) {
         final File repo = temp.toFile();
         new VerboseProcess(

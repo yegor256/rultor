@@ -78,14 +78,6 @@ final class ReleaseBinariesTest {
         );
     }
 
-    /**
-     * Make a talk with this tag.
-     * @param issue The issue
-     * @param tag The tag
-     * @param dir Daemon directory
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk(
         final Issue issue,
         final String tag,

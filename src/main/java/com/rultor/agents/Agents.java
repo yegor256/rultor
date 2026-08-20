@@ -338,11 +338,6 @@ public final class Agents {
         );
     }
 
-    /**
-     * Handle main commands.
-     * @param profile Profile to uuse
-     * @return Array of questions
-     */
     private static Question commands(final Profile profile) {
         return new QnByArchitect(
             profile,
@@ -384,11 +379,6 @@ public final class Agents {
         );
     }
 
-    /**
-     * XPath for commanders.
-     * @param entry Entry
-     * @return XPath
-     */
     private static String commanders(final String entry) {
         return String.format(
             "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
@@ -396,10 +386,6 @@ public final class Agents {
         );
     }
 
-    /**
-     * Make private ssh key.
-     * @return The key
-     */
     private static String priv() {
         String priv = System.getenv("PRIVATE_SSH_KEY");
         if (priv == null) {

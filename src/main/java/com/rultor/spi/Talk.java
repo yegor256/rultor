@@ -200,11 +200,6 @@ public interface Talk {
             // nothing
         }
 
-        /**
-         * Create a blank talk file.
-         * @return File with a blank talk XML
-         * @throws IOException If fails
-         */
         private static File blank() throws IOException {
             final File file = File.createTempFile("rultor", ".talk");
             FileUtils.write(
@@ -215,12 +210,6 @@ public interface Talk {
             return file;
         }
 
-        /**
-         * Save XML into a new temporary file.
-         * @param xml XML to save
-         * @return File with the XML content
-         * @throws IOException If fails
-         */
         private static File saved(final XML xml) throws IOException {
             final File file = File.createTempFile("rultor", ".talk");
             FileUtils.write(

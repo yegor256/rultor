@@ -60,11 +60,6 @@ final class TkTicks implements Take {
         );
     }
 
-    /**
-     * Make PNG in bytes.
-     * @return Bytes
-     * @throws IOException If fails
-     */
     private byte[] png() throws IOException {
         final TranscoderInput input = new TranscoderInput(
             (Document) TkTicks.PULSE.transform(this.dirs()).inner()
@@ -86,10 +81,6 @@ final class TkTicks implements Take {
         return baos.toByteArray();
     }
 
-    /**
-     * Turn ticks into XML.
-     * @return XML
-     */
     private XML dirs() {
         final long now = System.currentTimeMillis();
         final Directives dirs = new Directives().add("pulse");

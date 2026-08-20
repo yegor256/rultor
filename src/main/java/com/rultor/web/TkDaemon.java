@@ -92,13 +92,6 @@ final class TkDaemon implements TkRegex {
         }
     }
 
-    /**
-     * Get HTML.
-     * @param number Number
-     * @param hash Hash
-     * @return HTML
-     * @throws IOException If fails
-     */
     private InputStream html(final long number, final String hash)
         throws IOException {
         final Talk talk = this.talks.get(number);
@@ -119,12 +112,6 @@ final class TkDaemon implements TkRegex {
         );
     }
 
-    /**
-     * Prepare head HTML for the talk.
-     * @param talk Talk
-     * @return Head HTML, with placeholders replaced
-     * @throws IOException If fails
-     */
     private String head(final Talk talk) throws IOException {
         return IOUtils.toString(
             Objects.requireNonNull(
@@ -139,12 +126,6 @@ final class TkDaemon implements TkRegex {
         );
     }
 
-    /**
-     * Escape HTML chars in input stream.
-     * @param input Input stream
-     * @return New input stream
-     * @throws IOException If fails
-     */
     private static InputStream escape(
         final InputStream input
     ) throws IOException {

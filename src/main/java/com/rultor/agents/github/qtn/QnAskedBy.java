@@ -80,7 +80,7 @@ public final class QnAskedBy implements Question {
                 false,
                 String.format(
                     QnAskedBy.PHRASES.getString("QnAskedBy.denied"),
-                    this.commandersAsDelimitedList(
+                    QnAskedBy.commandersAsDelimitedList(
                         logins,
                         comment.issue().repo().github().users().self().login()
                     )
@@ -91,14 +91,7 @@ public final class QnAskedBy implements Question {
         return req;
     }
 
-    /**
-     * Format list of commanders with {@code @} prefix, comma-delimited.
-     * @param logins Commanders
-     * @param excluded Excluded commander
-     * @return Comma-delimited names
-     * @checkstyle NonStaticMethodCheck (10 lines)
-     */
-    private String commandersAsDelimitedList(final Collection<String> logins,
+    private static String commandersAsDelimitedList(final Collection<String> logins,
         final String excluded) {
         return new Joined(
             ", ",
@@ -112,12 +105,6 @@ public final class QnAskedBy implements Question {
         ).toString();
     }
 
-    /**
-     * Get list of commanders.
-     * @param repo Repo
-     * @return Their logins
-     * @throws IOException If fails
-     */
     private Collection<String> commanders(final Repo repo) throws IOException {
         final Collection<String> logins = new ArrayList<>(0);
         final XML xml = this.profile.read();

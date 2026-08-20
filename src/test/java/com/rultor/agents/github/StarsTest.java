@@ -53,12 +53,6 @@ final class StarsTest {
         );
     }
 
-    /**
-     * Create a test talk.
-     * @param repo Repo to use
-     * @return Test Talk
-     * @throws IOException In case of error.
-     */
     private Talk talk(final Repo repo) throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(

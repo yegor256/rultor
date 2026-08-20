@@ -179,22 +179,10 @@ final class UnderstandsTest {
         );
     }
 
-    /**
-     * Make talk from issue.
-     * @param issue The issue
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk(final Issue issue) throws IOException {
         return UnderstandsTest.talk(issue.repo().coordinates(), issue.number());
     }
 
-    /**
-     * Make talk from issue.
-     * @param pull The issue
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk(final Pull pull) throws IOException {
         return UnderstandsTest.talk(
             pull.repo().coordinates(),
@@ -202,13 +190,6 @@ final class UnderstandsTest {
         );
     }
 
-    /**
-     * Make talk from coordinates and number.
-     * @param coordinates Repo Coordinates
-     * @param number Issue Number
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk(
         final Coordinates coordinates,
         final int number

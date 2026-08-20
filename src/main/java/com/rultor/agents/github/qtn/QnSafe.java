@@ -67,11 +67,6 @@ public final class QnSafe implements Question {
         return req;
     }
 
-    /**
-     * Is it a valid issue?
-     * @param comment The comment
-     * @return TRUE if valid
-     */
     private static boolean valid(final Comment.Smart comment) {
         final boolean[] valid = {false};
         new VerboseRunnable(

@@ -74,13 +74,6 @@ public final class QnRelease implements Question {
         return req;
     }
 
-    /**
-     * Confirms that Rultor is starting the release process.
-     * @param comment Comment that triggered the release
-     * @param home URI of the release tail
-     * @return Req.Simple containing the release parameters
-     * @throws IOException on error
-     */
     private static Req affirmative(final Comment.Smart comment,
         final URI home) throws IOException {
         new Answer(comment).post(

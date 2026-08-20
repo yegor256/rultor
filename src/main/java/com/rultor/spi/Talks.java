@@ -221,11 +221,6 @@ public interface Talks {
             return this.active();
         }
 
-        /**
-         * Create a temporary directory.
-         * @return Absolute path of the directory
-         * @throws IOException If fails
-         */
         private static String temp() throws IOException {
             return Files.createTempDirectory("").toAbsolutePath().toString();
         }

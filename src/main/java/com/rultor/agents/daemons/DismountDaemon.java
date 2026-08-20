@@ -78,11 +78,6 @@ public final class DismountDaemon extends AbstractAgent {
         return dirs;
     }
 
-    /**
-     * Host name of the daemon.
-     * @param talk The talk
-     * @return Host name
-     */
     private static String host(final XML talk) {
         return String.format(
             "%s:%s for %s",

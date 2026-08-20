@@ -77,20 +77,12 @@ final class TkSiblings implements TkRegex {
             req,
             new XeAppend("repo", repo),
             new XeAppend("since", Long.toString(since.toEpochMilli())),
-            this.more(repo, siblings),
-            new XeDirectives(this.list(siblings))
+            TkSiblings.more(repo, siblings),
+            new XeDirectives(TkSiblings.list(siblings))
         );
     }
 
-    /**
-     * Link to more, if necessary.
-     * @param repo Repo name
-     * @param siblings Siblings
-     * @return Link or empty
-     * @throws IOException If fails
-     * @checkstyle NonStaticMethodCheck (10 lines)
-     */
-    private XeSource more(final String repo, final List<Talk> siblings)
+    private static XeSource more(final String repo, final List<Talk> siblings)
         throws IOException {
         final XeSource src;
         if (siblings.size() == 20) {
@@ -108,29 +100,16 @@ final class TkSiblings implements TkRegex {
         return src;
     }
 
-    /**
-     * List of directives.
-     * @param siblings List of them
-     * @return The directives
-     * @throws IOException If fails
-     */
-    private Iterable<Directive> list(final Iterable<Talk> siblings)
+    private static Iterable<Directive> list(final Iterable<Talk> siblings)
         throws IOException {
         final Directives dirs = new Directives().add("siblings");
         for (final Talk talk : siblings) {
-            dirs.append(this.dirs(talk));
+            dirs.append(TkSiblings.dirs(talk));
         }
         return dirs;
     }
 
-    /**
-     * Convert talk to directives.
-     * @param talk The talk to convert
-     * @return Directives
-     * @throws IOException If fails
-     * @checkstyle NonStaticMethodCheck (10 lines)
-     */
-    private Iterable<Directive> dirs(final Talk talk) throws IOException {
+    private static Iterable<Directive> dirs(final Talk talk) throws IOException {
         final XML xml = talk.read();
         final Directives dirs = new Directives().add("talk").add("archive");
         for (final XML log : xml.nodes("/talk/archive/log")) {
@@ -144,12 +123,6 @@ final class TkSiblings implements TkRegex {
             .up();
     }
 
-    /**
-     * Convert log to JAXB.
-     * @param talk Talk
-     * @param log The log to convert
-     * @return JAXB
-     */
     private static Iterable<Directive> log(final XML talk, final XML log) {
         final String hash = log.xpath("@id").get(0);
         return new Directives().add("log")

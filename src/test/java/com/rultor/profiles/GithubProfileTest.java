@@ -259,11 +259,6 @@ final class GithubProfileTest {
         );
     }
 
-    /**
-     * YAML config with a merge script and two asset entries.
-     * @return YAML text
-     * @throws Exception If fails
-     */
     private static String yamlWithMergeAndAssets() throws Exception {
         return new Joined(
             System.lineSeparator(),
@@ -278,11 +273,6 @@ final class GithubProfileTest {
         ).asString();
     }
 
-    /**
-     * Add a rultor.yml with a "friends" entry to the jeff/test1 repo.
-     * @param repo Repo to populate
-     * @throws IOException If fails
-     */
     private static void addFriendConfig(final Repo repo) throws IOException {
         repo.github()
             .repos()
@@ -303,12 +293,6 @@ final class GithubProfileTest {
             );
     }
 
-    /**
-     * Make a repo with YAML inside.
-     * @param yaml YAML config
-     * @return Repo
-     * @throws IOException If fails
-     */
     private static Repo repo(final String yaml) throws IOException {
         final GitHub github = new MkGitHub("jeff");
         github.repos()

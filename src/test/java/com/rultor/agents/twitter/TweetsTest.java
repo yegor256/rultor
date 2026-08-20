@@ -72,13 +72,6 @@ final class TweetsTest {
         );
     }
 
-    /**
-     * Creates a talk with repo and issue.
-     * @param repo Repo to use
-     * @param issue Issue to use
-     * @return Created Talk
-     * @throws IOException In case of error
-     */
     private static Talk talk(final Repo repo, final Issue issue)
         throws IOException {
         final Talk talk = new Talk.InFile();

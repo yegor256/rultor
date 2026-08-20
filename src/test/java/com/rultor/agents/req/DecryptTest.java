@@ -46,7 +46,7 @@ final class DecryptTest {
                 DecryptTest.NEWLINE,
                 new Decrypt(
                     new Profile.Fixed(
-                        this.createTestProfileXML(),
+                        this.createTestProfileXml(),
                         "test/test"
                     )
                 ).commands()
@@ -89,12 +89,7 @@ final class DecryptTest {
         );
     }
 
-    /**
-     * Creates a profile XML for testing purposes.
-     * @return XML document
-     * @checkstyle AbbreviationAsWordInNameCheck (15 lines)
-     */
-    private XMLDocument createTestProfileXML() {
+    private XMLDocument createTestProfileXml() {
         return new XMLDocument(
             new UncheckedText(
                 new Joined(

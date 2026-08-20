@@ -77,12 +77,6 @@ public final class ProfileDeprecations {
         return ProfileDeprecations.empty(this.profile.read());
     }
 
-    /**
-     * Prints given message to a shell.
-     * @param message Message to print to shell
-     * @param shell Shell to print to
-     * @throws IOException On failure to print to shell
-     */
     private static void output(final String message, final Shell shell)
         throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -93,11 +87,6 @@ public final class ProfileDeprecations {
         );
     }
 
-    /**
-     * Indicates whether there is a deprecation notice or not.
-     * @param prof The XML representation of the profile to test
-     * @return True if there is no deprecation notice, false otherwise
-     */
     private static boolean empty(final XML prof) {
         final List<XML> images = prof.nodes(
             "/p/entry[@key='docker']/entry[@key='image']"

@@ -59,11 +59,6 @@ final class YamlXML {
         return new XMLDocument(new Xembler(dirs).xmlQuietly());
     }
 
-    /**
-     * Convert something to dirs.
-     * @param obj Object
-     * @return Dirs
-     */
     @SuppressWarnings("unchecked")
     private static Iterable<Directive> dirs(final Object obj) {
         final Directives dirs = new Directives();

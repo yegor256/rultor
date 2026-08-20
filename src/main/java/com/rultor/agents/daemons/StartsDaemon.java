@@ -140,14 +140,6 @@ public final class StartsDaemon implements Agent {
         return dir;
     }
 
-    /**
-     * Build the run script content.
-     * @param shell The shell
-     * @param dir Directory where the daemon started
-     * @param xml XML with talk
-     * @return Script content
-     * @throws IOException If fails
-     */
     private String script(final Shell shell, final String dir, final XML xml)
         throws IOException {
         return String.join(
@@ -173,11 +165,6 @@ public final class StartsDaemon implements Agent {
         );
     }
 
-    /**
-     * Upload GPG secret key.
-     * @param shell The shell
-     * @throws IOException If fails
-     */
     private void uploadGpgKey(final Shell shell) throws IOException {
         final String secring = System.getenv("GPG_SECRING");
         if (secring == null) {
@@ -204,13 +191,6 @@ public final class StartsDaemon implements Agent {
         );
     }
 
-    /**
-     * Upload assets.
-     * @param shell Shell
-     * @param dir Directory
-     * @return Script to use
-     * @throws IOException If fails
-     */
     private String upload(final Shell shell, final String dir)
         throws IOException {
         final long start = System.currentTimeMillis();

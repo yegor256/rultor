@@ -71,13 +71,6 @@ public final class Tweets extends AbstractAgent {
         return new Directives();
     }
 
-    /**
-     * Create a tweet to post.
-     * @param repo The repo
-     * @param tag The tag
-     * @return Tweet text
-     * @throws IOException If fails
-     */
     private static String tweet(final Repo.Smart repo, final String tag)
         throws IOException {
         final StringBuilder text = new StringBuilder(200);

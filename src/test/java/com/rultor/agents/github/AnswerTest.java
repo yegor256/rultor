@@ -64,11 +64,6 @@ final class AnswerTest {
         );
     }
 
-    /**
-     * Make an issue.
-     * @return Issue
-     * @throws IOException If fails
-     */
     private static Issue issue() throws IOException {
         return new MkGitHub().randomRepo().issues().create("", "");
     }
