@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.TimeZone;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -26,11 +27,30 @@ final class TimeTest {
      */
     @Test
     void canParseValidTime() {
-        final String date = "2005-10-08T15:48:39";
+        final String date = "2005-10-08T15:48:39Z";
         Assertions.assertDoesNotThrow(
             () -> new Time(date),
             "Time should be able to create from date-time string"
         );
+    }
+
+    /**
+     * ISO value can be parsed independently of the default time zone.
+     */
+    @Test
+    void roundTripsIsoOutsideUtc() {
+        final TimeZone origin = TimeZone.getDefault();
+        final long millis = Instant.parse("2005-10-08T15:48:39Z").toEpochMilli();
+        try {
+            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tokyo"));
+            MatcherAssert.assertThat(
+                "ISO round-trip should preserve the instant",
+                new Time(new Time(millis).iso()).msec(),
+                Matchers.equalTo(millis)
+            );
+        } finally {
+            TimeZone.setDefault(origin);
+        }
     }
 
     /**
@@ -40,6 +60,7 @@ final class TimeTest {
     @ParameterizedTest
     @ValueSource(
         strings = {
+            "2005-10-08T15:48:39",
             "2005-10-0815:48:28",
             "2005-10-08",
             "15:48:28"
