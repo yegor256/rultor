@@ -38,26 +38,6 @@ final class DecryptTest {
      * @throws Exception In case of error.
      */
     @Test
-    void keepsThePassphraseOutOfTheTrace() throws Exception {
-        final String script = new Joined(
-            DecryptTest.NEWLINE,
-            new Decrypt(
-                new Profile.Fixed(this.createTestProfileXml(), "test/test")
-            ).commands()
-        ).asString();
-        MatcherAssert.assertThat(
-            "The passphrase must not stand on a command line the shell traces",
-            script,
-            Matchers.not(Matchers.containsString("--passphrase '"))
-        );
-        MatcherAssert.assertThat(
-            "The tracing must be off while the passphrase is piped in",
-            script,
-            Matchers.containsString("set +x")
-        );
-    }
-
-    @Test
     void decryptsAssets(@TempDir final Path temp) throws Exception {
         final String script = new Joined(
             DecryptTest.NEWLINE,
@@ -106,6 +86,27 @@ final class DecryptTest {
                 StandardCharsets.UTF_8
             ),
             Matchers.startsWith("hello, world!")
+        );
+    }
+
+    /**
+     * Decrypt keeps the passphrase off any line the shell traces.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void keepsThePassphraseOutOfTheTrace() throws Exception {
+        MatcherAssert.assertThat(
+            "The passphrase must be piped in with the tracing off, not written on a traced line",
+            new Joined(
+                DecryptTest.NEWLINE,
+                new Decrypt(
+                    new Profile.Fixed(this.createTestProfileXml(), "test/test")
+                ).commands()
+            ).asString(),
+            Matchers.allOf(
+                Matchers.not(Matchers.containsString("--passphrase '")),
+                Matchers.containsString("set +x")
+            )
         );
     }
 
