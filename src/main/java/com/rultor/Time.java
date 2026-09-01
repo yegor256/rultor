@@ -7,7 +7,6 @@ package com.rultor;
 import com.jcabi.aspects.Immutable;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -79,17 +78,13 @@ public final class Time {
     }
 
     private static Instant parse(final String date) {
-        final String txt;
-        if (date.endsWith("Z")) {
-            txt = date.substring(0, date.length() - 1);
-        } else {
-            txt = date;
-        }
         try {
             return LocalDateTime.parse(
-                txt,
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-            ).atZone(ZoneId.systemDefault()).toInstant();
+                date,
+                DateTimeFormatter.ofPattern(
+                    "yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US
+                )
+            ).toInstant(ZoneOffset.UTC);
         } catch (final DateTimeParseException ex) {
             throw new IllegalStateException(ex);
         }
