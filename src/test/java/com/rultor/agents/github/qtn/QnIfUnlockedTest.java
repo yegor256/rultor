@@ -18,9 +18,7 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnIfUnlocked}.
- *
  * @since 1.53
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class QnIfUnlockedTest {
 
@@ -50,5 +48,4 @@ final class QnIfUnlockedTest {
             XhtmlMatchers.hasXPath("/request/type[text()='merge']")
         );
     }
-
 }

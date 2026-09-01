@@ -25,7 +25,6 @@ import org.takes.tk.TkWrap;
 
 /**
  * App with fallback.
- *
  * @since 1.53
  */
 final class TkAppFallback extends TkWrap {
@@ -43,11 +42,6 @@ final class TkAppFallback extends TkWrap {
         super(TkAppFallback.make(take));
     }
 
-    /**
-     * Authenticated.
-     * @param take Takes
-     * @return Authenticated takes
-     */
     private static Take make(final Take take) {
         return new TkFallback(
             take,
@@ -68,12 +62,6 @@ final class TkAppFallback extends TkWrap {
         );
     }
 
-    /**
-     * Make fatal error page.
-     * @param req Request
-     * @return Response
-     * @throws IOException If fails
-     */
     private static Response fatal(final RqFallback req) throws IOException {
         return new RsWithStatus(
             new RsWithType(
@@ -90,5 +78,4 @@ final class TkAppFallback extends TkWrap {
             HttpURLConnection.HTTP_INTERNAL_ERROR
         );
     }
-
 }

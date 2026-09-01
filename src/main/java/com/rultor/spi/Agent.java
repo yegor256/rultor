@@ -15,10 +15,10 @@ import lombok.ToString;
 
 /**
  * Agent.
- *
  * @since 1.0
  */
 @Immutable
+@FunctionalInterface
 public interface Agent {
 
     /**
@@ -30,13 +30,13 @@ public interface Agent {
 
     /**
      * Iterative.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "children")
     final class Iterative implements Agent {
+
         /**
          * Agents to run.
          */
@@ -71,13 +71,13 @@ public interface Agent {
 
     /**
      * Disabled.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Disabled implements Agent {
+
         /**
          * Agent to disable.
          */
@@ -116,13 +116,13 @@ public interface Agent {
 
     /**
      * Swallows all exceptions.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Quiet implements Agent {
+
         /**
          * Agent to defend.
          */
@@ -153,13 +153,13 @@ public interface Agent {
 
     /**
      * Only if the name of the talk DOESN'T match the regular expression.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = {"agent", "pattern"})
     final class SkipIfName implements Agent {
+
         /**
          * Agent to defend.
          */
@@ -176,14 +176,24 @@ public interface Agent {
          * @param ptn Pattern to match
          */
         public SkipIfName(final Agent agt, final String ptn) {
+            this(agt, Pattern.compile(ptn));
+        }
+
+        /**
+         * Ctor.
+         * @param agt Agent
+         * @param ptn Compiled pattern to match
+         */
+        private SkipIfName(final Agent agt, final Pattern ptn) {
             this.agent = agt;
-            this.pattern = Pattern.compile(ptn);
+            this.pattern = ptn;
         }
 
         @Override
         public void execute(final Talk talk) throws IOException {
-            final String name = talk.read().xpath("/talk/@name").get(0);
-            if (!this.pattern.matcher(name).matches()) {
+            if (!this.pattern.matcher(
+                talk.read().xpath("/talk/@name").get(0)
+            ).matches()) {
                 this.agent.execute(talk);
             }
         }

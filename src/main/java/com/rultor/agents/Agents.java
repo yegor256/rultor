@@ -4,7 +4,6 @@
  */
 package com.rultor.agents;
 
-import co.stateful.Locks;
 import co.stateful.Sttc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.GitHub;
@@ -93,15 +92,12 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Agents.
- *
  * @since 1.0
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = {"github", "sttc"})
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
 
     /**
@@ -145,10 +141,6 @@ public final class Agents {
      * @throws IOException If fails
      */
     public SuperAgent starter() throws IOException {
-        final AwsEc2 aws = new AwsEc2(
-            Env.read("Rultor-EC2Key"),
-            Env.read("Rultor-EC2Secret")
-        );
         return new SuperAgent.Iterative(
             new Array<>(
                 new StartsTalks(this.github),
@@ -156,7 +148,11 @@ public final class Agents {
                 new IndexesRequests(),
                 new SuperAgent.Quiet(
                     new PrunesInstances(
-                        aws, TimeUnit.HOURS.toMillis(3L)
+                        new AwsEc2(
+                            Env.read("Rultor-EC2Key"),
+                            Env.read("Rultor-EC2Secret")
+                        ),
+                        TimeUnit.HOURS.toMillis(3L)
                     )
                 ),
                 new SuperAgent.Disabled(
@@ -192,14 +188,10 @@ public final class Agents {
      * @param profile Profile
      * @return The agent
      * @throws IOException If fails
-     * @checkstyle MethodLengthCheck (500 lines)
      */
-    @SuppressWarnings("PMD.ExcessiveMethodLength")
     public Agent agent(final Talk talk, final Profile profile)
         throws IOException {
-        final Locks locks = this.sttc.locks();
         final Question question = new QnSince(
-            // @checkstyle MagicNumber (1 line)
             49_092_213,
             new QnNotSelf(
                 new QnReferredTo(
@@ -234,7 +226,7 @@ public final class Agents {
                                         ),
                                         new QnIfCollaborator(
                                             new QnAlone(
-                                                talk, locks,
+                                                talk, this.sttc.locks(),
                                                 Agents.commands(profile)
                                             )
                                         ),
@@ -295,14 +287,12 @@ public final class Agents {
                     ),
                     true
                 ),
-                // @checkstyle MagicNumber (1 line)
                 new DismountDaemon(TimeUnit.HOURS.toMinutes(5L)),
                 new Agent.Quiet(
                     new DropsDaemon(TimeUnit.HOURS.toMinutes(1L))
                 ),
                 new Agent.Quiet(new MkdirDaemon()),
                 new TimedAgent(new StartsDaemon(profile)),
-                // @checkstyle MagicNumber (1 line)
                 new Agent.SkipIfName(
                     new Agent.Quiet(new KillsDaemon(TimeUnit.HOURS.toMinutes(1L))),
                     "^(objectionary|yegor256|zerocracy)/.*$"
@@ -348,11 +338,6 @@ public final class Agents {
         );
     }
 
-    /**
-     * Handle main commands.
-     * @param profile Profile to uuse
-     * @return Array of questions.
-     */
     private static Question commands(final Profile profile) {
         return new QnByArchitect(
             profile,
@@ -394,11 +379,6 @@ public final class Agents {
         );
     }
 
-    /**
-     * XPath for commanders.
-     * @param entry Entry
-     * @return XPath
-     */
     private static String commanders(final String entry) {
         return String.format(
             "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
@@ -406,10 +386,6 @@ public final class Agents {
         );
     }
 
-    /**
-     * Make private ssh key.
-     * @return The key
-     */
     private static String priv() {
         String priv = System.getenv("PRIVATE_SSH_KEY");
         if (priv == null) {
@@ -421,5 +397,4 @@ public final class Agents {
         }
         return priv;
     }
-
 }

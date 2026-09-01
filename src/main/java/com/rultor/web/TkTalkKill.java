@@ -17,7 +17,6 @@ import org.takes.facets.forward.RsForward;
 
 /**
  * Kill a talk.
- *
  * @since 1.50
  */
 final class TkTalkKill implements TkRegex {
@@ -56,5 +55,4 @@ final class TkTalkKill implements TkRegex {
             )
         );
     }
-
 }

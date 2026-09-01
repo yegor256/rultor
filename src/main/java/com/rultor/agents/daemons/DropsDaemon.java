@@ -22,7 +22,6 @@ import org.xembly.Xembler;
 
 /**
  * If the daemon is too old and the Docker container is already gone.
- *
  * @since 1.72
  */
 @Immutable
@@ -34,7 +33,6 @@ public final class DropsDaemon extends AbstractAgent {
      * Ctor.
      */
     public DropsDaemon() {
-        // @checkstyle MagicNumber (1 line)
         this(TimeUnit.DAYS.toMinutes(10L));
     }
 
@@ -46,7 +44,6 @@ public final class DropsDaemon extends AbstractAgent {
         super(
             "/talk/daemon[started and not(code) and not(ended)]",
             String.format(
-                // @checkstyle LineLength (1 line)
                 "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
                 mins
             ),
@@ -90,5 +87,4 @@ public final class DropsDaemon extends AbstractAgent {
         }
         return dirs;
     }
-
 }

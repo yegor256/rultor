@@ -11,7 +11,6 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.PfShell;
 import java.io.IOException;
-import java.util.Date;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -20,7 +19,6 @@ import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
 
 /**
  * Connects a running EC2 instance: detects its IP.
- *
  * @since 1.77
  */
 @Immutable
@@ -74,34 +72,35 @@ public final class ConnectsInstance extends AbstractAgent {
                 instance, name, host
             );
         } else {
-            final long age = new Date().getTime() - this.api.aws()
-                .describeInstances(
-                    DescribeInstancesRequest.builder()
-                        .instanceIds(instance)
-                        .build()
-                )
-                .reservations().get(0)
-                .instances().get(0)
-                .launchTime().toEpochMilli();
-            final String status = this.api.aws().describeInstanceStatus(
-                DescribeInstanceStatusRequest.builder()
-                    .includeAllInstances(true)
-                    .instanceIds(instance)
-                    .build()
-            ).instanceStatuses().get(0).instanceState().nameAsString();
             Logger.warn(
-                this, "Can't connect %s to AWS instance %s at %s (%[ms]s old, \"%s\")",
-                name, instance, host, age, status
+                this,
+                "Can't connect %s to AWS instance %s at %s (%[ms]s old, \"%s\")",
+                name, instance, host,
+                ConnectsInstance.age(this.api, instance),
+                ConnectsInstance.status(this.api, instance)
             );
         }
         return dirs;
     }
 
-    /**
-     * Tries to connect to it via SSH and returns TRUE if it's possible.
-     * @param host IP of the host
-     * @return TRUE if alive
-     */
+    private static long age(final AwsEc2 api, final String instance) {
+        return System.currentTimeMillis() - api.aws().describeInstances(
+            DescribeInstancesRequest.builder()
+                .instanceIds(instance)
+                .build()
+        ).reservations().get(0).instances().get(0)
+            .launchTime().toEpochMilli();
+    }
+
+    private static String status(final AwsEc2 api, final String instance) {
+        return api.aws().describeInstanceStatus(
+            DescribeInstanceStatusRequest.builder()
+                .includeAllInstances(true)
+                .instanceIds(instance)
+                .build()
+        ).instanceStatuses().get(0).instanceState().nameAsString();
+    }
+
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private boolean alive(final String host) {
         boolean alive = false;

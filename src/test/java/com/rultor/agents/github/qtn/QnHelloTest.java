@@ -16,17 +16,16 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnHello}.
- *
  * @since 1.6
  */
 final class QnHelloTest {
 
     /**
-     * QnHello can reply.
+     * QnHello marks the request as done.
      * @throws Exception In case of error.
      */
     @Test
-    void repliesInGitHub() throws Exception {
+    void marksRequestAsDone() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hello");
@@ -37,11 +36,24 @@ final class QnHelloTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnHello posts a hello message.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsHelloMessage() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("hello");
+        new QnHello().understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
+        );
         MatcherAssert.assertThat(
             "Hello message should be posted",
             new Comment.Smart(issue.comments().get(2)).body(),
             Matchers.containsString("Have fun :)")
         );
     }
-
 }

@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Tests for ${@link Agents}.
- *
  * @since 1.7
  */
 final class AgentsTest {

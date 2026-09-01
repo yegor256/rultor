@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * Question asked NOT by myself.
- *
  * @since 1.46.7
  */
 @Immutable
@@ -49,5 +48,4 @@ public final class QnNotSelf implements Question {
         }
         return req;
     }
-
 }

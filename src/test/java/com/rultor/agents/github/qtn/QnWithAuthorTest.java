@@ -9,8 +9,6 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGitHub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.agents.github.Question;
-import com.rultor.agents.github.Req;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ import org.xembly.Xembler;
 
 /**
  * Tests for {@link QnWithAuthor}.
- *
  * @since 1.65
  */
 final class QnWithAuthorTest {
@@ -34,17 +31,15 @@ final class QnWithAuthorTest {
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("title", "body");
         issue.comments().post("comment");
-        final Comment.Smart comment = new Comment.Smart(
-            issue.comments().get(1)
-        );
-        final Question question = new QnWithAuthor(
-            new QnStop()
-        );
-        final Req req = question.understand(comment, new URI("#"));
         MatcherAssert.assertThat(
             "stop request should be created",
             new Xembler(
-                new Directives().add("request").append(req.dirs())
+                new Directives().add("request").append(
+                    new QnWithAuthor(new QnStop()).understand(
+                        new Comment.Smart(issue.comments().get(1)),
+                        new URI("#")
+                    ).dirs()
+                )
             ).xml(),
             XhtmlMatchers.hasXPaths(
                 "/request[type='stop']",
@@ -64,18 +59,17 @@ final class QnWithAuthorTest {
         final Repo repo = github.randomRepo();
         final Issue issue = repo.issues().create("the title", "the body");
         issue.comments().post("the comment");
-        final Comment.Smart comment = new Comment.Smart(
-            issue.comments().get(1)
-        );
-        final Question question = new QnWithAuthor(new QnHello());
-        final Req req = question.understand(comment, new URI("#url"));
         MatcherAssert.assertThat(
             "Author should not be added to request",
             new Xembler(
-                new Directives().add("r").append(req.dirs())
+                new Directives().add("r").append(
+                    new QnWithAuthor(new QnHello()).understand(
+                        new Comment.Smart(issue.comments().get(1)),
+                        new URI("#url")
+                    ).dirs()
+                )
             ).xml(),
             XhtmlMatchers.hasXPaths("/r[not(author)]")
         );
     }
-
 }

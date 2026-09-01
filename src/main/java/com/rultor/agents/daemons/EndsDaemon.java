@@ -31,7 +31,6 @@ import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done.
- *
  * @since 1.0
  */
 @Immutable
@@ -71,17 +70,6 @@ public final class EndsDaemon extends AbstractAgent {
         return dirs;
     }
 
-    /**
-     * End this daemon.
-     * @param shell Shell
-     * @param dir The dir
-     * @return Directives
-     * @throws IOException If fails
-     * @todo #1207:1h There is no limit of tail message (only shifting to
-     *  100_000 symbols), but TkDaemon has a limit of 100_000 symbols in buffer
-     *  It is better to have a restriction for the tail length, not about start
-     *  position.
-     */
     private Iterable<Directive> end(final Shell shell,
         final String dir) throws IOException {
         final int exit = EndsDaemon.exit(shell, dir);
@@ -94,7 +82,7 @@ public final class EndsDaemon extends AbstractAgent {
             )
         );
         final String highlights = new Joined(
-            "\n",
+            System.lineSeparator(),
             new Mapped<>(
                 s -> new Sub(
                     s,
@@ -116,8 +104,7 @@ public final class EndsDaemon extends AbstractAgent {
             .add("ended").set(new Time().iso()).up()
             .add("code").set(Integer.toString(exit)).up()
             .add("highlights").set(Xembler.escape(highlights)).up()
-            .add("tail")
-            .set(
+            .add("tail").set(
                 Xembler.escape(
                     new Sub(
                         new Joined(
@@ -139,13 +126,6 @@ public final class EndsDaemon extends AbstractAgent {
             );
     }
 
-    /**
-     * Get exit code.
-     * @param shell Shell
-     * @param dir The dir
-     * @return Exit code
-     * @throws IOException If fails
-     */
     private static int exit(final Shell shell, final String dir)
         throws IOException {
         final String status = new ShellCommand(
@@ -162,13 +142,6 @@ public final class EndsDaemon extends AbstractAgent {
         return exit;
     }
 
-    /**
-     * Get stdout.
-     * @param shell Shell
-     * @param dir The dir
-     * @return Stdout
-     * @throws IOException If fails
-     */
     private static CharSequence stdout(final Shell shell, final String dir)
         throws IOException {
         final int max = 4_000_000;
@@ -187,5 +160,4 @@ public final class EndsDaemon extends AbstractAgent {
             )
         ).exec();
     }
-
 }

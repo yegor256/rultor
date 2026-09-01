@@ -9,8 +9,9 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Timeable;
 import com.jcabi.github.GitHub;
 import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseRunnable;
 import com.rultor.agents.Agents;
-import com.rultor.agents.github.qtn.DefaultBranch;
+import com.rultor.agents.github.qtn.RepoNotFoundException;
 import com.rultor.profiles.Profiles;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Pulse;
@@ -20,8 +21,9 @@ import com.rultor.spi.Tick;
 import io.sentry.Sentry;
 import java.io.Closeable;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +33,6 @@ import org.cactoos.list.ListOf;
 
 /**
  * Routine.
- *
  * @since 1.50
  * @todo #1125:30min Routine should be delegate execution to separate threads.
  *  Currently com.rultor.Routine#process() is sequentially processing all Talks
@@ -45,8 +46,7 @@ import org.cactoos.list.ListOf;
  *  removed.
  */
 @ScheduleWithFixedDelay
-@SuppressWarnings({"PMD.DoNotUseThreads",
-    "PMD.ConstructorShouldDoInitialization"})
+@SuppressWarnings("PMD.ConstructorShouldDoInitialization")
 final class Routine implements Runnable, Closeable {
 
     /**
@@ -85,7 +85,6 @@ final class Routine implements Runnable, Closeable {
      * @param pls Pulse
      * @param github GitHub client
      * @param sttc Sttc client
-     * @checkstyle ParameterNumberCheck (4 lines)
      */
     Routine(@NotNull final Talks tlks, final Pulse pls,
         final GitHub github, final Sttc sttc) {
@@ -100,9 +99,13 @@ final class Routine implements Runnable, Closeable {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void run() {
-        final long begin = System.currentTimeMillis();
+        new VerboseRunnable(
+            () -> this.safe(System.currentTimeMillis()), true
+        ).run();
+    }
+
+    private void safe(final long begin) {
         try {
             final List<Talk> active = new ListOf<>(this.talks.active());
             Logger.info(
@@ -112,20 +115,9 @@ final class Routine implements Runnable, Closeable {
                     active
                 )
             );
-            final int processed = this.unsafe(active);
-            if (Logger.isInfoEnabled(this)) {
-                Logger.info(
-                    this,
-                    "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
-                    processed,
-                    System.currentTimeMillis() - begin,
-                    System.currentTimeMillis() - this.start,
-                    new Date()
-                );
-            }
+            this.report(begin, this.unsafe(active));
             this.pulse.error(Collections.emptyList());
-            // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Throwable ex) {
+        } catch (final IOException ex) {
             if (!this.down.get()) {
                 Logger.error(this, "#run(): %[exception]s", ex);
                 try {
@@ -139,12 +131,19 @@ final class Routine implements Runnable, Closeable {
         }
     }
 
-    /**
-     * Routine every-minute proc.
-     * @param active List of active talks
-     * @return Total talks processed
-     * @throws IOException If fails
-     */
+    private void report(final long begin, final int processed) {
+        if (Logger.isInfoEnabled(this)) {
+            Logger.info(
+                this,
+                "Processed %d active talks in %[ms]s, alive for %[ms]s: %tc",
+                processed,
+                System.currentTimeMillis() - begin,
+                System.currentTimeMillis() - this.start,
+                ZonedDateTime.now(ZoneId.systemDefault())
+            );
+        }
+    }
+
     @Timeable(limit = 20, unit = TimeUnit.MINUTES)
     private int unsafe(final List<Talk> active) throws IOException {
         final long begin = System.currentTimeMillis();
@@ -160,12 +159,6 @@ final class Routine implements Runnable, Closeable {
         return total;
     }
 
-    /**
-     * Routine every-minute proc.
-     * @param active List of active talks
-     * @return Total talks processed
-     * @throws IOException If fails
-     */
     private int process(final List<Talk> active) throws IOException {
         this.agents.starter().execute(this.talks);
         final Profiles profiles = new Profiles();
@@ -179,7 +172,7 @@ final class Routine implements Runnable, Closeable {
                 if (total > Routine.MAX_TALKS) {
                     break;
                 }
-            } catch (final DefaultBranch.RepoNotFoundException ex) {
+            } catch (final RepoNotFoundException ex) {
                 Logger.warn(this, "The repo not found: %[exception]s", ex);
                 talk.active(false);
             }
@@ -187,5 +180,4 @@ final class Routine implements Runnable, Closeable {
         this.agents.closer().execute(this.talks);
         return total;
     }
-
 }

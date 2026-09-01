@@ -4,8 +4,9 @@
  */
 package com.rultor;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.TimeZone;
 import org.hamcrest.MatcherAssert;
@@ -17,16 +18,16 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for {@link Time}.
- *
  * @since 2.0
  */
 final class TimeTest {
+
     /**
      * Date can be parsed from string.
      */
     @Test
     void canParseValidTime() {
-        final String date = "2005-10-08T15:48:39";
+        final String date = "2005-10-08T15:48:39Z";
         Assertions.assertDoesNotThrow(
             () -> new Time(date),
             "Time should be able to create from date-time string"
@@ -34,15 +35,37 @@ final class TimeTest {
     }
 
     /**
+     * ISO value can be parsed independently of the default time zone.
+     */
+    @Test
+    void roundTripsIsoOutsideUtc() {
+        final TimeZone origin = TimeZone.getDefault();
+        final long millis = Instant.parse("2005-10-08T15:48:39Z").toEpochMilli();
+        try {
+            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tokyo"));
+            MatcherAssert.assertThat(
+                "ISO round-trip should preserve the instant",
+                new Time(new Time(millis).iso()).msec(),
+                Matchers.equalTo(millis)
+            );
+        } finally {
+            TimeZone.setDefault(origin);
+        }
+    }
+
+    /**
      * Date can not be parsed from invalid string.
      * @param date Date to check
      */
     @ParameterizedTest
-    @ValueSource(strings = {
-        "2005-10-0815:48:28",
-        "2005-10-08",
-        "15:48:28"
-    })
+    @ValueSource(
+        strings = {
+            "2005-10-08T15:48:39",
+            "2005-10-0815:48:28",
+            "2005-10-08",
+            "15:48:28"
+        }
+    )
     void exceptionParseInvalidTime(final String date) {
         Assertions.assertThrows(
             IllegalStateException.class,
@@ -56,15 +79,15 @@ final class TimeTest {
      */
     @Test
     void isoValidFormat() {
-        final Date date = new Date();
-        final SimpleDateFormat format =
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        final Time time =  new Time(date);
+        final Instant instant = Instant.now();
         MatcherAssert.assertThat(
             "ISO value should be for the GMT timezone",
-            time.iso(),
-            Matchers.equalTo(format.format(date))
+            new Time(instant).iso(),
+            Matchers.equalTo(
+                DateTimeFormatter.ofPattern(
+                    "yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US
+                ).withZone(ZoneOffset.UTC).format(instant)
+            )
         );
     }
 
@@ -73,29 +96,27 @@ final class TimeTest {
      */
     @Test
     void defaultNowTime() {
-        final Date date = new Date();
-        final Time time = new Time();
+        final Instant instant = Instant.now();
         MatcherAssert.assertThat(
             "Time without parameters should get current time",
-            time.msec(),
+            new Time().msec(),
             Matchers.allOf(
-                Matchers.greaterThanOrEqualTo(date.getTime()),
-                Matchers.lessThan(date.getTime() + 5)
+                Matchers.greaterThanOrEqualTo(instant.toEpochMilli()),
+                Matchers.lessThan(instant.toEpochMilli() + 5)
             )
         );
     }
 
     /**
-     * Time can be created from Date.
+     * Time can be created from Instant.
      */
     @Test
-    void fromDateValidTime() {
-        final Date date = new Date();
-        final Time time = new Time(date);
+    void fromInstantValidTime() {
+        final Instant instant = Instant.now();
         MatcherAssert.assertThat(
             "Time should get date from the parameter",
-            time.msec(),
-            Matchers.equalTo(date.getTime())
+            new Time(instant).msec(),
+            Matchers.equalTo(instant.toEpochMilli())
         );
     }
 
@@ -104,12 +125,11 @@ final class TimeTest {
      */
     @Test
     void fromMsValidTime() {
-        final Date date = new Date();
-        final Time time = new Time(date.getTime());
+        final Instant instant = Instant.now();
         MatcherAssert.assertThat(
             "Time should get msec value from parameter",
-            time.msec(),
-            Matchers.equalTo(date.getTime())
+            new Time(instant.toEpochMilli()).msec(),
+            Matchers.equalTo(instant.toEpochMilli())
         );
     }
 }

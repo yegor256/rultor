@@ -23,9 +23,7 @@ import org.cactoos.map.MapOf;
 
 /**
  * Merge request.
- *
  * @since 1.3
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -92,13 +90,6 @@ public final class QnMerge implements Question {
         return req;
     }
 
-    /**
-     * Pack a pull request.
-     * @param comment The comment we're in
-     * @param pull Pull
-     * @return Req
-     * @throws IOException If fails
-     */
     @SuppressWarnings("unchecked")
     private static Req pack(final Comment.Smart comment,
         final Pull pull
@@ -158,5 +149,4 @@ public final class QnMerge implements Question {
         }
         return req;
     }
-
 }

@@ -11,9 +11,8 @@ import com.jcabi.github.mock.MkGitHub;
 import com.rultor.spi.Profile;
 import jakarta.json.Json;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Map;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -23,26 +22,21 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile} YAML validation.
- *
  * @since 1.1
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings(
-    {
-    "PMD.AvoidDuplicateLiterals",
-    "PMD.TooManyMethods",
-    "PMD.UseConcurrentHashMap"
-    }
-)
 final class GithubProfileValidationTest {
+
     /**
      * GithubProfile will accept empty rultor configuration.
      * @throws Exception In case of error.
      */
     @Test
     void acceptsEmptyYaml() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo("");
-        new GithubProfile(repo).read();
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(
+                GithubProfileValidationTest.repo("")
+            ).read()
+        );
     }
 
     /**
@@ -54,7 +48,7 @@ final class GithubProfileValidationTest {
     void rejectsYamlWithoutMergeScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "merge:",
                 "  - pwd"
             ).asString()
@@ -74,7 +68,7 @@ final class GithubProfileValidationTest {
     void rejectsYamlWithoutDeployScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "deploy:",
                 "  - pwd"
             ).asString()
@@ -94,7 +88,7 @@ final class GithubProfileValidationTest {
     void rejectsYamlWithoutReleaseScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "release:",
                 "  - pwd"
             ).asString()
@@ -113,7 +107,7 @@ final class GithubProfileValidationTest {
     void acceptsYamlWithOnlyMerge() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "merge:",
                 " script:",
                 "  - pwd"
@@ -132,7 +126,7 @@ final class GithubProfileValidationTest {
     void acceptsYamlWithOnlyRelease() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "release:",
                 " script:",
                 "  - pwd"
@@ -151,7 +145,7 @@ final class GithubProfileValidationTest {
     void acceptsYamlWithOnlyDeploy() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "deploy:",
                 " script:",
                 "  - pwd"
@@ -170,7 +164,7 @@ final class GithubProfileValidationTest {
     void acceptsYamlWithAllCommands() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "deploy:",
                 " script:",
                 "  - pwd",
@@ -188,24 +182,24 @@ final class GithubProfileValidationTest {
     }
 
     /**
-     * GithubProfile get the assets in the YAML.
+     * GithubProfile collects the assets in the YAML.
      * @throws Exception In case of error.
      */
     @Test
-    void getExistAssets() throws Exception {
-        final Repo repo = GithubProfileValidationTest.repo(
-            new Joined(
-                "\n",
-                "friends:",
-                " - jeff/test",
-                "assets:",
-                " settings.xml: \"jeff/test#exist.txt\""
-            ).asString()
-        );
-        final Map<String, InputStream> map = new GithubProfile(repo).assets();
+    void collectsExistingAssets() throws Exception {
         MatcherAssert.assertThat(
             "Asset should be added from profile",
-            map.keySet(),
+            new GithubProfile(
+                GithubProfileValidationTest.repo(
+                    new Joined(
+                        System.lineSeparator(),
+                        "friends:",
+                        " - jeff/test",
+                        "assets:",
+                        " settings.xml: \"jeff/test#exist.txt\""
+                    ).asString()
+                )
+            ).assets().keySet(),
             Matchers.iterableWithSize(1)
         );
     }
@@ -218,7 +212,7 @@ final class GithubProfileValidationTest {
     void rejectGetAssetWithNotExistFile() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "friends:",
                 " - jeff/test",
                 "assets:",
@@ -239,7 +233,7 @@ final class GithubProfileValidationTest {
     void rejectGetAssetWithWrongRepo() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "friends:",
                 " - jeff/test",
                 "assets:",
@@ -260,7 +254,7 @@ final class GithubProfileValidationTest {
     void rejectGetAssetWithNoFriendUser() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "friends:",
                 " - zheus/test",
                 "assets:",
@@ -281,7 +275,7 @@ final class GithubProfileValidationTest {
     void rejectGetAssetWithNoFriends() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
             new Joined(
-                "\n",
+                System.lineSeparator(),
                 "assets:",
                 " settings.xml: \"jeff/test#exist.txt\""
             ).asString()
@@ -292,12 +286,6 @@ final class GithubProfileValidationTest {
         );
     }
 
-    /**
-     * Create repo with .rultor.yml inside.
-     * @param yaml Content of .rultor.yml file
-     * @return Created repo.
-     * @throws IOException In case of error.
-     */
     private static Repo repo(final String yaml) throws IOException {
         final GitHub github = new MkGitHub("jeff");
         final Repo repo = github.repos().create(
@@ -306,10 +294,11 @@ final class GithubProfileValidationTest {
         repo.contents().create(
             Json.createObjectBuilder()
                 .add("path", ".rultor.yml")
-                .add("message", "just test")
-                .add(
+                .add("message", "just test").add(
                     "content",
-                    Base64.getEncoder().encodeToString(yaml.getBytes())
+                    Base64.getEncoder().encodeToString(
+                        yaml.getBytes(StandardCharsets.UTF_8)
+                    )
                 )
                 .build()
         );

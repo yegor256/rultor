@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link Profile}.
- *
  * @since 1.28
  */
 final class ProfileTest {
@@ -91,5 +90,4 @@ final class ProfileTest {
             ).read().inner()
         );
     }
-
 }

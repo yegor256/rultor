@@ -9,10 +9,10 @@ import com.jcabi.github.RepoCommit;
 import com.jcabi.github.RepoCommits;
 import jakarta.json.Json;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -21,7 +21,6 @@ import org.mockito.Mockito;
 
 /**
  * Tests for ${@link CommitsLog}.
- *
  * @since 1.51
  */
 final class CommitsLogTest {
@@ -37,7 +36,7 @@ final class CommitsLogTest {
         Mockito.doReturn(
             Collections.singleton(
                 this.commit(
-                    "hi\u20ac\t\n this is a very long commit message"
+                    String.format("hi€\t%n this is a very long commit message")
                 )
             )
         ).when(commits).iterate(Mockito.any(Map.class));
@@ -45,9 +44,9 @@ final class CommitsLogTest {
         Mockito.doReturn(commits).when(repo).commits();
         MatcherAssert.assertThat(
             "Message should be shorter",
-            new CommitsLog(repo).build(new Date(), new Date()),
+            new CommitsLog(repo).build(Instant.now(), Instant.now()),
             Matchers.equalTo(
-                " * a1b2c3 by @jeff: hi\u20ac this is a very long commit..."
+                " * a1b2c3 by @jeff: hi€ this is a very long commit..."
             )
         );
     }
@@ -60,7 +59,7 @@ final class CommitsLogTest {
     @SuppressWarnings("unchecked")
     void createsLongReleaseLog() throws Exception {
         final RepoCommits commits = Mockito.mock(RepoCommits.class);
-        final Collection<RepoCommit> list = new LinkedList<>();
+        final Collection<RepoCommit> list = new ArrayList<>(100);
         for (int idx = 0; idx < 100; ++idx) {
             list.add(this.commit(String.format("commit #%d", idx)));
         }
@@ -69,17 +68,11 @@ final class CommitsLogTest {
         Mockito.doReturn(commits).when(repo).commits();
         MatcherAssert.assertThat(
             "Only 20 commits should be mentioned directly",
-            new CommitsLog(repo).build(new Date(), new Date()),
+            new CommitsLog(repo).build(Instant.now(), Instant.now()),
             Matchers.containsString("* and 80 more..")
         );
     }
 
-    /**
-     * Create repo commit.
-     * @param msg Message
-     * @return Commit
-     * @throws IOException In case of error.
-     */
     private RepoCommit commit(final String msg) throws IOException {
         final RepoCommit commit = Mockito.mock(RepoCommit.class);
         Mockito.doReturn("a1b2c3").when(commit).sha();
@@ -91,5 +84,4 @@ final class CommitsLogTest {
         ).when(commit).json();
         return commit;
     }
-
 }

@@ -12,7 +12,6 @@ import lombok.ToString;
 
 /**
  * GitHub URL for Issue.
- *
  * @since 2.0
  */
 @Immutable
@@ -33,7 +32,7 @@ final class IssueUrl {
 
     /**
      * Ctor.
-     * @param url Issue url.
+     * @param url Issue url
      */
     IssueUrl(final String url) {
         this.url = url;
@@ -42,9 +41,8 @@ final class IssueUrl {
     /**
      * Get issue id from url.
      * @return Issue id
-     * @checkstyle MethodNameCheck (10 lines)
      */
-    public int uid() {
+    int uid() {
         final Matcher matcher = IssueUrl.CORRECT.matcher(this.url);
         if (matcher.matches()) {
             return Integer.parseInt(matcher.group(1));
@@ -58,7 +56,7 @@ final class IssueUrl {
      * Check if url is a valid url for Issue.
      * @return True if valid
      */
-    public boolean valid() {
+    boolean valid() {
         return this.url != null
             && !this.url.isEmpty()
             && IssueUrl.CORRECT.matcher(this.url).matches();

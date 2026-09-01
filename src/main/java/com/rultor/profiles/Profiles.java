@@ -24,7 +24,6 @@ import lombok.ToString;
 
 /**
  * Profiles.
- *
  * @since 1.0
  */
 @Immutable
@@ -115,13 +114,6 @@ public final class Profiles {
         return merged;
     }
 
-    /**
-     * Get section content.
-     * @param profile Profile
-     * @param section Section of profile
-     * @return Content of section as array of strings
-     * @throws IOException If fails
-     */
     private static String[] section(final Profile profile,
         final String... section)
         throws IOException {
@@ -129,17 +121,11 @@ public final class Profiles {
         for (final String element : section) {
             path.append(String.format("/entry[@key='%s']", element));
         }
-        final List<String> result = profile.read().xpath(
+        return profile.read().xpath(
             String.format("/%s/item/text()", path)
-        );
-        return result.toArray(new String[0]);
+        ).toArray(new String[0]);
     }
 
-    /**
-     * Fetch a profile from an XML.
-     * @param xml The XML
-     * @return Profile found
-     */
     private Profile fetch(final XML xml) {
         final Profile profile;
         final List<String> type = xml.xpath("//request/type/text()");
@@ -165,10 +151,6 @@ public final class Profiles {
         return profile;
     }
 
-    /**
-     * Make github.
-     * @return GitHub
-     */
     @Cacheable(forever = true)
     private static GitHub github() {
         return new RtGitHub(
@@ -180,5 +162,4 @@ public final class Profiles {
             )
         );
     }
-
 }

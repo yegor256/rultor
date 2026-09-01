@@ -29,7 +29,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * If target branch is unlocked.
- *
  * @since 1.53
  */
 @Immutable
@@ -92,13 +91,6 @@ public final class QnIfUnlocked implements Question {
         return req;
     }
 
-    /**
-     * Is it allowed to merge?
-     * @param pull The pull
-     * @param branch The branch
-     * @return TRUE if allowed
-     * @throws IOException If fails
-     */
     private static Collection<String> guards(final Pull pull,
         final String branch) throws IOException {
         final Contents contents = pull.repo().contents();
@@ -109,11 +101,10 @@ public final class QnIfUnlocked implements Question {
                     IOUtils.toString(
                         contents.get(QnIfUnlocked.PATH, branch).raw(),
                         StandardCharsets.UTF_8
-                    ).split("\n")
+                    ).split(System.lineSeparator())
                 )
             );
         }
         return guards;
     }
-
 }

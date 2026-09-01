@@ -19,7 +19,6 @@ import org.takes.rs.RsWithType;
 
 /**
  * Sitemap.
- *
  * @since 1.26
  */
 final class TkSitemap implements Take {
@@ -45,11 +44,6 @@ final class TkSitemap implements Take {
         );
     }
 
-    /**
-     * XML.
-     * @return XML
-     * @throws IOException If fails
-     */
     private String xml() throws IOException {
         final StringBuilder doc = new StringBuilder(1_000).append(
             "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>"
@@ -57,34 +51,20 @@ final class TkSitemap implements Take {
         for (final Talk talk : this.talks.recent()) {
             final XML xml = talk.read();
             for (final String hash : xml.xpath("/talk/archive/log/@id")) {
-                doc.append(TkSitemap.toXML(talk, xml, hash));
+                doc.append(TkSitemap.toXml(talk, xml, hash));
             }
         }
         return doc.append("</urlset>").toString();
     }
 
-    /**
-     * Convert XML and hash into node.
-     * @param talk Talk
-     * @param xml Talk XML
-     * @param hash Hash
-     * @return XML text
-     * @throws IOException If fails
-     * @checkstyle AbbreviationAsWordInNameCheck (10 lines)
-     */
-    private static String toXML(final Talk talk, final XML xml,
+    private static String toXml(final Talk talk, final XML xml,
         final String hash) throws IOException {
-        return new StringBuilder(100)
-            .append("<url><loc>")
-            .append(
-                StringEscapeUtils.escapeXml11(
-                    new Home(xml, hash).uri().toString()
-                )
-            )
-            .append("</loc><lastmod>")
-            .append(new Time(talk.updated()).iso())
-            .append("</lastmod></url>")
-            .toString();
+        return String.format(
+            "<url><loc>%s</loc><lastmod>%s</lastmod></url>",
+            StringEscapeUtils.escapeXml11(
+                new Home(xml, hash).uri().toString()
+            ),
+            new Time(talk.updated()).iso()
+        );
     }
-
 }

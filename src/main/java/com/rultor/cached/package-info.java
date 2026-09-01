@@ -5,7 +5,6 @@
 
 /**
  * Cached.
- *
  * @since 1.51
  */
 package com.rultor.cached;

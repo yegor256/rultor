@@ -5,7 +5,7 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseRunnable;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -34,17 +34,12 @@ final class SafeIterator<T> implements Iterator<T> {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public boolean hasNext() {
-        boolean has;
-        try {
-            has = this.origin.hasNext();
-            // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Throwable ex) {
-            has = false;
-            Logger.error(this, "hasNext(): %[exception]s", ex);
-        }
-        return has;
+        final boolean[] has = {false};
+        new VerboseRunnable(
+            () -> has[0] = this.origin.hasNext(), true
+        ).run();
+        return has[0];
     }
 
     @Override

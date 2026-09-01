@@ -23,14 +23,14 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Tests for {@link Decrypt}.
- *
  * @since 1.37.4
  */
 final class DecryptTest {
+
     /**
      * Newline.
      */
-    private static final String NEWLINE = "\n";
+    private static final String NEWLINE = System.lineSeparator();
 
     /**
      * StartsRequest can take decryption instructions into account.
@@ -38,20 +38,18 @@ final class DecryptTest {
      * @throws Exception In case of error.
      */
     @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     void decryptsAssets(@TempDir final Path temp) throws Exception {
-        final Iterable<String> commands = new Decrypt(
-            new Profile.Fixed(
-                this.createTestProfileXML(),
-                "test/test"
-            )
-        ).commands();
         final String script = new Joined(
             DecryptTest.NEWLINE,
             "set -ex -o pipefail",
             new Joined(
                 DecryptTest.NEWLINE,
-                commands
+                new Decrypt(
+                    new Profile.Fixed(
+                        this.createTestProfileXml(),
+                        "test/test"
+                    )
+                ).commands()
             ).asString()
         ).asString();
         final File dir = temp.toFile();
@@ -92,12 +90,27 @@ final class DecryptTest {
     }
 
     /**
-     * Creates a profile XML for testing purposes.
-     *
-     * @return XML document
-     * @checkstyle AbbreviationAsWordInNameCheck (15 lines)
+     * Decrypt keeps the passphrase off any line the shell traces.
+     * @throws Exception In case of error.
      */
-    private XMLDocument createTestProfileXML() {
+    @Test
+    void keepsThePassphraseOutOfTheTrace() throws Exception {
+        MatcherAssert.assertThat(
+            "The passphrase must be piped in with the tracing off, not written on a traced line",
+            new Joined(
+                DecryptTest.NEWLINE,
+                new Decrypt(
+                    new Profile.Fixed(this.createTestProfileXml(), "test/test")
+                ).commands()
+            ).asString(),
+            Matchers.allOf(
+                Matchers.not(Matchers.containsString("--passphrase '")),
+                Matchers.containsString("set +x")
+            )
+        );
+    }
+
+    private XMLDocument createTestProfileXml() {
         return new XMLDocument(
             new UncheckedText(
                 new Joined(

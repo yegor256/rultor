@@ -18,7 +18,6 @@ import software.amazon.awssdk.services.ec2.model.Instance;
 
 /**
  * Finds IP of a running EC2 instance.
- *
  * @since 1.77
  */
 @Immutable
@@ -66,5 +65,4 @@ public final class DescribesInstance extends AbstractAgent {
         }
         return dirs;
     }
-
 }

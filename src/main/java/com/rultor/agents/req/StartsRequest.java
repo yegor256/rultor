@@ -13,9 +13,9 @@ import com.rultor.agents.daemons.Container;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -32,14 +32,11 @@ import org.xembly.Directives;
 
 /**
  * Merges.
- *
  * @since 1.0
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "profile")
-@SuppressWarnings("PMD.ExcessiveMethodLength")
 public final class StartsRequest extends AbstractAgent {
 
     /**
@@ -75,7 +72,7 @@ public final class StartsRequest extends AbstractAgent {
             );
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
-                "cat <<EOT\n%[exception]s\nEOT\nexit -1", ex
+                "cat <<EOT%n%[exception]s%nEOT%nexit -1", ex
             );
         }
         return new Directives().xpath("/talk")
@@ -85,19 +82,11 @@ public final class StartsRequest extends AbstractAgent {
             .add("script").set(script);
     }
 
-    /**
-     * Make a script.
-     * @param req Request in XML
-     * @param type Its type, like "merge", "deploy", or "release"
-     * @param name Name of the talk
-     * @return Bash script to run on the server
-     * @throws IOException If fails
-     */
     @SuppressWarnings("unchecked")
     private String script(final XML req, final String type, final String name)
         throws IOException {
         return String.join(
-            "\n",
+            System.lineSeparator(),
             new Joined<>(
                 new Mapped<>(
                     input -> String.format(
@@ -135,22 +124,16 @@ public final class StartsRequest extends AbstractAgent {
         );
     }
 
-    /**
-     * List sensitive files in a BASH variable "sensitive".
-     * @return Bash script
-     * @throws IOException If fails
-     */
     private String sensitive() throws IOException {
         String script = "";
         if (!this.profile.read().nodes("/p/entry[@key='release']").isEmpty()) {
             script = String.format(
-                "sensitive=(%s)\n",
+                "sensitive=(%s)%n",
                 String.join(
                     " ",
                     new Mapped<>(
                         Ssh::escape,
                         this.profile.read().xpath(
-                            // @checkstyle LineLength (1 line)
                             "/p/entry[@key='release']/entry[@key='sensitive']/item/text()"
                         )
                     )
@@ -160,12 +143,6 @@ public final class StartsRequest extends AbstractAgent {
         return script;
     }
 
-    /**
-     * Get start script for as_root config.
-     * @return Script
-     * @throws IOException If fails
-     * @since 1.37
-     */
     private String asRoot() throws IOException {
         return String.format(
             "as_root=%b",
@@ -175,17 +152,10 @@ public final class StartsRequest extends AbstractAgent {
         );
     }
 
-    /**
-     * Get variables from script.
-     * @param req Request
-     * @param type Its type, like "merge", "deploy", or "release"
-     * @return Vars
-     * @throws IOException If fails
-     */
     private Map<String, String> vars(final XML req, final String type)
         throws IOException {
         final Collection<Map.Entry<String, String>> entries =
-            new LinkedList<>();
+            new ArrayList<>(8);
         for (final XML arg : req.nodes("args/arg")) {
             entries.add(
                 new MapEntry<>(
@@ -224,7 +194,7 @@ public final class StartsRequest extends AbstractAgent {
                     new Mapped<>(
                         input -> String.format(
                             "--env=%s",
-                            input.replace("\n", " ")
+                            input.replace(System.lineSeparator(), " ")
                         ),
                         docker.envs(
                             new MapOf<>(
@@ -257,7 +227,7 @@ public final class StartsRequest extends AbstractAgent {
                     "squash",
                     def.text(
                         "/p/entry[@key='merge']/entry[@key='squash']",
-                        Boolean.FALSE.toString()
+                        "false"
                     ).toLowerCase(Locale.ENGLISH)
                 )
             );
@@ -275,7 +245,7 @@ public final class StartsRequest extends AbstractAgent {
                     "rebase",
                     def.text(
                         "/p/entry[@key='merge']/entry[@key='rebase']",
-                        Boolean.FALSE.toString()
+                        "false"
                     ).toLowerCase(Locale.ENGLISH)
                 )
             );
@@ -283,15 +253,10 @@ public final class StartsRequest extends AbstractAgent {
         return new MapOf<>(new ListOf<>(entries));
     }
 
-    /**
-     * Get docker run config.
-     * @param type Type of command, like 'release' or 'merge'
-     * @return Docker run cfg
-     * @throws IOException If fails
-     */
     private DockerRun docker(final String type) throws IOException {
-        final String xpath = String.format("/p/entry[@key='%s']", type);
-        final Collection<XML> nodes = this.profile.read().nodes(xpath);
+        final Collection<XML> nodes = this.profile.read().nodes(
+            String.format("/p/entry[@key='%s']", type)
+        );
         if (nodes.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
@@ -306,12 +271,6 @@ public final class StartsRequest extends AbstractAgent {
         return new DockerRun(this.profile, nodes.iterator().next());
     }
 
-    /**
-     * Escape var.
-     * @param key The name of the var
-     * @param raw The variable
-     * @return Escaped one
-     */
     private static String escape(final String key, final String raw) {
         final String esc;
         if ("scripts".equals(key) || "vars".equals(key)) {
@@ -322,13 +281,8 @@ public final class StartsRequest extends AbstractAgent {
         return esc;
     }
 
-    /**
-     * Export env vars.
-     * @param envs List of them
-     * @return Formatted lines
-     */
     private static Iterable<String> export(final Iterable<String> envs) {
-        final Collection<String> lines = new LinkedList<>();
+        final Collection<String> lines = new ArrayList<>(4);
         for (final String env : envs) {
             lines.add(String.format("export %s", Ssh.escape(env)));
             lines.add(";");

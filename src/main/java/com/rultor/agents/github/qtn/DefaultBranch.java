@@ -9,7 +9,6 @@ import java.io.IOException;
 
 /**
  * Default branch of a repo.
- *
  * @since 2.1
  */
 public final class DefaultBranch {
@@ -21,7 +20,7 @@ public final class DefaultBranch {
 
     /**
      * Ctor.
-     * @param repository GitHub Repo.
+     * @param repository GitHub Repo
      */
     public DefaultBranch(final Repo repository) {
         this.repo = repository;
@@ -37,27 +36,9 @@ public final class DefaultBranch {
                 ex
             );
         } catch (final AssertionError ex) {
-            throw new RepoNotFoundException(this.repo.coordinates().toString(), ex);
-        }
-    }
-
-    /**
-     * When repo is not found.
-     * @since 2.1
-     */
-    public static class RepoNotFoundException extends RuntimeException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = -3860028281726793188L;
-
-        /**
-         * Ctor.
-         * @param name Name of repo
-         * @param exp Original problem
-         */
-        public RepoNotFoundException(final String name, final Throwable exp) {
-            super(String.format("Most probably the repo %s doesn't exist", name), exp);
+            throw new RepoNotFoundException(
+                this.repo.coordinates().toString(), ex
+            );
         }
     }
 }

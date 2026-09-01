@@ -11,7 +11,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Talk}.
- *
  * @since 1.41.3
  */
 final class TalkTest {
@@ -31,7 +30,7 @@ final class TalkTest {
                 .add("href").set("#").up().up()
                 .add("daemon").attr("id", "abc")
                 .add("script").set("hello!").up()
-                .add("title").set("some title here \u20ac").up()
+                .add("title").set("some title here €").up()
                 .add("dir").set("C:\\Windows32\\Temp_One").up()
         );
         MatcherAssert.assertThat(
@@ -40,5 +39,4 @@ final class TalkTest {
             XhtmlMatchers.hasXPath("/talk/wire")
         );
     }
-
 }

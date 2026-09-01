@@ -9,7 +9,6 @@ import org.cactoos.iterable.Mapped;
 
 /**
  * List of texts for the script, in brackets.
- *
  * @since 1.64
  */
 final class Brackets {
@@ -40,5 +39,4 @@ final class Brackets {
             )
         );
     }
-
 }

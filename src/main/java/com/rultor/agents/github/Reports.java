@@ -24,7 +24,6 @@ import org.xembly.Directives;
 
 /**
  * Posts merge results to GitHub pull request.
- *
  * @since 1.0
  */
 @Immutable
@@ -56,7 +55,6 @@ public final class Reports extends AbstractAgent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
@@ -70,10 +68,9 @@ public final class Reports extends AbstractAgent {
         } else {
             pattern = "Reports.failure";
         }
-        final long number = Long.parseLong(req.xpath("@id").get(0));
         final Comment.Smart comment = new Comment.Smart(
             new SfComment(
-                Reports.origin(issue, number)
+                Reports.origin(issue, Long.parseLong(req.xpath("@id").get(0)))
             )
         );
         final StringBuilder message = new StringBuilder();
@@ -98,27 +95,17 @@ public final class Reports extends AbstractAgent {
             .strict(1).remove();
     }
 
-    /**
-     * Get highlights.
-     * @param req Request
-     * @return Highlights
-     */
     private static String highlights(final XML req) {
         final List<String> highlights = req.xpath("highlights/text()");
         final String text;
         if (highlights.isEmpty()) {
             text = "";
         } else {
-            text = String.format("\n\n%s", highlights.get(0));
+            text = String.format("%n%n%s", highlights.get(0));
         }
         return text;
     }
 
-    /**
-     * Get tail.
-     * @param req Request
-     * @return Tail
-     */
     private static String tail(final XML req) {
         final List<String> tail = req.xpath("tail/text()");
         final String text;
@@ -126,19 +113,13 @@ public final class Reports extends AbstractAgent {
             text = "";
         } else {
             text = String.format(
-                "\n\n```\n%s\n```",
+                "%n%n```%n%s%n```",
                 tail.get(0).replaceAll("```", "'''")
             );
         }
         return text;
     }
 
-    /**
-     * Get a comment we're answering to.
-     * @param issue The issue
-     * @param number Its number
-     * @return Comment
-     */
     private static Comment.Smart origin(final Issue.Smart issue,
         final long number) {
         final Comment comment;
@@ -149,5 +130,4 @@ public final class Reports extends AbstractAgent {
         }
         return new Comment.Smart(comment);
     }
-
 }

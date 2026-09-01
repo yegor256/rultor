@@ -12,8 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.cactoos.iterable.Filtered;
@@ -23,11 +23,9 @@ import org.cactoos.list.ListOf;
 
 /**
  * Talks in a repo.
- *
  * @since 1.0
  */
 @Immutable
-@SuppressWarnings("PMD.TooManyMethods")
 public interface Talks {
 
     /**
@@ -92,7 +90,7 @@ public interface Talks {
      * @param since Date
      * @return Talks
      */
-    Iterable<Talk> siblings(String repo, Date since);
+    Iterable<Talk> siblings(String repo, Instant since);
 
     /**
      * In directory.
@@ -100,6 +98,7 @@ public interface Talks {
      */
     @Immutable
     final class InDir implements Talks {
+
         /**
          * Dir.
          */
@@ -110,9 +109,15 @@ public interface Talks {
          * @throws IOException ex
          */
         public InDir() throws IOException {
-            this.path = Files.createTempDirectory("")
-                .toAbsolutePath()
-                .toString();
+            this(InDir.temp());
+        }
+
+        /**
+         * Ctor.
+         * @param dir Directory path
+         */
+        private InDir(final String dir) {
+            this.path = dir;
         }
 
         @Override
@@ -212,8 +217,12 @@ public interface Talks {
         }
 
         @Override
-        public Iterable<Talk> siblings(final String repo, final Date since) {
+        public Iterable<Talk> siblings(final String repo, final Instant since) {
             return this.active();
+        }
+
+        private static String temp() throws IOException {
+            return Files.createTempDirectory("").toAbsolutePath().toString();
         }
     }
 }

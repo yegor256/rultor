@@ -4,7 +4,6 @@
  */
 package com.rultor.agents;
 
-import com.jcabi.github.GitHub;
 import com.jcabi.github.Repos;
 import com.jcabi.github.RtGitHub;
 import com.jcabi.github.mock.MkGitHub;
@@ -20,9 +19,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Publishes}.
- *
  * @since 1.32.7
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class PublishesTest {
 
@@ -76,12 +73,14 @@ final class PublishesTest {
      */
     @Test
     void ignoresMissingRepo() throws Exception {
-        final GitHub github = new RtGitHub(
-            new FakeRequest()
-                .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
-                .withBody("{}")
+        final Agent agent = new Publishes(
+            new Profile.Fixed(),
+            new RtGitHub(
+                new FakeRequest()
+                    .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
+                    .withBody("{}")
+            )
         );
-        final Agent agent = new Publishes(new Profile.Fixed(), github);
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk").add("archive")
@@ -94,5 +93,4 @@ final class PublishesTest {
             XhtmlMatchers.hasXPath("/talk[@public='false']")
         );
     }
-
 }

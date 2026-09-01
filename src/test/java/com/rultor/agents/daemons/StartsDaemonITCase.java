@@ -36,31 +36,41 @@ import org.xembly.Directives;
 /**
  * Integration test for ${@link StartsDaemon}.
  * @since 1.3.8
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 final class StartsDaemonITCase {
 
     /**
-     * StartsDaemon can start a daemon.
+     * StartsDaemon adds started tag with start time.
      * @throws Exception In case of error.
-     * @checkstyle ExecutableStatementCountCheck (50 lines)
      */
     @Test
-    void startsDaemon() throws Exception {
+    void addsStartedTagWithStartTime() throws Exception {
         try (
             StartsDockerDaemon start =
                 new StartsDockerDaemon(Profile.EMPTY)
         ) {
-            final Talk talk = StartsDaemonITCase.talk(start);
             MatcherAssert.assertThat(
                 "started tag should be added with start time",
-                talk.read(),
+                StartsDaemonITCase.talk(start).read(),
                 XhtmlMatchers.hasXPaths(
                     "/talk/daemon[started and dir]",
                     "/talk/daemon[ends-with(started,'Z')]"
                 )
             );
+        }
+    }
+
+    /**
+     * StartsDaemon sends start script to daemon.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void sendsStartScriptToDaemon() throws Exception {
+        try (
+            StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = StartsDaemonITCase.talk(start);
             final String dir = talk.read().xpath("/talk/daemon/dir/text()")
                 .get(0);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -79,6 +89,29 @@ final class StartsDaemonITCase {
                     Matchers.containsString("+ ls -al"),
                     Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
                 )
+            );
+        }
+    }
+
+    /**
+     * StartsDaemon does not create status file right after start.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void doesNotCreateStatusFileYet() throws Exception {
+        try (
+            StartsDockerDaemon start =
+                new StartsDockerDaemon(Profile.EMPTY)
+        ) {
+            final Talk talk = StartsDaemonITCase.talk(start);
+            final String dir = talk.read().xpath("/talk/daemon/dir/text()")
+                .get(0);
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            TimeUnit.SECONDS.sleep(2L);
+            new Shell.Safe(new TalkShells(talk.read()).get()).exec(
+                String.format("cat %s/stdout", dir),
+                new NullInputStream(0L),
+                baos, baos
             );
             MatcherAssert.assertThat(
                 "status file should not be created",
@@ -123,12 +156,6 @@ final class StartsDaemonITCase {
         }
     }
 
-    /**
-     * Creates a Talk object with basic parameters.
-     * @param start Docker daemon starter
-     * @return The basic Talk object for testing
-     * @throws IOException In case of error
-     */
     private static Talk talk(final StartsDockerDaemon start)
         throws IOException {
         Assumptions.assumeTrue(
@@ -153,7 +180,6 @@ final class StartsDaemonITCase {
             new ArrayMap<String, InputStream>().with(
                 "file.bin",
                 new ByteArrayInputStream(
-                    // @checkstyle MagicNumber (1 line)
                     new byte[] {0, 1, 7, 8, 9, 10, 13, 20}
                 )
             )

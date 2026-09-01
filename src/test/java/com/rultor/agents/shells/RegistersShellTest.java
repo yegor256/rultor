@@ -18,7 +18,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link RegistersShell}.
- *
  * @since 1.0
  */
 @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
@@ -32,7 +31,6 @@ final class RegistersShellTest {
     void registersShell() throws Exception {
         final String host = "local";
         final int port = 221;
-        final String key = "";
         final String login = "john";
         final Agent agent = new RegistersShell(
             new Profile.Fixed(
@@ -42,7 +40,7 @@ final class RegistersShellTest {
                         "<p><entry key='ssh'>",
                         String.format("<entry key='host'>%s</entry>", host),
                         String.format("<entry key='port'>%d</entry>", port),
-                        String.format("<entry key='key'>%s</entry>", key),
+                        String.format("<entry key='key'>%s</entry>", ""),
                         String.format("<entry key='login'>%s</entry>", login),
                         "</entry></p>"
                     ).asString()
@@ -72,7 +70,6 @@ final class RegistersShellTest {
 
     /**
      * RegistersShell can register shell by IP.
-     * @throws Exception In case of error.
      */
     @Test
     void registerShellWithIP() {

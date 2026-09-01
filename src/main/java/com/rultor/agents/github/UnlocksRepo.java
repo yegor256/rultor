@@ -20,7 +20,6 @@ import org.cactoos.text.Joined;
 
 /**
  * Unlocks repo.
- *
  * @since 1.8.12
  */
 @Immutable
@@ -64,11 +63,6 @@ public final class UnlocksRepo implements SuperAgent {
         }
     }
 
-    /**
-     * Unlock.
-     * @param talk Talk
-     * @throws IOException If fails
-     */
     private void unlock(final Talk talk) throws IOException {
         final XML xml = talk.read();
         if (!xml.nodes(UnlocksRepo.XPATH).isEmpty()) {
@@ -81,5 +75,4 @@ public final class UnlocksRepo implements SuperAgent {
             }
         }
     }
-
 }

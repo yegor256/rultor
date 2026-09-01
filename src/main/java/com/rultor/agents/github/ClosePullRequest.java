@@ -19,7 +19,6 @@ import org.xembly.Directives;
 
 /**
  * Closes pull request manually, leaves comment with description.
- *
  * @since 1.63
  */
 @Immutable
@@ -56,11 +55,12 @@ public final class ClosePullRequest extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final String rebase = this.profile.text(
-            "/p/entry[@key='merge']/entry[@key='rebase']",
-            "false"
-        );
-        if ("true".equals(rebase)) {
+        if ("true".equals(
+            this.profile.text(
+                "/p/entry[@key='merge']/entry[@key='rebase']",
+                "false"
+            )
+        )) {
             final Issue.Smart issue = new TalkIssues(this.github, xml).get();
             issue.close();
             issue.comments().post(

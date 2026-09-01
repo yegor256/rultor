@@ -13,10 +13,10 @@ import lombok.ToString;
 
 /**
  * Super Agent.
- *
  * @since 1.0
  */
 @Immutable
+@FunctionalInterface
 public interface SuperAgent {
 
     /**
@@ -28,13 +28,13 @@ public interface SuperAgent {
 
     /**
      * Iterative.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "children")
     final class Iterative implements SuperAgent {
+
         /**
          * Agents to run.
          */
@@ -58,13 +58,13 @@ public interface SuperAgent {
 
     /**
      * Disabled.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Disabled implements SuperAgent {
+
         /**
          * Agent to disable.
          */
@@ -80,19 +80,19 @@ public interface SuperAgent {
 
         @Override
         public void execute(final Talks talks) throws IOException {
-            // do nothing
+            Logger.debug(this, "agent %s is disabled", this.agent);
         }
     }
 
     /**
      * Quiet.
-     *
      * @since 1.0
      */
     @Immutable
     @ToString
     @EqualsAndHashCode(of = "agent")
     final class Quiet implements SuperAgent {
+
         /**
          * Agent to disable.
          */
@@ -117,5 +117,4 @@ public interface SuperAgent {
             }
         }
     }
-
 }

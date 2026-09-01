@@ -18,7 +18,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -30,7 +31,6 @@ import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 
 /**
  * Marks the daemon as done.
- *
  * @since 1.0
  */
 @Immutable
@@ -95,31 +95,19 @@ public final class ArchivesDaemon extends AbstractAgent {
             .set(uri.toString());
     }
 
-    /**
-     * Upload file to S3.
-     * @param file The file
-     * @param hash Hash
-     * @return S3 URI
-     * @throws IOException If fails
-     */
     private URI upload(final File file, final String hash) throws IOException {
         final HeadObjectResponse meta = HeadObjectResponse.builder()
             .contentType("text/plain")
             .contentEncoding(StandardCharsets.UTF_8.name())
             .contentLength(file.length())
             .build();
-        final String key = String.format("%tY/%1$tm/%s.txt", new Date(), hash);
+        final String key = String.format(
+            "%tY/%1$tm/%s.txt", LocalDate.now(ZoneId.systemDefault()), hash
+        );
         this.bucket.ocket(key).write(Files.newInputStream(file.toPath()), meta);
         return URI.create(String.format("s3://%s/%s", this.bucket.name(), key));
     }
 
-    /**
-     * Make a title.
-     * @param xml XML
-     * @param file File with stdout
-     * @return Title
-     * @throws IOException If fails
-     */
     private static String title(final XML xml, final File file)
         throws IOException {
         final int code = Integer.parseInt(
@@ -141,5 +129,4 @@ public final class ArchivesDaemon extends AbstractAgent {
             FileUtils.readLines(file, StandardCharsets.UTF_8).size()
         );
     }
-
 }

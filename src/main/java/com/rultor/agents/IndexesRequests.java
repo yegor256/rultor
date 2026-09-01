@@ -17,14 +17,13 @@ import org.xembly.Directives;
 
 /**
  * Adds index to all the requests received.
- *
  * @since 1.0
  */
-@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 public final class IndexesRequests implements SuperAgent {
+
     @Override
     public void execute(final Talks talks) throws IOException {
-        int idx = this.index(talks);
+        int idx = IndexesRequests.index(talks);
         for (final Talk talk : talks.active()) {
             idx += 1;
             talk.modify(
@@ -35,16 +34,10 @@ public final class IndexesRequests implements SuperAgent {
         }
     }
 
-    /**
-     * Calculates maximal index value for a {@link Talks} object.
-     * @param talks The {@link Talks} object
-     * @return The maximal index value
-     * @throws IOException if the content of one {@link Talk} object can't be read
-     */
-    private int index(final Talks talks) throws IOException {
+    private static int index(final Talks talks) throws IOException {
         int index = 0;
         for (final Talk talk : talks.active()) {
-            final int idx = this.index(talk);
+            final int idx = IndexesRequests.index(talk);
             if (idx > index) {
                 index = idx;
             }
@@ -52,16 +45,7 @@ public final class IndexesRequests implements SuperAgent {
         return index;
     }
 
-    /**
-     * Calculates maximal (existing) index value of a {@link Talk} object.
-     * @param talk The {@link Talk} object
-     * @return The maximal index value
-     * @throws IOException if the content of the {@link Talk} object can't be
-     *  read
-     * @checkstyle NonStaticMethodCheck (15 lines)
-     */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    private int index(final Talk talk) throws IOException {
+    private static int index(final Talk talk) throws IOException {
         final List<Number> indexes = new ListOf<>(
             new Mapped<>(
                 NumberOf::new,

@@ -9,7 +9,7 @@ import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.logging.Level;
 import org.cactoos.iterable.HeadOf;
@@ -30,7 +30,6 @@ import org.xembly.Directives;
 
 /**
  * Siblings.
- *
  * @since 1.50
  */
 final class TkSiblings implements TkRegex {
@@ -50,7 +49,7 @@ final class TkSiblings implements TkRegex {
 
     @Override
     public Response act(final RqRegex req) throws IOException {
-        final Date since = new Date(
+        final Instant since = Instant.ofEpochMilli(
             Long.parseLong(
                 new RqHref.Smart(new RqHref.Base(req)).single(
                     "s", Long.toString(Long.MAX_VALUE)
@@ -77,30 +76,22 @@ final class TkSiblings implements TkRegex {
             "/xsl/siblings.xsl",
             req,
             new XeAppend("repo", repo),
-            new XeAppend("since", Long.toString(since.getTime())),
-            this.more(repo, siblings),
-            new XeDirectives(this.list(siblings))
+            new XeAppend("since", Long.toString(since.toEpochMilli())),
+            TkSiblings.more(repo, siblings),
+            new XeDirectives(TkSiblings.list(siblings))
         );
     }
 
-    /**
-     * Link to more, if necessary.
-     * @param repo Repo name
-     * @param siblings Siblings
-     * @return Link or empty
-     * @throws IOException If fails
-     * @checkstyle NonStaticMethodCheck (10 lines)
-     */
-    private XeSource more(final String repo, final List<Talk> siblings)
+    private static XeSource more(final String repo, final List<Talk> siblings)
         throws IOException {
         final XeSource src;
         if (siblings.size() == 20) {
-            final Talk last = siblings.get(siblings.size() - 1);
             src = new XeLink(
                 "more",
                 String.format(
                     "/p/%s?s=%s",
-                    repo, last.updated().getTime()
+                    repo,
+                    siblings.get(siblings.size() - 1).updated().toEpochMilli()
                 )
             );
         } else {
@@ -109,29 +100,16 @@ final class TkSiblings implements TkRegex {
         return src;
     }
 
-    /**
-     * List of directives.
-     * @param siblings List of them
-     * @return The directives
-     * @throws IOException If fails
-     */
-    private Iterable<Directive> list(final Iterable<Talk> siblings)
+    private static Iterable<Directive> list(final Iterable<Talk> siblings)
         throws IOException {
         final Directives dirs = new Directives().add("siblings");
         for (final Talk talk : siblings) {
-            dirs.append(this.dirs(talk));
+            dirs.append(TkSiblings.dirs(talk));
         }
         return dirs;
     }
 
-    /**
-     * Convert talk to directives.
-     * @param talk The talk to convert
-     * @return Directives
-     * @throws IOException If fails
-     * @checkstyle NonStaticMethodCheck (10 lines)
-     */
-    private Iterable<Directive> dirs(final Talk talk) throws IOException {
+    private static Iterable<Directive> dirs(final Talk talk) throws IOException {
         final XML xml = talk.read();
         final Directives dirs = new Directives().add("talk").add("archive");
         for (final XML log : xml.nodes("/talk/archive/log")) {
@@ -139,17 +117,12 @@ final class TkSiblings implements TkRegex {
         }
         return dirs.up().add("name").set(talk.name()).up()
             .add("href").set(xml.xpath("/talk/wire/href/text()").get(0)).up()
-            .add("updated").set(Long.toString(talk.updated().getTime())).up()
+            .add("updated")
+            .set(Long.toString(talk.updated().toEpochMilli())).up()
             .add("timeago").set(new PrettyTime().format(talk.updated())).up()
             .up();
     }
 
-    /**
-     * Convert log to JAXB.
-     * @param talk Talk
-     * @param log The log to convert
-     * @return JAXB
-     */
     private static Iterable<Directive> log(final XML talk, final XML log) {
         final String hash = log.xpath("@id").get(0);
         return new Directives().add("log")
@@ -158,5 +131,4 @@ final class TkSiblings implements TkRegex {
             .add("title").set(log.xpath("@title").get(0)).up()
             .up();
     }
-
 }

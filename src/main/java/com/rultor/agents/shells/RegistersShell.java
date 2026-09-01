@@ -18,13 +18,11 @@ import org.xembly.Directives;
 
 /**
  * Registers shell.
- *
  * @since 1.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "shell")
-@SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
 public final class RegistersShell extends AbstractAgent {
 
     /**
@@ -45,27 +43,27 @@ public final class RegistersShell extends AbstractAgent {
     public RegistersShell(final Profile profile, final String host,
         final int port, final String user, final String key)
         throws UnknownHostException {
+        this(
+            new PfShell(
+                profile,
+                new SmartHost(RegistersShell.validated(host, user, key)).ip(),
+                port,
+                user,
+                key
+            )
+        );
+    }
+
+    /**
+     * Constructor.
+     * @param pfshell Shell to register
+     */
+    private RegistersShell(final PfShell pfshell) {
         super(
             "/talk[daemon and not(shell)]",
             "/talk[not(ec2/instance)]"
         );
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException(
-                "User name is mandatory"
-            );
-        }
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException(
-                "SSH key is mandatory"
-            );
-        }
-        this.shell = new PfShell(
-            profile,
-            new SmartHost(host).ip(),
-            port,
-            user,
-            key
-        );
+        this.shell = pfshell;
     }
 
     @Override
@@ -110,5 +108,20 @@ public final class RegistersShell extends AbstractAgent {
             );
         }
         return dirs;
+    }
+
+    private static String validated(final String host, final String user,
+        final String key) {
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException(
+                "User name is mandatory"
+            );
+        }
+        if (key.isEmpty()) {
+            throw new IllegalArgumentException(
+                "SSH key is mandatory"
+            );
+        }
+        return host;
     }
 }

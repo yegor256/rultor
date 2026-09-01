@@ -19,8 +19,8 @@ import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
@@ -31,7 +31,6 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Show current status.
- *
  * @since 1.5
  */
 @Immutable
@@ -69,7 +68,7 @@ public final class QnStatus implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final XML xml = this.talk.read();
-        final Collection<String> lines = new LinkedList<>();
+        final Collection<String> lines = new ArrayList<>(4);
         lines.add(QnStatus.REPORT.applyTo(xml).trim());
         if (!xml.nodes("/talk[shell/host and daemon/dir]").isEmpty()) {
             final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
@@ -83,7 +82,6 @@ public final class QnStatus implements Question {
                         new Sub(
                             shell.exec(
                                 String.format(
-                                    // @checkstyle LineLength (1 line)
                                     "dir=%s; if [ -e \"${dir}/cid\" ]; then cat \"${dir}/cid\"; fi",
                                     Ssh.escape(dir)
                                 )
@@ -115,12 +113,11 @@ public final class QnStatus implements Question {
             String.format(
                 QnStatus.PHRASES.getString("QnStatus.response"),
                 new UncheckedText(
-                    new Joined("\n", lines)
+                    new Joined(System.lineSeparator(), lines)
                 ).asString()
             )
         );
         Logger.info(this, "status request in #%d", comment.issue().number());
         return Req.DONE;
     }
-
 }

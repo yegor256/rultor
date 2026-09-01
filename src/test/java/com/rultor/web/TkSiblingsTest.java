@@ -20,7 +20,6 @@ import org.xembly.Directives;
 /**
  * Test case for {@link TkSiblings}.
  * @since 1.23.1
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class TkSiblingsTest {
 
@@ -72,5 +71,4 @@ final class TkSiblingsTest {
             )
         );
     }
-
 }

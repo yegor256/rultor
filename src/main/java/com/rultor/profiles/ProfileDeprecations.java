@@ -26,15 +26,15 @@ public final class ProfileDeprecations {
      */
     private static final String CONTENT = new Joined(
         "",
-        "#### Deprecation Notice #### \n",
+        String.format("#### Deprecation Notice #### %n"),
         "You are using the Rultor default Docker image in your build.",
-        "The Rultor has to:\n",
+        String.format("The Rultor has to:%n"),
         "1. Provide the sudo package/command and not stop doing so ",
         "whenever a change to the Dockerfile is made, even if Rultor ",
-        "itself does not need the sudo command.\n",
+        String.format("itself does not need the sudo command.%n"),
         "2. Not install any gems to the global scope that interfere ",
-        "with pdd or est\n",
-        "#####################################\n"
+        String.format("with pdd or est%n"),
+        String.format("#####################################%n")
     ).toString();
 
     /**
@@ -77,12 +77,6 @@ public final class ProfileDeprecations {
         return ProfileDeprecations.empty(this.profile.read());
     }
 
-    /**
-     * Prints given message to a shell.
-     * @param message Message to print to shell
-     * @param shell Shell to print to
-     * @throws IOException On failure to print to shell
-     */
     private static void output(final String message, final Shell shell)
         throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -93,11 +87,6 @@ public final class ProfileDeprecations {
         );
     }
 
-    /**
-     * Indicates whether there is a deprecation notice or not.
-     * @param prof The XML representation of the profile to test
-     * @return True if there is no deprecation notice, false otherwise
-     */
     private static boolean empty(final XML prof) {
         final List<XML> images = prof.nodes(
             "/p/entry[@key='docker']/entry[@key='image']"

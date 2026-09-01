@@ -9,9 +9,8 @@ import com.jcabi.log.Logger;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talks;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
 import lombok.ToString;
 import software.amazon.awssdk.services.ec2.model.DescribeInstanceStatusRequest;
 import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
@@ -23,7 +22,6 @@ import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 
 /**
  * Terminates all instances that are very old.
- *
  * @since 1.77
  */
 @Immutable
@@ -53,16 +51,14 @@ public final class PrunesInstances implements SuperAgent {
     @Override
     public void execute(final Talks talks) throws IOException {
         final DescribeInstancesResponse res = this.api.aws().describeInstances(
-            DescribeInstancesRequest.builder()
-                .filters(
-                    Filter.builder()
-                        .name("tag:rultor")
-                        .values("yes")
-                        .build()
-                )
-                .build()
+            DescribeInstancesRequest.builder().filters(
+                Filter.builder()
+                    .name("tag:rultor")
+                    .values("yes")
+                    .build()
+            ).build()
         );
-        final Collection<String> seen = new LinkedList<>();
+        final Collection<String> seen = new ArrayList<>(0);
         for (final Reservation rsrv : res.reservations()) {
             final Instance instance = rsrv.instances().get(0);
             final String status = this.api.aws().describeInstanceStatus(
@@ -71,7 +67,8 @@ public final class PrunesInstances implements SuperAgent {
                     .instanceIds(instance.instanceId())
                     .build()
             ).instanceStatuses().get(0).instanceState().nameAsString();
-            final long age = new Date().getTime() - instance.launchTime().toEpochMilli();
+            final long age = System.currentTimeMillis()
+                - instance.launchTime().toEpochMilli();
             final String label = Logger.format(
                 "%s/%s/%s/%[ms]s",
                 instance.instanceId(),
@@ -100,5 +97,4 @@ public final class PrunesInstances implements SuperAgent {
             seen.size(), seen
         );
     }
-
 }

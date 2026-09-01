@@ -24,18 +24,17 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Mails}.
- *
  * @since 2.0
  */
 final class MailsTest {
 
     /**
-     * Mails can send a mail.
+     * Mails can send a mail with the expected content.
      * @throws Exception In case of error.
      */
     @Test
     @Disabled
-    void sendsMail() throws Exception {
+    void sendsMailWithContent() throws Exception {
         final Postman postman = Mockito.spy(Postman.CONSOLE);
         final Agent agent = new Mails(
             this.profile(),
@@ -45,10 +44,9 @@ final class MailsTest {
         final ArgumentCaptor<Envelope> captor =
             ArgumentCaptor.forClass(Envelope.class);
         Mockito.verify(postman).send(captor.capture());
-        final Envelope envelope = captor.getValue();
         MatcherAssert.assertThat(
             "Mail text should contain some data",
-            envelope.unwrap().getContent().toString(),
+            captor.getValue().unwrap().getContent().toString(),
             Matchers.allOf(
                 Matchers.containsString("See #456, release log:"),
                 Matchers.containsString("Released by Rultor"),
@@ -58,16 +56,33 @@ final class MailsTest {
                 )
             )
         );
+    }
+
+    /**
+     * Mails can send a mail with the expected subject.
+     * @throws Exception In case of error.
+     */
+    @Test
+    @Disabled
+    void sendsMailWithSubject() throws Exception {
+        final Postman postman = Mockito.spy(Postman.CONSOLE);
+        final Agent agent = new Mails(
+            this.profile(),
+            postman
+        );
+        agent.execute(MailsTest.talk());
+        final ArgumentCaptor<Envelope> captor =
+            ArgumentCaptor.forClass(Envelope.class);
+        Mockito.verify(postman).send(captor.capture());
         MatcherAssert.assertThat(
             "Mail subject should be about release",
-            envelope.unwrap().getSubject(),
+            captor.getValue().unwrap().getSubject(),
             Matchers.equalTo("user/repo v2.0 released!")
         );
     }
 
     /**
      * Mails can send a mail to recipients.
-     * @throws Exception In case of error.
      * @todo #748 Implement method sendsToRecipients. It must check that
      *  mail is sent to all recipients. Recipients are defined in Profile.
      */
@@ -80,10 +95,6 @@ final class MailsTest {
         );
     }
 
-    /**
-     * Profile for test.
-     * @return Profile
-     */
     private Profile.Fixed profile() throws Exception {
         return new Profile.Fixed(
             new XMLDocument(
@@ -100,11 +111,6 @@ final class MailsTest {
         );
     }
 
-    /**
-     * Make a talk with this tag.
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk() throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(

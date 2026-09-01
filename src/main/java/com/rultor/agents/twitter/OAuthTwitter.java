@@ -13,7 +13,6 @@ import twitter4j.TwitterException;
 
 /**
  * Twitter via OAuth2.
- *
  * @since 1.30
  */
 @Immutable
@@ -47,7 +46,6 @@ public final class OAuthTwitter implements Twitter {
      * @param scrt Secret
      * @param tkn Token
      * @param tscrt Token secret
-     * @checkstyle ParameterNumberCheck (5 lines)
      */
     public OAuthTwitter(final String tkey, final String scrt,
         final String tkn, final String tscrt) {
@@ -57,11 +55,7 @@ public final class OAuthTwitter implements Twitter {
         this.tsecret = tscrt;
     }
 
-    /**
-     * Send message to tweet.
-     * @param msg Message to post
-     * @throws IOException If fail
-     */
+    @Override
     @Quietly
     public void post(final String msg) throws IOException {
         final twitter4j.Twitter twitter = twitter4j.Twitter.newBuilder()

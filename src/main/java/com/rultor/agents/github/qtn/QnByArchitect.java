@@ -24,7 +24,6 @@ import org.cactoos.list.ListOf;
 
 /**
  * Question by architect only (if configured).
- *
  * @since 1.45
  */
 @Immutable
@@ -114,13 +113,6 @@ public final class QnByArchitect implements Question {
         return req;
     }
 
-    /**
-     * Is this a merge command in a pull request created by architect.
-     * @param comment Comment
-     * @param logins Configured architect logins
-     * @return TRUE if command can pass for non-architect
-     * @throws IOException If fails
-     */
     private static boolean isMergeByArchitectPull(final Comment.Smart comment,
         final List<String> logins) throws IOException {
         final Issue issue = comment.issue();
@@ -138,11 +130,6 @@ public final class QnByArchitect implements Question {
             && QnByArchitect.isMerge(comment.body());
     }
 
-    /**
-     * Is this text a merge command.
-     * @param body Body of comment
-     * @return TRUE if it starts with merge command
-     */
     private static boolean isMerge(final String body) {
         final String text = body.trim().toLowerCase(Locale.ENGLISH);
         return text.startsWith("merge")
@@ -151,13 +138,6 @@ public final class QnByArchitect implements Question {
                 .startsWith("merge");
     }
 
-    /**
-     * This repository allows this author to write into it.
-     * @param repo The repo
-     * @param author The author
-     * @return TRUE if write access allowed
-     * @throws IOException If fails
-     */
     private static boolean allowed(final Repo repo,
         final String author) throws IOException {
         String perm;
@@ -168,5 +148,4 @@ public final class QnByArchitect implements Question {
         }
         return "write".equals(perm) || "admin".equals(perm);
     }
-
 }

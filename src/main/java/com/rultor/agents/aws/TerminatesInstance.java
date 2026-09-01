@@ -12,12 +12,12 @@ import java.io.IOException;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 
 /**
  * Stops EC2 instance, when the "daemon" is gone (the job has
  * been completed successfully).
- *
  * @since 1.77
  */
 @Immutable
@@ -31,7 +31,7 @@ public final class TerminatesInstance extends AbstractAgent {
 
     /**
      * Ctor.
-     * @param api Aws Ec2 api.
+     * @param api Aws Ec2 api
      */
     public TerminatesInstance(final AwsEc2 api) {
         super(
@@ -44,11 +44,13 @@ public final class TerminatesInstance extends AbstractAgent {
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
         final String instance = xml.xpath("/talk/ec2/instance/text()").get(0);
-        this.api.aws().terminateInstances(
-            TerminateInstancesRequest.builder()
-                .instanceIds(instance)
-                .build()
-        );
+        try (Ec2Client client = this.api.aws()) {
+            client.terminateInstances(
+                TerminateInstancesRequest.builder()
+                    .instanceIds(instance)
+                    .build()
+            );
+        }
         Logger.info(
             this, "Successfully terminated %s instance of %s",
             instance, xml.xpath("/talk/@name").get(0)

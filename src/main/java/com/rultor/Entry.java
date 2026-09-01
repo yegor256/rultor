@@ -40,10 +40,8 @@ import org.takes.http.FtCli;
 
 /**
  * Command line entry.
- *
  * @since 1.50
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class Entry {
 
     /**
@@ -56,7 +54,15 @@ public final class Entry {
      * @param args Command line args
      */
     public Entry(final String... args) {
-        this.arguments = Arrays.asList(args);
+        this(Arrays.asList(args));
+    }
+
+    /**
+     * Ctor.
+     * @param args Command line args
+     */
+    private Entry(final Iterable<String> args) {
+        this.arguments = args;
     }
 
     /**
@@ -99,11 +105,6 @@ public final class Entry {
         }
     }
 
-    /**
-     * Make github.
-     * @return GitHub
-     * @throws IOException If fails
-     */
     @Cacheable(forever = true)
     private GitHub github() throws IOException {
         Logger.info(this, "Connecting GitHub...");
@@ -127,11 +128,6 @@ public final class Entry {
         return github;
     }
 
-    /**
-     * Sttc.
-     * @return Sttc
-     * @throws IOException If fails
-     */
     @Cacheable(forever = true)
     private Sttc sttc() throws IOException {
         Logger.info(this, "Connecting Sttc...");
@@ -151,10 +147,6 @@ public final class Entry {
         return sttc;
     }
 
-    /**
-     * Dynamo DB region.
-     * @return Region
-     */
     @Cacheable(forever = true)
     private Region dynamo() {
         Logger.info(this, "Connecting DynamoDB...");
@@ -178,10 +170,6 @@ public final class Entry {
         );
     }
 
-    /**
-     * Create pulse.
-     * @return Pulse
-     */
     @Cacheable(forever = true)
     private static Pulse pulse() {
         final Collection<Tick> ticks = Collections.synchronizedCollection(
@@ -216,5 +204,4 @@ public final class Entry {
             }
         };
     }
-
 }

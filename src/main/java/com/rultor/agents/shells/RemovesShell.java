@@ -14,7 +14,6 @@ import org.xembly.Directives;
 
 /**
  * Removes shell.
- *
  * @since 1.3
  */
 @Immutable

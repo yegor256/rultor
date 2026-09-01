@@ -8,14 +8,14 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Repo;
 import com.jcabi.github.User;
 import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * GitHub crew.
- *
  * @since 1.40.7
  */
 @Immutable
@@ -40,15 +40,13 @@ final class Crew {
      * Get all collaborators.
      * @return List of their login names
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    public Collection<String> names() {
-        final Collection<String> names = new LinkedList<>();
+    Collection<String> names() {
+        final Collection<String> names = new ArrayList<>(0);
         try {
             for (final User user : this.repo.collaborators().iterate()) {
                 names.add(user.login());
             }
-            // @checkstyle IllegalCatchCheck (1 line)
-        } catch (final Throwable ex) {
+        } catch (final IOException | IllegalStateException ex) {
             Logger.warn(
                 this, "failed to fetch collaborator: %s",
                 ex.getLocalizedMessage()
@@ -56,5 +54,4 @@ final class Crew {
         }
         return names;
     }
-
 }

@@ -19,15 +19,14 @@ import com.rultor.spi.Talks;
 import jakarta.json.JsonObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directives;
 
 /**
  * Starts talk when I'm mentioned in a GitHub issue.
- *
  * @since 1.0
  * @todo #1074:1h Current implementation can answer only for
  *  issue and PR comments, mostly because of Issue structure
@@ -55,7 +54,6 @@ public final class StartsTalks implements SuperAgent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
             System.currentTimeMillis() - 180_000
@@ -70,7 +68,7 @@ public final class StartsTalks implements SuperAgent {
                 .back(),
             RtPagination.COPYING
         );
-        final Collection<String> names = new LinkedList<>();
+        final Collection<String> names = new ArrayList<>(0);
         int skipped = 0;
         for (final JsonObject event : events) {
             final String url = event.getJsonObject("subject").getString("url");
@@ -103,16 +101,9 @@ public final class StartsTalks implements SuperAgent {
         );
     }
 
-    /**
-     * Activate talk.
-     * @param talks Talks
-     * @param event Event
-     * @return Name of the talk activated
-     * @throws IOException If fails
-     */
     private String activate(final Talks talks, final JsonObject event)
         throws IOException {
-        final Coordinates coords = this.coords(event);
+        final Coordinates coords = StartsTalks.coords(event);
         final Issue issue = this.github.repos().get(coords).issues().get(
             new IssueUrl(event.getJsonObject("subject").getString("url")).uid()
         );
@@ -141,16 +132,9 @@ public final class StartsTalks implements SuperAgent {
         return talk.name();
     }
 
-    /**
-     * Get coordinates from JSON.
-     * @param event Event
-     * @return Coords
-     * @checkstyle NonStaticMethodCheck (5 lines)
-     */
-    private Coordinates coords(final JsonObject event) {
+    private static Coordinates coords(final JsonObject event) {
         return new Coordinates.Simple(
             event.getJsonObject("repository").getString("full_name")
         );
     }
-
 }

@@ -34,13 +34,11 @@ import org.xembly.Directives;
 
 /**
  * Starts daemon.
- *
  * @since 1.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class StartsDaemon implements Agent {
 
     /**
@@ -86,11 +84,11 @@ public final class StartsDaemon implements Agent {
     /**
      * Process talk.
      *
-     * The annotation here is a TEMPORARY solution. It will be removed in the
-     * future. We need it because the SSH shell is not dropping the connection
-     * when the command is in the background.
+     * <p>The annotation here is a TEMPORARY solution. It will be removed in
+     * the future. We need it because the SSH shell is not dropping the
+     * connection when the command is in the background.
      *
-     * @param xml The XML to process.
+     * @param xml The XML to process
      * @return List of directives
      */
     @Timeable(limit = 1, unit = TimeUnit.MINUTES)
@@ -120,9 +118,32 @@ public final class StartsDaemon implements Agent {
         final Shell shell = new TalkShells(xml).get();
         new ProfileDeprecations(this.profile).print(shell);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final XML daemon = xml.nodes("/talk/daemon").get(0);
-        final String script = String.join(
-            "\n",
+        new Shell.Safe(shell).exec(
+            String.format("cd %s && cat > run.sh", Ssh.escape(dir)),
+            IOUtils.toInputStream(
+                this.script(shell, dir, xml), StandardCharsets.UTF_8
+            ),
+            Logger.stream(Level.INFO, this),
+            Logger.stream(Level.WARNING, this)
+        );
+        this.uploadGpgKey(shell);
+        new Shell.Empty(new Shell.Safe(shell)).exec(
+            String.join(
+                " && ",
+                String.format("cd %s", Ssh.escape(dir)),
+                "chmod a+x run.sh",
+                "echo 'run.sh failed to start' > stdout",
+                "( ( nohup ./run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null 2>&1 & )"
+            )
+        );
+        Logger.info(this, "Daemon started at %s", dir);
+        return dir;
+    }
+
+    private String script(final Shell shell, final String dir, final XML xml)
+        throws IOException {
+        return String.join(
+            System.lineSeparator(),
             "#!/usr/bin/env bash",
             "set -ex -o pipefail",
             "cd \"$(dirname \"$0\")\"",
@@ -140,34 +161,10 @@ public final class StartsDaemon implements Agent {
             "date",
             "uptime",
             this.upload(shell, dir),
-            daemon.xpath("script/text()").get(0)
+            xml.nodes("/talk/daemon").get(0).xpath("script/text()").get(0)
         );
-        new Shell.Safe(shell).exec(
-            String.format("cd %s && cat > run.sh", Ssh.escape(dir)),
-            IOUtils.toInputStream(script, StandardCharsets.UTF_8),
-            Logger.stream(Level.INFO, this),
-            Logger.stream(Level.WARNING, this)
-        );
-        this.uploadGpgKey(shell);
-        new Shell.Empty(new Shell.Safe(shell)).exec(
-            String.join(
-                " && ",
-                String.format("cd %s", Ssh.escape(dir)),
-                "chmod a+x run.sh",
-                "echo 'run.sh failed to start' > stdout",
-                // @checkstyle LineLength (1 line)
-                "( ( nohup ./run.sh </dev/null >stdout 2>&1; echo $? >status ) </dev/null >/dev/null 2>&1 & )"
-            )
-        );
-        Logger.info(this, "Daemon started at %s", dir);
-        return dir;
     }
 
-    /**
-     * Upload GPG secret key.
-     * @param shell The shell
-     * @throws IOException If fails
-     */
     private void uploadGpgKey(final Shell shell) throws IOException {
         final String secring = System.getenv("GPG_SECRING");
         if (secring == null) {
@@ -175,7 +172,7 @@ public final class StartsDaemon implements Agent {
                 "GPG_SECRING environment variable is not set"
             );
         }
-        if (secring.split("\n").length < 10) {
+        if (secring.split(System.lineSeparator()).length < 10) {
             throw new IOException(
                 String.format(
                     "GPG secret key is too short in the GPG_SECRING environment variable: %s",
@@ -194,13 +191,6 @@ public final class StartsDaemon implements Agent {
         );
     }
 
-    /**
-     * Upload assets.
-     * @param shell Shell
-     * @param dir Directory
-     * @return Script to use
-     * @throws IOException If fails
-     */
     private String upload(final Shell shell, final String dir)
         throws IOException {
         final long start = System.currentTimeMillis();
@@ -227,11 +217,10 @@ public final class StartsDaemon implements Agent {
             }
         } catch (final Profile.ConfigException ex) {
             script = Logger.format(
-                "cat << EOT\n%s\nEOT\nexit -1",
+                "cat << EOT%n%s%nEOT%nexit -1",
                 ex.getLocalizedMessage()
             );
         }
         return script;
     }
-
 }

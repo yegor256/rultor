@@ -18,7 +18,6 @@ import org.xembly.Directives;
 
 /**
  * Question that identifies an author.
- *
  * @since 1.65
  */
 @Immutable
@@ -62,5 +61,4 @@ public final class QnWithAuthor implements Question {
         }
         return out;
     }
-
 }

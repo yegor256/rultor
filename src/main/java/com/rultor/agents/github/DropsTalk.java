@@ -17,7 +17,6 @@ import org.xembly.Directives;
 /**
  * Drops talk if there is no 'wire' in it, but it's still
  * set to 'later' processing.
- *
  * @since 1.72
  */
 @Immutable
@@ -42,5 +41,4 @@ public final class DropsTalk extends AbstractAgent {
             .xpath("/talk")
             .attr("later", Boolean.toString(false));
     }
-
 }

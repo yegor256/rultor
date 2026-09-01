@@ -17,9 +17,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,7 +49,6 @@ import org.cactoos.text.UncheckedText;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "repo")
-@SuppressWarnings("PMD.ExcessiveImports")
 final class GithubProfile implements Profile {
 
     /**
@@ -108,12 +107,12 @@ final class GithubProfile implements Profile {
         return new YamlXML(this.yml()).get();
     }
 
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Override
     public Map<String, InputStream> assets() throws IOException {
         final XML xml = this.read();
         final List<XML> nodes = xml.nodes("/p/entry[@key='assets']/entry");
-        final List<Entry<String, InputStream>> entries = new LinkedList<>();
+        final List<Entry<String, InputStream>> entries =
+            new ArrayList<>(nodes.size());
         for (final XML node : nodes) {
             entries.add(
                 new MapEntry<>(
@@ -125,12 +124,6 @@ final class GithubProfile implements Profile {
         return new MapOf<>(new ListOf<>(entries));
     }
 
-    /**
-     * Convert address to input stream.
-     * @param path Path of the asset, e.g. "yegor/rultor#pom.xml"
-     * @return Stream with content
-     * @throws IOException If fails
-     */
     private InputStream asset(final String path) throws IOException {
         final Matcher matcher = GithubProfile.PATH.matcher(path);
         if (!matcher.matches()) {
@@ -144,7 +137,6 @@ final class GithubProfile implements Profile {
         if (!rpo.contents().exists(GithubProfile.FILE, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(
-                    // @checkstyle LineLength (1 line)
                     "%s file must be present in root directory of %s, see https://doc.rultor.com/reference.html#assets",
                     GithubProfile.FILE, rpo.coordinates()
                 )
@@ -163,7 +155,6 @@ final class GithubProfile implements Profile {
         if (!friends.allow(this.repo.coordinates().toString())) {
             throw new Profile.ConfigException(
                 String.format(
-                    // @checkstyle LineLength (1 line)
                     "%s in %s (branch %s) doesn't allow %s to use its assets (there are %d friends), see https://doc.rultor.com/reference.html#assets",
                     GithubProfile.FILE, rpo.coordinates(),
                     new DefaultBranch(rpo), this.repo.coordinates(),
@@ -175,11 +166,6 @@ final class GithubProfile implements Profile {
         return this.buildAssetStream(rpo, matcher.group(2));
     }
 
-    /**
-     * Check that everything is OK with trustees.
-     * @param rpo The repo
-     * @throws IOException If fails
-     */
     @SuppressWarnings("unchecked")
     private void checkTrustees(final Repo rpo) throws IOException {
         final Collection<String> trustees =
@@ -216,7 +202,6 @@ final class GithubProfile implements Profile {
             if (!commit.isVerified()) {
                 throw new Profile.ConfigException(
                     String.format(
-                        // @checkstyle LineLength (1 line)
                         "The last commit at %s in %s is not verified, that's why assets are not permitted to use in %s",
                         GithubProfile.FILE, this.repo.coordinates(),
                         rpo.coordinates()
@@ -227,7 +212,6 @@ final class GithubProfile implements Profile {
             if (!trustees.contains(author)) {
                 throw new Profile.ConfigException(
                     String.format(
-                        // @checkstyle LineLength (1 line)
                         "Since @%s is the modifier of %s in %s, that's why assets are not permitted to use in %s",
                         author, GithubProfile.FILE, this.repo.coordinates(),
                         rpo.coordinates()
@@ -237,14 +221,6 @@ final class GithubProfile implements Profile {
         }
     }
 
-    /**
-     * Build the InputStream for the given filename in the given Repository,
-     * dealing with errors.
-     * @param rpo Repository where the file is.
-     * @param filename Name of the file.
-     * @return An InputStream with the Base64 contents of the file.
-     * @throws IOException If something goes wrong.
-     */
     private InputStream buildAssetStream(final Repo rpo, final String filename)
         throws IOException {
         if (!rpo.contents().exists(filename, this.branch)) {
@@ -264,11 +240,6 @@ final class GithubProfile implements Profile {
         );
     }
 
-    /**
-     * Get .rultor.yml file.
-     * @return Its content
-     * @throws IOException If fails
-     */
     private String yml() throws IOException {
         final String yml;
         if (this.repo.contents()
@@ -287,15 +258,15 @@ final class GithubProfile implements Profile {
             );
             yml = "";
         }
-        final List<String> msg = this.validate(yml);
+        final List<String> msg = GithubProfile.validate();
         if (!msg.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
-                    "%s is not valid according to schema:\n``%s``",
+                    "%s is not valid according to schema:%n``%s``",
                     GithubProfile.FILE,
                     new UncheckedText(
                         new Joined(
-                            "\n",
+                            System.lineSeparator(),
                             msg
                         )
                     ).asString()
@@ -305,18 +276,7 @@ final class GithubProfile implements Profile {
         return yml;
     }
 
-    /**
-     * Validate rultor config YAML according to schema.
-     * @param yml Rultor YAML config
-     * @return Validation result message, empty list means validation succeeded.
-     * @todo #570:30min Implement validation using Kwalify library in separate
-     *  class called ValidYaml, move this method to that class and move tests
-     *  from GithubProfileValidationTest to ValidYamlTest. Remember about
-     *  removing PMD suppress below.
-     * @checkstyle NonStaticMethodCheck (5 lines)
-     */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private List<String> validate(final String yml) {
+    private static List<String> validate() {
         return Collections.emptyList();
     }
 }

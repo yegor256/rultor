@@ -36,7 +36,6 @@ import org.xembly.Xembler;
 
 /**
  * Lock branch.
- *
  * @since 1.53
  */
 @Immutable
@@ -96,8 +95,7 @@ public final class QnLock implements Question {
         } else {
             contents.create(
                 Json.createObjectBuilder()
-                    .add("path", QnLock.PATH)
-                    .add(
+                    .add("path", QnLock.PATH).add(
                         "message",
                         String.format(
                             "#%d: branch \"%s\" locked by request of @%s",
@@ -105,13 +103,12 @@ public final class QnLock implements Question {
                             branch,
                             comment.author().login()
                         )
-                    )
-                    .add(
+                    ).add(
                         "content",
                         Base64.encodeBase64String(
                             new UncheckedText(
                                 new Joined(
-                                    "\n",
+                                    System.lineSeparator(),
                                     users
                                 )
                             ).asString().getBytes(StandardCharsets.UTF_8)
@@ -141,13 +138,6 @@ public final class QnLock implements Question {
         return Req.DONE;
     }
 
-    /**
-     * Get args.
-     * @param comment The comment
-     * @param home Home
-     * @return Args
-     * @throws IOException If fails
-     */
     private static XML args(final Comment.Smart comment, final URI home)
         throws IOException {
         return new XMLDocument(
@@ -160,5 +150,4 @@ public final class QnLock implements Question {
             ).xmlQuietly()
         );
     }
-
 }

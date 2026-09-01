@@ -20,23 +20,29 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnReferredTo}.
- *
  * @since 1.20.3
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 final class QnReferredToTest {
 
     /**
-     * QnReferredTo can build a request.
+     * QnReferredTo can build a request from a mention without a comma.
      * @throws Exception In case of error.
      */
     @Test
-    void buildsRequest() throws Exception {
+    void buildsRequestFromMentionWithoutComma() throws Exception {
         MatcherAssert.assertThat(
             "deploy request should be created",
             this.xemblerXml("  @xx deploy"),
             XhtmlMatchers.hasXPath("/request/type[text()='deploy']")
         );
+    }
+
+    /**
+     * QnReferredTo can build a request from a mention followed by a comma.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void buildsRequestFromMentionWithComma() throws Exception {
         MatcherAssert.assertThat(
             "deploy request should be created",
             this.xemblerXml("  @xx, deploy"),
@@ -45,11 +51,11 @@ final class QnReferredToTest {
     }
 
     /**
-     * QnReferredTo can recognize mentions delimited by a comma.
+     * QnReferredTo can recognize a mention with a comma placed after it.
      * @throws Exception In case of error.
      */
     @Test
-    void recognizesCommaAsDelimiter() throws Exception {
+    void recognizesCommaAfterMentionAsDelimiter() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
             "deploy command should be recognized",
@@ -58,6 +64,15 @@ final class QnReferredToTest {
             ),
             Matchers.is(Req.DONE)
         );
+    }
+
+    /**
+     * QnReferredTo can recognize a mention with a comma placed before it.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void recognizesCommaBeforeMentionAsDelimiter() throws Exception {
+        final String login = "xx";
         MatcherAssert.assertThat(
             "deploy command should be recognized",
             this.reqFromComment(
@@ -69,11 +84,11 @@ final class QnReferredToTest {
 
     /**
      * QnReferredTo can recognize mention as invalid when login is
-     * bounded by non-boundary char.
+     * followed by a non-boundary char.
      * @throws Exception In case of error.
      */
     @Test
-    void recognizesInvalidBoundary() throws Exception {
+    void ignoresMentionWithTrailingBoundaryChar() throws Exception {
         final String login = "xx";
         MatcherAssert.assertThat(
             "Comment should be ignored without mention",
@@ -82,6 +97,16 @@ final class QnReferredToTest {
             ),
             Matchers.is(Req.EMPTY)
         );
+    }
+
+    /**
+     * QnReferredTo can recognize mention as invalid when login is
+     * preceded by a non-boundary char.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void ignoresMentionWithLeadingBoundaryChar() throws Exception {
+        final String login = "xx";
         MatcherAssert.assertThat(
             "Comment should be ignored without mention",
             this.reqFromComment(
@@ -92,11 +117,11 @@ final class QnReferredToTest {
     }
 
     /**
-     * QnReferredTo can answer when mention.
+     * QnReferredTo can recognize the deploy command when mentioned.
      * @throws Exception In case of error.
      */
     @Test
-    void answerWhenMentioned() throws Exception {
+    void recognizesDeployCommandWhenMentioned() throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");
         final String login = "xx";
@@ -107,6 +132,22 @@ final class QnReferredToTest {
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
             Matchers.is(Req.DONE)
+        );
+    }
+
+    /**
+     * QnReferredTo can post an answer comment with instructions when
+     * mentioned.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsAnswerCommentWithInstructionWhenMentioned() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        final String login = "xx";
+        issue.comments().post(String.format("hello @%s deploy", login));
+        new QnReferredTo(login, new QnDeploy()).understand(
+            new Comment.Smart(issue.comments().get(1)), new URI("#")
         );
         MatcherAssert.assertThat(
             "Answer comment should be posted with instruction",
@@ -123,14 +164,6 @@ final class QnReferredToTest {
         );
     }
 
-    /**
-     * Return the Req for a comment.
-     *
-     * @param comment String comment to read
-     * @param login String Rultor GitHub user login
-     * @return Req
-     * @throws Exception In case of error.
-     */
     private Req reqFromComment(final String comment, final String login)
         throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
@@ -141,13 +174,6 @@ final class QnReferredToTest {
         );
     }
 
-    /**
-     * Return the Xembler xml output for a comment.
-     *
-     * @param comment String comment to read
-     * @return String
-     * @throws Exception In case of error.
-     */
     private String xemblerXml(final String comment) throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final Issue issue = repo.issues().create("", "");

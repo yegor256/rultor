@@ -19,7 +19,6 @@ import lombok.ToString;
 
 /**
  * Question asked by one of them.
- *
  * @since 1.43.1
  */
 @Immutable
@@ -57,5 +56,4 @@ public final class QnFollow implements Question {
         );
         return this.origin.understand(comment, home);
     }
-
 }

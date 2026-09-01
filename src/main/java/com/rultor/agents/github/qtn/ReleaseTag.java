@@ -14,7 +14,6 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 /**
  * Release Tag validator, ensures not releasing already outdated tags.
- *
  * @since 1.62
  */
 @Immutable
@@ -77,26 +76,13 @@ public final class ReleaseTag {
         return tag;
     }
 
-    /**
-     * Checks that a tag is newer than a given reference.
-     * @param reference String
-     * @param tag String
-     * @return True if tag is newer than reference
-     */
     private static boolean newer(final String reference, final String tag) {
         return new DefaultArtifactVersion(reference).compareTo(
             new DefaultArtifactVersion(tag)
         ) < 0;
     }
 
-    /**
-     * Checks that tag is a valid release version, consisting only in digits
-     * and dots.
-     * @param identifier String tag name
-     * @return True if identifier is a valid release version
-     */
     private static boolean valid(final String identifier) {
         return ReleaseTag.VERSION_PATTERN.matcher(identifier).matches();
     }
-
 }

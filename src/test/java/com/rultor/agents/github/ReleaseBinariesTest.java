@@ -26,7 +26,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link ReleaseBinaries}.
- *
  * @since 1.1
  */
 final class ReleaseBinariesTest {
@@ -37,9 +36,7 @@ final class ReleaseBinariesTest {
      * @throws Exception In case of error
      */
     @Test
-    void attachesBinaryToRelease(
-        @TempDir final Path temp
-    ) throws Exception {
+    void attachesBinaryToRelease(@TempDir final Path temp) throws Exception {
         final Repo repo = new MkGitHub().randomRepo();
         final String tag = "v1.0";
         final String target = "target";
@@ -51,9 +48,12 @@ final class ReleaseBinariesTest {
             )
         );
         dir.mkdirs();
-        final File bin = new File(dir.getAbsolutePath(), name.replace("${tag}", tag));
-        final byte[] content = SecureRandom.getSeed(100);
-        new LengthOf(new TeeInput(content, bin)).value();
+        new LengthOf(
+            new TeeInput(
+                SecureRandom.getSeed(100),
+                new File(dir.getAbsolutePath(), name.replace("${tag}", tag))
+            )
+        ).value();
         final Talk talk = ReleaseBinariesTest
             .talk(repo.issues().create("", ""), tag, dir);
         new CommentsTag(repo.github()).execute(talk);
@@ -78,14 +78,6 @@ final class ReleaseBinariesTest {
         );
     }
 
-    /**
-     * Make a talk with this tag.
-     * @param issue The issue
-     * @param tag The tag
-     * @param dir Daemon directory
-     * @return Talk
-     * @throws IOException If fails
-     */
     private static Talk talk(
         final Issue issue,
         final String tag,
@@ -107,7 +99,7 @@ final class ReleaseBinariesTest {
                 .up()
                 .add("request").attr(identifier, "abcdef")
                 .add("type").set("release").up()
-                .add("success").set(Boolean.TRUE.toString()).up()
+                .add("success").set("true").up()
                 .add("args").add("arg").attr("name", "tag").set(tag)
         );
         return talk;

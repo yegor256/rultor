@@ -17,7 +17,6 @@ import org.xembly.Directives;
 
 /**
  * Kills daemon if too old.
- *
  * @since 1.0
  */
 @Immutable
@@ -41,10 +40,9 @@ public final class KillsDaemon extends AbstractAgent {
             "/talk/daemon[started and not(code) and not(ended)]",
             "/talk/daemon/dir",
             String.format(
-                // @checkstyle LineLength (1 line)
                 "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > %d]",
                 mins
-        )
+            )
         );
     }
 
@@ -64,5 +62,4 @@ public final class KillsDaemon extends AbstractAgent {
         }
         return new Directives().xpath("/talk/request").remove();
     }
-
 }

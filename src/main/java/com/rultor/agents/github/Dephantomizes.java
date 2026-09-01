@@ -18,7 +18,6 @@ import org.xembly.Directives;
 
 /**
  * Removes request, if GitHub issue is gone.
- *
  * @since 1.59.7
  */
 @Immutable
@@ -58,5 +57,4 @@ public final class Dephantomizes extends AbstractAgent {
         }
         return dirs;
     }
-
 }

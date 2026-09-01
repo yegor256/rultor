@@ -20,7 +20,6 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Tweets}.
- *
  * @since 1.30
  */
 final class TweetsTest {
@@ -37,8 +36,9 @@ final class TweetsTest {
             )
         );
         final Twitter twitter = Mockito.mock(Twitter.class);
-        final Talk talk = TweetsTest.talk(repo, repo.issues().create("", ""));
-        new Tweets(repo.github(), twitter).execute(talk);
+        new Tweets(repo.github(), twitter).execute(
+            TweetsTest.talk(repo, repo.issues().create("", ""))
+        );
         Mockito.verify(twitter).post(
             ArgumentMatchers.contains(repo.coordinates().repo())
         );
@@ -72,13 +72,6 @@ final class TweetsTest {
         );
     }
 
-    /**
-     * Creates a talk with repo and issue.
-     * @param repo Repo to use
-     * @param issue Issue to use
-     * @return Created Talk
-     * @throws IOException In case of error
-     */
     private static Talk talk(final Repo repo, final Issue issue)
         throws IOException {
         final Talk talk = new Talk.InFile();

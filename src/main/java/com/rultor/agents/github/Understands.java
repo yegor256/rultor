@@ -16,6 +16,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -28,19 +29,11 @@ import org.xembly.Directives;
 
 /**
  * Understands request.
- *
  * @since 1.3
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "github", "question" })
-@SuppressWarnings(
-    {
-    "PMD.CyclomaticComplexity",
-    "PMD.StdCyclomaticComplexity",
-    "PMD.ModifiedCyclomaticComplexity"
-    }
-)
 public final class Understands extends AbstractAgent {
 
     /**
@@ -73,7 +66,6 @@ public final class Understands extends AbstractAgent {
         this.question = qtn;
     }
 
-    // @checkstyle ExecutableStatementCountCheck (50 lines)
     // @checkstyle CyclomaticComplexityCheck (100 lines)
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
@@ -82,7 +74,9 @@ public final class Understands extends AbstractAgent {
             new Smarts<Comment.Smart>(
                 new Joined<Comment>(
                     Collections.singleton(new FirstComment(issue)),
-                    new Bulk<>(issue.comments().iterate(new Date(0L)))
+                    new Bulk<>(
+                        issue.comments().iterate(Date.from(Instant.EPOCH))
+                    )
                 )
             ).iterator()
         );
@@ -153,13 +147,6 @@ public final class Understands extends AbstractAgent {
             .attr("later", Boolean.toString(!req.equals(Req.EMPTY)));
     }
 
-    /**
-     * Understand.
-     * @param comment Comment
-     * @param xml XML
-     * @return Req
-     * @throws IOException If fails
-     */
     private Req parse(final Comment.Smart comment, final XML xml)
         throws IOException {
         Req req;
@@ -181,11 +168,6 @@ public final class Understands extends AbstractAgent {
         return req;
     }
 
-    /**
-     * Last seen message.
-     * @param xml XML
-     * @return Number
-     */
     private static long seen(final XML xml) {
         final long seen;
         if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
@@ -198,11 +180,6 @@ public final class Understands extends AbstractAgent {
         return seen;
     }
 
-    /**
-     * Root cause exception message.
-     * @param exception Error
-     * @return Message
-     */
     private static String rootCause(final Profile.ConfigException exception) {
         Throwable root = exception;
         while (!root.equals(root.getCause())) {

@@ -4,6 +4,7 @@
  */
 package com.rultor.agents.aws;
 
+import com.google.common.base.Splitter;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
@@ -14,16 +15,15 @@ import java.util.Arrays;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.Instance;
 import software.amazon.awssdk.services.ec2.model.ResourceType;
 import software.amazon.awssdk.services.ec2.model.RunInstancesRequest;
-import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
 import software.amazon.awssdk.services.ec2.model.Tag;
 import software.amazon.awssdk.services.ec2.model.TagSpecification;
 
 /**
  * Starts EC2 instance.
- *
  * @since 1.77
  */
 @Immutable
@@ -89,7 +89,6 @@ public final class StartsInstance extends AbstractAgent {
      * @param tpe Type of instance, like "t1.micro"
      * @param grp Security group, like "sg-38924038290"
      * @param net Subnet, like "subnet-0890890"
-     * @checkstyle ParameterNumberCheck (5 lines)
      */
     public StartsInstance(final Profile pfl, final AwsEc2 aws,
         final String image, final String tpe,
@@ -126,13 +125,6 @@ public final class StartsInstance extends AbstractAgent {
         return dirs;
     }
 
-    /**
-     * Run a new instance.
-     * @param talk Name of the talk
-     * @param xml Talk XML
-     * @return Instance ID
-     * @throws IOException If fails
-     */
     private Instance run(final String talk, final XML xml) throws IOException {
         final String itype = this.instanceType(xml);
         final RunInstancesRequest request = RunInstancesRequest.builder()
@@ -141,11 +133,9 @@ public final class StartsInstance extends AbstractAgent {
             .imageId(this.image)
             .instanceType(itype)
             .maxCount(1)
-            .minCount(1)
-            .tagSpecifications(
+            .minCount(1).tagSpecifications(
                 TagSpecification.builder()
-                    .resourceType(ResourceType.INSTANCE)
-                    .tags(
+                    .resourceType(ResourceType.INSTANCE).tags(
                         Tag.builder().key("Name").value(talk).build(),
                         Tag.builder().key("rultor").value("yes").build(),
                         Tag.builder().key("rultor-talk").value(talk).build()
@@ -158,9 +148,10 @@ public final class StartsInstance extends AbstractAgent {
             "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
             talk, this.image, itype, this.sgroup, this.subnet
         );
-        final RunInstancesResponse response =
-            this.api.aws().runInstances(request);
-        final Instance instance = response.instances().get(0);
+        final Instance instance;
+        try (Ec2Client client = this.api.aws()) {
+            instance = client.runInstances(request).instances().get(0);
+        }
         Logger.info(
             this,
             "Started a new AWS instance %s for '%s'",
@@ -169,12 +160,6 @@ public final class StartsInstance extends AbstractAgent {
         return instance;
     }
 
-    /**
-     * Read one EC2 param from .rultor.xml.
-     * @param xml Talk XML
-     * @return Value
-     * @throws IOException If fails
-     */
     private String instanceType(final XML xml) throws IOException {
         final String required = new Profile.Defaults(this.profile).text(
             "/p/entry[@key='ec2']/entry[@key='type']",
@@ -189,16 +174,18 @@ public final class StartsInstance extends AbstractAgent {
                 )
             );
         }
-        if (Arrays.asList(StartsInstance.ELITE_TYPES).contains(required)) {
-            final String org = xml.xpath("/talk/wire/github-repo/text()").get(0).split("/")[0];
-            if (!Arrays.asList(StartsInstance.ELITE_ORGS).contains(org)) {
-                throw new Profile.ConfigException(
-                    Logger.format(
-                        "You are not allowed to use EC2 instance type '%s', use one of %[list]s",
-                        required, StartsInstance.ALLOWED_TYPES
-                    )
-                );
-            }
+        if (Arrays.asList(StartsInstance.ELITE_TYPES).contains(required)
+            && !Arrays.asList(StartsInstance.ELITE_ORGS).contains(
+                Splitter.on('/').splitToList(
+                    xml.xpath("/talk/wire/github-repo/text()").get(0)
+                ).get(0)
+            )) {
+            throw new Profile.ConfigException(
+                Logger.format(
+                    "You are not allowed to use EC2 instance type '%s', use one of %[list]s",
+                    required, StartsInstance.ALLOWED_TYPES
+                )
+            );
         }
         return required;
     }

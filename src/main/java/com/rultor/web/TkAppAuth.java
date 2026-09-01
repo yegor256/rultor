@@ -27,7 +27,6 @@ import org.takes.tk.TkWrap;
 
 /**
  * Authenticated app.
- *
  * @since 1.53
  */
 final class TkAppAuth extends TkWrap {
@@ -40,11 +39,6 @@ final class TkAppAuth extends TkWrap {
         super(TkAppAuth.make(take));
     }
 
-    /**
-     * Authenticated.
-     * @param take Takes
-     * @return Authenticated takes
-     */
     private static Take make(final Take take) {
         return new TkAuth(
             new TkFork(
@@ -85,5 +79,4 @@ final class TkAppAuth extends TkWrap {
             )
         );
     }
-
 }
