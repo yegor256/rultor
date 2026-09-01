@@ -15,10 +15,10 @@ import java.util.Arrays;
 import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
+import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.Instance;
 import software.amazon.awssdk.services.ec2.model.ResourceType;
 import software.amazon.awssdk.services.ec2.model.RunInstancesRequest;
-import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
 import software.amazon.awssdk.services.ec2.model.Tag;
 import software.amazon.awssdk.services.ec2.model.TagSpecification;
 
@@ -148,9 +148,10 @@ public final class StartsInstance extends AbstractAgent {
             "Starting a new AWS instance for '%s' (image=%s, type=%s, group=%s, subnet=%s)...",
             talk, this.image, itype, this.sgroup, this.subnet
         );
-        final RunInstancesResponse response =
-            this.api.aws().runInstances(request);
-        final Instance instance = response.instances().get(0);
+        final Instance instance;
+        try (Ec2Client client = this.api.aws()) {
+            instance = client.runInstances(request).instances().get(0);
+        }
         Logger.info(
             this,
             "Started a new AWS instance %s for '%s'",
