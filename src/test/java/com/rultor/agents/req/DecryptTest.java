@@ -89,6 +89,27 @@ final class DecryptTest {
         );
     }
 
+    /**
+     * Decrypt keeps the passphrase off any line the shell traces.
+     * @throws Exception In case of error.
+     */
+    @Test
+    void keepsThePassphraseOutOfTheTrace() throws Exception {
+        MatcherAssert.assertThat(
+            "The passphrase must be piped in with the tracing off, not written on a traced line",
+            new Joined(
+                DecryptTest.NEWLINE,
+                new Decrypt(
+                    new Profile.Fixed(this.createTestProfileXml(), "test/test")
+                ).commands()
+            ).asString(),
+            Matchers.allOf(
+                Matchers.not(Matchers.containsString("--passphrase '")),
+                Matchers.containsString("set +x")
+            )
+        );
+    }
+
     private XMLDocument createTestProfileXml() {
         return new XMLDocument(
             new UncheckedText(

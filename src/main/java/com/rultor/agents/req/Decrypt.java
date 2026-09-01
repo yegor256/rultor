@@ -43,6 +43,13 @@ final class Decrypt {
 
     /**
      * Decrypt instructions.
+     *
+     * <p>The passphrase goes to gpg through a pipe and the tracing of the
+     * shell is turned off around it. The script these instructions land in
+     * runs under {@code set -ex}, so a passphrase written on the command
+     * line is printed by the shell itself into a build log that is public
+     * (#2325).</p>
+     *
      * @return Instructions
      * @throws IOException If fails
      */
@@ -64,13 +71,15 @@ final class Decrypt {
                     )
                 )
             );
+            commands.add("set +x");
             commands.add(
                 String.format(
                     String.join(
                         Decrypt.SPACE,
+                        "printf '%%s' %s |",
                         "gpg --no-tty --batch --verbose --decrypt",
                         "--ignore-mdc-error",
-                        "--passphrase %s %s > %s"
+                        "--passphrase-fd 0 %s > %s"
                     ),
                     Ssh.escape(
                         String.format("rultor-key:%s", this.profile.name())
@@ -79,6 +88,7 @@ final class Decrypt {
                     Ssh.escape(key)
                 )
             );
+            commands.add("set -x");
             commands.add(String.format("rm -rf %s ", Ssh.escape(enc)));
         }
         return commands;
