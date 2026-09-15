@@ -18,6 +18,7 @@ import org.xembly.Directives;
 
 /**
  * Publishes if it's public.
+ *
  * @since 1.32.7
  */
 @Immutable
@@ -37,6 +38,7 @@ public final class Publishes extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param prf Profile
      * @param ghub GitHub
      */

@@ -31,6 +31,7 @@ import org.xembly.Xembler;
 
 /**
  * Marks the daemon as done.
+ *
  * @since 1.0
  */
 @Immutable

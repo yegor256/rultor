@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link Entry}.
+ *
  * @since 1.58
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -28,7 +29,7 @@ final class EntryTest {
      * <p>This test is actually checking not how RtSttc works, but
      * whether it can work in current environment, with full list
      * of project dependencies. If there will be any dependency issue,
-     * this test will crash with a different exception, not AssertionError.
+     * this test will crash with a different exception, not AssertionError.</p>
      */
     @Test
     void sttcConnects() {
@@ -47,7 +48,7 @@ final class EntryTest {
      * <p>This test is actually checking not how RtGithug works, but
      * whether it can work in current environment, with full list
      * of project dependencies. If there will be any dependency issue,
-     * this test will crash with a different exception, not AssertionError.
+     * this test will crash with a different exception, not AssertionError.</p>
      */
     @Test
     void githubConnects() {

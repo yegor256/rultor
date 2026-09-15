@@ -11,12 +11,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Talk}.
+ *
  * @since 1.41.3
  */
 final class TalkTest {
 
     /**
      * Talk can accept correct XML.
+     *
      * @throws Exception In case of error.
      */
     @Test

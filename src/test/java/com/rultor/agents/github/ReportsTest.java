@@ -20,6 +20,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Reports}.
+ *
  * @since 1.3
  */
 final class ReportsTest {
@@ -43,6 +44,7 @@ final class ReportsTest {
 
     /**
      * Reports can report a result of a request.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -62,6 +64,7 @@ final class ReportsTest {
 
     /**
      * Reports can report a result of a request, when stop command fails.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -81,6 +84,7 @@ final class ReportsTest {
 
     /**
      * Reports can report a result of a request, when stop command fails.
+     *
      * @throws Exception In case of error
      */
     @Test

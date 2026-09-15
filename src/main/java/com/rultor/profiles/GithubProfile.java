@@ -41,7 +41,7 @@ import org.cactoos.text.UncheckedText;
  *
  * <p>An instance of this class is created by {@link Profiles}, when
  * it is obvious that the configuration of the repository is stored
- * in GitHub.
+ * in GitHub.</p>
  *
  * @since 1.0
  * @checkstyle AvoidInstantiatingObjectsInLoops
@@ -75,6 +75,7 @@ final class GithubProfile implements Profile {
 
     /**
      * Ctor.
+     *
      * @param rpo Repo
      */
     GithubProfile(final Repo rpo) {
@@ -83,6 +84,7 @@ final class GithubProfile implements Profile {
 
     /**
      * Ctor.
+     *
      * @param rpo Repo
      * @param brnch Branch
      * @since 1.51

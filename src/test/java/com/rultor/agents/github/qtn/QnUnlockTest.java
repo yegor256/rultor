@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnUnlock}.
+ *
  * @since 1.53
  */
 final class QnUnlockTest {
 
     /**
      * QnUnlock completes the request.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -40,6 +42,7 @@ final class QnUnlockTest {
 
     /**
      * QnUnlock posts a message about the missing lock file.
+     *
      * @throws Exception In case of error.
      */
     @Test

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Profiles}.
+ *
  * @since 1.62
  */
 final class ProfilesTest {
@@ -59,6 +60,7 @@ final class ProfilesTest {
 
     /**
      * Profiles can restrict changes in architect section.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -107,6 +109,7 @@ final class ProfilesTest {
 
     /**
      * Profiles can restrict changes in merge/commanders section.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -158,6 +161,7 @@ final class ProfilesTest {
      * Profiles can restrict changes in commanders section in case when
      * overall commanders list is still the same (commander moved from one
      * section to another).
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -198,6 +202,7 @@ final class ProfilesTest {
     /**
      * Profiles can validate merged profile without changes in restricted
      * sections, keeping the architect from master.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -233,6 +238,7 @@ final class ProfilesTest {
     /**
      * Profiles can validate merged profile without changes in restricted
      * sections, keeping the merge commander from master.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -273,6 +279,7 @@ final class ProfilesTest {
     /**
      * Profiles can validate merged profile without changes in restricted
      * sections, keeping the deploy commander from master.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -313,6 +320,7 @@ final class ProfilesTest {
     /**
      * Profiles can validate merged profile without changes in restricted
      * sections, keeping the release commander from master.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -353,6 +361,7 @@ final class ProfilesTest {
     /**
      * Profiles can validate merged profile without changes in restricted
      * sections, taking the script from fork.
+     *
      * @throws Exception In case of error.
      */
     @Test

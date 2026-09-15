@@ -5,6 +5,7 @@
 
 /**
  * Docker daemon, tests.
+ *
  * @since 1.63
  */
 package com.rultor.agents.docker;

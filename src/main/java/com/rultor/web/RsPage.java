@@ -33,6 +33,7 @@ import org.takes.rs.xe.XeStylesheet;
 
 /**
  * Index resource, front page of the website.
+ *
  * @since 1.50
  */
 @EqualsAndHashCode(callSuper = true)
@@ -40,6 +41,7 @@ final class RsPage extends RsWrap {
 
     /**
      * Ctor.
+     *
      * @param xsl XSL
      * @param req Request
      * @param src Source

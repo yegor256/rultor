@@ -21,12 +21,14 @@ import org.mockito.Mockito;
 
 /**
  * Tests for ${@link CommitsLog}.
+ *
  * @since 1.51
  */
 final class CommitsLogTest {
 
     /**
      * CommitsLog can create a log for release.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -53,6 +55,7 @@ final class CommitsLogTest {
 
     /**
      * CommitsLog can create a log for release.
+     *
      * @throws Exception In case of error.
      */
     @Test

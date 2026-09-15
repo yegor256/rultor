@@ -20,6 +20,7 @@ import lombok.ToString;
 
 /**
  * Stop a task.
+ *
  * @since 1.1
  */
 @Immutable
@@ -32,6 +33,13 @@ public final class QnStop implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnStop() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,

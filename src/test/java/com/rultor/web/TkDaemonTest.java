@@ -21,12 +21,14 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link TkDaemon}.
+ *
  * @since 1.50
  */
 final class TkDaemonTest {
 
     /**
      * TkDaemon can show log in HTML.
+     *
      * @throws Exception If some problem inside
      */
     @Test

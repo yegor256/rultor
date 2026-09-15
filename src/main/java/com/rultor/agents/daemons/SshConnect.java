@@ -20,6 +20,7 @@ import org.cactoos.text.Joined;
 
 /**
  * SSH connect.
+ *
  * @since 1.1
  */
 @Immutable
@@ -32,6 +33,7 @@ final class SshConnect implements Connect {
 
     /**
      * Ctor.
+     *
      * @param talk Talk
      */
     SshConnect(final XML talk) {
@@ -42,22 +44,24 @@ final class SshConnect implements Connect {
     public InputStream read() throws IOException {
         final Shell shell = new TalkShells(this.xml).get();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        shell.exec(
-            new Joined(
-                "",
-                "dir=",
-                Ssh.escape(
-                    this.xml.xpath("/talk/daemon/dir/text()").get(0)
-                ),
-                ";",
-                " (cat \"${dir}/stdout\" 2>/dev/null",
-                " || echo \"file $file is gone\")",
-                " | iconv -f utf-8 -t utf-8 -c",
-                " | LANG=en_US.UTF-8 col -b"
-            ).toString(),
-            new NullInputStream(0L), baos,
-            Logger.stream(Level.SEVERE, true)
-        );
+        try (NullInputStream stdin = new NullInputStream(0L)) {
+            shell.exec(
+                new Joined(
+                    "",
+                    "dir=",
+                    Ssh.escape(
+                        this.xml.xpath("/talk/daemon/dir/text()").get(0)
+                    ),
+                    ";",
+                    " (cat \"${dir}/stdout\" 2>/dev/null",
+                    " || echo \"file $file is gone\")",
+                    " | iconv -f utf-8 -t utf-8 -c",
+                    " | LANG=en_US.UTF-8 col -b"
+                ).toString(),
+                stdin, baos,
+                Logger.stream(Level.SEVERE, true)
+            );
+        }
         return new ByteArrayInputStream(baos.toByteArray());
     }
 }

@@ -23,6 +23,7 @@ import org.cactoos.list.ListOf;
 
 /**
  * Talks in a repo.
+ *
  * @since 1.0
  */
 @Immutable
@@ -30,6 +31,7 @@ public interface Talks {
 
     /**
      * Talk exists already?
+     *
      * @param number The number
      * @return TRUE if it exists
      * @since 1.3
@@ -38,6 +40,7 @@ public interface Talks {
 
     /**
      * Get an existing talk (runtime exception if it's absent).
+     *
      * @param number The number
      * @return Talk
      * @since 1.3
@@ -46,6 +49,7 @@ public interface Talks {
 
     /**
      * Talk exists already?
+     *
      * @param name The name
      * @return TRUE if it exists
      */
@@ -53,6 +57,7 @@ public interface Talks {
 
     /**
      * Get an existing talk (runtime exception if it's absent).
+     *
      * @param name The name
      * @return Talk
      */
@@ -60,12 +65,14 @@ public interface Talks {
 
     /**
      * Delete an existing talk (runtime exception if it's absent).
+     *
      * @param name The name
      */
     void delete(String name);
 
     /**
      * Create a new one (runtime exception if it exists already).
+     *
      * @param repo Name of the repository it is in
      * @param name The name
      * @throws IOException If fails
@@ -74,18 +81,21 @@ public interface Talks {
 
     /**
      * Get only active talks.
+     *
      * @return Talks
      */
     Iterable<Talk> active();
 
     /**
      * Get recent talks.
+     *
      * @return Talks
      */
     Iterable<Talk> recent();
 
     /**
      * Get siblings, since this date (all talks will be older that this date).
+     *
      * @param repo Repo name
      * @param since Date
      * @return Talks
@@ -94,6 +104,7 @@ public interface Talks {
 
     /**
      * In directory.
+     *
      * @since 1.0
      */
     @Immutable
@@ -106,6 +117,7 @@ public interface Talks {
 
         /**
          * Ctor.
+         *
          * @throws IOException ex
          */
         public InDir() throws IOException {
@@ -114,6 +126,7 @@ public interface Talks {
 
         /**
          * Ctor.
+         *
          * @param dir Directory path
          */
         private InDir(final String dir) {

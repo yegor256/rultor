@@ -12,6 +12,7 @@ import lombok.ToString;
 
 /**
  * GitHub URL for Issue.
+ *
  * @since 2.0
  */
 @Immutable
@@ -32,6 +33,7 @@ final class IssueUrl {
 
     /**
      * Ctor.
+     *
      * @param url Issue url
      */
     IssueUrl(final String url) {
@@ -40,6 +42,7 @@ final class IssueUrl {
 
     /**
      * Get issue id from url.
+     *
      * @return Issue id
      */
     int uid() {
@@ -54,6 +57,7 @@ final class IssueUrl {
 
     /**
      * Check if url is a valid url for Issue.
+     *
      * @return True if valid
      */
     boolean valid() {

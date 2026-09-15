@@ -19,6 +19,7 @@ import lombok.ToString;
 
 /**
  * Show current config.
+ *
  * @since 1.8
  */
 @Immutable
@@ -39,6 +40,7 @@ public final class QnConfig implements Question {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      */
     public QnConfig(final Profile prof) {

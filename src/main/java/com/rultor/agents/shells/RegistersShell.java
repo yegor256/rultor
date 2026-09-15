@@ -18,6 +18,7 @@ import org.xembly.Directives;
 
 /**
  * Registers shell.
+ *
  * @since 1.0
  */
 @Immutable
@@ -32,6 +33,7 @@ public final class RegistersShell extends AbstractAgent {
 
     /**
      * Constructor.
+     *
      * @param profile Profile
      * @param host Default IP address or host name
      * @param port Default Port of server
@@ -56,6 +58,7 @@ public final class RegistersShell extends AbstractAgent {
 
     /**
      * Constructor.
+     *
      * @param pfshell Shell to register
      */
     private RegistersShell(final PfShell pfshell) {

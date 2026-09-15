@@ -39,6 +39,7 @@ public final class RepoLock {
 
     /**
      * Ctor.
+     *
      * @param lcks Locks
      * @param rpo Repo
      */
@@ -49,6 +50,7 @@ public final class RepoLock {
 
     /**
      * Lock.
+     *
      * @param talk Talk
      * @return TRUE if locked
      * @throws IOException If fails
@@ -62,6 +64,7 @@ public final class RepoLock {
 
     /**
      * Unlock.
+     *
      * @param talk Talk
      * @return TRUE if unlocked
      * @throws IOException If fails

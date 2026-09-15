@@ -5,6 +5,7 @@
 
 /**
  * SPI, tests.
+ *
  * @since 1.28
  */
 package com.rultor.spi;

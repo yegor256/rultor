@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnIamLost}.
+ *
  * @since 1.60
  */
 final class QnIamLostTest {
 
     /**
      * QnIamLost can build a report.
+     *
      * @throws Exception In case of error.
      */
     @Test

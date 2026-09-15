@@ -14,6 +14,7 @@ import lombok.ToString;
 
 /**
  * Issues referenced from Talks.
+ *
  * @since 1.0
  */
 @Immutable
@@ -33,6 +34,7 @@ public final class TalkIssues {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      * @param talk Talk XML
      */
@@ -43,6 +45,7 @@ public final class TalkIssues {
 
     /**
      * Find and get issue.
+     *
      * @return Issue
      */
     public Issue.Smart get() {

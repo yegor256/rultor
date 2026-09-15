@@ -25,6 +25,7 @@ import org.takes.tk.TkWrap;
 
 /**
  * App with fallback.
+ *
  * @since 1.53
  */
 final class TkAppFallback extends TkWrap {
@@ -36,6 +37,7 @@ final class TkAppFallback extends TkWrap {
 
     /**
      * Ctor.
+     *
      * @param take Take
      */
     TkAppFallback(final Take take) {

@@ -24,6 +24,7 @@ import org.xembly.Directives;
 
 /**
  * Posts merge results to GitHub pull request.
+ *
  * @since 1.0
  */
 @Immutable
@@ -44,6 +45,7 @@ public final class Reports extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      */
     public Reports(final GitHub ghub) {

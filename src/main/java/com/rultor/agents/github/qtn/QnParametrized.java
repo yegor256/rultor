@@ -26,6 +26,7 @@ import org.xembly.Directives;
 
 /**
  * Parametrized question.
+ *
  * @since 1.3.6
  */
 @Immutable
@@ -48,6 +49,7 @@ public final class QnParametrized implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtn Original question
      */
     public QnParametrized(final Question qtn) {

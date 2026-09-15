@@ -28,6 +28,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link StartsRequest}.
+ *
  * @since 1.3
  */
 final class StartsRequestTest {
@@ -39,6 +40,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can start a request.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -71,6 +73,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can start a request.
+     *
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
@@ -151,6 +154,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can start a release request.
+     *
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
@@ -196,6 +200,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can start a merge request.
+     *
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
@@ -241,6 +246,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can not start a merge request.
+     *
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
@@ -288,6 +294,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can run release with dockerfile.
+     *
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
@@ -350,6 +357,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can take decryption instructions into account.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -384,6 +392,7 @@ final class StartsRequestTest {
 
     /**
      * StartsRequest can start a request.
+     *
      * @param temp Temporary folder for talk
      * @param jobtemp Temporary folder for job
      * @throws Exception In case of error.
@@ -481,36 +490,40 @@ final class StartsRequestTest {
 
     private File repo(final Path temp) {
         final File repo = temp.toFile();
-        new VerboseProcess(
-            new ProcessBuilder().command(
-                "/bin/bash",
-                "-c",
-                new UncheckedText(
-                    new Joined(
-                        ";",
-                        "set -ex -o pipefail",
-                        "git init .",
-                        "git config user.email test@rultor.com",
-                        "git config user.name test",
-                        String.format(
-                            "git checkout -b %s",
-                            StartsRequestTest.HEAD_BRANCH
-                        ),
-                        "echo 'hello, world!' > hello.txt",
-                        "git add .",
-                        "git -c commit.gpgsign=false commit --no-verify -am 'first file'",
-                        "git checkout -b frk",
-                        "echo 'good bye!' > hello.txt",
-                        "git -c commit.gpgsign=false commit --no-verify -am 'modified file'",
-                        String.format(
-                            "git checkout %s",
-                            StartsRequestTest.HEAD_BRANCH
-                        ),
-                        "git config receive.denyCurrentBranch ignore"
-                    )
-                ).asString()
-            ).directory(repo)
-        ).stdout();
+        try (
+            VerboseProcess process = new VerboseProcess(
+                new ProcessBuilder().command(
+                    "/bin/bash",
+                    "-c",
+                    new UncheckedText(
+                        new Joined(
+                            ";",
+                            "set -ex -o pipefail",
+                            "git init .",
+                            "git config user.email test@rultor.com",
+                            "git config user.name test",
+                            String.format(
+                                "git checkout -b %s",
+                                StartsRequestTest.HEAD_BRANCH
+                            ),
+                            "echo 'hello, world!' > hello.txt",
+                            "git add .",
+                            "git -c commit.gpgsign=false commit --no-verify -am 'first file'",
+                            "git checkout -b frk",
+                            "echo 'good bye!' > hello.txt",
+                            "git -c commit.gpgsign=false commit --no-verify -am 'modified file'",
+                            String.format(
+                                "git checkout %s",
+                                StartsRequestTest.HEAD_BRANCH
+                            ),
+                            "git config receive.denyCurrentBranch ignore"
+                        )
+                    ).asString()
+                ).directory(repo)
+            )
+        ) {
+            process.stdout();
+        }
         return repo;
     }
 }

@@ -40,6 +40,7 @@ import org.takes.http.FtCli;
 
 /**
  * Command line entry.
+ *
  * @since 1.50
  */
 public final class Entry {
@@ -51,6 +52,7 @@ public final class Entry {
 
     /**
      * Ctor.
+     *
      * @param args Command line args
      */
     public Entry(final String... args) {
@@ -59,6 +61,7 @@ public final class Entry {
 
     /**
      * Ctor.
+     *
      * @param args Command line args
      */
     private Entry(final Iterable<String> args) {
@@ -67,6 +70,7 @@ public final class Entry {
 
     /**
      * Main entry point.
+     *
      * @param args Arguments
      * @throws IOException If fails
      */
@@ -78,6 +82,7 @@ public final class Entry {
 
     /**
      * Run it all.
+     *
      * @throws IOException If fails
      */
     public void exec() throws IOException {

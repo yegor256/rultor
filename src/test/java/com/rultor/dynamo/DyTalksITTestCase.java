@@ -27,6 +27,7 @@ import org.xembly.Directives;
 
 /**
  * Integration case for {@link DyTalks}.
+ *
  * @since 1.1
  * @checkstyle NonStaticMethodCheck (500 lines)
  */
@@ -50,6 +51,7 @@ final class DyTalksITTestCase {
 
     /**
      * DyTalks can add a talk.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -68,6 +70,7 @@ final class DyTalksITTestCase {
 
     /**
      * DyTalks can list recent talks.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -88,6 +91,7 @@ final class DyTalksITTestCase {
 
     /**
      * DyTalks caches talks.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -109,6 +113,7 @@ final class DyTalksITTestCase {
 
     /**
      * DyTalks does not refresh cached recent talks immediately.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -137,6 +142,7 @@ final class DyTalksITTestCase {
 
     /**
      * DyTalks can list all siblings.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -158,6 +164,7 @@ final class DyTalksITTestCase {
 
     /**
      * DyTalks can list siblings since a given date.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -180,6 +187,7 @@ final class DyTalksITTestCase {
 
     /**
      * DyTalks can list recent talks, ignoring private ones.
+     *
      * @throws Exception If some problem inside
      */
     @Test

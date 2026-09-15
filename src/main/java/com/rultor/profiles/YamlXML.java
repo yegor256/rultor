@@ -20,6 +20,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 /**
  * YAML into XML.
+ *
  * @since 1.0
  * @checkstyle AbbreviationAsWordInNameCheck (50 lines)
  */
@@ -35,6 +36,7 @@ final class YamlXML {
 
     /**
      * Ctor.
+     *
      * @param yml YAML
      */
     YamlXML(final String yml) {
@@ -43,6 +45,7 @@ final class YamlXML {
 
     /**
      * Get XML.
+     *
      * @return XML
      */
     XML get() {

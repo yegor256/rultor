@@ -29,6 +29,7 @@ import org.xembly.Directives;
 
 /**
  * Understands request.
+ *
  * @since 1.3
  */
 @Immutable
@@ -54,6 +55,7 @@ public final class Understands extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      * @param qtn Question
      */

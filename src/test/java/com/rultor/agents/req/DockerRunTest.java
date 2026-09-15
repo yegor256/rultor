@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link DockerRun}.
+ *
  * @since 1.0
  */
 final class DockerRunTest {
@@ -25,6 +26,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can save multiple env items.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -52,6 +54,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can save a single env item.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -79,6 +82,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can save an additional value from the envs parameter.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -106,6 +110,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can fetch script.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -132,6 +137,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can fetch script from several items.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -158,6 +164,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can create script with comment inside.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -205,6 +212,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can fetch script.
+     *
      * @throws Exception In case of error.
      * @since 1.22
      */
@@ -231,6 +239,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can fetch uninstall script.
+     *
      * @throws Exception In case of error.
      * @since 1.22
      */
@@ -264,6 +273,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can fetch environment vars.
+     *
      * @throws Exception In case of error.
      * @since 1.22
      */
@@ -289,6 +299,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can fetch multi-line script.
+     *
      * @throws Exception In case of error.
      * @since 1.32.3
      */
@@ -314,6 +325,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can skip empty lines in a multi-line script.
+     *
      * @throws Exception In case of error.
      * @since 1.32.3
      */
@@ -339,6 +351,7 @@ final class DockerRunTest {
 
     /**
      * DockerRun can fetch environment vars from empty list.
+     *
      * @throws Exception In case of error.
      */
     @Test

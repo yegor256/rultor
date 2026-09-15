@@ -25,6 +25,7 @@ import org.takes.tk.TkWrap;
 
 /**
  * App.
+ *
  * @since 1.50
  */
 public final class TkApp extends TkWrap {
@@ -36,6 +37,7 @@ public final class TkApp extends TkWrap {
 
     /**
      * Ctor.
+     *
      * @param talks Talks
      * @param pulse Pulse
      * @param toggles Toggles

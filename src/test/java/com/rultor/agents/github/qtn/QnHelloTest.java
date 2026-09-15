@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnHello}.
+ *
  * @since 1.6
  */
 final class QnHelloTest {
 
     /**
      * QnHello marks the request as done.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -40,6 +42,7 @@ final class QnHelloTest {
 
     /**
      * QnHello posts a hello message.
+     *
      * @throws Exception In case of error.
      */
     @Test

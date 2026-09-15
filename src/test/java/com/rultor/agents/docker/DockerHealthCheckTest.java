@@ -16,12 +16,14 @@ import org.mockito.Mockito;
 
 /**
  * Tests for ${@link DockerHealthCheck}.
+ *
  * @since 1.63
  */
 final class DockerHealthCheckTest {
 
     /**
      * DockerHealthCheckTest can execute checkhost.sh.
+     *
      * @throws Exception In case of error
      */
     @Test

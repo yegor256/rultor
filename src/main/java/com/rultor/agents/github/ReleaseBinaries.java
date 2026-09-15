@@ -16,6 +16,7 @@ import org.xembly.Directives;
 
 /**
  * Attach binaries to release.
+ *
  * @since 1.3
  *
  * @todo #662:30min Implement attaching artifacts to release, remove PMD
@@ -28,6 +29,7 @@ public final class ReleaseBinaries extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      * @param prof Profile
      */

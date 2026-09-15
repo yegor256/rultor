@@ -26,6 +26,7 @@ import org.xembly.Xembler;
 
 /**
  * Talk.
+ *
  * @since 1.0
  */
 @Immutable
@@ -63,6 +64,7 @@ public interface Talk {
 
     /**
      * Its unique number.
+     *
      * @return Its number
      * @throws IOException If fails
      * @since 1.3
@@ -71,6 +73,7 @@ public interface Talk {
 
     /**
      * Its unique name.
+     *
      * @return Its name
      * @throws IOException If fails
      */
@@ -78,6 +81,7 @@ public interface Talk {
 
     /**
      * When was it updated.
+     *
      * @return When
      * @throws IOException If fails
      */
@@ -85,6 +89,7 @@ public interface Talk {
 
     /**
      * Read its content.
+     *
      * @return Content
      * @throws IOException If fails
      */
@@ -92,6 +97,7 @@ public interface Talk {
 
     /**
      * Modify its content.
+     *
      * @param dirs Directives
      * @throws IOException If fails
      */
@@ -99,6 +105,7 @@ public interface Talk {
 
     /**
      * Make it active or passive.
+     *
      * @param yes TRUE if it should be active
      * @throws IOException If fails
      */
@@ -106,6 +113,7 @@ public interface Talk {
 
     /**
      * In file.
+     *
      * @since 1.0
      */
     @Immutable
@@ -118,6 +126,7 @@ public interface Talk {
 
         /**
          * Ctor.
+         *
          * @throws IOException If fails
          */
         public InFile() throws IOException {
@@ -126,6 +135,7 @@ public interface Talk {
 
         /**
          * Ctor.
+         *
          * @param lines Lines to concat
          * @throws IOException If fails
          */
@@ -135,6 +145,7 @@ public interface Talk {
 
         /**
          * Ctor.
+         *
          * @param xml XML to save
          * @throws IOException If fails
          */
@@ -144,6 +155,7 @@ public interface Talk {
 
         /**
          * Ctor.
+         *
          * @param file The file
          */
         public InFile(final File file) {

@@ -25,6 +25,7 @@ import org.cactoos.text.Joined;
 
 /**
  * Question asked by one of them.
+ *
  * @since 1.3
  */
 @Immutable
@@ -55,6 +56,7 @@ public final class QnAskedBy implements Question {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      * @param path XPath in profile with a list of logins
      * @param qtn Original question

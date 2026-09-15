@@ -10,6 +10,7 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Fake PGP Signature.
+ *
  * @since 1.67.1
  * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
  */
@@ -17,6 +18,7 @@ final class FakePGP {
 
     /**
      * Returns FakePGP string.
+     *
      * @return String
      * @checkstyle NonStaticMethodCheck (35 lines)
      */

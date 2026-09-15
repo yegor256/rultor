@@ -27,6 +27,7 @@ import org.xembly.Directives;
 
 /**
  * Starts talk when I'm mentioned in a GitHub issue.
+ *
  * @since 1.0
  * @todo #1074:1h Current implementation can answer only for
  *  issue and PR comments, mostly because of Issue structure
@@ -47,6 +48,7 @@ public final class StartsTalks implements SuperAgent {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      */
     public StartsTalks(final GitHub ghub) {

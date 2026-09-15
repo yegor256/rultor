@@ -16,6 +16,7 @@ import org.xembly.Directives;
 
 /**
  * Question that passes github_issue as env variable.
+ *
  * @since 2.0
  */
 public final class QnGithubIssue implements Question {
@@ -27,6 +28,7 @@ public final class QnGithubIssue implements Question {
 
     /**
      * Ctor.
+     *
      * @param question Original question
      */
     public QnGithubIssue(final Question question) {

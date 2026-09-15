@@ -16,6 +16,7 @@ import lombok.ToString;
 
 /**
  * GitHub crew.
+ *
  * @since 1.40.7
  */
 @Immutable
@@ -30,6 +31,7 @@ final class Crew {
 
     /**
      * Ctor.
+     *
      * @param rpo GitHub repo
      */
     Crew(final Repo rpo) {
@@ -38,6 +40,7 @@ final class Crew {
 
     /**
      * Get all collaborators.
+     *
      * @return List of their login names
      */
     Collection<String> names() {

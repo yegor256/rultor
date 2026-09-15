@@ -24,6 +24,7 @@ import lombok.ToString;
 
 /**
  * Profiles.
+ *
  * @since 1.0
  */
 @Immutable
@@ -37,7 +38,15 @@ public final class Profiles {
     private static final String MERGE = "merge";
 
     /**
+     * Constructor.
+     */
+    public Profiles() {
+        // Nothing to initialize.
+    }
+
+    /**
      * Fetch a profile from a talk.
+     *
      * @param talk The talk
      * @return Profile found
      * @throws IOException If fails
@@ -61,6 +70,7 @@ public final class Profiles {
      * Merge profile from master and fork. Merged profile must be profile
      * from fork, but all lists for commanders and architects must be taken
      * from master branch.
+     *
      * @param master Profile from master branch
      * @param fork Fork that will be merged
      * @param branch Fork branch that will be merged
@@ -75,6 +85,7 @@ public final class Profiles {
     /**
      * Validate merged profile: merged profile must have no changes in architect
      * and commander sections (full match with master profile).
+     *
      * @param master Profile from master branch
      * @param merged Result of merging master and fork profiles
      * @return Validated profile

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Tests for {@link GithubProfile}.
+ *
  * @since 1.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -24,6 +25,7 @@ final class GithubProfileITCase {
 
     /**
      * GithubProfile can fetch a YAML config.
+     *
      * @throws Exception In case of error.
      */
     @Test

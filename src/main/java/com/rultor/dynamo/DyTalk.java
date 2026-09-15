@@ -15,6 +15,7 @@ import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -35,6 +36,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 
 /**
  * Talk in Dynamo.
+ *
  * @since 1.0
  */
 @Immutable
@@ -55,6 +57,7 @@ public final class DyTalk implements Talk {
 
     /**
      * Ctor.
+     *
      * @param itm Item
      */
     DyTalk(final Item itm) {
@@ -160,10 +163,12 @@ public final class DyTalk implements Talk {
 
     private static String unzip(final byte[] bytes) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        IOUtils.copy(
-            new GZIPInputStream(new ByteArrayInputStream(bytes)),
-            baos
-        );
+        try (
+            InputStream input =
+                new GZIPInputStream(new ByteArrayInputStream(bytes))
+        ) {
+            IOUtils.copy(input, baos);
+        }
         return baos.toString(StandardCharsets.UTF_8);
     }
 }

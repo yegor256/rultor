@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link StartsTalks}.
+ *
  * @since 1.9
  */
 final class StartsTalksTest {
 
     /**
      * StartsTalks can start a talk.
+     *
      * @throws Exception In case of error.
      */
     @Test

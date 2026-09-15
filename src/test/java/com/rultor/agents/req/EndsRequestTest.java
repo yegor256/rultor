@@ -13,12 +13,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link EndsRequest}.
+ *
  * @since 1.3
  */
 final class EndsRequestTest {
 
     /**
      * EndsRequest can end a request.
+     *
      * @throws Exception In case of error.
      */
     @Test

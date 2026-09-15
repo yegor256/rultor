@@ -27,12 +27,14 @@ import org.takes.tk.TkWrap;
 
 /**
  * Authenticated app.
+ *
  * @since 1.53
  */
 final class TkAppAuth extends TkWrap {
 
     /**
      * Ctor.
+     *
      * @param take Take
      */
     TkAppAuth(final Take take) {

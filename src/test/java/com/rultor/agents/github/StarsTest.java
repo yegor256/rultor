@@ -15,12 +15,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Stars}.
+ *
  * @since 1.1
  */
 final class StarsTest {
 
     /**
      * Stars can star a new repo.
+     *
      * @throws IOException In case of error
      */
     @Test
@@ -37,6 +39,7 @@ final class StarsTest {
 
     /**
      * Stars should leave already starred repo.
+     *
      * @throws IOException In case of error
      */
     @Test

@@ -26,6 +26,7 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnMerge}.
+ *
  * @since 1.6
  */
 final class QnMergeTest {
@@ -43,6 +44,7 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -80,6 +82,7 @@ final class QnMergeTest {
 
     /**
      * QnMerge posts the initiator command as the first comment.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -106,6 +109,7 @@ final class QnMergeTest {
 
     /**
      * QnMerge posts a comment about starting the merge.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -138,6 +142,7 @@ final class QnMergeTest {
     /**
      * QnMerge posts the initiator comment even while a GitHub check is
      * still in progress.
+     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
@@ -168,6 +173,7 @@ final class QnMergeTest {
     /**
      * QnMerge can not build a request because some GitHub checks
      * were failed.
+     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
@@ -199,6 +205,7 @@ final class QnMergeTest {
     /**
      * QnMerge posts the initiator comment when GitHub checks finished
      * successfully.
+     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
@@ -228,6 +235,7 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request because GitHub checks finished successfully.
+     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
@@ -262,6 +270,7 @@ final class QnMergeTest {
 
     /**
      * QnMerge can build a request when some CI checks are skipped.
+     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      */
@@ -297,6 +306,7 @@ final class QnMergeTest {
 
     /**
      * QnMerge can not build a request because .rultor file is changed.
+     *
      * @throws IOException In case of I/O error
      * @throws URISyntaxException In case of URI error
      * @todo #1459 Enable this test after com.jcabi.github.mock.MkPull

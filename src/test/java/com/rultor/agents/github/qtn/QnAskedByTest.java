@@ -20,12 +20,14 @@ import org.mockito.Mockito;
 
 /**
  * Tests for {@link QnAskedBy}.
+ *
  * @since 1.1
  */
 final class QnAskedByTest {
 
     /**
      * QnAskedBy can exclude {@code @rultor} from list of commanders (#690).
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -56,6 +58,7 @@ final class QnAskedByTest {
 
     /**
      * QnAskedBy can include all architects in the list of commanders.
+     *
      * @throws Exception In case of error.
      */
     @Test

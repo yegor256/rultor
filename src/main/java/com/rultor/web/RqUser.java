@@ -22,12 +22,14 @@ import org.takes.rq.RqWrap;
 
 /**
  * Web user.
+ *
  * @since 1.50
  */
 final class RqUser extends RqWrap {
 
     /**
      * Ctor.
+     *
      * @param req Request
      */
     RqUser(final Request req) {
@@ -49,6 +51,7 @@ final class RqUser extends RqWrap {
 
     /**
      * Is it an anonymous user?
+     *
      * @return TRUE if I'm anonymous
      * @throws IOException If fails
      */
@@ -58,6 +61,7 @@ final class RqUser extends RqWrap {
 
     /**
      * Can I see this talk?
+     *
      * @param talk The talk
      * @return TRUE if I can see it
      * @throws IOException If fails

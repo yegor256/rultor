@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 /**
  * Connect to the log.
+ *
  * @since 1.1
  */
 @Immutable
@@ -18,6 +19,7 @@ interface Connect {
 
     /**
      * Read it.
+     *
      * @return Stream
      * @throws IOException If fails
      */

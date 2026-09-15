@@ -18,12 +18,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link QnSafe}.
+ *
  * @since 1.76
  */
 final class QnSafeTest {
 
     /**
      * QnSafe can understand a comment even if some exception is thrown.
+     *
      * @throws URISyntaxException if URI is invalid
      * @throws IOException if I/O fails.
      */

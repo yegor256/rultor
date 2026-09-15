@@ -22,12 +22,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link ClosePullRequest}.
+ *
  * @since 1.63
  */
 final class ClosePullRequestTest {
 
     /**
      * ClosePullRequest can close pull request if rebase mode.
+     *
      * @throws Exception If error
      * @todo #918:30min This class should only close pull requests for
      *  successful merges, that have not resulted in GitHub itself closing the
@@ -63,6 +65,7 @@ final class ClosePullRequestTest {
     /**
      * ClosePullRequest can add a rebase message when closing a pull
      * request in rebase mode.
+     *
      * @throws Exception If error
      */
     @Test
@@ -97,6 +100,7 @@ final class ClosePullRequestTest {
 
     /**
      * ClosePullRequest can leave issue open if no rebase mode.
+     *
      * @throws Exception If error
      */
     @Test
@@ -126,6 +130,7 @@ final class ClosePullRequestTest {
 
     /**
      * ClosePullRequest does not add comments if no rebase mode.
+     *
      * @throws Exception If error
      */
     @Test

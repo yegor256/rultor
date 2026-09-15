@@ -16,12 +16,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link UnlocksRepo}.
+ *
  * @since 1.22.1
  */
 final class UnlocksRepoTest {
 
     /**
      * UnlocksRepo can unlock a repo.
+     *
      * @throws Exception In case of error.
      */
     @Test

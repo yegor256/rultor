@@ -27,6 +27,7 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Starts a Docker Container containing a Docker daemon and SSHD.
+ *
  * @since 1.63
  */
 public final class StartsDockerDaemon implements AutoCloseable {
@@ -48,6 +49,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
 
     /**
      * Ctor.
+     *
      * @param prof Current Profile
      */
     public StartsDockerDaemon(final Profile prof) {
@@ -60,6 +62,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
 
     /**
      * Ctor.
+     *
      * @param prof Current Profile
      * @param clnt Docker client
      * @param ctrs Docker containers created
@@ -73,6 +76,7 @@ public final class StartsDockerDaemon implements AutoCloseable {
 
     /**
      * Sets up a PfShell in which Rultor can function.
+     *
      * @return PfShell loaded with credentials for new Rultor runner container
      * @throws IOException on failure
      */

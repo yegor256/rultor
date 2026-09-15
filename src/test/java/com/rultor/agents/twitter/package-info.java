@@ -5,6 +5,7 @@
 
 /**
  * Twitter interaction, tests.
+ *
  * @since 1.30
  */
 package com.rultor.agents.twitter;

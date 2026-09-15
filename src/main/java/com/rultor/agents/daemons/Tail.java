@@ -21,6 +21,7 @@ import org.cactoos.text.Joined;
 
 /**
  * Tail daemon output.
+ *
  * @since 1.0
  */
 @Immutable
@@ -40,6 +41,7 @@ public final class Tail {
 
     /**
      * Ctor.
+     *
      * @param talk Talk
      * @param hsh Hash
      */
@@ -50,6 +52,7 @@ public final class Tail {
 
     /**
      * Read it.
+     *
      * @return Stream with log
      * @throws IOException If fails
      */

@@ -21,12 +21,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnGithubIssue}.
+ *
  * @since 2.0
  */
 final class QnGithubIssueTest {
 
     /**
      * QnGithubIssue can pass github_issue as env variable.
+     *
      * @throws Exception In case of error.
      */
     @Test

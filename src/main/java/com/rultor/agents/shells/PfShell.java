@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Shell in profile.
+ *
  * @since 1.48
  */
 @Immutable
@@ -51,6 +52,7 @@ public final class PfShell {
 
     /**
      * Constructor.
+     *
      * @param prof Profile
      * @param host Default IP address or Host name
      * @param port Default Port of server
@@ -68,6 +70,7 @@ public final class PfShell {
 
     /**
      * Make a new shell, with a different address.
+     *
      * @param host New address
      * @return New shell
      */
@@ -77,6 +80,7 @@ public final class PfShell {
 
     /**
      * Get host.
+     *
      * @return Host name
      * @throws IOException If fails
      */
@@ -88,6 +92,7 @@ public final class PfShell {
 
     /**
      * Get port.
+     *
      * @return Port
      * @throws IOException If fails
      */
@@ -102,6 +107,7 @@ public final class PfShell {
 
     /**
      * Get login.
+     *
      * @return SSH login
      * @throws IOException If fails
      */
@@ -113,6 +119,7 @@ public final class PfShell {
 
     /**
      * Get private key.
+     *
      * @return Private SSH key
      * @throws IOException If fails
      */
@@ -143,6 +150,7 @@ public final class PfShell {
 
     /**
      * Make SSH shell.
+     *
      * @return SSH shell
      * @throws UnknownHostException If fails
      */

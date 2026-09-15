@@ -16,6 +16,7 @@ import lombok.ToString;
 
 /**
  * Date and time in ISO 8601.
+ *
  * @since 1.8.12
  */
 @Immutable
@@ -37,6 +38,7 @@ public final class Time {
 
     /**
      * Ctor.
+     *
      * @param instant Instant
      */
     public Time(final Instant instant) {
@@ -45,6 +47,7 @@ public final class Time {
 
     /**
      * Ctor.
+     *
      * @param date Date
      */
     public Time(final String date) {
@@ -53,6 +56,7 @@ public final class Time {
 
     /**
      * Ctor.
+     *
      * @param msec Milliseconds
      */
     public Time(final long msec) {
@@ -61,6 +65,7 @@ public final class Time {
 
     /**
      * Make ISO string.
+     *
      * @return Text
      */
     public String iso() {
@@ -71,6 +76,7 @@ public final class Time {
 
     /**
      * Make date.
+     *
      * @return Date
      */
     public long msec() {

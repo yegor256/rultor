@@ -17,6 +17,7 @@ import lombok.ToString;
 
 /**
  * First comment in any home.
+ *
  * @since 1.50.6
  */
 @Immutable
@@ -31,6 +32,7 @@ final class FirstComment implements Comment {
 
     /**
      * Ctor.
+     *
      * @param issue Home issue
      */
     FirstComment(final Issue.Smart issue) {

@@ -26,12 +26,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link ReleaseBinaries}.
+ *
  * @since 1.1
  */
 final class ReleaseBinariesTest {
 
     /**
      * ReleaseBinaries should attach artifact to release.
+     *
      * @param temp Temporary folder for talk
      * @throws Exception In case of error
      */

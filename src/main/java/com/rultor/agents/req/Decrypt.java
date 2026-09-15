@@ -16,6 +16,7 @@ import lombok.ToString;
 
 /**
  * Decrypt.
+ *
  * @since 1.37.4
  */
 @Immutable
@@ -35,6 +36,7 @@ final class Decrypt {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      */
     Decrypt(final Profile prof) {

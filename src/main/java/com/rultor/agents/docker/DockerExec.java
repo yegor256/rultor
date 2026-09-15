@@ -17,6 +17,7 @@ import org.apache.commons.io.input.NullInputStream;
 
 /**
  * Remove old images from Docker.
+ *
  * @since 1.57
  */
 public final class DockerExec implements SuperAgent {
@@ -33,6 +34,7 @@ public final class DockerExec implements SuperAgent {
 
     /**
      * Ctor.
+     *
      * @param ssh Shell
      * @param scrpt Script
      */
@@ -43,14 +45,18 @@ public final class DockerExec implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        new Shell.Safe(this.shell).exec(
-            IOUtils.toString(
-                Objects.requireNonNull(this.getClass().getResource(this.script)),
-                StandardCharsets.UTF_8
-            ),
-            new NullInputStream(0L),
-            Logger.stream(Level.INFO, this),
-            Logger.stream(Level.WARNING, this)
-        );
+        try (NullInputStream stdin = new NullInputStream(0L)) {
+            new Shell.Safe(this.shell).exec(
+                IOUtils.toString(
+                    Objects.requireNonNull(
+                        this.getClass().getResource(this.script)
+                    ),
+                    StandardCharsets.UTF_8
+                ),
+                stdin,
+                Logger.stream(Level.INFO, this),
+                Logger.stream(Level.WARNING, this)
+            );
+        }
     }
 }

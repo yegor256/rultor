@@ -18,6 +18,7 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link RegistersShell}.
+ *
  * @since 1.0
  */
 @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
@@ -25,6 +26,7 @@ final class RegistersShellTest {
 
     /**
      * RegistersShell can register a shell with hostname.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -99,6 +101,7 @@ final class RegistersShellTest {
 
     /**
      * RegistersShell can handle broken profile.
+     *
      * @throws Exception In case of error.
      */
     @Test

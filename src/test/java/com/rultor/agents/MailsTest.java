@@ -24,12 +24,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Mails}.
+ *
  * @since 2.0
  */
 final class MailsTest {
 
     /**
      * Mails can send a mail with the expected content.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -60,6 +62,7 @@ final class MailsTest {
 
     /**
      * Mails can send a mail with the expected subject.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -83,6 +86,7 @@ final class MailsTest {
 
     /**
      * Mails can send a mail to recipients.
+     *
      * @todo #748 Implement method sendsToRecipients. It must check that
      *  mail is sent to all recipients. Recipients are defined in Profile.
      */

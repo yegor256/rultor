@@ -32,6 +32,7 @@ import org.xembly.Directives;
 
 /**
  * Merges.
+ *
  * @since 1.0
  */
 @Immutable
@@ -46,6 +47,7 @@ public final class StartsRequest extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      */
     public StartsRequest(final Profile prof) {

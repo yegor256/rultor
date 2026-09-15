@@ -92,6 +92,7 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Agents.
+ *
  * @since 1.0
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
@@ -127,6 +128,7 @@ public final class Agents {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      * @param stc Sttc client
      */
@@ -137,6 +139,7 @@ public final class Agents {
 
     /**
      * Create super agent, starter.
+     *
      * @return The starter
      * @throws IOException If fails
      */
@@ -170,6 +173,7 @@ public final class Agents {
 
     /**
      * Create super agent, closer.
+     *
      * @return The closer
      * @throws IOException If fails
      */
@@ -184,6 +188,7 @@ public final class Agents {
 
     /**
      * Create it for a talk.
+     *
      * @param talk Talk itself
      * @param profile Profile
      * @return The agent

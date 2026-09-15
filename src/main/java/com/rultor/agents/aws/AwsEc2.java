@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.ec2.Ec2Client;
 
 /**
  * Amazon EC2 client.
+ *
  * @since 1.77
  */
 @Immutable
@@ -36,6 +37,7 @@ public final class AwsEc2 {
 
     /**
      * Ctor.
+     *
      * @param akey Key to use api
      * @param asecret Secret to use api
      */
@@ -45,6 +47,7 @@ public final class AwsEc2 {
 
     /**
      * Ctor.
+     *
      * @param akey Key to use api
      * @param asecret Secret to use api
      * @param reg Region for instance run
@@ -57,6 +60,7 @@ public final class AwsEc2 {
 
     /**
      * AWS EC2 client instance.
+     *
      * @return AWS EC2 client
      */
     public Ec2Client aws() {

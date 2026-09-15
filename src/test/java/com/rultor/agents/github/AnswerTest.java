@@ -17,12 +17,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link Answer}.
+ *
  * @since 1.8.16
  */
 final class AnswerTest {
 
     /**
      * Answer can post a message.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -41,6 +43,7 @@ final class AnswerTest {
 
     /**
      * Answer can reject a message if it's a spam from us.
+     *
      * @throws Exception In case of error.
      */
     @Test

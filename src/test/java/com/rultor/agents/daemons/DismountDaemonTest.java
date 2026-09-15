@@ -15,12 +15,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link DismountDaemon}.
+ *
  * @since 1.2
  */
 final class DismountDaemonTest {
 
     /**
      * Sets daemon to ended when host is not responding.
+     *
      * @throws IOException In case of error.
      */
     @Test
@@ -54,6 +56,7 @@ final class DismountDaemonTest {
 
     /**
      * Sets daemon to ended when host is not responding.
+     *
      * @throws IOException In case of error.
      */
     @Test

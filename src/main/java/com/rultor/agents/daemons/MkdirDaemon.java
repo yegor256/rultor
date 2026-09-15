@@ -21,6 +21,7 @@ import org.xembly.Directives;
 
 /**
  * Make directory for the daemon.
+ *
  * @since 1.0
  */
 @Immutable
@@ -42,11 +43,13 @@ public final class MkdirDaemon extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new Shell.Safe(shell).exec(
-            "mktemp -d -t rultor-XXXX",
-            new NullInputStream(0L),
-            baos, baos
-        );
+        try (NullInputStream stdin = new NullInputStream(0L)) {
+            new Shell.Safe(shell).exec(
+                "mktemp -d -t rultor-XXXX",
+                stdin,
+                baos, baos
+            );
+        }
         final String dir = baos.toString(StandardCharsets.UTF_8).trim();
         Logger.info(
             this, "directory %s created for %s",

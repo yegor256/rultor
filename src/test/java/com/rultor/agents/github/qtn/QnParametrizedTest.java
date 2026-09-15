@@ -20,12 +20,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnParametrized}.
+ *
  * @since 1.3.6
  */
 final class QnParametrizedTest {
 
     /**
      * QnParametrized can fetch params.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -68,6 +70,7 @@ final class QnParametrizedTest {
 
     /**
      * QnParametrized can ignore if there are no params.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -86,6 +89,7 @@ final class QnParametrizedTest {
 
     /**
      * QnParametrized can ignore empty request.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -104,6 +108,7 @@ final class QnParametrizedTest {
 
     /**
      * QnParametrized can ignore LATER request.
+     *
      * @throws Exception In case of error.
      */
     @Test

@@ -16,6 +16,7 @@ import org.xembly.Directives;
 
 /**
  * Stops daemon if STOP request is present.
+ *
  * @since 1.50
  */
 @Immutable

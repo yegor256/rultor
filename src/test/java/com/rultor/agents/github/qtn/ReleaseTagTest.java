@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link ReleaseTag}.
+ *
  * @since 1.62
  */
 final class ReleaseTagTest {
 
     /**
      * ReleaseTag allows a greater, semantically correct version.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -33,6 +35,7 @@ final class ReleaseTagTest {
 
     /**
      * ReleaseTag allows a version number containing a non-numeric suffix.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -48,6 +51,7 @@ final class ReleaseTagTest {
 
     /**
      * ReleaseTag allows a beta version number.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -63,6 +67,7 @@ final class ReleaseTagTest {
 
     /**
      * ReleaseTag denies an outdated, semantically correct version.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -78,6 +83,7 @@ final class ReleaseTagTest {
 
     /**
      * ReleaseTag can retrieve the latest release version in the repo.
+     *
      * @throws Exception In case of error
      */
     @Test

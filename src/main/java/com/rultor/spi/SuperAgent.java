@@ -13,6 +13,7 @@ import lombok.ToString;
 
 /**
  * Super Agent.
+ *
  * @since 1.0
  */
 @Immutable
@@ -21,6 +22,7 @@ public interface SuperAgent {
 
     /**
      * Execute it.
+     *
      * @param talks All talks
      * @throws IOException If fails
      */
@@ -28,6 +30,7 @@ public interface SuperAgent {
 
     /**
      * Iterative.
+     *
      * @since 1.0
      */
     @Immutable
@@ -42,6 +45,7 @@ public interface SuperAgent {
 
         /**
          * Ctor.
+         *
          * @param list List of them
          */
         public Iterative(final Iterable<SuperAgent> list) {
@@ -58,6 +62,7 @@ public interface SuperAgent {
 
     /**
      * Disabled.
+     *
      * @since 1.0
      */
     @Immutable
@@ -72,6 +77,7 @@ public interface SuperAgent {
 
         /**
          * Ctor.
+         *
          * @param agt The agent
          */
         public Disabled(final SuperAgent agt) {
@@ -86,6 +92,7 @@ public interface SuperAgent {
 
     /**
      * Quiet.
+     *
      * @since 1.0
      */
     @Immutable
@@ -100,6 +107,7 @@ public interface SuperAgent {
 
         /**
          * Ctor.
+         *
          * @param agt The agent
          */
         public Quiet(final SuperAgent agt) {

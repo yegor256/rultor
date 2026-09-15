@@ -33,6 +33,7 @@ import org.takes.rs.RsFluent;
 
 /**
  * Single daemon.
+ *
  * @since 1.50
  */
 final class TkDaemon implements TkRegex {
@@ -44,6 +45,7 @@ final class TkDaemon implements TkRegex {
 
     /**
      * Ctor.
+     *
      * @param tlks Talks
      */
     TkDaemon(final Talks tlks) {
@@ -95,18 +97,23 @@ final class TkDaemon implements TkRegex {
     private InputStream html(final long number, final String hash)
         throws IOException {
         final Talk talk = this.talks.get(number);
+        final InputStream body = TkDaemon.escape(
+            new Tail(talk.read(), hash).read()
+        );
+        @SuppressWarnings("PMD.UnnecessaryLocalRule")
+        final InputStream tail = AutoCloseInputStream.builder().setInputStream(
+            Objects.requireNonNull(
+                this.getClass().getResourceAsStream("daemon/tail.html")
+            )
+        ).get();
         return new SequenceInputStream(
             Collections.enumeration(
                 Arrays.asList(
                     IOUtils.toInputStream(
                         this.head(talk), StandardCharsets.UTF_8
                     ),
-                    TkDaemon.escape(new Tail(talk.read(), hash).read()),
-                    AutoCloseInputStream.builder().setInputStream(
-                        Objects.requireNonNull(
-                            this.getClass().getResourceAsStream("daemon/tail.html")
-                        )
-                    ).get()
+                    body,
+                    tail
                 )
             )
         );
@@ -133,32 +140,31 @@ final class TkDaemon implements TkRegex {
             new InputStreamReader(input, StandardCharsets.UTF_8),
             100_000
         );
-        return ReaderInputStream.builder()
-            .setCharset(StandardCharsets.UTF_8).setReader(
-                // @checkstyle AnonInnerLengthCheck (30 lines)
-                new ProxyReader(src) {
-                    @Override
-                    protected void beforeRead(final int len)
-                        throws IOException {
-                        super.beforeRead(len);
-                        final char[] buf = new char[len];
-                        final int found = src.read(buf);
-                        if (found > 0) {
-                            final StringBuilder line =
-                                new StringBuilder(found);
-                            for (int idx = 0; idx < found; ++idx) {
-                                line.append(buf[idx]);
-                            }
-                            final String escape =
-                                StringEscapeUtils.escapeHtml4(
-                                    line.toString()
-                                );
-                            final char[] rpl = new char[escape.length()];
-                            escape.getChars(0, escape.length(), rpl, 0);
-                            src.unread(rpl);
-                        }
+        // @checkstyle AnonInnerLengthCheck (30 lines)
+        @SuppressWarnings("PMD.UnnecessaryLocalRule")
+        final ProxyReader reader = new ProxyReader(src) {
+            @Override
+            protected void beforeRead(final int len) throws IOException {
+                super.beforeRead(len);
+                final char[] buf = new char[len];
+                final int found = src.read(buf);
+                if (found > 0) {
+                    final StringBuilder line =
+                        new StringBuilder(found);
+                    for (int idx = 0; idx < found; ++idx) {
+                        line.append(buf[idx]);
                     }
+                    final String escape =
+                        StringEscapeUtils.escapeHtml4(
+                            line.toString()
+                        );
+                    final char[] rpl = new char[escape.length()];
+                    escape.getChars(0, escape.length(), rpl, 0);
+                    src.unread(rpl);
                 }
-            ).get();
+            }
+        };
+        return ReaderInputStream.builder()
+            .setCharset(StandardCharsets.UTF_8).setReader(reader).get();
     }
 }

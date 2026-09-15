@@ -21,6 +21,7 @@ import org.xembly.Directives;
 
 /**
  * Tweets.
+ *
  * @since 1.30
  */
 @Immutable
@@ -40,6 +41,7 @@ public final class Tweets extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      * @param twt Twitter client
      */

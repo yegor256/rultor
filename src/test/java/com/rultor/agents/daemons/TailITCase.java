@@ -21,12 +21,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Tail}.
+ *
  * @since 1.62
  */
 final class TailITCase {
 
     /**
      * Tail can convert non UTF-8 chars in StdOut to UTF-8.
+     *
      * @throws Exception In case of error.
      */
     @Test

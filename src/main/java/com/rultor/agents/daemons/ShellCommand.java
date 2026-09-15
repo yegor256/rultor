@@ -11,15 +11,11 @@ import java.io.IOException;
 
 /**
  * Command to run in a given shell and working directory.
+ *
  * @since 1.62
  */
 @Immutable
 final class ShellCommand {
-
-    /**
-     * Join shell commands with this string.
-     */
-    private static final String SHELL_JOINER = " && ";
 
     /**
      * Shell to use.
@@ -38,6 +34,7 @@ final class ShellCommand {
 
     /**
      * Ctor.
+     *
      * @param shll Shell
      * @param dir String working directory
      * @param cmd String command to run
@@ -50,13 +47,14 @@ final class ShellCommand {
 
     /**
      * Executes the command.
+     *
      * @return Stdout
      * @throws IOException If fails
      */
     String exec() throws IOException {
         return new Shell.Plain(new Shell.Safe(this.shell)).exec(
             String.join(
-                ShellCommand.SHELL_JOINER,
+                " && ",
                 String.format("cd %s", Ssh.escape(this.directory)),
                 this.command
             )

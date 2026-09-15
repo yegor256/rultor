@@ -15,6 +15,7 @@ import org.xembly.Directives;
 
 /**
  * Send email after release done.
+ *
  * @since 2.0
  * @todo #748 Implement Mails agent. Similar to what we do in CommentsTag
  *  we should do here - send an email to all listed addresses. The body of
@@ -33,6 +34,7 @@ public final class Mails extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param prfl Profile
      * @param pstmn Mail client
      */

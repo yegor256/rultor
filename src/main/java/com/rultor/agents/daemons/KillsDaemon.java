@@ -17,6 +17,7 @@ import org.xembly.Directives;
 
 /**
  * Kills daemon if too old.
+ *
  * @since 1.0
  */
 @Immutable
@@ -33,6 +34,7 @@ public final class KillsDaemon extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param mins Maximum minutes per build
      */
     public KillsDaemon(final long mins) {

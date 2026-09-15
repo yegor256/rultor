@@ -23,12 +23,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile}.
+ *
  * @since 1.0
  */
 final class GithubProfileTest {
 
     /**
      * GithubProfile can fetch a YAML config with merge and asset entries.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -50,6 +52,7 @@ final class GithubProfileTest {
 
     /**
      * GithubProfile can fetch a YAML config with an architect list.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -69,6 +72,7 @@ final class GithubProfileTest {
 
     /**
      * GithubProfile can fetch a YAML config with a resolved asset entry.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -106,6 +110,7 @@ final class GithubProfileTest {
 
     /**
      * GithubProfile can throw if asset is misconfigured.
+     *
      * @throws Exception In case of error.
      * @since 1.33
      */
@@ -126,6 +131,7 @@ final class GithubProfileTest {
 
     /**
      * GithubProfile can throw if asset contains username with underscore.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -146,6 +152,7 @@ final class GithubProfileTest {
     /**
      * GithubProfile can throw if asset contains username starting with an
      * underscore.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -165,6 +172,7 @@ final class GithubProfileTest {
 
     /**
      * GithubProfile can accept asset from repo name that contains a dot.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -200,6 +208,7 @@ final class GithubProfileTest {
 
     /**
      * GithubProfile can throw when rultor.yml is absent.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -219,6 +228,7 @@ final class GithubProfileTest {
 
     /**
      * GithubProfile can throw when friend is not defined.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -239,6 +249,7 @@ final class GithubProfileTest {
     /**
      * GithubProfile should throw a ConfigException if some asset file doesn't
      * exist.
+     *
      * @throws Exception In case of error.
      */
     @Test

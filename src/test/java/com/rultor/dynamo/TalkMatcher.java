@@ -11,6 +11,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 /**
  * Matcher for Talks.
+ *
  * @since 1.1
  */
 final class TalkMatcher extends TypeSafeMatcher<Talk> {
@@ -22,6 +23,7 @@ final class TalkMatcher extends TypeSafeMatcher<Talk> {
 
     /**
      * Constructor.
+     *
      * @param nam Name of the talk
      */
     TalkMatcher(final String nam) {

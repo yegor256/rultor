@@ -23,12 +23,14 @@ import org.mockito.Mockito;
 
 /**
  * Tests for {@link QnByArchitect}.
+ *
  * @since 1.45
  */
 final class QnByArchitectTest {
 
     /**
      * QnByArchitect can reject if not an architect.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -56,6 +58,7 @@ final class QnByArchitectTest {
 
     /**
      * QnByArchitect posts a confirmation request if not an architect.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -81,6 +84,7 @@ final class QnByArchitectTest {
 
     /**
      * QnByArchitect can accept if an architect.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -110,6 +114,7 @@ final class QnByArchitectTest {
     /**
      * QnByArchitect can accept if is a merge request made by anyone in a
      * pull request made by an architect.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -139,6 +144,7 @@ final class QnByArchitectTest {
     /**
      * QnByArchitect rejects non-merge commands from non-architects
      * even if the PR was created by an architect.
+     *
      * @throws Exception In case of error.
      */
     @Test

@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 
 /**
  * GitHub invitations.
+ *
  * @since 1.62
  */
 public final class Invitations implements SuperAgent {
@@ -28,6 +29,7 @@ public final class Invitations implements SuperAgent {
 
     /**
      * Ctor.
+     *
      * @param ghb GitHub client
      */
     public Invitations(final GitHub ghb) {

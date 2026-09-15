@@ -24,6 +24,7 @@ import software.amazon.awssdk.services.ec2.model.TagSpecification;
 
 /**
  * Starts EC2 instance.
+ *
  * @since 1.77
  */
 @Immutable
@@ -83,6 +84,7 @@ public final class StartsInstance extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param pfl Profile
      * @param aws API
      * @param image Instance AMI image name to run

@@ -12,6 +12,7 @@ import lombok.ToString;
 
 /**
  * Host.
+ *
  * @since 1.77.0
  */
 @Immutable
@@ -26,6 +27,7 @@ final class SmartHost {
 
     /**
      * Ctor.
+     *
      * @param address Host name or IP address
      * @throws UnknownHostException in case of address is not resolved
      */
@@ -35,6 +37,7 @@ final class SmartHost {
 
     /**
      * Ctor.
+     *
      * @param address Resolved host address
      */
     private SmartHost(final InetAddress address) {
@@ -43,6 +46,7 @@ final class SmartHost {
 
     /**
      * Host's IP.
+     *
      * @return Ip address
      * @checkstyle MethodNameCheck (3 lines)
      */

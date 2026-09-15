@@ -25,6 +25,7 @@ import org.cactoos.text.Trimmed;
 
 /**
  * Docker run command.
+ *
  * @since 1.0
  */
 @Immutable
@@ -44,6 +45,7 @@ final class DockerRun {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      * @param xpath XPath of the XML element inside .rultor.yml
      * @throws IOException If fails
@@ -54,6 +56,7 @@ final class DockerRun {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      * @param node XML element inside ".rultor.yml" with the command
      */
@@ -64,6 +67,7 @@ final class DockerRun {
 
     /**
      * Make a script to run.
+     *
      * @return Script
      * @throws IOException If fails
      */
@@ -93,6 +97,7 @@ final class DockerRun {
 
     /**
      * Make a list of env vars for docker.
+     *
      * @param extra Extra vars
      * @return Envs
      * @throws IOException If fails

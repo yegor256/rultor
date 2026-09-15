@@ -20,12 +20,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Tweets}.
+ *
  * @since 1.30
  */
 final class TweetsTest {
 
     /**
      * Tweets can post a tweet.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -46,6 +48,7 @@ final class TweetsTest {
 
     /**
      * Tweets can post a tweet with language tags.
+     *
      * @throws Exception In case of error.
      */
     @Test

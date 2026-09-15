@@ -35,12 +35,14 @@ import org.xembly.Directives;
 
 /**
  * Integration test for ${@link StartsDaemon}.
+ *
  * @since 1.3.8
  */
 final class StartsDaemonITCase {
 
     /**
      * StartsDaemon adds started tag with start time.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -62,13 +64,15 @@ final class StartsDaemonITCase {
 
     /**
      * StartsDaemon sends start script to daemon.
+     *
      * @throws Exception In case of error.
      */
     @Test
     void sendsStartScriptToDaemon() throws Exception {
         try (
             StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
+                new StartsDockerDaemon(Profile.EMPTY);
+            NullInputStream stdin = new NullInputStream(0L)
         ) {
             final Talk talk = StartsDaemonITCase.talk(start);
             final String dir = talk.read().xpath("/talk/daemon/dir/text()")
@@ -77,7 +81,7 @@ final class StartsDaemonITCase {
             TimeUnit.SECONDS.sleep(2L);
             new Shell.Safe(new TalkShells(talk.read()).get()).exec(
                 String.format("cat %s/stdout", dir),
-                new NullInputStream(0L),
+                stdin,
                 baos, baos
             );
             MatcherAssert.assertThat(
@@ -95,13 +99,15 @@ final class StartsDaemonITCase {
 
     /**
      * StartsDaemon does not create status file right after start.
+     *
      * @throws Exception In case of error.
      */
     @Test
     void doesNotCreateStatusFileYet() throws Exception {
         try (
             StartsDockerDaemon start =
-                new StartsDockerDaemon(Profile.EMPTY)
+                new StartsDockerDaemon(Profile.EMPTY);
+            NullInputStream stdin = new NullInputStream(0L)
         ) {
             final Talk talk = StartsDaemonITCase.talk(start);
             final String dir = talk.read().xpath("/talk/daemon/dir/text()")
@@ -110,7 +116,7 @@ final class StartsDaemonITCase {
             TimeUnit.SECONDS.sleep(2L);
             new Shell.Safe(new TalkShells(talk.read()).get()).exec(
                 String.format("cat %s/stdout", dir),
-                new NullInputStream(0L),
+                stdin,
                 baos, baos
             );
             MatcherAssert.assertThat(
@@ -124,6 +130,7 @@ final class StartsDaemonITCase {
     /**
      * StartsDaemon can deprecate default image (except one case, when
      * repo is is the actual Rultor repo: https://github.com/yegor256/rultor).
+     *
      * @throws IOException In case of error
      */
     @Test

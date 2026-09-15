@@ -17,6 +17,7 @@ import org.takes.facets.forward.RsForward;
 
 /**
  * Kill a talk.
+ *
  * @since 1.50
  */
 final class TkTalkKill implements TkRegex {
@@ -28,6 +29,7 @@ final class TkTalkKill implements TkRegex {
 
     /**
      * Ctor.
+     *
      * @param tks Talks
      */
     TkTalkKill(final Talks tks) {

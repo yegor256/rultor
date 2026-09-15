@@ -19,6 +19,7 @@ import software.amazon.awssdk.services.ec2.model.DescribeInstancesRequest;
 
 /**
  * Connects a running EC2 instance: detects its IP.
+ *
  * @since 1.77
  */
 @Immutable
@@ -37,6 +38,7 @@ public final class ConnectsInstance extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param aws API
      * @param shll The shell
      */

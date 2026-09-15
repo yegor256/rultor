@@ -12,6 +12,7 @@ import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.Toggles;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Talks;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.zip.GZIPInputStream;
 import org.cactoos.text.TextOf;
@@ -31,6 +32,7 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkApp}.
+ *
  * @since 1.50
  */
 final class TkAppTest {
@@ -47,6 +49,7 @@ final class TkAppTest {
 
     /**
      * App can render front page.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -73,6 +76,7 @@ final class TkAppTest {
 
     /**
      * App can render front page.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -105,6 +109,7 @@ final class TkAppTest {
 
     /**
      * App can render front page.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -138,6 +143,7 @@ final class TkAppTest {
 
     /**
      * App can serve home js.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -170,30 +176,33 @@ final class TkAppTest {
 
     /**
      * Tests GZIP content return.
+     *
      * @throws Exception If fails
      */
     @Test
     @Disabled
     void rendersGzipHomePage() throws Exception {
-        MatcherAssert.assertThat(
-            "Page can be gzip compressed",
-            new TextOf(
-                new GZIPInputStream(
-                    new RsPrint(
-                        new TkApp(
-                            new Talks.InDir(), Pulse.EMPTY,
-                            new Toggles.InFile()
-                        ).act(
-                            new RqWithHeaders(
-                                new RqFake("GET", "/"),
-                                "Accept: plain/html",
-                                "Accept-Encoding: gzip"
-                            )
+        try (
+            InputStream gzip = new GZIPInputStream(
+                new RsPrint(
+                    new TkApp(
+                        new Talks.InDir(), Pulse.EMPTY,
+                        new Toggles.InFile()
+                    ).act(
+                        new RqWithHeaders(
+                            new RqFake("GET", "/"),
+                            "Accept: plain/html",
+                            "Accept-Encoding: gzip"
                         )
-                    ).body()
-                )
-            ).asString(),
-            Matchers.startsWith("<!DOCTYPE html")
-        );
+                    )
+                ).body()
+            )
+        ) {
+            MatcherAssert.assertThat(
+                "Page can be gzip compressed",
+                new TextOf(gzip).asString(),
+                Matchers.startsWith("<!DOCTYPE html")
+            );
+        }
     }
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link Brackets}.
+ *
  * @since 1.2
  */
 final class BracketsTest {

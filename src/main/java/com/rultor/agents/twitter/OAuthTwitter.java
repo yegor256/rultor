@@ -13,6 +13,7 @@ import twitter4j.TwitterException;
 
 /**
  * Twitter via OAuth2.
+ *
  * @since 1.30
  */
 @Immutable
@@ -42,6 +43,7 @@ public final class OAuthTwitter implements Twitter {
 
     /**
      * Ctor.
+     *
      * @param tkey Key
      * @param scrt Secret
      * @param tkn Token

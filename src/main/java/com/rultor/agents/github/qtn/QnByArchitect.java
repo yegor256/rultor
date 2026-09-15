@@ -24,17 +24,13 @@ import org.cactoos.list.ListOf;
 
 /**
  * Question by architect only (if configured).
+ *
  * @since 1.45
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "profile", "xpath", "origin" })
 public final class QnByArchitect implements Question {
-
-    /**
-     * Mention prefix in command.
-     */
-    private static final String MENTION = "^@[^\\s,:]+[\\s,:]*";
 
     /**
      * Message bundle.
@@ -59,6 +55,7 @@ public final class QnByArchitect implements Question {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      * @param path XPath in profile with a list of logins
      * @param qtn Original question
@@ -133,7 +130,7 @@ public final class QnByArchitect implements Question {
     private static boolean isMerge(final String body) {
         final String text = body.trim().toLowerCase(Locale.ENGLISH);
         return text.startsWith("merge")
-            || text.replaceFirst(QnByArchitect.MENTION, "")
+            || text.replaceFirst("^@[^\\s,:]+[\\s,:]*", "")
                 .trim()
                 .startsWith("merge");
     }

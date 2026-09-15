@@ -18,6 +18,7 @@ import org.apache.commons.io.input.NullInputStream;
 /**
  * Checks the Health of a Docker host and tries to recover Docker daemon
  * crashes.
+ *
  * @since 1.63
  * @todo #1041:30min Add DockerHealthCheck to the running SuperAgents.
  *  In doing so make sure that Rultor crashes throwing a meaningful exception
@@ -33,6 +34,7 @@ public final class DockerHealthCheck implements SuperAgent {
 
     /**
      * Ctor.
+     *
      * @param ssh Shell
      */
     public DockerHealthCheck(final Shell ssh) {
@@ -41,14 +43,18 @@ public final class DockerHealthCheck implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        new Shell.Safe(this.shell).exec(
-            IOUtils.toString(
-                Objects.requireNonNull(this.getClass().getResource("checkhost.sh")),
-                StandardCharsets.UTF_8
-            ),
-            new NullInputStream(0L),
-            Logger.stream(Level.INFO, this),
-            Logger.stream(Level.WARNING, this)
-        );
+        try (NullInputStream stdin = new NullInputStream(0L)) {
+            new Shell.Safe(this.shell).exec(
+                IOUtils.toString(
+                    Objects.requireNonNull(
+                        this.getClass().getResource("checkhost.sh")
+                    ),
+                    StandardCharsets.UTF_8
+                ),
+                stdin,
+                Logger.stream(Level.INFO, this),
+                Logger.stream(Level.WARNING, this)
+            );
+        }
     }
 }

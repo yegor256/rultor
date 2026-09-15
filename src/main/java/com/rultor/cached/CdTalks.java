@@ -17,6 +17,7 @@ import org.cactoos.iterable.Mapped;
 
 /**
  * Cached talks.
+ *
  * @since 1.51
  */
 @Immutable
@@ -31,6 +32,7 @@ public final class CdTalks implements Talks {
 
     /**
      * Public ctor.
+     *
      * @param talks Talks
      */
     public CdTalks(final Talks talks) {

@@ -20,12 +20,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link CommentsTag}.
+ *
  * @since 1.41.1
  */
 final class CommentsTagTest {
 
     /**
      * CommentsTag can create a release.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -46,6 +48,7 @@ final class CommentsTagTest {
 
     /**
      * CommentsTag can duplicate a release.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -66,6 +69,7 @@ final class CommentsTagTest {
     /**
      * CommentsTag refuses a release whose tag is older than the newest
      * existing release, using SemVer ordering.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -85,6 +89,7 @@ final class CommentsTagTest {
 
     /**
      * CommentsTag can create a proper release message.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -110,6 +115,7 @@ final class CommentsTagTest {
 
     /**
      * CommentsTag can create a proper release title.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -130,6 +136,7 @@ final class CommentsTagTest {
 
     /**
      * CommentsTag can create a proper release title.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -158,6 +165,7 @@ final class CommentsTagTest {
 
     /**
      * CommentsTag can create latest release if profile specify 'pre: false'.
+     *
      * @throws IOException In case of error.
      */
     @Test
@@ -198,6 +206,7 @@ final class CommentsTagTest {
     /**
      * CommentsTag can create latest release if profile specify 'pre: true',
      * but 'pre: false' is written in the comment.
+     *
      * @throws IOException In case of error.
      */
     @Test
@@ -231,6 +240,7 @@ final class CommentsTagTest {
     /**
      * CommentsTag can create pre-release by default.
      * Check the default behaviour if profile specifies anything.
+     *
      * @throws IOException In case of error.
      */
     @Test

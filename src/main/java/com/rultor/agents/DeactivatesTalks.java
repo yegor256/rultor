@@ -17,6 +17,7 @@ import org.cactoos.text.Joined;
 
 /**
  * Deactivates empty talks.
+ *
  * @since 1.3
  */
 @Immutable
@@ -32,6 +33,13 @@ public final class DeactivatesTalks implements SuperAgent {
         "/talk[@later='false' and not(request) and not(daemon)",
         " and not(shell)]"
     ).toString();
+
+    /**
+     * Constructor.
+     */
+    public DeactivatesTalks() {
+        // Nothing to initialize.
+    }
 
     @Override
     public void execute(final Talks talks) throws IOException {

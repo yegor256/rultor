@@ -12,6 +12,7 @@ import lombok.ToString;
 
 /**
  * Home page of a daemon.
+ *
  * @since 1.0
  */
 @Immutable
@@ -31,6 +32,7 @@ public final class Home {
 
     /**
      * Ctor.
+     *
      * @param talk Talk
      */
     public Home(final XML talk) {
@@ -39,6 +41,7 @@ public final class Home {
 
     /**
      * Ctor.
+     *
      * @param talk Talk
      * @param hsh Hash
      */
@@ -49,6 +52,7 @@ public final class Home {
 
     /**
      * Get its URI.
+     *
      * @return URI
      */
     public URI uri() {

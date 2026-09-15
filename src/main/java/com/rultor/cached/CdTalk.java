@@ -16,6 +16,7 @@ import org.xembly.Directive;
 
 /**
  * Cached talk.
+ *
  * @since 1.51
  */
 @Immutable
@@ -30,6 +31,7 @@ public final class CdTalk implements Talk {
 
     /**
      * Ctor.
+     *
      * @param talk Talks
      */
     CdTalk(final Talk talk) {

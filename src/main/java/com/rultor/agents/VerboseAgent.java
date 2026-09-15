@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * An agent that rethrows an error with information about the talk.
+ *
  * @since 1.59
  */
 public final class VerboseAgent implements Agent {
@@ -21,6 +22,7 @@ public final class VerboseAgent implements Agent {
 
     /**
      * Ctor.
+     *
      * @param agent Original agent
      */
     public VerboseAgent(final Agent agent) {

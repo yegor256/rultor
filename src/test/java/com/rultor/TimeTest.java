@@ -18,6 +18,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for {@link Time}.
+ *
  * @since 2.0
  */
 final class TimeTest {
@@ -55,6 +56,7 @@ final class TimeTest {
 
     /**
      * Date can not be parsed from invalid string.
+     *
      * @param date Date to check
      */
     @ParameterizedTest

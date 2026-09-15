@@ -13,12 +13,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link FirstComment}.
+ *
  * @since 1.51
  */
 final class FirstCommentTest {
 
     /**
      * FirstComment can parse an issue.
+     *
      * @throws Exception In case of error.
      */
     @Test

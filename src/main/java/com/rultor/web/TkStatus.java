@@ -19,6 +19,7 @@ import org.takes.rs.RsWithStatus;
 
 /**
  * Status (OK or not OK).
+ *
  * @since 1.52
  */
 final class TkStatus implements Take {
@@ -35,6 +36,7 @@ final class TkStatus implements Take {
 
     /**
      * Ctor.
+     *
      * @param pls Pulse
      */
     TkStatus(final Pulse pls) {
@@ -43,6 +45,7 @@ final class TkStatus implements Take {
 
     /**
      * Ctor.
+     *
      * @param pls Pulse
      * @param begin When we started
      */

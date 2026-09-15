@@ -31,6 +31,7 @@ import org.xembly.Directives;
 
 /**
  * Comments a new tag in GitHub.
+ *
  * @since 1.31
  */
 @Immutable
@@ -56,6 +57,7 @@ public final class CommentsTag extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      */
     public CommentsTag(final GitHub ghub) {
@@ -64,6 +66,7 @@ public final class CommentsTag extends AbstractAgent {
 
     /**
      * Constructor.
+     *
      * @param ghub GitHub client
      * @param config Profile
      */

@@ -34,6 +34,7 @@ import org.xembly.Directives;
 
 /**
  * Starts daemon.
+ *
  * @since 1.0
  */
 @Immutable
@@ -62,6 +63,7 @@ public final class StartsDaemon implements Agent {
 
     /**
      * Ctor.
+     *
      * @param prof Profile
      */
     public StartsDaemon(final Profile prof) {
@@ -86,7 +88,7 @@ public final class StartsDaemon implements Agent {
      *
      * <p>The annotation here is a TEMPORARY solution. It will be removed in
      * the future. We need it because the SSH shell is not dropping the
-     * connection when the command is in the background.
+     * connection when the command is in the background.</p>
      *
      * @param xml The XML to process
      * @return List of directives
@@ -109,6 +111,7 @@ public final class StartsDaemon implements Agent {
 
     /**
      * Run daemon.
+     *
      * @param xml XML with talk
      * @return Directory where it started
      * @throws IOException If fails

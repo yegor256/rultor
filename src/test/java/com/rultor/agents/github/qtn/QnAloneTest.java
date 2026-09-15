@@ -19,12 +19,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnAlone}.
+ *
  * @since 1.6.1
  */
 final class QnAloneTest {
 
     /**
      * QnAlone can create lock repo.
+     *
      * @throws Exception In case of error.
      */
     @Test

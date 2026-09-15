@@ -14,6 +14,7 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 /**
  * Release Tag validator, ensures not releasing already outdated tags.
+ *
  * @since 1.62
  */
 @Immutable
@@ -38,6 +39,7 @@ public final class ReleaseTag {
 
     /**
      * Ctor.
+     *
      * @param rpo GitHub repo
      * @param version String release tag name
      */
@@ -50,6 +52,7 @@ public final class ReleaseTag {
      * Checks if this tag can be released.
      * A tag can be released if it is either not named as a semantically
      * correct version or has a higher version number than all existing tags.
+     *
      * @return True if this tag can be released
      * @throws IOException on error
      */
@@ -60,6 +63,7 @@ public final class ReleaseTag {
 
     /**
      * Returns the tag name of the highest version from the repo.
+     *
      * @return String name of the highest released version
      * @throws IOException on error
      */

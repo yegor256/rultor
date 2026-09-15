@@ -17,6 +17,7 @@ import org.takes.misc.Opt;
 
 /**
  * Admin only.
+ *
  * @since 1.50
  */
 final class FkAdminOnly implements Fork {
@@ -28,6 +29,7 @@ final class FkAdminOnly implements Fork {
 
     /**
      * Ctor.
+     *
      * @param take Original
      */
     FkAdminOnly(final Take take) {

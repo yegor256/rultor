@@ -20,6 +20,7 @@ import lombok.ToString;
 
 /**
  * Passes through only if it is alone in this repo.
+ *
  * @since 1.3
  */
 @Immutable
@@ -44,6 +45,7 @@ public final class QnAlone implements Question {
 
     /**
      * Ctor.
+     *
      * @param tlk Talk
      * @param lcks Locks
      * @param qtn Original question

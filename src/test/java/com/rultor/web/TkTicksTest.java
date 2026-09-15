@@ -18,12 +18,14 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkTicks}.
+ *
  * @since 1.50
  */
 final class TkTicksTest {
 
     /**
      * TkTicks can render PNG.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -79,6 +81,7 @@ final class TkTicksTest {
 
     /**
      * TkTicks can render PNG without ticks.
+     *
      * @throws Exception If some problem inside
      */
     @Test

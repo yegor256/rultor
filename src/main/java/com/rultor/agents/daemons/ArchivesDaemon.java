@@ -15,6 +15,7 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.TalkShells;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,6 +32,7 @@ import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 
 /**
  * Marks the daemon as done.
+ *
  * @since 1.0
  */
 @Immutable
@@ -45,6 +47,7 @@ public final class ArchivesDaemon extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param bkt Bucket
      */
     public ArchivesDaemon(final Bucket bkt) {
@@ -60,23 +63,28 @@ public final class ArchivesDaemon extends AbstractAgent {
         final Shell shell = new TalkShells(xml).get();
         final File file = File.createTempFile("rultor", ".log");
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        new Shell.Safe(shell).exec(
-            String.join(
-                "; ",
-                String.format("if [ -d %s ]", Ssh.escape(dir)),
-                String.format("then cd %s", Ssh.escape(dir)),
-                "else echo 'Build directory is absent, internal error'",
-                "exit",
-                "fi",
-                "if [ -r stdout ]",
-                "then cat stdout | iconv -f utf-8 -t utf-8 -c | LANG=en_US.UTF-8 col -bx",
-                "else echo 'Stdout not found, internal error'",
-                "fi"
-            ),
-            new NullInputStream(0L),
-            Files.newOutputStream(file.toPath()),
-            Logger.stream(Level.WARNING, this)
-        );
+        try (
+            OutputStream stdout = Files.newOutputStream(file.toPath());
+            NullInputStream stdin = new NullInputStream(0L)
+        ) {
+            new Shell.Safe(shell).exec(
+                String.join(
+                    "; ",
+                    String.format("if [ -d %s ]", Ssh.escape(dir)),
+                    String.format("then cd %s", Ssh.escape(dir)),
+                    "else echo 'Build directory is absent, internal error'",
+                    "exit",
+                    "fi",
+                    "if [ -r stdout ]",
+                    "then cat stdout | iconv -f utf-8 -t utf-8 -c | LANG=en_US.UTF-8 col -bx",
+                    "else echo 'Stdout not found, internal error'",
+                    "fi"
+                ),
+                stdin,
+                stdout,
+                Logger.stream(Level.WARNING, this)
+            );
+        }
         new Shell.Empty(new Shell.Safe(shell)).exec(
             String.format("sudo rm -rf %1$s || rm -rf %s", Ssh.escape(dir))
         );

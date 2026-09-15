@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnLastOf}.
+ *
  * @since 1.6.5
  */
 final class QnLastOfTest {
 
     /**
      * QnLastOf can get the last one.
+     *
      * @throws Exception In case of error.
      */
     @Test

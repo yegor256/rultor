@@ -15,12 +15,14 @@ import org.mockito.Mockito;
 
 /**
  * Tests for ${@link DeactivatesTalks}.
+ *
  * @since 1.3
  */
 final class DeactivatesTalksTest {
 
     /**
      * DeactivatesTalks can deactivate a talk.
+     *
      * @throws Exception In case of error.
      */
     @Test

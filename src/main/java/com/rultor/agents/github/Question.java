@@ -11,6 +11,7 @@ import java.net.URI;
 
 /**
  * Question.
+ *
  * @since 1.3
  */
 @Immutable
@@ -24,6 +25,7 @@ public interface Question {
 
     /**
      * Understand it and return the request.
+     *
      * @param comment The comment
      * @param home Home URI of the daemon
      * @return Request (or Req.EMPTY is nothing found)

@@ -18,6 +18,7 @@ import lombok.ToString;
 
 /**
  * It never fails.
+ *
  * @since 1.57
  */
 @Immutable
@@ -26,18 +27,13 @@ import lombok.ToString;
 public final class QnSafe implements Question {
 
     /**
-     * Default error message format.
-     */
-    private static final String DEFAULT_FORMAT =
-        "We failed, sorry, try again:%n%n```%n%[exception]s%n```";
-
-    /**
      * Original question.
      */
     private final transient Question origin;
 
     /**
      * Ctor.
+     *
      * @param qtn Original question
      */
     public QnSafe(final Question qtn) {
@@ -57,7 +53,10 @@ public final class QnSafe implements Question {
             } catch (final Throwable ex) {
                 new Answer(comment).post(
                     false,
-                    Logger.format(QnSafe.DEFAULT_FORMAT, ex)
+                    Logger.format(
+                        "We failed, sorry, try again:%n%n```%n%[exception]s%n```",
+                        ex
+                    )
                 );
                 req = Req.DONE;
             }

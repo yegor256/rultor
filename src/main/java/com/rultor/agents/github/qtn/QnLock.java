@@ -36,6 +36,7 @@ import org.xembly.Xembler;
 
 /**
  * Lock branch.
+ *
  * @since 1.53
  */
 @Immutable
@@ -53,6 +54,13 @@ public final class QnLock implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnLock() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,

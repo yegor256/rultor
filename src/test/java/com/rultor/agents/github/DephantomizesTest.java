@@ -15,12 +15,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Dephantomizes}.
+ *
  * @since 1.59.7
  */
 final class DephantomizesTest {
 
     /**
      * Dephantomizes can remove request and wire.
+     *
      * @throws IOException In case of error
      */
     @Test
@@ -37,6 +39,7 @@ final class DephantomizesTest {
 
     /**
      * Dephantomizes can remove request and wire.
+     *
      * @throws IOException In case of error
      */
     @Test

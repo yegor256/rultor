@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link ProfileDeprecations}.
+ *
  * @since 1.62
  */
 final class ProfileDeprecationsTest {
@@ -29,6 +30,7 @@ final class ProfileDeprecationsTest {
 
     /**
      * ProfileDeprecations can identify deprecated sections.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -42,6 +44,7 @@ final class ProfileDeprecationsTest {
 
     /**
      * ProfileDeprecations can identify a deprecated image.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -64,6 +67,7 @@ final class ProfileDeprecationsTest {
 
     /**
      * ProfileDeprecations can identify a valid profile.
+     *
      * @throws Exception In case of error
      */
     @Test

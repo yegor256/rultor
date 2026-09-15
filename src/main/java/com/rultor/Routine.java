@@ -33,6 +33,7 @@ import org.cactoos.list.ListOf;
 
 /**
  * Routine.
+ *
  * @since 1.50
  * @todo #1125:30min Routine should be delegate execution to separate threads.
  *  Currently com.rultor.Routine#process() is sequentially processing all Talks
@@ -48,11 +49,6 @@ import org.cactoos.list.ListOf;
 @ScheduleWithFixedDelay
 @SuppressWarnings("PMD.ConstructorShouldDoInitialization")
 final class Routine implements Runnable, Closeable {
-
-    /**
-     * How many talks to process in one cycle.
-     */
-    private static final int MAX_TALKS = 16;
 
     /**
      * Shutting down?
@@ -81,6 +77,7 @@ final class Routine implements Runnable, Closeable {
 
     /**
      * Ctor.
+     *
      * @param tlks Talks
      * @param pls Pulse
      * @param github GitHub client
@@ -169,7 +166,7 @@ final class Routine implements Runnable, Closeable {
             try {
                 final Profile profile = profiles.fetch(talk);
                 this.agents.agent(talk, profile).execute(talk);
-                if (total > Routine.MAX_TALKS) {
+                if (total > 16) {
                     break;
                 }
             } catch (final RepoNotFoundException ex) {

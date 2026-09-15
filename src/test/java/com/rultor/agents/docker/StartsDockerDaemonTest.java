@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link StartsDockerDaemon}.
+ *
  * @since 1.63
  */
 final class StartsDockerDaemonTest {
 
     /**
      * StartsDockerDaemon can provide a PfShell logged in as root.
+     *
      * @throws Exception In case of failure
      */
     @Test
@@ -43,6 +45,7 @@ final class StartsDockerDaemonTest {
 
     /**
      * StartsDockerDaemon can provide a PfShell with an RSA key.
+     *
      * @throws Exception In case of failure
      */
     @Test
@@ -68,6 +71,7 @@ final class StartsDockerDaemonTest {
     /**
      * StartsDockerDaemon can provide a PfShell whose key is placed
      * in /root/.ssh/id_rsa.
+     *
      * @throws Exception In case of failure
      */
     @Test

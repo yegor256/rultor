@@ -17,6 +17,7 @@ import lombok.ToString;
 
 /**
  * Say that I'm lost, can't understand you.
+ *
  * @since 1.60
  */
 @Immutable
@@ -29,6 +30,13 @@ public final class QnIamLost implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnIamLost() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,

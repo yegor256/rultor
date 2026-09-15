@@ -19,12 +19,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnRelease}.
+ *
  * @since 1.6
  */
 final class QnReleaseTest {
 
     /**
      * QnRelease can build a request.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -53,6 +55,7 @@ final class QnReleaseTest {
     /**
      * QnRelease can build a release request when the requested version is newer
      * than the last release.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -81,6 +84,7 @@ final class QnReleaseTest {
 
     /**
      * QnRelease can deny release when tag is outdated.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -101,6 +105,7 @@ final class QnReleaseTest {
     /**
      * QnRelease can post a comment about an existing release when the
      * requested tag is outdated.
+     *
      * @throws Exception In case of error
      */
     @Test
@@ -121,6 +126,7 @@ final class QnReleaseTest {
 
     /**
      * QnRelease can accept release title.
+     *
      * @throws Exception In case of error
      */
     @Test

@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 
 /**
  * Feature toggles.
+ *
  * @since 1.0
  */
 @Immutable
@@ -22,18 +23,21 @@ public interface Toggles {
 
     /**
      * Toggle read only mode.
+     *
      * @throws IOException If fails
      */
     void toggle() throws IOException;
 
     /**
      * Is it read only mode now?
+     *
      * @return TRUE if read only
      */
     boolean readOnly();
 
     /**
      * Inner file.
+     *
      * @since 1.0
      */
     @Immutable
@@ -52,6 +56,13 @@ public interface Toggles {
          * Lock for read-only toggle operations.
          */
         private static final ReentrantLock LOCK = new ReentrantLock();
+
+        /**
+         * Constructor.
+         */
+        public InFile() {
+            // Nothing to initialize.
+        }
 
         @Override
         public void toggle() throws IOException {

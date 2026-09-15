@@ -5,6 +5,7 @@
 
 /**
  * Questions.
+ *
  * @since 1.3
  */
 package com.rultor.agents.github.qtn;

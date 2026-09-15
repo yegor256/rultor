@@ -17,9 +17,17 @@ import org.xembly.Directives;
 
 /**
  * Adds index to all the requests received.
+ *
  * @since 1.0
  */
 public final class IndexesRequests implements SuperAgent {
+
+    /**
+     * Constructor.
+     */
+    public IndexesRequests() {
+        // Nothing to initialize.
+    }
 
     @Override
     public void execute(final Talks talks) throws IOException {

@@ -8,12 +8,14 @@ import java.util.Collections;
 
 /**
  * Pulse.
+ *
  * @since 1.20
  */
 public interface Pulse {
 
     /**
      * Empty.
+     *
      * @checkstyle AnonInnerLengthCheck (24 lines)
      */
     Pulse EMPTY = new Pulse() {
@@ -40,24 +42,28 @@ public interface Pulse {
 
     /**
      * Add new tick.
+     *
      * @param tick The tick
      */
     void add(Tick tick);
 
     /**
      * Get ticks.
+     *
      * @return Ticks
      */
     Iterable<Tick> ticks();
 
     /**
      * Most recent exception (or empty).
+     *
      * @return Problems
      */
     Iterable<Throwable> error();
 
     /**
      * Set recent exception (or empty).
+     *
      * @param errors Errors or empty if none
      */
     void error(Iterable<Throwable> errors);

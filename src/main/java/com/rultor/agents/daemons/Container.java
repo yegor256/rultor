@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * Turn talk name into Docker container name.
+ *
  * @since 1.72
  */
 @Immutable
@@ -23,6 +24,7 @@ public final class Container {
 
     /**
      * Ctor.
+     *
      * @param talk Script name
      */
     public Container(final String talk) {

@@ -16,6 +16,7 @@ import lombok.ToString;
 
 /**
  * If contains text.
+ *
  * @since 1.3
  */
 @Immutable
@@ -35,6 +36,7 @@ public final class QnIfContains implements Question {
 
     /**
      * Ctor.
+     *
      * @param ptn Pattern to search for
      * @param qtn Original question
      */

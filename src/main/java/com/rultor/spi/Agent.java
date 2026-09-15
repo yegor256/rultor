@@ -15,6 +15,7 @@ import lombok.ToString;
 
 /**
  * Agent.
+ *
  * @since 1.0
  */
 @Immutable
@@ -23,6 +24,7 @@ public interface Agent {
 
     /**
      * Execute it.
+     *
      * @param talk Talk to work with
      * @throws IOException If fails
      */
@@ -30,6 +32,7 @@ public interface Agent {
 
     /**
      * Iterative.
+     *
      * @since 1.0
      */
     @Immutable
@@ -44,6 +47,7 @@ public interface Agent {
 
         /**
          * Ctor.
+         *
          * @param list List of them
          */
         public Iterative(final Agent... list) {
@@ -52,6 +56,7 @@ public interface Agent {
 
         /**
          * Ctor.
+         *
          * @param list List of them
          */
         public Iterative(final Iterable<Agent> list) {
@@ -71,6 +76,7 @@ public interface Agent {
 
     /**
      * Disabled.
+     *
      * @since 1.0
      */
     @Immutable
@@ -90,6 +96,7 @@ public interface Agent {
 
         /**
          * Ctor.
+         *
          * @param agt Agent
          */
         public Disabled(final Agent agt) {
@@ -98,6 +105,7 @@ public interface Agent {
 
         /**
          * Ctor.
+         *
          * @param agt Agent
          * @param dsbl Disable it?
          */
@@ -116,6 +124,7 @@ public interface Agent {
 
     /**
      * Swallows all exceptions.
+     *
      * @since 1.0
      */
     @Immutable
@@ -130,6 +139,7 @@ public interface Agent {
 
         /**
          * Ctor.
+         *
          * @param agt Agent
          */
         public Quiet(final Agent agt) {
@@ -153,6 +163,7 @@ public interface Agent {
 
     /**
      * Only if the name of the talk DOESN'T match the regular expression.
+     *
      * @since 1.0
      */
     @Immutable
@@ -172,6 +183,7 @@ public interface Agent {
 
         /**
          * Ctor.
+         *
          * @param agt Agent
          * @param ptn Pattern to match
          */
@@ -181,6 +193,7 @@ public interface Agent {
 
         /**
          * Ctor.
+         *
          * @param agt Agent
          * @param ptn Compiled pattern to match
          */

@@ -18,6 +18,7 @@ import lombok.ToString;
 
 /**
  * Hello.
+ *
  * @since 1.3
  */
 @Immutable
@@ -30,6 +31,13 @@ public final class QnHello implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnHello() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,

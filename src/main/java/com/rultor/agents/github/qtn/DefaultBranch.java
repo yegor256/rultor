@@ -9,6 +9,7 @@ import java.io.IOException;
 
 /**
  * Default branch of a repo.
+ *
  * @since 2.1
  */
 public final class DefaultBranch {
@@ -20,6 +21,7 @@ public final class DefaultBranch {
 
     /**
      * Ctor.
+     *
      * @param repository GitHub Repo
      */
     public DefaultBranch(final Repo repository) {

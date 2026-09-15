@@ -13,12 +13,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link DropsTalk}.
+ *
  * @since 1.3
  */
 final class DropsTalkTest {
 
     /**
      * Removes 'later' attr.
+     *
      * @throws Exception In case of error.
      */
     @Test

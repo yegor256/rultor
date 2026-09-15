@@ -17,6 +17,7 @@ import org.cactoos.text.Joined;
 /**
  * Class allowing to print the deprecation notice if and only if the
  * underlying {@link Profile} is deprecated.
+ *
  * @since 1.62
  */
 public final class ProfileDeprecations {
@@ -45,6 +46,7 @@ public final class ProfileDeprecations {
     /**
      * Constructs a {@code ProfileDeprecations} with the specified underlying
      * {@code Profile}.
+     *
      * @param prof The underlying profile
      */
     public ProfileDeprecations(final Profile prof) {
@@ -53,6 +55,7 @@ public final class ProfileDeprecations {
 
     /**
      * Prints the deprecation notice if the profile is deprecated.
+     *
      * @param shell The shell to use to print the deprecation notice if needed
      * @throws IOException if it fails while getting the XML format of the
      *  profile
@@ -69,6 +72,7 @@ public final class ProfileDeprecations {
 
     /**
      * Indicates whether there is a deprecation notice or not.
+     *
      * @return True if there is no deprecation notice, false otherwise
      * @throws IOException if it fails while getting the XML format of the
      *  profile
@@ -80,11 +84,13 @@ public final class ProfileDeprecations {
     private static void output(final String message, final Shell shell)
         throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new Shell.Safe(shell).exec(
-            String.format("echo -e \"%s\"", Ssh.escape(message)),
-            new NullInputStream(0L),
-            baos, baos
-        );
+        try (NullInputStream stdin = new NullInputStream(0L)) {
+            new Shell.Safe(shell).exec(
+                String.format("echo -e \"%s\"", Ssh.escape(message)),
+                stdin,
+                baos, baos
+            );
+        }
     }
 
     private static boolean empty(final XML prof) {

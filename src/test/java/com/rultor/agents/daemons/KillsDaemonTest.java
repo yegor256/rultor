@@ -14,12 +14,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link KillsDaemon}.
+ *
  * @since 1.0
  */
 final class KillsDaemonTest {
 
     /**
      * KillsDaemon can ignore a daemon.
+     *
      * @throws Exception In case of error.
      */
     @Test

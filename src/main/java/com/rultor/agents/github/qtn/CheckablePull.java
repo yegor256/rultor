@@ -14,6 +14,7 @@ import lombok.ToString;
 
 /**
  * Checkable pull request.
+ *
  * @since 2.0
  */
 @Immutable
@@ -28,6 +29,7 @@ final class CheckablePull {
 
     /**
      * Ctor.
+     *
      * @param ghpull Pull to validate
      */
     CheckablePull(final Pull ghpull) {
@@ -36,6 +38,7 @@ final class CheckablePull {
 
     /**
      * Checks if all checks are successful.
+     *
      * @return True if all checks are successful
      * @throws IOException If fails
      */
@@ -52,6 +55,7 @@ final class CheckablePull {
 
     /**
      * Checks if file is affected by pull request.
+     *
      * @param file File name to check
      * @return True if all checks are successful
      * @throws IOException If fails

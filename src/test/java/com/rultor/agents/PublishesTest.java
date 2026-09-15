@@ -19,12 +19,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link Publishes}.
+ *
  * @since 1.32.7
  */
 final class PublishesTest {
 
     /**
      * Publishes can add a public attribute.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -47,6 +49,7 @@ final class PublishesTest {
 
     /**
      * Publishes can ignore if PUBLIC attribute is already set.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -69,6 +72,7 @@ final class PublishesTest {
 
     /**
      * Publishes can survive a missing repository.
+     *
      * @throws Exception In case of error.
      */
     @Test

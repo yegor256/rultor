@@ -17,12 +17,14 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link TkSitemap}.
+ *
  * @since 1.50
  */
 final class TkSitemapTest {
 
     /**
      * TkSitemap can render a list.
+     *
      * @throws Exception If some problem inside
      */
     @Test

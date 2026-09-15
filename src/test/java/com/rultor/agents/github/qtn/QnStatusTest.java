@@ -18,12 +18,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnStatus}.
+ *
  * @since 1.5
  */
 final class QnStatusTest {
 
     /**
      * QnStatus can build a report.
+     *
      * @throws Exception In case of error.
      */
     @Test

@@ -15,12 +15,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link EndsDaemon}.
+ *
  * @since 1.2
  */
 final class EndsDaemonTest {
 
     /**
      * EndsDaemon should fail if host is not found.
+     *
      * @throws IOException In case of error.
      */
     @Test

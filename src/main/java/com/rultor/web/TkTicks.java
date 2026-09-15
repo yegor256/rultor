@@ -28,6 +28,7 @@ import org.xembly.Xembler;
 
 /**
  * PNG with pulse.
+ *
  * @since 1.50
  */
 final class TkTicks implements Take {
@@ -46,6 +47,7 @@ final class TkTicks implements Take {
 
     /**
      * Ctor.
+     *
      * @param pls Pulse
      */
     TkTicks(final Pulse pls) {

@@ -22,6 +22,7 @@ import org.cactoos.map.MapOf;
 
 /**
  * Deploy request.
+ *
  * @since 1.3
  */
 @Immutable
@@ -34,6 +35,13 @@ public final class QnDeploy implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnDeploy() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(

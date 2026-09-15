@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link SiblingsRs}.
+ *
  * @since 1.23
  */
 final class TkSiblingsITCase {
@@ -35,6 +36,7 @@ final class TkSiblingsITCase {
 
     /**
      * SiblingsRs can render index page.
+     *
      * @throws Exception If some problem inside
      */
     @Test

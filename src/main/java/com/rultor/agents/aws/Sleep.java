@@ -11,6 +11,7 @@ import lombok.ToString;
 
 /**
  * Sleep.
+ *
  * @since 1.77
  */
 @Immutable
@@ -24,6 +25,7 @@ final class Sleep {
 
     /**
      * Ctor.
+     *
      * @param scnd Seconds
      */
     Sleep(final long scnd) {

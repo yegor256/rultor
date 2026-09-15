@@ -34,12 +34,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for ${@link Understands}.
+ *
  * @since 1.3
  */
 final class UnderstandsTest {
 
     /**
      * Understands can understand a message.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -76,6 +78,7 @@ final class UnderstandsTest {
 
     /**
      * Understands can ignore LATER req.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -97,6 +100,7 @@ final class UnderstandsTest {
 
     /**
      * Understands can understand a body of an issue.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -119,6 +123,7 @@ final class UnderstandsTest {
      * The test that verifies that only one message is print if the
      * pull request has a failed check.
      * Test for issue #1657
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -150,6 +155,7 @@ final class UnderstandsTest {
      * The test that verifies that a "can't merge" message is posted if the
      * pull request has a failed check.
      * Test for issue #1657
+     *
      * @throws Exception In case of error.
      */
     @Test

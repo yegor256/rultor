@@ -17,12 +17,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnIfCollaborator}.
+ *
  * @since 1.40.4
  */
 final class QnIfCollaboratorTest {
 
     /**
      * QnCollaborators can block a request.
+     *
      * @throws Exception In case of error.
      */
     @Test

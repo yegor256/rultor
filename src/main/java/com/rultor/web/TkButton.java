@@ -18,6 +18,7 @@ import org.takes.rs.RsWithType;
 
 /**
  * Button.
+ *
  * @since 1.50
  */
 final class TkButton implements TkRegex {

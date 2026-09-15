@@ -27,6 +27,7 @@ import software.amazon.awssdk.services.dynamodb.model.Select;
 
 /**
  * Talks in Dynamo.
+ *
  * @since 1.0
  */
 @Immutable
@@ -46,12 +47,14 @@ public final class DyTalks implements Talks {
 
     /**
      * Index name.
+     *
      * @since 1.3
      */
     public static final String IDX_NUMBERS = "numbers";
 
     /**
      * Index name.
+     *
      * @since 1.23
      */
     public static final String IDX_SIBLINGS = "siblings";
@@ -63,12 +66,14 @@ public final class DyTalks implements Talks {
 
     /**
      * Its number.
+     *
      * @since 1.3
      */
     public static final String ATTR_NUMBER = "number";
 
     /**
      * Name of the repo it belongs to.
+     *
      * @since 1.23
      */
     public static final String ATTR_REPO = "repo";
@@ -105,6 +110,7 @@ public final class DyTalks implements Talks {
 
     /**
      * Public ctor.
+     *
      * @param reg Region
      * @param cnt Counter of talks
      */

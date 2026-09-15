@@ -17,12 +17,14 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkHome}.
+ *
  * @since 1.50
  */
 final class TkHomeTest {
 
     /**
      * TkHome can render home page.
+     *
      * @throws Exception If some problem inside
      */
     @Test

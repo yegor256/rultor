@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link TkHome}.
+ *
  * @since 0.5
  */
 final class TkHomeITCase {
@@ -40,6 +41,7 @@ final class TkHomeITCase {
 
     /**
      * IndexRs can render absent pages.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -60,6 +62,7 @@ final class TkHomeITCase {
 
     /**
      * Redirects from absent URL.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -80,6 +83,7 @@ final class TkHomeITCase {
 
     /**
      * IndexRs can render valid pages.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -103,6 +107,7 @@ final class TkHomeITCase {
 
     /**
      * IndexRs can show version.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -119,6 +124,7 @@ final class TkHomeITCase {
 
     /**
      * Renders valid PNG image.
+     *
      * @throws Exception If some problem inside
      */
     @Test

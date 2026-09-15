@@ -12,6 +12,7 @@ import lombok.ToString;
 
 /**
  * Safe iterator.
+ *
  * @param <T> Class to iterate
  * @since 1.59
  */
@@ -27,6 +28,7 @@ final class SafeIterator<T> implements Iterator<T> {
 
     /**
      * Ctor.
+     *
      * @param itr Original
      */
     SafeIterator(final Iterator<T> itr) {

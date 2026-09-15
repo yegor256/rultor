@@ -16,6 +16,7 @@ import lombok.ToString;
 
 /**
  * Last of.
+ *
  * @since 1.6.5
  */
 @Immutable
@@ -30,6 +31,7 @@ public final class QnLastOf implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtns Original questions
      */
     public QnLastOf(final Iterable<Question> qtns) {

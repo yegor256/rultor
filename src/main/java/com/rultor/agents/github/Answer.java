@@ -31,17 +31,13 @@ import org.xembly.Xembler;
 
 /**
  * Answer to post.
+ *
  * @since 1.0
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "comment")
 public final class Answer {
-
-    /**
-     * Maximum messages from me.
-     */
-    private static final int MAX = 5;
 
     /**
      * Space char.
@@ -55,6 +51,7 @@ public final class Answer {
 
     /**
      * Ctor.
+     *
      * @param cmt Comment
      */
     public Answer(final Comment.Smart cmt) {
@@ -63,6 +60,7 @@ public final class Answer {
 
     /**
      * Post it..
+     *
      * @param success Is it a report about success?
      * @param msg Message
      * @param args Arguments
@@ -86,7 +84,7 @@ public final class Answer {
             }
             ++mine;
         }
-        if (mine < Answer.MAX) {
+        if (mine < 5) {
             new SfComments(
                 issue.comments()
             ).post(this.msg(success, Logger.format(msg, args)));

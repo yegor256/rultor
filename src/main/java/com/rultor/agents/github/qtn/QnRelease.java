@@ -23,6 +23,7 @@ import org.cactoos.map.MapOf;
 
 /**
  * Release request.
+ *
  * @since 1.3.6
  */
 @Immutable
@@ -40,6 +41,13 @@ public final class QnRelease implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnRelease() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,

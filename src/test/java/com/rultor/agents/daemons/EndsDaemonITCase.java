@@ -25,12 +25,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link EndsDaemon}.
+ *
  * @since 1.2
  */
 final class EndsDaemonITCase {
 
     /**
      * EndsDaemon should store highlighted stdout entry.
+     *
      * @throws IOException In case of error.
      */
     @Test
@@ -64,6 +66,7 @@ final class EndsDaemonITCase {
 
     /**
      * EndsDaemon can read exit code.
+     *
      * @throws IOException In case of error.
      */
     @Test
@@ -89,6 +92,7 @@ final class EndsDaemonITCase {
 
     /**
      * EndsDaemon can end the build in case of a broken profile.
+     *
      * @throws Exception On failure
      */
     @Test
@@ -117,6 +121,7 @@ final class EndsDaemonITCase {
 
     /**
      * EndsDaemon can deprecate default image.
+     *
      * @throws IOException In case of error
      */
     @Test

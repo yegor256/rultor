@@ -18,6 +18,7 @@ import java.net.URI;
 
 /**
  * S3 connect.
+ *
  * @since 1.1
  */
 @Immutable
@@ -35,6 +36,7 @@ final class S3Connect implements Connect {
 
     /**
      * Ctor.
+     *
      * @param talk Talk
      * @param name Name of the archive
      */

@@ -19,6 +19,7 @@ import org.xembly.Directives;
 
 /**
  * Closes pull request manually, leaves comment with description.
+ *
  * @since 1.63
  */
 @Immutable
@@ -44,6 +45,7 @@ public final class ClosePullRequest extends AbstractAgent {
 
     /**
      * Constructor.
+     *
      * @param prof Profile
      * @param ghub GitHub
      */

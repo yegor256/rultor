@@ -16,6 +16,7 @@ import java.util.Objects;
 
 /**
  * Profile.
+ *
  * @since 1.0
  */
 @Immutable
@@ -35,6 +36,7 @@ public interface Profile {
 
     /**
      * Name of the repo.
+     *
      * @return Name
      * @since 1.36
      */
@@ -42,6 +44,7 @@ public interface Profile {
 
     /**
      * Name of the branch.
+     *
      * @return Name
      * @since 1.5
      */
@@ -50,6 +53,7 @@ public interface Profile {
     /**
      * Get it in XML format (throws
      * {@link Profile.ConfigException}, if fails).
+     *
      * @return XML
      * @throws IOException If fails
      */
@@ -57,6 +61,7 @@ public interface Profile {
 
     /**
      * Get assets.
+     *
      * @return Map of assets
      * @throws IOException If fails
      */
@@ -64,6 +69,7 @@ public interface Profile {
 
     /**
      * If can't read profile due to syntax error.
+     *
      * @since 1.0
      */
     final class ConfigException extends RuntimeException {
@@ -75,6 +81,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param cause Cause of it
          */
         public ConfigException(final String cause) {
@@ -83,6 +90,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param cause Cause of it
          */
         public ConfigException(final Exception cause) {
@@ -91,6 +99,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param msg Message
          * @param cause Cause of it, may be absent
          */
@@ -101,6 +110,7 @@ public interface Profile {
 
     /**
      * Defaults.
+     *
      * @since 1.0
      */
     @Immutable
@@ -113,6 +123,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param profile The profile
          */
         public Defaults(final Profile profile) {
@@ -121,6 +132,7 @@ public interface Profile {
 
         /**
          * Get text item.
+         *
          * @param xpath Path
          * @return Value
          * @throws IOException If fails
@@ -131,6 +143,7 @@ public interface Profile {
 
         /**
          * Get text item.
+         *
          * @param xpath Path
          * @param def Default, if it's absent
          * @return Value
@@ -152,6 +165,7 @@ public interface Profile {
 
     /**
      * Fixed.
+     *
      * @since 1.0
      */
     @Immutable
@@ -185,6 +199,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param lines Xml lines
          */
         public Fixed(final String... lines) {
@@ -193,6 +208,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param doc Document
          */
         public Fixed(final XML doc) {
@@ -201,6 +217,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param doc Document
          * @param name Name
          */
@@ -210,6 +227,7 @@ public interface Profile {
 
         /**
          * Ctor.
+         *
          * @param doc Document
          * @param name Name
          * @param brnch Branch

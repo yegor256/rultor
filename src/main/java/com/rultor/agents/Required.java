@@ -14,6 +14,7 @@ import lombok.ToString;
 
 /**
  * The agent is required for this talk?
+ *
  * @since 1.74
  */
 @Immutable
@@ -28,6 +29,7 @@ public final class Required {
 
     /**
      * Ctor.
+     *
      * @param args XPath expressions
      */
     public Required(final Array<String> args) {
@@ -36,6 +38,7 @@ public final class Required {
 
     /**
      * This talk is required for this agent?
+     *
      * @param talk The talk
      * @return TRUE if this talk is required for this agent
      * @throws IOException If fails

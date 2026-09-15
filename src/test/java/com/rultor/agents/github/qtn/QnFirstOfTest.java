@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnFirstOf}.
+ *
  * @since 1.6.5
  */
 final class QnFirstOfTest {
 
     /**
      * QnFirstOf can get the first one.
+     *
      * @throws Exception In case of error.
      */
     @Test

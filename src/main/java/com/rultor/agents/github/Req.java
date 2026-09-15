@@ -13,6 +13,7 @@ import org.xembly.Directives;
 
 /**
  * Request.
+ *
  * @since 1.3
  */
 @Immutable
@@ -36,12 +37,14 @@ public interface Req {
 
     /**
      * Directives.
+     *
      * @return Dirs
      */
     Iterable<Directive> dirs();
 
     /**
      * Simple impl.
+     *
      * @since 1.3
      */
     @Immutable
@@ -59,6 +62,7 @@ public interface Req {
 
         /**
          * Ctor.
+         *
          * @param tpe Type
          * @param args Args
          */

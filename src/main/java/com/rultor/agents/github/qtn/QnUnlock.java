@@ -25,6 +25,7 @@ import org.xembly.Xembler;
 
 /**
  * Unlock branch.
+ *
  * @since 1.53
  */
 @Immutable
@@ -42,6 +43,13 @@ public final class QnUnlock implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnUnlock() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,

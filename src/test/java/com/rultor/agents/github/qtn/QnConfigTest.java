@@ -17,12 +17,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnConfig}.
+ *
  * @since 1.8
  */
 final class QnConfigTest {
 
     /**
      * QnConfig can reply.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -41,6 +43,7 @@ final class QnConfigTest {
 
     /**
      * QnConfig can reply with an XML view of the profile.
+     *
      * @throws Exception In case of error.
      */
     @Test

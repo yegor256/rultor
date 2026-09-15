@@ -14,6 +14,7 @@ import lombok.ToString;
 
 /**
  * Shells referenced from Talks.
+ *
  * @since 1.0
  */
 @Immutable
@@ -28,6 +29,7 @@ public final class TalkShells {
 
     /**
      * Ctor.
+     *
      * @param talk XML in talk
      */
     public TalkShells(final XML talk) {
@@ -36,6 +38,7 @@ public final class TalkShells {
 
     /**
      * Find and get shell.
+     *
      * @return Issue
      * @throws UnknownHostException If fails
      */

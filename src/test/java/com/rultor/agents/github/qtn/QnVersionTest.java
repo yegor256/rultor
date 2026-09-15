@@ -17,12 +17,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnVersion}.
+ *
  * @since 1.6
  */
 final class QnVersionTest {
 
     /**
      * QnVersion marks the request as done.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -41,6 +43,7 @@ final class QnVersionTest {
 
     /**
      * QnVersion prints the current version.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -60,6 +63,7 @@ final class QnVersionTest {
 
     /**
      * QnVersion marks the link request as done.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -78,6 +82,7 @@ final class QnVersionTest {
 
     /**
      * QnVersion reply contains link to revision.
+     *
      * @throws Exception In case of error.
      */
     @Test

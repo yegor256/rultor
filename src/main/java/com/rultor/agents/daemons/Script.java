@@ -19,6 +19,7 @@ import org.apache.commons.io.input.AutoCloseInputStream;
 
 /**
  * Script to run.
+ *
  * @since 1.53
  */
 @Immutable
@@ -33,6 +34,7 @@ final class Script {
 
     /**
      * Ctor.
+     *
      * @param script Script name
      */
     Script(final String script) {
@@ -41,6 +43,7 @@ final class Script {
 
     /**
      * Execute.
+     *
      * @param xml Talk xml
      * @return Exit code
      * @throws IOException If fails
@@ -48,19 +51,23 @@ final class Script {
     int exec(final XML xml) throws IOException {
         final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        new Shell.Safe(shell).exec(
-            String.format(
-                "cd %s && cat > %s && chmod a+x %1$s/%2$s",
-                Ssh.escape(dir), Ssh.escape(this.name)
-            ),
-            AutoCloseInputStream.builder().setInputStream(
+        try (
+            AutoCloseInputStream stdin = AutoCloseInputStream.builder().setInputStream(
                 Objects.requireNonNull(
                     this.getClass().getResourceAsStream(this.name)
                 )
-            ).get(),
-            Logger.stream(Level.INFO, this),
-            Logger.stream(Level.WARNING, this)
-        );
+            ).get()
+        ) {
+            new Shell.Safe(shell).exec(
+                String.format(
+                    "cd %s && cat > %s && chmod a+x %1$s/%2$s",
+                    Ssh.escape(dir), Ssh.escape(this.name)
+                ),
+                stdin,
+                Logger.stream(Level.INFO, this),
+                Logger.stream(Level.WARNING, this)
+            );
+        }
         return new Shell.Empty(shell).exec(
             String.join(
                 " && ",

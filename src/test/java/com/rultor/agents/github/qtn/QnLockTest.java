@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnLock}.
+ *
  * @since 1.53
  */
 final class QnLockTest {
 
     /**
      * QnLock can lock a branch.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -40,6 +42,7 @@ final class QnLockTest {
 
     /**
      * QnLock posts a message about the lock action.
+     *
      * @throws Exception In case of error.
      */
     @Test

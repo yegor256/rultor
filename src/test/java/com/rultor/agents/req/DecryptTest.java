@@ -23,6 +23,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Tests for {@link Decrypt}.
+ *
  * @since 1.37.4
  */
 final class DecryptTest {
@@ -34,6 +35,7 @@ final class DecryptTest {
 
     /**
      * StartsRequest can take decryption instructions into account.
+     *
      * @param temp Temporary folder
      * @throws Exception In case of error.
      */
@@ -91,6 +93,7 @@ final class DecryptTest {
 
     /**
      * Decrypt keeps the passphrase off any line the shell traces.
+     *
      * @throws Exception In case of error.
      */
     @Test

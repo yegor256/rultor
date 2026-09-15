@@ -19,6 +19,7 @@ import lombok.ToString;
 
 /**
  * If rultor is in the list of collaborators.
+ *
  * @since 1.7
  */
 @Immutable
@@ -39,6 +40,7 @@ public final class QnIfCollaborator implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtn Original question
      */
     public QnIfCollaborator(final Question qtn) {

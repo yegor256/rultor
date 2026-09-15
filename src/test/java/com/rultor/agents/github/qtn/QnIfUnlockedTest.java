@@ -18,12 +18,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnIfUnlocked}.
+ *
  * @since 1.53
  */
 final class QnIfUnlockedTest {
 
     /**
      * QnIfUnlocked can build a request.
+     *
      * @throws Exception In case of error.
      */
     @Test

@@ -18,6 +18,7 @@ import software.amazon.awssdk.services.ec2.model.TerminateInstancesRequest;
 /**
  * Terminates EC2 instance if it's older than X hours, but
  * the work hasn't been started yet and the shell is not registered.
+ *
  * @since 1.77
  */
 @Immutable
@@ -36,6 +37,7 @@ public final class ShootsInstance extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param aws API
      * @param msec Max age in millis
      */

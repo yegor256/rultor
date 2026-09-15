@@ -31,6 +31,7 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Show current status.
+ *
  * @since 1.5
  */
 @Immutable
@@ -58,6 +59,7 @@ public final class QnStatus implements Question {
 
     /**
      * Ctor.
+     *
      * @param tlk Talk
      */
     public QnStatus(final Talk tlk) {

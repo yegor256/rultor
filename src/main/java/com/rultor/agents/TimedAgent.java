@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Aggent that tracks time and complains if too slow.
+ *
  * @since 1.59
  */
 public final class TimedAgent implements Agent {
@@ -28,6 +29,7 @@ public final class TimedAgent implements Agent {
 
     /**
      * Ctor.
+     *
      * @param agent Original agent
      */
     public TimedAgent(final Agent agent) {

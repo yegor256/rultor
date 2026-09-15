@@ -28,6 +28,7 @@ final class Friends {
 
     /**
      * Ctor.
+     *
      * @param items Names, as they are listed in .rultor.yml
      */
     Friends(final Iterable<String> items) {
@@ -38,6 +39,7 @@ final class Friends {
 
     /**
      * How many of them are there?
+     *
      * @return Total count of names in the list
      */
     int size() {
@@ -46,6 +48,7 @@ final class Friends {
 
     /**
      * Is this repository among them?
+     *
      * @param coords Coordinates of the repo, e.g. "yegor256/rultor"
      * @return TRUE if the repo may use the assets
      */

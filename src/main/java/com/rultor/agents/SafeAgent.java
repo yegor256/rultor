@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * Safe agent.
+ *
  * @since 1.59
  */
 public final class SafeAgent implements Agent {
@@ -24,6 +25,7 @@ public final class SafeAgent implements Agent {
 
     /**
      * Ctor.
+     *
      * @param agent Original agent
      */
     public SafeAgent(final Agent agent) {

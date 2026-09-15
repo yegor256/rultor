@@ -13,12 +13,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link Profile}.
+ *
  * @since 1.28
  */
 final class ProfileTest {
 
     /**
      * Profile.Fixed can accept correct XML.
+     *
      * @throws Exception In case of error.
      * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
      */

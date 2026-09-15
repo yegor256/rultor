@@ -20,12 +20,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnReferredTo}.
+ *
  * @since 1.20.3
  */
 final class QnReferredToTest {
 
     /**
      * QnReferredTo can build a request from a mention without a comma.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -39,6 +41,7 @@ final class QnReferredToTest {
 
     /**
      * QnReferredTo can build a request from a mention followed by a comma.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -52,6 +55,7 @@ final class QnReferredToTest {
 
     /**
      * QnReferredTo can recognize a mention with a comma placed after it.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -68,6 +72,7 @@ final class QnReferredToTest {
 
     /**
      * QnReferredTo can recognize a mention with a comma placed before it.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -85,6 +90,7 @@ final class QnReferredToTest {
     /**
      * QnReferredTo can recognize mention as invalid when login is
      * followed by a non-boundary char.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -102,6 +108,7 @@ final class QnReferredToTest {
     /**
      * QnReferredTo can recognize mention as invalid when login is
      * preceded by a non-boundary char.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -118,6 +125,7 @@ final class QnReferredToTest {
 
     /**
      * QnReferredTo can recognize the deploy command when mentioned.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -138,6 +146,7 @@ final class QnReferredToTest {
     /**
      * QnReferredTo can post an answer comment with instructions when
      * mentioned.
+     *
      * @throws Exception In case of error.
      */
     @Test

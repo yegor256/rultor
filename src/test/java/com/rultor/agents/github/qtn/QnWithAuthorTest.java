@@ -17,12 +17,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for {@link QnWithAuthor}.
+ *
  * @since 1.65
  */
 final class QnWithAuthorTest {
 
     /**
      * QnWithAuthor can add author.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -51,6 +53,7 @@ final class QnWithAuthorTest {
 
     /**
      * QnWithAuthor can ignore if Req is empty.
+     *
      * @throws Exception In case of error.
      */
     @Test

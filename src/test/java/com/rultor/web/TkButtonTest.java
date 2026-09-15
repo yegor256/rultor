@@ -13,12 +13,14 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkButton}.
+ *
  * @since 1.50
  */
 final class TkButtonTest {
 
     /**
      * TkButton can render SVG.
+     *
      * @throws Exception If some problem inside
      */
     @Test

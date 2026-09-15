@@ -15,6 +15,7 @@ import org.xembly.Directives;
 
 /**
  * Stars repos used.
+ *
  * @since 1.0
  */
 public final class Stars extends AbstractAgent {
@@ -26,6 +27,7 @@ public final class Stars extends AbstractAgent {
 
     /**
      * Ctor.
+     *
      * @param ghub GitHub client
      */
     public Stars(final GitHub ghub) {

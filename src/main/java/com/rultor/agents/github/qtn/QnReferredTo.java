@@ -20,6 +20,7 @@ import lombok.ToString;
 
 /**
  * Question.
+ *
  * @since 1.3
  */
 @Immutable
@@ -45,6 +46,7 @@ public final class QnReferredTo implements Question {
 
     /**
      * Ctor.
+     *
      * @param self Self login
      * @param qtn Original question
      */

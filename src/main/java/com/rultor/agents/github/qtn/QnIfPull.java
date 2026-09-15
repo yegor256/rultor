@@ -18,6 +18,7 @@ import lombok.ToString;
 
 /**
  * If pull.
+ *
  * @since 1.57
  */
 @Immutable
@@ -38,6 +39,7 @@ public final class QnIfPull implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtn Original question
      */
     public QnIfPull(final Question qtn) {

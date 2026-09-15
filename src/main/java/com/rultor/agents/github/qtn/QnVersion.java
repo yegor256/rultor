@@ -19,6 +19,7 @@ import lombok.ToString;
 
 /**
  * Show my current version.
+ *
  * @since 1.3.1
  */
 @Immutable
@@ -31,6 +32,13 @@ public final class QnVersion implements Question {
      */
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
+
+    /**
+     * Constructor.
+     */
+    public QnVersion() {
+        // Nothing to initialize.
+    }
 
     @Override
     public Req understand(final Comment.Smart comment,

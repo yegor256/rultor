@@ -13,12 +13,14 @@ import org.xembly.Directives;
 
 /**
  * Tests for {@link IndexesRequests}.
+ *
  * @since 1.2
  */
 final class IndexesRequestsTest {
 
     /**
      * IndexesRequests should store index when it doesn't exist.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -45,6 +47,7 @@ final class IndexesRequestsTest {
 
     /**
      * IndexesRequests should retrieve index from log.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -76,6 +79,7 @@ final class IndexesRequestsTest {
 
     /**
      * IndexesRequests should retrieve index from sibling.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -123,6 +127,7 @@ final class IndexesRequestsTest {
 
     /**
      * IndexesRequests should not store index when request tag doesn't exist.
+     *
      * @throws Exception In case of error.
      */
     @Test

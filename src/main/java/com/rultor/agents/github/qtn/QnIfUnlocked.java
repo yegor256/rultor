@@ -29,6 +29,7 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * If target branch is unlocked.
+ *
  * @since 1.53
  */
 @Immutable
@@ -54,6 +55,7 @@ public final class QnIfUnlocked implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtn Original question
      */
     public QnIfUnlocked(final Question qtn) {

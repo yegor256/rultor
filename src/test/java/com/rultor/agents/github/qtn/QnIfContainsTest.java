@@ -17,12 +17,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link QnIfContains}.
+ *
  * @since 1.50
  */
 final class QnIfContainsTest {
 
     /**
      * QnIfContains can block a request.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -42,6 +44,7 @@ final class QnIfContainsTest {
 
     /**
      * QnIfContains can allow a request.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -61,6 +64,7 @@ final class QnIfContainsTest {
 
     /**
      * QnIfContains skips the content in ``.
+     *
      * @throws Exception In case of error.
      */
     @Test

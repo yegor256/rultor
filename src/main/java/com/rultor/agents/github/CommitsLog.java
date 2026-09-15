@@ -26,6 +26,7 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Log of commits.
+ *
  * @since 1.51
  */
 @Immutable
@@ -43,6 +44,7 @@ final class CommitsLog {
 
     /**
      * Ctor.
+     *
      * @param rpo Repo
      */
     CommitsLog(final Repo rpo) {
@@ -51,6 +53,7 @@ final class CommitsLog {
 
     /**
      * Release body text.
+     *
      * @param prev Previous release time
      * @param current Current release time
      * @return Release body text

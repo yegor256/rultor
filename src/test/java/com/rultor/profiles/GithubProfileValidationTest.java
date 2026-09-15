@@ -22,12 +22,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link GithubProfile} YAML validation.
+ *
  * @since 1.1
  */
 final class GithubProfileValidationTest {
 
     /**
      * GithubProfile will accept empty rultor configuration.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -41,6 +43,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile can reject YAML with missing script in merge command.
+     *
      * @throws Exception In case of error.
      */
     @Disabled
@@ -61,6 +64,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile can reject YAML with missing script in deploy command.
+     *
      * @throws Exception In case of error.
      */
     @Disabled
@@ -81,6 +85,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile can reject YAML with missing script in release command.
+     *
      * @throws Exception In case of error.
      */
     @Disabled
@@ -101,6 +106,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile can accept YAML with script in merge command.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -120,6 +126,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile can accept YAML with script in release command.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -139,6 +146,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile can accept YAML with script in deploy command.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -158,6 +166,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile can accept YAML with script in all command.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -183,6 +192,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile collects the assets in the YAML.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -206,6 +216,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile reject get assets over not exist file.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -227,6 +238,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile reject get assets with wrong repository.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -248,6 +260,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile reject get assets with no friend user.
+     *
      * @throws Exception In case of error.
      */
     @Test
@@ -269,6 +282,7 @@ final class GithubProfileValidationTest {
 
     /**
      * GithubProfile reject get assets with no friends.
+     *
      * @throws Exception In case of error.
      */
     @Test

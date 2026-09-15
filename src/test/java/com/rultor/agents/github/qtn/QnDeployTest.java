@@ -17,12 +17,14 @@ import org.xembly.Xembler;
 
 /**
  * Tests for ${@link QnDeploy}.
+ *
  * @since 1.6
  */
 final class QnDeployTest {
 
     /**
      * QnDeploy can build a request.
+     *
      * @throws Exception In case of error.
      */
     @Test

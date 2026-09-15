@@ -18,6 +18,7 @@ import org.xembly.Directives;
 
 /**
  * Front page of a talk.
+ *
  * @since 1.50
  */
 final class TkTalk implements TkRegex {
@@ -29,6 +30,7 @@ final class TkTalk implements TkRegex {
 
     /**
      * Ctor.
+     *
      * @param tks Talks
      */
     TkTalk(final Talks tks) {

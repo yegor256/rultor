@@ -19,6 +19,7 @@ import org.xembly.Directives;
 
 /**
  * Integration tests for ${@link StartsRequest}.
+ *
  * @since 1.24.1
  */
 final class StartsRequestITTestCase {
@@ -43,6 +44,7 @@ final class StartsRequestITTestCase {
 
     /**
      * StartsRequest can compose an executable DEPLOY request.
+     *
      * @throws Exception In case of error.
      * @checkstyle NonStaticMethodCheck (100 lines)
      */

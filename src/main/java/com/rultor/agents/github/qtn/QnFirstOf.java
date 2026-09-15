@@ -17,6 +17,7 @@ import lombok.ToString;
 
 /**
  * First of.
+ *
  * @since 1.3
  */
 @Immutable
@@ -31,6 +32,7 @@ public final class QnFirstOf implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtns Original questions
      */
     public QnFirstOf(final Question... qtns) {
@@ -39,6 +41,7 @@ public final class QnFirstOf implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtns Original questions
      */
     public QnFirstOf(final Iterable<Question> qtns) {

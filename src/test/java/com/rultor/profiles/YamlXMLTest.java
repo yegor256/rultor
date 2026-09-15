@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ${@link YamlXML}.
+ *
  * @since 1.0
  * @checkstyle AbbreviationAsWordInNameCheck (5 lines)
  */

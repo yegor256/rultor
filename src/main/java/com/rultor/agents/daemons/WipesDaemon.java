@@ -15,6 +15,7 @@ import org.xembly.Directives;
 
 /**
  * Wipe the daemon as broken.
+ *
  * @since 1.53
  */
 @Immutable

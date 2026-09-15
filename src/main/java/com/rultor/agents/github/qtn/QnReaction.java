@@ -20,6 +20,7 @@ import lombok.ToString;
 /**
  * Mark this question in GitHub with an emoji, to show the
  * author that the comments has been seen.
+ *
  * @since 1.50.0
  */
 @Immutable
@@ -34,6 +35,7 @@ public final class QnReaction implements Question {
 
     /**
      * Ctor.
+     *
      * @param qtn Original question
      */
     public QnReaction(final Question qtn) {
