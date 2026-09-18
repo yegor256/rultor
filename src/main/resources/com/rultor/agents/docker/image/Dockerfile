@@ -13,7 +13,7 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
 # Basics
-RUN apt-get update && apt-get install -y bsdmainutils=9.0.5ubuntu1
+RUN apt-get update && apt-get install -y bsdmainutils=12.1.8
 
 # SSHD
 RUN apt-get update && apt-get install -y ssh=1:6.6p1-2ubuntu2.6 && mkdir /var/run/sshd && \
