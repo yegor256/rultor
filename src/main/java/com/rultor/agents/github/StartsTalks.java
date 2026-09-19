@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hamcrest.Matchers;
 import org.xembly.Directives;
 
 /**
@@ -90,13 +91,18 @@ public final class StartsTalks implements SuperAgent {
             }
             names.add(this.activate(talks, event));
         }
-        req.uri()
-            .queryParam("last_read_at", since).back()
-            .method(Request.PUT)
-            .body().set("{}").back()
-            .fetch()
-            .as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_RESET);
+        new RestResponse(
+            req.uri()
+                .queryParam("last_read_at", since).back()
+                .method(Request.PUT)
+                .body().set("{}").back()
+                .fetch()
+        ).assertStatus(
+            Matchers.oneOf(
+                HttpURLConnection.HTTP_ACCEPTED,
+                HttpURLConnection.HTTP_RESET
+            )
+        );
         Logger.info(
             this, "%d new notification(s) since %s (%d skipped): %[list]s",
             names.size(), since, skipped, names
