@@ -7,9 +7,17 @@ name: bashate
   push:
     branches:
       - master
+    paths:
+      - '**.sh'
+      - '**.bash'
+      - '.github/workflows/bashate.yml'
   pull_request:
     branches:
       - master
+    paths:
+      - '**.sh'
+      - '**.bash'
+      - '.github/workflows/bashate.yml'
 jobs:
   bashate:
     timeout-minutes: 15
