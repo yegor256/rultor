@@ -10,6 +10,7 @@ import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.RtPagination;
 import com.jcabi.http.Request;
+import com.jcabi.http.response.JsonResponse;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.Logger;
 import com.rultor.Time;
@@ -19,8 +20,10 @@ import com.rultor.spi.Talks;
 import jakarta.json.JsonObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hamcrest.Matchers;
@@ -65,7 +68,6 @@ public final class StartsTalks implements SuperAgent {
             .uri().path("/notifications").back();
         final Iterable<JsonObject> events = new RtPagination<>(
             req.uri()
-                .queryParam("participating", "true")
                 .queryParam("since", since)
                 .queryParam("all", Boolean.toString(true))
                 .back(),
@@ -76,7 +78,7 @@ public final class StartsTalks implements SuperAgent {
         for (final JsonObject event : events) {
             final String url = event.getJsonObject("subject").getString("url");
             final String reason = event.getString("reason");
-            if (!"mention".equals(reason)) {
+            if (!StartsTalks.interesting(reason) || !this.addressed(event)) {
                 ++skipped;
                 Logger.info(
                     this, "Skipped, since not interesting reason '%s' in %s",
@@ -107,6 +109,35 @@ public final class StartsTalks implements SuperAgent {
             this, "%d new notification(s) since %s (%d skipped): %[list]s",
             names.size(), since, skipped, names
         );
+    }
+
+    private static boolean interesting(final String reason) {
+        return "mention".equals(reason) || "subscribed".equals(reason);
+    }
+
+    private boolean addressed(final JsonObject event) throws IOException {
+        boolean result = "mention".equals(event.getString("reason"));
+        final JsonObject subject = event.getJsonObject("subject");
+        if (!result && !subject.isNull("latest_comment_url")) {
+            final String body = this.comment(subject).fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(JsonResponse.class).json().readObject()
+                .getString("body", "");
+            result = body.toLowerCase(Locale.ENGLISH).contains(
+                String.format(
+                    "@%s",
+                    this.github.users().self().login()
+                        .toLowerCase(Locale.ENGLISH)
+                )
+            );
+        }
+        return result;
+    }
+
+    private Request comment(final JsonObject subject) {
+        return this.github.entry().uri().path(
+            URI.create(subject.getString("latest_comment_url")).getPath()
+        ).back();
     }
 
     private String activate(final Talks talks, final JsonObject event)
