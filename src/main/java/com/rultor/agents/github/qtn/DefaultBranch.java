@@ -5,6 +5,7 @@
 package com.rultor.agents.github.qtn;
 
 import com.jcabi.github.Repo;
+import com.jcabi.github.UnexpectedHttpStatus;
 import java.io.IOException;
 
 /**
@@ -32,14 +33,14 @@ public final class DefaultBranch {
     public String toString() {
         try {
             return this.repo.defaultBranch().name();
+        } catch (final UnexpectedHttpStatus ex) {
+            throw new RepoNotFoundException(
+                this.repo.coordinates().toString(), ex
+            );
         } catch (final IOException ex) {
             throw new IllegalStateException(
                 String.format("Repo %s has no default branch", this.repo),
                 ex
-            );
-        } catch (final AssertionError ex) {
-            throw new RepoNotFoundException(
-                this.repo.coordinates().toString(), ex
             );
         }
     }
