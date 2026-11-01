@@ -50,7 +50,10 @@ public final class ClosePullRequest extends AbstractAgent {
      * @param ghub GitHub
      */
     public ClosePullRequest(final Profile prof, final GitHub ghub) {
-        super("/talk/wire[github-repo and github-issue]");
+        super(
+            "/talk/wire[github-repo and github-issue]",
+            "/talk/request[@id and type='merge' and success='true']"
+        );
         this.profile = new Profile.Defaults(prof);
         this.github = ghub;
     }
@@ -64,12 +67,14 @@ public final class ClosePullRequest extends AbstractAgent {
             )
         )) {
             final Issue.Smart issue = new TalkIssues(this.github, xml).get();
-            issue.close();
-            issue.comments().post(
-                ClosePullRequest.PHRASES.getString(
-                    "ClosePullRequest.explanation"
-                )
-            );
+            if (issue.isOpen()) {
+                issue.close();
+                issue.comments().post(
+                    ClosePullRequest.PHRASES.getString(
+                        "ClosePullRequest.explanation"
+                    )
+                );
+            }
         }
         return new Directives();
     }
