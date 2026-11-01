@@ -31,11 +31,6 @@ final class ClosePullRequestTest {
      * ClosePullRequest can close pull request if rebase mode.
      *
      * @throws Exception If error
-     * @todo #918:30min This class should only close pull requests for
-     *  successful merges, that have not resulted in GitHub itself closing the
-     *  PR, do nothing for any other kind of request. Once this is implemented
-     *  here, implement this class acting on all pull requests by adding it to
-     *  the active Agents.
      */
     @Test
     void closesPullRequestForRebaseMode() throws Exception {
@@ -54,7 +49,7 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(
-            ClosePullRequestTest.talk(repo, issue)
+            ClosePullRequestTest.talk(repo, issue, "merge", true)
         );
         MatcherAssert.assertThat(
             "PR should be closed",
@@ -85,7 +80,7 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(
-            ClosePullRequestTest.talk(repo, issue)
+            ClosePullRequestTest.talk(repo, issue, "merge", true)
         );
         MatcherAssert.assertThat(
             "Rebase message should be added",
@@ -120,7 +115,7 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(
-            ClosePullRequestTest.talk(repo, issue)
+            ClosePullRequestTest.talk(repo, issue, "merge", true)
         );
         MatcherAssert.assertThat(
             "Issue should be open",
@@ -150,7 +145,7 @@ final class ClosePullRequestTest {
             ),
             repo.github()
         ).execute(
-            ClosePullRequestTest.talk(repo, issue)
+            ClosePullRequestTest.talk(repo, issue, "merge", true)
         );
         MatcherAssert.assertThat(
             "No comments should be added",
@@ -160,14 +155,84 @@ final class ClosePullRequestTest {
         );
     }
 
-    private static Talk talk(final Repo repo, final Issue issue)
-        throws IOException {
+    @Test
+    void leavesPullRequestOpenAfterFailedMerge() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new ClosePullRequest(
+            ClosePullRequestTest.rebase(),
+            repo.github()
+        ).execute(
+            ClosePullRequestTest.talk(repo, issue, "merge", false)
+        );
+        MatcherAssert.assertThat(
+            "Pull request must not be closed after a failed merge",
+            new Issue.Smart(issue).state(), Matchers.is("open")
+        );
+    }
+
+    @Test
+    void leavesPullRequestOpenAfterDeploy() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new ClosePullRequest(
+            ClosePullRequestTest.rebase(),
+            repo.github()
+        ).execute(
+            ClosePullRequestTest.talk(repo, issue, "deploy", true)
+        );
+        MatcherAssert.assertThat(
+            "Pull request must not be closed after a deploy",
+            new Issue.Smart(issue).state(), Matchers.is("open")
+        );
+    }
+
+    @Test
+    void addsNoCommentToAlreadyClosedPullRequest() throws Exception {
+        final Repo repo = new MkGitHub().randomRepo();
+        final Issue issue = repo.issues().create("", "");
+        new Issue.Smart(issue).close();
+        new ClosePullRequest(
+            ClosePullRequestTest.rebase(),
+            repo.github()
+        ).execute(
+            ClosePullRequestTest.talk(repo, issue, "merge", true)
+        );
+        MatcherAssert.assertThat(
+            "Closed pull request must not receive a comment",
+            new Issue.Smart(issue).comments()
+                .iterate(Date.from(Instant.EPOCH)),
+            Matchers.is(Matchers.emptyIterable())
+        );
+    }
+
+    private static Profile rebase() throws Exception {
+        return new Profile.Fixed(
+            new XMLDocument(
+                new Joined(
+                    "",
+                    "<p><entry key='merge'>",
+                    "<entry key='rebase'>true</entry>",
+                    "</entry></p>"
+                ).asString()
+            )
+        );
+    }
+
+    private static Talk talk(final Repo repo, final Issue issue,
+        final String type, final boolean success) throws IOException {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk").add("wire")
                 .add("href").set("http://test").up()
                 .add("github-repo").set(repo.coordinates().toString()).up()
                 .add("github-issue").set(Integer.toString(issue.number()))
+                .up().up()
+                .add("request").attr("id", "a1b2c3")
+                .add("author").set("yegor256").up()
+                .add("success").set(Boolean.toString(success)).up()
+                .add("type").set(type).up()
+                .add("args")
         );
         return talk;
     }

@@ -33,6 +33,7 @@ import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.daemons.StopsDaemon;
 import com.rultor.agents.daemons.WipesDaemon;
 import com.rultor.agents.docker.DockerExec;
+import com.rultor.agents.github.ClosePullRequest;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Dephantomizes;
 import com.rultor.agents.github.DropsTalk;
@@ -320,6 +321,7 @@ public final class Agents {
                 new CommentsTag(this.github, profile),
                 new ReleaseBinaries(this.github, profile),
                 new Dephantomizes(this.github),
+                new ClosePullRequest(profile, this.github),
                 new Reports(this.github),
                 new Agent.Quiet(new TerminatesInstance(aws)),
                 new Agent.Quiet(new PingsInstance()),
