@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.AutoCloseInputStream;
 import org.apache.commons.io.input.ProxyReader;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.commons.text.StringEscapeUtils;
@@ -100,12 +99,6 @@ final class TkDaemon implements TkRegex {
         final InputStream body = TkDaemon.escape(
             new Tail(talk.read(), hash).read()
         );
-        @SuppressWarnings("PMD.UnnecessaryLocalRule")
-        final InputStream tail = AutoCloseInputStream.builder().setInputStream(
-            Objects.requireNonNull(
-                this.getClass().getResourceAsStream("daemon/tail.html")
-            )
-        ).get();
         return new SequenceInputStream(
             Collections.enumeration(
                 Arrays.asList(
@@ -113,9 +106,18 @@ final class TkDaemon implements TkRegex {
                         this.head(talk), StandardCharsets.UTF_8
                     ),
                     body,
-                    tail
+                    IOUtils.toInputStream(this.tail(), StandardCharsets.UTF_8)
                 )
             )
+        );
+    }
+
+    private String tail() throws IOException {
+        return IOUtils.toString(
+            Objects.requireNonNull(
+                this.getClass().getResource("daemon/tail.html")
+            ),
+            StandardCharsets.UTF_8
         );
     }
 
@@ -141,7 +143,6 @@ final class TkDaemon implements TkRegex {
             100_000
         );
         // @checkstyle AnonInnerLengthCheck (30 lines)
-        @SuppressWarnings("PMD.UnnecessaryLocalRule")
         final ProxyReader reader = new ProxyReader(src) {
             @Override
             protected void beforeRead(final int len) throws IOException {
