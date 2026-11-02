@@ -10,5 +10,6 @@ extend-exclude = [
 "nam" = "nam"
 "shll" = "shll"
 "scrpt" = "scrpt"
+"tpe" = "tpe"
 "MIIEowIBAAKCAQEAzDKK1b2dXgXepTvgpy2klfTZ6BVZCwg09eoyOtAWUnX64xQs" = "MIIEowIBAAKCAQEAzDKK1b2dXgXepTvgpy2klfTZ6BVZCwg09eoyOtAWUnX64xQs"
 "KgDKCNskCGoV0TAjYzdGfiABX17HcGePaL8GaItzWkakpWFoJGAXOGTmiKHqd49o" = "KgDKCNskCGoV0TAjYzdGfiABX17HcGePaL8GaItzWkakpWFoJGAXOGTmiKHqd49o"

@@ -23,7 +23,7 @@ import lombok.ToString;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Reversed;
 import org.cactoos.list.ListOf;
-import org.cactoos.text.Abbreviated;
+import org.cactoos.text.AbbreviatedRight;
 import org.cactoos.text.FormattedText;
 import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
@@ -103,7 +103,7 @@ public final class Answer {
             new UncheckedText(
                 new FormattedText(
                     "> %s%n%n",
-                    new Abbreviated(
+                    new AbbreviatedRight(
                         this.comment.body().replaceAll(
                             "\\p{Space}",
                             Answer.SPACE
