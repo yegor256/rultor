@@ -749,22 +749,40 @@
                 <id>start-takes-server</id>
                 <phase>pre-integration-test</phase>
                 <goals>
-                  <goal>java</goal>
+                  <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <mainClass>com.rultor.Entry</mainClass>
+                  <executable>${java.home}/bin/java</executable>
                   <classpathScope>test</classpathScope>
-                  <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                  <async>true</async>
+                  <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                   <arguments>
+                    <argument>-Dfailsafe.ddl.port=${failsafe.ddl.port}</argument>
+                    <argument>-classpath</argument>
+                    <classpath/>
+                    <argument>com.rultor.Entry</argument>
                     <argument>--port=${takes.port}</argument>
-                    <argument>--daemon=yes</argument>
                   </arguments>
-                  <systemProperties>
-                    <property>
-                      <key>failsafe.ddl.port</key>
-                      <value>${failsafe.ddl.port}</value>
-                    </property>
-                  </systemProperties>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>wait-for-takes-server</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <waitfor maxwait="2" maxwaitunit="minute" checkevery="500" timeoutproperty="takes.timeout">
+                      <socket server="localhost" port="${takes.port}"/>
+                    </waitfor>
+                    <fail if="takes.timeout" message="The Takes server did not open port ${takes.port} in two minutes"/>
+                  </target>
                 </configuration>
               </execution>
             </executions>
