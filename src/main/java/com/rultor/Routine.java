@@ -97,9 +97,17 @@ final class Routine implements Runnable, Closeable {
 
     @Override
     public void run() {
-        new VerboseRunnable(
-            () -> this.safe(System.currentTimeMillis()), true
-        ).run();
+        try {
+            new VerboseRunnable(
+                () -> this.safe(System.currentTimeMillis()), true
+            ).run();
+        } catch (final IllegalStateException ex) {
+            Thread.interrupted();
+            Logger.warn(
+                this, "The routine was interrupted and will run again: %[exception]s",
+                ex
+            );
+        }
     }
 
     private void safe(final long begin) {
