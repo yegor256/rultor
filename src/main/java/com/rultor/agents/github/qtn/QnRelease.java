@@ -74,7 +74,7 @@ public final class QnRelease implements Question {
                         release.reference()
                     )
                 );
-                req = Req.EMPTY;
+                req = Req.DONE;
             }
         } else {
             req = QnRelease.affirmative(comment, home);
