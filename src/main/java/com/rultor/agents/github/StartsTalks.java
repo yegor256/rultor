@@ -46,6 +46,13 @@ import org.xembly.Directives;
 public final class StartsTalks implements SuperAgent {
 
     /**
+     * Message for an exception rethrown with the context of the
+     * notification that caused it.
+     */
+    private static final String FAILURE =
+        "Failed to process notification at %s";
+
+    /**
      * GitHub.
      */
     private final transient GitHub github;
@@ -60,6 +67,7 @@ public final class StartsTalks implements SuperAgent {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
             System.currentTimeMillis() - 180_000
@@ -77,21 +85,34 @@ public final class StartsTalks implements SuperAgent {
         int skipped = 0;
         for (final JsonObject event : events) {
             final String url = event.getJsonObject("subject").getString("url");
-            final String reason = event.getString("reason");
-            if (!StartsTalks.interesting(reason) || !this.addressed(event)) {
-                ++skipped;
-                Logger.info(
-                    this, "Skipped, since not interesting reason '%s' in %s",
-                    reason, url
+            try {
+                final String reason = event.getString("reason");
+                if (!StartsTalks.interesting(reason) || !this.addressed(event)) {
+                    ++skipped;
+                    Logger.info(
+                        this, "Skipped, since not interesting reason '%s' in %s",
+                        reason, url
+                    );
+                    continue;
+                }
+                if (!new IssueUrl(url).valid()) {
+                    ++skipped;
+                    Logger.info(this, "Skipped, since not valid URL at %s", url);
+                    continue;
+                }
+                names.add(this.activate(talks, event));
+            } catch (final IOException ex) {
+                throw new IOException(
+                    String.format(StartsTalks.FAILURE, url),
+                    ex
                 );
-                continue;
+                // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final RuntimeException ex) {
+                throw new IllegalStateException(
+                    String.format(StartsTalks.FAILURE, url),
+                    ex
+                );
             }
-            if (!new IssueUrl(url).valid()) {
-                ++skipped;
-                Logger.info(this, "Skipped, since not valid URL at %s", url);
-                continue;
-            }
-            names.add(this.activate(talks, event));
         }
         new RestResponse(
             req.uri()

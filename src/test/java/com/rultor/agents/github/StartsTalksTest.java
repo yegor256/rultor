@@ -15,9 +15,11 @@ import com.jcabi.http.mock.MkGrizzlyContainer;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -125,6 +127,64 @@ final class StartsTalksTest {
         }
     }
 
+    /**
+     * StartsTalks rethrows an {@link IOException} with the URL of the
+     * notification that caused it.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void wrapsIoExceptionWithNotificationUrl() throws Exception {
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple(StartsTalksTest.notification("mention")))
+            .next(new MkAnswer.Simple("{\"html_url\":\"http://x/o/r/issues/7\"}"))
+            .start();
+        try (container) {
+            final Talks talks = Mockito.mock(Talks.class);
+            final Talk talk = Mockito.mock(Talk.class);
+            Mockito.when(talks.get("o/r#7")).thenReturn(talk);
+            Mockito.doThrow(new IOException("broken"))
+                .when(talk).modify(Mockito.any());
+            MatcherAssert.assertThat(
+                "IOException message should name the notification URL",
+                Assertions.assertThrows(
+                    IOException.class,
+                    () -> new StartsTalks(new RtGitHub(container.home()))
+                        .execute(talks),
+                    "IOException should be rethrown"
+                ).getMessage(),
+                Matchers.containsString(
+                    "https://api.github.com/repos/o/r/issues/7"
+                )
+            );
+        }
+    }
+
+    /**
+     * StartsTalks rethrows a runtime exception with the URL of the
+     * notification that caused it.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void wrapsRuntimeExceptionWithNotificationUrl() throws Exception {
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple(StartsTalksTest.brokenNotification()))
+            .start();
+        try (container) {
+            MatcherAssert.assertThat(
+                "Exception message should name the notification URL",
+                Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> new StartsTalks(new RtGitHub(container.home()))
+                        .execute(new Talks.InDir()),
+                    "IllegalStateException should be rethrown"
+                ).getMessage(),
+                Matchers.containsString("not-an-issue-url")
+            );
+        }
+    }
+
     private static String notification(final String reason) {
         return String.join(
             "",
@@ -134,6 +194,17 @@ final class StartsTalksTest {
             "\"url\":\"https://api.github.com/repos/o/r/issues/7\",",
             "\"latest_comment_url\":",
             "\"https://api.github.com/repos/o/r/issues/comments/9\"}}]"
+        );
+    }
+
+    private static String brokenNotification() {
+        return String.join(
+            "",
+            "[{\"reason\":\"subscribed\",",
+            "\"repository\":{\"full_name\":\"o/r\"},",
+            "\"subject\":{",
+            "\"url\":\"not-an-issue-url\",",
+            "\"latest_comment_url\":\"http://bad url\"}}]"
         );
     }
 }
