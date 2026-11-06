@@ -77,6 +77,8 @@ import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.PfShell;
 import com.rultor.agents.shells.RegistersShell;
 import com.rultor.agents.shells.RemovesShell;
+import com.rultor.agents.shells.SshDefaults;
+import com.rultor.agents.shells.SshProfile;
 import com.rultor.agents.twitter.OAuthTwitter;
 import com.rultor.agents.twitter.Tweets;
 import com.rultor.spi.Agent;
@@ -275,22 +277,11 @@ public final class Agents {
                 new Agent.Quiet(new DescribesInstance(aws)),
                 new Agent.Quiet(
                     new ConnectsInstance(
-                        aws,
-                        new PfShell(
-                            profile,
-                            "none",
-                            Agents.PORT,
-                            "ubuntu",
-                            Agents.priv()
-                        )
+                        aws, Agents.instanceShell(profile)
                     )
                 ),
                 new Agent.Disabled(
-                    new RegistersShell(
-                        profile,
-                        Agents.HOST, Agents.PORT, Agents.LOGIN,
-                        Agents.priv()
-                    ),
+                    Agents.registeredShell(profile),
                     true
                 ),
                 new DismountDaemon(TimeUnit.HOURS.toMinutes(5L)),
@@ -390,6 +381,26 @@ public final class Agents {
         return String.format(
             "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
             entry
+        );
+    }
+
+    private static PfShell instanceShell(final Profile profile) {
+        return new PfShell(
+            new SshProfile(
+                profile,
+                new SshDefaults("none", Agents.PORT, "ubuntu", Agents.priv())
+            )
+        );
+    }
+
+    private static RegistersShell registeredShell(final Profile profile) {
+        return new RegistersShell(
+            new SshProfile(
+                profile,
+                new SshDefaults(
+                    Agents.HOST, Agents.PORT, Agents.LOGIN, Agents.priv()
+                )
+            )
         );
     }
 

@@ -9,7 +9,6 @@ import com.jcabi.ssh.Ssh;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -18,54 +17,44 @@ import org.apache.commons.io.IOUtils;
 /**
  * Shell in profile.
  *
+ * <p>The profile is expected to carry all ssh entries; wrap it into
+ * {@link SshProfile} to fill them in with defaults when missing.</p>
+ *
  * @since 1.48
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "profile", "addr", "prt", "user", "pvt" })
+@EqualsAndHashCode(of = { "profile", "addr" })
 public final class PfShell {
 
     /**
-     * Profile.
+     * Profile with SSH settings.
      */
     private final transient Profile profile;
 
     /**
-     * Host name or IP address.
+     * Host name or IP address to override the profile with, empty for none.
      */
     private final transient String addr;
 
     /**
-     * Port to use.
+     * Constructor.
+     *
+     * @param prof Profile with SSH settings
      */
-    private final transient int prt;
-
-    /**
-     * User name.
-     */
-    private final transient String user;
-
-    /**
-     * Private SSH key.
-     */
-    private final transient String pvt;
+    public PfShell(final Profile prof) {
+        this(prof, "");
+    }
 
     /**
      * Constructor.
      *
-     * @param prof Profile
-     * @param host Default IP address or Host name
-     * @param port Default Port of server
-     * @param login Default Login
-     * @param key Default Private SSH key
+     * @param prof Profile with SSH settings
+     * @param host Host name to override the profile with, empty for none
      */
-    public PfShell(final Profile prof, final String host,
-        final int port, final String login, final String key) {
+    private PfShell(final Profile prof, final String host) {
         this.profile = prof;
         this.addr = host;
-        this.prt = port;
-        this.user = login;
-        this.pvt = key;
     }
 
     /**
@@ -75,7 +64,7 @@ public final class PfShell {
      * @return New shell
      */
     public PfShell withHost(final String host) {
-        return new PfShell(this.profile, host, this.prt, this.user, this.pvt);
+        return new PfShell(this.profile, host);
     }
 
     /**
@@ -85,9 +74,15 @@ public final class PfShell {
      * @throws IOException If fails
      */
     public String host() throws IOException {
-        return new Profile.Defaults(this.profile).text(
-            "/p/entry[@key='ssh']/entry[@key='host']", this.addr
-        );
+        final String host;
+        if (this.addr.isEmpty()) {
+            host = new Profile.Defaults(this.profile).text(
+                "/p/entry[@key='ssh']/entry[@key='host']"
+            );
+        } else {
+            host = this.addr;
+        }
+        return host;
     }
 
     /**
@@ -99,8 +94,7 @@ public final class PfShell {
     public int port() throws IOException {
         return Integer.parseInt(
             new Profile.Defaults(this.profile).text(
-                "/p/entry[@key='ssh']/entry[@key='port']",
-                Integer.toString(this.prt)
+                "/p/entry[@key='ssh']/entry[@key='port']"
             )
         );
     }
@@ -113,7 +107,7 @@ public final class PfShell {
      */
     public String login() throws IOException {
         return new Profile.Defaults(this.profile).text(
-            "/p/entry[@key='ssh']/entry[@key='login']", this.user
+            "/p/entry[@key='ssh']/entry[@key='login']"
         );
     }
 
@@ -125,17 +119,12 @@ public final class PfShell {
      */
     public String key() throws IOException {
         final String path = new Profile.Defaults(this.profile).text(
-            "/p/entry[@key='ssh']/entry[@key='key']", ""
+            "/p/entry[@key='ssh']/entry[@key='key']"
         );
         final String key;
-        if (path.isEmpty()) {
-            key = this.pvt;
+        if (this.profile.assets().get(path) == null) {
+            key = path;
         } else {
-            if (this.profile.assets().get(path) == null) {
-                throw new Profile.ConfigException(
-                    String.format("Private SSH key not found at %s", path)
-                );
-            }
             try (InputStream stream = this.profile.assets().get(path)) {
                 key = IOUtils.toString(
                     stream,
@@ -152,9 +141,9 @@ public final class PfShell {
      * Make SSH shell.
      *
      * @return SSH shell
-     * @throws UnknownHostException If fails
+     * @throws IOException If fails
      */
-    public Ssh toSsh() throws UnknownHostException {
-        return new Ssh(this.addr, this.prt, this.user, this.pvt);
+    public Ssh toSsh() throws IOException {
+        return new Ssh(this.host(), this.port(), this.login(), this.key());
     }
 }
