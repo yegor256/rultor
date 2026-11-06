@@ -8,6 +8,7 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.Repos;
 import com.jcabi.github.mock.MkGitHub;
+import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.UUID;
@@ -72,6 +73,83 @@ final class TweetsTest {
                     )
                 ).asString()
             )
+        );
+    }
+
+    /**
+     * Tweets can skip posting when 'tweet' is disabled in the profile.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void skipsTweetWhenDisabledInProfile() throws Exception {
+        final Repo repo = new MkGitHub().repos().create(
+            new Repos.RepoCreate(
+                UUID.randomUUID().toString().replace("-", ""), false
+            )
+        );
+        final Twitter twitter = Mockito.mock(Twitter.class);
+        new Tweets(
+            repo.github(),
+            twitter,
+            new Profile.Fixed(
+                "<p>",
+                "<entry key='release'>",
+                "<entry key='tweet'>false</entry>",
+                "</entry></p>"
+            )
+        ).execute(TweetsTest.talk(repo, repo.issues().create("", "")));
+        Mockito.verify(twitter, Mockito.never()).post(Mockito.anyString());
+    }
+
+    /**
+     * Tweets can post when 'tweet' is explicitly enabled in the profile.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsTweetWhenEnabledInProfile() throws Exception {
+        final Repo repo = new MkGitHub().repos().create(
+            new Repos.RepoCreate(
+                UUID.randomUUID().toString().replace("-", ""), false
+            )
+        );
+        final Twitter twitter = Mockito.mock(Twitter.class);
+        new Tweets(
+            repo.github(),
+            twitter,
+            new Profile.Fixed(
+                "<p>",
+                "<entry key='release'>",
+                "<entry key='tweet'>true</entry>",
+                "</entry></p>"
+            )
+        ).execute(TweetsTest.talk(repo, repo.issues().create("", "")));
+        Mockito.verify(twitter).post(
+            ArgumentMatchers.contains(repo.coordinates().repo())
+        );
+    }
+
+    /**
+     * Tweets can post when the profile has no 'tweet' option at all.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void postsTweetWhenOptionAbsentInProfile() throws Exception {
+        final Repo repo = new MkGitHub().repos().create(
+            new Repos.RepoCreate(
+                UUID.randomUUID().toString().replace("-", ""), false
+            )
+        );
+        final Twitter twitter = Mockito.mock(Twitter.class);
+        new Tweets(
+            repo.github(),
+            twitter,
+            new Profile.Fixed()
+        ).execute(TweetsTest.talk(repo, repo.issues().create("", "")));
+        Mockito.verify(twitter).post(
+            ArgumentMatchers.contains(repo.coordinates().repo())
         );
     }
 

@@ -13,7 +13,9 @@ import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.github.TalkIssues;
+import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -26,7 +28,7 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = { "github", "twitter" })
+@EqualsAndHashCode(callSuper = false, of = { "github", "twitter", "profile" })
 public final class Tweets extends AbstractAgent {
 
     /**
@@ -40,18 +42,35 @@ public final class Tweets extends AbstractAgent {
     private final transient Twitter twitter;
 
     /**
+     * Profile.
+     */
+    private final transient Profile profile;
+
+    /**
      * Ctor.
      *
      * @param ghub GitHub client
      * @param twt Twitter client
      */
     public Tweets(final GitHub ghub, final Twitter twt) {
+        this(ghub, twt, Profile.EMPTY);
+    }
+
+    /**
+     * Ctor.
+     *
+     * @param ghub GitHub client
+     * @param twt Twitter client
+     * @param config Profile
+     */
+    public Tweets(final GitHub ghub, final Twitter twt, final Profile config) {
         super(
             "/talk/wire[github-repo and github-issue]",
             "/talk/request[@id and type='release' and success='true']"
         );
         this.github = ghub;
         this.twitter = twt;
+        this.profile = config;
     }
 
     @Override
@@ -59,7 +78,7 @@ public final class Tweets extends AbstractAgent {
         final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Repo.Smart repo = new Repo.Smart(issue.repo());
-        if (!repo.isPrivate()) {
+        if (!repo.isPrivate() && this.tweetEnabled()) {
             this.twitter.post(
                 Tweets.tweet(
                     repo, req.xpath("args/arg[@name='tag']/text()").get(0)
@@ -71,6 +90,28 @@ public final class Tweets extends AbstractAgent {
             );
         }
         return new Directives();
+    }
+
+    private boolean tweetEnabled() {
+        try {
+            final List<String> values = this.profile.read()
+                .xpath("/p/entry[@key='release']/entry[@key='tweet']/text()");
+            final boolean result;
+            if (values.isEmpty()) {
+                result = true;
+            } else {
+                result = "true".equals(values.get(0).trim());
+            }
+            return result;
+        } catch (final IOException exception) {
+            throw new IllegalStateException(
+                String.format(
+                    "Can't read profile: '%s' to determine tweet status",
+                    this.profile
+                ),
+                exception
+            );
+        }
     }
 
     private static String tweet(final Repo.Smart repo, final String tag)
