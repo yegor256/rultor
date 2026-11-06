@@ -67,7 +67,6 @@ public final class StartsTalks implements SuperAgent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void execute(final Talks talks) throws IOException {
         final String since = new Time(
             System.currentTimeMillis() - 180_000
@@ -106,8 +105,7 @@ public final class StartsTalks implements SuperAgent {
                     String.format(StartsTalks.FAILURE, url),
                     ex
                 );
-                // @checkstyle IllegalCatchCheck (1 line)
-            } catch (final RuntimeException ex) {
+            } catch (final IllegalArgumentException | IllegalStateException ex) {
                 throw new IllegalStateException(
                     String.format(StartsTalks.FAILURE, url),
                     ex
