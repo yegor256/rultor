@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -113,22 +114,49 @@ final class PfShellTest {
     }
 
     /**
-     * PfShell can use the key entry value when there is no such asset.
+     * PfShell can fail with a configuration error when the key asset
+     * referenced by the profile is missing.
+     */
+    @Test
+    void throwsConfigExceptionWhenKeyAssetMissing() {
+        MatcherAssert.assertThat(
+            "Missing key asset should raise a configuration error",
+            Assertions.assertThrows(
+                Profile.ConfigException.class,
+                () -> new PfShell(
+                    new Profile.Fixed(
+                        "<p><entry key='ssh'>",
+                        "<entry key='key'>missing.pem</entry>",
+                        "</entry></p>"
+                    )
+                ).key(),
+                "ConfigException should be thrown"
+            ).getMessage(),
+            Matchers.containsString("Private SSH key not found at missing.pem")
+        );
+    }
+
+    /**
+     * PfShell can fall back to the injected default key when the profile
+     * explicitly configures an empty {@code ssh.key} entry.
      *
      * @throws Exception In case of error.
      */
     @Test
-    void usesKeyValueWhenAssetAbsent() throws Exception {
+    void fallsBackToDefaultKeyWhenEntryEmpty() throws Exception {
         MatcherAssert.assertThat(
-            "Key entry value should be used when the asset is absent",
+            "Empty ssh.key should fall back to the injected default",
             new PfShell(
-                new Profile.Fixed(
-                    "<p><entry key='ssh'>",
-                    "<entry key='key'>inline-key</entry>",
-                    "</entry></p>"
+                new SshProfile(
+                    new Profile.Fixed(
+                        "<p><entry key='ssh'>",
+                        "<entry key='key'></entry>",
+                        "</entry></p>"
+                    ),
+                    new SshDefaults("b4.rultor.com", 22, "rultor", "dflt-key")
                 )
             ).key(),
-            Matchers.equalTo("inline-key")
+            Matchers.equalTo("dflt-key")
         );
     }
 

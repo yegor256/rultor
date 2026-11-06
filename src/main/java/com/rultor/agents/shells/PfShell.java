@@ -114,17 +114,26 @@ public final class PfShell {
     /**
      * Get private key.
      *
+     * <p>An entry injected by {@link SshDefaults} carries the default
+     * key itself; a key configured by the profile is an asset reference
+     * and must resolve to an existing asset.</p>
+     *
      * @return Private SSH key
      * @throws IOException If fails
      */
     public String key() throws IOException {
-        final String path = new Profile.Defaults(this.profile).text(
-            "/p/entry[@key='ssh']/entry[@key='key']"
-        );
+        final String entry = "/p/entry[@key='ssh']/entry[@key='key']";
         final String key;
-        if (this.profile.assets().get(path) == null) {
-            key = path;
-        } else {
+        if (this.profile.read()
+            .nodes(String.format("%s[@default='true']", entry)).isEmpty()) {
+            final String path = new Profile.Defaults(this.profile).text(
+                entry, ""
+            );
+            if (this.profile.assets().get(path) == null) {
+                throw new Profile.ConfigException(
+                    String.format("Private SSH key not found at %s", path)
+                );
+            }
             try (InputStream stream = this.profile.assets().get(path)) {
                 key = IOUtils.toString(
                     stream,
@@ -133,6 +142,9 @@ public final class PfShell {
             } catch (final IOException ex) {
                 throw new Profile.ConfigException(ex);
             }
+        } else {
+            key = this.profile.read()
+                .xpath(String.format("%s/text()", entry)).get(0);
         }
         return key;
     }

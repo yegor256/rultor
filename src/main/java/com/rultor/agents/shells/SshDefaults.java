@@ -55,6 +55,11 @@ public final class SshDefaults {
     /**
      * Directives filling in the SSH entries missing in the profile XML.
      *
+     * <p>Every entry injected by this method is marked with a
+     * {@code default='true'} attribute, so consumers can distinguish an
+     * injected default from a value that the profile configured itself,
+     * e.g. an asset reference in the {@code key} entry.</p>
+     *
      * @param xml Profile XML
      * @return Directives, possibly empty
      */
@@ -66,7 +71,7 @@ public final class SshDefaults {
         SshDefaults.entry(dirs, xml, "host", this.host);
         SshDefaults.entry(dirs, xml, "port", Integer.toString(this.port));
         SshDefaults.entry(dirs, xml, "login", this.login);
-        SshDefaults.entry(dirs, xml, "key", this.key);
+        SshDefaults.keyEntry(dirs, xml, this.key);
         return dirs;
     }
 
@@ -76,7 +81,21 @@ public final class SshDefaults {
             String.format("/p/entry[@key='ssh']/entry[@key='%s']", name)
         ).isEmpty()) {
             dirs.xpath("/p/entry[@key='ssh']")
-                .add("entry").attr("key", name).set(value);
+                .add("entry").attr("key", name)
+                .attr("default", "true").set(value);
+        }
+    }
+
+    private static void keyEntry(final Directives dirs, final XML xml,
+        final String value) {
+        final String xpath = "/p/entry[@key='ssh']/entry[@key='key']";
+        if (xml.nodes(xpath).isEmpty()) {
+            dirs.xpath("/p/entry[@key='ssh']")
+                .add("entry").attr("key", "key")
+                .attr("default", "true").set(value);
+        } else if (xml.xpath(String.format("%s/text()", xpath)).isEmpty()) {
+            dirs.xpath(xpath)
+                .attr("default", "true").set(value);
         }
     }
 }
