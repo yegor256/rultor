@@ -315,7 +315,8 @@ public final class Agents {
                             Env.read("Rultor-TwitterSecret"),
                             Env.read("Rultor-TwitterToken"),
                             Env.read("Rultor-TwitterTokenSecret")
-                        )
+                        ),
+                        profile
                     )
                 ),
                 new CommentsTag(this.github, profile),
