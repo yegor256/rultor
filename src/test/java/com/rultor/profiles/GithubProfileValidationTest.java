@@ -17,7 +17,6 @@ import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -46,7 +45,6 @@ final class GithubProfileValidationTest {
      *
      * @throws Exception In case of error.
      */
-    @Disabled
     @Test
     void rejectsYamlWithoutMergeScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
@@ -67,7 +65,6 @@ final class GithubProfileValidationTest {
      *
      * @throws Exception In case of error.
      */
-    @Disabled
     @Test
     void rejectsYamlWithoutDeployScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
@@ -88,7 +85,6 @@ final class GithubProfileValidationTest {
      *
      * @throws Exception In case of error.
      */
-    @Disabled
     @Test
     void rejectsYamlWithoutReleaseScript() throws Exception {
         final Repo repo = GithubProfileValidationTest.repo(
@@ -101,6 +97,52 @@ final class GithubProfileValidationTest {
         Assertions.assertThrows(
             Profile.ConfigException.class,
             () -> new GithubProfile(repo).read()
+        );
+    }
+
+    /**
+     * GithubProfile can reject YAML with an unknown top-level key.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void rejectsYamlWithUnknownKey() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            new Joined(
+                System.lineSeparator(),
+                "merge:",
+                " script:",
+                "  - pwd",
+                "unknown-key: true"
+            ).asString()
+        );
+        Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(repo).read()
+        );
+    }
+
+    /**
+     * GithubProfile reports the reference link for invalid YAML.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void reportsReferenceLinkForInvalidYaml() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            new Joined(
+                System.lineSeparator(),
+                "merge:",
+                "  - pwd"
+            ).asString()
+        );
+        MatcherAssert.assertThat(
+            "Error must point to the config reference",
+            Assertions.assertThrows(
+                Profile.ConfigException.class,
+                () -> new GithubProfile(repo).read()
+            ).getMessage(),
+            Matchers.containsString("https://doc.rultor.com/reference.html")
         );
     }
 
