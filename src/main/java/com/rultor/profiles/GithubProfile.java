@@ -4,6 +4,8 @@
  */
 package com.rultor.profiles;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
@@ -11,6 +13,10 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 import com.rultor.agents.github.qtn.DefaultBranch;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
@@ -19,7 +25,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +40,8 @@ import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapOf;
 import org.cactoos.text.Joined;
 import org.cactoos.text.UncheckedText;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 /**
  * GitHub Profile.
@@ -45,6 +52,7 @@ import org.cactoos.text.UncheckedText;
  *
  * @since 1.0
  * @checkstyle AvoidInstantiatingObjectsInLoops
+ * @checkstyle ClassFanOutComplexityCheck (50 lines)
  */
 @Immutable
 @ToString
@@ -62,6 +70,17 @@ final class GithubProfile implements Profile {
     private static final Pattern PATH = Pattern.compile(
         "([a-zA-Z0-9][a-zA-Z0-9-]*/[a-zA-Z_0-9.-]+)#(.+)"
     );
+
+    /**
+     * Classpath resource with the JSON schema of the config.
+     */
+    private static final String SCHEMA =
+        "/com/rultor/profiles/rultor_schema.json";
+
+    /**
+     * JSON mapper, used to convert parsed YAML into a JSON tree.
+     */
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * Repo.
@@ -260,7 +279,7 @@ final class GithubProfile implements Profile {
             );
             yml = "";
         }
-        final List<String> msg = GithubProfile.validate();
+        final List<String> msg = GithubProfile.validate(yml);
         if (!msg.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
@@ -278,7 +297,52 @@ final class GithubProfile implements Profile {
         return yml;
     }
 
-    private static List<String> validate() {
-        return Collections.emptyList();
+    private static List<String> validate(final String yml) {
+        final List<String> messages = new ArrayList<>(0);
+        final Object parsed;
+        try {
+            parsed = new Yaml().load(yml);
+        } catch (final YAMLException ex) {
+            throw new Profile.ConfigException(ex);
+        }
+        if (parsed != null) {
+            try (
+                InputStream stream = GithubProfile.class.getResourceAsStream(
+                    GithubProfile.SCHEMA
+                )
+            ) {
+                final JsonSchema schema = JsonSchemaFactory
+                    .getInstance(SpecVersion.VersionFlag.V202012)
+                    .getSchema(stream);
+                final JsonNode node =
+                    GithubProfile.MAPPER.valueToTree(parsed);
+                for (final ValidationMessage msg
+                    : schema.validate(node)) {
+                    final String path =
+                        msg.getInstanceLocation().toString();
+                    final String where;
+                    if (path.isEmpty()) {
+                        where = "";
+                    } else {
+                        where = String.format("'%s': ", path);
+                    }
+                    messages.add(
+                        String.format(
+                            "%s%s, see https://doc.rultor.com/reference.html",
+                            where, msg.getMessage()
+                        )
+                    );
+                }
+            } catch (final IOException ex) {
+                throw new IllegalStateException(
+                    String.format(
+                        "Failed to read %s from classpath",
+                        GithubProfile.SCHEMA
+                    ),
+                    ex
+                );
+            }
+        }
+        return messages;
     }
 }
