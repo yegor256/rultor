@@ -94,11 +94,11 @@ final class QnReleaseTest {
         repo.releases().create("1.7");
         issue.comments().post("release `1.6`");
         MatcherAssert.assertThat(
-            "Empty request should be created",
+            "Done request should be created",
             new QnRelease().understand(
                 new Comment.Smart(issue.comments().get(1)), new URI("#")
             ),
-            Matchers.is(Req.EMPTY)
+            Matchers.is(Req.DONE)
         );
     }
 
