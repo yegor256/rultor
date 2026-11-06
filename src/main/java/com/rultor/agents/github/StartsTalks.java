@@ -68,7 +68,6 @@ public final class StartsTalks implements SuperAgent {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void execute(final Talks talks) throws IOException {
         final String moment = new Time().iso();
         final Request req = this.github.entry()
@@ -101,8 +100,7 @@ public final class StartsTalks implements SuperAgent {
                     String.format(StartsTalks.FAILURE, url),
                     ex
                 );
-                // @checkstyle IllegalCatchCheck (1 line)
-            } catch (final RuntimeException ex) {
+            } catch (final IllegalArgumentException | IllegalStateException ex) {
                 throw new IllegalStateException(
                     String.format(StartsTalks.FAILURE, url),
                     ex
