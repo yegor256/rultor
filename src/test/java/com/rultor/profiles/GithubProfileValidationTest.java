@@ -147,6 +147,30 @@ final class GithubProfileValidationTest {
     }
 
     /**
+     * GithubProfile reports the line of the invalid entry.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void reportsLinesForInvalidYaml() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            new Joined(
+                System.lineSeparator(),
+                "docker:",
+                "  image: 42"
+            ).asString()
+        );
+        MatcherAssert.assertThat(
+            "Error must point to the line of the invalid entry",
+            Assertions.assertThrows(
+                Profile.ConfigException.class,
+                () -> new GithubProfile(repo).read()
+            ).getMessage(),
+            Matchers.containsString("'/docker/image' (line 2)")
+        );
+    }
+
+    /**
      * GithubProfile can accept YAML with script in merge command.
      *
      * @throws Exception In case of error.
