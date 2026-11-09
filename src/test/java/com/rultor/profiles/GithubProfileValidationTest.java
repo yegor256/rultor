@@ -233,6 +233,28 @@ final class GithubProfileValidationTest {
     }
 
     /**
+     * GithubProfile can accept YAML with the documented EC2 settings.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void acceptsYamlWithEcType() throws Exception {
+        final Repo repo = GithubProfileValidationTest.repo(
+            new Joined(
+                System.lineSeparator(),
+                "ec2:",
+                "  type: t2.medium",
+                "merge:",
+                " script:",
+                "  - pwd"
+            ).asString()
+        );
+        Assertions.assertDoesNotThrow(
+            () -> new GithubProfile(repo).read()
+        );
+    }
+
+    /**
      * GithubProfile collects the assets in the YAML.
      *
      * @throws Exception In case of error.

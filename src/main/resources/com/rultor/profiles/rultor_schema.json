@@ -70,6 +70,19 @@
       },
       "type": "object"
     },
+    "ec2": {
+      "description": "Amazon EC2 instance to be used to run builds.",
+      "properties": {
+        "type": {
+          "description": "Type of the EC2 instance, e.g. t2.micro, t2.medium, default value depends on the Rultor server.",
+          "examples": [
+            "t2.medium"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "env": {
       "additionalProperties": true,
       "description": "Additional environment variables for all operations.",
