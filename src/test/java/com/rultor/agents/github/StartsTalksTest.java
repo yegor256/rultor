@@ -12,6 +12,7 @@ import com.jcabi.http.Request;
 import com.jcabi.http.mock.MkAnswer;
 import com.jcabi.http.mock.MkContainer;
 import com.jcabi.http.mock.MkGrizzlyContainer;
+import com.rultor.Time;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
@@ -78,6 +79,55 @@ final class StartsTalksTest {
                 "Notifications should not stay unread",
                 container.take().method(),
                 Matchers.equalTo(Request.PUT)
+            );
+        }
+    }
+
+    /**
+     * StartsTalks can fetch only unread notifications.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void fetchesOnlyUnreadNotifications() throws Exception {
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple("[]"))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_RESET))
+            .start();
+        try (container) {
+            new StartsTalks(new RtGitHub(container.home()))
+                .execute(new Talks.InDir());
+            MatcherAssert.assertThat(
+                "Notifications are not limited to unread ones",
+                container.take().uri().getQuery(),
+                Matchers.not(Matchers.containsString("all=true"))
+            );
+        }
+    }
+
+    /**
+     * StartsTalks can mark notifications as read up to the moment of fetch.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void marksNotificationsAsReadUpToMomentOfFetch() throws Exception {
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple("[]"))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_ACCEPTED))
+            .start();
+        try (container) {
+            final long start = System.currentTimeMillis();
+            new StartsTalks(new RtGitHub(container.home()))
+                .execute(new Talks.InDir());
+            container.take();
+            MatcherAssert.assertThat(
+                "Notifications are not marked as read up to the moment of fetch",
+                new Time(
+                    container.take().uri().getQuery()
+                        .replaceAll("^.*last_read_at=([^&]+).*$", "$1")
+                ).msec(),
+                Matchers.greaterThan(start - 1000L)
             );
         }
     }
