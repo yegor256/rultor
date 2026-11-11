@@ -140,6 +140,45 @@ final class DyTalksITTestCase {
         );
     }
 
+    @Test
+    void listsFreshlyActivatedTalkAheadOfOlderOnes() throws Exception {
+        final Talks talks = new DyTalks(
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
+        );
+        final String name = String.format("fresh/r%x#7", System.nanoTime());
+        for (int idx = 0; idx < 11; ++idx) {
+            talks.create("old/repo", String.format("%s-%d", name, idx));
+        }
+        talks.create("fresh/repo", name);
+        talks.get(name).active(true);
+        MatcherAssert.assertThat(
+            "Freshly activated talk is not listed among active ones",
+            talks.active(),
+            Matchers.hasItem(new TalkMatcher(name))
+        );
+    }
+
+    @Test
+    void returnsModifiedTalkToRoundRobin() throws Exception {
+        final Talks talks = new DyTalks(
+            DyTalksITTestCase.dynamo(), new MkSttc().counters().get("")
+        );
+        final String name = String.format("stale/r%x#3", System.nanoTime());
+        for (int idx = 0; idx < 11; ++idx) {
+            talks.create("older/repo", String.format("%s-%d", name, idx));
+        }
+        talks.create("stale/repo", name);
+        talks.get(name).active(true);
+        talks.get(name).modify(
+            new Directives().xpath("/talk").attr("later", "false")
+        );
+        MatcherAssert.assertThat(
+            "Modified talk is still listed ahead of older ones",
+            talks.active(),
+            Matchers.not(Matchers.hasItem(new TalkMatcher(name)))
+        );
+    }
+
     /**
      * DyTalks can list all siblings.
      *
