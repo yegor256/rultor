@@ -61,17 +61,11 @@ public final class StartsTalks implements SuperAgent {
 
     @Override
     public void execute(final Talks talks) throws IOException {
-        final String since = new Time(
-            System.currentTimeMillis() - 180_000
-        ).iso();
+        final String moment = new Time().iso();
         final Request req = this.github.entry()
             .uri().path("/notifications").back();
         final Iterable<JsonObject> events = new RtPagination<>(
-            req.uri()
-                .queryParam("since", since)
-                .queryParam("all", Boolean.toString(true))
-                .back(),
-            RtPagination.COPYING
+            req, RtPagination.COPYING
         );
         final Collection<String> names = new ArrayList<>(0);
         int skipped = 0;
@@ -95,7 +89,7 @@ public final class StartsTalks implements SuperAgent {
         }
         new RestResponse(
             req.uri()
-                .queryParam("last_read_at", since).back()
+                .queryParam("last_read_at", moment).back()
                 .method(Request.PUT)
                 .body().set("{}").back()
                 .fetch()
@@ -106,8 +100,8 @@ public final class StartsTalks implements SuperAgent {
             )
         );
         Logger.info(
-            this, "%d new notification(s) since %s (%d skipped): %[list]s",
-            names.size(), since, skipped, names
+            this, "%d new notification(s) read up to %s (%d skipped): %[list]s",
+            names.size(), moment, skipped, names
         );
     }
 
