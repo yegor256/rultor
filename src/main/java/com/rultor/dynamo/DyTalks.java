@@ -9,17 +9,24 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
+import com.jcabi.dynamo.Frame;
+import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.HeadOf;
+import org.cactoos.iterable.Joined;
 import org.cactoos.iterable.Mapped;
+import org.cactoos.list.ListOf;
+import org.cactoos.set.SetOf;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ComparisonOperator;
 import software.amazon.awssdk.services.dynamodb.model.Condition;
@@ -97,6 +104,13 @@ public final class DyTalks implements Talks {
      * When updated.
      */
     public static final String ATTR_UPDATED = "updated";
+
+    /**
+     * Is it activated and not yet modified since then (true) or not (false).
+     *
+     * @since 2.0
+     */
+    public static final String ATTR_FRESH = "fresh";
 
     /**
      * Region we're in.
@@ -191,6 +205,7 @@ public final class DyTalks implements Talks {
             new Attributes()
                 .with(DyTalks.HASH, name)
                 .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
+                .with(DyTalks.ATTR_FRESH, Boolean.toString(false))
                 .with(DyTalks.ATTR_REPO, repo)
                 .with(DyTalks.ATTR_NUMBER, number)
                 .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis()).with(
@@ -202,20 +217,27 @@ public final class DyTalks implements Talks {
 
     @Override
     public Iterable<Talk> active() {
+        final List<Item> fresh = new ListOf<>(
+            new Filtered<>(
+                item -> item.has(DyTalks.ATTR_FRESH)
+                    && Boolean.parseBoolean(item.get(DyTalks.ATTR_FRESH).s()),
+                new HeadOf<>(20, this.queue(false, 20))
+            )
+        );
+        final Set<String> names = new SetOf<>(
+            new Mapped<>(item -> item.get(DyTalks.HASH).s(), fresh)
+        );
         return new Mapped<>(
             DyTalk::new,
             new HeadOf<>(
                 10,
-                this.region.table(DyTalks.TBL)
-                    .frame().through(
-                        new QueryValve()
-                            .withIndexName(DyTalks.IDX_ACTIVE)
-                            .withConsistentRead(false)
-                            .withSelect(Select.SPECIFIC_ATTRIBUTES).withAttributesToGet(
-                                DyTalks.HASH, DyTalks.ATTR_NUMBER
-                            )
+                new Joined<Item>(
+                    fresh,
+                    new Filtered<>(
+                        item -> !names.contains(item.get(DyTalks.HASH).s()),
+                        this.queue(true, 10)
                     )
-                    .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
+                )
             )
         );
     }
@@ -276,5 +298,20 @@ public final class DyTalks implements Talks {
                         .build()
                 )
         );
+    }
+
+    private Frame queue(final boolean forward, final int limit) {
+        return this.region.table(DyTalks.TBL)
+            .frame().through(
+                new QueryValve()
+                    .withIndexName(DyTalks.IDX_ACTIVE)
+                    .withScanIndexForward(forward)
+                    .withLimit(limit)
+                    .withConsistentRead(false)
+                    .withSelect(Select.SPECIFIC_ATTRIBUTES).withAttributesToGet(
+                        DyTalks.HASH, DyTalks.ATTR_NUMBER, DyTalks.ATTR_FRESH
+                    )
+            )
+            .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true));
     }
 }

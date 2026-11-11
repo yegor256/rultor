@@ -129,6 +129,7 @@ public final class DyTalk implements Talk {
             }
             this.item.put(
                 new AttributeUpdates()
+                    .with(DyTalks.ATTR_FRESH, false)
                     .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis()).with(
                         DyTalks.ATTR_XML_ZIP,
                         AttributeValueUpdate.builder().value(
@@ -146,6 +147,7 @@ public final class DyTalk implements Talk {
         this.item.put(
             new AttributeUpdates()
                 .with(DyTalks.ATTR_ACTIVE, yes)
+                .with(DyTalks.ATTR_FRESH, yes)
                 .with(DyTalks.ATTR_UPDATED, System.currentTimeMillis())
         );
     }
