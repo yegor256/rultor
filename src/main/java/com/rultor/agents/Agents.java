@@ -63,6 +63,7 @@ import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnNotSelf;
 import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReaction;
+import com.rultor.agents.github.qtn.QnRebase;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
 import com.rultor.agents.github.qtn.QnSafe;
@@ -365,6 +366,14 @@ public final class Agents {
                         profile,
                         Agents.commanders("merge"),
                         new QnIfPull(new QnIfUnlocked(new QnMerge()))
+                    )
+                ),
+                new QnIfContains(
+                    "rebase",
+                    new QnAskedBy(
+                        profile,
+                        Agents.commanders("rebase"),
+                        new QnIfPull(new QnIfUnlocked(new QnRebase()))
                     )
                 ),
                 new QnIfContains(
