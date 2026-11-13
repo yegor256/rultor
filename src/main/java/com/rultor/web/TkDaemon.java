@@ -5,6 +5,7 @@
 package com.rultor.web;
 
 import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
 import com.rultor.agents.daemons.Tail;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
@@ -17,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
@@ -129,10 +131,20 @@ final class TkDaemon implements TkRegex {
             StandardCharsets.UTF_8
         ).trim().replace("TALK_NAME", talk.name()).replace(
             "TALK_LINK",
-            StringEscapeUtils.escapeHtml4(
-                talk.read().xpath("/talk/wire/href/text()").get(0)
-            )
+            StringEscapeUtils.escapeHtml4(TkDaemon.link(talk.read()))
         );
+    }
+
+    private static String link(final XML xml) {
+        final String href = xml.xpath("/talk/wire/href/text()").get(0);
+        final List<String> request = xml.xpath("/talk/request/@id");
+        final String link;
+        if (request.isEmpty()) {
+            link = href;
+        } else {
+            link = String.format("%s#issuecomment-%s", href, request.get(0));
+        }
+        return link;
     }
 
     private static InputStream escape(
