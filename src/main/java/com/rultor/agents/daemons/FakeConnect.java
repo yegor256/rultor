@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 
 /**
  * Fake file connect.
+ *
  * @since 1.1
  */
 @Immutable
@@ -25,6 +26,7 @@ final class FakeConnect implements Connect {
 
     /**
      * Ctor.
+     *
      * @param talk Talk
      */
     FakeConnect(final XML talk) {
@@ -34,7 +36,7 @@ final class FakeConnect implements Connect {
     @Override
     public InputStream read() throws IOException {
         return Files.newInputStream(
-            Paths.get(this.xml.xpath("/talk/daemon/dir/text() ").get(0))
+            Paths.get(this.xml.xpath("/talk/daemon/dir/text()").get(0))
         );
     }
 }
