@@ -37,6 +37,18 @@ public final class QnRebase implements Question {
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
 
+    /**
+     * Loaded phrases, as visible to this instance.
+     */
+    private final ResourceBundle phrases;
+
+    /**
+     * Constructor.
+     */
+    public QnRebase() {
+        this.phrases = QnRebase.PHRASES;
+    }
+
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home
@@ -51,18 +63,18 @@ public final class QnRebase implements Question {
             new Answer(comment).post(
                 true,
                 String.format(
-                    QnRebase.PHRASES.getString("QnRebase.start"),
+                    this.phrases.getString("QnRebase.start"),
                     home.toASCIIString()
                 )
             );
-            req = QnRebase.pack(
+            req = this.pack(
                 comment,
                 issue.repo().pulls().get(issue.number())
             );
         } else {
             new Answer(comment).post(
                 false,
-                QnRebase.PHRASES.getString("QnRebase.already-closed")
+                this.phrases.getString("QnRebase.already-closed")
             );
             req = Req.EMPTY;
         }
@@ -70,7 +82,7 @@ public final class QnRebase implements Question {
     }
 
     @SuppressWarnings("unchecked")
-    private static Req pack(final Comment.Smart comment,
+    private Req pack(final Comment.Smart comment,
         final Pull pull
     ) throws IOException {
         final PullRef head = pull.head();
@@ -79,7 +91,7 @@ public final class QnRebase implements Question {
         if (head.json().isNull("repo")) {
             new Answer(comment).post(
                 false,
-                QnRebase.PHRASES.getString("QnRebase.head-is-gone")
+                this.phrases.getString("QnRebase.head-is-gone")
             );
             req = Req.EMPTY;
         } else if (head.repo().coordinates()
@@ -122,7 +134,7 @@ public final class QnRebase implements Question {
         } else {
             new Answer(comment).post(
                 false,
-                QnRebase.PHRASES.getString("QnRebase.fork-not-supported")
+                this.phrases.getString("QnRebase.fork-not-supported")
             );
             req = Req.DONE;
         }
