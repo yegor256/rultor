@@ -37,13 +37,6 @@ public final class QnRebase implements Question {
     private static final ResourceBundle PHRASES =
         ResourceBundle.getBundle("phrases");
 
-    /**
-     * Constructor.
-     */
-    public QnRebase() {
-        // Nothing to initialize.
-    }
-
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home
