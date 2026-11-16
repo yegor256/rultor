@@ -10,6 +10,7 @@ import com.jcabi.github.GitHub;
 import com.jcabi.github.Issue;
 import com.jcabi.github.RtPagination;
 import com.jcabi.http.Request;
+import com.jcabi.http.Response;
 import com.jcabi.http.response.JsonResponse;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.Logger;
@@ -113,17 +114,23 @@ public final class StartsTalks implements SuperAgent {
         boolean result = "mention".equals(event.getString("reason"));
         final JsonObject subject = event.getJsonObject("subject");
         if (!result && !subject.isNull("latest_comment_url")) {
-            final String body = this.comment(subject).fetch().as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(JsonResponse.class).json().readObject()
-                .getString("body", "");
-            result = body.toLowerCase(Locale.ENGLISH).contains(
-                String.format(
-                    "@%s",
-                    this.github.users().self().login()
-                        .toLowerCase(Locale.ENGLISH)
-                )
-            );
+            final Response rsp = this.comment(subject).fetch();
+            if (rsp.status() == HttpURLConnection.HTTP_OK) {
+                final String body = rsp.as(JsonResponse.class).json()
+                    .readObject().getString("body", "");
+                result = body.toLowerCase(Locale.ENGLISH).contains(
+                    String.format(
+                        "@%s",
+                        this.github.users().self().login()
+                            .toLowerCase(Locale.ENGLISH)
+                    )
+                );
+            } else {
+                Logger.warn(
+                    this, "Can't read latest comment of %s, HTTP status is %d",
+                    subject.getString("url"), rsp.status()
+                );
+            }
         }
         return result;
     }

@@ -175,6 +175,33 @@ final class StartsTalksTest {
         }
     }
 
+    /**
+     * StartsTalks can mark notifications as read even when the latest
+     * comment of one of them is not reachable anymore.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void marksAsReadWhenLatestCommentIsMissing() throws Exception {
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple(StartsTalksTest.notification("subscribed")))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_NOT_FOUND))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_ACCEPTED))
+            .start();
+        try (container) {
+            final Talks talks = Mockito.mock(Talks.class);
+            new StartsTalks(new RtGitHub(container.home())).execute(talks);
+            container.take();
+            container.take();
+            MatcherAssert.assertThat(
+                "Notifications must be marked as read",
+                container.take().method(),
+                Matchers.equalTo(Request.PUT)
+            );
+            Mockito.verifyNoInteractions(talks);
+        }
+    }
+
     private static String notification(final String reason) {
         return String.join(
             "",
