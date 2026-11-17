@@ -4,6 +4,7 @@
  */
 package com.rultor.profiles;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
@@ -11,6 +12,9 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 import com.rultor.agents.github.qtn.DefaultBranch;
 import com.rultor.spi.Profile;
 import java.io.ByteArrayInputStream;
@@ -24,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
@@ -62,6 +67,17 @@ final class GithubProfile implements Profile {
     private static final Pattern PATH = Pattern.compile(
         "([a-zA-Z0-9][a-zA-Z0-9-]*/[a-zA-Z_0-9.-]+)#(.+)"
     );
+
+    /**
+     * Classpath resource with the JSON schema of the config.
+     */
+    private static final String SCHEMA =
+        "/com/rultor/profiles/rultor_schema.json";
+
+    /**
+     * JSON mapper, used to convert parsed YAML into a JSON tree.
+     */
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * Repo.
@@ -242,7 +258,7 @@ final class GithubProfile implements Profile {
         );
     }
 
-    private String yml() throws IOException {
+    private Object yml() throws IOException {
         final String yml;
         if (this.repo.contents()
             .exists(GithubProfile.FILE, this.branch)) {
@@ -260,7 +276,8 @@ final class GithubProfile implements Profile {
             );
             yml = "";
         }
-        final List<String> msg = GithubProfile.validate();
+        final Object parsed = YamlXML.parse(yml);
+        final List<String> msg = GithubProfile.validate(parsed, yml);
         if (!msg.isEmpty()) {
             throw new Profile.ConfigException(
                 String.format(
@@ -275,10 +292,78 @@ final class GithubProfile implements Profile {
                 )
             );
         }
-        return yml;
+        return parsed;
     }
 
-    private static List<String> validate() {
-        return Collections.emptyList();
+    private static List<String> validate(final Object parsed,
+        final String yml) {
+        final List<String> messages = new ArrayList<>(0);
+        if (parsed != null) {
+            try (
+                InputStream stream = GithubProfile.class.getResourceAsStream(
+                    GithubProfile.SCHEMA
+                )
+            ) {
+                final Set<ValidationMessage> errors = GithubProfile.errors(
+                    parsed, stream
+                );
+                final Map<String, Integer> lines;
+                if (errors.isEmpty()) {
+                    lines = Collections.emptyMap();
+                } else {
+                    lines = new YamlLines(yml).lines();
+                }
+                for (final ValidationMessage msg : errors) {
+                    messages.add(GithubProfile.report(msg, lines));
+                }
+            } catch (final IOException ex) {
+                throw new IllegalStateException(
+                    String.format(
+                        "Failed to read %s from classpath",
+                        GithubProfile.SCHEMA
+                    ),
+                    ex
+                );
+            }
+        }
+        return messages;
+    }
+
+    private static Set<ValidationMessage> errors(final Object parsed,
+        final InputStream stream) throws IOException {
+        return JsonSchemaFactory
+            .getInstance(SpecVersion.VersionFlag.V202012)
+            .getSchema(stream)
+            .validate(GithubProfile.MAPPER.valueToTree(parsed));
+    }
+
+    private static String report(final ValidationMessage msg,
+        final Map<String, Integer> lines) {
+        final String path = GithubProfile.pointer(
+            msg.getInstanceLocation().toString()
+        );
+        final int line = lines.getOrDefault(path, 0);
+        final String prefix;
+        if (line == 0 && path.isEmpty()) {
+            prefix = "";
+        } else if (line == 0) {
+            prefix = String.format("'%s': ", path);
+        } else if (path.isEmpty()) {
+            prefix = String.format("(line %d): ", line);
+        } else {
+            prefix = String.format("'%s' (line %d): ", path, line);
+        }
+        return String.format(
+            "%s%s, see https://doc.rultor.com/reference.html",
+            prefix, msg.getMessage()
+        );
+    }
+
+    private static String pointer(final String path) {
+        String pointer = path;
+        if (pointer.startsWith("$")) {
+            pointer = pointer.substring(1).replace('.', '/');
+        }
+        return pointer.replaceAll("\\[(\\d+)\\]", "/$1");
     }
 }

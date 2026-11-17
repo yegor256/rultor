@@ -26,13 +26,13 @@ import org.yaml.snakeyaml.error.YAMLException;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "yaml")
+@EqualsAndHashCode(of = "parsed")
 final class YamlXML {
 
     /**
-     * Yaml.
+     * Already parsed YAML document.
      */
-    private final transient String yaml;
+    private final transient Object parsed;
 
     /**
      * Ctor.
@@ -40,7 +40,32 @@ final class YamlXML {
      * @param yml YAML
      */
     YamlXML(final String yml) {
-        this.yaml = yml;
+        this(YamlXML.parse(yml));
+    }
+
+    /**
+     * Ctor, when the YAML document is already parsed.
+     *
+     * @param parsed Parsed YAML document
+     */
+    YamlXML(final Object parsed) {
+        this.parsed = parsed;
+    }
+
+    /**
+     * Parse the YAML document.
+     *
+     * @param yml YAML
+     * @return Parsed document, <tt>null</tt> for an empty document
+     */
+    static Object parse(final String yml) {
+        final Object parsed;
+        try {
+            parsed = new Yaml().load(yml.trim());
+        } catch (final YAMLException ex) {
+            throw new Profile.ConfigException(ex);
+        }
+        return parsed;
     }
 
     /**
@@ -49,15 +74,9 @@ final class YamlXML {
      * @return XML
      */
     XML get() {
-        final Yaml parser = new Yaml();
         final Directives dirs = new Directives().add("p");
-        final String trimmed = this.yaml.trim();
-        if (!trimmed.isEmpty()) {
-            try {
-                dirs.append(YamlXML.dirs(parser.load(trimmed)));
-            } catch (final YAMLException ex) {
-                throw new Profile.ConfigException(ex);
-            }
+        if (this.parsed != null) {
+            dirs.append(YamlXML.dirs(this.parsed));
         }
         return new XMLDocument(new Xembler(dirs).xmlQuietly());
     }

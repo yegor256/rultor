@@ -23,7 +23,8 @@ Just say `@rultor hello` in any of your GitHub issues and
 
 Full documentation is at [doc.rultor.com](https://doc.rultor.com)
 
-[Schema](rultor_schema.json) for .rultor.yml file.
+[Schema](src/main/resources/com/rultor/profiles/rultor_schema.json)
+for .rultor.yml file.
 
 Need help online? Try our [Telegram group](https://t.me/zerocracy).
 
