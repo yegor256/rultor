@@ -13,6 +13,8 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.rultor.agents.shells.PfShell;
+import com.rultor.agents.shells.SshDefaults;
+import com.rultor.agents.shells.SshProfile;
 import com.rultor.spi.Profile;
 import java.io.File;
 import java.io.IOException;
@@ -91,13 +93,17 @@ public final class StartsDockerDaemon implements AutoCloseable {
         this.containers.add(container);
         this.client.startContainerCmd(container.getId()).exec();
         return new PfShell(
-            this.profile,
-            this.client.infoCmd().exec().getName(),
-            this.client.inspectContainerCmd(container.getId())
-                .exec().getNetworkSettings().getPorts().getBindings().keySet()
-                .iterator().next().getPort(),
-            "root",
-            this.key(container)
+            new SshProfile(
+                this.profile,
+                new SshDefaults(
+                    this.client.infoCmd().exec().getName(),
+                    this.client.inspectContainerCmd(container.getId())
+                        .exec().getNetworkSettings().getPorts().getBindings()
+                        .keySet().iterator().next().getPort(),
+                    "root",
+                    this.key(container)
+                )
+            )
         );
     }
 

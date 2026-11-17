@@ -35,20 +35,21 @@ final class RegistersShellTest {
         final int port = 221;
         final String login = "john";
         final Agent agent = new RegistersShell(
-            new Profile.Fixed(
-                new XMLDocument(
-                    new Joined(
-                        " ",
-                        "<p><entry key='ssh'>",
-                        String.format("<entry key='host'>%s</entry>", host),
-                        String.format("<entry key='port'>%d</entry>", port),
-                        String.format("<entry key='key'>%s</entry>", ""),
-                        String.format("<entry key='login'>%s</entry>", login),
-                        "</entry></p>"
-                    ).asString()
-                )
-            ),
-            "127.0.0.1", 22, "rultor", "def-key"
+            new SshProfile(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            " ",
+                            "<p><entry key='ssh'>",
+                            String.format("<entry key='host'>%s</entry>", host),
+                            String.format("<entry key='port'>%d</entry>", port),
+                            String.format("<entry key='login'>%s</entry>", login),
+                            "</entry></p>"
+                        ).asString()
+                    )
+                ),
+                new SshDefaults("127.0.0.1", 22, "rultor", "def-key")
+            )
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
@@ -72,15 +73,16 @@ final class RegistersShellTest {
 
     /**
      * RegistersShell can register shell by IP.
+     *
+     * @throws Exception In case of error.
      */
     @Test
-    void registerShellWithIP() {
+    void registerShellWithIP() throws Exception {
         final String host = "192.168.5.49";
         final int port = 221;
-        final String key = "";
         final String login = "john";
-        Assertions.assertDoesNotThrow(
-            () -> new RegistersShell(
+        final Agent agent = new RegistersShell(
+            new SshProfile(
                 new Profile.Fixed(
                     new XMLDocument(
                         new Joined(
@@ -88,13 +90,29 @@ final class RegistersShellTest {
                             "<p><entry key='ssh'>",
                             String.format("<entry key='host'>%s</entry>", host),
                             String.format("<entry key='port'>%d</entry>", port),
-                            String.format("<entry key='key'>%s</entry>", key),
                             String.format("<entry key='login'>%s</entry>", login),
                             "</entry></p>"
                         ).asString()
                     )
                 ),
-                host, 22, "rultor", "def-key"
+                new SshDefaults("127.0.0.1", 22, "rultor", "def-key")
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("daemon").attr("id", "abcd")
+                .add("title").set("something").up()
+                .add("script").set("test")
+        );
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            "Shell should be registered by IP",
+            talk.read(),
+            XhtmlMatchers.hasXPaths(
+                String.format("/talk/shell[@id='abcd']/host[.='%s']", host),
+                String.format("/talk/shell[@id='abcd']/port[.='%d']", port),
+                String.format("/talk/shell[@id='abcd']/login[.='%s']", login)
             )
         );
     }
@@ -108,9 +126,7 @@ final class RegistersShellTest {
     void handlesBrokenProfileGracefully() throws Exception {
         final Profile profile = Mockito.mock(Profile.class);
         Mockito.doThrow(new Profile.ConfigException("")).when(profile).read();
-        final Agent agent = new RegistersShell(
-            profile, "localhost", 1, "test-user", "test-key"
-        );
+        final Agent agent = new RegistersShell(profile);
         final Talk talk = new Talk.InFile();
         Assertions.assertDoesNotThrow(
             () -> agent.execute(talk)

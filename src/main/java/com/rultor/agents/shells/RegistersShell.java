@@ -10,7 +10,6 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -34,26 +33,10 @@ public final class RegistersShell extends AbstractAgent {
     /**
      * Constructor.
      *
-     * @param profile Profile
-     * @param host Default IP address or host name
-     * @param port Default Port of server
-     * @param user Default Login
-     * @param key Default Private SSH key
-     * @throws UnknownHostException in case of host is not resolved
-     * @checkstyle ParameterNumberCheck (6 lines)
+     * @param profile Profile with SSH settings, e.g. {@link SshProfile}
      */
-    public RegistersShell(final Profile profile, final String host,
-        final int port, final String user, final String key)
-        throws UnknownHostException {
-        this(
-            new PfShell(
-                profile,
-                new SmartHost(RegistersShell.validated(host, user, key)).ip(),
-                port,
-                user,
-                key
-            )
-        );
+    public RegistersShell(final Profile profile) {
+        this(new PfShell(profile));
     }
 
     /**
@@ -111,20 +94,5 @@ public final class RegistersShell extends AbstractAgent {
             );
         }
         return dirs;
-    }
-
-    private static String validated(final String host, final String user,
-        final String key) {
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException(
-                "User name is mandatory"
-            );
-        }
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException(
-                "SSH key is mandatory"
-            );
-        }
-        return host;
     }
 }
