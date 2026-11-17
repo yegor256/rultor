@@ -16,7 +16,7 @@
 
 [Rultor](https://www.rultor.com) is a DevOps team assistant.
 It helps your programmers and release managers automate
-  routine operations (merge, deploy, and release)
+  routine operations (merge, deploy, rebase, and release)
   with an easy-to-use intuitive chat-bot interface.
 Just say `@rultor hello` in any of your GitHub issues and
   the conversation will start.
