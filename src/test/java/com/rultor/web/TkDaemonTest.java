@@ -69,4 +69,53 @@ final class TkDaemonTest {
             )
         );
     }
+
+    /**
+     * TkDaemon can link the header to the comment which gave the command.
+     *
+     * @throws Exception If some problem inside
+     */
+    @Test
+    void linksHeaderToRequestComment() throws Exception {
+        final Talks talks = new Talks.InDir();
+        final String name = "test";
+        talks.create(name, Talk.TEST_NAME);
+        final Talk talk = talks.get(name);
+        final File tail = File.createTempFile(
+            TkDaemonTest.class.getCanonicalName(), ".txt"
+        );
+        FileUtils.writeStringToFile(
+            tail, "plain log output", StandardCharsets.UTF_8
+        );
+        talk.modify(
+            new Directives().xpath("/talk").add("daemon")
+                .attr("id", "00000000")
+                .add("dir").set(tail.getAbsolutePath()).up()
+                .add("script").set("no script").up()
+                .add("title").set("no title")
+        );
+        talk.modify(
+            new Directives().xpath("/talk").add("request")
+                .attr("id", "1234567890")
+                .add("type").set("deploy").up()
+                .add("args")
+        );
+        MatcherAssert.assertThat(
+            "Header should link to the comment which issued the command",
+            XhtmlMatchers.xhtml(
+                IOUtils.toString(
+                    new TkAuth(
+                        request -> new TkDaemon(talks).act(
+                            new RqRegex.Fake("(.*)-(.*)", "1-abcd")
+                        ),
+                        new PsFake(true)
+                    ).act(new RqFake()).body(),
+                    StandardCharsets.UTF_8
+                )
+            ),
+            XhtmlMatchers.hasXPaths(
+                "//xhtml:a[@href='https://github.com/test#issuecomment-1234567890']"
+            )
+        );
+    }
 }
