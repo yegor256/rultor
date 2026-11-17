@@ -47,4 +47,13 @@ git log -1 --show-signature
 
 docker_when_possible
 
-git push origin "${head_branch}"
+if ! push_log=$(git push origin "${head_branch}" 2>&1); then
+  echo "git push of the merge commit to \"${head_branch}\" was rejected by the remote server,"
+  echo "most likely because GitHub branch protection rules block direct pushes to this branch."
+  echo "The merge commit was created, but Rultor can't deliver it."
+  echo "You can merge the pull request via the GitHub web interface,"
+  echo "or adjust the branch protection rules to let Rultor push."
+  echo "Full output of the rejected push:"
+  printf '%s\n' "${push_log}"
+  exit 1
+fi

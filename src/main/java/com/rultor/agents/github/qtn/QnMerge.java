@@ -68,32 +68,47 @@ public final class QnMerge implements Question {
                     )
                 );
                 req = Req.DONE;
-            } else
-                if (pull.allChecksSuccessful()) {
-                    new Answer(comment).post(
-                        true,
-                        String.format(
-                            QnMerge.PHRASES.getString("QnMerge.start"),
-                            home.toASCIIString()
-                        )
-                    );
-                    req = QnMerge.pack(
-                        comment,
-                        issue.repo().pulls().get(issue.number())
-                    );
-                } else {
-                    new Answer(comment).post(
-                        false,
-                        QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
-                    );
-                    req = Req.DONE;
-                }
+            } else {
+                req = QnMerge.merge(comment, home, pull, issue);
+            }
         } else {
             new Answer(comment).post(
                 false,
                 QnMerge.PHRASES.getString("QnMerge.already-closed")
             );
             req = Req.EMPTY;
+        }
+        return req;
+    }
+
+    private static Req merge(final Comment.Smart comment,
+        final URI home,
+        final CheckablePull pull,
+        final Issue.Smart issue
+    ) throws IOException {
+        final Req req;
+        final String blocker = new ProtectedBranch(issue.pull()).blocker();
+        if (blocker.isEmpty() && pull.allChecksSuccessful()) {
+            new Answer(comment).post(
+                true,
+                String.format(
+                    QnMerge.PHRASES.getString("QnMerge.start"),
+                    home.toASCIIString()
+                )
+            );
+            req = QnMerge.pack(
+                comment,
+                issue.repo().pulls().get(issue.number())
+            );
+        } else if (blocker.isEmpty()) {
+            new Answer(comment).post(
+                false,
+                QnMerge.PHRASES.getString("QnMerge.checks-are-failed")
+            );
+            req = Req.DONE;
+        } else {
+            new Answer(comment).post(false, blocker);
+            req = Req.DONE;
         }
         return req;
     }
