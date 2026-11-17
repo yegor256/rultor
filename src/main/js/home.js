@@ -39,10 +39,14 @@ $(document).ready(
     var $div = $('#pulse');
     window.setInterval(
       function () {
-        $div.find('img').attr(
-          'src',
-          $div.attr('data-href') + '?' + Date.now()
-        );
+        // Check whether the #pulse div
+        // and the img tag does exists
+        if ($div.length && $div.find('img').length) {
+          $div.find('img').attr(
+            'src',
+            $div.attr('data-href') + '?' + Date.now()
+          );
+        }
       },
       1000
     );
