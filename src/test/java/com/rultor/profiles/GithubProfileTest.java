@@ -8,11 +8,16 @@ import com.jcabi.github.Coordinates;
 import com.jcabi.github.GitHub;
 import com.jcabi.github.Repo;
 import com.jcabi.github.Repos;
+import com.jcabi.github.RtGitHub;
 import com.jcabi.github.mock.MkGitHub;
+import com.jcabi.http.mock.MkAnswer;
+import com.jcabi.http.mock.MkContainer;
+import com.jcabi.http.mock.MkGrizzlyContainer;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Profile;
 import jakarta.json.Json;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import org.cactoos.text.Joined;
@@ -267,6 +272,95 @@ final class GithubProfileTest {
         Assertions.assertThrows(
             Profile.ConfigException.class,
             new GithubProfile(repo)::assets
+        );
+    }
+
+    /**
+     * GithubProfile explains an inaccessible asset repository.
+     *
+     * <p>When the asset repository is private and @rultor cannot access
+     * it, the error must say so, instead of claiming that the config
+     * file is absent, see
+     * https://github.com/yegor256/rultor/issues/1280.</p>
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void explainsInaccessibleAssetRepository() throws Exception {
+        final String cfg = GithubProfileTest.contentJson(
+            String.format(
+                "assets:%n  test.xml: jeff/test1#test.xml%n"
+            )
+        );
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, "{\"default_branch\":\"master\"}"))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_NOT_FOUND, "{}"))
+            .start();
+        try (container) {
+            MatcherAssert.assertThat(
+                "Error should explain the access problem",
+                GithubProfileTest.assetException(container).getMessage(),
+                Matchers.allOf(
+                    Matchers.containsString("Can't access jeff/test1"),
+                    Matchers.not(Matchers.containsString("must be present"))
+                )
+            );
+        }
+    }
+
+    /**
+     * GithubProfile keeps reporting a missing config of an accessible
+     * repository.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void reportsMissingConfigWhenAssetRepoIsAccessible() throws Exception {
+        final String cfg = GithubProfileTest.contentJson(
+            String.format(
+                "assets:%n  test.xml: jeff/test1#test.xml%n"
+            )
+        );
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, "{\"default_branch\":\"master\"}"))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, "{}"))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_NOT_FOUND, "{}"))
+            .start();
+        try (container) {
+            MatcherAssert.assertThat(
+                "Missing config should be reported",
+                GithubProfileTest.assetException(container).getMessage(),
+                Matchers.containsString(
+                    ".rultor.yml file must be present in root directory of jeff/test1"
+                )
+            );
+        }
+    }
+
+    private static Exception assetException(final MkContainer container) {
+        return Assertions.assertThrows(
+            Profile.ConfigException.class,
+            () -> new GithubProfile(
+                new RtGitHub(container.home()).repos().get(
+                    new Coordinates.Simple("jeff/test2")
+                ),
+                "master"
+            ).assets()
+        );
+    }
+
+    private static String contentJson(final String text) {
+        return String.format(
+            "{\"path\":\".rultor.yml\",\"encoding\":\"base64\",\"content\":\"%s\"}",
+            Base64.getEncoder().encodeToString(
+                text.getBytes(StandardCharsets.UTF_8)
+            )
         );
     }
 
