@@ -33,6 +33,7 @@ import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.daemons.StopsDaemon;
 import com.rultor.agents.daemons.WipesDaemon;
 import com.rultor.agents.docker.DockerExec;
+import com.rultor.agents.docker.DockerHealthCheck;
 import com.rultor.agents.github.ClosePullRequest;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Dephantomizes;
@@ -169,6 +170,12 @@ public final class Agents {
                             Agents.priv()
                         ),
                         "prune.sh"
+                    )
+                ),
+                new DockerHealthCheck(
+                    new Ssh(
+                        Agents.HOST, Agents.PORT, Agents.LOGIN,
+                        Agents.priv()
                     )
                 )
             )
