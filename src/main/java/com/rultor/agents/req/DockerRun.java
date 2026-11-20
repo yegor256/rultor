@@ -148,7 +148,8 @@ final class DockerRun {
     private static String neutralize(final String item) {
         final int start = item.indexOf('#');
         final String result;
-        if (start == 0 || start > 0 && item.charAt(start - 1) != '\\'
+        if (start == 0
+            || start > 0 && Character.isWhitespace(item.charAt(start - 1))
             && !DockerRun.inquotes(item, start)) {
             result = item.substring(0, start) + '`' + item.substring(start)
                 + '`';

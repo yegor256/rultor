@@ -211,6 +211,40 @@ final class DockerRunTest {
     }
 
     /**
+     * DockerRun can parse a valid YAML with a hash symbol inside a quoted
+     * value, it should not be treated as a start of a comment. See
+     * <a href="https://github.com/yegor256/rultor/issues/1312">#1312</a>.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void keepsHashInsideQuotedValue() throws Exception {
+        MatcherAssert.assertThat(
+            "Hash inside a quoted YAML value should not start a comment",
+            new DockerRun(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            DockerRunTest.SPACE,
+                            "<p><entry key='x'><entry key='script'>",
+                            "<item>chmod +x gradlew</item>",
+                            "<item>version=${tag#'v'}</item>",
+                            "</entry></entry></p>"
+                        ).asString()
+                    )
+                ),
+                "/p/entry[@key='x']"
+            ).script(),
+            Matchers.hasItems(
+                "chmod +x gradlew",
+                ";",
+                "version=${tag#'v'}",
+                ";"
+            )
+        );
+    }
+
+    /**
      * DockerRun can fetch script.
      *
      * @throws Exception In case of error.
