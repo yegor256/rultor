@@ -245,6 +245,43 @@ final class DockerRunTest {
     }
 
     /**
+     * DockerRun can neutralize a hash that starts a comment right after
+     * an unquoted shell operator. Bash treats <code>echo ready;# x</code>
+     * as <code>echo ready;</code> followed by a comment, so the whole
+     * item must be neutralized, otherwise the comment swallows every
+     * script item written after it on the same line. See the review of
+     * <a href="https://github.com/yegor256/rultor/pull/2529">#2529</a>.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void neutralizesCommentAfterShellOperator() throws Exception {
+        MatcherAssert.assertThat(
+            "Hash after a shell operator should still start a comment",
+            new DockerRun(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            DockerRunTest.SPACE,
+                            "<p><entry key='x'><entry key='script'>",
+                            "<item>echo ready;# comment</item>",
+                            "<item>echo next</item>",
+                            "</entry></entry></p>"
+                        ).asString()
+                    )
+                ),
+                "/p/entry[@key='x']"
+            ).script(),
+            Matchers.hasItems(
+                "echo ready;`# comment`",
+                ";",
+                "echo next",
+                ";"
+            )
+        );
+    }
+
+    /**
      * DockerRun can fetch script.
      *
      * @throws Exception In case of error.

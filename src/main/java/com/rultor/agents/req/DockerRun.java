@@ -119,6 +119,22 @@ final class DockerRun {
         );
     }
 
+    /**
+     * This character ends an unquoted shell token: whitespace or one of
+     * the shell metacharacters. A hash right after a token boundary
+     * starts a comment in bash, while a hash glued to another character
+     * stays a part of the token, e.g. in a parameter expansion like
+     * ${tag#'v'}, see
+     * <a href="https://github.com/yegor256/rultor/issues/1312">#1312</a>.
+     *
+     * @param chr Character to check
+     * @return True if the character ends a shell token
+     */
+    static boolean boundary(final char chr) {
+        return Character.isWhitespace(chr)
+            || ";|&()<>".indexOf(chr) >= 0;
+    }
+
     private static Iterable<String> scripts(final XML xml, final String path) {
         final Collection<String> items = new ArrayList<>(0);
         if (!xml.nodes(path).isEmpty()) {
@@ -149,7 +165,7 @@ final class DockerRun {
         final int start = item.indexOf('#');
         final String result;
         if (start == 0
-            || start > 0 && Character.isWhitespace(item.charAt(start - 1))
+            || start > 0 && DockerRun.boundary(item.charAt(start - 1))
             && !DockerRun.inquotes(item, start)) {
             result = item.substring(0, start) + '`' + item.substring(start)
                 + '`';
