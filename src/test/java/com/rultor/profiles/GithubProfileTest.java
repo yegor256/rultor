@@ -302,7 +302,9 @@ final class GithubProfileTest {
         try (container) {
             MatcherAssert.assertThat(
                 "Error should explain the access problem",
-                GithubProfileTest.assetException(container).getMessage(),
+                GithubProfileTest.assetFailure(
+                    container, Profile.ConfigException.class
+                ).getMessage(),
                 Matchers.allOf(
                     Matchers.containsString("Can't access jeff/test1"),
                     Matchers.not(Matchers.containsString("must be present"))
@@ -335,7 +337,9 @@ final class GithubProfileTest {
         try (container) {
             MatcherAssert.assertThat(
                 "Missing config should be reported",
-                GithubProfileTest.assetException(container).getMessage(),
+                GithubProfileTest.assetFailure(
+                    container, Profile.ConfigException.class
+                ).getMessage(),
                 Matchers.containsString(
                     ".rultor.yml file must be present in root directory of jeff/test1"
                 )
@@ -343,15 +347,52 @@ final class GithubProfileTest {
         }
     }
 
-    private static Exception assetException(final MkContainer container) {
+    /**
+     * GithubProfile does not turn a transient GitHub failure into a
+     * configuration failure.
+     *
+     * <p>A server-side status like 5xx is not an access problem of the
+     * asset repository: the error must stay an I/O error, instead of
+     * telling the user to grant read access, see the review of
+     * https://github.com/yegor256/rultor/pull/2528.</p>
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void keepsTransientHttpFailureAsIoException() throws Exception {
+        final String cfg = GithubProfileTest.contentJson(
+            String.format(
+                "assets:%n  test.xml: jeff/test1#test.xml%n"
+            )
+        );
+        final MkContainer container = new MkGrizzlyContainer()
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, "{\"default_branch\":\"master\"}"))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_OK, cfg))
+            .next(new MkAnswer.Simple(HttpURLConnection.HTTP_BAD_GATEWAY, "{}"))
+            .start();
+        try (container) {
+            MatcherAssert.assertThat(
+                "Transient GitHub failure must not be reported as an access problem",
+                GithubProfileTest.assetFailure(container, IOException.class)
+                    .getMessage(),
+                Matchers.not(Matchers.containsString("Can't access"))
+            );
+        }
+    }
+
+    private static Exception assetFailure(final MkContainer container,
+        final Class<? extends Exception> type) {
         return Assertions.assertThrows(
-            Profile.ConfigException.class,
+            type,
             () -> new GithubProfile(
                 new RtGitHub(container.home()).repos().get(
                     new Coordinates.Simple("jeff/test2")
                 ),
                 "master"
-            ).assets()
+            ).assets(),
+            "Assets must fail with the expected exception type"
         );
     }
 

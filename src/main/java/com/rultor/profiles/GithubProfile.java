@@ -10,7 +10,6 @@ import com.jcabi.github.Content;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RepoCommit;
-import com.jcabi.github.UnexpectedHttpStatus;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.networknt.schema.JsonSchemaFactory;
@@ -153,17 +152,7 @@ final class GithubProfile implements Profile {
         final Repo rpo = this.repo.github().repos().get(
             new Coordinates.Simple(matcher.group(1))
         );
-        try {
-            rpo.json();
-        } catch (final UnexpectedHttpStatus ex) {
-            throw new Profile.ConfigException(
-                String.format(
-                    "Can't access %s, make sure @rultor has read access to it, see https://doc.rultor.com/reference.html#assets",
-                    rpo.coordinates()
-                ),
-                ex
-            );
-        }
+        new AssetRepoAccess(rpo).accessible();
         if (!rpo.contents().exists(GithubProfile.FILE, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(
