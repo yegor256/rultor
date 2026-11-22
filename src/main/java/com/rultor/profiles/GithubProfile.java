@@ -152,6 +152,7 @@ final class GithubProfile implements Profile {
         final Repo rpo = this.repo.github().repos().get(
             new Coordinates.Simple(matcher.group(1))
         );
+        new AssetRepoAccess(rpo).accessible();
         if (!rpo.contents().exists(GithubProfile.FILE, this.branch)) {
             throw new Profile.ConfigException(
                 String.format(

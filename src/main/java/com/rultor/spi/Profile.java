@@ -103,7 +103,7 @@ public interface Profile {
          * @param msg Message
          * @param cause Cause of it, may be absent
          */
-        private ConfigException(final String msg, final Throwable cause) {
+        public ConfigException(final String msg, final Throwable cause) {
             super(msg, cause);
         }
     }
