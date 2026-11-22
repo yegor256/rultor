@@ -10,6 +10,7 @@ import com.jcabi.github.GitHub;
 import com.jcabi.immutable.Array;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
+import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.Ssh;
 import com.rultor.Env;
 import com.rultor.agents.aws.AwsEc2;
@@ -33,6 +34,7 @@ import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.daemons.StopsDaemon;
 import com.rultor.agents.daemons.WipesDaemon;
 import com.rultor.agents.docker.DockerExec;
+import com.rultor.agents.docker.DockerHealthCheck;
 import com.rultor.agents.github.ClosePullRequest;
 import com.rultor.agents.github.CommentsTag;
 import com.rultor.agents.github.Dephantomizes;
@@ -87,6 +89,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -131,14 +134,32 @@ public final class Agents {
     private final transient Sttc sttc;
 
     /**
+     * Shell for the Docker health check.
+     */
+    private final transient Shell health;
+
+    /**
      * Ctor.
      *
      * @param ghub GitHub client
      * @param stc Sttc client
      */
     public Agents(final GitHub ghub, final Sttc stc) {
+        this(ghub, stc, Agents.ssh());
+    }
+
+    /**
+     * Ctor.
+     *
+     * @param ghub GitHub client
+     * @param stc Sttc client
+     * @param hlth Shell for the Docker health check
+     * @since 2.0
+     */
+    public Agents(final GitHub ghub, final Sttc stc, final Shell hlth) {
         this.github = ghub;
         this.sttc = stc;
+        this.health = hlth;
     }
 
     /**
@@ -170,7 +191,8 @@ public final class Agents {
                         ),
                         "prune.sh"
                     )
-                )
+                ),
+                new DockerHealthCheck(this.health)
             )
         );
     }
@@ -424,5 +446,17 @@ public final class Agents {
             ).asString();
         }
         return priv;
+    }
+
+    private static Shell ssh() {
+        try {
+            return new Ssh(
+                Agents.HOST, Agents.PORT, Agents.LOGIN, Agents.priv()
+            );
+        } catch (final UnknownHostException ex) {
+            throw new IllegalStateException(
+                String.format("Can't resolve %s", Agents.HOST), ex
+            );
+        }
     }
 }
