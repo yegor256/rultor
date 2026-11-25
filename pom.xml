@@ -70,6 +70,15 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
   </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>5.6.4</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.takes</groupId>
@@ -448,6 +457,12 @@
       <artifactId>docker-java</artifactId>
       <version>3.7.1</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.github.docker-java</groupId>
+          <artifactId>docker-java-transport-netty</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.github.docker-java</groupId>
