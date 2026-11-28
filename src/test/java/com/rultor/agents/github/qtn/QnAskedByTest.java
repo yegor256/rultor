@@ -12,6 +12,8 @@ import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.github.Question;
 import com.rultor.spi.Profile;
 import java.net.URI;
+import java.util.Locale;
+import java.util.regex.Pattern;
 import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -24,6 +26,12 @@ import org.mockito.Mockito;
  * @since 1.1
  */
 final class QnAskedByTest {
+
+    /**
+     * Pattern to count mentions of the commander in the answer.
+     */
+    private static final Pattern MENTION =
+        Pattern.compile("@user2", Pattern.LITERAL);
 
     /**
      * QnAskedBy can exclude {@code @rultor} from list of commanders (#690).
@@ -94,5 +102,92 @@ final class QnAskedByTest {
         final URI home = new URI("#1");
         qab.understand(comment, home);
         Mockito.verify(question).understand(comment, home);
+    }
+
+    /**
+     * QnAskedBy can list a login only once when it is present in both
+     * the commanders of the command and the architects (#1085).
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void doesNotDuplicateLoginInCommandersAndArchitect() throws Exception {
+        final MkGitHub github = new MkGitHub();
+        final Repo repo = github.randomRepo();
+        final Issue issue = repo.issues().create("needs", "deployment");
+        final String action = "deploy";
+        issue.comments().post(action);
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().get(1)
+        );
+        final QnAskedBy qab = new QnAskedBy(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='architect'><item>user2</item></entry>",
+                        "<entry key='deploy'><entry key='commanders'>",
+                        "<item>user2</item></entry></entry></p>"
+                    ).asString()
+                )
+            ),
+            String.format(
+                "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
+                action
+            ),
+            Mockito.mock(Question.class)
+        );
+        qab.understand(comment, new URI("#1"));
+        MatcherAssert.assertThat(
+            "A login listed twice must appear once in the message",
+            QnAskedByTest.MENTION.split(
+                new Comment.Smart(issue.comments().get(2)).body(), -1
+            ).length - 1,
+            Matchers.equalTo(1)
+        );
+    }
+
+    /**
+     * QnAskedBy can treat logins that differ only in letter case as one
+     * commander, since GitHub logins are case-insensitive (#1085).
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void treatsLoginsDifferingOnlyInCaseAsOneCommander() throws Exception {
+        final MkGitHub github = new MkGitHub();
+        final Repo repo = github.randomRepo();
+        final Issue issue = repo.issues().create("needs", "deployment");
+        final String action = "deploy";
+        issue.comments().post(action);
+        final Comment.Smart comment = new Comment.Smart(
+            issue.comments().get(1)
+        );
+        final QnAskedBy qab = new QnAskedBy(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='architect'><item>user2</item></entry>",
+                        "<entry key='deploy'><entry key='commanders'>",
+                        "<item>User2</item></entry></entry></p>"
+                    ).asString()
+                )
+            ),
+            String.format(
+                "/p/entry[@key='%s']/entry[@key='commanders']/item/text()",
+                action
+            ),
+            Mockito.mock(Question.class)
+        );
+        qab.understand(comment, new URI("#1"));
+        MatcherAssert.assertThat(
+            "Logins differing only in case must be listed once",
+            QnAskedByTest.MENTION.split(
+                new Comment.Smart(issue.comments().get(2)).body()
+                    .toLowerCase(Locale.ROOT), -1
+            ).length - 1,
+            Matchers.equalTo(1)
+        );
     }
 }
