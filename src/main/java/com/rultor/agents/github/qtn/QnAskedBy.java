@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -108,11 +109,18 @@ public final class QnAskedBy implements Question {
     }
 
     private Collection<String> commanders(final Repo repo) throws IOException {
-        final Collection<String> logins = new ArrayList<>(0);
         final XML xml = this.profile.read();
-        logins.addAll(new Crew(repo).names());
-        logins.addAll(xml.xpath(this.xpath));
-        logins.addAll(xml.xpath("/p/entry[@key='architect']/item/text()"));
+        final Collection<String> all = new ArrayList<>(0);
+        all.addAll(new Crew(repo).names());
+        all.addAll(xml.xpath(this.xpath));
+        all.addAll(xml.xpath("/p/entry[@key='architect']/item/text()"));
+        final Collection<String> logins = new LinkedHashSet<>(0);
+        for (final String login : all) {
+            if (logins.stream()
+                .noneMatch(name -> name.equalsIgnoreCase(login))) {
+                logins.add(login);
+            }
+        }
         return logins;
     }
 }
