@@ -196,7 +196,7 @@ public final class StartsRequest extends AbstractAgent {
                     new Mapped<>(
                         input -> String.format(
                             "--env=%s",
-                            input.replace(System.lineSeparator(), " ")
+                            input
                         ),
                         docker.envs(
                             new MapOf<>(
