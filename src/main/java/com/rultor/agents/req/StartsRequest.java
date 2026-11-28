@@ -286,9 +286,33 @@ public final class StartsRequest extends AbstractAgent {
     private static Iterable<String> export(final Iterable<String> envs) {
         final Collection<String> lines = new ArrayList<>(4);
         for (final String env : envs) {
-            lines.add(String.format("export %s", Ssh.escape(env)));
+            lines.add(String.format("export %s", StartsRequest.exportable(env)));
             lines.add(";");
         }
         return lines;
+    }
+
+    /**
+     * The name stays plain and the value is double-quoted, so the shell
+     * that runs the script expands references like $REF inside the value.
+     * @param env Env in NAME=value format
+     * @return Shell-safe export argument
+     */
+    private static String exportable(final String env) {
+        final int split = env.indexOf('=');
+        final String result;
+        if (split < 0) {
+            result = Ssh.escape(env);
+        } else {
+            result = String.format(
+                "%s=\"%s\"",
+                env.substring(0, split),
+                env.substring(split + 1)
+                    .replace("\\", "\\\\")
+                    .replace("\"", "\\\"")
+                    .replace("`", "\\`")
+            );
+        }
+        return result;
     }
 }

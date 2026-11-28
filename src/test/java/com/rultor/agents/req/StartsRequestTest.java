@@ -391,6 +391,55 @@ final class StartsRequestTest {
     }
 
     /**
+     * StartsRequest exports env values double-quoted, so the shell that
+     * runs the script expands references like $REF inside them.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void exportsEnvWithRefsForShellExpansion() throws Exception {
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='deploy'><entry key='script'>",
+                        "echo HEY</entry><entry key='env'>",
+                        "<entry key='PATH'>",
+                        "$GOPATH/bin:/usr/local/go/bin:/bin:$PATH</entry>",
+                        "</entry></entry></p>"
+                    ).asString()
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "abcd")
+                .add("author").set("yegor256").up()
+                .add("type").set("deploy").up()
+                .add("args")
+        );
+        agent.execute(talk);
+        final String script = talk.read()
+            .xpath("//script/text()").get(0);
+        MatcherAssert.assertThat(
+            "Env value with refs should be exported double-quoted",
+            script,
+            Matchers.containsString(
+                "export PATH=\"$GOPATH/bin:/usr/local/go/bin:/bin:$PATH\""
+            )
+        );
+        MatcherAssert.assertThat(
+            "Env value should not be single-quoted as a whole",
+            script,
+            Matchers.not(
+                Matchers.containsString("export 'PATH=$GOPATH")
+            )
+        );
+    }
+
+    /**
      * StartsRequest can start a request.
      *
      * @param temp Temporary folder for talk
