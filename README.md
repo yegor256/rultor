@@ -93,6 +93,31 @@ for example `bundle test`.
 You can see it in action, for example, in this pull request:
 [jcabi/jcabi-github#878](https://github.com/jcabi/jcabi-github/pull/878).
 
+## How to Build It Locally?
+
+To build Rultor from source, install
+[JDK 21](https://adoptium.net) (the version our CI builds with) and
+[Apache Maven](https://maven.apache.org) (there is no Maven wrapper in
+the repository).
+The code itself targets Java 11, see `maven.compiler.source`
+in `pom.xml`.
+
+Then run:
+
+```bash
+mvn clean install -Pqulice
+```
+
+The `qulice` Maven profile enables static analysis, so the build fails
+not only on failing tests, but also on style violations.
+
+Integration tests (files named `*ITCase.java`, executed by the
+[maven-failsafe-plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/))
+start real Docker containers, which means a running
+[Docker](https://docs.docker.com/get-docker/) daemon is required on
+your machine.
+To skip all tests, add `-DskipTests`.
+
 [1]: http://www.yegor256.com/2014/07/24/rultor-automated-merging.html
 [2]: http://www.yegor256.com/2014/07/29/docker-in-rultor.html
 [3]: http://www.yegor256.com/2014/07/21/read-only-master-branch.html
