@@ -446,6 +446,74 @@ final class StartsRequestTest {
         );
     }
 
+    /**
+     * StartsRequest keeps a multi-line env value intact in both the Docker
+     * --env arguments and the export commands, for the block-scalar value
+     * from https://github.com/yegor256/rultor/issues/1285.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void keepsMultilineEnvValueInDockerVarsAndExports() throws Exception {
+        final String crlf = "&#13;&#10;";
+        final String xmlValue = String.join(
+            crlf,
+            "-XX:MaxPermSize=256m",
+            "-Xmx512m",
+            "-Djavax.net.ssl.trustStoreType=JKS"
+        ) + crlf;
+        final Agent agent = new StartsRequest(
+            new Profile.Fixed(
+                new XMLDocument(
+                    new Joined(
+                        "",
+                        "<p><entry key='deploy'>",
+                        "<entry key='script'>echo HEY</entry>",
+                        "<entry key='env'>",
+                        String.format(
+                            "<entry key='MAVEN_OPTS'>%s</entry>",
+                            xmlValue
+                        ),
+                        "</entry></entry></p>"
+                    ).asString()
+                )
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("request").attr("id", "abcd")
+                .add("author").set("yegor256").up()
+                .add("type").set("deploy").up()
+                .add("args")
+        );
+        agent.execute(talk);
+        final String script = talk.read()
+            .xpath("/talk/daemon/script/text()").get(0)
+            .replace("\r\n", "\n")
+            .replace("\r", "\n");
+        final String value = String.join(
+            "\n",
+            "-XX:MaxPermSize=256m",
+            "-Xmx512m",
+            "-Djavax.net.ssl.trustStoreType=JKS"
+        ) + "\n";
+        MatcherAssert.assertThat(
+            "Docker --env argument must keep the multi-line value",
+            script,
+            Matchers.containsString(
+                String.format("'--env=MAVEN_OPTS=%s'", value)
+            )
+        );
+        MatcherAssert.assertThat(
+            "Export command must carry the same multi-line value",
+            script,
+            Matchers.containsString(
+                String.format("export '\\''MAVEN_OPTS=%s'\\'''", value)
+            )
+        );
+    }
+
     private String exec(final Talk talk, final Path wdir) throws IOException {
         return this.process(talk, wdir).stdout();
     }
