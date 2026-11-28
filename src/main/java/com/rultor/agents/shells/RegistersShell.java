@@ -10,6 +10,7 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.net.InetAddress;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directive;
@@ -68,6 +69,7 @@ public final class RegistersShell extends AbstractAgent {
                     "SSH host is empty, it's a mistake"
                 );
             }
+            final String ip = InetAddress.getByName(host).getHostAddress();
             final String login = this.shell.login();
             if (login.isEmpty()) {
                 throw new Profile.ConfigException(
@@ -82,7 +84,7 @@ public final class RegistersShell extends AbstractAgent {
             }
             dirs.xpath("/talk").add("shell")
                 .attr("id", hash)
-                .add("host").set(host).up()
+                .add("host").set(ip).up()
                 .add("port").set(Integer.toString(this.shell.port())).up()
                 .add("login").set(login).up()
                 .add("key").set(key);

@@ -25,13 +25,14 @@ import org.xembly.Directives;
 final class RegistersShellTest {
 
     /**
-     * RegistersShell can register a shell with hostname.
+     * RegistersShell can register a shell with hostname,
+     * saving its resolved IP instead of the hostname.
      *
      * @throws Exception In case of error.
      */
     @Test
     void registersShell() throws Exception {
-        final String host = "local";
+        final String host = "localhost";
         final int port = 221;
         final String login = "john";
         final Agent agent = new RegistersShell(
@@ -63,11 +64,48 @@ final class RegistersShellTest {
             "All data should be saved to shell",
             talk.read(),
             XhtmlMatchers.hasXPaths(
-                String.format("/talk/shell[@id='abcd']/host[.='%s']", host),
+                "/talk/shell[@id='abcd']/host[.='127.0.0.1']",
                 String.format("/talk/shell[@id='abcd']/port[.='%d']", port),
                 String.format("/talk/shell[@id='abcd']/login[.='%s']", login),
                 "/talk/shell[@id='abcd']/key[.='def-key']"
             )
+        );
+    }
+
+    /**
+     * RegistersShell throws when the host name cannot be resolved.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    void throwsOnUnresolvableHost() throws Exception {
+        final Agent agent = new RegistersShell(
+            new SshProfile(
+                new Profile.Fixed(
+                    new XMLDocument(
+                        new Joined(
+                            " ",
+                            "<p><entry key='ssh'>",
+                            "<entry key='host'>unresolvable.invalid</entry>",
+                            "<entry key='port'>22</entry>",
+                            "<entry key='login'>john</entry>",
+                            "</entry></p>"
+                        ).asString()
+                    )
+                ),
+                new SshDefaults("127.0.0.1", 22, "rultor", "def-key")
+            )
+        );
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk")
+                .add("daemon").attr("id", "abcd")
+                .add("title").set("something").up()
+                .add("script").set("test")
+        );
+        Assertions.assertThrows(
+            java.net.UnknownHostException.class,
+            () -> agent.execute(talk)
         );
     }
 
